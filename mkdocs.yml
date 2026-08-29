@@ -1,0 +1,57 @@
+site_name: Clínica Escola FBr - Documentação
+site_description: Documentação do projeto Clínica Escola FBr para as entregas das Unidades 1 a 4.
+
+theme:
+  name: material
+  language: pt
+  palette:
+    - scheme: default
+      primary: indigo
+      accent: indigo
+      toggle:
+        icon: material/brightness-7
+        name: Alternar para modo escuro
+    - scheme: slate
+      primary: indigo
+      accent: indigo
+      toggle:
+        icon: material/brightness-4
+        name: Alternar para modo claro
+  features:
+    - navigation.tabs
+    - navigation.sections
+    - navigation.top
+    - search.suggest
+    - search.highlight
+    - content.code.copy
+
+markdown_extensions:
+  - pymdownx.superfences:
+      custom_fences:
+        - name: mermaid
+          class: mermaid
+          format: !!python/name:pymdownx.superfences.fence_code_format
+  - pymdownx.highlight:
+      anchor_linenums: true
+  - pymdownx.inlinehilite
+  - pymdownx.snippets
+  - admonition
+  - tables
+
+nav:
+  - Início: index.md
+  - Cenário Atual: cenario-atual.md
+  - Solução Proposta: solucao-proposta.md
+  - Intervenção Social: intervencao-social.md
+  - Estratégia de ESW: estrategia-esw.md
+  - Engenharia de Requisitos: engenharia-requisitos.md
+  - Requisitos & Backlog:
+      - Requisitos Funcionais: requisitos/funcionais.md
+      - Requisitos Não-Funcionais: requisitos/nao-funcionais.md
+      - DoR e DoD: requisitos/dor-dod.md
+      - Backlog e MVP: requisitos/backlog.md
+  - Gestão do Projeto:
+      - Cronograma e Entregas: gestao/cronograma.md
+      - Equipe e Comunicação: gestao/equipe-comunicacao.md
+  - Lições Aprendidas: licoes-aprendidas.md
+  - Referências: referencias.md

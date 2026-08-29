@@ -1,0 +1,33 @@
+name: Deploy MkDocs Documentation
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - "docs/**"
+      - "mkdocs.yml"
+      - ".github/workflows/deploy-docs.yml"
+
+permissions:
+  contents: write
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Configure Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.x"
+
+      - name: Install dependencies
+        run: |
+          pip install mkdocs-material pymdown-extensions
+
+      - name: Build and deploy site to gh-pages branch
+        run: |
+          mkdocs gh-deploy --force
