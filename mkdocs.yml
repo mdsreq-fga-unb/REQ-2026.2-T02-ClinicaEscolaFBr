@@ -1,8 +1,10 @@
 site_name: Clínica Escola FBr - Documentação
 site_description: Documentação do projeto Clínica Escola FBr para as entregas das Unidades 1 a 4.
-
+extra_css: [assets/stylesheets/extra.css]
 theme:
   name: material
+  logo: assets/favicon.png
+  favicon: assets/favicon.png
   language: pt
   palette:
     - scheme: default
