@@ -13,12 +13,12 @@ A solução deverá:
 
 ## 2.2 Objetivos Específicos (OE) do Produto
 
-- **(OE1)** Digitalizar a inscrição de pacientes, eliminando a necessidade de deslocamento presencial nessa etapa
+- **(OE1)** Facilitar o acesso da comunidade de Santa Maria/DF ao processo de triagem psicológica, reduzindo barreiras de tempo e deslocamento na etapa de inscrição
 - **(OE2)** Apoiar a triagem e a priorização clínica dos inscritos, com pré-classificação automática sujeita à revisão da equipe da clínica
 - **(OE3)** Reduzir as faltas e os cancelamentos não informados, por meio de agendamento, lembretes e confirmação de presença
 - **(OE4)** Ampliar o aproveitamento das vagas ofertadas a cada semestre, com fila de espera organizada e realocação ágil das vagas liberadas
 - **(OE5)** Organizar o registro clínico e a supervisão, do acompanhamento das sessões até a geração do relatório final de evolução
-- **(OE6)** Prover à coordenação indicadores e documentos que apoiem a gestão da clínica e a prestação de contas ao Conselho Regional de Psicologia e ao MEC
+- **(OE6)** Subsidiar a gestão da clínica e a prestação de contas perante o Conselho Regional de Psicologia e o MEC, com base em indicadores confiáveis sobre o atendimento
 - **(OE7)** Assegurar o sigilo das informações dos pacientes, em conformidade com a LGPD e com as normas do Conselho Federal de Psicologia
 
 ## 2.3 Características de Produto (mapeadas com os Objetivos Específicos)
