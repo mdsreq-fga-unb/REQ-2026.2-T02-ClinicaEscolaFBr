@@ -1,6 +1,6 @@
 # 3. Intervenção Social
 
-A solução VivaClínica tende a produzir uma intervenção social voltada à melhoria do acesso e da organização dos serviços de atendimento psicológico oferecidos pela Clínica Escola da FBr à comunidade, especialmente para pessoas que dependem desse serviço como alternativa de atendimento psicológico acessível. A solução também deverá modificar os fluxos de trabalho da clínica, tornando mais organizada a relação entre pacientes, estagiários, supervisores, coordenação e secretaria.
+A solução tende a produzir uma intervenção social voltada à melhoria do acesso e da organização dos serviços de atendimento psicológico oferecidos pela Clínica Escola da FBr à comunidade, especialmente para pessoas que dependem desse serviço como alternativa de atendimento psicológico acessível. A solução também deverá modificar os fluxos de trabalho da clínica, tornando mais organizada a relação entre pacientes, estagiários, supervisores, coordenação e secretaria.
 
 Entre os impactos pretendidos, destacam-se:
 
@@ -24,4 +24,4 @@ Ao mesmo tempo, a solução pode gerar efeitos emergentes, não totalmente previ
 - necessidade de adaptação dos estagiários, supervisores e funcionários aos novos fluxos de trabalho;
 - possibilidade de classificações ou decisões inadequadas caso mecanismos automáticos sejam utilizados sem validação de profissionais responsáveis.
 
-Assim, a intervenção social promovida pela VivaClínica não consiste apenas em digitalizar os processos administrativos da Clínica Escola. A solução interfere diretamente na forma como a comunidade acessa o atendimento psicológico, como as vagas disponíveis são utilizadas, como pacientes e instituição se comunicam e como estagiários, supervisores e profissionais organizam o atendimento. Por isso, os requisitos da solução devem considerar não apenas ganhos de eficiência operacional, mas também acessibilidade, inclusão digital, transparência, privacidade, segurança das informações e os possíveis efeitos decorrentes do uso real do sistema.
+Assim, a intervenção social promovida pela Clínica Escola FBr não consiste apenas em digitalizar os processos administrativos da Clínica Escola. A solução interfere diretamente na forma como a comunidade acessa o atendimento psicológico, como as vagas disponíveis são utilizadas, como pacientes e instituição se comunicam e como estagiários, supervisores e profissionais organizam o atendimento. Por isso, os requisitos da solução devem considerar não apenas ganhos de eficiência operacional, mas também acessibilidade, inclusão digital, transparência, privacidade, segurança das informações e os possíveis efeitos decorrentes do uso real do sistema.
