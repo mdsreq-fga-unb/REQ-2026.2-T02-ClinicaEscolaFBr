@@ -43,6 +43,12 @@ jobs:
           invalid=0
 
           while IFS= read -r commit_subject; do
+            case "$commit_subject" in
+              Merge\ *|Merge\ pull\ request\ *)
+                continue
+                ;;
+            esac
+
             if ! printf '%s\n' "$commit_subject" | grep -Eq "^(${commit_types}): [^[:space:]].*"; then
               printf 'Mensagem invalida: %s\n' "$commit_subject"
               invalid=1
