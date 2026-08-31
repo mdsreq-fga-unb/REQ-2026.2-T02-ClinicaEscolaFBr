@@ -67,6 +67,12 @@ Navegue pelo menu para acompanhar as entregas das Unidades:
 
 ### Histórico de Revisão
 
-| Data       | Versão | Descrição                                                                                                                      | Autor             |
-| ---------- | ------ | ------------------------------------------------------------------------------------------------------------------------------ | ----------------- |
-| 29/08/2026 | 1.0    | Estruturação inicial do site no GitHub Pages, conversão do documento de Visão para Markdown e organização das seções no MkDocs | Gabriel Barbaceli |
+| Data       | Versão | Descrição                                                                                                                      | Autor                                                                     |
+| ---------- | ------ | ------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------- |
+| 17/08/2026 | 1.0    | Início do desenvolvimento do documento                                                                                         | Jônatas                                                                   |
+| 20/08/2026 | 1.1    | Escrita das informações do cliente                                                                                             | Luís Henrique (durante reunião, tela compartilhada com os demais membros) |
+| 26/08/2026 | 1.2    | Preenchimento das seções necessárias para envio da proposta                                                                    | Joaquim José (durante reunião, tela compartilhada com os demais membros)  |
+| 27/08/2026 | 1.3    | Formatação do documento                                                                                                        | Jônatas                                                                   |
+| 29/08/2026 | 1.4    | Adição de correções propostas pelo professor (tópicos 1.2, 2.1)                                                                | Gabriel Barbaceli                                                         |
+| 29/08/2026 | 1.5    | Estruturação inicial do site no GitHub Pages, conversão do documento de Visão para Markdown e organização das seções no MkDocs | Gabriel Barbaceli                                                         |
+| 31/08/2026 | 1.6    | Atualização do histórico de revisão e inclusão das boas práticas do GitHub na documentação e na navegação do MkDocs            | Gabriel Barbaceli                                                         |

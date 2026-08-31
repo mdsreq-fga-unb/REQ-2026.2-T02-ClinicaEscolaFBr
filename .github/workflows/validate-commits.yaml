@@ -1,0 +1,58 @@
+name: Validate Commit Messages
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+  push:
+    branches:
+      - main
+      - develop
+
+permissions:
+  contents: read
+
+jobs:
+  validate-commits:
+    name: Validate commit messages
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository history
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Validate commit subjects
+        env:
+          EVENT_NAME: ${{ github.event_name }}
+          BEFORE_SHA: ${{ github.event.before }}
+          CURRENT_SHA: ${{ github.sha }}
+          BASE_SHA: ${{ github.event.pull_request.base.sha }}
+          HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+        run: |
+          set -eu
+
+          if [ "$EVENT_NAME" = "pull_request" ]; then
+            commit_range="$BASE_SHA..$HEAD_SHA"
+          elif [ "$BEFORE_SHA" = "0000000000000000000000000000000000000000" ]; then
+            commit_range="$CURRENT_SHA"
+          else
+            commit_range="$BEFORE_SHA..$CURRENT_SHA"
+          fi
+
+          commit_types='feat|fix|docs|test|refactor|style|build|ci|chore|cleanup|remove'
+          invalid=0
+
+          while IFS= read -r commit_subject; do
+            if ! printf '%s\n' "$commit_subject" | grep -Eq "^(${commit_types}): [^[:space:]].*"; then
+              printf 'Mensagem invalida: %s\n' "$commit_subject"
+              invalid=1
+            fi
+          done <<EOF
+          $(git log --format=%s "$commit_range")
+          EOF
+
+          if [ "$invalid" -ne 0 ]; then
+            printf '%s\n' 'Use o formato: tipo: descricao curta'
+            printf '%s\n' 'Tipos aceitos: feat, fix, docs, test, refactor, style, build, ci, chore, cleanup, remove'
+            exit 1
+          fi

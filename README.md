@@ -51,6 +51,7 @@ Nela você encontra:
 - Estratégias de Engenharia de Software
 - Engenharia de Requisitos
 - Gestão (cronograma, equipe e comunicação)
+- [Boas práticas de utilização do GitHub](docs/gestao/boas-praticas-github.md)
 - Requisitos, DoR, DoD e Backlog
 - Lições Aprendidas
 - Referências

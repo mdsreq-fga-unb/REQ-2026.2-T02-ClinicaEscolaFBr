@@ -2,7 +2,7 @@
 
 ## 2.1 Objetivo Geral do Produto
 
-O objetivo do produto é **digitalizar e integrar a gestão da Clínica Escola de Psicologia da Faculdade Brasília**, por meio de uma aplicação web responsiva que apoie o processo desde a inscrição do paciente até a entrega do relatório final de evolução.
+O objetivo do produto é **apoiar a integração e a digitalização da gestão da Clínica Escola de Psicologia da Faculdade Brasília**, por meio de uma aplicação web responsiva que apoie o processo desde a inscrição do paciente até a entrega do relatório final de evolução.
 
 A solução deverá:
 

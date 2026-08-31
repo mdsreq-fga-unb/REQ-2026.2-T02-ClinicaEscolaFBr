@@ -55,5 +55,11 @@ nav:
   - Gestão do Projeto:
       - Cronograma e Entregas: gestao/cronograma.md
       - Equipe e Comunicação: gestao/equipe-comunicacao.md
+      - Boas práticas no GitHub: gestao/boas-praticas-github.md
+  - Reuniões:
+      - Unidade 1: reunioes/unidade-1.md
+      - Unidade 2: reunioes/unidade-2.md
+      - Unidade 3: reunioes/unidade-3.md
+      - Unidade 4: reunioes/unidade-4.md
   - Lições Aprendidas: licoes-aprendidas.md
   - Referências: referencias.md

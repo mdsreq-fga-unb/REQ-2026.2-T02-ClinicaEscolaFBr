@@ -1,0 +1,13 @@
+#!/bin/sh
+
+commit_message_file="$1"
+commit_subject=$(sed '/^[[:space:]]*#/d;/^[[:space:]]*$/d' "$commit_message_file" | sed -n '1p')
+commit_types='feat|fix|docs|test|refactor|style|build|ci|chore|cleanup|remove'
+
+if ! printf '%s\n' "$commit_subject" | grep -Eq "^(${commit_types}): [^[:space:]].*"; then
+  printf '%s\n' 'Mensagem de commit invalida.' >&2
+  printf '%s\n' 'Use o formato: tipo: descricao curta' >&2
+  printf '%s\n' 'Tipos aceitos: feat, fix, docs, test, refactor, style, build, ci, chore, cleanup, remove' >&2
+  printf '%s\n' 'Exemplo: docs: atualiza a documentacao' >&2
+  exit 1
+fi
