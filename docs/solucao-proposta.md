@@ -114,4 +114,6 @@ A solução da Clínica Escola FBr irá se diferenciar pelos seguintes aspectos:
 
 ## 2.7 Benefícios Esperados
 
-> _Seção a ser preenchida com os benefícios para o cliente e para os usuários._
+- **Para o cliente:** ampliar a capacidade de gestão da Clínica Escola de Psicologia da FBr, centralizando informações relacionadas à inscrição, seleção, agendamento e acompanhamento dos pacientes. A solução deverá contribuir para a redução de processos manuais, melhorar o controle sobre faltas, cancelamentos e vagas disponíveis, facilitar a realocação de pacientes e proporcionar maior rastreabilidade dos atendimentos. Também se espera melhorar o controle das atividades dos estagiários e fornecer informações mais organizadas para supervisores e coordenação, criando melhores condições para a continuidade e expansão dos serviços prestados pela Clínica Escola.
+
+- **Para os usuários:** proporcionar aos pacientes uma experiência mais simples, acessível e transparente desde a inscrição até o acompanhamento do atendimento, facilitando o acesso às informações sobre agendamentos, confirmações, cancelamentos e situação na fila de espera. Para estagiários, supervisores e profissionais envolvidos na operação da clínica, espera-se reduzir tarefas manuais e facilitar o acesso às informações necessárias para organização e acompanhamento dos atendimentos, respeitando os diferentes níveis de acesso e o sigilo das informações dos pacientes.
