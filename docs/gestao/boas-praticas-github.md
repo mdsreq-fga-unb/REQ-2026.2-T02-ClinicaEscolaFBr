@@ -17,6 +17,8 @@ As alterações devem ser integradas à branch de desenvolvimento mais atualizad
 
 Não faça alterações diretamente em `develop` ou `main`, mesmo quando a mudança for apenas na documentação ou no GitHub Pages.
 
+> Importante: a branch `gh-pages` é a branch de publicação do site do MkDocs no GitHub Pages. Ela não deve ser alterada manualmente, deletada, force-push, reescrita ou usada como branch de desenvolvimento. O conteúdo do site deve ser gerado a partir da branch de trabalho e publicado pelo fluxo do GitHub Pages, sem edição direta na `gh-pages`.
+
 ## Fluxo de trabalho
 
 ### 1. Atualizar a branch de destino
@@ -150,10 +152,21 @@ git push -u origin nome-da-branch
 Depois, abra uma pull request para `develop` ou, se ela não existir, para `main`. A PR deve:
 
 - seguir o template de PR do repositório;
+- usar o título no padrão: `branch de destino <- branch com alterações | descrição breve`;
 - explicar o que foi alterado e o impacto esperado;
 - relacionar a issue ou funcionalidade FDD quando fizer sentido;
 - adicionar autores, revisores e tags adequados;
 - preencher as seções de mudanças e issues relacionadas, quando aplicáveis.
+
+Exemplos válidos de título:
+
+```text
+develop <- feature/123-cadastro-paciente | adiciona cadastro de paciente
+develop <- docs/152-boas-praticas-github | atualiza guia do GitHub
+main <- fix/145-validacao-agendamento | corrige validação de agendamento
+```
+
+O título deve manter a ordem `destino <- origem | resumo`. Em outras palavras, a primeira parte indica a branch alvo e a segunda identifica a branch que contém as alterações, seguida de uma descrição curta do conteúdo da PR.
 
 Não faça merge da própria PR sem a revisão exigida pelo grupo.
 
