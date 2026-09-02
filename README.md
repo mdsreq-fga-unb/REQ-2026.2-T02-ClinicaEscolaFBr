@@ -42,7 +42,7 @@ O **Clínica Escola FBr** é a solução proposta para digitalizar as etapas per
 
 A documentação completa do projeto está disponível no **GitHub Pages**:
 
-> [Link do site de documentação](https://mdsreq-fga-unb.github.io/REQ-2026.2-T02-VivaClinica/)
+> [Link do site de documentação](https://mdsreq-fga-unb.github.io/REQ-2026.2-T02-ClinicaEscolaFBr/)
 
 Nela você encontra:
 
