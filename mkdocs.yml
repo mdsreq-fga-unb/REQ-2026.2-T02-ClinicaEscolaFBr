@@ -62,4 +62,6 @@ nav:
       - Unidade 3: reunioes/unidade-3.md
       - Unidade 4: reunioes/unidade-4.md
   - Lições Aprendidas: licoes-aprendidas.md
+  - Estudos:
+      - Feature-Driven Development (FDD): estudos/fdd.md
   - Referências: referencias.md
