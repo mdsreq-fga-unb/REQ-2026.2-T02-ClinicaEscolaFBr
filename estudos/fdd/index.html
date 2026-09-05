@@ -1,0 +1,2311 @@
+
+<!doctype html>
+<html lang="pt" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Documentação do projeto Clínica Escola FBr para as entregas das Unidades 1 a 4.">
+      
+      
+      
+      
+        <link rel="prev" href="../../licoes-aprendidas/">
+      
+      
+        <link rel="next" href="../../referencias/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../assets/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
+    
+    
+      
+        <title>Feature-Driven Development (FDD) - Clínica Escola FBr - Documentação</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.ec1eaa64.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/extra.css">
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#feature-driven-development-fdd" class="md-skip">
+          Ir para o conteúdo
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Cabeçalho">
+    <a href="../.." title="Clínica Escola FBr - Documentação" class="md-header__button md-logo" aria-label="Clínica Escola FBr - Documentação" data-md-component="logo">
+      
+  <img src="../../assets/favicon.png" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Clínica Escola FBr - Documentação
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Feature-Driven Development (FDD)
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Alternar para modo escuro"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Alternar para modo escuro" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Alternar para modo claro"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Alternar para modo claro" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Buscar" placeholder="Buscar" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Pesquisar">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Limpar" aria-label="Limpar" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Inicializando a pesquisa
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="Abas" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../.." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Início
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../cenario-atual/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Cenário Atual
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../solucao-proposta/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Solução Proposta
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../intervencao-social/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Intervenção Social
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../estrategia-esw/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Estratégia de ESW
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../engenharia-requisitos/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Engenharia de Requisitos
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../requisitos/funcionais/" class="md-tabs__link">
+          
+  
+  
+  Requisitos & Backlog
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../gestao/cronograma/" class="md-tabs__link">
+          
+  
+  
+  Gestão do Projeto
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../reunioes/unidade-1/" class="md-tabs__link">
+          
+  
+  
+  Reuniões
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../licoes-aprendidas/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Lições Aprendidas
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="./" class="md-tabs__link">
+          
+  
+  
+  Estudos
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../referencias/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Referências
+
+      </a>
+    </li>
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navegação" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="Clínica Escola FBr - Documentação" class="md-nav__button md-logo" aria-label="Clínica Escola FBr - Documentação" data-md-component="logo">
+      
+  <img src="../../assets/favicon.png" alt="logo">
+
+    </a>
+    Clínica Escola FBr - Documentação
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Início
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cenario-atual/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Cenário Atual
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../solucao-proposta/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Solução Proposta
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../intervencao-social/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Intervenção Social
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../estrategia-esw/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Estratégia de ESW
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../engenharia-requisitos/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Engenharia de Requisitos
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7" >
+        
+          
+          <label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Requisitos & Backlog
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Requisitos & Backlog
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../requisitos/funcionais/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Requisitos Funcionais
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../requisitos/nao-funcionais/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Requisitos Não-Funcionais
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../requisitos/dor-dod/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    DoR e DoD
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../requisitos/backlog/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Backlog e MVP
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_8" >
+        
+          
+          <label class="md-nav__link" for="__nav_8" id="__nav_8_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Gestão do Projeto
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_8_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_8">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Gestão do Projeto
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../gestao/cronograma/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Cronograma e Entregas
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../gestao/equipe-comunicacao/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Equipe e Comunicação
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../gestao/boas-praticas-github/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Boas práticas no GitHub
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_9" >
+        
+          
+          <label class="md-nav__link" for="__nav_9" id="__nav_9_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Reuniões
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_9_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_9">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Reuniões
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reunioes/unidade-1/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Unidade 1
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reunioes/unidade-2/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Unidade 2
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reunioes/unidade-3/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Unidade 3
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reunioes/unidade-4/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Unidade 4
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../licoes-aprendidas/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Lições Aprendidas
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_11" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_11" id="__nav_11_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Estudos
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_11_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_11">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Estudos
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Feature-Driven Development (FDD)
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Feature-Driven Development (FDD)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Índice">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Índice
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#1-o-que-e-fdd" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. O que é FDD
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-objetivos-do-fdd" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Objetivos do FDD
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-os-cinco-processos-do-fdd" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Os cinco processos do FDD
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="3. Os cinco processos do FDD">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#31-desenvolver-um-modelo-abrangente" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.1 Desenvolver um Modelo Abrangente
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#32-construir-uma-lista-de-features" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.2 Construir uma Lista de Features
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#33-planejar-por-feature" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.3 Planejar por Feature
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#34-projetar-por-feature" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.4 Projetar por Feature
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#35-construir-por-feature" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.5 Construir por Feature
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-como-aplicar-fdd-a-clinica-escola-fbr" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Como aplicar FDD à Clínica Escola FBr
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="4. Como aplicar FDD à Clínica Escola FBr">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#41-da-necessidade-a-feature" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.1 Da necessidade à feature
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#42-exemplo-de-decomposicao-do-mvp" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.2 Exemplo de decomposição do MVP
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-como-implementar-fdd-no-codigo" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. Como implementar FDD no código
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="5. Como implementar FDD no código">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#51-organizar-o-codigo-por-feature" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.1 Organizar o código por feature
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#52-separar-regra-de-negocio-de-infraestrutura" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.2 Separar regra de negócio de infraestrutura
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#53-branches-commits-e-pull-requests" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.3 Branches, commits e pull requests
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#54-definition-of-ready-e-definition-of-done" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.4 Definition of Ready e Definition of Done
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#6-papeis-no-fdd" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6. Papéis no FDD
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#7-metricas-e-acompanhamento" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7. Métricas e acompanhamento
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#8-vantagens-e-limites-do-fdd" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8. Vantagens e limites do FDD
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="8. Vantagens e limites do FDD">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#vantagens" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Vantagens
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#limites-e-cuidados" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Limites e cuidados
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#9-resumo-pratico" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        9. Resumo prático
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../referencias/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Referências
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Índice">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Índice
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#1-o-que-e-fdd" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. O que é FDD
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-objetivos-do-fdd" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Objetivos do FDD
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-os-cinco-processos-do-fdd" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Os cinco processos do FDD
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="3. Os cinco processos do FDD">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#31-desenvolver-um-modelo-abrangente" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.1 Desenvolver um Modelo Abrangente
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#32-construir-uma-lista-de-features" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.2 Construir uma Lista de Features
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#33-planejar-por-feature" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.3 Planejar por Feature
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#34-projetar-por-feature" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.4 Projetar por Feature
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#35-construir-por-feature" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.5 Construir por Feature
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-como-aplicar-fdd-a-clinica-escola-fbr" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Como aplicar FDD à Clínica Escola FBr
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="4. Como aplicar FDD à Clínica Escola FBr">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#41-da-necessidade-a-feature" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.1 Da necessidade à feature
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#42-exemplo-de-decomposicao-do-mvp" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.2 Exemplo de decomposição do MVP
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-como-implementar-fdd-no-codigo" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. Como implementar FDD no código
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="5. Como implementar FDD no código">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#51-organizar-o-codigo-por-feature" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.1 Organizar o código por feature
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#52-separar-regra-de-negocio-de-infraestrutura" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.2 Separar regra de negócio de infraestrutura
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#53-branches-commits-e-pull-requests" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.3 Branches, commits e pull requests
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#54-definition-of-ready-e-definition-of-done" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.4 Definition of Ready e Definition of Done
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#6-papeis-no-fdd" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6. Papéis no FDD
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#7-metricas-e-acompanhamento" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7. Métricas e acompanhamento
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#8-vantagens-e-limites-do-fdd" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8. Vantagens e limites do FDD
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="8. Vantagens e limites do FDD">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#vantagens" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Vantagens
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#limites-e-cuidados" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Limites e cuidados
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#9-resumo-pratico" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        9. Resumo prático
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="feature-driven-development-fdd">Feature-Driven Development (FDD)</h1>
+<h2 id="1-o-que-e-fdd">1. O que é FDD</h2>
+<p>Feature-Driven Development, ou Desenvolvimento Orientado a Funcionalidades, é um processo ágil de Engenharia de Software organizado em torno da entrega frequente de funcionalidades pequenas, completas e percebidas pelo usuário. Em vez de planejar o produto apenas por camadas técnicas, o FDD estrutura o trabalho a partir do valor que o sistema entrega ao negócio.</p>
+<p>Uma feature é uma capacidade específica do produto, suficientemente pequena para ser projetada, implementada, testada e demonstrada em um período curto. Ela deve ser descrita de forma objetiva, normalmente no padrão:</p>
+<blockquote>
+<p><strong><ação> <resultado> <objeto></strong></p>
+</blockquote>
+<p>Exemplos para a Clínica Escola FBr:</p>
+<ul>
+<li>Registrar solicitação de atendimento do paciente.</li>
+<li>Consultar posição do paciente na fila.</li>
+<li>Confirmar presença em sessão agendada.</li>
+<li>Classificar prioridade do inscrito.</li>
+<li>Associar paciente ao estagiário responsável.</li>
+</ul>
+<p>Uma feature não deve ser uma tarefa técnica, como “criar tabela no banco”, nem uma iniciativa grande demais, como “implementar todo o módulo da secretaria”. A primeira é uma atividade interna de implementação; a segunda precisa ser decomposta em funcionalidades menores.</p>
+<h2 id="2-objetivos-do-fdd">2. Objetivos do FDD</h2>
+<p>O FDD busca:</p>
+<ul>
+<li>entregar valor observável em ciclos curtos;</li>
+<li>tornar o progresso mensurável pelo número de features concluídas;</li>
+<li>reduzir o risco de desenvolver funcionalidades sem utilidade para o negócio;</li>
+<li>manter uma visão abrangente do domínio antes de detalhar cada parte;</li>
+<li>distribuir responsabilidades entre líderes de feature e especialistas técnicos;</li>
+<li>favorecer inspeções frequentes de design e código;</li>
+<li>permitir que o cliente acompanhe e valide incrementos reais do produto.</li>
+</ul>
+<p>Na Clínica Escola FBr, isso é importante porque o sistema possui vários perfis, regras clínicas e restrições regulatórias. O trabalho por features permite validar gradualmente o fluxo da clínica, começando pelo MVP e evitando que a equipe espere o sistema inteiro ficar pronto para obter feedback.</p>
+<h2 id="3-os-cinco-processos-do-fdd">3. Os cinco processos do FDD</h2>
+<p>O FDD é tradicionalmente organizado em cinco processos. Eles são apresentados em sequência, mas podem se repetir e se sobrepor conforme novas informações surgem.</p>
+<h3 id="31-desenvolver-um-modelo-abrangente">3.1 Desenvolver um Modelo Abrangente</h3>
+<p>Nesta etapa, a equipe constrói uma visão compartilhada do domínio do problema. O objetivo não é definir todos os detalhes da implementação, mas compreender os conceitos, atores, regras, eventos e relações importantes para o negócio.</p>
+<p>Na Clínica Escola FBr, o modelo deve considerar, por exemplo:</p>
+<ul>
+<li>paciente ou responsável;</li>
+<li>inscrição e solicitação de atendimento;</li>
+<li>triagem e prioridade clínica;</li>
+<li>fila de espera;</li>
+<li>vaga e ciclo semestral;</li>
+<li>sessão e agendamento;</li>
+<li>confirmação, cancelamento e falta;</li>
+<li>estagiário, supervisor e coordenação;</li>
+<li>perfis de acesso e auditoria.</li>
+</ul>
+<p>Práticas úteis:</p>
+<ol>
+<li>entrevistar os especialistas da FBr;</li>
+<li>observar e descrever o processo atual;</li>
+<li>identificar substantivos relevantes do domínio;</li>
+<li>identificar verbos e eventos do processo;</li>
+<li>discutir diferentes interpretações com o cliente;</li>
+<li>registrar conceitos aprovados em um modelo de domínio;</li>
+<li>separar regras confirmadas de hipóteses ainda pendentes.</li>
+</ol>
+<p>O modelo abrangente não precisa ser perfeito na primeira versão. Ele deve ser suficientemente consistente para orientar a decomposição das áreas e features.</p>
+<h3 id="32-construir-uma-lista-de-features">3.2 Construir uma Lista de Features</h3>
+<p>A equipe transforma o modelo de domínio em uma lista hierárquica de funcionalidades. Essa lista normalmente é organizada em três níveis:</p>
+<ul>
+<li><strong>Área de negócio:</strong> grande parte do domínio, como Gestão de Inscrições;</li>
+<li><strong>Conjunto de features:</strong> agrupamento coerente, como Triagem e Fila;</li>
+<li><strong>Feature:</strong> capacidade pequena e entregável, como Classificar prioridade do inscrito.</li>
+</ul>
+<p>Exemplo:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>Área: Gestão de Inscrições
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>  Conjunto: Solicitação de atendimento
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>    Feature: Registrar solicitação de atendimento do paciente
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>    Feature: Emitir número de inscrição do paciente
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>    Feature: Consultar situação da solicitação
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>Área: Gestão da Fila
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>  Conjunto: Triagem e priorização
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>    Feature: Pré-classificar prioridade do inscrito
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>    Feature: Revisar classificação do inscrito
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>    Feature: Consultar posição do paciente na fila
+</code></pre></div>
+<p>A lista deve ser escrita em linguagem de negócio, evitando nomes de componentes, telas ou tecnologias. Cada feature deverá ser relacionada aos requisitos funcionais, objetivos do produto e critérios de aceitação correspondentes.</p>
+<h3 id="33-planejar-por-feature">3.3 Planejar por Feature</h3>
+<p>Depois de criada a lista, a equipe define a ordem e a responsabilidade de desenvolvimento. O planejamento deve considerar:</p>
+<ul>
+<li>valor para o cliente;</li>
+<li>dependências entre features;</li>
+<li>riscos técnicos e regulatórios;</li>
+<li>esforço estimado;</li>
+<li>disponibilidade dos integrantes;</li>
+<li>prioridade do MVP;</li>
+<li>necessidade de validação com a FBr.</li>
+</ul>
+<p>Cada feature recebe um responsável principal, normalmente um Líder de Feature, e revisores. O plano deve registrar o estado da feature, por exemplo:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>Identificada -&gt; Planejada -&gt; Em design -&gt; Design inspecionado
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>-&gt; Em construção -&gt; Código concluído -&gt; Testada
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>-&gt; Inspecionada -&gt; Promovida -&gt; Demonstrada -&gt; Aceita
+</code></pre></div>
+<p>A equipe não deve interpretar o planejamento como uma autorização para ignorar mudanças. Se a FBr esclarecer uma regra ou se uma dependência for descoberta, a lista e o plano devem ser atualizados com rastreabilidade.</p>
+<h3 id="34-projetar-por-feature">3.4 Projetar por Feature</h3>
+<p>Nesta etapa, a equipe detalha uma feature ou um pequeno conjunto de features que será construído. O design precisa explicar como a funcionalidade se comportará, quais componentes participarão e quais regras deverão ser respeitadas.</p>
+<p>Artefatos possíveis:</p>
+<ul>
+<li>descrição da feature e critérios de aceitação;</li>
+<li>fluxo principal e fluxos alternativos;</li>
+<li>protótipo da tela, quando houver interação;</li>
+<li>diagrama de sequência;</li>
+<li>modelo de dados afetado;</li>
+<li>contratos de API;</li>
+<li>regras de autorização;</li>
+<li>cenários de teste;</li>
+<li>riscos e decisões técnicas.</li>
+</ul>
+<p>O design deve ser inspecionado pela equipe antes da codificação. Para a Clínica Escola FBr, a inspeção deve verificar especialmente o acesso por perfil, o sigilo dos dados sensíveis, a ausência de atendimento psicológico on-line e a necessidade de revisão humana na triagem.</p>
+<h3 id="35-construir-por-feature">3.5 Construir por Feature</h3>
+<p>A equipe implementa, testa, revisa e integra a feature. Uma feature só deve ser considerada concluída quando atender aos critérios definidos e passar pelos controles técnicos e de qualidade do projeto.</p>
+<p>Um fluxo recomendado é:</p>
+<ol>
+<li>preparar ou ajustar o ambiente necessário;</li>
+<li>implementar a persistência dos dados;</li>
+<li>implementar a regra de negócio;</li>
+<li>implementar a API ou o serviço de aplicação;</li>
+<li>implementar a interface, quando aplicável;</li>
+<li>criar testes unitários;</li>
+<li>criar testes de integração ou de aceitação;</li>
+<li>executar inspeção de código;</li>
+<li>corrigir problemas encontrados;</li>
+<li>integrar a feature à versão do produto;</li>
+<li>demonstrar a funcionalidade à equipe e à FBr;</li>
+<li>registrar o aceite ou as pendências.</li>
+</ol>
+<h2 id="4-como-aplicar-fdd-a-clinica-escola-fbr">4. Como aplicar FDD à Clínica Escola FBr</h2>
+<h3 id="41-da-necessidade-a-feature">4.1 Da necessidade à feature</h3>
+<p>A equipe pode utilizar a seguinte cadeia de rastreabilidade:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>Problema do negócio
+<a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>  -&gt; Objetivo do produto
+<a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>    -&gt; Característica de produto
+<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>      -&gt; Requisito funcional
+<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>        -&gt; Feature
+<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>          -&gt; Critério de aceitação
+<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>            -&gt; Código e testes
+</code></pre></div>
+<p>Exemplo:</p>
+<table>
+<thead>
+<tr>
+<th>Elemento</th>
+<th>Exemplo</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Problema</td>
+<td>Faltas sem aviso deixam horários ociosos.</td>
+</tr>
+<tr>
+<td>Objetivo</td>
+<td>Reduzir faltas e cancelamentos não informados.</td>
+</tr>
+<tr>
+<td>Característica</td>
+<td>Agendamento, confirmação e remarcação.</td>
+</tr>
+<tr>
+<td>Requisito</td>
+<td>O sistema deve permitir confirmar presença em uma sessão.</td>
+</tr>
+<tr>
+<td>Feature</td>
+<td>Confirmar presença em sessão agendada.</td>
+</tr>
+<tr>
+<td>Critério de aceitação</td>
+<td>Ao confirmar, o sistema registra data, usuário e situação da sessão.</td>
+</tr>
+<tr>
+<td>Teste</td>
+<td>Verificar que a sessão muda para “confirmada” e que a ação fica auditada.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="42-exemplo-de-decomposicao-do-mvp">4.2 Exemplo de decomposição do MVP</h3>
+<p>Uma possível organização inicial é:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>Área: Acesso e segurança
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>  Conjunto: Autenticação
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>    Feature: Autenticar usuário por perfil
+<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>    Feature: Encerrar sessão do usuário
+<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>    Feature: Registrar acesso do usuário
+<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>
+<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>Área: Inscrição e triagem
+<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>  Conjunto: Solicitação de atendimento
+<a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>    Feature: Registrar solicitação de atendimento do paciente
+<a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>    Feature: Emitir número de inscrição do paciente
+<a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>  Conjunto: Triagem
+<a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>    Feature: Pré-classificar prioridade do inscrito
+<a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a>    Feature: Revisar classificação do inscrito
+<a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a>
+<a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a>Área: Fila de espera
+<a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a>  Conjunto: Acompanhamento da fila
+<a id="__codelineno-3-17" name="__codelineno-3-17" href="#__codelineno-3-17"></a>    Feature: Ordenar inscritos por prioridade
+<a id="__codelineno-3-18" name="__codelineno-3-18" href="#__codelineno-3-18"></a>    Feature: Consultar posição do paciente na fila
+<a id="__codelineno-3-19" name="__codelineno-3-19" href="#__codelineno-3-19"></a>
+<a id="__codelineno-3-20" name="__codelineno-3-20" href="#__codelineno-3-20"></a>Área: Agendamento
+<a id="__codelineno-3-21" name="__codelineno-3-21" href="#__codelineno-3-21"></a>  Conjunto: Sessões
+<a id="__codelineno-3-22" name="__codelineno-3-22" href="#__codelineno-3-22"></a>    Feature: Agendar sessão do paciente
+<a id="__codelineno-3-23" name="__codelineno-3-23" href="#__codelineno-3-23"></a>    Feature: Enviar lembrete de sessão
+<a id="__codelineno-3-24" name="__codelineno-3-24" href="#__codelineno-3-24"></a>    Feature: Confirmar presença em sessão agendada
+<a id="__codelineno-3-25" name="__codelineno-3-25" href="#__codelineno-3-25"></a>    Feature: Registrar cancelamento de sessão
+<a id="__codelineno-3-26" name="__codelineno-3-26" href="#__codelineno-3-26"></a>
+<a id="__codelineno-3-27" name="__codelineno-3-27" href="#__codelineno-3-27"></a>Área: Operação acadêmica
+<a id="__codelineno-3-28" name="__codelineno-3-28" href="#__codelineno-3-28"></a>  Conjunto: Distribuição de casos
+<a id="__codelineno-3-29" name="__codelineno-3-29" href="#__codelineno-3-29"></a>    Feature: Associar paciente ao estagiário responsável
+<a id="__codelineno-3-30" name="__codelineno-3-30" href="#__codelineno-3-30"></a>    Feature: Associar estagiário ao supervisor
+<a id="__codelineno-3-31" name="__codelineno-3-31" href="#__codelineno-3-31"></a>  Conjunto: Assiduidade
+<a id="__codelineno-3-32" name="__codelineno-3-32" href="#__codelineno-3-32"></a>    Feature: Registrar falta do paciente
+<a id="__codelineno-3-33" name="__codelineno-3-33" href="#__codelineno-3-33"></a>    Feature: Alertar limite de faltas do paciente
+</code></pre></div>
+<h2 id="5-como-implementar-fdd-no-codigo">5. Como implementar FDD no código</h2>
+<p>FDD é um processo de organização e desenvolvimento, não uma biblioteca e não exige uma arquitetura específica. Ele pode ser aplicado com diferentes linguagens, frameworks e estilos arquiteturais. O essencial é manter o código organizado para que cada feature possa ser localizada, testada e entregue com autonomia razoável.</p>
+<h3 id="51-organizar-o-codigo-por-feature">5.1 Organizar o código por feature</h3>
+<p>Quando fizer sentido para a stack escolhida, a equipe pode preferir uma organização vertical por funcionalidade:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>src/
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>  features/
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>    inscricoes/
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>      domain/
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>      application/
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>      infrastructure/
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>      presentation/
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>      tests/
+<a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a>    triagem/
+<a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a>      domain/
+<a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a>      application/
+<a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a>      infrastructure/
+<a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a>      presentation/
+<a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a>      tests/
+<a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a>    agendamento/
+<a id="__codelineno-4-16" name="__codelineno-4-16" href="#__codelineno-4-16"></a>      domain/
+<a id="__codelineno-4-17" name="__codelineno-4-17" href="#__codelineno-4-17"></a>      application/
+<a id="__codelineno-4-18" name="__codelineno-4-18" href="#__codelineno-4-18"></a>      infrastructure/
+<a id="__codelineno-4-19" name="__codelineno-4-19" href="#__codelineno-4-19"></a>      presentation/
+<a id="__codelineno-4-20" name="__codelineno-4-20" href="#__codelineno-4-20"></a>      tests/
+</code></pre></div>
+<p>Essa estrutura evita que a implementação de uma feature fique espalhada sem necessidade por pastas genéricas. A divisão interna pode variar conforme a arquitetura adotada, mas deve preservar separação entre regras de negócio, acesso a dados e interface.</p>
+<h3 id="52-separar-regra-de-negocio-de-infraestrutura">5.2 Separar regra de negócio de infraestrutura</h3>
+<p>Uma regra como “duas faltas atingem o limite de desligamento” deve existir em uma camada de domínio ou aplicação testável, e não apenas dentro de uma tela ou consulta ao banco. Assim, a mesma regra pode ser utilizada pela interface, por uma API e por processos automáticos sem duplicação.</p>
+<p>Exemplo conceitual:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>Caso de uso: Registrar falta do paciente
+<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>  1. localizar a sessão e o paciente;
+<a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>  2. validar se o usuário tem permissão;
+<a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>  3. registrar a falta;
+<a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>  4. recalcular a quantidade de faltas;
+<a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a>  5. gerar alerta se o limite for atingido;
+<a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>  6. registrar a operação na auditoria.
+</code></pre></div>
+<p>O código concreto dependerá da linguagem e do framework definidos pela equipe. Antes de implementar, deve-se documentar o contrato da operação, os erros esperados e os critérios de aceitação.</p>
+<h3 id="53-branches-commits-e-pull-requests">5.3 Branches, commits e pull requests</h3>
+<p>O fluxo de versionamento pode refletir o trabalho por feature:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>main
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>  &lt;- feature/confirmar-presenca
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>  &lt;- feature/consultar-posicao-fila
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>  &lt;- feature/revisar-triagem
+</code></pre></div>
+<p>Cada branch deve tratar uma feature ou uma mudança pequena e coerente. Commits devem descrever mudanças verificáveis, por exemplo:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>feat: registra confirmação de presença da sessão
+<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a> test: cobre confirmação de presença já registrada
+<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a> fix: impede confirmação fora do prazo permitido
+</code></pre></div>
+<p>O pull request deve informar a feature relacionada, os requisitos atendidos, os testes executados, eventuais decisões de segurança e o estado da validação com a FBr.</p>
+<h3 id="54-definition-of-ready-e-definition-of-done">5.4 Definition of Ready e Definition of Done</h3>
+<p>Antes de iniciar uma feature, a equipe deve verificar a Definition of Ready (DoR). No mínimo, a feature deve ter objetivo, descrição, prioridade, dependências conhecidas, critérios de aceitação e responsável definido.</p>
+<p>Para concluí-la, a Definition of Done (DoD) pode exigir:</p>
+<ul>
+<li>código implementado e revisado;</li>
+<li>testes unitários e de integração adequados;</li>
+<li>critérios de aceitação atendidos;</li>
+<li>controle de acesso verificado;</li>
+<li>documentação atualizada;</li>
+<li>ausência de erros conhecidos que impeçam a entrega;</li>
+<li>integração realizada sem quebrar funcionalidades existentes;</li>
+<li>demonstração feita quando aplicável;</li>
+<li>aceite ou pendência registrada.</li>
+</ul>
+<h2 id="6-papeis-no-fdd">6. Papéis no FDD</h2>
+<p>Os papéis podem ser adaptados ao tamanho da equipe. Na Clínica Escola FBr, a divisão proposta é:</p>
+<table>
+<thead>
+<tr>
+<th>Papel</th>
+<th>Responsabilidade</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Líder de projeto</td>
+<td>Acompanhar cronograma, riscos, comunicação e decisões.</td>
+</tr>
+<tr>
+<td>Arquiteto-chefe</td>
+<td>Orientar arquitetura, padrões técnicos e integração.</td>
+</tr>
+<tr>
+<td>Líder de requisitos</td>
+<td>Manter requisitos, critérios de aceitação e rastreabilidade.</td>
+</tr>
+<tr>
+<td>Líder de feature</td>
+<td>Conduzir design, implementação, revisão e demonstração da feature.</td>
+</tr>
+<tr>
+<td>Especialista de domínio</td>
+<td>Esclarecer regras e validar o comportamento esperado.</td>
+</tr>
+<tr>
+<td>Inspetor</td>
+<td>Revisar design, código e evidências de teste.</td>
+</tr>
+</tbody>
+</table>
+<p>Uma pessoa pode exercer mais de um papel, mas a revisão deve ser feita por outra pessoa sempre que possível. O cliente não precisa assumir papel técnico: os representantes da FBr atuam principalmente como especialistas de domínio e responsáveis pelo aceite.</p>
+<h2 id="7-metricas-e-acompanhamento">7. Métricas e acompanhamento</h2>
+<p>O acompanhamento deve medir entrega real, e não apenas quantidade de reuniões ou linhas de código. Indicadores úteis incluem:</p>
+<ul>
+<li>features identificadas, planejadas, em construção, concluídas e aceitas;</li>
+<li>tempo entre início e conclusão de uma feature;</li>
+<li>quantidade de defeitos encontrados antes e depois da demonstração;</li>
+<li>percentual de features do MVP com critérios de aceitação validados;</li>
+<li>quantidade de pendências abertas por feature;</li>
+<li>cobertura de testes das regras críticas;</li>
+<li>tempo de resposta para dúvidas de negócio;</li>
+<li>riscos regulatórios e de segurança ainda não resolvidos.</li>
+</ul>
+<p>Essas métricas devem apoiar decisões. Elas não devem ser usadas para comparar integrantes individualmente nem para incentivar a entrega de funcionalidades incompletas.</p>
+<h2 id="8-vantagens-e-limites-do-fdd">8. Vantagens e limites do FDD</h2>
+<h3 id="vantagens">Vantagens</h3>
+<ul>
+<li>aproxima o desenvolvimento do valor de negócio;</li>
+<li>facilita a divisão do trabalho em uma equipe pequena;</li>
+<li>torna o progresso mais visível;</li>
+<li>favorece entregas incrementais e demonstrações frequentes;</li>
+<li>cria rastreabilidade entre domínio, requisitos, código e testes;</li>
+<li>permite priorizar o MVP sem perder a visão geral do sistema.</li>
+</ul>
+<h3 id="limites-e-cuidados">Limites e cuidados</h3>
+<ul>
+<li>exige entendimento inicial razoável do domínio;</li>
+<li>pode virar apenas uma lista de tarefas se as features forem mal definidas;</li>
+<li>precisa de disciplina para realizar inspeções e atualizar a documentação;</li>
+<li>não fornece, sozinho, práticas detalhadas de testes, programação ou comunicação;</li>
+<li>pode concentrar conhecimento nos Líderes de Feature se não houver revisão cruzada;</li>
+<li>não substitui a validação ética, legal e de segurança necessária para dados de saúde.</li>
+</ul>
+<h2 id="9-resumo-pratico">9. Resumo prático</h2>
+<p>Para aplicar FDD no projeto:</p>
+<ol>
+<li>compreender e registrar o domínio;</li>
+<li>decompor o domínio em áreas, conjuntos e features pequenas;</li>
+<li>escrever cada feature com ação, resultado e objeto;</li>
+<li>priorizar o MVP;</li>
+<li>planejar responsáveis, dependências e critérios de aceitação;</li>
+<li>projetar uma feature por vez e inspecionar o design;</li>
+<li>construir código, testes e documentação juntos;</li>
+<li>revisar o código e promover somente o que estiver pronto;</li>
+<li>demonstrar as features ao cliente;</li>
+<li>registrar aceite, feedback e próximos ajustes.</li>
+</ol>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Voltar ao topo
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.tabs", "navigation.sections", "navigation.top", "search.suggest", "search.highlight", "content.code.copy"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copiado para \u00e1rea de transfer\u00eancia", "clipboard.copy": "Copiar para \u00e1rea de transfer\u00eancia", "search.result.more.one": "Mais 1 nesta p\u00e1gina", "search.result.more.other": "Mais # nesta p\u00e1gina", "search.result.none": "Nenhum resultado encontrado", "search.result.one": "1 resultado encontrado", "search.result.other": "# resultados encontrados", "search.result.placeholder": "Digite para iniciar a busca", "search.result.term.missing": "Ausente", "select.version": "Selecione a vers\u00e3o"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.d7400e89.min.js"></script>
+      
+    
+  </body>
+</html>

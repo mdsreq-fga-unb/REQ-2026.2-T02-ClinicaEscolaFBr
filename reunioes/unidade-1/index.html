@@ -1,0 +1,1996 @@
+
+<!doctype html>
+<html lang="pt" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Documentação do projeto Clínica Escola FBr para as entregas das Unidades 1 a 4.">
+      
+      
+      
+      
+        <link rel="prev" href="../../gestao/boas-praticas-github/">
+      
+      
+        <link rel="next" href="../unidade-2/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../assets/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
+    
+    
+      
+        <title>Unidade 1 - Clínica Escola FBr - Documentação</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.ec1eaa64.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/extra.css">
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#unidade-1" class="md-skip">
+          Ir para o conteúdo
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Cabeçalho">
+    <a href="../.." title="Clínica Escola FBr - Documentação" class="md-header__button md-logo" aria-label="Clínica Escola FBr - Documentação" data-md-component="logo">
+      
+  <img src="../../assets/favicon.png" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Clínica Escola FBr - Documentação
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Unidade 1
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Alternar para modo escuro"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Alternar para modo escuro" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Alternar para modo claro"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Alternar para modo claro" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Buscar" placeholder="Buscar" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Pesquisar">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Limpar" aria-label="Limpar" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Inicializando a pesquisa
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="Abas" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../.." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Início
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../cenario-atual/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Cenário Atual
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../solucao-proposta/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Solução Proposta
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../intervencao-social/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Intervenção Social
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../estrategia-esw/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Estratégia de ESW
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../engenharia-requisitos/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Engenharia de Requisitos
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../requisitos/funcionais/" class="md-tabs__link">
+          
+  
+  
+  Requisitos & Backlog
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../gestao/cronograma/" class="md-tabs__link">
+          
+  
+  
+  Gestão do Projeto
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="./" class="md-tabs__link">
+          
+  
+  
+  Reuniões
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../licoes-aprendidas/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Lições Aprendidas
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../estudos/fdd/" class="md-tabs__link">
+          
+  
+  
+  Estudos
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../referencias/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Referências
+
+      </a>
+    </li>
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navegação" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="Clínica Escola FBr - Documentação" class="md-nav__button md-logo" aria-label="Clínica Escola FBr - Documentação" data-md-component="logo">
+      
+  <img src="../../assets/favicon.png" alt="logo">
+
+    </a>
+    Clínica Escola FBr - Documentação
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Início
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cenario-atual/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Cenário Atual
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../solucao-proposta/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Solução Proposta
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../intervencao-social/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Intervenção Social
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../estrategia-esw/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Estratégia de ESW
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../engenharia-requisitos/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Engenharia de Requisitos
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7" >
+        
+          
+          <label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Requisitos & Backlog
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Requisitos & Backlog
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../requisitos/funcionais/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Requisitos Funcionais
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../requisitos/nao-funcionais/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Requisitos Não-Funcionais
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../requisitos/dor-dod/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    DoR e DoD
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../requisitos/backlog/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Backlog e MVP
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_8" >
+        
+          
+          <label class="md-nav__link" for="__nav_8" id="__nav_8_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Gestão do Projeto
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_8_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_8">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Gestão do Projeto
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../gestao/cronograma/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Cronograma e Entregas
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../gestao/equipe-comunicacao/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Equipe e Comunicação
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../gestao/boas-praticas-github/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Boas práticas no GitHub
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_9" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_9" id="__nav_9_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Reuniões
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_9_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_9">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Reuniões
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Unidade 1
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Unidade 1
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Índice">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Índice
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#reuniao-de-alinhamento-01" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Reunião de alinhamento 01
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Reunião de alinhamento 01">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#resumo" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Resumo
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#pautas-e-decisoes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Pautas e decisões
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#encaminhamentos" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Encaminhamentos
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#reuniao-de-levantamento-inicial-de-requisitos" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Reunião de levantamento inicial de requisitos
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Reunião de levantamento inicial de requisitos">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#resumo_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Resumo
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cenario-e-problemas-discutidos" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Cenário e problemas discutidos
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#requisitos-e-direcionamentos-iniciais" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Requisitos e direcionamentos iniciais
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#restricoes-e-proximos-passos" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Restrições e próximos passos
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#projeto-github-pages-entrega-slides-e-gravacao-de-video" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Projeto GitHub Pages — entrega, slides e gravação de vídeo
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Projeto GitHub Pages — entrega, slides e gravação de vídeo">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#objetivo" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Objetivo
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#1-status-e-prazos" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Status e prazos
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-apresentacao" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Apresentação
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-estrutura-dos-topicos" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Estrutura dos tópicos
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#4-divisao-das-falas" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Divisão das falas
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#5-gravacao-do-video" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. Gravação do vídeo
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#6-pagina-de-reunioes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6. Página de reuniões
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#7-proximos-passos" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7. Próximos passos
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#encerramento" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Encerramento
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../unidade-2/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Unidade 2
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../unidade-3/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Unidade 3
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../unidade-4/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Unidade 4
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../licoes-aprendidas/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Lições Aprendidas
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_11" >
+        
+          
+          <label class="md-nav__link" for="__nav_11" id="__nav_11_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Estudos
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_11_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_11">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Estudos
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../estudos/fdd/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Feature-Driven Development (FDD)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../referencias/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Referências
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Índice">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Índice
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#reuniao-de-alinhamento-01" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Reunião de alinhamento 01
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Reunião de alinhamento 01">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#resumo" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Resumo
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#pautas-e-decisoes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Pautas e decisões
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#encaminhamentos" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Encaminhamentos
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#reuniao-de-levantamento-inicial-de-requisitos" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Reunião de levantamento inicial de requisitos
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Reunião de levantamento inicial de requisitos">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#resumo_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Resumo
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cenario-e-problemas-discutidos" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Cenário e problemas discutidos
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#requisitos-e-direcionamentos-iniciais" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Requisitos e direcionamentos iniciais
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#restricoes-e-proximos-passos" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Restrições e próximos passos
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#projeto-github-pages-entrega-slides-e-gravacao-de-video" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Projeto GitHub Pages — entrega, slides e gravação de vídeo
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Projeto GitHub Pages — entrega, slides e gravação de vídeo">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#objetivo" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Objetivo
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#1-status-e-prazos" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Status e prazos
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-apresentacao" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Apresentação
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-estrutura-dos-topicos" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Estrutura dos tópicos
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#4-divisao-das-falas" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Divisão das falas
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#5-gravacao-do-video" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. Gravação do vídeo
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#6-pagina-de-reunioes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6. Página de reuniões
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#7-proximos-passos" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7. Próximos passos
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#encerramento" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Encerramento
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="unidade-1">Unidade 1</h1>
+<p>Registro das reuniões realizadas durante a Unidade 1 do projeto Clínica Escola FBr.</p>
+<h2 id="reuniao-de-alinhamento-01">Reunião de alinhamento 01</h2>
+<p><strong>Data:</strong> 20/08/2026
+<strong>Local:</strong> Reunião on-line(Google Meet)
+<strong>Participantes:</strong> Gabriel; Joaquim José da Fonseca Viana; Jônatas Davi Oliveira Farias; Luís Henrique; Maria Clara Canuto; Nicolas Lopes.</p>
+<p><img alt="Registro da reunião de alinhamento 01" src="../../assets/reuniao-1.jpeg" /></p>
+<p><em>Figura 1 — Registro da reunião de alinhamento 01, realizada em 20/08/2026.</em></p>
+<p><a href="../../assets/atas-reunioes/Ata_Reuniao_01_Projeto_Requisitos.pdf">Consultar ata completa em PDF</a></p>
+<h3 id="resumo">Resumo</h3>
+<p>O primeiro alinhamento formal da equipe foi realizado para organizar a preparação da reunião com a Faculdade Brasília, as entregas da Unidade 1, o cronograma de curto prazo, a pesquisa sobre abordagem, ciclo de vida e processo de desenvolvimento e a divisão inicial de responsabilidades.</p>
+<h3 id="pautas-e-decisoes">Pautas e decisões</h3>
+<ul>
+<li>Alinhamento das perguntas e dos tópicos para a reunião com a Faculdade Brasília, com foco no cenário atual da Clínica Escola, nos processos, nos atores, nos problemas e nas necessidades.</li>
+<li>Revisão das entregas previstas para a Unidade 1 e dos itens do template de Visão de Produto e Projeto.</li>
+<li>Definição da estratégia de pesquisa e posterior escolha da abordagem, do ciclo de vida e do processo de desenvolvimento.</li>
+<li>Organização do GitHub e do GitPages, aguardando a aprovação da proposta pelo professor antes do início do trabalho definitivo no repositório oficial.</li>
+<li>Definição da importância de concentrar evidências e gestão do trabalho no GitHub, mantendo a rastreabilidade do projeto.</li>
+<li>Divisão das atividades e dos prazos entre os integrantes, com registro das alterações relevantes no histórico de revisão do documento.</li>
+</ul>
+<h3 id="encaminhamentos">Encaminhamentos</h3>
+<p>Todos os integrantes ficaram responsáveis por pesquisar alternativas de abordagem, ciclos de vida, processos, tecnologias e ferramentas. Joaquim ficou responsável por adiantar o item 1.2 e preparar o item 2.5; Jônatas, pela formatação final; Luís Henrique, pelo cronograma, pela ata e pelo contato com o professor; e a equipe de perguntas, pela consolidação do roteiro da entrevista.</p>
+<hr />
+<h2 id="reuniao-de-levantamento-inicial-de-requisitos">Reunião de levantamento inicial de requisitos</h2>
+<p><strong>Data:</strong> 26/08/2026
+<strong>Local:</strong> Reunião on-line (Google Meet)
+<strong>Participantes:</strong> Equipe UnB e representantes da Clínica-Escola/FBr.</p>
+<p><img alt="Registro da reunião de levantamento inicial de requisitos" src="../../assets/reuniao-1-cliente.jpeg" /></p>
+<p><em>Figura 2 — Registro da reunião de levantamento inicial de requisitos, realizada em 26/08/2026.</em></p>
+<p><a href="../../assets/atas-reunioes/Ata_Reuniao_Clinica_Escola_FBr_26-08-2026_ATUALIZADA.pdf">Consultar ata completa em PDF</a></p>
+<h3 id="resumo_1">Resumo</h3>
+<p>A reunião teve como objetivo compreender o funcionamento atual da Clínica-Escola, identificar os principais problemas e levantar requisitos iniciais para orientar o escopo do sistema.</p>
+<h3 id="cenario-e-problemas-discutidos">Cenário e problemas discutidos</h3>
+<ul>
+<li>A maior parte do processo é manual, com apoio pontual de planilhas compartilhadas em nuvem.</li>
+<li>O fluxo atual envolve inscrição, identificação e triagem do paciente, distribuição entre supervisores e estagiários, agendamento, pagamento da taxa social, sessões, registro de evolução e relatório final.</li>
+<li>O atendimento psicológico é presencial. A inscrição inicial pode ser digitalizada, mas autorizações e atendimentos permanecem sujeitos às exigências presenciais da clínica.</li>
+<li>O principal gargalo é o agendamento e sua confirmação, incluindo cancelamentos sem aviso, faltas, remarcações e dificuldade de busca ativa.</li>
+<li>Quando uma vaga é liberada, é necessário realocar rapidamente outro paciente para evitar que o estagiário fique sem atendimento.</li>
+<li>O excesso de registros em papel dificulta o rastreamento, o acompanhamento e a consolidação das informações.</li>
+</ul>
+<h3 id="requisitos-e-direcionamentos-iniciais">Requisitos e direcionamentos iniciais</h3>
+<ul>
+<li>Cadastrar e rastrear pacientes, gerenciar agendamentos, confirmações, cancelamentos e remarcações.</li>
+<li>Identificar o estagiário e o supervisor responsáveis por cada atendimento.</li>
+<li>Controlar faltas e alertar para situações de desligamento conforme as regras da clínica.</li>
+<li>Acompanhar vagas disponíveis e apoiar a realocação de pacientes da fila de espera.</li>
+<li>Registrar a evolução após cada sessão e gerar o relatório final a partir do histórico.</li>
+<li>Emitir declaração automática de comparecimento e apoiar a comunicação com os pacientes.</li>
+<li>Acompanhar o pagamento da taxa social de R$ 35,00.</li>
+<li>Produzir relatórios administrativos e apoiar fiscalizações do Conselho e do MEC.</li>
+<li>Considerar pré-classificação inicial dos pacientes, sempre com revisão humana.</li>
+</ul>
+<h3 id="restricoes-e-proximos-passos">Restrições e próximos passos</h3>
+<p>O sigilo das informações psicológicas é uma restrição central. O sistema deverá adotar níveis de acesso adequados aos papéis de estagiários, supervisores e demais usuários, além de evitar exposição desnecessária na consulta à fila de espera. Também deverá ter interface simples, responsiva e acessível, adequada ao uso pelo celular.</p>
+<p>O desenvolvimento será modular, começando pelas dores mais relevantes e por um escopo viável no semestre. O mínimo esperado pela clínica é rastrear o paciente, realizar a marcação e identificar o aluno responsável pelo atendimento. A equipe deverá consolidar o documento da proposta, produzir os diagramas das seções responsáveis, revisar o conteúdo e enviá-lo ao professor.</p>
+<hr />
+<h2 id="projeto-github-pages-entrega-slides-e-gravacao-de-video">Projeto GitHub Pages — entrega, slides e gravação de vídeo</h2>
+<p><strong>Data:</strong> 03/09/2026
+<strong>Participantes:</strong> Gabriel da Cunha Barbaceli; Joaquim José da Fonseca Viana; Jônatas Davi Oliveira Farias; Nicolas Lopes.</p>
+<p><img alt="Registro da reunião de acompanhamento do projeto" src="../../assets/reuniao-2.jpeg" /></p>
+<p><em>Figura 3 — Registro da reunião de acompanhamento do projeto, realizada em 03/09/2026.</em></p>
+<p><a href="../../assets/atas-reunioes/Ata_Reuniao_03-09-2026.pdf">Consultar ata completa em PDF</a></p>
+<h3 id="objetivo">Objetivo</h3>
+<p>Alinhar a entrega do GitHub Pages, a estrutura da apresentação e a gravação do vídeo.</p>
+<h3 id="1-status-e-prazos">1. Status e prazos</h3>
+<ul>
+<li>Joaquim deverá concluir a revisão e sua parte do documento até a tarde de 04/09, após a prova.</li>
+<li>A entrega interna do conteúdo do GitHub Pages ficou prevista, no máximo, para 04/09.</li>
+<li>Embora o cronograma interno previsse a entrega em 03/09, a equipe considerou viável concluí-la em 04/09.</li>
+<li>Todo o conteúdo deverá estar no repositório até sábado, 05/09, para reservar o domingo e a segunda-feira para a gravação e a preparação.</li>
+<li>O prazo mencionado para a gravação do vídeo é 08/09.</li>
+</ul>
+<h3 id="2-apresentacao">2. Apresentação</h3>
+<ul>
+<li>Foi definido o uso de slides simples como apoio, em vez de realizar a apresentação navegando diretamente pelo GitHub Pages.</li>
+<li>Caso haja tempo, o GitHub Pages poderá ser mostrado rapidamente ao final.</li>
+<li>A duração-alvo é de aproximadamente 10 minutos, com limite máximo planejado de 13 minutos.</li>
+<li>A apresentação deverá ser objetiva e apresentar o software como uma solução para o cliente.</li>
+<li>O conteúdo deverá ser sintetizado, evitando reproduzir integralmente o material já disponível no GitHub Pages.</li>
+</ul>
+<h3 id="3-estrutura-dos-topicos">3. Estrutura dos tópicos</h3>
+<p>A divisão preliminar dos tópicos da apresentação ficou organizada da seguinte forma:</p>
+<ul>
+<li>Cenário atual e intervenção social.</li>
+<li>Solução proposta — parte 1, até o tópico 2.4.</li>
+<li>Solução proposta — parte 2, a partir do tópico 2.4, incluindo viabilidade técnica e stack tecnológica.</li>
+<li>Estratégias de Engenharia de Software.</li>
+<li>Engenharia de Requisitos.</li>
+<li>Gestão de projetos e reuniões.</li>
+</ul>
+<p>A página de reuniões será mencionada brevemente dentro do tópico de gestão de projetos.</p>
+<h3 id="4-divisao-das-falas">4. Divisão das falas</h3>
+<ul>
+<li>Foi considerada como referência a apresentação do tópico redigido por cada integrante, por proporcionar maior familiaridade com o conteúdo.</li>
+<li>Será criada uma enquete no grupo para confirmar quem apresentará cada um dos seis tópicos, incluindo Maria e Luís.</li>
+<li>Luís foi sugerido para os tópicos mais técnicos, especialmente Estratégias de Engenharia de Software e Engenharia de Requisitos.</li>
+<li>Luís já se ofereceu para preparar sua fala antecipadamente.</li>
+<li>A divisão final das falas será definida no grupo.</li>
+</ul>
+<h3 id="5-gravacao-do-video">5. Gravação do vídeo</h3>
+<ul>
+<li>A data provisória para a gravação é domingo, 06/09.</li>
+<li>O horário será definido no grupo, considerando também Maria e Luís, que estão viajando.</li>
+<li>A primeira opção discutida é realizar a gravação com todos juntos, em uma reunião ou ligação, como simulação do ensaio.</li>
+<li>Caso os horários não coincidam, cada integrante poderá gravar sua parte separadamente para posterior junção dos vídeos.</li>
+</ul>
+<h3 id="6-pagina-de-reunioes">6. Página de reuniões</h3>
+<ul>
+<li>Deverá ser adicionada uma foto da reunião à página de reuniões do GitHub Pages.</li>
+<li>Também deverá ser adicionado o link para a ata completa, mantida em uma pasta separada no repositório.</li>
+<li>Gabriel ficou responsável por implementar a imagem em Markdown e o link para o documento completo ao término da reunião.</li>
+</ul>
+<h3 id="7-proximos-passos">7. Próximos passos</h3>
+<ul>
+<li>Gabriel deverá adicionar a foto e o link da ata à página de reuniões.</li>
+<li>A equipe deverá criar a enquete para definir os responsáveis pelos seis tópicos da apresentação.</li>
+<li>A equipe deverá definir no grupo o horário da gravação de domingo, após consultar os integrantes que estão viajando.</li>
+<li>Joaquim deverá concluir a revisão e sua parte do documento até a tarde de 04/09.</li>
+</ul>
+<h3 id="encerramento">Encerramento</h3>
+<p>Ficaram encaminhados o prazo interno do GitHub Pages, a estrutura dos slides, a divisão preliminar dos conteúdos e a gravação provisoriamente prevista para domingo, 06/09. A divisão final das falas e o horário da gravação ainda dependem de confirmação no grupo.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Voltar ao topo
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.tabs", "navigation.sections", "navigation.top", "search.suggest", "search.highlight", "content.code.copy"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copiado para \u00e1rea de transfer\u00eancia", "clipboard.copy": "Copiar para \u00e1rea de transfer\u00eancia", "search.result.more.one": "Mais 1 nesta p\u00e1gina", "search.result.more.other": "Mais # nesta p\u00e1gina", "search.result.none": "Nenhum resultado encontrado", "search.result.one": "1 resultado encontrado", "search.result.other": "# resultados encontrados", "search.result.placeholder": "Digite para iniciar a busca", "search.result.term.missing": "Ausente", "select.version": "Selecione a vers\u00e3o"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.d7400e89.min.js"></script>
+      
+    
+  </body>
+</html>

@@ -1,0 +1,1717 @@
+
+<!doctype html>
+<html lang="pt" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Documentação do projeto Clínica Escola FBr para as entregas das Unidades 1 a 4.">
+      
+      
+      
+      
+        <link rel="prev" href="../intervencao-social/">
+      
+      
+        <link rel="next" href="../engenharia-requisitos/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../assets/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
+    
+    
+      
+        <title>Estratégia de ESW - Clínica Escola FBr - Documentação</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.ec1eaa64.min.css">
+      
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/extra.css">
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#4-estrategias-de-engenharia-de-software" class="md-skip">
+          Ir para o conteúdo
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Cabeçalho">
+    <a href=".." title="Clínica Escola FBr - Documentação" class="md-header__button md-logo" aria-label="Clínica Escola FBr - Documentação" data-md-component="logo">
+      
+  <img src="../assets/favicon.png" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Clínica Escola FBr - Documentação
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Estratégia de ESW
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Alternar para modo escuro"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Alternar para modo escuro" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Alternar para modo claro"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Alternar para modo claro" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Buscar" placeholder="Buscar" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Pesquisar">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Limpar" aria-label="Limpar" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Inicializando a pesquisa
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="Abas" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href=".." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Início
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../cenario-atual/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Cenário Atual
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../solucao-proposta/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Solução Proposta
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../intervencao-social/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Intervenção Social
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    <li class="md-tabs__item md-tabs__item--active">
+      <a href="./" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Estratégia de ESW
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../engenharia-requisitos/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Engenharia de Requisitos
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../requisitos/funcionais/" class="md-tabs__link">
+          
+  
+  
+  Requisitos & Backlog
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../gestao/cronograma/" class="md-tabs__link">
+          
+  
+  
+  Gestão do Projeto
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../reunioes/unidade-1/" class="md-tabs__link">
+          
+  
+  
+  Reuniões
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../licoes-aprendidas/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Lições Aprendidas
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../estudos/fdd/" class="md-tabs__link">
+          
+  
+  
+  Estudos
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../referencias/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Referências
+
+      </a>
+    </li>
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navegação" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="Clínica Escola FBr - Documentação" class="md-nav__button md-logo" aria-label="Clínica Escola FBr - Documentação" data-md-component="logo">
+      
+  <img src="../assets/favicon.png" alt="logo">
+
+    </a>
+    Clínica Escola FBr - Documentação
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Início
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cenario-atual/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Cenário Atual
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../solucao-proposta/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Solução Proposta
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../intervencao-social/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Intervenção Social
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Estratégia de ESW
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Estratégia de ESW
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Índice">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Índice
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#41-estrategia-priorizada" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.1 Estratégia Priorizada
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#42-quadro-comparativo" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.2 Quadro Comparativo
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#43-justificativa" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.3 Justificativa
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="4.3 Justificativa">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-o-dominio-e-estavel-e-normatizado-o-que-viabiliza-a-modelagem-inicial-exigida-pelo-fdd" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. O domínio é estável e normatizado, o que viabiliza a modelagem inicial exigida pelo FDD
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-as-caracteristicas-do-produto-ja-se-decompoem-em-features-pequenas-e-demonstraveis" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. As características do produto já se decompõem em features pequenas e demonstráveis
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-as-inspecoes-formais-respondem-a-criticidade-dos-requisitos-de-sigilo-e-conformidade" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. As inspeções formais respondem à criticidade dos requisitos de sigilo e conformidade
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#4-a-visibilidade-granular-do-progresso-e-compativel-com-a-equipe-e-com-o-calendario-da-disciplina" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. A visibilidade granular do progresso é compatível com a equipe e com o calendário da disciplina
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#limitacoes-reconhecidas-e-medidas-de-mitigacao" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Limitações reconhecidas e medidas de mitigação
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../engenharia-requisitos/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Engenharia de Requisitos
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7" >
+        
+          
+          <label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Requisitos & Backlog
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Requisitos & Backlog
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../requisitos/funcionais/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Requisitos Funcionais
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../requisitos/nao-funcionais/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Requisitos Não-Funcionais
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../requisitos/dor-dod/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    DoR e DoD
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../requisitos/backlog/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Backlog e MVP
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_8" >
+        
+          
+          <label class="md-nav__link" for="__nav_8" id="__nav_8_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Gestão do Projeto
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_8_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_8">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Gestão do Projeto
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../gestao/cronograma/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Cronograma e Entregas
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../gestao/equipe-comunicacao/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Equipe e Comunicação
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../gestao/boas-praticas-github/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Boas práticas no GitHub
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_9" >
+        
+          
+          <label class="md-nav__link" for="__nav_9" id="__nav_9_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Reuniões
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_9_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_9">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Reuniões
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../reunioes/unidade-1/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Unidade 1
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../reunioes/unidade-2/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Unidade 2
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../reunioes/unidade-3/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Unidade 3
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../reunioes/unidade-4/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Unidade 4
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../licoes-aprendidas/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Lições Aprendidas
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_11" >
+        
+          
+          <label class="md-nav__link" for="__nav_11" id="__nav_11_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Estudos
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_11_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_11">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Estudos
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../estudos/fdd/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Feature-Driven Development (FDD)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../referencias/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Referências
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Índice">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Índice
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#41-estrategia-priorizada" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.1 Estratégia Priorizada
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#42-quadro-comparativo" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.2 Quadro Comparativo
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#43-justificativa" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.3 Justificativa
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="4.3 Justificativa">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-o-dominio-e-estavel-e-normatizado-o-que-viabiliza-a-modelagem-inicial-exigida-pelo-fdd" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. O domínio é estável e normatizado, o que viabiliza a modelagem inicial exigida pelo FDD
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-as-caracteristicas-do-produto-ja-se-decompoem-em-features-pequenas-e-demonstraveis" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. As características do produto já se decompõem em features pequenas e demonstráveis
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-as-inspecoes-formais-respondem-a-criticidade-dos-requisitos-de-sigilo-e-conformidade" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. As inspeções formais respondem à criticidade dos requisitos de sigilo e conformidade
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#4-a-visibilidade-granular-do-progresso-e-compativel-com-a-equipe-e-com-o-calendario-da-disciplina" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. A visibilidade granular do progresso é compatível com a equipe e com o calendário da disciplina
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#limitacoes-reconhecidas-e-medidas-de-mitigacao" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Limitações reconhecidas e medidas de mitigação
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="4-estrategias-de-engenharia-de-software">4. Estratégias de Engenharia de Software</h1>
+<p>A partir das informações apresentadas em <a href="../cenario-atual/">Cenário Atual</a> e em <a href="../solucao-proposta/">Solução Proposta</a>, foram tomadas as decisões relativas às estratégias de engenharia de software que orientam a construção do produto da Clínica Escola FBr.</p>
+<h2 id="41-estrategia-priorizada">4.1 Estratégia Priorizada</h2>
+<ul>
+<li><strong>Abordagem de Desenvolvimento de Software:</strong> Ágil</li>
+<li><strong>Ciclo de vida:</strong> Ágil</li>
+<li><strong>Processo de Engenharia de Software:</strong> Feature-Driven Development (FDD)</li>
+</ul>
+<p>O ciclo de vida ágil incorpora as características dos ciclos iterativo e incremental — a repetição de atividades em ciclos, com refinamento a partir do feedback, e a entrega progressiva de partes funcionais do produto — e acrescenta a ênfase na comunicação e na colaboração constantes com os stakeholders, além do feedback antecipado que fornece visibilidade e controle do produto ao cliente. Todo ciclo de vida ágil é iterativo e incremental, mas nem todo ciclo iterativo e incremental adota os valores e práticas do ágil. A escolha é, portanto, coerente com a abordagem priorizada e com o FDD, processo que se organiza em torno de funcionalidades pequenas, demonstráveis e valorizadas pelo cliente.</p>
+<p>O detalhamento do processo adotado, seus cinco subprocessos e a decomposição do MVP em features estão registrados no estudo <a href="../estudos/fdd/">Feature-Driven Development (FDD)</a>.</p>
+<h2 id="42-quadro-comparativo">4.2 Quadro Comparativo</h2>
+<p>O quadro a seguir compara o <strong>Feature-Driven Development (FDD)</strong> e o <strong>ScrumXP</strong> — dois processos compatíveis com a abordagem ágil priorizada — considerando os aspectos relevantes para o desenvolvimento da solução da Clínica Escola FBr.</p>
+<table>
+<thead>
+<tr>
+<th>Características</th>
+<th>FDD</th>
+<th>ScrumXP</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Abordagem geral</strong></td>
+<td>Ágil, iterativo e incremental, organizado em torno de funcionalidades valorizadas pelo cliente, com a modelagem do domínio na origem do processo.</td>
+<td>Ágil, iterativo e incremental, organizado em ciclos de duração fixa, com entregas incrementais e adaptação contínua.</td>
+</tr>
+<tr>
+<td><strong>Unidade de trabalho</strong></td>
+<td>Feature: pequena função valorizada pelo cliente, declarada no formato <code>&lt;ação&gt; &lt;resultado&gt; &lt;objeto&gt;</code> e implementável em duas semanas ou menos.</td>
+<td>User story, escrita na perspectiva do usuário e alocada a uma sprint de uma a quatro semanas.</td>
+</tr>
+<tr>
+<td><strong>Ponto de partida</strong></td>
+<td>Modelo abrangente do domínio, construído em conjunto por especialistas do domínio e desenvolvedores, que fundamenta a identificação das features.</td>
+<td>Visão do produto e backlog inicial, priorizado pelo Product Owner segundo o valor de negócio.</td>
+</tr>
+<tr>
+<td><strong>Estrutura do processo</strong></td>
+<td>Cinco processos: desenvolver um modelo abrangente, construir uma lista de features, planejar por feature, projetar por feature e construir por feature. O planejamento é feito por feature, não por período fixo.</td>
+<td>Sprints de duração fixa, com planejamento, reuniões diárias, revisão e retrospectiva. O planejamento é feito por período fixo.</td>
+</tr>
+<tr>
+<td><strong>Flexibilidade de requisitos</strong></td>
+<td>Alta no detalhamento e na priorização das features; menor diante de mudanças estruturais no modelo de domínio.</td>
+<td>Alta em qualquer nível: o backlog pode ser repriorizado a cada sprint e mudanças são acolhidas a qualquer momento.</td>
+</tr>
+<tr>
+<td><strong>Colaboração com o cliente</strong></td>
+<td>Validação por demonstração das features concluídas e pelos marcos de progresso de cada feature.</td>
+<td>Envolvimento contínuo, com feedback ao final de cada sprint e disponibilidade permanente do Product Owner.</td>
+</tr>
+<tr>
+<td><strong>Tratamento de requisitos não funcionais</strong></td>
+<td>Não é prescrito pelo processo; precisa ser incorporado por meio de critérios de aceitação por feature e das inspeções de design e de código.</td>
+<td>Não é prescrito pelo framework; incorporado por meio da Definition of Done e dos critérios de aceitação das histórias.</td>
+</tr>
+<tr>
+<td><strong>Práticas técnicas prescritas</strong></td>
+<td>Inspeções de design e de código e propriedade individual de classes, combinadas ao trabalho em equipes de feature.</td>
+<td>Práticas do XP: desenvolvimento orientado a testes, programação em pares, integração contínua e refatoração.</td>
+</tr>
+<tr>
+<td><strong>Mecanismos de qualidade</strong></td>
+<td>Inspeções formais em dois pontos definidos, após o projeto e após a construção, como condição para a promoção da feature.</td>
+<td>Qualidade embutida nas práticas técnicas, com testes automatizados executados continuamente e verificação contra a Definition of Done.</td>
+</tr>
+<tr>
+<td><strong>Visibilidade do progresso</strong></td>
+<td>Granular e objetiva: cinco marcos por feature — design concluído, design inspecionado, código concluído, inspeção de código e promoção para construção.</td>
+<td>Por ciclo: incremento demonstrável ao final de cada sprint e acompanhamento do andamento durante a sprint.</td>
+</tr>
+<tr>
+<td><strong>Documentação</strong></td>
+<td>Concisa e orientada à prática, com projeto detalhado de cada feature antes da construção.</td>
+<td>Mínima, com ênfase na comunicação direta e nos testes como especificação executável.</td>
+</tr>
+<tr>
+<td><strong>Papéis e responsabilidade</strong></td>
+<td>Líderes de feature, com propriedade individual de classes equilibrada pelo trabalho em equipes de feature.</td>
+<td>Time auto-organizado, com propriedade coletiva do código e os papéis de Product Owner e Scrum Master.</td>
+</tr>
+<tr>
+<td><strong>Perfil de equipe adequado</strong></td>
+<td>Projetos de médio a grande porte, com equipes que valorizam a combinação de responsabilidade individual e trabalho em equipe; pressupõe familiaridade com modelagem de domínio.</td>
+<td>Equipes pequenas e colaborativas, com representação permanente do cliente junto ao time.</td>
+</tr>
+<tr>
+<td><strong>Adaptação ao projeto da Clínica Escola FBr</strong></td>
+<td>Adequado: o processo da clínica já existe, é executado manualmente e é normatizado, o que viabiliza o modelo abrangente do domínio desde o início; as características de produto CP1 a CP12 já se decompõem naturalmente em features; e as inspeções formais oferecem um ponto de controle para os requisitos de sigilo, proteção de dados e acessibilidade.</td>
+<td>Adequado quanto à flexibilidade e ao feedback, mas pressupõe um Product Owner dedicado e uma cadência fixa de sprints difícil de sustentar por uma equipe de seis integrantes com agenda acadêmica; a propriedade coletiva do código também dilui a responsabilidade individual sobre os componentes que tratam dados sensíveis de saúde.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="43-justificativa">4.3 Justificativa</h2>
+<p>Com base nas características do projeto e nos desafios identificados junto à Faculdade Brasília, o <strong>FDD</strong> é o processo mais adequado ao desenvolvimento da solução da Clínica Escola FBr, pelos motivos apresentados a seguir.</p>
+<h3 id="1-o-dominio-e-estavel-e-normatizado-o-que-viabiliza-a-modelagem-inicial-exigida-pelo-fdd">1. O domínio é estável e normatizado, o que viabiliza a modelagem inicial exigida pelo FDD</h3>
+<p>A principal restrição do FDD é pressupor que um modelo de domínio estável possa ser estabelecido no início do projeto. Essa condição, normalmente difícil de satisfazer, é justamente o que caracteriza o contexto da Clínica Escola: a equipe não está concebendo um negócio novo, mas digitalizando um processo que já existe, é executado manualmente e é regido por normas profissionais.</p>
+<p>O fluxo de inscrição, triagem por prioridade clínica, fila de espera, distribuição dos casos entre supervisores e estagiários, agendamento, realização de 8 a 10 sessões e emissão do relatório final de evolução foi levantado junto à coordenação do curso de Psicologia, à diretoria financeira e de tecnologia e à secretaria acadêmica, e não está sujeito a redefinição pela equipe de desenvolvimento. O modelo abrangente do domínio, primeiro processo do FDD, encontra portanto uma base sólida desde o início.</p>
+<h3 id="2-as-caracteristicas-do-produto-ja-se-decompoem-em-features-pequenas-e-demonstraveis">2. As características do produto já se decompõem em features pequenas e demonstráveis</h3>
+<p>As doze características definidas na <a href="../solucao-proposta/">Solução Proposta</a>, da inscrição on-line ao controle de assiduidade e à emissão de declarações, correspondem a funcionalidades delimitadas, com valor perceptível para a clínica e para o paciente, compatíveis com a definição de feature adotada pelo FDD: uma pequena função valorizada pelo cliente, implementável em duas semanas ou menos e declarada no formato <code>&lt;ação&gt; &lt;resultado&gt; &lt;objeto&gt;</code>.</p>
+<p>O escopo do MVP já foi delimitado com o cliente nas características CP1, CP2, CP3, CP4, CP5, CP7, CP11 e CP12, o que permite iniciar a construção da lista de features e o planejamento por feature sem etapa preparatória adicional.</p>
+<h3 id="3-as-inspecoes-formais-respondem-a-criticidade-dos-requisitos-de-sigilo-e-conformidade">3. As inspeções formais respondem à criticidade dos requisitos de sigilo e conformidade</h3>
+<p>O FDD dedica menos atenção explícita aos requisitos não funcionais do que outros processos, e o produto da Clínica Escola é fortemente condicionado por eles: dados sensíveis de saúde sob a Lei Geral de Proteção de Dados e as resoluções do Conselho Federal de Psicologia, controle de acesso diferenciado por perfil, acessibilidade avaliada pelo MEC e usabilidade para um público em situação de vulnerabilidade social.</p>
+<p>Esse risco é mitigado pelo próprio processo. O FDD prevê a inspeção de design e a inspeção de código como marcos obrigatórios anteriores à promoção da feature para a construção. A equipe incorpora os requisitos não funcionais como critérios de aceitação de cada feature e como itens verificáveis do checklist estruturado utilizado nessas inspeções, conforme registrado em <a href="../engenharia-requisitos/">Engenharia de Requisitos</a> e em <a href="../gestao/equipe-comunicacao/">Equipe e Comunicação</a>. Diferentemente de um framework de gerenciamento, que não prescreve práticas técnicas, o FDD já oferece o ponto de controle em que essa verificação ocorre.</p>
+<h3 id="4-a-visibilidade-granular-do-progresso-e-compativel-com-a-equipe-e-com-o-calendario-da-disciplina">4. A visibilidade granular do progresso é compatível com a equipe e com o calendário da disciplina</h3>
+<p>O sistema de relatórios por marcos do FDD — design concluído, design inspecionado, código concluído, inspeção de código e promoção para construção — fornece uma medida objetiva do andamento de cada feature, em vez de uma medida agregada por ciclo.</p>
+<p>Para uma equipe de seis integrantes, com disponibilidade variável ao longo do semestre letivo e entregas avaliadas por unidade de ensino, esse acompanhamento permite identificar precocemente as features em atraso e redistribuir responsabilidades. A estrutura de líderes de feature, combinada à revisão cruzada prevista em <a href="../gestao/equipe-comunicacao/">Equipe e Comunicação</a>, preserva a responsabilidade individual sobre cada funcionalidade sem tornar a validação dependente de uma única pessoa.</p>
+<h3 id="limitacoes-reconhecidas-e-medidas-de-mitigacao">Limitações reconhecidas e medidas de mitigação</h3>
+<p>A adoção do FDD implica limitações que a equipe reconhece e para as quais adota medidas específicas:</p>
+<ul>
+<li><strong>Sensibilidade a mudanças no modelo de domínio.</strong> Como o modelo abrangente orienta a identificação das features, alterações estruturais no entendimento do domínio geram retrabalho. A equipe mantém reuniões periódicas de validação com a coordenação da Clínica Escola, com foco explícito na confirmação do modelo de domínio e das regras de negócio, antes do detalhamento das features dependentes.</li>
+<li><strong>Exigência de familiaridade com modelagem de domínio.</strong> Tratando-se de uma equipe em formação, a modelagem é construída de forma colaborativa e submetida a revisão cruzada entre os integrantes, além de validada com os especialistas do domínio da FBr.</li>
+<li><strong>Ausência de práticas técnicas e de cerimônias de retrospectiva prescritas.</strong> O FDD não define, sozinho, práticas detalhadas de teste e programação nem cerimônias de revisão de processo. A equipe complementa o processo com as práticas de revisão e inspeção descritas em <a href="../gestao/boas-praticas-github/">Boas práticas no GitHub</a> e realiza, ao final de cada ciclo de desenvolvimento, a revisão do andamento das features, dos riscos e das dependências prevista em <a href="../gestao/cronograma/">Cronograma e Entregas</a>.</li>
+</ul>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Voltar ao topo
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["navigation.tabs", "navigation.sections", "navigation.top", "search.suggest", "search.highlight", "content.code.copy"], "search": "../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copiado para \u00e1rea de transfer\u00eancia", "clipboard.copy": "Copiar para \u00e1rea de transfer\u00eancia", "search.result.more.one": "Mais 1 nesta p\u00e1gina", "search.result.more.other": "Mais # nesta p\u00e1gina", "search.result.none": "Nenhum resultado encontrado", "search.result.one": "1 resultado encontrado", "search.result.other": "# resultados encontrados", "search.result.placeholder": "Digite para iniciar a busca", "search.result.term.missing": "Ausente", "select.version": "Selecione a vers\u00e3o"}, "version": null}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.d7400e89.min.js"></script>
+      
+    
+  </body>
+</html>

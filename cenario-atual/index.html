@@ -1,0 +1,1737 @@
+
+<!doctype html>
+<html lang="pt" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Documentação do projeto Clínica Escola FBr para as entregas das Unidades 1 a 4.">
+      
+      
+      
+      
+        <link rel="prev" href="..">
+      
+      
+        <link rel="next" href="../solucao-proposta/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../assets/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
+    
+    
+      
+        <title>Cenário Atual - Clínica Escola FBr - Documentação</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.ec1eaa64.min.css">
+      
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/extra.css">
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#1-cenario-atual-do-cliente-e-do-negocio" class="md-skip">
+          Ir para o conteúdo
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Cabeçalho">
+    <a href=".." title="Clínica Escola FBr - Documentação" class="md-header__button md-logo" aria-label="Clínica Escola FBr - Documentação" data-md-component="logo">
+      
+  <img src="../assets/favicon.png" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Clínica Escola FBr - Documentação
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Cenário Atual
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Alternar para modo escuro"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Alternar para modo escuro" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Alternar para modo claro"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Alternar para modo claro" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Buscar" placeholder="Buscar" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Pesquisar">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Limpar" aria-label="Limpar" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Inicializando a pesquisa
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="Abas" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href=".." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Início
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    <li class="md-tabs__item md-tabs__item--active">
+      <a href="./" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Cenário Atual
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../solucao-proposta/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Solução Proposta
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../intervencao-social/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Intervenção Social
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../estrategia-esw/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Estratégia de ESW
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../engenharia-requisitos/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Engenharia de Requisitos
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../requisitos/funcionais/" class="md-tabs__link">
+          
+  
+  
+  Requisitos & Backlog
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../gestao/cronograma/" class="md-tabs__link">
+          
+  
+  
+  Gestão do Projeto
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../reunioes/unidade-1/" class="md-tabs__link">
+          
+  
+  
+  Reuniões
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../licoes-aprendidas/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Lições Aprendidas
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../estudos/fdd/" class="md-tabs__link">
+          
+  
+  
+  Estudos
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../referencias/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Referências
+
+      </a>
+    </li>
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navegação" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="Clínica Escola FBr - Documentação" class="md-nav__button md-logo" aria-label="Clínica Escola FBr - Documentação" data-md-component="logo">
+      
+  <img src="../assets/favicon.png" alt="logo">
+
+    </a>
+    Clínica Escola FBr - Documentação
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Início
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Cenário Atual
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Cenário Atual
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Índice">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Índice
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#11-identificacao-do-clienteparceiro" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.1 Identificação do Cliente/Parceiro
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#12-introducao-ao-negocio-e-contexto" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.2 Introdução ao Negócio e Contexto
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#13-rich-picture" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.3 Rich Picture
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#14-identificacao-da-oportunidade-ou-problema" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.4 Identificação da Oportunidade ou Problema
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#15-desafios-do-projeto" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.5 Desafios do Projeto
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#16-mapa-de-stakeholders" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.6 Mapa de Stakeholders
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#17-segmentacao-de-clientes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.7 Segmentação de Clientes
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../solucao-proposta/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Solução Proposta
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../intervencao-social/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Intervenção Social
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../estrategia-esw/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Estratégia de ESW
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../engenharia-requisitos/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Engenharia de Requisitos
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7" >
+        
+          
+          <label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Requisitos & Backlog
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Requisitos & Backlog
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../requisitos/funcionais/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Requisitos Funcionais
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../requisitos/nao-funcionais/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Requisitos Não-Funcionais
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../requisitos/dor-dod/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    DoR e DoD
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../requisitos/backlog/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Backlog e MVP
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_8" >
+        
+          
+          <label class="md-nav__link" for="__nav_8" id="__nav_8_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Gestão do Projeto
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_8_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_8">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Gestão do Projeto
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../gestao/cronograma/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Cronograma e Entregas
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../gestao/equipe-comunicacao/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Equipe e Comunicação
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../gestao/boas-praticas-github/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Boas práticas no GitHub
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_9" >
+        
+          
+          <label class="md-nav__link" for="__nav_9" id="__nav_9_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Reuniões
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_9_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_9">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Reuniões
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../reunioes/unidade-1/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Unidade 1
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../reunioes/unidade-2/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Unidade 2
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../reunioes/unidade-3/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Unidade 3
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../reunioes/unidade-4/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Unidade 4
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../licoes-aprendidas/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Lições Aprendidas
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_11" >
+        
+          
+          <label class="md-nav__link" for="__nav_11" id="__nav_11_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Estudos
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_11_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_11">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Estudos
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../estudos/fdd/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Feature-Driven Development (FDD)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../referencias/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Referências
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Índice">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Índice
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#11-identificacao-do-clienteparceiro" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.1 Identificação do Cliente/Parceiro
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#12-introducao-ao-negocio-e-contexto" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.2 Introdução ao Negócio e Contexto
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#13-rich-picture" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.3 Rich Picture
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#14-identificacao-da-oportunidade-ou-problema" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.4 Identificação da Oportunidade ou Problema
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#15-desafios-do-projeto" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.5 Desafios do Projeto
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#16-mapa-de-stakeholders" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.6 Mapa de Stakeholders
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#17-segmentacao-de-clientes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1.7 Segmentação de Clientes
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="1-cenario-atual-do-cliente-e-do-negocio">1. Cenário Atual do Cliente e do Negócio</h1>
+<h2 id="11-identificacao-do-clienteparceiro">1.1 Identificação do Cliente/Parceiro</h2>
+<ul>
+<li><strong>Nome:</strong> Faculdade Brasília</li>
+<li><strong>Tipo:</strong> Instituição de Ensino Superior</li>
+<li>
+<p><strong>Representantes:</strong>
+  Robson Luís de Araújo (Coordenador do Curso de Psicologia, responsável pela Clínica Escola),
+  Thiago Cardoso Viana (Diretor de Financeiro e de Tecnologia),
+  Karla Gardene Baima (Secretária Acadêmica).</p>
+</li>
+<li>
+<p><strong>Forma de contato:</strong> Reuniões periódicas por videoconferência, e-mail e canal de mensagens instantâneas</p>
+</li>
+<li><strong>Vínculo com o projeto:</strong> Cliente real e parte interessada principal, responsável por fornecer informações sobre o negócio, validar as decisões do projeto e avaliar as entregas realizadas ao longo do desenvolvimento.</li>
+</ul>
+<h2 id="12-introducao-ao-negocio-e-contexto">1.2 Introdução ao Negócio e Contexto</h2>
+<p>A <strong>Faculdade Brasília – FBr</strong> é uma instituição de ensino superior privada, credenciada pelo Ministério da Educação (MEC) e sediada na Avenida Santa Maria, na Região Administrativa de Santa Maria, no Distrito Federal. Idealizada desde a década de 1990 e inaugurada em 08 de agosto de 2019 com aproximadamente 1500 alunos, a instituição atua hoje com graduação presencial e a distância, pós-graduação, extensão universitária e escola técnica, em cursos como Direito, Enfermagem, Psicologia, Análise e Desenvolvimento de Sistemas e Pedagogia.</p>
+<p>Sua missão está diretamente vinculada ao compromisso com a RA de Santa Maria e as cidades circunvizinhas, o que se materializa em projetos de responsabilidade social nos quais os alunos prestam serviços gratuitos à comunidade, como as ações de saúde em parceria com a Administração Regional de Santa Maria e o projeto Outubro Rosa.</p>
+<p>É nesse contexto que se insere a <strong>Clínica Escola do curso de Bacharelado em Psicologia</strong>, curso presencial de dez semestres cuja proposta pedagógica prevê que os estágios e as práticas supervisionadas sejam oportunidades de oferta de atendimento psicológico à população, principalmente à comunidade economicamente desfavorecida, local e regional.</p>
+<p>A Clínica Escola cumpre, assim, uma dupla finalidade:</p>
+<ul>
+<li><strong>Para os estudantes:</strong> é o ambiente de formação prática obrigatória, no qual os alunos dos semestres finais realizam atendimentos sob supervisão de professores psicólogos.</li>
+<li><strong>Para a comunidade:</strong> é um projeto social que amplia o acesso a cuidado em saúde mental para moradores de Santa Maria e do entorno do Distrito Federal que, em geral, não dispõem de condições financeiras para custear atendimento particular.</li>
+</ul>
+<p>Apesar da relevância do serviço, toda a operação é conduzida hoje de forma presencial e manual, sem o apoio de qualquer ferramenta de gestão: a solicitação de atendimento, a triagem, a fila de espera, a distribuição dos casos entre os estagiários, o agendamento das sessões, o registro da evolução dos atendimentos e a extração de indicadores para a coordenação dependem integralmente do deslocamento do interessado até a instituição e de controles feitos à mão.</p>
+<p>Esse é o cenário no qual o projeto se propõe a atuar.</p>
+<h2 id="13-rich-picture">1.3 Rich Picture</h2>
+<p>O Rich Picture da Figura 1 representa o cenário atual da Clínica Escola de Psicologia da Faculdade Brasília, com base no levantamento realizado em 26 de agosto de 2026 junto à coordenação do curso de Psicologia, à diretoria financeira e de tecnologia e à secretaria acadêmica.</p>
+<p><img alt="Rich Picture da Clínica Escola" src="../assets/rich-picture.png" /></p>
+<blockquote>
+<p><strong>Figura 1 – Rich Picture do cenário atual da Clínica Escola de Psicologia da FBr.</strong></p>
+</blockquote>
+<p>O processo envolve pacientes, parceiros de encaminhamento, coordenação, supervisores, estagiários e secretaria. Atualmente, a captação e a inscrição ocorrem presencialmente, com preenchimento de fichas em papel e classificação manual dos pacientes conforme a prioridade de atendimento. A clínica disponibiliza aproximadamente 100 vagas por semestre para uma demanda de 160 a 180 inscrições.</p>
+<p>Após a triagem, os casos são distribuídos entre supervisores e estagiários, que realizam o contato e o agendamento principalmente por telefone e WhatsApp. Os atendimentos são presenciais e compreendem, em média, de 8 a 10 sessões, com registro da evolução e elaboração de relatório final do estado do paciente.</p>
+<p>Não há atualmente um sistema integrado de gestão. As informações são mantidas em fichas físicas, mensagens, ligações e em uma planilha Excel compartilhada, o que contribui para problemas como:</p>
+<ul>
+<li>Demora na confirmação dos atendimentos</li>
+<li>Faltas e cancelamentos</li>
+<li>Pouca visibilidade da fila de espera</li>
+<li>Dificuldade de geração de indicadores</li>
+<li>Riscos relacionados ao tratamento de dados pessoais sensíveis</li>
+</ul>
+<h2 id="14-identificacao-da-oportunidade-ou-problema">1.4 Identificação da Oportunidade ou Problema</h2>
+<p>O projeto é necessário porque a Clínica Escola de Psicologia da FBr, que hoje oferta 100 vagas por semestre de atendimento psicológico gratuito à comunidade, opera integralmente de forma manual e presencial, apoiada apenas em fichas de papel e em uma planilha de Excel. Esse arranjo não sustenta o volume de demanda recebido, de 160 a 180 inscrições por semestre, e produz uma perda sistemática de atendimentos que poderiam ser realizados com a estrutura já existente.</p>
+<p>O principal gargalo identificado com o cliente está no <strong>agendamento e na confirmação de presença</strong>, apontados como as etapas mais trabalhosas do processo: o contato é feito por ligação ou WhatsApp, o paciente frequentemente não reconhece o número da clínica e a resposta demora. A consequência é dupla e imediata. Quando o paciente falta sem avisar, o estagiário permanece ocioso em um horário que poderia ter sido ocupado por outra pessoa da fila de espera, o que representa, ao mesmo tempo, a perda de um atendimento à comunidade e a perda de uma hora de prática para a formação do estudante. Não há, hoje, busca ativa de confirmação nem mecanismo ágil de realocação da vaga liberada.</p>
+<p>Somam-se a esse gargalo outros efeitos do processo manual:</p>
+<ul>
+<li>A ausência de registro estruturado impede que a coordenação acompanhe indicadores básicos, como a evasão de pacientes e o aproveitamento das vagas.</li>
+<li>Obriga a montagem manual dos relatórios exigidos pelo Conselho Regional de Psicologia (que fiscaliza a cada dois anos) e pelo MEC.</li>
+<li>O prontuário em papel mantém dados sensíveis de saúde sem controle de acesso nem rastreabilidade.</li>
+<li>O relatório final de evolução, entregue ao paciente ao término das sessões, precisa ser redigitado a partir de anotações dispersas.</li>
+<li>Do lado do paciente, não há qualquer informação sobre a posição na fila, o que fragiliza a relação da instituição com a comunidade que ela se propõe a atender.</li>
+</ul>
+<p>A oportunidade, portanto, é digitalizar exatamente as etapas que a regulação permite digitalizar. O Conselho Regional de Psicologia veda o atendimento psicológico on-line para a clínica escola, mas não impede que a inscrição, a triagem, o agendamento, a confirmação de presença, o registro clínico e a emissão de documentos sejam apoiados por um sistema.</p>
+<p>Atuar sobre essa faixa do processo permite ampliar o aproveitamento das vagas já ofertadas, sem ampliar a estrutura física ou o quadro de supervisores, e fortalece a política de responsabilidade social da instituição junto à Região Administrativa de Santa Maria.</p>
+<p><img alt="Diagrama de Ishikawa das causas do problema da Clínica Escola" src="../assets/ishikawa-diagram.png" /></p>
+<blockquote>
+<p><strong>Figura 2 – Diagrama de Ishikawa das causas do problema da Clínica Escola</strong> (organizado pelos 6M’s).</p>
+</blockquote>
+<h2 id="15-desafios-do-projeto">1.5 Desafios do Projeto</h2>
+<p>Os principais desafios identificados junto ao cliente envolvem aspectos técnicos, regulatórios, operacionais e de gestão do projeto:</p>
+<ul>
+<li><strong>Sigilo e proteção de dados sensíveis:</strong> o tratamento de informações relacionadas à saúde psicológica dos pacientes exige elevado nível de segurança e controle de acesso, especialmente considerando a participação de estagiários e supervisores no processo.</li>
+<li><strong>Restrições regulatórias:</strong> a clínica-escola está sujeita às normas profissionais aplicáveis aos atendimentos psicológicos, o que impõe limitações quanto à realização de determinadas atividades de forma remota.</li>
+<li><strong>Usabilidade:</strong> parte significativa do público atendido encontra-se em situação de vulnerabilidade social e possui pouca familiaridade com tecnologias digitais, tornando a facilidade de utilização um desafio relevante.</li>
+<li><strong>Acessibilidade:</strong> o sistema deverá considerar diferentes necessidades de acessibilidade, inclusive de pessoas com limitações visuais ou outras condições que possam dificultar sua interação com recursos digitais.</li>
+<li><strong>Confiabilidade da triagem:</strong> informações utilizadas para priorização dos atendimentos possuem natureza clínica, tornando especialmente crítica a confiabilidade de qualquer processo de classificação ou apoio à triagem.</li>
+</ul>
+<h2 id="16-mapa-de-stakeholders">1.6 Mapa de Stakeholders</h2>
+<table>
+<thead>
+<tr>
+<th>Stakeholder</th>
+<th>Relação</th>
+<th>Interesses</th>
+<th>Expectativas</th>
+<th style="text-align: center;">Nível de impacto</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Robson Luís de Araújo</td>
+<td>Coordenador do Curso de Psicologia, responsável pela Clínica Escola. Principal ponto de decisão e validação do cliente</td>
+<td>Melhorar a gestão da clínica. Visando em manter a qualidade do atendimento e da formação dos estagiários</td>
+<td>Sistema que reduza o trabalho manual da coordenação e gere indicadores para prestação de contas ao CRP e ao MEC</td>
+<td style="text-align: center;">Alto</td>
+</tr>
+<tr>
+<td>Thiago Cardono Viana</td>
+<td>Diretor Financeiro e de Tecnologia, responsável pela viabilidade financeira e tecnológica</td>
+<td>Solução de baixo custo, sem dependência de licenciamento por usuário</td>
+<td>Aderência da solução à infraestrutura de TI já existente na instituição</td>
+<td style="text-align: center;">Alto</td>
+</tr>
+<tr>
+<td>Karla Gardene Baima</td>
+<td>Secretária acadêmica, executa hoje boa parte do processo manual da clínica</td>
+<td>Redução no trabalho operacional de agendamento, confirmação e emissão de documentos</td>
+<td>Sistema simples de usar no dia a dia</td>
+<td style="text-align: center;">Médio</td>
+</tr>
+<tr>
+<td>Supervisores</td>
+<td>Responsáveis pela orientação acadêmica dos estágiarios</td>
+<td>Rastreabilidade dos casos e visibilidade da evolução dos pacientes</td>
+<td>Ferramenta que apoie o acompanhamento das sessões, sem burocratizar a surpervisão</td>
+<td style="text-align: center;">Médio</td>
+</tr>
+<tr>
+<td>Pacientes (Santa Maria e entorno)</td>
+<td>Usuários externos que se inscrevem à iniciativa</td>
+<td>Acesso mais simples, rápido e transparente ao atendimento psicológico gratuito</td>
+<td>Visibilidade da posição na fila de inscrição, confirmação de presença</td>
+<td style="text-align: center;">Baixo</td>
+</tr>
+<tr>
+<td>Parceiros de encaminhamento</td>
+<td>Órgãos públicos que encaminham pacientes da comunidade para a Clínica Escola</td>
+<td>Continuidade no fluxo de encaminhamento sem burocracia</td>
+<td>Processo de encaminhamento e inscrição sem necessidade de deslocamento presencial</td>
+<td style="text-align: center;">Baixo</td>
+</tr>
+<tr>
+<td>Conselho Regional de Psicologia (CRP) e MEC</td>
+<td>Órgãos reguladores e fiscalizadores da Clínica Escola</td>
+<td>Conformidade com normas éticas e sigilo de dados</td>
+<td>Relatórios e prontuários que atendam às normas de fiscalização</td>
+<td style="text-align: center;">Alto (indireto)</td>
+</tr>
+</tbody>
+</table>
+<h2 id="17-segmentacao-de-clientes">1.7 Segmentação de Clientes</h2>
+<p>A Clínica Escola atende a comunidade externa da Região Administrativa de Santa Maria e das cidades do entorno do Distrito Federal, majoritariamente pessoas em situação de vulnerabilidade socioeconômica que não têm condições de custear atendimento psicológico particular.</p>
+<p>Esse público se organiza em três perfis principais, segundo a faixa etária:</p>
+<ul>
+<li><strong>Crianças (a partir de 6 anos) e adolescentes:</strong> são o segmento com maior exigência formal, pois dependem de autorização e do termo de responsabilidade assinado pelos pais ou responsáveis. Na prática, quem interage com a instituição e com o futuro sistema é o responsável, e não o paciente.</li>
+<li><strong>Adultos:</strong> procuram a clínica por demanda espontânea ou por encaminhamento de parceiros, geralmente motivados por quadros de ansiedade, depressão, estresse ocupacional ou luto. São o segmento que interage diretamente com a inscrição, o agendamento e a confirmação das sessões.</li>
+<li><strong>Idosos:</strong> atualmente não são atendidos por ausência de procura, uma vez que essa população costuma ser captada pela rede pública de saúde. Trata-se, portanto, de um segmento potencial, que pode ser alcançado caso a instituição amplie a divulgação do serviço.</li>
+</ul>
+<p>Além da faixa etária, o negócio segmenta os pacientes por <strong>prioridade clínica</strong>, classificação que define a ordem de acesso às 100 vagas ofertadas por semestre:</p>
+<table>
+<thead>
+<tr>
+<th>Prioridade</th>
+<th>Descrição</th>
+<th>Critério de atendimento</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Ficha Vermelha</strong></td>
+<td>Pessoas que já apresentam psicopatologias crônicas (depressão, transtornos de ansiedade), sobretudo quando fazem uso contínuo de medicação</td>
+<td>Atendida prioritariamente</td>
+</tr>
+<tr>
+<td><strong>Ficha Amarela</strong></td>
+<td>Quem passa por abalos emocionais pontuais, estresse ou luto, sem quadro grave nem uso de medicação</td>
+<td>Atendida em seguida</td>
+</tr>
+<tr>
+<td><strong>Ficha Verde</strong></td>
+<td>Quem busca autodesenvolvimento, sem sinais de adoecimento</td>
+<td>Atendida apenas se sobrarem vagas</td>
+</tr>
+</tbody>
+</table>
+<p>Como a procura é praticamente o dobro da oferta, esse é o critério que determina, na prática, quem será atendido no semestre.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Voltar ao topo
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["navigation.tabs", "navigation.sections", "navigation.top", "search.suggest", "search.highlight", "content.code.copy"], "search": "../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copiado para \u00e1rea de transfer\u00eancia", "clipboard.copy": "Copiar para \u00e1rea de transfer\u00eancia", "search.result.more.one": "Mais 1 nesta p\u00e1gina", "search.result.more.other": "Mais # nesta p\u00e1gina", "search.result.none": "Nenhum resultado encontrado", "search.result.one": "1 resultado encontrado", "search.result.other": "# resultados encontrados", "search.result.placeholder": "Digite para iniciar a busca", "search.result.term.missing": "Ausente", "select.version": "Selecione a vers\u00e3o"}, "version": null}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.d7400e89.min.js"></script>
+      
+    
+  </body>
+</html>

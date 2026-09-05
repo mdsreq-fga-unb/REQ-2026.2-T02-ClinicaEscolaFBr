@@ -1,0 +1,6 @@
+/* Ajusta a altura do logo no cabeçalho */
+.md-header__button.md-logo img,
+.md-header__button.md-logo svg {
+  height: 2.8rem; /* Aumente para 2.5rem se quiser ainda maior */
+  width: auto;
+}
