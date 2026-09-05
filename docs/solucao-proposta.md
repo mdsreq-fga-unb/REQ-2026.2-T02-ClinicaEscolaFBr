@@ -52,7 +52,15 @@ As características **CP6, CP8, CP9 e CP10** (acompanhamento clínico, controle 
 
 ## 2.4 Tecnologias a Serem Utilizadas
 
-> _Seção a ser preenchida com as tecnologias escolhidas para a construção da solução._
+Conforme foi definido pela equipe, a stack tecnológica optada para o desenvolvimento da solução é definida por:
+
+- Front-end: TypeScript, com o framework Next.js, selecionado pela sua maturidade, documentação ampla e convenções bem estabelecidas de organização, reduzindo a curva de aprendizado para a equipe. 
+
+- Back-end: TypeScript, com o framework NextJS, mantendo a linguagem do front-end, reduzindo a dispersão de trabalho da equipe entre as duas camadas da aplicação. 
+
+- Banco de Dados: PostgreSQL, banco de dados relacional adequado à modelagem consistente dos perfis de acesso e das relações entre casos, sessões e responsáveis exigidas pelas características CP5 e CP11. 
+
+Controle de Versão e Documentação: GiHub como repositório central do código-fonte, diagramas e artefatos de requisitos, utilizando GitHub Projects para rastreamento de features e MkDocs/GitHub Pages para publicação da documentação do projeto. 
 
 ## 2.5 Pesquisa de Mercado e Análise Competitiva
 
