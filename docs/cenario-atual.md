@@ -84,9 +84,9 @@ Os principais desafios identificados junto ao cliente envolvem aspectos técnico
 ## 1.6 Mapa de Stakeholders
 
 | Stakeholder | Relação | Interesses | Expectativas | Nível de impacto |
-| :--- | :---: | :---: | :---: | ---: |
-| Robson Luís de Araújo | Coordenador do Curso de Psicologia, responsável pela Clínica Escola. Principal ponto de decisão e validação do cliente | Coordenador do Curso de Psicologia, responsável pela Clínica Escola. Principal ponto de decisão e validação do cliente | Sistema que reduza o trabalho manual da coordenação e gere indicadores para prestação de contas ao CRP e ao MEC | Alto |
-| Thiago Cardono Viana | Diretor Financeiro e de Tecnologia, responsável pela viabilidade financeira e tecnológica | Solução de baixo custo, sem dependência de licenciamento por usuário | Alto |
+| --- | --- | --- | --- | :---: |
+| Robson Luís de Araújo | Coordenador do Curso de Psicologia, responsável pela Clínica Escola. Principal ponto de decisão e validação do cliente | Melhorar a gestão da clínica. Visando em manter a qualidade do atendimento e da formação dos estagiários  | Sistema que reduza o trabalho manual da coordenação e gere indicadores para prestação de contas ao CRP e ao MEC | Alto |
+| Thiago Cardono Viana | Diretor Financeiro e de Tecnologia, responsável pela viabilidade financeira e tecnológica | Solução de baixo custo, sem dependência de licenciamento por usuário | Aderência da solução à infraestrutura de TI já existente na instituição | Alto |
 | Karla Gardene Baima | Secretária acadêmica, executa hoje boa parte do processo manual da clínica | Redução no trabalho operacional de agendamento, confirmação e emissão de documentos | Sistema simples de usar no dia a dia | Médio |
 | Supervisores | Responsáveis pela orientação acadêmica dos estágiarios | Rastreabilidade dos casos e visibilidade da evolução dos pacientes | Ferramenta que apoie o acompanhamento das sessões, sem burocratizar a surpervisão | Médio |
 | Pacientes (Santa Maria e entorno) | Usuários externos que se inscrevem à iniciativa | Acesso mais simples, rápido e transparente ao atendimento psicológico gratuito | Visibilidade da posição na fila de inscrição, confirmação de presença | Baixo |
