@@ -56,7 +56,7 @@ Conforme foi definido pela equipe, a stack tecnológica optada para o desenvolvi
 
 - Front-end: TypeScript, com o framework Next.js, selecionado pela sua maturidade, documentação ampla e convenções bem estabelecidas de organização, reduzindo a curva de aprendizado para a equipe. 
 
-- Back-end: TypeScript, com o framework NextJS, mantendo a linguagem do front-end, reduzindo a dispersão de trabalho da equipe entre as duas camadas da aplicação. 
+- Back-end: TypeScript, com o framework NestJS, mantendo a linguagem do front-end, reduzindo a dispersão de trabalho da equipe entre as duas camadas da aplicação. 
 
 - Banco de Dados: PostgreSQL, banco de dados relacional adequado à modelagem consistente dos perfis de acesso e das relações entre casos, sessões e responsáveis exigidas pelas características CP5 e CP11. 
 
