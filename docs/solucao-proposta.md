@@ -110,7 +110,15 @@ A solução da Clínica Escola FBr irá se diferenciar pelos seguintes aspectos:
 
 ## 2.6 Viabilidade da Proposta
 
-> _Seção a ser preenchida com a avaliação objetiva da viabilidade no contexto da disciplina (equipe, prazo, acesso ao cliente, conhecimento técnico disponível e possibilidade de entrega de um MVP funcional ao final do semestre)._
+Os principais fatores que sustentam a viabilidade da proposta são o acesso facilitado ao cliente, a delimitação já negociada do escopo de MVP e a adoção de um modelo de entrega ágil ao longo do semestre. A equipe, embora enxuta, já definiu a stack tecnológica do projeto TypeScript no front-end, com Next.js, e no back-end, com NestJS, além de PostgreSQL como banco de dados, o que reduz a dispersão de esforço ao concentrar o desenvolvimento em uma única linguagem entre as duas camadas da aplicação. O planejamento distribui o desenvolvimento em ciclos semanais que priorizam primeiro as funcionalidades que atacam o gargalo mais crítico apontado pela coordenação: o agendamento e a confirmação de presença dos pacientes. 
+
+Do ponto de vista técnico, o ponto de maior atenção recai sobre a coordenação entre a inscrição, a triagem automática e a fila de espera priorizada, já que essas etapas dependem de uma lógica compartilhada para garantir que uma vaga liberada seja de fato redirecionada ao próximo paciente elegível, e não apenas registrada como disponível. Para conter esse risco, a equipe optou por avançar de forma modular, entregando e validando cada bloco isoladamente antes de integrá-lo ao restante do sistema. A escolha de Next.js e NestJS, frameworks maduros e amplamente documentados dentro do ecossistema TypeScript, favorece esse avanço modular, já que ambos seguem convenções bem estabelecidas para a organização de módulos, controladores e rotas, o que tende a reduzir a curva de aprendizado mesmo nos pontos em que o domínio técnico da equipe ainda está em formação. O uso de um banco relacional também é compatível com a necessidade de modelar de forma consistente os perfis de acesso paciente, secretaria, estagiário, supervisor e coordenação e as relações entre casos, sessões e responsáveis, exigidas pelas características CP5 e CP11. 
+
+Diante desse cenário, a viabilidade do projeto passa a depender de duas condições práticas: 
+
+- Manter o escopo do MVP fechado no conjunto de funcionalidades já priorizado com o cliente, resistindo à antecipação de itens do escopo desejável; 
+
+- Sustentar uma cadência regular de validações com a Faculdade Brasília, aproveitando a disponibilidade e a agilidade de resposta já observadas durante o levantamento;
 
 ## 2.7 Benefícios Esperados
 
