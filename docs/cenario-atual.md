@@ -83,7 +83,16 @@ Os principais desafios identificados junto ao cliente envolvem aspectos técnico
 
 ## 1.6 Mapa de Stakeholders
 
-> _Seção a ser detalhada com identificação dos principais stakeholders, relação com a solução, interesses, expectativas e nível de influência._
+| Stakeholder | Relação | Interesses | Expectativas | Nível de impacto |
+| :--- | :---: | :---: | :---: | ---: |
+| Robson Luís de Araújo | Coordenador do Curso de Psicologia, responsável pela Clínica Escola. Principal ponto de decisão e validação do cliente | Coordenador do Curso de Psicologia, responsável pela Clínica Escola. Principal ponto de decisão e validação do cliente | Sistema que reduza o trabalho manual da coordenação e gere indicadores para prestação de contas ao CRP e ao MEC | Alto |
+| Thiago Cardono Viana | Diretor Financeiro e de Tecnologia, responsável pela viabilidade financeira e tecnológica | Solução de baixo custo, sem dependência de licenciamento por usuário | Alto |
+| Karla Gardene Baima | Secretária acadêmica, executa hoje boa parte do processo manual da clínica | Redução no trabalho operacional de agendamento, confirmação e emissão de documentos | Sistema simples de usar no dia a dia | Médio |
+| Supervisores | Responsáveis pela orientação acadêmica dos estágiarios | Rastreabilidade dos casos e visibilidade da evolução dos pacientes | Ferramenta que apoie o acompanhamento das sessões, sem burocratizar a surpervisão | Médio |
+| Pacientes (Santa Maria e entorno) | Usuários externos que se inscrevem à iniciativa | Acesso mais simples, rápido e transparente ao atendimento psicológico gratuito | Visibilidade da posição na fila de inscrição, confirmação de presença | Baixo |
+| Parceiros de encaminhamento | Órgãos públicos que encaminham pacientes da comunidade para a Clínica Escola | Continuidade no fluxo de encaminhamento sem burocracia | Processo de encaminhamento e inscrição sem necessidade de deslocamento presencial | Baixo |
+| Conselho Regional de Psicologia (CRP) e MEC | Órgãos reguladores e fiscalizadores da Clínica Escola | Conformidade com normas éticas e sigilo de dados | Relatórios e prontuários que atendam às normas de fiscalização | Alto (indireto) |
+
 
 ## 1.7 Segmentação de Clientes
 
