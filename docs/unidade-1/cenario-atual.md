@@ -33,7 +33,7 @@ Esse é o cenário no qual o projeto se propõe a atuar.
 
 O Rich Picture da Figura 1 representa o cenário atual da Clínica Escola de Psicologia da Faculdade Brasília, com base no levantamento realizado em 26 de agosto de 2026 junto à coordenação do curso de Psicologia, à diretoria financeira e de tecnologia e à secretaria acadêmica.
 
-![Rich Picture da Clínica Escola](assets/rich-picture.png)
+![Rich Picture da Clínica Escola](../assets/rich-picture.png)
 
 > **Figura 1 – Rich Picture do cenário atual da Clínica Escola de Psicologia da FBr.**
 
@@ -67,7 +67,7 @@ A oportunidade, portanto, é digitalizar exatamente as etapas que a regulação 
 
 Atuar sobre essa faixa do processo permite ampliar o aproveitamento das vagas já ofertadas, sem ampliar a estrutura física ou o quadro de supervisores, e fortalece a política de responsabilidade social da instituição junto à Região Administrativa de Santa Maria.
 
-![Diagrama de Ishikawa das causas do problema da Clínica Escola](assets/ishikawa-diagram.png)
+![Diagrama de Ishikawa das causas do problema da Clínica Escola](../assets/ishikawa-diagram.png)
 
 > **Figura 2 – Diagrama de Ishikawa das causas do problema da Clínica Escola** (organizado pelos 6M’s).
 
@@ -83,16 +83,15 @@ Os principais desafios identificados junto ao cliente envolvem aspectos técnico
 
 ## 1.6 Mapa de Stakeholders
 
-| Stakeholder | Relação | Interesses | Expectativas | Nível de impacto |
-| --- | --- | --- | --- | :---: |
-| Robson Luís de Araújo | Coordenador do Curso de Psicologia, responsável pela Clínica Escola. Principal ponto de decisão e validação do cliente | Melhorar a gestão da clínica. Visando em manter a qualidade do atendimento e da formação dos estagiários  | Sistema que reduza o trabalho manual da coordenação e gere indicadores para prestação de contas ao CRP e ao MEC | Alto |
-| Thiago Cardono Viana | Diretor Financeiro e de Tecnologia, responsável pela viabilidade financeira e tecnológica | Solução de baixo custo, sem dependência de licenciamento por usuário | Aderência da solução à infraestrutura de TI já existente na instituição | Alto |
-| Karla Gardene Baima | Secretária acadêmica, executa hoje boa parte do processo manual da clínica | Redução no trabalho operacional de agendamento, confirmação e emissão de documentos | Sistema simples de usar no dia a dia | Médio |
-| Supervisores | Responsáveis pela orientação acadêmica dos estágiarios | Rastreabilidade dos casos e visibilidade da evolução dos pacientes | Ferramenta que apoie o acompanhamento das sessões, sem burocratizar a surpervisão | Médio |
-| Pacientes (Santa Maria e entorno) | Usuários externos que se inscrevem à iniciativa | Acesso mais simples, rápido e transparente ao atendimento psicológico gratuito | Visibilidade da posição na fila de inscrição, confirmação de presença | Baixo |
-| Parceiros de encaminhamento | Órgãos públicos que encaminham pacientes da comunidade para a Clínica Escola | Continuidade no fluxo de encaminhamento sem burocracia | Processo de encaminhamento e inscrição sem necessidade de deslocamento presencial | Baixo |
-| Conselho Regional de Psicologia (CRP) e MEC | Órgãos reguladores e fiscalizadores da Clínica Escola | Conformidade com normas éticas e sigilo de dados | Relatórios e prontuários que atendam às normas de fiscalização | Alto (indireto) |
-
+| Stakeholder                                 | Relação                                                                                                                | Interesses                                                                                               | Expectativas                                                                                                    | Nível de impacto |
+| ------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------- | :--------------: |
+| Robson Luís de Araújo                       | Coordenador do Curso de Psicologia, responsável pela Clínica Escola. Principal ponto de decisão e validação do cliente | Melhorar a gestão da clínica. Visando em manter a qualidade do atendimento e da formação dos estagiários | Sistema que reduza o trabalho manual da coordenação e gere indicadores para prestação de contas ao CRP e ao MEC |       Alto       |
+| Thiago Cardoso Viana                        | Diretor Financeiro e de Tecnologia, responsável pela viabilidade financeira e tecnológica                              | Solução de baixo custo, sem dependência de licenciamento por usuário                                     | Aderência da solução à infraestrutura de TI já existente na instituição                                         |       Alto       |
+| Karla Gardene Baima                         | Secretária acadêmica, executa hoje boa parte do processo manual da clínica                                             | Redução no trabalho operacional de agendamento, confirmação e emissão de documentos                      | Sistema simples de usar no dia a dia                                                                            |      Médio       |
+| Supervisores                                | Responsáveis pela orientação acadêmica dos estagiários                                                                 | Rastreabilidade dos casos e visibilidade da evolução dos pacientes                                       | Ferramenta que apoie o acompanhamento das sessões, sem burocratizar a supervisão                                |      Médio       |
+| Pacientes (Santa Maria e entorno)           | Usuários externos que se inscrevem à iniciativa                                                                        | Acesso mais simples, rápido e transparente ao atendimento psicológico gratuito                           | Visibilidade da posição na fila de inscrição, confirmação de presença                                           |      Baixo       |
+| Parceiros de encaminhamento                 | Órgãos públicos que encaminham pacientes da comunidade para a Clínica Escola                                           | Continuidade no fluxo de encaminhamento sem burocracia                                                   | Processo de encaminhamento e inscrição sem necessidade de deslocamento presencial                               |      Baixo       |
+| Conselho Regional de Psicologia (CRP) e MEC | Órgãos reguladores e fiscalizadores da Clínica Escola                                                                  | Conformidade com normas éticas e sigilo de dados                                                         | Relatórios e prontuários que atendam às normas de fiscalização                                                  | Alto (indireto)  |
 
 ## 1.7 Segmentação de Clientes
 
