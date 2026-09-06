@@ -23,15 +23,18 @@ O **Clínica Escola FBr** é a solução proposta para digitalizar as etapas per
 
 ```
 ├── docs/ # Documentação do projeto (MkDocs)
-│ ├── gestao/ # Cronograma, equipe e comunicação
+│ ├── unidade-1/ # Conteúdo e registros da Unidade 1
+│ │ ├── gestao/ # Cronograma, equipe e comunicação
+│ │ ├── estudos/ # Estudo de FDD
+│ │ ├── reunioes.md
+│ │ ├── licoes-aprendidas.md
+│ │ ├── referencias.md
+│ │ ├── cenario-atual.md
+│ │ ├── solucao-proposta.md
+│ │ ├── intervencao-social.md
+│ │ ├── estrategia-esw.md
+│ │ └── engenharia-requisitos.md
 │ ├── requisitos/ # Requisitos funcionais, não-funcionais, DoR, DoD e Backlog
-│ ├── cenario-atual.md
-│ ├── solucao-proposta.md
-│ ├── intervencao-social.md
-│ ├── estrategia-esw.md
-│ ├── engenharia-requisitos.md
-│ ├── licoes-aprendidas.md
-│ ├── referencias.md
 │ └── index.md
 ├── src/ # Código-fonte da aplicação (sistema do cliente)
 ├── mkdocs.yml # Configuração do site de documentação
@@ -51,10 +54,11 @@ Nela você encontra:
 - Estratégias de Engenharia de Software
 - Engenharia de Requisitos
 - Gestão (cronograma, equipe e comunicação)
-- [Boas práticas de utilização do GitHub](docs/gestao/boas-praticas-github.md)
-- Requisitos, DoR, DoD e Backlog
-- Lições Aprendidas
-- Referências
+- [Boas práticas de utilização do GitHub](docs/unidade-1/gestao/boas-praticas-github.md)
+- Lições Aprendidas da Unidade 1
+- Referências utilizadas na Unidade 1
+
+Os requisitos funcionais, não funcionais, DoR, DoD e backlog serão organizados e publicados na Unidade 2, quando tiverem conteúdo validado.
 
 ---
 
@@ -74,7 +78,7 @@ O sistema em desenvolvimento (`src/`) será uma **aplicação web responsiva** v
 
 ## Tecnologias
 
-> _A ser definido pela equipe (seção 2.4 da documentação)._
+> TypeScript, Next.js, NestJS e PostgreSQL, conforme a seção 2.4 da documentação.
 
 ---
 

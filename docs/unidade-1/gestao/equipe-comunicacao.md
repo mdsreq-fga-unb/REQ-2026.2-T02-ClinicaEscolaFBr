@@ -1,4 +1,4 @@
-# 7 INTERAÇÃO ENTRE EQUIPE E CLIENTE
+# 7. INTERAÇÃO ENTRE EQUIPE E CLIENTE
 
 A interação do projeto será baseada em colaboração contínua entre a equipe de desenvolvimento e os especialistas de domínio da Faculdade Brasília (FBr). O processo FDD organizará o trabalho em features pequenas, rastreáveis e demonstráveis, permitindo validar progressivamente o modelo de domínio, o design e o comportamento do produto.
 

@@ -42,26 +42,17 @@ markdown_extensions:
 
 nav:
   - Início: index.md
-  - Cenário Atual: cenario-atual.md
-  - Solução Proposta: solucao-proposta.md
-  - Intervenção Social: intervencao-social.md
-  - Estratégia de ESW: estrategia-esw.md
-  - Engenharia de Requisitos: engenharia-requisitos.md
-  - Requisitos & Backlog:
-      - Requisitos Funcionais: requisitos/funcionais.md
-      - Requisitos Não-Funcionais: requisitos/nao-funcionais.md
-      - DoR e DoD: requisitos/dor-dod.md
-      - Backlog e MVP: requisitos/backlog.md
-  - Gestão do Projeto:
-      - Cronograma e Entregas: gestao/cronograma.md
-      - Equipe e Comunicação: gestao/equipe-comunicacao.md
-      - Boas práticas no GitHub: gestao/boas-praticas-github.md
-  - Reuniões:
-      - Unidade 1: reunioes/unidade-1.md
-      - Unidade 2: reunioes/unidade-2.md
-      - Unidade 3: reunioes/unidade-3.md
-      - Unidade 4: reunioes/unidade-4.md
-  - Lições Aprendidas: licoes-aprendidas.md
-  - Estudos:
-      - Feature-Driven Development (FDD): estudos/fdd.md
-  - Referências: referencias.md
+  - Unidade 1:
+      - 1. Cenário Atual: unidade-1/cenario-atual.md
+      - 2. Solução Proposta: unidade-1/solucao-proposta.md
+      - 3. Intervenção Social: unidade-1/intervencao-social.md
+      - 4. Estratégia de ESW: unidade-1/estrategia-esw.md
+      - 5. Engenharia de Requisitos: unidade-1/engenharia-requisitos.md
+      - Gestão do Projeto:
+          - 6. Cronograma e Entregas: unidade-1/gestao/cronograma.md
+          - 7. Equipe e Comunicação: unidade-1/gestao/equipe-comunicacao.md
+          - Boas práticas no GitHub: unidade-1/gestao/boas-praticas-github.md
+      - Reuniões: unidade-1/reunioes.md
+      - Estudo de FDD: unidade-1/estudos/fdd.md
+      - Lições Aprendidas: unidade-1/licoes-aprendidas.md
+      - Referências: unidade-1/referencias.md
