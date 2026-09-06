@@ -54,13 +54,13 @@ As características **CP6, CP8, CP9 e CP10** (acompanhamento clínico, controle 
 
 Conforme foi definido pela equipe, a stack tecnológica optada para o desenvolvimento da solução é definida por:
 
-- Front-end: TypeScript, com o framework Next.js, selecionado pela sua maturidade, documentação ampla e convenções bem estabelecidas de organização, reduzindo a curva de aprendizado para a equipe. 
+- Front-end: TypeScript, com o framework Next.js, selecionado pela sua maturidade, documentação ampla e convenções bem estabelecidas de organização, reduzindo a curva de aprendizado para a equipe.
 
-- Back-end: TypeScript, com o framework NestJS, mantendo a linguagem do front-end, reduzindo a dispersão de trabalho da equipe entre as duas camadas da aplicação. 
+- Back-end: TypeScript, com o framework NestJS, mantendo a linguagem do front-end, reduzindo a dispersão de trabalho da equipe entre as duas camadas da aplicação.
 
-- Banco de Dados: PostgreSQL, banco de dados relacional adequado à modelagem consistente dos perfis de acesso e das relações entre casos, sessões e responsáveis exigidas pelas características CP5 e CP11. 
+- Banco de Dados: PostgreSQL, banco de dados relacional adequado à modelagem consistente dos perfis de acesso e das relações entre casos, sessões e responsáveis exigidas pelas características CP5 e CP11.
 
-Controle de Versão e Documentação: GiHub como repositório central do código-fonte, diagramas e artefatos de requisitos, utilizando GitHub Projects para rastreamento de features e MkDocs/GitHub Pages para publicação da documentação do projeto. 
+Controle de Versão e Documentação: GitHub como repositório central do código-fonte, diagramas e artefatos de requisitos, utilizando GitHub Projects para rastreamento de features e MkDocs/GitHub Pages para publicação da documentação do projeto.
 
 ## 2.5 Pesquisa de Mercado e Análise Competitiva
 
@@ -118,13 +118,13 @@ A solução da Clínica Escola FBr irá se diferenciar pelos seguintes aspectos:
 
 ## 2.6 Viabilidade da Proposta
 
-Os principais fatores que sustentam a viabilidade da proposta são o acesso facilitado ao cliente, a delimitação já negociada do escopo de MVP e a adoção de um modelo de entrega ágil ao longo do semestre. A equipe, embora enxuta, já definiu a stack tecnológica do projeto TypeScript no front-end, com Next.js, e no back-end, com NestJS, além de PostgreSQL como banco de dados, o que reduz a dispersão de esforço ao concentrar o desenvolvimento em uma única linguagem entre as duas camadas da aplicação. O planejamento distribui o desenvolvimento em ciclos semanais que priorizam primeiro as funcionalidades que atacam o gargalo mais crítico apontado pela coordenação: o agendamento e a confirmação de presença dos pacientes. 
+Os principais fatores que sustentam a viabilidade da proposta são o acesso facilitado ao cliente, a delimitação já negociada do escopo de MVP e a adoção de um modelo de entrega ágil ao longo do semestre. A equipe, embora enxuta, já definiu a stack tecnológica do projeto TypeScript no front-end, com Next.js, e no back-end, com NestJS, além de PostgreSQL como banco de dados, o que reduz a dispersão de esforço ao concentrar o desenvolvimento em uma única linguagem entre as duas camadas da aplicação. O planejamento distribui o desenvolvimento em ciclos semanais que priorizam primeiro as funcionalidades que atacam o gargalo mais crítico apontado pela coordenação: o agendamento e a confirmação de presença dos pacientes.
 
-Do ponto de vista técnico, o ponto de maior atenção recai sobre a coordenação entre a inscrição, a triagem automática e a fila de espera priorizada, já que essas etapas dependem de uma lógica compartilhada para garantir que uma vaga liberada seja de fato redirecionada ao próximo paciente elegível, e não apenas registrada como disponível. Para conter esse risco, a equipe optou por avançar de forma modular, entregando e validando cada bloco isoladamente antes de integrá-lo ao restante do sistema. A escolha de Next.js e NestJS, frameworks maduros e amplamente documentados dentro do ecossistema TypeScript, favorece esse avanço modular, já que ambos seguem convenções bem estabelecidas para a organização de módulos, controladores e rotas, o que tende a reduzir a curva de aprendizado mesmo nos pontos em que o domínio técnico da equipe ainda está em formação. O uso de um banco relacional também é compatível com a necessidade de modelar de forma consistente os perfis de acesso paciente, secretaria, estagiário, supervisor e coordenação e as relações entre casos, sessões e responsáveis, exigidas pelas características CP5 e CP11. 
+Do ponto de vista técnico, o ponto de maior atenção recai sobre a coordenação entre a inscrição, a triagem automática e a fila de espera priorizada, já que essas etapas dependem de uma lógica compartilhada para garantir que uma vaga liberada seja de fato redirecionada ao próximo paciente elegível, e não apenas registrada como disponível. Para conter esse risco, a equipe optou por avançar de forma modular, entregando e validando cada bloco isoladamente antes de integrá-lo ao restante do sistema. A escolha de Next.js e NestJS, frameworks maduros e amplamente documentados dentro do ecossistema TypeScript, favorece esse avanço modular, já que ambos seguem convenções bem estabelecidas para a organização de módulos, controladores e rotas, o que tende a reduzir a curva de aprendizado mesmo nos pontos em que o domínio técnico da equipe ainda está em formação. O uso de um banco relacional também é compatível com a necessidade de modelar de forma consistente os perfis de acesso paciente, secretaria, estagiário, supervisor e coordenação e as relações entre casos, sessões e responsáveis, exigidas pelas características CP5 e CP11.
 
-Diante desse cenário, a viabilidade do projeto passa a depender de duas condições práticas: 
+Diante desse cenário, a viabilidade do projeto passa a depender de duas condições práticas:
 
-- Manter o escopo do MVP fechado no conjunto de funcionalidades já priorizado com o cliente, resistindo à antecipação de itens do escopo desejável; 
+- Manter o escopo do MVP fechado no conjunto de funcionalidades já priorizado com o cliente, resistindo à antecipação de itens do escopo desejável;
 
 - Sustentar uma cadência regular de validações com a Faculdade Brasília, aproveitando a disponibilidade e a agilidade de resposta já observadas durante o levantamento;
 

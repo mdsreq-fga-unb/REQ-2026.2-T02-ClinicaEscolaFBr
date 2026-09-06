@@ -5,7 +5,7 @@ Registro das reuniões realizadas durante a Unidade 1 do projeto Clínica Escola
 ## Reunião de alinhamento 01
 
 **Data:** 20/08/2026
-**Local:** Reunião on-line(Google Meet)
+**Local:** Reunião on-line (Google Meet)
 **Participantes:** Gabriel; Joaquim José da Fonseca Viana; Jônatas Davi Oliveira Farias; Luís Henrique; Maria Clara Canuto; Nicolas Lopes.
 
 ![Registro da reunião de alinhamento 01](../assets/reuniao-1.jpeg)
@@ -23,7 +23,7 @@ O primeiro alinhamento formal da equipe foi realizado para organizar a preparaç
 - Alinhamento das perguntas e dos tópicos para a reunião com a Faculdade Brasília, com foco no cenário atual da Clínica Escola, nos processos, nos atores, nos problemas e nas necessidades.
 - Revisão das entregas previstas para a Unidade 1 e dos itens do template de Visão de Produto e Projeto.
 - Definição da estratégia de pesquisa e posterior escolha da abordagem, do ciclo de vida e do processo de desenvolvimento.
-- Organização do GitHub e do GitPages, aguardando a aprovação da proposta pelo professor antes do início do trabalho definitivo no repositório oficial.
+- Organização do GitHub e do GitHub Pages, aguardando a aprovação da proposta pelo professor antes do início do trabalho definitivo no repositório oficial.
 - Definição da importância de concentrar evidências e gestão do trabalho no GitHub, mantendo a rastreabilidade do projeto.
 - Divisão das atividades e dos prazos entre os integrantes, com registro das alterações relevantes no histórico de revisão do documento.
 
