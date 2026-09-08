@@ -27,7 +27,14 @@ A solução digitaliza as etapas permitidas pela regulação (inscrição, triag
 
 ### Vídeo de Apresentação da Unidade 1
 
-[![Apresentação da Unidade 1 — Clínica Escola FBr](https://img.youtube.com/vi/ysMmYmttAH8/hqdefault.jpg)](https://youtu.be/ysMmYmttAH8)
+<div class="video-container">
+  <iframe
+    src="https://www.youtube.com/embed/ysMmYmttAH8"
+    title="Apresentação da Unidade 1 — Clínica Escola FBr"
+    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+    allowfullscreen>
+  </iframe>
+</div>
 
 Apresentação da entrega da Unidade 1, cobrindo o cenário atual e a intervenção social, a solução proposta, a estratégia de Engenharia de Software, a Engenharia de Requisitos e a gestão do projeto.
 
@@ -89,4 +96,4 @@ Navegue pelo menu para acompanhar a documentação da Unidade 1. As seções de 
 | 04/09/2026 | 1.11   | Atualização do cronograma com a visão macro das Unidades 2, 3 e 4 e revisão da aplicação dos processos FDD                                | Gabriel Barbaceli                                                         |
 | 05/09/2026 | 1.12   | Inclusão da estratégia de Engenharia de Software, do mapa de stakeholders e da stack tecnológica; correções textuais associadas           | Joaquim José, Maria Clara e Maria Clara-Canuto                            |
 | 06/09/2026 | 1.13   | Reorganização dos artefatos na pasta da Unidade 1, consolidação das reuniões, atualização da navegação e revisão geral                    | Gabriel Barbaceli                                                         |
-| 08/09/2026 | 1.14   | Inclusão do vídeo de apresentação da entrega da Unidade 1                                                                                | Joaquim José                                                              |
+| 08/09/2026 | 1.14   | Inclusão do vídeo de apresentação da entrega da Unidade 1                                                                                 | Joaquim José                                                              |
