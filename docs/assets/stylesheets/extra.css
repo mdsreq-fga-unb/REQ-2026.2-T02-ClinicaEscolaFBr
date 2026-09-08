@@ -1,3 +1,14 @@
+.video-container {
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  margin: 1rem 0;
+}
+
+.video-container iframe {
+  width: 100%;
+  height: 100%;
+  border: 0;
+}
 /* Ajusta a altura do logo no cabeçalho */
 .md-header__button.md-logo img,
 .md-header__button.md-logo svg {
