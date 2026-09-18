@@ -44,7 +44,7 @@ Apresentação da entrega da Unidade 1, cobrindo o cenário atual e a intervenç
 
 ### Visão Geral da Documentação
 
-Navegue pelo menu para acompanhar a documentação da Unidade 1. As seções de requisitos funcionais, requisitos não funcionais, DoR, DoD e backlog serão incorporadas à navegação quando forem desenvolvidas na Unidade 2.
+Navegue pelo menu para acompanhar a documentação das Unidades 1 e 2. A Unidade 2 reúne os requisitos funcionais e não funcionais, o DoR, o DoD e o backlog de produto.
 
 - **Visão e Cenário**
   Entendimento do problema, cenário atual e solução proposta.
@@ -59,22 +59,27 @@ Navegue pelo menu para acompanhar a documentação da Unidade 1. As seções de 
 
 ### Mapeamento dos Arquivos
 
-| Arquivo                                                               | Seção    | Conteúdo                                                                     |
-| --------------------------------------------------------------------- | -------- | ---------------------------------------------------------------------------- |
-| [`Cenário Atual`](unidade-1/cenario-atual.md)                         | Seção 1  | Identificação do cliente, Contexto, Rich Picture, Stakeholders e Segmentação |
-| [`Solução Proposta`](unidade-1/solucao-proposta.md)                   | Seção 2  | Objetivos, Características de Produto (CPs), Análise de mercado e Benefícios |
-| [`Intervenção Social`](unidade-1/intervencao-social.md)               | Seção 3  | Intervenção social do software                                               |
-| [`Estratégia de ESW`](unidade-1/estrategia-esw.md)                    | Seção 4  | Abordagem de ESW, Ciclo de vida e Processo                                   |
-| [`Engenharia de Requisitos`](unidade-1/engenharia-requisitos.md)      | Seção 5  | Técnicas e atividades de Engenharia de Requisitos                            |
-| [`Cronograma e Entregas`](unidade-1/gestao/cronograma.md)             | Seção 6  | Cronograma do projeto                                                        |
-| [`Equipe e Comunicação`](unidade-1/gestao/equipe-comunicacao.md)      | Seção 7  | Membros, papéis, canal de comunicação e validação                            |
-| [`Boas práticas no GitHub`](unidade-1/gestao/boas-praticas-github.md) | Apoio    | Fluxo de colaboração, revisão e publicação                                   |
-| [`Estudo de FDD`](unidade-1/estudos/fdd.md)                           | Apoio    | Processo FDD adotado no projeto                                              |
-| [`Reuniões da Unidade 1`](unidade-1/reunioes.md)                      | Apoio    | Registros de alinhamento, levantamento e acompanhamento                      |
-| [`Lições Aprendidas`](unidade-1/licoes-aprendidas.md)                 | Seção 11 | Retrospectiva da Unidade 1                                                   |
-| [`Referências`](unidade-1/referencias.md)                             | Seção 12 | Referências utilizadas nos artefatos da Unidade 1                            |
-
-> **Nota:** As seções 8, 9 e 10 serão desenvolvidas na **Unidade 2** e permanecem fora da navegação até que tenham conteúdo validado.
+| Arquivo | Seção | Conteúdo |
+| --- | --- | --- |
+| [`Cenário Atual`](unidade-1/cenario-atual.md) | Seção 1 | Identificação do cliente, contexto, Rich Picture, stakeholders e segmentação |
+| [`Solução Proposta`](unidade-1/solucao-proposta.md) | Seção 2 | Objetivos, características de produto (CPs), análise de mercado e benefícios |
+| [`Intervenção Social`](unidade-1/intervencao-social.md) | Seção 3 | Intervenção social do software |
+| [`Estratégia de ESW`](unidade-1/estrategia-esw.md) | Seção 4 | Abordagem de ESW, ciclo de vida e processo |
+| [`Engenharia de Requisitos`](unidade-1/engenharia-requisitos.md) | Seção 5 | Técnicas e atividades de Engenharia de Requisitos |
+| [`Cronograma e Entregas`](unidade-1/gestao/cronograma.md) | Seção 6 | Cronograma do projeto |
+| [`Equipe e Comunicação`](unidade-1/gestao/equipe-comunicacao.md) | Seção 7 | Membros, papéis, canal de comunicação e validação |
+| [`Requisitos Funcionais`](unidade-2/requisitos/funcionais.md) | Seção 8.1 | Lista de requisitos funcionais, atores, prioridades, critérios de aceitação e rastreabilidade |
+| [`Requisitos Não Funcionais`](unidade-2/requisitos/nao-funcionais.md) | Seção 8.2 | Lista URPS+ de requisitos mensuráveis de segurança, privacidade, acessibilidade, usabilidade, disponibilidade, desempenho e auditoria |
+| [`DoR e DoD`](unidade-2/requisitos/dor-dod.md) | Seção 9 | Critérios de prontidão e conclusão das features |
+| [`Backlog de Produto`](unidade-2/requisitos/backlog.md) | Seções 10.1 e 10.2 | Backlog geral, priorização e recorte do MVP |
+| [`Cronograma e Entregas da Unidade 2`](unidade-2/gestao/cronograma.md) | Apoio | Planejamento das atividades e entregáveis da Unidade 2 |
+| [`Reuniões da Unidade 2`](unidade-2/reunioes.md) | Apoio | Registros de elicitação, validação e acompanhamento dos requisitos |
+| [`Lições Aprendidas da Unidade 2`](unidade-2/licoes-aprendidas.md) | Seção 11.2 | Retrospectiva da Unidade 2 |
+| [`Lições Aprendidas`](unidade-1/licoes-aprendidas.md) | Seção 11 | Retrospectiva da Unidade 1 |
+| [`Referências`](unidade-1/referencias.md) | Seção 12 | Referências utilizadas nos artefatos da Unidade 1 |
+| [`Boas práticas no GitHub`](unidade-1/gestao/boas-praticas-github.md) | Apoio | Fluxo de colaboração, revisão e publicação |
+| [`Estudo de FDD`](unidade-1/estudos/fdd.md) | Apoio | Processo FDD adotado no projeto |
+| [`Reuniões da Unidade 1`](unidade-1/reunioes.md) | Apoio | Registros de alinhamento, levantamento e acompanhamento |
 
 ---
 
@@ -97,3 +102,4 @@ Navegue pelo menu para acompanhar a documentação da Unidade 1. As seções de 
 | 05/09/2026 | 1.12   | Inclusão da estratégia de Engenharia de Software, do mapa de stakeholders e da stack tecnológica; correções textuais associadas           | Joaquim José, Maria Clara e Maria Clara-Canuto                            |
 | 06/09/2026 | 1.13   | Reorganização dos artefatos na pasta da Unidade 1, consolidação das reuniões, atualização da navegação e revisão geral                    | Gabriel Barbaceli                                                         |
 | 08/09/2026 | 1.14   | Inclusão do vídeo de apresentação da entrega da Unidade 1                                                                                 | Joaquim José                                                              |
+| 17/09/2026 | 2.0    | Reorganização da documentação para a Unidade 2: migração dos requisitos para `docs/unidade-2/`, inclusão do cronograma detalhado da Unidade 2 (com a atividade de priorização e definição do MVP), atualização da navegação, do README e do mapeamento de arquivos, e registro da reunião de divisão de tarefas de 17/09 | Gabriel Barbaceli                                                         |

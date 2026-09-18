@@ -34,7 +34,9 @@ O **Clínica Escola FBr** é a solução proposta para digitalizar as etapas per
 │ │ ├── intervencao-social.md
 │ │ ├── estrategia-esw.md
 │ │ └── engenharia-requisitos.md
-│ ├── requisitos/ # Requisitos funcionais, não-funcionais, DoR, DoD e Backlog
+│ ├── unidade-2/ # Artefatos da Unidade 2
+│ │ ├── requisitos/ # Requisitos, DoR, DoD e backlog
+│ │ └── index.md
 │ └── index.md
 ├── src/ # Código-fonte da aplicação (sistema do cliente)
 ├── mkdocs.yml # Configuração do site de documentação
@@ -58,7 +60,7 @@ Nela você encontra:
 - Lições Aprendidas da Unidade 1
 - Referências utilizadas na Unidade 1
 
-Os requisitos funcionais, não funcionais, DoR, DoD e backlog serão organizados e publicados na Unidade 2, quando tiverem conteúdo validado.
+Os requisitos funcionais, não funcionais, DoR, DoD e backlog estão organizados em `docs/unidade-2/` e serão refinados conforme a validação com os stakeholders.
 
 ---
 

@@ -56,3 +56,12 @@ nav:
       - Estudo de FDD: unidade-1/estudos/fdd.md
       - Lições Aprendidas: unidade-1/licoes-aprendidas.md
       - Referências: unidade-1/referencias.md
+  - Unidade 2:
+      - 8. Requisitos de Software:
+          - 8.1 Requisitos Funcionais: unidade-2/requisitos/funcionais.md
+          - 8.2 Requisitos Não Funcionais: unidade-2/requisitos/nao-funcionais.md
+      - 9. DoR e DoD: unidade-2/requisitos/dor-dod.md
+      - 10. Backlog de Produto: unidade-2/requisitos/backlog.md
+      - Cronograma e Entregas: unidade-2/gestao/cronograma.md
+      - Reuniões: unidade-2/reunioes.md
+      - Lições Aprendidas: unidade-2/licoes-aprendidas.md
