@@ -474,7 +474,7 @@ O registro dos pagamentos é de responsabilidade da **secretaria**, e a consulta
     Feature: Consultar situação da contribuição social dos pacientes
 ```
 
-#### Feature — Registrar pagamento da contribuição social do paciente
+#### Feature — Registrar pagamento da contribuição social do paciente [#43](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/issues/43)
 
 **RF11 — Registrar pagamento da contribuição social**
 
@@ -488,7 +488,7 @@ _Critérios de aceitação:_
 
 _Rastreabilidade:_ Feature "Registrar pagamento da contribuição social do paciente" → CP8 — Registro da contribuição social → OE6/OE4.
 
-#### Feature — Consultar situação da contribuição social dos pacientes
+#### Feature — Consultar situação da contribuição social dos pacientes [#44](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/issues/44)
 
 **RF12 — Consultar situação da contribuição social**
 
@@ -531,7 +531,7 @@ Os perfis de acesso são cinco: **paciente**, **secretaria**, **estagiário**, *
     Feature: Registrar consentimento para tratamento de dados
 ```
 
-#### Feature — Autenticar usuário institucional
+#### Feature — Autenticar usuário institucional [#45](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/issues/45)
 
 **RF13 — Autenticar usuário institucional**
 
@@ -545,7 +545,7 @@ _Critérios de aceitação:_
 
 _Rastreabilidade:_ Feature "Autenticar usuário institucional" → CP11 — Segurança, sigilo e controle de acesso → OE7/OE5.
 
-#### Feature — Encerrar sessão do usuário
+#### Feature — Encerrar sessão do usuário [#46](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/issues/46)
 
 **RF14 — Encerrar sessão do usuário**
 
@@ -555,7 +555,7 @@ _Critério de aceitação:_ dado um usuário autenticado, quando ele escolher sa
 
 _Rastreabilidade:_ Feature "Encerrar sessão do usuário" → CP11 — Segurança, sigilo e controle de acesso → OE7.
 
-#### Feature — Verificar identidade do paciente ou responsável
+#### Feature — Verificar identidade do paciente ou responsável [#47](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/issues/47)
 
 **RF15 — Verificar identidade do paciente ou responsável**
 
@@ -569,7 +569,7 @@ _Critérios de aceitação:_
 
 _Rastreabilidade:_ Feature "Verificar identidade do paciente ou responsável" → CP11 — Segurança, sigilo e controle de acesso → OE7/OE1. Atende à verificação de acesso exigida pela feature "Consultar posição individual na fila" (CP3) e pelas features de declaração da CP9.
 
-#### Feature — Cadastrar usuário institucional com perfil de acesso
+#### Feature — Cadastrar usuário institucional com perfil de acesso [#48](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/issues/48)
 
 **RF16 — Cadastrar usuário institucional**
 
@@ -583,7 +583,7 @@ _Critérios de aceitação:_
 
 _Rastreabilidade:_ Feature "Cadastrar usuário institucional com perfil de acesso" → CP11 — Segurança, sigilo e controle de acesso → OE7/OE5.
 
-#### Feature — Desativar usuário institucional
+#### Feature — Desativar usuário institucional [#49](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/issues/49)
 
 **RF17 — Desativar usuário institucional**
 
@@ -597,7 +597,7 @@ _Critérios de aceitação:_
 
 _Rastreabilidade:_ Feature "Desativar usuário institucional" → CP11 — Segurança, sigilo e controle de acesso → OE7/OE5.
 
-#### Feature — Restringir acesso ao prontuário do paciente
+#### Feature — Restringir acesso ao prontuário do paciente [#50](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/issues/50)
 
 **RF18 — Restringir acesso ao prontuário**
 
@@ -612,7 +612,7 @@ _Critérios de aceitação:_
 
 _Rastreabilidade:_ Feature "Restringir acesso ao prontuário do paciente" → CP11 — Segurança, sigilo e controle de acesso → OE7/OE5. Depende do vínculo entre paciente, estagiário e supervisor (CP5) e do prontuário (CP6).
 
-#### Feature — Consultar registro de acessos ao prontuário
+#### Feature — Consultar registro de acessos ao prontuário [#51](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/issues/51)
 
 **RF19 — Consultar registro de acessos ao prontuário**
 
@@ -626,7 +626,7 @@ _Critérios de aceitação:_
 
 _Rastreabilidade:_ Feature "Consultar registro de acessos ao prontuário" → CP11 — Segurança, sigilo e controle de acesso → OE7.
 
-#### Feature — Registrar consentimento para tratamento de dados
+#### Feature — Registrar consentimento para tratamento de dados [#52](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/issues/52)
 
 **RF20 — Registrar consentimento para tratamento de dados**
 

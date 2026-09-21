@@ -315,7 +315,7 @@ Rastreabilidade: CP12 — Acessibilidade e usabilidade (transversal às features
 
 ### Registro da Contribuição Social (CP8)
 
-#### Feature — Registrar pagamento da contribuição social do paciente
+#### Feature — Registrar pagamento da contribuição social do paciente [#43](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/issues/43)
 
 **RNF12 — Auditoria dos registros de contribuição social**
 
@@ -330,7 +330,7 @@ Rastreabilidade: Feature "Registrar pagamento da contribuição social do pacien
 
 Os RNFs abaixo restringem as features da CP11 e valem para todas as funcionalidades internas do sistema que tratam dados pessoais ou de saúde.
 
-#### Feature — Autenticar usuário institucional
+#### Feature — Autenticar usuário institucional [#45](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/issues/45)
 
 **RNF13 — Proteção das credenciais de acesso**
 
@@ -341,7 +341,7 @@ A conformidade deve ser verificada por inspeção do banco de dados (nenhuma sen
 Classificação: segurança (URPS+).
 Rastreabilidade: Feature "Autenticar usuário institucional" → CP11 — Segurança, sigilo e controle de acesso.
 
-#### Feature — Encerrar sessão do usuário
+#### Feature — Encerrar sessão do usuário [#46](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/issues/46)
 
 **RNF14 — Expiração da sessão por inatividade**
 
@@ -352,7 +352,7 @@ A conformidade deve ser verificada por teste: deixar uma sessão parada por 30 m
 Classificação: segurança (URPS+).
 Rastreabilidade: Feature "Encerrar sessão do usuário" → CP11 — Segurança, sigilo e controle de acesso.
 
-#### Feature — Restringir acesso ao prontuário do paciente
+#### Feature — Restringir acesso ao prontuário do paciente [#50](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/issues/50)
 
 **RNF15 — Criptografia dos dados**
 
@@ -363,7 +363,7 @@ A conformidade deve ser verificada por ferramenta de análise de configuração 
 Classificação: segurança (URPS+).
 Rastreabilidade: Feature "Restringir acesso ao prontuário do paciente" → CP11 — Segurança, sigilo e controle de acesso.
 
-#### Feature — Consultar registro de acessos ao prontuário
+#### Feature — Consultar registro de acessos ao prontuário [#51](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/issues/51)
 
 **RNF16 — Trilha de auditoria de acessos ao prontuário**
 
