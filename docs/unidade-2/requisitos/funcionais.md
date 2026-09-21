@@ -1,4 +1,4 @@
-# 8. Requisitos de Software
+﻿# 8. Requisitos de Software
 
 ## 8.1 Lista de Requisitos Funcionais
 
@@ -153,3 +153,169 @@ O sistema deve permitir que o paciente aumente ou diminua o tamanho do texto exi
 
 _Critério de aceitação:_ dado que o paciente selecionou um dos três níveis de tamanho de texto, quando navegar pelas páginas voltadas ao público externo, então o nível selecionado deve ser aplicado de forma consistente em todas elas, seguindo a mesma regra de persistência por sessão de navegador do RF03.
 _Rastreabilidade:_ Feature "Ajustar tamanho do texto" → CP12 — Acessibilidade e usabilidade.
+
+### Inscrição on-line (CP1)
+
+A CP1 foi decomposta em três features: registro da solicitação de atendimento on-line, emissão de comprovante de inscrição e registro de inscrição assistida. As features têm como objetivo ampliar o acesso da comunidade aos serviços da Clínica Escola FBr, permitindo que o interessado realize sua inscrição sem necessidade de deslocamento presencial e que pessoas com dificuldades de acesso digital possam utilizar um canal assistido.
+
+O registro da inscrição assistida constitui uma resposta proposta ao risco de exclusão digital identificado na intervenção social (Seção 3), cuja forma de operação deverá ser validada com a Clínica Escola.
+
+As funcionalidades destinadas ao público externo devem observar os requisitos de acessibilidade da CP12, enquanto o acesso institucional aos dados dos inscritos deve respeitar os perfis e as restrições estabelecidos pela CP11.
+
+#### Feature — Registrar solicitação de atendimento on-line
+
+**RF05 — Registrar solicitação de atendimento on-line**
+
+O sistema deve permitir que o interessado realize uma solicitação de atendimento psicológico por meio de formulário eletrônico, acessível a partir de link divulgado no site e nas redes sociais da FBr, informando seus dados cadastrais e a queixa que motivou a busca pelo atendimento.
+
+O formulário deve permitir o preenchimento dos campos definidos pela Clínica Escola como obrigatórios, verificar se esses campos foram preenchidos e solicitar a confirmação do interessado antes de registrar a inscrição.
+
+Após a conclusão do envio, o sistema deve armazenar a solicitação e gerar um identificador único, que será utilizado para o acompanhamento da inscrição nas etapas posteriores de triagem e fila de espera.
+
+O registro da solicitação não representa confirmação de vaga ou garantia de atendimento, pois o interessado ainda deverá passar pelo processo de triagem previsto na CP2.
+
+_Critérios de aceitação:_
+
+- Dado que o interessado acessou o formulário de inscrição, quando preencher todos os campos obrigatórios e confirmar o envio, então o sistema deve registrar a solicitação e gerar um identificador único vinculado à inscrição.
+
+- Dado que o interessado deixou um ou mais campos obrigatórios sem preenchimento, quando tentar enviar o formulário, então o sistema deve impedir a conclusão da inscrição, identificar os campos pendentes e permitir sua correção sem descartar os demais dados já preenchidos.
+
+- Dada uma solicitação registrada com sucesso, quando o interessado concluir o processo de inscrição, então o sistema deve informar que a solicitação foi recebida e que o atendimento dependerá das etapas posteriores de triagem e disponibilidade de vagas.
+
+- Dado que ocorreu uma falha antes da confirmação do registro, quando o interessado tentar concluir a inscrição, então o sistema não deve apresentar uma confirmação de inscrição realizada sem que exista um registro correspondente.
+
+_Rastreabilidade:_ Feature "Registrar solicitação de atendimento on-line" → CP1 — Inscrição on-line → OE1/OE4.
+
+#### Feature — Emitir comprovante de inscrição
+
+**RF06 — Emitir comprovante de inscrição**
+
+O sistema deve permitir que o interessado obtenha um comprovante eletrônico após a conclusão do registro da solicitação de atendimento.
+
+O comprovante deve apresentar o número único da inscrição, a data e a hora do registro e uma mensagem confirmando o recebimento da solicitação pela Clínica Escola FBr.
+
+O documento deve informar que o comprovante representa exclusivamente o registro da inscrição e não constitui confirmação de vaga, agendamento ou início do atendimento psicológico.
+
+O comprovante não deve apresentar a queixa informada pelo interessado nem informações clínicas que não sejam necessárias para confirmar o recebimento da solicitação.
+
+_Critérios de aceitação:_
+
+- Dada uma solicitação de atendimento registrada com sucesso, quando o interessado concluir a inscrição, então o sistema deve disponibilizar um comprovante contendo o número da inscrição, a data e a hora do registro.
+
+- Dado um comprovante emitido, quando o interessado visualizar seu conteúdo, então deve encontrar uma mensagem informando que a inscrição foi recebida e que o atendimento está sujeito à triagem e à disponibilidade de vagas.
+
+- Dada uma tentativa de inscrição que não tenha sido concluída com sucesso, quando o interessado acessar a etapa de confirmação, então o sistema não deve emitir um comprovante correspondente a uma solicitação inexistente.
+
+- Dado um comprovante de inscrição, quando seu conteúdo for apresentado ao interessado, então não deve conter a queixa informada no formulário nem dados clínicos desnecessários à confirmação do registro.
+
+_Rastreabilidade:_ Feature "Emitir comprovante de inscrição" → CP1 — Inscrição on-line → OE1/OE4.
+
+#### Feature — Registrar inscrição assistida
+
+**RF07 — Registrar inscrição assistida**
+
+O sistema deve permitir que um usuário institucional autorizado registre a solicitação de atendimento de um interessado que necessite de auxílio para realizar sua inscrição, mediante atendimento assistido ou presencial disponibilizado pela Clínica Escola FBr.
+
+O registro assistido deve utilizar os mesmos campos cadastrais e informações obrigatórias estabelecidos para a inscrição on-line, permitindo que a solicitação seja incorporada ao mesmo fluxo de triagem e fila de espera.
+
+O sistema deve identificar a modalidade utilizada para o registro da inscrição, diferenciando as solicitações realizadas diretamente pelo interessado daquelas registradas com auxílio de um usuário institucional.
+
+A utilização do canal assistido não deve atribuir prioridade clínica diferenciada ao interessado, pois a classificação de prioridade depende do processo de triagem previsto na CP2.
+
+_Critérios de aceitação:_
+
+- Dado um interessado atendido por um usuário institucional autorizado, quando os dados obrigatórios forem preenchidos e a inscrição for confirmada, então o sistema deve registrar a solicitação, gerar um identificador único e encaminhá-la ao mesmo fluxo de triagem utilizado pelas inscrições on-line.
+
+- Dado um usuário institucional sem permissão para registrar inscrições assistidas, quando tentar acessar a funcionalidade, então o sistema deve impedir a operação.
+
+- Dada uma inscrição realizada por atendimento assistido, quando seu registro for consultado por um usuário autorizado, então o sistema deve identificar a modalidade de inscrição utilizada.
+
+- Dadas duas solicitações com a mesma classificação de prioridade validada, sendo uma on-line e outra assistida, quando forem incorporadas à fila de espera, então a modalidade de inscrição não deve constituir, isoladamente, critério para atribuição de prioridade diferenciada.
+
+_Rastreabilidade:_ Feature "Registrar inscrição assistida" → CP1 — Inscrição on-line → OE1/OE4 → IS01 — Exclusão digital.
+
+### Fila de espera e consulta de posição (CP3)
+
+A CP3 foi decomposta em três features: ordenação dos inscritos na fila de espera, consulta individual da posição e apresentação das condições gerais de atendimento.
+
+As features têm como objetivo organizar a fila de acordo com as prioridades estabelecidas na triagem, ampliar a transparência das informações fornecidas aos inscritos e reduzir a necessidade de contatos recorrentes com a secretaria para acompanhamento da solicitação.
+
+A ordenação da fila depende da classificação de prioridade realizada na CP2, enquanto a consulta individual deve respeitar as restrições de acesso e sigilo previstas na CP11.
+
+A apresentação das condições gerais de atendimento constitui uma resposta proposta aos riscos de aumento da demanda e de criação de expectativas inadequadas sobre o tempo de espera, identificados na intervenção social (Seção 3).
+
+#### Feature — Ordenar inscritos na fila de espera
+
+**RF08 — Ordenar inscritos na fila de espera**
+
+O sistema deve manter a fila de espera da Clínica Escola FBr organizada de acordo com a classificação de prioridade atribuída aos inscritos durante o processo de triagem previsto na CP2.
+
+A classificação deve considerar as prioridades vermelha, amarela e verde, conforme as regras definidas pela Clínica Escola, utilizando a classificação final validada pela equipe responsável pela triagem.
+
+O sistema não deve utilizar uma pré-classificação automática como decisão clínica definitiva sem a revisão de um profissional autorizado.
+
+Quando ocorrer uma alteração autorizada na prioridade ou na situação de um inscrito, o sistema deve atualizar seu posicionamento na fila de acordo com os critérios institucionais definidos para a ordenação.
+
+Os critérios de desempate entre inscritos com a mesma prioridade deverão ser confirmados com a Clínica Escola durante a validação dos requisitos.
+
+_Critérios de aceitação:_
+
+- Dado um inscrito cuja classificação de prioridade tenha sido validada pela equipe responsável, quando sua solicitação for incorporada à fila de espera, então o sistema deve posicioná-lo conforme a prioridade atribuída e os critérios de ordenação aprovados pela Clínica Escola.
+
+- Dado um inscrito cuja pré-classificação automática ainda não tenha sido validada, quando o sistema organizar a fila, então não deve tratar a classificação preliminar como decisão clínica definitiva.
+
+- Dada uma alteração de prioridade realizada por um usuário autorizado, quando a nova classificação for confirmada, então o sistema deve atualizar a posição do inscrito de acordo com os critérios de ordenação estabelecidos.
+
+- Dada uma alteração na situação de um inscrito que afete sua participação na fila, quando a atualização for confirmada, então o sistema deve recalcular as posições dos demais inscritos afetados, preservando o histórico da decisão.
+
+_Rastreabilidade:_ Feature "Ordenar inscritos na fila de espera" → CP3 — Fila de espera e consulta de posição → OE4/OE7.
+
+#### Feature — Consultar posição individual na fila
+
+**RF09 — Consultar posição individual na fila**
+
+O sistema deve permitir que o inscrito consulte sua posição e situação atual na fila de espera da Clínica Escola FBr, utilizando seu CPF ou número de inscrição para localizar a solicitação.
+
+Antes de apresentar as informações individuais, o sistema deve verificar se o solicitante está autorizado a consultar o registro, conforme o mecanismo de verificação de acesso a ser definido e validado pela equipe.
+
+A consulta deve apresentar exclusivamente as informações relativas à própria solicitação, sem divulgar nomes, dados cadastrais, queixas ou classificações clínicas dos demais inscritos.
+
+O sistema deve informar que a posição na fila pode sofrer alterações em razão das prioridades estabelecidas na triagem e das movimentações da fila, não representando garantia de prazo ou data de atendimento.
+
+_Critérios de aceitação:_
+
+- Dado um inscrito com acesso devidamente verificado, quando informar seu CPF ou número de inscrição e solicitar a consulta, então o sistema deve apresentar exclusivamente sua posição e situação atual na fila de espera.
+
+- Dado um usuário que não tenha comprovado autorização para consultar determinada inscrição, quando tentar acessar suas informações, então o sistema deve impedir a divulgação da posição e da situação individual correspondente.
+
+- Dada uma consulta individual autorizada, quando o sistema apresentar a posição do inscrito, então não deve exibir nomes, dados cadastrais, queixas ou informações clínicas dos demais integrantes da fila.
+
+- Dada uma alteração na prioridade ou na situação dos inscritos que modifique o posicionamento na fila, quando o interessado realizar uma nova consulta autorizada, então o sistema deve apresentar sua posição atualizada.
+
+- Dada uma consulta de posição realizada com sucesso, quando o resultado for apresentado, então o sistema deve informar que a posição poderá variar e que não existe garantia de atendimento em uma data ou prazo específico.
+
+_Rastreabilidade:_ Feature "Consultar posição individual na fila" → CP3 — Fila de espera e consulta de posição → OE4/OE7 → IS03 — Expectativa sobre a fila.
+
+#### Feature — Informar condições gerais da fila
+
+**RF10 — Informar condições gerais da fila**
+
+O sistema deve permitir que o interessado consulte informações institucionais sobre o funcionamento da fila de espera da Clínica Escola FBr, incluindo os critérios gerais de atendimento e a capacidade de atendimento divulgada pela coordenação.
+
+As informações apresentadas devem corresponder ao conteúdo institucional aprovado pela Clínica Escola e conter a data da última atualização.
+
+A divulgação deve ocorrer de forma agregada, sem permitir a identificação de inscritos, a exposição de informações clínicas individuais ou a visualização de dados restritos da operação.
+
+Quando não houver informação de capacidade aprovada e vigente, o sistema não deve apresentar valores estimados como se representassem a disponibilidade real de vagas.
+
+_Critérios de aceitação:_
+
+- Dado que a coordenação tenha aprovado e disponibilizado informações institucionais sobre a fila, quando o interessado acessar a página correspondente, então o sistema deve apresentar os critérios gerais de atendimento e a capacidade divulgada, acompanhados da data de atualização.
+
+- Dado que não exista informação de capacidade aprovada ou vigente, quando o interessado consultar as condições gerais da fila, então o sistema não deve apresentar uma quantidade estimada de vagas como disponibilidade confirmada.
+
+- Dado um interessado que consulte as informações gerais da fila, quando o conteúdo for apresentado, então não deve conter nomes, dados cadastrais, queixas ou classificações clínicas individualizadas dos inscritos.
+
+- Dada uma alteração nas informações institucionais aprovada pela coordenação, quando o conteúdo atualizado for publicado, então o sistema deve substituir a informação anterior e apresentar a nova data de atualização.
+
+_Rastreabilidade:_ Feature "Informar condições gerais da fila" → CP3 — Fila de espera e consulta de posição → OE4/OE7 → IS02 — Aumento da demanda.
