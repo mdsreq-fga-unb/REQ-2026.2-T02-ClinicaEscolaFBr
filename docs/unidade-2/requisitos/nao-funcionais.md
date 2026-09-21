@@ -312,3 +312,75 @@ As páginas voltadas ao público externo devem se adaptar corretamente a largura
 
 Classificação: usabilidade.
 Rastreabilidade: CP12 — Acessibilidade e usabilidade (transversal às features "Ativar modo de alto contraste" e "Ajustar tamanho do texto").
+
+### Registro da Contribuição Social (CP8)
+
+#### Feature — Registrar pagamento da contribuição social do paciente
+
+**RNF12 — Auditoria dos registros de contribuição social**
+
+Todo registro de pagamento da contribuição social (RF11) deve guardar o usuário responsável, a data/hora da operação, o paciente, o valor, a data e a forma de pagamento. Esses dados não podem ser apagados nem sobrescritos, e devem ficar disponíveis para consulta pela coordenação por, no mínimo, 24 meses, prazo compatível com o ciclo de fiscalização do CRP (mesmo prazo do RNF03).
+
+A conformidade deve ser verificada por inspeção: registrar pagamentos com dados fictícios, conferir se todos os campos acima foram guardados e confirmar que nenhum perfil consegue apagá-los ou alterá-los pela interface.
+
+Classificação: auditoria (URPS+).
+Rastreabilidade: Feature "Registrar pagamento da contribuição social do paciente" → CP8 — Registro da contribuição social.
+
+### Segurança, Sigilo e Controle de Acesso (CP11)
+
+Os RNFs abaixo restringem as features da CP11 e valem para todas as funcionalidades internas do sistema que tratam dados pessoais ou de saúde.
+
+#### Feature — Autenticar usuário institucional
+
+**RNF13 — Proteção das credenciais de acesso**
+
+As senhas dos usuários institucionais devem ter, no mínimo, 8 caracteres, com pelo menos uma letra e um número, e devem ser armazenadas apenas na forma de hash com algoritmo próprio para senhas (bcrypt ou Argon2), nunca em texto legível. Após 5 tentativas de login seguidas com erro para o mesmo usuário, o sistema deve bloquear novas tentativas desse usuário por 15 minutos.
+
+A conformidade deve ser verificada por inspeção do banco de dados (nenhuma senha legível armazenada) e por teste de 5 tentativas de login com erro, confirmando o bloqueio e sua liberação após 15 minutos.
+
+Classificação: segurança (URPS+).
+Rastreabilidade: Feature "Autenticar usuário institucional" → CP11 — Segurança, sigilo e controle de acesso.
+
+#### Feature — Encerrar sessão do usuário
+
+**RNF14 — Expiração da sessão por inatividade**
+
+A sessão de um usuário institucional deve ser encerrada automaticamente após 30 minutos sem nenhuma interação com o sistema, para reduzir o risco de exposição de dados em computadores compartilhados da clínica.
+
+A conformidade deve ser verificada por teste: deixar uma sessão parada por 30 minutos e confirmar que a próxima ação exige nova autenticação.
+
+Classificação: segurança (URPS+).
+Rastreabilidade: Feature "Encerrar sessão do usuário" → CP11 — Segurança, sigilo e controle de acesso.
+
+#### Feature — Restringir acesso ao prontuário do paciente
+
+**RNF15 — Criptografia dos dados**
+
+Toda comunicação entre o navegador e o sistema deve usar HTTPS com TLS 1.2 ou superior, e requisições feitas por HTTP devem ser redirecionadas para HTTPS. Os dados clínicos do prontuário (registros de evolução e relatório final) devem ser armazenados criptografados no banco de dados.
+
+A conformidade deve ser verificada por ferramenta de análise de configuração TLS (ex.: SSL Labs), por teste de acesso via HTTP e por inspeção do banco de dados, confirmando que o conteúdo clínico não aparece em texto legível.
+
+Classificação: segurança (URPS+).
+Rastreabilidade: Feature "Restringir acesso ao prontuário do paciente" → CP11 — Segurança, sigilo e controle de acesso.
+
+#### Feature — Consultar registro de acessos ao prontuário
+
+**RNF16 — Trilha de auditoria de acessos ao prontuário**
+
+O sistema deve registrar automaticamente todo acesso ao prontuário, permitido ou negado, com o usuário, o perfil, a data/hora, o paciente e a operação realizada. Nenhum perfil pode alterar ou apagar esses registros, que devem ser mantidos por, no mínimo, 5 anos, prazo mínimo de guarda do registro documental definido pelo CFP (a confirmar com a FBr).
+
+A conformidade deve ser verificada por teste: realizar acessos permitidos e negados com usuários de teste e conferir se todos aparecem na consulta do RF19, e por inspeção, confirmando que a interface não oferece meio de alterar ou apagar os registros.
+
+Classificação: auditoria (URPS+).
+Rastreabilidade: Feature "Consultar registro de acessos ao prontuário" → CP11 — Segurança, sigilo e controle de acesso.
+
+#### Transversal às features da CP11
+
+**RNF17 — Cópia de segurança e recuperação dos dados**
+
+O sistema deve fazer cópia de segurança completa dos dados pelo menos uma vez por dia, de forma que uma falha cause a perda de, no máximo, 24 horas de registros. As cópias devem ser armazenadas criptografadas, fora do servidor principal, e a restauração deve ser testada pelo menos uma vez por semestre.
+
+A conformidade deve ser verificada por inspeção do histórico de cópias (uma cópia por dia) e por um teste de restauração em ambiente separado, conferindo se os dados restaurados correspondem aos da última cópia.
+
+Classificação: confiabilidade (URPS+).
+Rastreabilidade: CP11 — Segurança, sigilo e controle de acesso (transversal às features); responde ao risco IS05 — Dependência tecnológica da intervenção social (Seção 3).
