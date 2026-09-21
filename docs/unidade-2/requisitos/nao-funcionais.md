@@ -138,3 +138,97 @@ As páginas voltadas ao público externo devem se adaptar corretamente a largura
 
 Classificação: usabilidade.
 Rastreabilidade: CP12 — Acessibilidade e usabilidade (transversal às features "Ativar modo de alto contraste" e "Ajustar tamanho do texto").
+
+### Inscrição on-line (CP1)
+
+A CP1 possui três features: **Registrar solicitação de atendimento on-line**, **Emitir comprovante de inscrição** e **Registrar inscrição assistida**.
+
+Os requisitos não funcionais abaixo estabelecem condições de qualidade específicas para o preenchimento do formulário e a proteção das informações registradas durante a inscrição.
+
+As páginas de inscrição também devem atender aos requisitos transversais de acessibilidade e usabilidade definidos na CP12 (RNF04, RNF05 e RNF06).
+
+#### Feature — Registrar solicitação de atendimento on-line
+
+**RNF07 — Identificação e recuperação de erros no formulário**
+
+O formulário de inscrição on-line (RF05) deve apresentar mensagens textuais de erro associadas aos respectivos campos quando houver ausência ou preenchimento inválido de informações obrigatórias.
+
+As mensagens devem identificar o campo que precisa ser corrigido e descrever a correção necessária, sem depender exclusivamente de alterações de cor para comunicar o erro.
+
+Após a identificação de um erro de preenchimento, o sistema deve preservar os valores válidos informados nos demais campos do formulário, permitindo que o interessado conclua a inscrição sem precisar repetir todo o preenchimento.
+
+A conformidade deve ser verificada por meio de testes com campos obrigatórios vazios e entradas inválidas, confirmando a identificação textual dos erros e a preservação das informações válidas previamente inseridas.
+
+Classificação: usabilidade e acessibilidade (URPS+).
+
+Rastreabilidade: Feature "Registrar solicitação de atendimento on-line" → CP1 — Inscrição on-line; complementa os requisitos transversais de acessibilidade da CP12.
+
+#### Feature — Emitir comprovante de inscrição
+
+**RNF08 — Proteção das informações no comprovante de inscrição**
+
+O comprovante eletrônico emitido após o registro da solicitação (RF06) deve apresentar somente as informações necessárias à confirmação do recebimento da inscrição, sem divulgar a queixa informada pelo interessado ou outros dados clínicos registrados no formulário.
+
+As informações clínicas não devem ser incluídas no endereço eletrônico utilizado para acessar a confirmação nem em mensagens públicas de sucesso ou erro relacionadas à emissão do comprovante.
+
+A conformidade deve ser verificada mediante a emissão de comprovantes com dados fictícios, a inspeção de seu conteúdo e a verificação das informações apresentadas na interface e no endereço eletrônico da confirmação.
+
+Classificação: segurança e privacidade (URPS+).
+
+Rastreabilidade: Feature "Emitir comprovante de inscrição" → CP1 — Inscrição on-line; relacionada à CP11 — Segurança, sigilo e controle de acesso.
+
+### Fila de espera e consulta de posição (CP3)
+
+A CP3 possui três features: **Ordenar inscritos na fila de espera**, **Consultar posição individual na fila** e **Informar condições gerais da fila**.
+
+Os RNFs abaixo estabelecem condições de segurança, privacidade, compreensibilidade e confiabilidade das informações apresentadas ao interessado.
+
+Os requisitos de acessibilidade e responsividade da CP12 também se aplicam às páginas públicas de consulta da fila de espera.
+
+#### Feature — Consultar posição individual na fila
+
+**RNF09 — Privacidade e controle de acesso à consulta da fila**
+
+A consulta individual da fila de espera (RF09) deve impedir que o conhecimento isolado do CPF ou do número de inscrição permita a um usuário não autorizado acessar informações individuais de outro inscrito.
+
+O sistema deve verificar a autorização do solicitante antes de apresentar sua posição e situação na fila, utilizando mecanismo de verificação de acesso definido e validado pela equipe responsável.
+
+As respostas de consultas não autorizadas não devem revelar a posição, a classificação de prioridade, a queixa ou outros dados individuais da solicitação consultada.
+
+A conformidade deve ser verificada por meio de testes com inscrições fictícias, contemplando consultas autorizadas e tentativas de acesso a registros de terceiros mediante o conhecimento de seus identificadores.
+
+Em todos os casos de acesso não autorizado, nenhuma informação individual da inscrição consultada deve ser divulgada.
+
+Classificação: segurança e privacidade (URPS+).
+
+Rastreabilidade: Feature "Consultar posição individual na fila" → CP3 — Fila de espera e consulta de posição; relacionada à CP11 — Segurança, sigilo e controle de acesso.
+
+**RNF10 — Compreensibilidade das informações sobre a posição na fila**
+
+A interface de consulta da fila de espera (RF09) deve apresentar de forma clara e legível a posição e a situação atual do inscrito, acompanhadas de informação explícita de que a posição pode variar e não representa garantia de prazo ou data de atendimento.
+
+O aviso deve ser exibido junto ao resultado da consulta, sem exigir que o interessado acesse outra página, abra um documento adicional ou realize uma operação específica para visualizar essa informação.
+
+A conformidade deve ser verificada em testes da interface, confirmando que todas as consultas individuais realizadas com sucesso apresentam a informação sobre a possibilidade de alteração da posição e a ausência de garantia de prazo de atendimento.
+
+Classificação: usabilidade (URPS+).
+
+Rastreabilidade: Feature "Consultar posição individual na fila" → CP3 — Fila de espera e consulta de posição → IS03 — Expectativa sobre a fila.
+
+#### Feature — Informar condições gerais da fila
+
+**RNF11 — Confiabilidade das informações institucionais da fila**
+
+As informações institucionais sobre capacidade e critérios gerais de atendimento apresentadas pelo sistema (RF10) devem corresponder à versão vigente do conteúdo aprovado pela coordenação da Clínica Escola FBr.
+
+O sistema deve apresentar a data da última atualização das informações divulgadas e substituir a versão anterior quando uma nova publicação autorizada for realizada.
+
+Informações de capacidade que não estejam aprovadas ou vigentes não devem ser apresentadas como disponibilidade confirmada de vagas.
+
+A conformidade deve ser verificada mediante a publicação de informações institucionais fictícias, a atualização autorizada de seu conteúdo e a conferência da versão e da data exibidas ao interessado.
+
+Após a publicação da atualização, a consulta deve apresentar exclusivamente a versão vigente das informações institucionais.
+
+Classificação: confiabilidade (URPS+).
+
+Rastreabilidade: Feature "Informar condições gerais da fila" → CP3 — Fila de espera e consulta de posição → IS02 — Aumento da demanda.
