@@ -91,6 +91,91 @@ Após a publicação da atualização, a consulta deve apresentar exclusivamente
 Classificação: confiabilidade (URPS+).
 Rastreabilidade: Feature "Informar condições gerais da fila" → CP3 — Fila de espera e consulta de posição → IS02 — Aumento da demanda.
 
+### Distribuição de casos entre supervisores e estagiários (CP5)
+
+A CP5 tem nove features (ver [Requisitos Funcionais](funcionais.md)); os RNFs abaixo estabelecem condições de qualidade para a distribuição de casos, a vinculação de pacientes a estagiários e o acompanhamento dos vínculos, aplicando-se de forma transversal ao conjunto das features, conforme indicado na rastreabilidade de cada um. Os RNFs de segurança e privacidade (RNF5.1 e RNF5.2) devem ser alinhados com os requisitos gerais de acesso e sigilo da CP11, evitando duplicidade, e o RNF5.9 segue a mesma meta de acessibilidade definida para a CP12 (RNF04).
+
+**RNF5.1 — Autorização para distribuição, vínculo e transferência de casos**
+
+Somente a coordenação e os supervisores autorizados podem distribuir, vincular e transferir casos; o estagiário e o supervisor só podem acessar os casos sob sua própria responsabilidade.
+
+A conformidade deve ser verificada por testes de autorização, com cenários positivos e negativos, para os perfis paciente, secretaria, estagiário, supervisor e coordenação, sem nenhum acesso indevido.
+
+Classificação: segurança (URPS+).
+Rastreabilidade: CP5 — Distribuição de casos entre supervisores e estagiários (transversal a todas as features da CP5).
+
+**RNF5.2 — Privacidade dos dados nas telas de distribuição e consulta**
+
+As telas de distribuição de casos e de consulta de responsáveis devem exibir apenas os dados necessários a cada perfil; dados clínicos só podem aparecer a quem tem acesso ao prontuário do caso, conforme a CP11.
+
+A conformidade deve ser verificada por revisão das telas por perfil e por teste do conteúdo efetivamente exibido, confirmando a ausência de campos clínicos para perfis sem acesso ao prontuário.
+
+Classificação: privacidade (URPS+).
+Rastreabilidade: CP5 — Distribuição de casos entre supervisores e estagiários (transversal às features "Listar casos aguardando distribuição", "Consultar responsáveis pelo caso" e "Consultar casos sob responsabilidade do estagiário ou supervisor").
+
+**RNF5.3 — Auditoria de atribuições, vínculos e transferências**
+
+Toda atribuição, vínculo, alteração e transferência de responsável por um caso deve ser registrada com data/hora, autor da ação, caso envolvido e responsáveis anterior e novo.
+
+A conformidade deve ser verificada por teste de integração, confirmando o registro de auditoria após cada operação de distribuição, vínculo ou transferência.
+
+Classificação: auditoria (URPS+).
+Rastreabilidade: CP5 — Distribuição de casos entre supervisores e estagiários (transversal às features "Distribuir caso a supervisor conforme área de especialidade", "Vincular paciente a estagiário responsável", "Transferir caso para outro estagiário ou supervisor" e "Consultar histórico de responsáveis do caso").
+
+**RNF5.4 — Integridade dos vínculos de responsabilidade**
+
+Nenhum caso ativo pode ficar sem supervisor e estagiário responsáveis após a distribuição, nem ter dois responsáveis principais vigentes ao mesmo tempo, salvo confirmação futura do atendimento em dupla (RN5.9).
+
+A conformidade deve ser garantida por restrições de integridade no banco de dados, além de testes de regra de negócio, sem nenhuma inconsistência de vínculo identificada.
+
+Classificação: confiabilidade (URPS+).
+Rastreabilidade: CP5 — Distribuição de casos entre supervisores e estagiários (transversal às features "Distribuir caso a supervisor conforme área de especialidade", "Vincular paciente a estagiário responsável" e "Transferir caso para outro estagiário ou supervisor").
+
+**RNF5.5 — Continuidade do histórico na troca de responsável**
+
+A troca de responsável por um caso não deve causar perda de informação: as sessões, a evolução e os vínculos anteriores devem permanecer disponíveis ao novo responsável autorizado após a transferência.
+
+A conformidade deve ser verificada por teste comparando o histórico do caso antes e depois da transferência, confirmando que a totalidade dos registros anteriores permanece acessível.
+
+Classificação: confiabilidade (URPS+).
+Rastreabilidade: Feature "Transferir caso para outro estagiário ou supervisor" → CP5 — Distribuição de casos entre supervisores e estagiários; relacionada à feature "Consultar histórico de responsáveis do caso".
+
+**RNF5.6 — Desempenho das listagens e operações de vínculo**
+
+As listagens de casos e as operações de distribuição, vínculo e consulta de responsáveis devem responder rapidamente, considerando o volume de casos da clínica (cerca de 100 vagas e 160 a 180 inscrições por semestre).
+
+A conformidade deve ser verificada por teste de desempenho com dados representativos, com listagens e operações de vínculo respondendo em até 3 segundos em 95% das requisições, em condições normais de uso.
+
+Classificação: desempenho (URPS+).
+Rastreabilidade: CP5 — Distribuição de casos entre supervisores e estagiários (transversal às features "Listar casos aguardando distribuição", "Consultar responsáveis pelo caso", "Consultar casos sob responsabilidade do estagiário ou supervisor" e "Visualizar distribuição de casos por supervisor").
+
+**RNF5.7 — Usabilidade da distribuição e do vínculo de casos**
+
+O supervisor e a coordenação devem conseguir distribuir e vincular casos sem treinamento prévio, inclusive a partir do celular, concluindo a distribuição de um caso em até 3 interações a partir da lista de pendentes.
+
+A conformidade deve ser verificada por teste de usabilidade com usuários representativos, em telas responsivas.
+
+Classificação: usabilidade (URPS+).
+Rastreabilidade: CP5 — Distribuição de casos entre supervisores e estagiários (transversal às features "Listar casos aguardando distribuição", "Distribuir caso a supervisor conforme área de especialidade" e "Vincular paciente a estagiário responsável").
+
+**RNF5.8 — Manutenibilidade das áreas de especialidade**
+
+A lista de áreas de especialidade e sua associação aos supervisores deve poder ser mantida pela coordenação diretamente pela interface, sem necessidade de alteração de código ou intervenção técnica.
+
+A conformidade deve ser verificada por teste de aceitação com o perfil de coordenação, incluindo, editando e removendo áreas de especialidade.
+
+Classificação: manutenibilidade (URPS+).
+Rastreabilidade: Feature "Registrar áreas de especialidade do supervisor" → CP5 — Distribuição de casos entre supervisores e estagiários.
+
+**RNF5.9 — Acessibilidade das telas de distribuição e consulta**
+
+As telas de distribuição de casos, vínculo e consulta de responsáveis devem ser acessíveis, seguindo a mesma meta de conformidade definida para a CP12 (RNF04): navegação por teclado, contraste adequado e compatibilidade com leitor de tela.
+
+A conformidade deve ser verificada com leitor de tela e checklist de acessibilidade.
+
+Classificação: acessibilidade (URPS+).
+Rastreabilidade: CP5 — Distribuição de casos entre supervisores e estagiários (transversal às features "Listar casos aguardando distribuição", "Registrar áreas de especialidade do supervisor", "Distribuir caso a supervisor conforme área de especialidade", "Vincular paciente a estagiário responsável", "Consultar responsáveis pelo caso", "Consultar casos sob responsabilidade do estagiário ou supervisor" e "Visualizar distribuição de casos por supervisor"); relacionada à CP12 — Acessibilidade e usabilidade.
+
 ### Emissão de Declaração de Comparecimento (CP9)
 
 A CP9 tem cinco features (ver [Requisitos Funcionais](funcionais.md)); os RNFs abaixo estabelecem condições de qualidade para a emissão, reemissão e verificação da declaração de comparecimento, aplicando-se de forma transversal ao conjunto das features, conforme indicado na rastreabilidade de cada um. Os RNFs de segurança e privacidade (RNF9.1 a RNF9.3) devem ser alinhados com os requisitos gerais de acesso e sigilo da CP11, evitando duplicidade, e o RNF9.7 segue a mesma meta de acessibilidade definida para a CP12 (RNF04).

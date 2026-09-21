@@ -19,6 +19,20 @@ Os requisitos funcionais (RFs) são declarados a partir da decomposição das Ca
     Feature: Consultar posição individual na fila
     Feature: Informar condições gerais da fila
 
+Área: Gestão de casos
+  Conjunto: Distribuição entre supervisores
+    Feature: Listar casos aguardando distribuição
+    Feature: Registrar áreas de especialidade do supervisor
+    Feature: Distribuir caso a supervisor conforme área de especialidade
+  Conjunto: Vinculação a estagiário
+    Feature: Vincular paciente a estagiário responsável
+    Feature: Consultar responsáveis pelo caso
+    Feature: Consultar casos sob responsabilidade do estagiário ou supervisor
+  Conjunto: Acompanhamento e reorganização
+    Feature: Visualizar distribuição de casos por supervisor
+    Feature: Transferir caso para outro estagiário ou supervisor
+    Feature: Consultar histórico de responsáveis do caso
+
 Área: Emissão de documentos
   Conjunto: Declaração de comparecimento
     Feature: Listar sessões com comparecimento registrado do paciente
@@ -203,6 +217,123 @@ _Critérios de aceitação:_
 - Dada uma alteração nas informações institucionais aprovada pela coordenação, quando o conteúdo atualizado for publicado, então o sistema deve substituir a informação anterior e apresentar a nova data de atualização.
 
 _Rastreabilidade:_ Feature "Informar condições gerais da fila" → CP3 — Fila de espera e consulta de posição → OE4/OE7 → IS02 — Aumento da demanda.
+
+### Distribuição de casos entre supervisores e estagiários (CP5)
+
+A CP5 foi decomposta em nove features, organizadas em três conjuntos: distribuição dos casos entre supervisores conforme a área de especialidade, vinculação de cada paciente a um estagiário responsável e acompanhamento/reorganização dos vínculos já estabelecidos, apoiando a organização da reunião inicial de estágio e a rastreabilidade da responsabilidade sobre cada caso ([Solução Proposta, §2.3](../../unidade-1/solucao-proposta.md#23-caracteristicas-de-produto-mapeadas-com-os-objetivos-especificos)).
+
+A distribuição depende da classificação de prioridade realizada na CP2 e da fila de espera da CP3, enquanto o acesso ao prontuário do caso pelo estagiário e pelo supervisor respeita os perfis e restrições definidos na CP11. A ordem de prioridade na distribuição (RN5.4), o limite de casos simultâneos (RN5.8), a possibilidade de atendimento em dupla (RN5.9) e o enquadramento da transferência de caso na CP5 (RF5.8) ainda dependem de validação com a FBr.
+
+#### Feature — Listar casos aguardando distribuição
+
+**RF5.1 — Listar casos aguardando distribuição**
+
+O sistema deve listar, para um usuário autenticado com perfil de coordenação ou supervisor, os casos (pacientes) já triados que ainda não têm supervisor e estagiário responsáveis identificados, ordenados por prioridade, para apoiar a reunião inicial de estágio. Casos já distribuídos deixam de aparecer na lista. Quando não houver caso pendente, o sistema deve informar isso de forma clara.
+
+_Critérios de aceitação:_
+
+- Dado um conjunto de pacientes triados, quando a coordenação ou o supervisor abrir a lista de casos aguardando distribuição, então o sistema deve exibir somente os casos sem supervisor e estagiário responsáveis, ordenados por prioridade.
+- Dado um caso já distribuído a um supervisor, quando a lista de casos pendentes for exibida, então esse caso não deve aparecer nela.
+- Dado que todos os casos triados já foram distribuídos, quando um usuário autorizado abrir a lista de casos aguardando distribuição, então o sistema deve informar que não há casos pendentes.
+
+_Rastreabilidade:_ Feature "Listar casos aguardando distribuição" → CP5 — Distribuição de casos entre supervisores e estagiários → OE5/OE2.
+
+#### Feature — Registrar áreas de especialidade do supervisor
+
+**RF5.2 — Registrar áreas de especialidade do supervisor**
+
+O sistema deve permitir que a coordenação registre e mantenha as áreas de especialidade de cada supervisor, que servem de critério para a distribuição dos casos (RF5.3). Cada supervisor pode ter uma ou mais áreas de especialidade, e a manutenção dessa lista deve ser possível pela interface, sem intervenção técnica. Alterar as áreas de um supervisor não deve afetar os casos já distribuídos a ele.
+
+_Critérios de aceitação:_
+
+- Dado um supervisor cadastrado sem áreas de especialidade, quando a coordenação registrar uma ou mais áreas para ele, então o sistema deve associar as áreas informadas ao supervisor.
+- Dado um supervisor que já responde por casos distribuídos, quando a coordenação remover uma de suas áreas de especialidade, então os casos já distribuídos a ele devem permanecer sob sua responsabilidade.
+
+_Rastreabilidade:_ Feature "Registrar áreas de especialidade do supervisor" → CP5 — Distribuição de casos entre supervisores e estagiários → OE5.
+
+#### Feature — Distribuir caso a supervisor conforme área de especialidade
+
+**RF5.3 — Distribuir caso a supervisor conforme área de especialidade**
+
+O sistema deve permitir que a coordenação atribua cada caso pendente (RF5.1) a um supervisor, considerando a compatibilidade entre a área de especialidade exigida pelo caso e as áreas registradas para os supervisores (RF5.2). Um caso só pode ter um supervisor responsável vigente por vez, e a atribuição deve ficar registrada com data e autor. Quando não houver supervisor compatível com a área exigida, o sistema deve informar essa condição e permitir a atribuição manual a outro supervisor, registrando a exceção. A reatribuição de um caso que já possui supervisor deve ser feita exclusivamente pela transferência de caso (RF5.8), e não por uma nova distribuição.
+
+_Critérios de aceitação:_
+
+- Dado um caso que exige determinada área de especialidade e um supervisor que atua nessa área, quando a coordenação distribuir o caso a esse supervisor, então o sistema deve registrar o supervisor como responsável pelo caso, com data e autor da atribuição.
+- Dado um caso sem supervisor compatível disponível, quando a coordenação tentar distribuí-lo, então o sistema deve informar a ausência de compatibilidade e permitir a atribuição manual, registrando a exceção.
+- Dado um caso que já possui supervisor responsável, quando um usuário tentar distribuí-lo novamente, então o sistema deve bloquear a ação e orientar o uso da transferência de caso (RF5.8).
+
+_Rastreabilidade:_ Feature "Distribuir caso a supervisor conforme área de especialidade" → CP5 — Distribuição de casos entre supervisores e estagiários → OE5. Dependência: RF5.1, RF5.2.
+
+#### Feature — Vincular paciente a estagiário responsável
+
+**RF5.4 — Vincular paciente a estagiário responsável**
+
+O sistema deve permitir que o supervisor vincule cada paciente sob sua responsabilidade a um estagiário ativo no semestre, responsável pelo atendimento. Após o vínculo, o caso passa a ter estagiário e supervisor identificados, e o estagiário vinculado passa a ter acesso ao prontuário do caso, respeitando os perfis e restrições definidos na CP11. O supervisor só pode vincular estagiários a casos sob sua própria responsabilidade, e o vínculo deve ficar registrado com data e autor.
+
+_Critérios de aceitação:_
+
+- Dado um caso sob a responsabilidade de um supervisor, quando ele vincular um estagiário ao caso, então o sistema deve registrar o estagiário como responsável pelo caso e conceder a ele acesso ao caso.
+- Dado um caso sob a responsabilidade de um supervisor, quando outro supervisor tentar vincular um estagiário a esse caso, então o sistema deve negar a ação.
+
+_Rastreabilidade:_ Feature "Vincular paciente a estagiário responsável" → CP5 — Distribuição de casos entre supervisores e estagiários → OE5. Dependência: RF5.3.
+
+#### Feature — Consultar responsáveis pelo caso
+
+**RF5.5 — Consultar responsáveis pelo caso**
+
+O sistema deve exibir, para cada caso, o estagiário e o supervisor responsáveis, para uso da secretaria no agendamento e da coordenação no acompanhamento. A consulta deve exibir apenas o nome do estagiário e do supervisor responsáveis, sem expor dados clínicos a perfis que não têm acesso ao prontuário, e casos ainda sem responsáveis devem ser sinalizados como pendentes de distribuição.
+
+_Critério de aceitação:_ dado um caso com estagiário e supervisor já vinculados, quando a secretaria, o estagiário, o supervisor ou a coordenação consultarem o caso, então o sistema deve exibir os responsáveis sem exibir dados clínicos.
+
+_Rastreabilidade:_ Feature "Consultar responsáveis pelo caso" → CP5 — Distribuição de casos entre supervisores e estagiários → OE5. Dependência: RF5.4.
+
+#### Feature — Consultar casos sob responsabilidade do estagiário ou supervisor
+
+**RF5.6 — Consultar casos sob responsabilidade do estagiário ou supervisor**
+
+O sistema deve permitir que o estagiário ou o supervisor consultem a lista de casos vinculados a eles, identificando o paciente, a prioridade e a situação de cada caso. O estagiário deve visualizar apenas os casos vinculados a ele, enquanto o supervisor deve visualizar os casos sob sua responsabilidade e os de seus estagiários.
+
+_Critério de aceitação:_ dado um estagiário vinculado a um conjunto de casos, quando ele abrir a lista de seus casos, então o sistema deve exibir exclusivamente os casos vinculados a ele.
+
+_Rastreabilidade:_ Feature "Consultar casos sob responsabilidade do estagiário ou supervisor" → CP5 — Distribuição de casos entre supervisores e estagiários → OE5. Dependência: RF5.4.
+
+#### Feature — Visualizar distribuição de casos por supervisor
+
+**RF5.7 — Visualizar distribuição de casos por supervisor**
+
+O sistema deve mostrar à coordenação quantos casos ativos cada supervisor e cada estagiário têm sob sua responsabilidade, apoiando o equilíbrio da carga entre supervisores e alimentando o indicador "distribuição de casos por supervisor" da CP10.
+
+_Critério de aceitação:_ dado o conjunto de casos distribuídos, quando a coordenação consultar a visão de distribuição, então o sistema deve apresentar o número de casos ativos por supervisor e por estagiário, refletindo a situação atual.
+
+_Rastreabilidade:_ Feature "Visualizar distribuição de casos por supervisor" → CP5 — Distribuição de casos entre supervisores e estagiários → OE5; alimenta CP10 — Indicadores e relatórios institucionais. Dependência: RF5.3.
+
+#### Feature — Transferir caso para outro estagiário ou supervisor
+
+**RF5.8 — Transferir caso para outro estagiário ou supervisor**
+
+O sistema deve permitir que o supervisor ou a coordenação transfiram um caso ativo para outro estagiário ou supervisor — por exemplo, ao término do estágio, na saída do estagiário ou por reorganização da carga —, preservando o histórico do paciente (sessões, evolução e vínculos anteriores). A transferência deve exigir a indicação do novo responsável e do motivo, e deve ficar registrada, vinculada à atribuição anterior. A partir da transferência, o responsável anterior perde o acesso ao caso, e o novo responsável passa a ter acesso a todo o histórico.
+
+_Critério de aceitação:_ dado um caso vinculado a um estagiário que concluiu o estágio, quando o supervisor transferir o caso para outro estagiário, então o sistema deve registrar o novo estagiário como responsável, manter o histórico do paciente disponível a ele e revogar o acesso do estagiário anterior.
+
+_Rastreabilidade:_ Feature "Transferir caso para outro estagiário ou supervisor" → CP5 — Distribuição de casos entre supervisores e estagiários → OE5. Dependência: RF5.4.
+
+#### Feature — Consultar histórico de responsáveis do caso
+
+**RF5.9 — Consultar histórico de responsáveis do caso**
+
+O sistema deve permitir consultar a sequência de supervisores e estagiários que já foram responsáveis por um caso, com a data e o motivo de cada mudança, listados em ordem cronológica. O acesso a esse histórico deve respeitar os perfis de acesso definidos na CP11.
+
+_Critério de aceitação:_ dado um caso que já passou por uma ou mais transferências de responsável, quando um usuário autorizado consultar seu histórico, então o sistema deve listar, em ordem cronológica, cada vínculo com responsável, período e motivo do encerramento.
+
+_Rastreabilidade:_ Feature "Consultar histórico de responsáveis do caso" → CP5 — Distribuição de casos entre supervisores e estagiários → OE5. Dependência: RF5.4, RF5.8.
+
+#### Pontos a validar com a FBr (CP5)
+
+- A ordem de prioridade (vermelha, amarela, verde) deve orientar diretamente a ordem de distribuição dos casos, e não apenas a ordenação da lista de pendentes (RN5.4)?
+- Pode existir um limite de casos simultâneos por estagiário e por supervisor (RN5.8)? Se sim, qual o valor?
+- Um caso pode ser atendido por mais de um estagiário, em regime de atendimento em dupla (RN5.9)?
+- A transferência de caso entre estagiários ou supervisores (RF5.8) pertence à CP5 ou deve se tornar uma característica de produto própria? Qual o processo real de continuidade entre semestres?
 
 ### Emissão de Declaração de Comparecimento (CP9)
 
