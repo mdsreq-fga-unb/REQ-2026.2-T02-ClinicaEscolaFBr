@@ -214,7 +214,7 @@ _Rastreabilidade:_ Feature "Emitir comprovante de inscrição" → CP1 — Inscr
 
 **RF07 — Registrar inscrição assistida**
 
-O sistema deve permitir que um usuário institucional autorizado registre a solicitação de atendimento de um interessado que necessite de auxílio para realizar sua inscrição, mediante atendimento assistido ou presencial disponibilizado pela Clínica Escola FBr.
+O sistema deve permitir que um usuário institucional com perfil de secretaria registre a solicitação de atendimento de um interessado que necessite de auxílio para realizar sua inscrição, mediante atendimento assistido ou presencial disponibilizado pela Clínica Escola FBr. O registro dessa solicitação deve ser restrito ao perfil de secretaria, conforme os perfis institucionais definidos na CP11 — Segurança, sigilo e controle de acesso.
 
 O registro assistido deve utilizar os mesmos campos cadastrais e informações obrigatórias estabelecidos para a inscrição on-line, permitindo que a solicitação seja incorporada ao mesmo fluxo de triagem e fila de espera.
 
@@ -224,9 +224,9 @@ A utilização do canal assistido não deve atribuir prioridade clínica diferen
 
 _Critérios de aceitação:_
 
-- Dado um interessado atendido por um usuário institucional autorizado, quando os dados obrigatórios forem preenchidos e a inscrição for confirmada, então o sistema deve registrar a solicitação, gerar um identificador único e encaminhá-la ao mesmo fluxo de triagem utilizado pelas inscrições on-line.
+- Dado um interessado atendido por um usuário institucional com perfil de secretaria, quando os dados obrigatórios forem preenchidos e a inscrição for confirmada, então o sistema deve registrar a solicitação, gerar um identificador único e encaminhá-la ao mesmo fluxo de triagem utilizado pelas inscrições on-line.
 
-- Dado um usuário institucional sem permissão para registrar inscrições assistidas, quando tentar acessar a funcionalidade, então o sistema deve impedir a operação.
+- Dado um usuário institucional com perfil diferente de secretaria, quando tentar acessar a funcionalidade de inscrição assistida, então o sistema deve impedir o registro da solicitação por esse usuário.
 
 - Dada uma inscrição realizada por atendimento assistido, quando seu registro for consultado por um usuário autorizado, então o sistema deve identificar a modalidade de inscrição utilizada.
 
@@ -276,7 +276,7 @@ _Rastreabilidade:_ Feature "Ordenar inscritos na fila de espera" → CP3 — Fil
 
 O sistema deve permitir que o inscrito consulte sua posição e situação atual na fila de espera da Clínica Escola FBr, utilizando seu CPF ou número de inscrição para localizar a solicitação.
 
-Antes de apresentar as informações individuais, o sistema deve verificar se o solicitante está autorizado a consultar o registro, conforme o mecanismo de verificação de acesso a ser definido e validado pela equipe.
+Antes de apresentar as informações individuais, o sistema deve verificar a identidade do inscrito conforme o RF15 — Verificar identidade do paciente ou responsável, definido na CP11. A verificação deve exigir CPF ou número de inscrição e um código de uso único enviado ao contato cadastrado, permitindo o acesso exclusivamente às informações da inscrição correspondente.
 
 A consulta deve apresentar exclusivamente as informações relativas à própria solicitação, sem divulgar nomes, dados cadastrais, queixas ou classificações clínicas dos demais inscritos.
 
@@ -284,7 +284,7 @@ O sistema deve informar que a posição na fila pode sofrer alterações em raz�
 
 _Critérios de aceitação:_
 
-- Dado um inscrito com acesso devidamente verificado, quando informar seu CPF ou número de inscrição e solicitar a consulta, então o sistema deve apresentar exclusivamente sua posição e situação atual na fila de espera.
+- Dado um inscrito que tenha informado seu CPF ou número de inscrição e confirmado sua identidade por meio do código de uso único previsto no RF15, quando solicitar a consulta da fila de espera, então o sistema deve apresentar exclusivamente sua posição e situação atual na fila.
 
 - Dado um usuário que não tenha comprovado autorização para consultar determinada inscrição, quando tentar acessar suas informações, então o sistema deve impedir a divulgação da posição e da situação individual correspondente.
 
@@ -294,7 +294,7 @@ _Critérios de aceitação:_
 
 - Dada uma consulta de posição realizada com sucesso, quando o resultado for apresentado, então o sistema deve informar que a posição poderá variar e que não existe garantia de atendimento em uma data ou prazo específico.
 
-_Rastreabilidade:_ Feature "Consultar posição individual na fila" → CP3 — Fila de espera e consulta de posição → OE4/OE7 → IS03 — Expectativa sobre a fila.
+_Rastreabilidade:_ Feature "Consultar posição individual na fila" → CP3 — Fila de espera e consulta de posição → OE4/OE7 → IS03 — Expectativa sobre a fila. Dependência: RF15 — Verificar identidade do paciente ou responsável (CP11).
 
 #### Feature — Informar condições gerais da fila
 
