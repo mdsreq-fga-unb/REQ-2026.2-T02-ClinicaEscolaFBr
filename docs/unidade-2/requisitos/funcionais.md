@@ -149,7 +149,7 @@ _Rastreabilidade:_ Feature "Ativar modo de alto contraste" → CP12 — Acessibi
 
 **RF04 — Ajustar tamanho do texto**
 
-O sistema deve permitir que o paciente aumente ou diminua o tamanho do texto exibido nas páginas voltadas ao público externo, em pelo menos 3 níveis (padrão, grande e extra grande, cada nível ampliando a fonte em aproximadamente 25% em relação ao anterior), sem cortar texto, sobrepor elementos ou impedir o acesso a qualquer funcionalidade dessas páginas.
+O sistema deve permitir que o paciente aumente ou diminua o tamanho do texto exibido nas páginas voltadas ao público externo, em pelo menos 3 níveis (padrão — 100%, grande — 150% e extra grande — 200% do tamanho base do texto), sem cortar texto, sobrepor elementos ou impedir o acesso a qualquer funcionalidade dessas páginas.
 
 _Critério de aceitação:_ dado que o paciente selecionou um dos três níveis de tamanho de texto, quando navegar pelas páginas voltadas ao público externo, então o nível selecionado deve ser aplicado de forma consistente em todas elas, seguindo a mesma regra de persistência por sessão de navegador do RF03.
 _Rastreabilidade:_ Feature "Ajustar tamanho do texto" → CP12 — Acessibilidade e usabilidade.

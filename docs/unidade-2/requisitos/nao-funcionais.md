@@ -102,7 +102,7 @@ Rastreabilidade: Feature "Consultar indicadores operacionais" → CP10 — Indic
 
 **RNF02 — Tempo de geração do relatório institucional**
 
-O sistema deve gerar e exibir em tela o relatório institucional consolidado (RF02) em até 5 segundos, contados do acionamento da geração pela coordenação até a exibição completa do conteúdo, para qualquer período de referência de até 12 meses e com até 10 usuários simultâneos conectados ao sistema.
+O sistema deve gerar e exibir em tela o relatório institucional consolidado (RF02) em até 5 segundos, contados do acionamento da geração pela coordenação até a exibição completa do conteúdo, para qualquer período de referência de até 12 meses e com até 10 usuários realizando consultas ou gerações de relatórios simultaneamente.
 
 Classificação: desempenho.
 Rastreabilidade: Feature "Gerar e exportar relatório institucional" → CP10 — Indicadores e relatórios institucionais.
@@ -120,7 +120,7 @@ CP12 tem duas features (**Ativar modo de alto contraste** e **Ajustar tamanho do
 
 **RNF04 — Conformidade com WCAG 2.2 nível AA**
 
-As páginas voltadas ao público externo devem atender a todos os critérios de sucesso de nível A e AA da WCAG 2.2 aplicáveis a conteúdo web, verificável por ferramenta automatizada de auditoria de acessibilidade (ex.: Lighthouse ou axe), sem nenhuma ocorrência de falha de nível A ou AA apontada pela ferramenta.
+As páginas voltadas ao público externo devem atender a todos os critérios de sucesso de nível A e AA da WCAG 2.2 aplicáveis a conteúdo web, verificável pela combinação de ferramenta automatizada de auditoria de acessibilidade (ex.: Lighthouse ou axe) e inspeção/teste manual (incluindo navegação por teclado e leitor de tela), sem nenhuma ocorrência de falha de nível A ou AA apontada pela ferramenta ou identificada na inspeção manual.
 
 Classificação: acessibilidade (URPS+).
 Rastreabilidade: CP12 — Acessibilidade e usabilidade (transversal às features "Ativar modo de alto contraste" e "Ajustar tamanho do texto").
@@ -134,7 +134,7 @@ Rastreabilidade: CP12 — Acessibilidade e usabilidade (transversal às features
 
 **RNF06 — Responsividade da interface**
 
-As páginas voltadas ao público externo devem se adaptar corretamente a larguras de tela entre 360 e 1920 pixels, sem perda de funcionalidade, sem sobreposição ou corte de elementos e sem exigir rolagem horizontal em nenhuma largura desse intervalo.
+As páginas voltadas ao público externo devem se adaptar corretamente a larguras de tela entre 320 e 1920 pixels, sem perda de funcionalidade, sem sobreposição ou corte de elementos e sem exigir rolagem horizontal em nenhuma largura desse intervalo.
 
 Classificação: usabilidade.
 Rastreabilidade: CP12 — Acessibilidade e usabilidade (transversal às features "Ativar modo de alto contraste" e "Ajustar tamanho do texto").
