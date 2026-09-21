@@ -460,3 +460,193 @@ O sistema deve permitir que o paciente aumente ou diminua o tamanho do texto exi
 
 _Critério de aceitação:_ dado que o paciente selecionou um dos três níveis de tamanho de texto, quando navegar pelas páginas voltadas ao público externo, então o nível selecionado deve ser aplicado de forma consistente em todas elas, seguindo a mesma regra de persistência por sessão de navegador do RF03.
 _Rastreabilidade:_ Feature "Ajustar tamanho do texto" → CP12 — Acessibilidade e usabilidade.
+
+### Registro da Contribuição Social (CP8)
+
+A CP8 foi decomposta em duas features, voltadas ao controle da taxa única de responsabilidade social de R$ 35,00, devida na primeira sessão ([Seção 2.3](../../unidade-1/solucao-proposta.md#23-caracteristicas-de-produto-mapeadas-com-os-objetivos-especificos)). Hoje esse acompanhamento é feito à mão ([ata de 26/08/2026](../../unidade-1/reunioes.md)). As features permitem registrar o pagamento e distinguir quem efetivou e quem não efetivou a contribuição, inclusive no momento da primeira sessão, quando a taxa é exigida.
+
+O registro dos pagamentos é de responsabilidade da **secretaria**, e a consulta também pode ser feita pela **coordenação**. O estagiário responsável vê apenas a situação (efetivada ou pendente) dos pacientes vinculados a ele, conforme os perfis definidos na CP11.
+
+```text
+Área: Gestão administrativa
+  Conjunto: Contribuição social
+    Feature: Registrar pagamento da contribuição social do paciente
+    Feature: Consultar situação da contribuição social dos pacientes
+```
+
+#### Feature — Registrar pagamento da contribuição social do paciente
+
+**RF11 — Registrar pagamento da contribuição social**
+
+O sistema deve permitir que um usuário com perfil de secretaria registre o pagamento da contribuição social de um paciente, informando a data do pagamento e a forma de pagamento, com o valor de R$ 35,00 preenchido por padrão. Cada paciente pode ter apenas um pagamento de contribuição social registrado por ciclo de atendimento, já que a taxa é única.
+
+_Critérios de aceitação:_
+
+- Dado um paciente com contribuição pendente, quando a secretaria registrar o pagamento com data e forma de pagamento, então o sistema deve marcar a contribuição do paciente como **efetivada** e guardar o valor, a data, a forma de pagamento, o usuário que registrou e a data/hora do registro.
+- Dado um paciente que já possui contribuição efetivada no ciclo de atendimento atual, quando a secretaria tentar registrar um novo pagamento, então o sistema deve impedir o registro duplicado e informar a data do pagamento já registrado.
+- Dado um usuário sem perfil de secretaria, quando tentar registrar um pagamento, então o sistema deve impedir a operação.
+
+_Rastreabilidade:_ Feature "Registrar pagamento da contribuição social do paciente" → CP8 — Registro da contribuição social → OE6/OE4.
+
+#### Feature — Consultar situação da contribuição social dos pacientes
+
+**RF12 — Consultar situação da contribuição social**
+
+O sistema deve permitir que usuários com perfil de secretaria ou de coordenação consultem a situação da contribuição social dos pacientes em atendimento, com filtro por situação (**efetivada** ou **pendente**). Para cada paciente, a consulta deve mostrar o nome, a situação, a data da primeira sessão e, quando efetivada, a data do pagamento. A situação também deve ser indicada na agenda do dia, junto à primeira sessão do paciente, para que a pendência seja percebida no momento em que a taxa é exigida.
+
+_Critérios de aceitação:_
+
+- Dado que existem pacientes com contribuição efetivada e pendente, quando a secretaria filtrar por "pendente", então o sistema deve listar apenas os pacientes sem pagamento registrado no ciclo de atendimento atual.
+- Dado um paciente cuja contribuição foi registrada (RF11), quando a consulta for refeita, então o paciente deve aparecer com situação "efetivada" e com a data do pagamento.
+- Dado um paciente com primeira sessão agendada para hoje e contribuição pendente, quando a secretaria ou o estagiário responsável abrir a agenda do dia, então a sessão desse paciente deve exibir a indicação "contribuição pendente", que deixa de aparecer assim que o pagamento é registrado. A indicação é apenas informativa: a decisão sobre realizar ou não a sessão continua sendo da clínica.
+- Dado um estagiário, quando consultar um paciente vinculado a ele, então o sistema deve exibir somente a situação da contribuição (efetivada ou pendente), sem a forma de pagamento e sem os dados dos demais pacientes.
+
+_Rastreabilidade:_ Feature "Consultar situação da contribuição social dos pacientes" → CP8 — Registro da contribuição social → OE6/OE4. A indicação na agenda depende do agendamento da CP4.
+
+#### Pontos a validar com a FBr (CP8)
+
+- Quais formas de pagamento são aceitas (dinheiro, Pix, outras) e se é emitido recibo ao paciente.
+- Se existe isenção da taxa para pacientes sem condição de pagar e, em caso positivo, quem autoriza.
+- Se a sessão pode ocorrer quando a contribuição está pendente (hoje o RF12 apenas indica a pendência, sem bloquear).
+- Como corrigir um pagamento registrado por engano (hoje não há feature de estorno ou retificação).
+
+### Segurança, Sigilo e Controle de Acesso (CP11)
+
+A CP11 foi decomposta em oito features, organizadas em três conjuntos: autenticação, controle de acesso por perfil e proteção de dados. Elas respondem à restrição mais crítica apontada pelo cliente, o sigilo das informações psicológicas ([Seção 1.5](../../unidade-1/cenario-atual.md#15-desafios-do-projeto)), e atendem à LGPD e às normas do Conselho Federal de Psicologia (CFP).
+
+Os perfis de acesso são cinco: **paciente**, **secretaria**, **estagiário**, **supervisor** e **coordenação**. Os quatro perfis institucionais acessam o sistema com e-mail e senha. O paciente (ou seu responsável legal) não possui conta nem senha, já que parte do público tem pouca familiaridade com tecnologia: as páginas públicas, como a inscrição, não exigem identificação, e o acesso às informações do próprio paciente (posição na fila da CP3 e declarações da CP9) é liberado por uma verificação de identidade feita a cada consulta.
+
+```text
+Área: Acesso e segurança
+  Conjunto: Autenticação
+    Feature: Autenticar usuário institucional
+    Feature: Encerrar sessão do usuário
+    Feature: Verificar identidade do paciente ou responsável
+  Conjunto: Controle de acesso por perfil
+    Feature: Cadastrar usuário institucional com perfil de acesso
+    Feature: Desativar usuário institucional
+    Feature: Restringir acesso ao prontuário do paciente
+  Conjunto: Proteção de dados
+    Feature: Consultar registro de acessos ao prontuário
+    Feature: Registrar consentimento para tratamento de dados
+```
+
+#### Feature — Autenticar usuário institucional
+
+**RF13 — Autenticar usuário institucional**
+
+O sistema deve permitir que usuários institucionais (secretaria, estagiário, supervisor e coordenação) acessem o sistema informando e-mail e senha. Após a autenticação, o sistema deve apresentar somente as funcionalidades permitidas para o perfil do usuário.
+
+_Critérios de aceitação:_
+
+- Dado um usuário ativo, quando informar e-mail e senha corretos, então o sistema deve autenticá-lo e exibir apenas as funcionalidades do seu perfil.
+- Dado um e-mail ou uma senha incorretos, quando o usuário tentar entrar, então o sistema deve negar o acesso com uma mensagem genérica, sem indicar qual dos dois campos está errado.
+- Dado um usuário desativado (RF17), quando tentar entrar com as credenciais antigas, então o sistema deve negar o acesso.
+
+_Rastreabilidade:_ Feature "Autenticar usuário institucional" → CP11 — Segurança, sigilo e controle de acesso → OE7/OE5.
+
+#### Feature — Encerrar sessão do usuário
+
+**RF14 — Encerrar sessão do usuário**
+
+O sistema deve permitir que o usuário autenticado encerre a própria sessão a qualquer momento, exigindo nova autenticação para voltar a acessar as funcionalidades internas. O encerramento automático por inatividade é tratado no RNF14.
+
+_Critério de aceitação:_ dado um usuário autenticado, quando ele escolher sair, então o sistema deve encerrar a sessão e, ao voltar a qualquer página interna (inclusive pelo botão "voltar" do navegador), exigir nova autenticação.
+
+_Rastreabilidade:_ Feature "Encerrar sessão do usuário" → CP11 — Segurança, sigilo e controle de acesso → OE7.
+
+#### Feature — Verificar identidade do paciente ou responsável
+
+**RF15 — Verificar identidade do paciente ou responsável**
+
+O sistema deve exigir que o paciente, ou o responsável legal no caso de crianças e adolescentes, confirme sua identidade antes de acessar as informações do próprio paciente (posição na fila da CP3 e declarações de comparecimento da CP9). A confirmação é feita informando o CPF ou o número de inscrição e, em seguida, um código de uso único enviado ao contato (telefone ou e-mail) cadastrado na inscrição. Conhecer apenas o CPF ou o número de inscrição não deve ser suficiente para acessar as informações.
+
+_Critérios de aceitação:_
+
+- Dado um paciente com inscrição registrada, quando informar o CPF ou o número de inscrição e o código recebido no contato cadastrado, então o sistema deve liberar o acesso apenas às informações desse paciente.
+- Dado alguém que informou um CPF ou número de inscrição válido, quando não informar o código ou informar um código incorreto ou expirado, então o sistema não deve exibir nenhuma informação da inscrição, nem confirmar se ela existe.
+- Dado um código já utilizado, quando for informado novamente, então o sistema deve recusá-lo.
+
+_Rastreabilidade:_ Feature "Verificar identidade do paciente ou responsável" → CP11 — Segurança, sigilo e controle de acesso → OE7/OE1. Atende à verificação de acesso exigida pela feature "Consultar posição individual na fila" (CP3) e pelas features de declaração da CP9.
+
+#### Feature — Cadastrar usuário institucional com perfil de acesso
+
+**RF16 — Cadastrar usuário institucional**
+
+O sistema deve permitir que um usuário com perfil de coordenação cadastre usuários institucionais, informando nome, e-mail e exatamente um perfil de acesso (secretaria, estagiário, supervisor ou coordenação).
+
+_Critérios de aceitação:_
+
+- Dado um usuário com perfil de coordenação, quando cadastrar um novo usuário com nome, e-mail e perfil, então o sistema deve criar o acesso com o perfil indicado.
+- Dado um e-mail já cadastrado, quando a coordenação tentar cadastrá-lo novamente, então o sistema deve impedir o cadastro duplicado.
+- Dado um usuário sem perfil de coordenação, quando tentar cadastrar usuários, então o sistema deve impedir a operação.
+
+_Rastreabilidade:_ Feature "Cadastrar usuário institucional com perfil de acesso" → CP11 — Segurança, sigilo e controle de acesso → OE7/OE5.
+
+#### Feature — Desativar usuário institucional
+
+**RF17 — Desativar usuário institucional**
+
+O sistema deve permitir que um usuário com perfil de coordenação desative um usuário institucional, bloqueando seu acesso sem apagar o histórico de registros feitos por ele. Como os estagiários mudam a cada semestre, a desativação é o meio de retirar o acesso de quem concluiu o estágio.
+
+_Critérios de aceitação:_
+
+- Dado um estagiário que concluiu o estágio, quando a coordenação desativá-lo, então ele deve perder o acesso imediatamente, inclusive se estiver com uma sessão aberta.
+- Dado um usuário desativado, quando seus registros anteriores forem consultados por um usuário autorizado, então esses registros devem continuar disponíveis e identificados com o nome de quem os fez.
+- Dado um usuário sem perfil de coordenação, quando tentar desativar usuários, então o sistema deve impedir a operação.
+
+_Rastreabilidade:_ Feature "Desativar usuário institucional" → CP11 — Segurança, sigilo e controle de acesso → OE7/OE5.
+
+#### Feature — Restringir acesso ao prontuário do paciente
+
+**RF18 — Restringir acesso ao prontuário**
+
+O sistema deve permitir o acesso ao prontuário de um paciente (registros de evolução e relatório final da CP6) somente ao estagiário responsável pelo paciente e ao supervisor desse estagiário, conforme o vínculo definido na CP5. Os perfis de secretaria e de coordenação não devem ter acesso ao conteúdo clínico do prontuário, apenas aos dados cadastrais e administrativos do paciente.
+
+_Critérios de aceitação:_
+
+- Dado um paciente vinculado ao estagiário A, supervisionado pelo supervisor S, quando A ou S abrirem o prontuário, então o sistema deve exibir o conteúdo clínico.
+- Dado um estagiário B, que não é o responsável pelo paciente, quando tentar abrir o prontuário desse paciente, então o sistema deve negar o acesso, inclusive quando a requisição for feita diretamente ao servidor, sem passar pela interface.
+- Dado um usuário com perfil de secretaria ou de coordenação, quando consultar um paciente, então o sistema deve exibir os dados cadastrais e administrativos, mas não os registros de evolução nem o relatório final.
+- Dado um caso transferido do estagiário A para o estagiário C, quando a transferência for concluída, então C deve passar a ter acesso ao prontuário e A deve perdê-lo.
+
+_Rastreabilidade:_ Feature "Restringir acesso ao prontuário do paciente" → CP11 — Segurança, sigilo e controle de acesso → OE7/OE5. Depende do vínculo entre paciente, estagiário e supervisor (CP5) e do prontuário (CP6).
+
+#### Feature — Consultar registro de acessos ao prontuário
+
+**RF19 — Consultar registro de acessos ao prontuário**
+
+O sistema deve permitir que um usuário com perfil de coordenação consulte o registro de acessos ao prontuário de um paciente, informando, para cada acesso, o usuário, o perfil, a data/hora e a operação realizada (visualização, criação ou alteração), com filtro por paciente, por usuário e por período. A consulta mostra quem acessou, mas não o conteúdo clínico acessado.
+
+_Critérios de aceitação:_
+
+- Dado que o estagiário A visualizou o prontuário de um paciente, quando a coordenação consultar o registro de acessos desse paciente, então deve aparecer uma entrada com o nome de A, o perfil, a data/hora e a operação "visualização".
+- Dada uma tentativa de acesso negada pelo RF18, quando a coordenação consultar o registro, então a tentativa deve aparecer identificada como "acesso negado".
+- Dado um usuário sem perfil de coordenação, quando tentar consultar o registro de acessos, então o sistema deve impedir a operação.
+
+_Rastreabilidade:_ Feature "Consultar registro de acessos ao prontuário" → CP11 — Segurança, sigilo e controle de acesso → OE7.
+
+#### Feature — Registrar consentimento para tratamento de dados
+
+**RF20 — Registrar consentimento para tratamento de dados**
+
+O sistema deve apresentar, antes da conclusão da inscrição (CP1), um termo que informe, em linguagem simples, quais dados pessoais e de saúde são coletados, para que finalidade e quem terá acesso a eles, e deve exigir a concordância do interessado para concluir a inscrição. Para crianças e adolescentes, a concordância deve ser dada pelo responsável legal. O sistema deve registrar a versão do termo aceita e a data/hora do aceite.
+
+_Critérios de aceitação:_
+
+- Dado um interessado no formulário de inscrição, quando tentar concluir sem aceitar o termo, então o sistema deve impedir a conclusão e indicar que o aceite é necessário.
+- Dado um interessado que aceitou o termo, quando a inscrição for concluída, então o sistema deve guardar a versão do termo e a data/hora do aceite junto à inscrição.
+- Dada a inscrição de um menor de idade, quando o termo for apresentado, então ele deve pedir a identificação e a concordância do responsável legal.
+
+O aceite on-line não substitui a autorização e o termo de responsabilidade assinados presencialmente pelo responsável legal, que continuam exigidos pela clínica para o atendimento de crianças e adolescentes ([ata de 26/08/2026](../../unidade-1/reunioes.md)).
+
+_Rastreabilidade:_ Feature "Registrar consentimento para tratamento de dados" → CP11 — Segurança, sigilo e controle de acesso → OE7. Complementa a feature "Registrar solicitação de atendimento on-line" da CP1.
+
+#### Pontos a validar com a FBr (CP11)
+
+- Se a secretaria precisa ver alguma informação clínica (por exemplo, a prioridade da triagem) e se a coordenação deve ter acesso ao prontuário em situações excepcionais, como fiscalização do CRP.
+- Quais perfis podem ver a queixa informada na inscrição e a classificação da triagem, que também são dados de saúde, mas não fazem parte do prontuário protegido pelo RF18.
+- Se o login deve usar o e-mail institucional da FBr ou outro mecanismo já adotado pela instituição.
+- Por qual canal o código do RF15 deve ser enviado (SMS, WhatsApp ou e-mail), considerando o contato que os pacientes costumam informar.
+- O texto do termo de consentimento, que deve ser revisado pela FBr.
+- Como o paciente exercerá os direitos previstos na LGPD (acesso, correção e eliminação dos dados), que ainda não estão cobertos por nenhuma feature.
