@@ -191,7 +191,7 @@ Os requisitos de acessibilidade e responsividade da CP12 também se aplicam às 
 
 A consulta individual da fila de espera (RF09) deve impedir que o conhecimento isolado do CPF ou do número de inscrição permita a um usuário não autorizado acessar informações individuais de outro inscrito.
 
-O sistema deve verificar a autorização do solicitante antes de apresentar sua posição e situação na fila, utilizando mecanismo de verificação de acesso definido e validado pela equipe responsável.
+O sistema deve exigir a verificação da identidade do solicitante conforme o RF15 da CP11, mediante CPF ou número de inscrição e código de uso único enviado ao contato cadastrado. A posição e a situação individual na fila somente devem ser apresentadas após a confirmação bem-sucedida da identidade, respeitando as restrições de acesso estabelecidas na CP11.
 
 As respostas de consultas não autorizadas não devem revelar a posição, a classificação de prioridade, a queixa ou outros dados individuais da solicitação consultada.
 
@@ -201,7 +201,7 @@ Em todos os casos de acesso não autorizado, nenhuma informação individual da 
 
 Classificação: segurança e privacidade (URPS+).
 
-Rastreabilidade: Feature "Consultar posição individual na fila" → CP3 — Fila de espera e consulta de posição; relacionada à CP11 — Segurança, sigilo e controle de acesso.
+Rastreabilidade: Feature "Consultar posição individual na fila" → CP3 — Fila de espera e consulta de posição; relacionada à CP11 — Segurança, sigilo e controle de acesso. Dependência: RF15 — Verificar identidade do paciente ou responsável (CP11).
 
 **RNF10 — Compreensibilidade das informações sobre a posição na fila**
 
