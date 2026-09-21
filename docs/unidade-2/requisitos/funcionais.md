@@ -478,7 +478,7 @@ O registro dos pagamentos é de responsabilidade da **secretaria**, e a consulta
 
 **RF11 — Registrar pagamento da contribuição social**
 
-O sistema deve permitir que um usuário com perfil de secretaria registre o pagamento da contribuição social de um paciente, informando a data do pagamento e a forma de pagamento, com o valor de R$ 35,00 preenchido por padrão. Cada paciente pode ter apenas um pagamento de contribuição social registrado por ciclo de atendimento, já que a taxa é única.
+O sistema deve permitir que um usuário com perfil de secretaria registre o pagamento da contribuição social de um paciente, informando a data do pagamento e a forma de pagamento, com o valor de R$ 35,00 preenchido por padrão. Cada paciente pode ter apenas um pagamento de contribuição social registrado por ciclo de atendimento, já que a taxa é única. Para este requisito, **ciclo de atendimento** é o período de acompanhamento de um paciente que vai da primeira sessão até o encerramento do atendimento (conclusão das sessões com o relatório final, desligamento por faltas ou desistência); se o paciente se inscrever novamente depois do encerramento, começa um novo ciclo e a taxa volta a ser devida. Essa definição é provisória até a validação com a FBr (ver Pontos a validar).
 
 _Critérios de aceitação:_
 
@@ -498,7 +498,7 @@ _Critérios de aceitação:_
 
 - Dado que existem pacientes com contribuição efetivada e pendente, quando a secretaria filtrar por "pendente", então o sistema deve listar apenas os pacientes sem pagamento registrado no ciclo de atendimento atual.
 - Dado um paciente cuja contribuição foi registrada (RF11), quando a consulta for refeita, então o paciente deve aparecer com situação "efetivada" e com a data do pagamento.
-- Dado um paciente com primeira sessão agendada para hoje e contribuição pendente, quando a secretaria ou o estagiário responsável abrir a agenda do dia, então a sessão desse paciente deve exibir a indicação "contribuição pendente", que deixa de aparecer assim que o pagamento é registrado. A indicação é apenas informativa: a decisão sobre realizar ou não a sessão continua sendo da clínica.
+- Dado um paciente com primeira sessão agendada para hoje e contribuição pendente, quando a secretaria ou o estagiário responsável abrir a agenda do dia, então a sessão desse paciente deve exibir a indicação "contribuição pendente", que deixa de aparecer assim que o pagamento é registrado. Regra provisória, até a validação com a FBr (ver Pontos a validar): a indicação é apenas informativa e não bloqueia a sessão; a decisão sobre realizá-la continua sendo da clínica.
 - Dado um estagiário, quando consultar um paciente vinculado a ele, então o sistema deve exibir somente a situação da contribuição (efetivada ou pendente), sem a forma de pagamento e sem os dados dos demais pacientes.
 
 _Rastreabilidade:_ Feature "Consultar situação da contribuição social dos pacientes" → CP8 — Registro da contribuição social → OE6/OE4. A indicação na agenda depende do agendamento da CP4.
@@ -507,7 +507,8 @@ _Rastreabilidade:_ Feature "Consultar situação da contribuição social dos pa
 
 - Quais formas de pagamento são aceitas (dinheiro, Pix, outras) e se é emitido recibo ao paciente.
 - Se existe isenção da taxa para pacientes sem condição de pagar e, em caso positivo, quem autoriza.
-- Se a sessão pode ocorrer quando a contribuição está pendente (hoje o RF12 apenas indica a pendência, sem bloquear).
+- Se a sessão pode ocorrer quando a contribuição está pendente. Até a resposta, o RF12 adota a regra provisória de apenas indicar a pendência, sem bloquear a sessão.
+- Se a definição de ciclo de atendimento usada no RF11 corresponde à prática da clínica, isto é, se a taxa é cobrada uma única vez por acompanhamento e novamente em caso de nova inscrição.
 - Como corrigir um pagamento registrado por engano (hoje não há feature de estorno ou retificação).
 
 ### Segurança, Sigilo e Controle de Acesso (CP11)
@@ -601,7 +602,7 @@ _Rastreabilidade:_ Feature "Desativar usuário institucional" → CP11 — Segur
 
 **RF18 — Restringir acesso ao prontuário**
 
-O sistema deve permitir o acesso ao prontuário de um paciente (registros de evolução e relatório final da CP6) somente ao estagiário responsável pelo paciente e ao supervisor desse estagiário, conforme o vínculo definido na CP5. Os perfis de secretaria e de coordenação não devem ter acesso ao conteúdo clínico do prontuário, apenas aos dados cadastrais e administrativos do paciente.
+O sistema deve permitir o acesso ao prontuário de um paciente (registros de evolução e relatório final da CP6) somente ao estagiário responsável pelo paciente e ao supervisor desse estagiário, conforme o vínculo definido na CP5. Os perfis de secretaria e de coordenação não devem ter acesso ao conteúdo clínico do prontuário, apenas aos dados cadastrais e administrativos do paciente. A regra não prevê exceções por perfil, conforme a definição da CP11 aprovada na [Seção 2.3](../../unidade-1/solucao-proposta.md#23-caracteristicas-de-produto-mapeadas-com-os-objetivos-especificos), que restringe o prontuário ao estagiário responsável e ao seu supervisor.
 
 _Critérios de aceitação:_
 
@@ -644,8 +645,7 @@ _Rastreabilidade:_ Feature "Registrar consentimento para tratamento de dados" �
 
 #### Pontos a validar com a FBr (CP11)
 
-- Se a secretaria precisa ver alguma informação clínica (por exemplo, a prioridade da triagem) e se a coordenação deve ter acesso ao prontuário em situações excepcionais, como fiscalização do CRP.
-- Quais perfis podem ver a queixa informada na inscrição e a classificação da triagem, que também são dados de saúde, mas não fazem parte do prontuário protegido pelo RF18.
+- Quais perfis podem ver a queixa informada na inscrição e a classificação da triagem (por exemplo, se a secretaria precisa ver a prioridade). Esses dados também são de saúde, mas ficam fora do escopo do RF18, que trata apenas do prontuário.
 - Se o login deve usar o e-mail institucional da FBr ou outro mecanismo já adotado pela instituição.
 - Por qual canal o código do RF15 deve ser enviado (SMS, WhatsApp ou e-mail), considerando o contato que os pacientes costumam informar.
 - O texto do termo de consentimento, que deve ser revisado pela FBr.
