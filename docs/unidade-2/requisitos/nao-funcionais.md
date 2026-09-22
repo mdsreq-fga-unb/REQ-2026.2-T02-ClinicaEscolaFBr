@@ -122,6 +122,73 @@ Após a publicação da atualização, a consulta deve apresentar exclusivamente
 Classificação: confiabilidade (URPS+).
 Rastreabilidade: Feature "Informar condições gerais da fila" → CP3 — Fila de espera e consulta de posição → IS02 — Aumento da demanda.
 
+### Agendamento, Confirmação e Remarcação (CP4)
+
+A CP4 tem oito features (ver [Requisitos Funcionais](funcionais.md)); os RNFs abaixo estabelecem condições de qualidade para o agendamento, a confirmação, o lembrete e o cancelamento de sessões, aplicando-se de forma transversal ao conjunto das features, conforme indicado na rastreabilidade de cada um. Os RNFs de segurança e privacidade devem ser alinhados com os requisitos gerais de acesso e sigilo da CP11, evitando duplicidade, e a acessibilidade das páginas voltadas ao paciente (confirmação de presença) segue a mesma meta definida para a CP12 (RNF04).
+
+**RNF4.1 — Integridade do agendamento**
+
+Duas sessões não podem ser agendadas para o mesmo horário do mesmo estagiário, nem para o mesmo horário do mesmo paciente, mesmo em caso de duas requisições simultâneas de agendamento ou remarcação.
+
+A conformidade deve ser verificada por teste de concorrência, com duas tentativas simultâneas de agendar ou remarcar uma sessão para o mesmo horário do mesmo estagiário, confirmando que apenas uma é aceita.
+
+Classificação: confiabilidade (URPS+).
+Rastreabilidade: CP4 — Agendamento, confirmação e remarcação (transversal às features "Agendar sessão do paciente" e "Reagendar sessão do paciente").
+
+**RNF4.2 — Auditoria das operações sobre a sessão**
+
+Todo agendamento, remarcação, confirmação e cancelamento de sessão deve ser registrado com usuário responsável, data/hora e o estado anterior e novo da sessão. Esses registros não podem ser apagados nem sobrescritos.
+
+A conformidade deve ser verificada por teste de integração, confirmando o registro de auditoria após cada uma dessas operações.
+
+Classificação: auditoria (URPS+).
+Rastreabilidade: CP4 — Agendamento, confirmação e remarcação (transversal às features "Agendar sessão do paciente", "Reagendar sessão do paciente", "Confirmar presença em sessão agendada", "Registrar cancelamento de sessão pelo paciente" e "Registrar cancelamento de sessão pelo estagiário").
+
+**RNF4.3 — Confiabilidade do envio de lembretes**
+
+O sistema deve garantir uma taxa de entrega de pelo menos 98% dos lembretes de sessão enviados, com nova tentativa automática em caso de falha de envio dentro de 1 hora, e deve registrar o envio ou a falha de cada lembrete para consulta posterior.
+
+A conformidade deve ser verificada por teste com envio simulado, incluindo cenários de falha, conferindo a taxa de entrega e o registro de tentativas.
+
+Classificação: confiabilidade (URPS+).
+Rastreabilidade: Feature "Enviar lembrete de sessão agendada" → CP4 — Agendamento, confirmação e remarcação.
+
+**RNF4.4 — Tempo de resposta nas operações de agendamento**
+
+As operações de agendar, reagendar, confirmar presença e registrar cancelamento devem apresentar retorno em até 2 segundos para 95% das requisições realizadas em condições normais de uso.
+
+A conformidade deve ser verificada por teste de desempenho com dados representativos do volume da clínica (cerca de 100 vagas e 160 a 180 inscrições por semestre).
+
+Classificação: desempenho (URPS+).
+Rastreabilidade: CP4 — Agendamento, confirmação e remarcação (transversal às features "Agendar sessão do paciente", "Reagendar sessão do paciente", "Confirmar presença em sessão agendada", "Registrar cancelamento de sessão pelo paciente" e "Registrar cancelamento de sessão pelo estagiário").
+
+**RNF4.5 — Privacidade da agenda por perfil**
+
+O estagiário deve visualizar apenas sua própria agenda de sessões; o supervisor deve visualizar apenas a agenda dos estagiários sob sua supervisão, conforme o vínculo definido na CP5.
+
+A conformidade deve ser verificada por testes de autorização, com cenários positivos e negativos, confirmando a ausência de acesso à agenda de estagiários sem vínculo de supervisão.
+
+Classificação: privacidade (URPS+).
+Rastreabilidade: Feature "Consultar agenda de sessões do estagiário" → CP4 — Agendamento, confirmação e remarcação; relacionada à CP11 — Segurança, sigilo e controle de acesso.
+
+**RNF4.6 — Disponibilidade do módulo de agendamento**
+
+O módulo de agendamento e confirmação deve estar disponível em pelo menos 99% do horário comercial (8h–18h, dias úteis), dado que indisponibilidades nesse módulo impactam diretamente a operação da clínica.
+
+A conformidade deve ser verificada por monitoramento contínuo de disponibilidade durante o período de operação.
+
+Classificação: confiabilidade (URPS+).
+Rastreabilidade: CP4 — Agendamento, confirmação e remarcação (transversal a todas as features).
+
+**RNF4.7 — Usabilidade da confirmação de presença pelo paciente**
+
+A confirmação de presença deve ser possível a partir do link enviado no lembrete (RF4.4), sem exigir login ou cadastro de senha, em no máximo 2 interações, considerando o público com pouca familiaridade com tecnologia atendido pela clínica.
+
+A conformidade deve ser verificada por teste de usabilidade com usuários representativos, incluindo pessoas com baixo letramento digital.
+
+Classificação: usabilidade (URPS+).
+Rastreabilidade: Feature "Confirmar presença em sessão agendada" → CP4 — Agendamento, confirmação e remarcação; relacionada à CP12 — Acessibilidade e usabilidade.
+
 ### Distribuição de casos entre supervisores e estagiários (CP5)
 
 A CP5 tem nove features (ver [Requisitos Funcionais](funcionais.md)); os RNFs abaixo estabelecem condições de qualidade para a distribuição de casos, a vinculação de pacientes a estagiários e o acompanhamento dos vínculos, aplicando-se de forma transversal ao conjunto das features, conforme indicado na rastreabilidade de cada um. Os RNFs de segurança e privacidade (RNF5.1 e RNF5.2) devem ser alinhados com os requisitos gerais de acesso e sigilo da CP11, evitando duplicidade, e o RNF5.9 segue a mesma meta de acessibilidade definida para a CP12 (RNF04).
@@ -231,6 +298,55 @@ Cada versão gerada do relatório deve identificar o ciclo e os registros de evo
 
 Classificação: confiabilidade e auditoria (URPS+).
 Rastreabilidade: Feature “Gerar relatório final de evolução” → CP6 (escopo da issue; CP8 na Solução Proposta) → OE5/OE6.
+
+### Registro de Evolução por Sessão (CP7)
+
+A CP7 tem três features (ver [Requisitos Funcionais](funcionais.md)); os RNFs abaixo estabelecem condições de qualidade para o registro, a correção e a consulta da evolução clínica de cada sessão.
+
+**RNF7.1 — Sigilo do conteúdo da evolução**
+
+O conteúdo de uma evolução registrada deve ser acessível somente ao estagiário responsável pelo caso e ao seu supervisor, conforme o vínculo vigente definido na CP5 e a restrição de acesso ao prontuário (RF18, CP11). Listagens, mensagens de erro e respostas a solicitações negadas não devem expor conteúdo clínico a outros perfis.
+
+A conformidade deve ser verificada com casos fictícios, testando acesso permitido e negado antes e depois de uma transferência de responsável.
+
+Classificação: segurança e privacidade (URPS+).
+Rastreabilidade: CP7 — Registro de evolução por sessão (transversal às features "Registrar evolução da sessão realizada", "Corrigir evolução registrada" e "Consultar evolução de uma sessão específica"); relacionada à CP11 — Segurança, sigilo e controle de acesso.
+
+**RNF7.2 — Integridade e proveniência dos registros de evolução**
+
+Cada evolução persistida deve conservar sua associação à sessão, ao paciente, ao ciclo, ao autor e ao momento de registro. O histórico não deve ser perdido nem associado a outro caso após troca de responsável (RF5.8).
+
+A conformidade deve ser verificada por comparação entre sessão, evolução e histórico antes e depois de uma transferência de caso.
+
+Classificação: confiabilidade e auditoria (URPS+).
+Rastreabilidade: Feature "Registrar evolução da sessão realizada" → CP7 — Registro de evolução por sessão; relacionada a RF5.8 e RNF5.5.
+
+**RNF7.3 — Auditoria das correções de evolução**
+
+Toda correção de um registro de evolução (RF7.2 — Corrigir evolução registrada) deve preservar o conteúdo original, sem sobrescrita silenciosa, e deve registrar o autor, a data/hora e o motivo de cada correção, de forma que o histórico completo de versões de uma evolução fique disponível para consulta.
+
+A conformidade deve ser verificada corrigindo um registro de evolução fictício e conferindo que a versão original permanece acessível junto com a nova versão, o autor e o motivo da correção.
+
+Classificação: auditoria e confiabilidade (URPS+).
+Rastreabilidade: Feature "Corrigir evolução registrada" → CP7 — Registro de evolução por sessão.
+
+**RNF7.4 — Desempenho do registro e da consulta de evolução**
+
+O registro de uma nova evolução e a consulta de uma evolução já registrada devem apresentar retorno em até 2 segundos para 95% das requisições em condições normais de uso.
+
+A conformidade deve ser verificada por teste de desempenho com dados representativos do volume de sessões da clínica.
+
+Classificação: desempenho (URPS+).
+Rastreabilidade: CP7 — Registro de evolução por sessão (transversal às features "Registrar evolução da sessão realizada" e "Consultar evolução de uma sessão específica").
+
+**RNF7.5 — Usabilidade do registro de evolução**
+
+O registro de uma evolução deve ser simples e rápido o suficiente para ser preenchido pelo estagiário logo após a sessão, sem exigir treinamento prévio além da orientação inicial de uso do sistema.
+
+A conformidade deve ser verificada por teste de usabilidade com estagiários representativos, medindo o tempo e o número de interações necessários para concluir um registro.
+
+Classificação: usabilidade (URPS+).
+Rastreabilidade: Feature "Registrar evolução da sessão realizada" → CP7 — Registro de evolução por sessão.
 
 ### Registro da Contribuição Social (CP8)
 
