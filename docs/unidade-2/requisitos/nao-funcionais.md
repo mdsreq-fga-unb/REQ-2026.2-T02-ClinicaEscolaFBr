@@ -38,6 +38,37 @@ A conformidade deve ser verificada mediante a emissão de comprovantes com dados
 Classificação: segurança e privacidade (URPS+).
 Rastreabilidade: Feature "Emitir comprovante de inscrição" → CP1 — Inscrição on-line; relacionada à CP11 — Segurança, sigilo e controle de acesso.
 
+### Triagem e sinalização de casos (CP2)
+
+As features da CP2 tratam respostas potencialmente sensíveis da inscrição e decisões que afetam a ordem de atendimento. Aplicam-se também os controles transversais de segurança e acesso da CP12, conforme a numeração da Solução Proposta.
+
+#### Feature — Organizar informações da inscrição para triagem
+
+**RNF2.1 — Sigilo das informações de triagem**
+
+As respostas de triagem e as sinalizações vinculadas à inscrição devem ser exibidas somente a usuários institucionais autorizados para essa finalidade. A interface e as respostas a tentativas de acesso negadas não devem revelar queixa, histórico informado, urgência percebida ou sinalizações clínicas. A conformidade deve ser verificada com inscrições fictícias, comparando consultas autorizadas e tentativas de acesso por perfis não autorizados.
+
+Classificação: segurança e privacidade (URPS+).
+Rastreabilidade: Feature “Organizar informações da inscrição para triagem” → CP2; relacionada às features “Sinalizar pontos de atenção da inscrição” e “Registrar prioridade clínica do inscrito” e à CP12.
+
+#### Feature — Sinalizar pontos de atenção da inscrição
+
+**RNF2.2 — Rastreabilidade das regras de sinalização**
+
+Cada ponto de atenção apresentado deve manter vínculo verificável com a resposta original e com a versão da regra institucional aprovada que o produziu. A conformidade deve ser verificada com dados fictícios e casos com e sem correspondência às regras aprovadas, confirmando a origem de cada sinalização e a ausência de cor de prioridade atribuída automaticamente.
+
+Classificação: confiabilidade e auditoria (URPS+).
+Rastreabilidade: Feature “Sinalizar pontos de atenção da inscrição” → CP2; relacionada a RF2.2.
+
+#### Feature — Registrar prioridade clínica do inscrito
+
+**RNF2.3 — Integridade e auditoria das decisões de prioridade**
+
+O registro e a alteração da prioridade devem preservar a classificação anterior, a nova classificação, o usuário institucional responsável e a data e hora de cada decisão. Uma decisão anterior não deve ser sobrescrita ou apagada por uma revisão posterior. A conformidade deve ser verificada com uma inscrição fictícia classificada e depois reclassificada por usuário autorizado, seguida de tentativa de alteração por usuário não autorizado; o histórico deve permanecer íntegro e a fila deve receber apenas a decisão vigente confirmada.
+
+Classificação: confiabilidade, segurança e auditoria (URPS+).
+Rastreabilidade: Feature “Registrar prioridade clínica do inscrito” → CP2; integração com RF08 (CP3) e controles da CP12.
+
 ### Fila de espera e consulta de posição (CP3)
 
 A CP3 possui três features: **Ordenar inscritos na fila de espera**, **Consultar posição individual na fila** e **Informar condições gerais da fila**.
