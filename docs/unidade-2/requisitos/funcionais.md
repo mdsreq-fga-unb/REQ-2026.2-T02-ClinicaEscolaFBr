@@ -13,6 +13,12 @@ Os requisitos funcionais (RFs) são declarados a partir da decomposição das Ca
     Feature: Emitir comprovante de inscrição
     Feature: Registrar inscrição assistida
 
+Área: Triagem clínica
+  Conjunto: Triagem e sinalização de casos
+    Feature: Organizar informações da inscrição para triagem
+    Feature: Sinalizar pontos de atenção da inscrição
+    Feature: Registrar prioridade clínica do inscrito
+
 Área: Gestão da fila de espera
   Conjunto: Fila de espera e consulta de posição
     Feature: Ordenar inscritos na fila de espera
@@ -150,6 +156,65 @@ _Critérios de aceitação:_
 
 _Rastreabilidade:_ Feature "Registrar inscrição assistida" → CP1 — Inscrição on-line → OE1/OE4 → IS01 — Exclusão digital.
 
+### Triagem e sinalização de casos (CP2)
+
+A CP2 foi decomposta em três features: organização das informações da inscrição, sinalização de pontos de atenção e registro da prioridade definida pela equipe clínica. A inscrição on-line ou assistida (CP1) fornece os dados de entrada; somente a prioridade clínica confirmada pode alimentar a ordenação da fila (CP3). O acesso aos dados da triagem observa a CP12 — Segurança, sigilo e controle de acesso, conforme a numeração da [Solução Proposta](../../unidade-1/solucao-proposta.md#23-caracteristicas-de-produto-mapeadas-com-os-objetivos-especificos).
+
+A formulação desta CP na atividade de decomposição menciona pré-classificação automática pelas opções do formulário. A versão vigente da Solução Proposta, §2.2–2.3, restringe o sistema a organizar e sinalizar informações, reservando a classificação vermelha, amarela ou verde exclusivamente à equipe clínica. A possibilidade de sugestão automática de uma cor permanece **pendente de validação com a FBr** e não integra os RFs abaixo.
+
+#### Feature — Organizar informações da inscrição para triagem
+
+**RF2.1 — Organizar informações da inscrição para triagem**
+
+O sistema deve apresentar à equipe clínica autorizada as inscrições recebidas, identificadas pelo número de inscrição, com as respostas do formulário necessárias à triagem, incluindo queixa, urgência percebida e histórico informado quando esses campos estiverem definidos no formulário aprovado pela Clínica Escola. A apresentação deve distinguir informação declarada pelo interessado de avaliação registrada pela equipe e indicar dados ausentes, sem preencher lacunas por inferência.
+
+_Critérios de aceitação:_
+
+- Dada uma inscrição registrada pelo canal on-line ou assistido, quando um integrante autorizado da equipe clínica abrir a triagem, então o sistema deve apresentar o número da inscrição e as respostas registradas para os campos de triagem disponíveis.
+- Dado um campo de triagem sem resposta registrada, quando a inscrição for apresentada, então o sistema deve indicar a ausência da informação, sem atribuir conteúdo presumido.
+- Dado um usuário sem autorização para acessar dados de triagem, quando tentar consultar uma inscrição, então o sistema deve impedir a visualização das respostas.
+
+_Rastreabilidade:_ Problema → OG → OE2/OE1 → CP2 → Feature “Organizar informações da inscrição para triagem” → RF2.1. Dependência: CP1; restrição transversal: CP12.
+
+#### Feature — Sinalizar pontos de atenção da inscrição
+
+**RF2.2 — Sinalizar pontos de atenção da inscrição**
+
+O sistema deve destacar, para a equipe clínica autorizada, respostas do formulário que correspondam a pontos de atenção definidos e aprovados pela Clínica Escola. Cada sinalização deve permitir identificar a resposta que a originou e deve ser apresentada como informação para avaliação humana, sem atribuir uma cor de prioridade, ordenar o inscrito na fila ou concluir a triagem automaticamente. As opções do formulário e as regras de sinalização dependem de validação com a FBr antes da implementação.
+
+_Critérios de aceitação:_
+
+- Dada uma inscrição com resposta correspondente a uma regra de sinalização aprovada, quando a equipe clínica consultar a triagem, então o sistema deve destacar o ponto de atenção e a resposta que o originou.
+- Dada uma resposta que não corresponda a regra aprovada, quando a inscrição for consultada, então o sistema não deve produzir uma sinalização clínica baseada em regra presumida.
+- Dada uma inscrição com um ou mais pontos de atenção, quando estes forem apresentados, então a prioridade clínica deve continuar pendente até a decisão da equipe autorizada.
+
+_Rastreabilidade:_ Problema → OG → OE2/OE1 → CP2 → Feature “Sinalizar pontos de atenção da inscrição” → RF2.2. Dependência: RF2.1; restrição transversal: CP12.
+
+#### Feature — Registrar prioridade clínica do inscrito
+
+**RF2.3 — Registrar prioridade clínica do inscrito**
+
+O sistema deve permitir que integrante autorizado da equipe clínica registre a classificação final de uma inscrição como vermelha, amarela ou verde, após avaliar as informações e sinalizações disponíveis. Deve ser possível corrigir uma classificação mediante nova decisão autorizada, preservando o histórico das classificações e o responsável por cada decisão. Inscrições sem decisão devem permanecer com prioridade pendente e não devem ser tratadas pela fila como classificadas. O sistema deve disponibilizar à CP3 somente a prioridade final vigente definida pela equipe clínica.
+
+_Critérios de aceitação:_
+
+- Dada uma inscrição com triagem pendente, quando um integrante autorizado da equipe clínica confirmar uma das três prioridades, então o sistema deve registrar a cor escolhida, o responsável e a data e hora da decisão.
+- Dado um usuário sem autorização clínica, quando tentar registrar ou alterar a prioridade, então o sistema deve recusar a ação e preservar a classificação vigente.
+- Dada uma inscrição ainda sem classificação confirmada, quando a fila consultar sua prioridade, então o sistema deve informar situação pendente, sem usar sinalizações como prioridade final.
+- Dada uma alteração autorizada de prioridade, quando a equipe confirmar a nova cor, então o sistema deve manter o histórico da decisão anterior e disponibilizar a classificação vigente para a fila da CP3.
+
+_Rastreabilidade:_ Problema → OG → OE2/OE1 → CP2 → Feature “Registrar prioridade clínica do inscrito” → RF2.3. Dependência: RF2.1/RF2.2; integração: RF08 (CP3); restrição transversal: CP12.
+
+#### Modelo de domínio da CP2
+
+- **Inscrição:** solicitação identificada pelo número gerado na CP1; contém respostas declaradas pelo interessado e possui uma situação de triagem.
+- **Resposta de triagem:** informação associada à inscrição e à pergunta do formulário aprovado; sua origem declaratória permanece explícita.
+- **Ponto de atenção:** sinalização derivada de uma resposta e de uma regra institucional aprovada; não possui valor de prioridade clínica.
+- **Decisão de prioridade:** classificação vermelha, amarela ou verde, vinculada à inscrição, ao integrante autorizado da equipe clínica e ao momento da decisão. A decisão vigente pode substituir outra sem apagar seu histórico.
+- **Fila de espera:** utiliza a decisão de prioridade vigente e confirmada; inscrições pendentes não recebem prioridade por inferência.
+
+_Pontos para consenso e validação com a FBr:_ confirmar campos e opções do formulário, regras de sinalização e tratamento de respostas ausentes; identificar os perfis clínicos autorizados a classificar e revisar; definir o tratamento operacional dos casos pendentes e a eventual necessidade de uma sugestão automática de cor. Caso a FBr aprove essa sugestão, a alteração deve ser declarada em RF e RNF próprios antes de entrar no escopo.
+
 ### Fila de espera e consulta de posição (CP3)
 
 A CP3 foi decomposta em três features: ordenação dos inscritos na fila de espera, consulta individual da posição e apresentação das condições gerais de atendimento.
@@ -168,7 +233,7 @@ O sistema deve manter a fila de espera da Clínica Escola FBr organizada de acor
 
 A classificação deve considerar as prioridades vermelha, amarela e verde, conforme as regras definidas pela Clínica Escola, utilizando a classificação final validada pela equipe responsável pela triagem.
 
-O sistema não deve utilizar uma pré-classificação automática como decisão clínica definitiva sem a revisão de um profissional autorizado.
+O sistema não deve utilizar sinalizações da triagem como decisão clínica definitiva; somente a classificação confirmada pela equipe clínica pode definir a prioridade na fila.
 
 Quando ocorrer uma alteração autorizada na prioridade ou na situação de um inscrito, o sistema deve atualizar seu posicionamento na fila de acordo com os critérios institucionais definidos para a ordenação.
 
@@ -178,7 +243,7 @@ _Critérios de aceitação:_
 
 - Dado um inscrito cuja classificação de prioridade tenha sido validada pela equipe responsável, quando sua solicitação for incorporada à fila de espera, então o sistema deve posicioná-lo conforme a prioridade atribuída e os critérios de ordenação aprovados pela Clínica Escola.
 
-- Dado um inscrito cuja pré-classificação automática ainda não tenha sido validada, quando o sistema organizar a fila, então não deve tratar a classificação preliminar como decisão clínica definitiva.
+- Dado um inscrito com sinalizações de triagem e sem classificação clínica confirmada, quando o sistema organizar a fila, então não deve atribuir prioridade com base nessas sinalizações.
 
 - Dada uma alteração de prioridade realizada por um usuário autorizado, quando a nova classificação for confirmada, então o sistema deve atualizar a posição do inscrito de acordo com os critérios de ordenação estabelecidos.
 
