@@ -33,6 +33,11 @@ Os requisitos funcionais (RFs) são declarados a partir da decomposição das Ca
     Feature: Transferir caso para outro estagiário ou supervisor
     Feature: Consultar histórico de responsáveis do caso
 
+Área: Gestão administrativa
+  Conjunto: Contribuição social
+    Feature: Registrar pagamento da contribuição social do paciente
+    Feature: Consultar situação da contribuição social dos pacientes
+
 Área: Emissão de documentos
   Conjunto: Declaração de comparecimento
     Feature: Listar sessões com comparecimento registrado do paciente
@@ -45,6 +50,19 @@ Os requisitos funcionais (RFs) são declarados a partir da decomposição das Ca
   Conjunto: Indicadores e relatórios institucionais
     Feature: Consultar indicadores operacionais
     Feature: Gerar e exportar relatório institucional
+
+Área: Acesso e segurança
+  Conjunto: Autenticação
+    Feature: Autenticar usuário institucional
+    Feature: Encerrar sessão do usuário
+    Feature: Verificar identidade do paciente ou responsável
+  Conjunto: Controle de acesso por perfil
+    Feature: Cadastrar usuário institucional com perfil de acesso
+    Feature: Desativar usuário institucional
+    Feature: Restringir acesso ao prontuário do paciente
+  Conjunto: Proteção de dados
+    Feature: Consultar registro de acessos ao prontuário
+    Feature: Registrar consentimento para tratamento de dados
 
 Área: Acessibilidade e usabilidade
   Conjunto: Personalização de exibição
@@ -333,6 +351,49 @@ _Rastreabilidade:_ Feature "Consultar histórico de responsáveis do caso" → C
 - Pode existir um limite de casos simultâneos por estagiário e por supervisor (RN5.8)? Se sim, qual o valor?
 - Um caso pode ser atendido por mais de um estagiário, em regime de atendimento em dupla (RN5.9)?
 
+### Registro da Contribuição Social (CP8)
+
+A CP8 foi decomposta em duas features, voltadas ao controle da taxa única de responsabilidade social de R$ 35,00, devida na primeira sessão ([Seção 2.3](../../unidade-1/solucao-proposta.md#23-caracteristicas-de-produto-mapeadas-com-os-objetivos-especificos)). Hoje esse acompanhamento é feito à mão ([ata de 26/08/2026](../../unidade-1/reunioes.md)). As features permitem registrar o pagamento e distinguir quem efetivou e quem não efetivou a contribuição, inclusive no momento da primeira sessão, quando a taxa é exigida.
+
+O registro dos pagamentos é de responsabilidade da **secretaria**, e a consulta também pode ser feita pela **coordenação**. O estagiário responsável vê apenas a situação (efetivada ou pendente) dos pacientes vinculados a ele, conforme os perfis definidos na CP11.
+
+#### Feature — Registrar pagamento da contribuição social do paciente [#43](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/issues/43)
+
+**RF11 — Registrar pagamento da contribuição social**
+
+O sistema deve permitir que um usuário com perfil de secretaria registre o pagamento da contribuição social de um paciente, informando a data do pagamento e a forma de pagamento, com o valor de R$ 35,00 preenchido por padrão. Cada paciente pode ter apenas um pagamento de contribuição social registrado por ciclo de atendimento, já que a taxa é única. Para este requisito, **ciclo de atendimento** é o período de acompanhamento de um paciente que vai da primeira sessão até o encerramento do atendimento (conclusão das sessões com o relatório final, desligamento por faltas ou desistência); se o paciente se inscrever novamente depois do encerramento, começa um novo ciclo e a taxa volta a ser devida. Essa definição é provisória até a validação com a FBr (ver Pontos a validar).
+
+_Critérios de aceitação:_
+
+- Dado um paciente com contribuição pendente, quando a secretaria registrar o pagamento com data e forma de pagamento, então o sistema deve marcar a contribuição do paciente como **efetivada** e guardar o valor, a data, a forma de pagamento, o usuário que registrou e a data/hora do registro.
+- Dado um paciente que já possui contribuição efetivada no ciclo de atendimento atual, quando a secretaria tentar registrar um novo pagamento, então o sistema deve impedir o registro duplicado e informar a data do pagamento já registrado.
+- Dado um usuário sem perfil de secretaria, quando tentar registrar um pagamento, então o sistema deve impedir a operação.
+
+_Rastreabilidade:_ Feature "Registrar pagamento da contribuição social do paciente" → CP8 — Registro da contribuição social → OE6/OE4.
+
+#### Feature — Consultar situação da contribuição social dos pacientes [#44](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/issues/44)
+
+**RF12 — Consultar situação da contribuição social**
+
+O sistema deve permitir que usuários com perfil de secretaria ou de coordenação consultem a situação da contribuição social dos pacientes em atendimento, com filtro por situação (**efetivada** ou **pendente**). Para cada paciente, a consulta deve mostrar o nome, a situação, a data da primeira sessão e, quando efetivada, a data do pagamento. A situação também deve ser indicada na agenda do dia, junto à primeira sessão do paciente, para que a pendência seja percebida no momento em que a taxa é exigida.
+
+_Critérios de aceitação:_
+
+- Dado que existem pacientes com contribuição efetivada e pendente, quando a secretaria filtrar por "pendente", então o sistema deve listar apenas os pacientes sem pagamento registrado no ciclo de atendimento atual.
+- Dado um paciente cuja contribuição foi registrada (RF11), quando a consulta for refeita, então o paciente deve aparecer com situação "efetivada" e com a data do pagamento.
+- Dado um paciente com primeira sessão agendada para hoje e contribuição pendente, quando a secretaria ou o estagiário responsável abrir a agenda do dia, então a sessão desse paciente deve exibir a indicação "contribuição pendente", que deixa de aparecer assim que o pagamento é registrado. Regra provisória, até a validação com a FBr (ver Pontos a validar): a indicação é apenas informativa e não bloqueia a sessão; a decisão sobre realizá-la continua sendo da clínica.
+- Dado um estagiário, quando consultar um paciente vinculado a ele, então o sistema deve exibir somente a situação da contribuição (efetivada ou pendente), sem a forma de pagamento e sem os dados dos demais pacientes.
+
+_Rastreabilidade:_ Feature "Consultar situação da contribuição social dos pacientes" → CP8 — Registro da contribuição social → OE6/OE4. A indicação na agenda depende do agendamento da CP4.
+
+#### Pontos a validar com a FBr (CP8)
+
+- Quais formas de pagamento são aceitas (dinheiro, Pix, outras) e se é emitido recibo ao paciente.
+- Se existe isenção da taxa para pacientes sem condição de pagar e, em caso positivo, quem autoriza.
+- Se a sessão pode ocorrer quando a contribuição está pendente. Até a resposta, o RF12 adota a regra provisória de apenas indicar a pendência, sem bloquear a sessão.
+- Se a definição de ciclo de atendimento usada no RF11 corresponde à prática da clínica, isto é, se a taxa é cobrada uma única vez por acompanhamento e novamente em caso de nova inscrição.
+- Como corrigir um pagamento registrado por engano (hoje não há feature de estorno ou retificação).
+
 ### Emissão de Declaração de Comparecimento (CP9)
 
 A CP9 foi decomposta em cinco features, voltadas a permitir que a secretaria ou o próprio paciente/responsável obtenham a declaração de comparecimento às sessões, contendo data, horário e nome do estagiário que realizou o atendimento ([Solução Proposta, §2.3](../../unidade-1/solucao-proposta.md#23-caracteristicas-de-produto-mapeadas-com-os-objetivos-especificos)). O objetivo é atender de imediato uma demanda recorrente dos pacientes, sem trabalho manual da secretaria.
@@ -439,98 +500,11 @@ _Critérios de aceitação:_
 
 _Rastreabilidade:_ Feature "Gerar e exportar relatório institucional" → CP10 — Indicadores e relatórios institucionais.
 
-### Acessibilidade e Usabilidade (CP12)
-
-A CP12 foi decomposta em duas features de personalização da exibição, voltadas a reduzir barreiras de acesso para o público em vulnerabilidade social e para pessoas com deficiência visual, conforme os desafios identificados na [Seção 1.5](../../unidade-1/cenario-atual.md#15-desafios-do-projeto). As duas features se aplicam exclusivamente às **páginas voltadas ao público externo** (paciente/solicitante) — inscrição, consulta de posição na fila, agendamento e confirmação de presença —, e não ao painel administrativo interno (usado por coordenação, secretaria, estagiários e supervisores).
-
-#### Feature — Ativar modo de alto contraste [#24](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/issues/24)
-
-**RF03 — Ativar modo de alto contraste**
-
-O sistema deve permitir que o paciente ative um modo de alto contraste em todas as páginas voltadas ao público externo, alterando a combinação de cores de texto e plano de fundo para atender, no mínimo, à razão de contraste exigida pelo nível AA da WCAG 2.2 (ver RNF04).
-
-_Critério de aceitação:_ dado que o paciente ativou o modo de alto contraste, quando ele navegar entre as páginas voltadas ao público externo dentro da mesma sessão do navegador, então a preferência deve permanecer ativa em todas elas, sem precisar ser reativada a cada página; a preferência não precisa ser mantida após o encerramento da sessão do navegador, já que essas páginas não exigem login do paciente.
-_Rastreabilidade:_ Feature "Ativar modo de alto contraste" → CP12 — Acessibilidade e usabilidade.
-
-#### Feature — Ajustar tamanho do texto [#25](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/issues/25)
-
-**RF04 — Ajustar tamanho do texto**
-
-O sistema deve permitir que o paciente aumente ou diminua o tamanho do texto exibido nas páginas voltadas ao público externo, em pelo menos 3 níveis (padrão — 100%, grande — 150% e extra grande — 200% do tamanho base do texto), sem cortar texto, sobrepor elementos ou impedir o acesso a qualquer funcionalidade dessas páginas.
-
-_Critério de aceitação:_ dado que o paciente selecionou um dos três níveis de tamanho de texto, quando navegar pelas páginas voltadas ao público externo, então o nível selecionado deve ser aplicado de forma consistente em todas elas, seguindo a mesma regra de persistência por sessão de navegador do RF03.
-_Rastreabilidade:_ Feature "Ajustar tamanho do texto" → CP12 — Acessibilidade e usabilidade.
-
-### Registro da Contribuição Social (CP8)
-
-A CP8 foi decomposta em duas features, voltadas ao controle da taxa única de responsabilidade social de R$ 35,00, devida na primeira sessão ([Seção 2.3](../../unidade-1/solucao-proposta.md#23-caracteristicas-de-produto-mapeadas-com-os-objetivos-especificos)). Hoje esse acompanhamento é feito à mão ([ata de 26/08/2026](../../unidade-1/reunioes.md)). As features permitem registrar o pagamento e distinguir quem efetivou e quem não efetivou a contribuição, inclusive no momento da primeira sessão, quando a taxa é exigida.
-
-O registro dos pagamentos é de responsabilidade da **secretaria**, e a consulta também pode ser feita pela **coordenação**. O estagiário responsável vê apenas a situação (efetivada ou pendente) dos pacientes vinculados a ele, conforme os perfis definidos na CP11.
-
-```text
-Área: Gestão administrativa
-  Conjunto: Contribuição social
-    Feature: Registrar pagamento da contribuição social do paciente
-    Feature: Consultar situação da contribuição social dos pacientes
-```
-
-#### Feature — Registrar pagamento da contribuição social do paciente [#43](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/issues/43)
-
-**RF11 — Registrar pagamento da contribuição social**
-
-O sistema deve permitir que um usuário com perfil de secretaria registre o pagamento da contribuição social de um paciente, informando a data do pagamento e a forma de pagamento, com o valor de R$ 35,00 preenchido por padrão. Cada paciente pode ter apenas um pagamento de contribuição social registrado por ciclo de atendimento, já que a taxa é única. Para este requisito, **ciclo de atendimento** é o período de acompanhamento de um paciente que vai da primeira sessão até o encerramento do atendimento (conclusão das sessões com o relatório final, desligamento por faltas ou desistência); se o paciente se inscrever novamente depois do encerramento, começa um novo ciclo e a taxa volta a ser devida. Essa definição é provisória até a validação com a FBr (ver Pontos a validar).
-
-_Critérios de aceitação:_
-
-- Dado um paciente com contribuição pendente, quando a secretaria registrar o pagamento com data e forma de pagamento, então o sistema deve marcar a contribuição do paciente como **efetivada** e guardar o valor, a data, a forma de pagamento, o usuário que registrou e a data/hora do registro.
-- Dado um paciente que já possui contribuição efetivada no ciclo de atendimento atual, quando a secretaria tentar registrar um novo pagamento, então o sistema deve impedir o registro duplicado e informar a data do pagamento já registrado.
-- Dado um usuário sem perfil de secretaria, quando tentar registrar um pagamento, então o sistema deve impedir a operação.
-
-_Rastreabilidade:_ Feature "Registrar pagamento da contribuição social do paciente" → CP8 — Registro da contribuição social → OE6/OE4.
-
-#### Feature — Consultar situação da contribuição social dos pacientes [#44](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/issues/44)
-
-**RF12 — Consultar situação da contribuição social**
-
-O sistema deve permitir que usuários com perfil de secretaria ou de coordenação consultem a situação da contribuição social dos pacientes em atendimento, com filtro por situação (**efetivada** ou **pendente**). Para cada paciente, a consulta deve mostrar o nome, a situação, a data da primeira sessão e, quando efetivada, a data do pagamento. A situação também deve ser indicada na agenda do dia, junto à primeira sessão do paciente, para que a pendência seja percebida no momento em que a taxa é exigida.
-
-_Critérios de aceitação:_
-
-- Dado que existem pacientes com contribuição efetivada e pendente, quando a secretaria filtrar por "pendente", então o sistema deve listar apenas os pacientes sem pagamento registrado no ciclo de atendimento atual.
-- Dado um paciente cuja contribuição foi registrada (RF11), quando a consulta for refeita, então o paciente deve aparecer com situação "efetivada" e com a data do pagamento.
-- Dado um paciente com primeira sessão agendada para hoje e contribuição pendente, quando a secretaria ou o estagiário responsável abrir a agenda do dia, então a sessão desse paciente deve exibir a indicação "contribuição pendente", que deixa de aparecer assim que o pagamento é registrado. Regra provisória, até a validação com a FBr (ver Pontos a validar): a indicação é apenas informativa e não bloqueia a sessão; a decisão sobre realizá-la continua sendo da clínica.
-- Dado um estagiário, quando consultar um paciente vinculado a ele, então o sistema deve exibir somente a situação da contribuição (efetivada ou pendente), sem a forma de pagamento e sem os dados dos demais pacientes.
-
-_Rastreabilidade:_ Feature "Consultar situação da contribuição social dos pacientes" → CP8 — Registro da contribuição social → OE6/OE4. A indicação na agenda depende do agendamento da CP4.
-
-#### Pontos a validar com a FBr (CP8)
-
-- Quais formas de pagamento são aceitas (dinheiro, Pix, outras) e se é emitido recibo ao paciente.
-- Se existe isenção da taxa para pacientes sem condição de pagar e, em caso positivo, quem autoriza.
-- Se a sessão pode ocorrer quando a contribuição está pendente. Até a resposta, o RF12 adota a regra provisória de apenas indicar a pendência, sem bloquear a sessão.
-- Se a definição de ciclo de atendimento usada no RF11 corresponde à prática da clínica, isto é, se a taxa é cobrada uma única vez por acompanhamento e novamente em caso de nova inscrição.
-- Como corrigir um pagamento registrado por engano (hoje não há feature de estorno ou retificação).
-
 ### Segurança, Sigilo e Controle de Acesso (CP11)
 
 A CP11 foi decomposta em oito features, organizadas em três conjuntos: autenticação, controle de acesso por perfil e proteção de dados. Elas respondem à restrição mais crítica apontada pelo cliente, o sigilo das informações psicológicas ([Seção 1.5](../../unidade-1/cenario-atual.md#15-desafios-do-projeto)), e atendem à LGPD e às normas do Conselho Federal de Psicologia (CFP).
 
 Os perfis de acesso são cinco: **paciente**, **secretaria**, **estagiário**, **supervisor** e **coordenação**. Os quatro perfis institucionais acessam o sistema com e-mail e senha. O paciente (ou seu responsável legal) não possui conta nem senha, já que parte do público tem pouca familiaridade com tecnologia: as páginas públicas, como a inscrição, não exigem identificação, e o acesso às informações do próprio paciente (posição na fila da CP3 e declarações da CP9) é liberado por uma verificação de identidade feita a cada consulta.
-
-```text
-Área: Acesso e segurança
-  Conjunto: Autenticação
-    Feature: Autenticar usuário institucional
-    Feature: Encerrar sessão do usuário
-    Feature: Verificar identidade do paciente ou responsável
-  Conjunto: Controle de acesso por perfil
-    Feature: Cadastrar usuário institucional com perfil de acesso
-    Feature: Desativar usuário institucional
-    Feature: Restringir acesso ao prontuário do paciente
-  Conjunto: Proteção de dados
-    Feature: Consultar registro de acessos ao prontuário
-    Feature: Registrar consentimento para tratamento de dados
-```
 
 #### Feature — Autenticar usuário institucional [#45](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/issues/45)
 
@@ -650,3 +624,25 @@ _Rastreabilidade:_ Feature "Registrar consentimento para tratamento de dados" �
 - Por qual canal o código do RF15 deve ser enviado (SMS, WhatsApp ou e-mail), considerando o contato que os pacientes costumam informar.
 - O texto do termo de consentimento, que deve ser revisado pela FBr.
 - Como o paciente exercerá os direitos previstos na LGPD (acesso, correção e eliminação dos dados), que ainda não estão cobertos por nenhuma feature.
+
+### Acessibilidade e Usabilidade (CP12)
+
+A CP12 foi decomposta em duas features de personalização da exibição, voltadas a reduzir barreiras de acesso para o público em vulnerabilidade social e para pessoas com deficiência visual, conforme os desafios identificados na [Seção 1.5](../../unidade-1/cenario-atual.md#15-desafios-do-projeto). As duas features se aplicam exclusivamente às **páginas voltadas ao público externo** (paciente/solicitante) — inscrição, consulta de posição na fila, agendamento e confirmação de presença —, e não ao painel administrativo interno (usado por coordenação, secretaria, estagiários e supervisores).
+
+#### Feature — Ativar modo de alto contraste [#24](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/issues/24)
+
+**RF03 — Ativar modo de alto contraste**
+
+O sistema deve permitir que o paciente ative um modo de alto contraste em todas as páginas voltadas ao público externo, alterando a combinação de cores de texto e plano de fundo para atender, no mínimo, à razão de contraste exigida pelo nível AA da WCAG 2.2 (ver RNF04).
+
+_Critério de aceitação:_ dado que o paciente ativou o modo de alto contraste, quando ele navegar entre as páginas voltadas ao público externo dentro da mesma sessão do navegador, então a preferência deve permanecer ativa em todas elas, sem precisar ser reativada a cada página; a preferência não precisa ser mantida após o encerramento da sessão do navegador, já que essas páginas não exigem login do paciente.
+_Rastreabilidade:_ Feature "Ativar modo de alto contraste" → CP12 — Acessibilidade e usabilidade.
+
+#### Feature — Ajustar tamanho do texto [#25](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/issues/25)
+
+**RF04 — Ajustar tamanho do texto**
+
+O sistema deve permitir que o paciente aumente ou diminua o tamanho do texto exibido nas páginas voltadas ao público externo, em pelo menos 3 níveis (padrão — 100%, grande — 150% e extra grande — 200% do tamanho base do texto), sem cortar texto, sobrepor elementos ou impedir o acesso a qualquer funcionalidade dessas páginas.
+
+_Critério de aceitação:_ dado que o paciente selecionou um dos três níveis de tamanho de texto, quando navegar pelas páginas voltadas ao público externo, então o nível selecionado deve ser aplicado de forma consistente em todas elas, seguindo a mesma regra de persistência por sessão de navegador do RF03.
+_Rastreabilidade:_ Feature "Ajustar tamanho do texto" → CP12 — Acessibilidade e usabilidade.
