@@ -82,6 +82,25 @@ Os requisitos funcionais (RFs) são declarados a partir da decomposição das Ca
   Conjunto: Personalização de exibição
     Feature: Ativar modo de alto contraste
     Feature: Ajustar tamanho do texto
+
+Área: Agendamento e Acompanhamento de Sessões
+  Conjunto: Agendamento
+    Feature: Agendar sessão do paciente
+    Feature: Consultar agenda de sessões do estagiário
+    Feature: Reagendar sessão do paciente
+  Conjunto: Confirmação e lembrete
+    Feature: Enviar lembrete de sessão agendada
+    Feature: Confirmar presença em sessão agendada
+  Conjunto: Cancelamento
+    Feature: Registrar cancelamento de sessão pelo paciente
+    Feature: Registrar cancelamento de sessão pelo estagiário
+    Feature: Notificar paciente sobre ausência do estagiário
+
+Área: Acompanhamento Clínico
+  Conjunto: Registro de evolução por sessão
+    Feature: Registrar evolução da sessão realizada
+    Feature: Corrigir evolução registrada
+    Feature: Consultar evolução de uma sessão específica
 ```
 
 ### Inscrição on-line (CP1)
@@ -314,6 +333,135 @@ _Critérios de aceitação:_
 
 _Rastreabilidade:_ Feature "Informar condições gerais da fila" → CP3 — Fila de espera e consulta de posição → OE4/OE7 → IS02 — Aumento da demanda.
 
+### Agendamento, Confirmação e Remarcação (CP4)
+
+A CP4 foi decomposta em oito features, organizadas em três conjuntos: agendamento, confirmação/lembrete e cancelamento, respondendo à dor mais crítica relatada pela coordenação — as falhas de agendamento e de confirmação de presença que produzem horários ociosos ([Solução Proposta, §2.1 e §2.3](../../unidade-1/solucao-proposta.md#23-caracteristicas-de-produto-mapeadas-com-os-objetivos-especificos)).
+
+O agendamento depende do vínculo entre paciente e estagiário responsável, definido pela CP5, e pressupõe que a inscrição já tenha passado pela triagem da CP2. O acesso aos dados da sessão observa os perfis definidos na CP11 — Segurança, sigilo e controle de acesso. O registro de um não comparecimento gera o evento consumido pela CP9 — Controle de assiduidade e alertas, para a contagem cumulativa de faltas; esta decomposição trata apenas do registro do evento na sessão, não da interpretação cumulativa dele.
+
+O prazo mínimo de antecedência para cancelamento ou remarcação, o número máximo de remarcações por paciente dentro do ciclo, o canal do lembrete automático (SMS, e-mail ou ambos) e quem pode registrar o cancelamento em nome do estagiário ainda dependem de validação com a FBr.
+
+#### Feature — Agendar sessão do paciente
+
+**RF4.1 — Agendar sessão do paciente**
+
+O sistema deve permitir que a secretaria ou o estagiário responsável agende uma sessão para um paciente já vinculado a um estagiário (CP5), informando data e horário. O sistema deve impedir o agendamento de sessões sobrepostas para o mesmo estagiário ou para o mesmo paciente, e deve registrar o status inicial da sessão como "agendada", com paciente, estagiário, data e horário associados. O agendamento não deve ocorrer para pacientes sem estagiário responsável vinculado.
+
+_Critérios de aceitação:_
+
+- Dado um paciente já vinculado a um estagiário responsável, quando a secretaria ou o estagiário agendar uma sessão em um horário disponível, então o sistema deve registrar a sessão com status "agendada", paciente, estagiário, data e horário.
+- Dado um horário já ocupado por outra sessão do mesmo estagiário, quando houver tentativa de agendar uma nova sessão nesse horário, então o sistema deve impedir o agendamento e informar o conflito.
+- Dado um paciente sem estagiário responsável vinculado, quando houver tentativa de agendar uma sessão para ele, então o sistema deve impedir o agendamento.
+
+_Rastreabilidade:_ Feature "Agendar sessão do paciente" → CP4 — Agendamento, confirmação e remarcação → OE3/OE4. Dependência: CP5 — Distribuição de casos entre supervisores e estagiários; restrição transversal: CP11 — Segurança, sigilo e controle de acesso.
+
+#### Feature — Consultar agenda de sessões do estagiário
+
+**RF4.2 — Consultar agenda de sessões do estagiário**
+
+O sistema deve permitir que o estagiário consulte suas sessões agendadas, confirmadas e realizadas, com filtro por período. O supervisor deve poder consultar a agenda dos estagiários sob sua supervisão, respeitando os vínculos definidos na CP5.
+
+_Critérios de aceitação:_
+
+- Dado um estagiário autenticado, quando ele consultar sua agenda, então o sistema deve exibir suas sessões agendadas, confirmadas e realizadas, filtráveis por período.
+- Dado um supervisor autenticado, quando ele consultar a agenda de um estagiário sob sua supervisão, então o sistema deve exibir as sessões desse estagiário.
+- Dado um usuário sem vínculo de supervisão com o estagiário, quando tentar consultar a agenda dele, então o sistema deve negar o acesso.
+
+_Rastreabilidade:_ Feature "Consultar agenda de sessões do estagiário" → CP4 — Agendamento, confirmação e remarcação → OE3/OE4. Dependência: RF4.1, CP5; restrição transversal: CP11.
+
+#### Feature — Reagendar sessão do paciente
+
+**RF4.3 — Reagendar sessão do paciente**
+
+O sistema deve permitir alterar a data ou o horário de uma sessão ainda não realizada, preservando o registro da sessão original e da remarcação para fins de auditoria e do relatório final de evolução (CP6/CP7/CP8). O limite de remarcações por paciente dentro do ciclo ainda depende de validação com a FBr; até essa definição, o sistema não deve impor um limite fixo.
+
+_Critérios de aceitação:_
+
+- Dada uma sessão agendada ainda não realizada, quando a secretaria ou o estagiário alterar a data ou o horário, então o sistema deve atualizar a sessão e manter o registro da data/horário anterior vinculado à sessão.
+- Dada uma sessão já realizada ou cancelada, quando houver tentativa de reagendamento, então o sistema deve impedir a operação.
+
+_Rastreabilidade:_ Feature "Reagendar sessão do paciente" → CP4 — Agendamento, confirmação e remarcação → OE3/OE4. Dependência: RF4.1.
+
+#### Feature — Enviar lembrete de sessão agendada
+
+**RF4.4 — Enviar lembrete de sessão agendada**
+
+O sistema deve enviar automaticamente um lembrete ao paciente antes de uma sessão agendada, registrando o envio ou a eventual falha de envio para fins de auditoria. O canal do lembrete (e-mail, SMS ou ambos) e a antecedência do envio ainda dependem de validação com a FBr.
+
+_Critérios de aceitação:_
+
+- Dada uma sessão agendada dentro do prazo de antecedência definido, quando o momento do lembrete for atingido, então o sistema deve enviar o lembrete ao paciente e registrar o envio.
+- Dada uma falha no envio do lembrete, quando ela ocorrer, então o sistema deve registrar a falha, sem apresentá-la como envio concluído.
+
+_Rastreabilidade:_ Feature "Enviar lembrete de sessão agendada" → CP4 — Agendamento, confirmação e remarcação → OE3. Dependência: RF4.1.
+
+#### Feature — Confirmar presença em sessão agendada
+
+**RF4.5 — Confirmar presença em sessão agendada**
+
+O sistema deve permitir que o paciente confirme presença em uma sessão agendada até um prazo definido antes do atendimento. Ao confirmar, o sistema deve atualizar o status da sessão para "confirmada", registrando data, hora e usuário responsável pela confirmação. Sessões não confirmadas dentro do prazo devem ser sinalizadas para a secretaria.
+
+_Critérios de aceitação:_
+
+- Dada uma sessão agendada dentro do prazo de confirmação, quando o paciente confirmar presença, então o sistema deve atualizar o status para "confirmada", com data, hora e usuário responsável.
+- Dada uma sessão cujo prazo de confirmação expirou sem confirmação do paciente, quando o prazo for atingido, então o sistema deve sinalizar a sessão para a secretaria.
+- Dada uma sessão já cancelada, quando houver tentativa de confirmação, então o sistema deve impedir a operação.
+
+_Rastreabilidade:_ Feature "Confirmar presença em sessão agendada" → CP4 — Agendamento, confirmação e remarcação → OE3. Dependência: RF4.1. Integração: alimenta a CP9 — Controle de assiduidade e alertas, quando a confirmação não ocorre.
+
+#### Feature — Registrar cancelamento de sessão pelo paciente
+
+**RF4.6 — Registrar cancelamento de sessão pelo paciente**
+
+O sistema deve permitir que o paciente, ou a secretaria em seu nome, cancele uma sessão futura, informando um motivo. O cancelamento deve gerar o evento consumido pela CP9 — Controle de assiduidade e alertas, para avaliação de falta, conforme o prazo mínimo de antecedência a ser definido com a FBr.
+
+_Critérios de aceitação:_
+
+- Dada uma sessão agendada futura, quando o paciente ou a secretaria em seu nome registrar o cancelamento com um motivo, então o sistema deve atualizar o status da sessão para "cancelada" e registrar o motivo, o autor e a data/hora do cancelamento.
+- Dada uma sessão já realizada, quando houver tentativa de cancelamento, então o sistema deve impedir a operação.
+
+_Rastreabilidade:_ Feature "Registrar cancelamento de sessão pelo paciente" → CP4 — Agendamento, confirmação e remarcação → OE3. Dependência: RF4.1. Integração: CP9 — Controle de assiduidade e alertas.
+
+#### Feature — Registrar cancelamento de sessão pelo estagiário
+
+**RF4.7 — Registrar cancelamento de sessão pelo estagiário**
+
+O sistema deve permitir que o estagiário, o supervisor ou a secretaria registrem a ausência prevista do estagiário em uma sessão já agendada, informando o motivo. O registro deve disparar a notificação ao paciente afetado (RF4.8).
+
+_Critérios de aceitação:_
+
+- Dada uma sessão agendada, quando o estagiário, o supervisor ou a secretaria registrar a ausência prevista do estagiário com motivo, então o sistema deve atualizar o status da sessão e disparar a notificação ao paciente.
+- Dado um usuário sem vínculo com a sessão (não é o estagiário, o supervisor dele ou a secretaria), quando tentar registrar essa ausência, então o sistema deve negar a operação.
+
+_Rastreabilidade:_ Feature "Registrar cancelamento de sessão pelo estagiário" → CP4 — Agendamento, confirmação e remarcação → OE3/OE4. Dependência: RF4.1, CP5.
+
+#### Feature — Notificar paciente sobre ausência do estagiário
+
+**RF4.8 — Notificar paciente sobre ausência do estagiário**
+
+Quando uma sessão for cancelada por ausência do estagiário (RF4.7), o sistema deve notificar o paciente com a maior antecedência possível, oferecendo a opção de reagendamento (RF4.3).
+
+_Critérios de aceitação:_
+
+- Dada uma sessão cancelada por ausência do estagiário, quando o cancelamento for registrado, então o sistema deve notificar o paciente imediatamente, com a opção de reagendar a sessão.
+
+_Rastreabilidade:_ Feature "Notificar paciente sobre ausência do estagiário" → CP4 — Agendamento, confirmação e remarcação → OE3. Dependência: RF4.7.
+
+#### Modelo de domínio da CP4
+
+- **Sessão:** entidade central, com atributos paciente, estagiário, data/hora, status (agendada, confirmada, cancelada, realizada, falta) e motivo do cancelamento, quando houver.
+- **Relações:** Sessão (N) — Paciente (1); Sessão (N) — Estagiário (1).
+- **Regra de integridade:** uma Sessão só pode ser criada se já existir o vínculo Paciente–Estagiário definido pela CP5.
+- **Evento "lembrete enviado":** deve ficar auditável, mesmo sem constituir entidade persistente central.
+
+#### Pontos a validar com a FBr (CP4)
+
+- Prazo mínimo de antecedência para cancelar ou remarcar uma sessão.
+- Número máximo de remarcações permitidas por paciente dentro do ciclo de 8 a 10 sessões.
+- Canal do lembrete automático (e-mail, SMS ou ambos) e antecedência de envio.
+- Quem pode registrar o cancelamento em nome do estagiário (o próprio estagiário, o supervisor ou a secretaria).
+
+
 ### Distribuição de casos entre supervisores e estagiários (CP5)
 
 A CP5 foi decomposta em nove features, organizadas em três conjuntos: distribuição dos casos entre supervisores conforme a área de especialidade, vinculação de cada paciente a um estagiário responsável e acompanhamento/reorganização dos vínculos já estabelecidos, apoiando a organização da reunião inicial de estágio e a rastreabilidade da responsabilidade sobre cada caso ([Solução Proposta, §2.3](../../unidade-1/solucao-proposta.md#23-caracteristicas-de-produto-mapeadas-com-os-objetivos-especificos)).
@@ -500,6 +648,69 @@ _Rastreabilidade:_ Problema → OG → OE5/OE6 → CP6 (escopo da issue; corresp
 - **Relatório final:** documento derivado das evoluções de um ciclo, com versão e registros de origem identificáveis; seu estado de revisão e aprovação depende de regra institucional.
 
 _Pontos para consenso com a FBr e a equipe Umbra:_ confirmar a correspondência CP6/CP7/CP8 e resolver a duplicidade de CP8 com a contribuição social; definir os campos obrigatórios do prontuário, evolução e relatório; confirmar como a realização da sessão é registrada, se há evolução por sessão e como corrigir registros; definir critérios de encerramento e exceções ao ciclo de 8 a 10 sessões; definir revisão, aprovação, assinatura e destino do relatório. Esses pontos não devem ser presumidos como regras clínicas aprovadas.
+
+### Registro de Evolução por Sessão (CP7)
+
+A CP7 foi decomposta em três features, no conjunto "Registro de evolução por sessão" dentro da área "Acompanhamento Clínico", respondendo à necessidade de substituir o registro manual/disperso da evolução do paciente por um histórico estruturado e auditável ([Solução Proposta, §2.3](../../unidade-1/solucao-proposta.md#23-caracteristicas-de-produto-mapeadas-com-os-objetivos-especificos)).
+
+O registro de evolução depende de uma sessão já realizada (CP4) e do vínculo entre paciente e estagiário responsável (CP5). O acesso ao conteúdo registrado é restrito ao estagiário responsável e ao seu supervisor, conforme os perfis definidos na CP11 — Segurança, sigilo e controle de acesso. A evolução registrada alimenta o prontuário eletrônico (CP6) e, ao fim do ciclo, o relatório final de evolução (CP8).
+
+O conteúdo clínico obrigatório de um registro de evolução, a possibilidade e o prazo de correção após o registro original, e se uma sessão pode ter mais de um registro de evolução (ex.: complementos) ainda dependem de validação com a FBr.
+
+#### Feature — Registrar evolução da sessão realizada
+
+**RF7.1 — Registrar evolução da sessão realizada**
+
+O sistema deve permitir que o estagiário responsável registre a evolução de uma sessão já realizada, vinculando o registro ao paciente, ao ciclo de atendimento e à sessão de origem. Cada registro deve identificar o autor e o momento do registro. O sistema deve impedir que uma evolução seja registrada para sessão de outro paciente ou por estagiário sem vínculo vigente com o caso, e deve impedir o registro de evolução para sessão que ainda não foi realizada.
+
+_Critérios de aceitação:_
+
+- Dada uma sessão realizada de um paciente sob responsabilidade do estagiário, quando ele registrar uma evolução válida, então o sistema deve associar o registro à sessão, ao paciente e ao ciclo, com autor e data/hora.
+- Dada uma sessão de outro paciente, ou um estagiário sem vínculo vigente com o caso, quando houver tentativa de registrar evolução, então o sistema deve recusar a operação.
+- Dada uma sessão ainda não realizada (agendada, confirmada, cancelada ou falta), quando houver tentativa de registrar evolução para ela, então o sistema deve impedir o registro.
+
+_Rastreabilidade:_ Feature "Registrar evolução da sessão realizada" → CP7 — Registro de evolução por sessão → OE5/OE2. Dependência: CP4 (sessão realizada), CP5 (vínculo estagiário-paciente); restrição transversal: CP11 — Segurança, sigilo e controle de acesso.
+
+#### Feature — Corrigir evolução registrada
+
+**RF7.2 — Corrigir evolução registrada**
+
+O sistema deve permitir que o estagiário responsável corrija um registro de evolução já salvo, dentro de um prazo a ser definido com a FBr, preservando o conteúdo original para fins de auditoria — não deve haver sobrescrita silenciosa. Toda correção deve registrar autor, data/hora e, quando aplicável, o motivo da alteração.
+
+_Critérios de aceitação:_
+
+- Dado um registro de evolução já salvo pelo próprio estagiário, dentro do prazo permitido, quando ele corrigir o conteúdo, então o sistema deve preservar a versão original e registrar a nova versão com autor, data/hora e motivo.
+- Dado um registro de evolução fora do prazo permitido para correção, quando houver tentativa de alteração, então o sistema deve impedir a operação.
+- Dado um usuário diferente do autor original, quando tentar corrigir um registro, então o sistema deve negar a ação, salvo exceção para o supervisor, caso essa exceção seja aprovada pela FBr.
+
+_Rastreabilidade:_ Feature "Corrigir evolução registrada" → CP7 — Registro de evolução por sessão → OE5. Dependência: RF7.1.
+
+#### Feature — Consultar evolução de uma sessão específica
+
+**RF7.3 — Consultar evolução de uma sessão específica**
+
+O sistema deve permitir que o estagiário responsável e o seu supervisor consultem o registro de evolução vinculado a uma sessão específica, incluindo eventuais correções e seus históricos. O acesso a esse conteúdo deve respeitar a restrição de acesso ao prontuário definida na CP11.
+
+_Critérios de aceitação:_
+
+- Dada uma sessão com evolução registrada, quando o estagiário responsável ou o supervisor consultarem essa sessão, então o sistema deve apresentar o conteúdo da evolução, incluindo o histórico de correções, se houver.
+- Dado um usuário sem vínculo clínico vigente com o caso, quando tentar consultar a evolução de uma sessão, então o sistema deve negar o acesso.
+
+_Rastreabilidade:_ Feature "Consultar evolução de uma sessão específica" → CP7 — Registro de evolução por sessão → OE5. Dependência: RF7.1, RF7.2; restrição transversal: CP11.
+
+#### Modelo de domínio da CP7
+
+- **Evolução:** entidade vinculada a Sessão, Paciente e Ciclo de atendimento; atributos: conteúdo, autor, data/hora de criação; pode ter versões (original + correções).
+- **Relação:** Evolução (N) — Sessão (1) — presume-se, até validação contrária, que uma sessão tem no máximo um registro de evolução, sujeito a correção.
+- **Correção:** sub-registro ou versão de Evolução, preservando o conteúdo anterior, autor e motivo da alteração.
+
+#### Pontos a validar com a FBr (CP7)
+
+- Conteúdo clínico obrigatório de um registro de evolução.
+- Prazo e limites para correção de um registro já salvo.
+- Se uma sessão pode ter mais de um registro de evolução (ex.: complementos) ou apenas um, sujeito a correção.
+- Se o supervisor pode corrigir um registro do estagiário, ou apenas visualizar e solicitar correção a ele.
+- Conciliar esta decomposição com RF6.2/RF6.3, já publicados pela equipe na seção consolidada de CP6/CP7/CP8.
 
 ### Registro da Contribuição Social (CP8)
 
