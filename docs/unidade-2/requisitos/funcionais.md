@@ -330,10 +330,8 @@ _Rastreabilidade:_ Feature "Consultar histórico de responsáveis do caso" → C
 
 #### Pontos a validar com a FBr (CP5)
 
-- A ordem de prioridade (vermelha, amarela, verde) deve orientar diretamente a ordem de distribuição dos casos, e não apenas a ordenação da lista de pendentes (RN5.4)?
 - Pode existir um limite de casos simultâneos por estagiário e por supervisor (RN5.8)? Se sim, qual o valor?
 - Um caso pode ser atendido por mais de um estagiário, em regime de atendimento em dupla (RN5.9)?
-- A transferência de caso entre estagiários ou supervisores (RF5.8) pertence à CP5 ou deve se tornar uma característica de produto própria? Qual o processo real de continuidade entre semestres?
 
 ### Emissão de Declaração de Comparecimento (CP9)
 
