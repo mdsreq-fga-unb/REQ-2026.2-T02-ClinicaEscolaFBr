@@ -207,6 +207,31 @@ A conformidade deve ser verificada com leitor de tela e checklist de acessibilid
 Classificação: acessibilidade (URPS+).
 Rastreabilidade: CP5 — Distribuição de casos entre supervisores e estagiários (transversal às features "Listar casos aguardando distribuição", "Registrar áreas de especialidade do supervisor", "Distribuir caso a supervisor conforme área de especialidade", "Vincular paciente a estagiário responsável", "Consultar responsáveis pelo caso", "Consultar casos sob responsabilidade do estagiário ou supervisor" e "Visualizar distribuição de casos por supervisor"); relacionada à CP12 — Acessibilidade e usabilidade.
 
+### Prontuário eletrônico, evolução e relatório final (CP6 — escopo desta atividade)
+
+Os RNFs abaixo restringem as quatro features RF6.1–RF6.4. A numeração consolidada segue a issue #34; na Solução Proposta, o registro de evolução e o relatório final aparecem nas CP7 e CP8. Aplicam-se também RF18, RNF15, RNF16 e RNF17 da CP11 para acesso, criptografia, auditoria e recuperação do prontuário.
+
+**RNF6.1 — Sigilo do conteúdo clínico**
+
+O prontuário, as evoluções e o relatório final devem ser acessíveis somente ao estagiário responsável pelo caso e ao seu supervisor, conforme o vínculo vigente e o RF18. Listagens, mensagens de erro e respostas a solicitações negadas não devem expor conteúdo clínico a outros perfis. A conformidade deve ser verificada com casos fictícios, testando acesso permitido e negado antes e depois de uma transferência de responsável.
+
+Classificação: segurança e privacidade (URPS+).
+Rastreabilidade: RF6.1–RF6.4 → CP6 (escopo da issue) → OE5/OE6; dependências: CP5 e CP11.
+
+**RNF6.2 — Integridade e proveniência das evoluções**
+
+Cada evolução persistida deve conservar sua associação ao paciente, ciclo, sessão, autor e momento de registro. O histórico clínico não deve ser perdido nem associado a outro caso após troca de responsável. Alterações posteriores, se aprovadas pela FBr, devem preservar o conteúdo anterior e a autoria da alteração. A conformidade deve ser verificada por comparação entre sessão, prontuário e histórico antes e depois de transferência e de tentativa de alteração não autorizada.
+
+Classificação: confiabilidade e auditoria (URPS+).
+Rastreabilidade: Features “Registrar evolução da sessão” e “Consultar histórico de evolução do paciente” → CP6 (escopo da issue); relacionadas a RF5.8 e RNF5.5.
+
+**RNF6.3 — Fidelidade e rastreabilidade do relatório final**
+
+Cada versão gerada do relatório deve identificar o ciclo e os registros de evolução usados como origem. O conteúdo consolidado deve ser verificável contra esses registros, sem substituir, omitir silenciosamente ou inventar informação clínica. Uma nova geração após correção de evolução deve produzir versão distinguível da anterior. A conformidade deve ser verificada com ciclo fictício contendo registros completos e lacunas, comparando as versões do relatório com os registros de origem.
+
+Classificação: confiabilidade e auditoria (URPS+).
+Rastreabilidade: Feature “Gerar relatório final de evolução” → CP6 (escopo da issue; CP8 na Solução Proposta) → OE5/OE6.
+
 ### Registro da Contribuição Social (CP8)
 
 #### Feature — Registrar pagamento da contribuição social do paciente [#43](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/issues/43)

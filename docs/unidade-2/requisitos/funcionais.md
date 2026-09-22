@@ -39,6 +39,14 @@ Os requisitos funcionais (RFs) são declarados a partir da decomposição das Ca
     Feature: Transferir caso para outro estagiário ou supervisor
     Feature: Consultar histórico de responsáveis do caso
 
+Área: Acompanhamento clínico
+  Conjunto: Prontuário e evolução
+    Feature: Consultar prontuário do paciente
+    Feature: Registrar evolução da sessão
+    Feature: Consultar histórico de evolução do paciente
+  Conjunto: Encerramento do ciclo
+    Feature: Gerar relatório final de evolução
+
 Área: Gestão administrativa
   Conjunto: Contribuição social
     Feature: Registrar pagamento da contribuição social do paciente
@@ -420,6 +428,78 @@ _Rastreabilidade:_ Feature "Consultar histórico de responsáveis do caso" → C
 
 - Pode existir um limite de casos simultâneos por estagiário e por supervisor (RN5.8)? Se sim, qual o valor?
 - Um caso pode ser atendido por mais de um estagiário, em regime de atendimento em dupla (RN5.9)?
+
+### Prontuário eletrônico, evolução e relatório final (CP6 — escopo desta atividade)
+
+Esta decomposição reúne o prontuário, o registro de evolução por sessão e o relatório final, conforme o escopo da issue #34. Na [Solução Proposta, §2.3](../../unidade-1/solucao-proposta.md#23-caracteristicas-de-produto-mapeadas-com-os-objetivos-especificos), essas capacidades estão separadas entre **CP6**, **CP7** e **CP8**, respectivamente. A denominação e a rastreabilidade consolidadas desta seção precisam ser harmonizadas com essa fonte e com a seção já existente “Registro da Contribuição Social (CP8)” antes do aceite. Os identificadores RF6.x identificam as features deste conjunto, sem pressupor alteração das demais CPs.
+
+A documentação existente confirma como necessidades a centralização dos dados clínicos, o vínculo da evolução à sessão e ao prontuário, a consulta do histórico pelo estagiário responsável e seu supervisor e a consolidação dos registros ao fim do ciclo de 8 a 10 sessões. Aplicam-se os vínculos de responsabilidade da CP5 e a restrição de acesso ao prontuário do RF18 (CP11). O conteúdo obrigatório do prontuário e do relatório, o fluxo de revisão do supervisor e os critérios de encerramento do ciclo ainda dependem de validação com a FBr.
+
+#### Feature — Consultar prontuário do paciente
+
+**RF6.1 — Consultar prontuário do paciente**
+
+O sistema deve apresentar ao estagiário responsável e ao seu supervisor o prontuário eletrônico do paciente vinculado ao caso, reunindo a identificação do caso e seus registros clínicos de evolução. A consulta deve refletir o vínculo de responsabilidade vigente, inclusive após transferência de caso (RF5.8), e preservar a associação dos registros ao paciente e ao ciclo de atendimento correspondente. O acesso de outros perfis ao conteúdo clínico segue a restrição do RF18.
+
+_Critérios de aceitação:_
+
+- Dado um caso vinculado a um estagiário e supervisor, quando um deles abrir o prontuário, então o sistema deve apresentar os registros clínicos associados ao paciente e ao ciclo correspondente.
+- Dado um caso transferido para novo responsável, quando o novo estagiário ou supervisor autorizado abrir o prontuário, então deve encontrar os registros anteriores preservados.
+- Dado um usuário sem vínculo clínico vigente com o caso, quando tentar abrir o prontuário, então o sistema deve negar acesso ao conteúdo clínico.
+
+_Rastreabilidade:_ Problema → OG → OE5/OE6 → CP6 (prontuário na Solução Proposta) → Feature “Consultar prontuário do paciente” → RF6.1. Dependências: CP5 e RF18 (CP11).
+
+#### Feature — Registrar evolução da sessão
+
+**RF6.2 — Registrar evolução da sessão**
+
+O sistema deve permitir que o estagiário responsável registre a evolução de uma sessão realizada, vinculando o registro ao paciente, ao ciclo de atendimento e à sessão de origem. Cada registro deve identificar o autor e o momento do registro. O sistema deve impedir que uma evolução seja associada a sessão de outro paciente ou registrada por estagiário sem vínculo vigente. Os campos clínicos obrigatórios e a possibilidade de correção ou complementação após o registro dependem de definição da FBr.
+
+_Critérios de aceitação:_
+
+- Dada uma sessão realizada de um paciente sob responsabilidade do estagiário, quando ele salvar uma evolução válida, então o registro deve ficar associado à sessão, ao paciente e ao ciclo, com autor e data e hora.
+- Dada uma sessão de outro paciente ou um estagiário sem vínculo vigente, quando houver tentativa de registrar evolução, então o sistema deve recusar a operação.
+- Dada uma falha no salvamento, quando o sistema informar o resultado, então não deve apresentar o registro como concluído se ele não tiver sido persistido.
+
+_Rastreabilidade:_ Problema → OG → OE5/OE6 → CP6 (escopo da issue; corresponde à CP7 na Solução Proposta) → Feature “Registrar evolução da sessão” → RF6.2. Dependências: RF6.1, CP5 e sessão realizada da CP4.
+
+#### Feature — Consultar histórico de evolução do paciente
+
+**RF6.3 — Consultar histórico de evolução do paciente**
+
+O sistema deve permitir que o estagiário responsável e seu supervisor consultem, no prontuário, as evoluções registradas para o ciclo de atendimento do paciente, identificando a sessão, a data e o autor de cada registro. O histórico deve manter os registros anteriores quando houver transferência de responsável, sem misturar ciclos distintos do mesmo paciente.
+
+_Critérios de aceitação:_
+
+- Dado um ciclo com evoluções registradas, quando usuário clínico autorizado consultar o histórico, então o sistema deve apresentar os registros vinculados às respectivas sessões, em ordem cronológica.
+- Dado um ciclo sem evoluções, quando o histórico for aberto, então o sistema deve informar que não há registros, sem exibir dados de outro ciclo.
+- Dado um usuário sem acesso ao prontuário, quando tentar consultar o histórico, então o sistema deve negar a consulta.
+
+_Rastreabilidade:_ Problema → OG → OE5/OE6 → CP6 (escopo da issue; corresponde às CP6/CP7 na Solução Proposta) → Feature “Consultar histórico de evolução do paciente” → RF6.3. Dependências: RF6.1, RF6.2 e RF18 (CP11).
+
+#### Feature — Gerar relatório final de evolução
+
+**RF6.4 — Gerar relatório final de evolução**
+
+O sistema deve permitir que o estagiário responsável gere um relatório final do ciclo de atendimento a partir das evoluções registradas, para revisão do supervisor responsável antes de qualquer conclusão institucional. O relatório deve identificar o paciente, o ciclo e os registros de origem utilizados e permitir verificar a correspondência entre o conteúdo consolidado e o histórico do prontuário. O sistema não deve completar lacunas clínicas por inferência. A quantidade de 8 a 10 sessões é a referência descrita na Solução Proposta; exceções, campos obrigatórios, formato de saída, aprovação e assinatura serão definidos com a FBr antes da implementação.
+
+_Critérios de aceitação:_
+
+- Dado um ciclo com evoluções registradas, quando o estagiário responsável solicitar o relatório, então o sistema deve gerar uma versão vinculada ao ciclo e aos registros de origem, disponível ao supervisor do caso para revisão.
+- Dado um ciclo sem evoluções registradas, quando houver solicitação do relatório, então o sistema deve informar a ausência de registros de origem e não produzir conteúdo clínico presumido.
+- Dado um usuário sem vínculo clínico vigente com o caso, quando tentar gerar ou consultar o relatório, então o sistema deve negar o acesso.
+- Dada uma evolução ausente ou incompleta no período selecionado, quando o relatório for gerado, então a lacuna deve permanecer identificável para revisão humana, sem texto clínico criado pelo sistema.
+
+_Rastreabilidade:_ Problema → OG → OE5/OE6 → CP6 (escopo da issue; corresponde à CP8 na Solução Proposta) → Feature “Gerar relatório final de evolução” → RF6.4. Dependências: RF6.2, RF6.3 e RF18 (CP11).
+
+#### Modelo de domínio e pontos para validação
+
+- **Paciente e caso:** o paciente pode ter mais de um ciclo de atendimento; cada caso mantém os vínculos clínicos vigentes e anteriores definidos na CP5.
+- **Prontuário:** reúne os registros clínicos do paciente, separados por ciclo e acessíveis apenas aos responsáveis clínicos autorizados.
+- **Sessão e evolução:** a sessão realizada pode ter um registro de evolução associado, com autor, momento de registro e vínculo ao ciclo; a cardinalidade e a política de correção precisam ser confirmadas.
+- **Relatório final:** documento derivado das evoluções de um ciclo, com versão e registros de origem identificáveis; seu estado de revisão e aprovação depende de regra institucional.
+
+_Pontos para consenso com a FBr e a equipe Umbra:_ confirmar a correspondência CP6/CP7/CP8 e resolver a duplicidade de CP8 com a contribuição social; definir os campos obrigatórios do prontuário, evolução e relatório; confirmar como a realização da sessão é registrada, se há evolução por sessão e como corrigir registros; definir critérios de encerramento e exceções ao ciclo de 8 a 10 sessões; definir revisão, aprovação, assinatura e destino do relatório. Esses pontos não devem ser presumidos como regras clínicas aprovadas.
 
 ### Registro da Contribuição Social (CP8)
 
