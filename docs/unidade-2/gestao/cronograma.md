@@ -35,11 +35,11 @@ O escopo de requisitos da Unidade 2 cobre, na numeração final adotada pela equ
 | Maria Clara | CP5 e CP9 (declaração de comparecimento) | CP5; CP10 (parte — declaração de comparecimento) |
 | Luís Henrique | CP2 e CP6 (prontuário, evolução e relatório final) | CP2, CP6, CP7 e CP8 |
 | Joaquim | CP11 (segurança) e CP8 (contribuição social) | CP12; CP10 (parte — contribuição social) |
-| Nicolas | CP4 e CP7 (controle de assiduidade e alertas) | CP4; CP9 pendente — ver observação abaixo |
+| Nicolas | CP4 e CP7 (controle de assiduidade e alertas) | CP4; CP9 — ver observação abaixo |
 | Gabriel | CP12 (acessibilidade) e CP10 (indicadores) | CP14 e CP11 |
 | — | não fazia parte da divisão original | CP13 — nova, incluída nesta unidade |
 
-> **Observação:** a CP9 (Controle de assiduidade e alertas), sob responsabilidade original de Nicolas, ainda não teve seus requisitos elicitados. O trabalho de Nicolas neste ciclo concentrou-se na CP7 final (Registro de evolução por sessão), que se sobrepõe à decomposição da antiga CP6 conduzida por Luís Henrique (ver [issue #35](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/issues/35), reaberta, e [PR #58](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/pull/58)). A elicitação da CP9 permanece pendente para os próximos ciclos.
+> **Observação:** a CP9 (Controle de assiduidade e alertas), sob responsabilidade original de Nicolas, não teve seus requisitos elicitados por ele neste ciclo — o trabalho de Nicolas concentrou-se na CP7 final (Registro de evolução por sessão), que se sobrepõe à decomposição da antiga CP6 conduzida por Luís Henrique (ver [issue #35](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/issues/35), reaberta, e [PR #58](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/pull/58)). Para não deixar a lacuna aberta, a CP9 foi declarada (RF33–RF37, RNF32–RNF35) diretamente a partir dos pontos já confirmados com a Clínica Escola na reunião de 26/08/2026, sem passar pelo ciclo normal de elicitação individual; a validação dessa declaração com a FBr e a revisão pela equipe permanecem pendentes, como para as demais CPs.
 
 A priorização entre essas CPs ocorre em 29/09/2026, ao final deste ciclo, por meio de uma avaliação formal de valor de negócio e de esforço técnico junto ao cliente. Apenas as CPs então priorizadas seguem para os ciclos de construção das Unidades 3 e 4 (ver Unidade 1, Seção 6.2).
 

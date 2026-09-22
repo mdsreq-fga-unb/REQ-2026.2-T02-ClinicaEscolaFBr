@@ -65,13 +65,13 @@ As sessões com pacientes e responsáveis devem proteger dados sensíveis, permi
 
 ## 5.2 Requisitos não funcionais no processo FDD
 
-No processo adotado, os RNFs são declarados junto à característica de produto e relacionados às features FDD que eles afetam. Essa aplicação já está documentada nas CP1, CP2, CP3, CP5, CP10, CP11, CP12 e CP14.
+No processo adotado, os RNFs são declarados junto à característica de produto e relacionados às features FDD que eles afetam. Essa aplicação já está documentada nas CP1, CP2, CP3, CP5, CP9, CP10, CP11, CP12 e CP14.
 
 Para cada CP, o fluxo de tratamento dos RNFs é:
 
 1. **Identificação e declaração:** registrar o RNF com identificador, categoria, descrição, fonte ou regra relacionada e situação de validação. As categorias utilizadas na CP10 (declaração de comparecimento) incluem privacidade, segurança, auditoria, desempenho, usabilidade, portabilidade, acessibilidade e confiabilidade.
 2. **Definição de meta:** estabelecer uma métrica ou condição verificável sempre que possível, como zero acessos indevidos, 100% das emissões auditadas, limite de tempo de resposta ou requisitos de acessibilidade do documento.
-3. **Relacionamento com as features:** informar explicitamente as features afetadas pelo RNF. Na CP10 (declaração de comparecimento), essa relação é feita entre RNF33–RNF41 e RF35–RF39, considerando também as regras de negócio e os critérios de aceitação das features.
+3. **Relacionamento com as features:** informar explicitamente as features afetadas pelo RNF. Na CP10 (declaração de comparecimento), essa relação é feita entre RNF37–RNF45 e RF40–RF44, considerando também as regras de negócio e os critérios de aceitação das features.
 4. **Definição da verificação:** registrar como o RNF será avaliado, por exemplo, por teste de autorização, teste de integração, teste de desempenho, inspeção do documento, teste de usabilidade, leitor de tela ou checklist de acessibilidade.
 5. **Validação e evidência:** submeter as declarações, metas e decisões pendentes à revisão interna e à validação com a FBr. Depois da implementação, registrar o resultado dos testes ou inspeções e a evidência correspondente. Um RNF somente será considerado conforme quando sua meta estiver definida, sua forma de verificação for executada e o resultado estiver registrado.
 
