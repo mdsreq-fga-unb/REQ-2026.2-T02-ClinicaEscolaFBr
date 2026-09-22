@@ -65,17 +65,17 @@ As sessões com pacientes e responsáveis devem proteger dados sensíveis, permi
 
 ## 5.2 Requisitos não funcionais no processo FDD
 
-No processo adotado, os RNFs são declarados junto à característica de produto e relacionados às features FDD que eles afetam. A aplicação documentada até o momento está na CP9 — Emissão de declaração de comparecimento — e será replicada para as demais CPs conforme elas forem detalhadas.
+No processo adotado, os RNFs são declarados junto à característica de produto e relacionados às features FDD que eles afetam. Essa aplicação já está documentada nas CP1, CP2, CP3, CP5, CP8, CP9, CP10, CP11 e CP12.
 
 Para cada CP, o fluxo de tratamento dos RNFs é:
 
-1. **Identificação e declaração:** registrar o RNF com identificador, categoria, descrição, fonte ou regra relacionada e situação de validação. As categorias utilizadas na CP9 incluem privacidade, segurança, auditoria, desempenho, usabilidade, portabilidade, acessibilidade e integridade.
+1. **Identificação e declaração:** registrar o RNF com identificador, categoria, descrição, fonte ou regra relacionada e situação de validação. As categorias utilizadas na CP9 incluem privacidade, segurança, auditoria, desempenho, usabilidade, portabilidade, acessibilidade e confiabilidade.
 2. **Definição de meta:** estabelecer uma métrica ou condição verificável sempre que possível, como zero acessos indevidos, 100% das emissões auditadas, limite de tempo de resposta ou requisitos de acessibilidade do documento.
 3. **Relacionamento com as features:** informar explicitamente as features afetadas pelo RNF. Na CP9, essa relação é feita entre RNF9.1–RNF9.9 e RF9.1–RF9.5, considerando também as regras de negócio e os critérios de aceitação das features.
 4. **Definição da verificação:** registrar como o RNF será avaliado, por exemplo, por teste de autorização, teste de integração, teste de desempenho, inspeção do documento, teste de usabilidade, leitor de tela ou checklist de acessibilidade.
 5. **Validação e evidência:** submeter as declarações, metas e decisões pendentes à revisão interna e à validação com a FBr. Depois da implementação, registrar o resultado dos testes ou inspeções e a evidência correspondente. Um RNF somente será considerado conforme quando sua meta estiver definida, sua forma de verificação for executada e o resultado estiver registrado.
 
-A tabela de RNFs deve manter, no mínimo, as colunas `ID`, `Categoria`, `Requisito`, `Métrica/Meta`, `Forma de Verificação` e `Features Afetadas`. Quando o requisito estiver em elaboração, isso deve ser indicado como “A validar”, “Proposta” ou “Meta a definir”, sem tratar a declaração como conformidade já comprovada.
+Cada RNF é registrado em formato descritivo, associado à feature correspondente: um parágrafo com a descrição do requisito e a forma de verificação, seguido — sem linha em branco entre eles — por `Classificação: <categoria> (URPS+).` e por `Rastreabilidade: Feature "<nome>" → <CP> — <nome da CP>; <relações adicionais quando houver>.` Quando o requisito estiver em elaboração, isso deve ser indicado no texto descritivo como "a validar", "proposta" ou "meta a definir com a FBr", sem tratar a declaração como conformidade já comprovada.
 
 Os critérios de aceitação permanecem registrados no arquivo de requisitos funcionais e devem ser usados em conjunto com os RNFs aplicáveis. A rastreabilidade liga a CP à feature, ao RNF, à regra de negócio, ao critério de aceitação e à evidência de verificação. Serão utilizados os seguintes checklists: (a) checklist de qualidade dos requisitos, para clareza, completude, consistência e verificabilidade; (b) checklist de segurança e privacidade, para perfis, minimização de dados, sigilo e auditoria; (c) checklist de acessibilidade e usabilidade, para teclado, leitor de tela, contraste, linguagem simples e uso em celular; e (d) checklist de verificação técnica, para desempenho, integridade, portabilidade e tratamento de erros. Na versão atual, esses checklists ainda serão aplicados na revisão interna; a documentação já registra explicitamente a verificação de acessibilidade e os métodos de teste dos demais RNFs.
 
