@@ -176,6 +176,19 @@ A conformidade deve ser verificada com leitor de tela e checklist de acessibilid
 Classificação: acessibilidade (URPS+).
 Rastreabilidade: CP5 — Distribuição de casos entre supervisores e estagiários (transversal às features "Listar casos aguardando distribuição", "Registrar áreas de especialidade do supervisor", "Distribuir caso a supervisor conforme área de especialidade", "Vincular paciente a estagiário responsável", "Consultar responsáveis pelo caso", "Consultar casos sob responsabilidade do estagiário ou supervisor" e "Visualizar distribuição de casos por supervisor"); relacionada à CP12 — Acessibilidade e usabilidade.
 
+### Registro da Contribuição Social (CP8)
+
+#### Feature — Registrar pagamento da contribuição social do paciente [#43](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/issues/43)
+
+**RNF12 — Auditoria dos registros de contribuição social**
+
+Todo registro de pagamento da contribuição social (RF11) deve guardar o usuário responsável, a data/hora da operação, o paciente, o valor, a data e a forma de pagamento. Esses dados não podem ser apagados nem sobrescritos, e devem ficar disponíveis para consulta pela coordenação por, no mínimo, 24 meses, prazo compatível com o ciclo de fiscalização do CRP (mesmo prazo do RNF03).
+
+A conformidade deve ser verificada por inspeção: registrar pagamentos com dados fictícios, conferir se todos os campos acima foram guardados e confirmar que nenhum perfil consegue apagá-los ou alterá-los pela interface.
+
+Classificação: auditoria (URPS+).
+Rastreabilidade: Feature "Registrar pagamento da contribuição social do paciente" → CP8 — Registro da contribuição social.
+
 ### Emissão de Declaração de Comparecimento (CP9)
 
 A CP9 tem cinco features (ver [Requisitos Funcionais](funcionais.md)); os RNFs abaixo estabelecem condições de qualidade para a emissão, reemissão e verificação da declaração de comparecimento, aplicando-se de forma transversal ao conjunto das features, conforme indicado na rastreabilidade de cada um. Os RNFs de segurança e privacidade (RNF9.1 a RNF9.3) devem ser alinhados com os requisitos gerais de acesso e sigilo da CP11, evitando duplicidade, e o RNF9.7 segue a mesma meta de acessibilidade definida para a CP12 (RNF04).
@@ -288,44 +301,6 @@ Para cada geração ou exportação do relatório institucional (RF02), o sistem
 Classificação: auditoria (URPS+).
 Rastreabilidade: Feature "Gerar e exportar relatório institucional" → CP10 — Indicadores e relatórios institucionais.
 
-### Acessibilidade e Usabilidade (CP12)
-
-CP12 tem duas features (**Ativar modo de alto contraste** e **Ajustar tamanho do texto**), mas os RNFs abaixo são requisitos de qualidade transversais às páginas voltadas ao público externo (inscrição, consulta de posição na fila, agendamento e confirmação de presença) como um todo — não restringem uma única feature isoladamente, e por isso não foram forçados em uma das duas.
-
-**RNF04 — Conformidade com WCAG 2.2 nível AA**
-
-As páginas voltadas ao público externo devem atender a todos os critérios de sucesso de nível A e AA da WCAG 2.2 aplicáveis a conteúdo web, verificável pela combinação de ferramenta automatizada de auditoria de acessibilidade (ex.: Lighthouse ou axe) e inspeção/teste manual (incluindo navegação por teclado e leitor de tela), sem nenhuma ocorrência de falha de nível A ou AA apontada pela ferramenta ou identificada na inspeção manual.
-
-Classificação: acessibilidade (URPS+).
-Rastreabilidade: CP12 — Acessibilidade e usabilidade (transversal às features "Ativar modo de alto contraste" e "Ajustar tamanho do texto").
-
-**RNF05 — Navegação por teclado**
-
-As páginas voltadas ao público externo devem ser operáveis integralmente por teclado — incluindo tabulação entre elementos, ativação de botões e links, e preenchimento e envio de formulários —, sem dependência exclusiva do uso do mouse. Todo elemento interativo (campo, botão ou link) deve exibir um indicador visual de foco (contorno ou destaque) sempre que estiver em foco via teclado, permitindo identificar visualmente a posição atual da navegação.
-
-Classificação: acessibilidade (URPS+).
-Rastreabilidade: CP12 — Acessibilidade e usabilidade (transversal às features "Ativar modo de alto contraste" e "Ajustar tamanho do texto").
-
-**RNF06 — Responsividade da interface**
-
-As páginas voltadas ao público externo devem se adaptar corretamente a larguras de tela entre 320 e 1920 pixels, sem perda de funcionalidade, sem sobreposição ou corte de elementos e sem exigir rolagem horizontal em nenhuma largura desse intervalo.
-
-Classificação: usabilidade.
-Rastreabilidade: CP12 — Acessibilidade e usabilidade (transversal às features "Ativar modo de alto contraste" e "Ajustar tamanho do texto").
-
-### Registro da Contribuição Social (CP8)
-
-#### Feature — Registrar pagamento da contribuição social do paciente [#43](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/issues/43)
-
-**RNF12 — Auditoria dos registros de contribuição social**
-
-Todo registro de pagamento da contribuição social (RF11) deve guardar o usuário responsável, a data/hora da operação, o paciente, o valor, a data e a forma de pagamento. Esses dados não podem ser apagados nem sobrescritos, e devem ficar disponíveis para consulta pela coordenação por, no mínimo, 24 meses, prazo compatível com o ciclo de fiscalização do CRP (mesmo prazo do RNF03).
-
-A conformidade deve ser verificada por inspeção: registrar pagamentos com dados fictícios, conferir se todos os campos acima foram guardados e confirmar que nenhum perfil consegue apagá-los ou alterá-los pela interface.
-
-Classificação: auditoria (URPS+).
-Rastreabilidade: Feature "Registrar pagamento da contribuição social do paciente" → CP8 — Registro da contribuição social.
-
 ### Segurança, Sigilo e Controle de Acesso (CP11)
 
 Os RNFs abaixo restringem as features da CP11 e valem para todas as funcionalidades internas do sistema que tratam dados pessoais ou de saúde.
@@ -384,3 +359,28 @@ A conformidade deve ser verificada por inspeção do histórico de cópias (uma 
 
 Classificação: confiabilidade (URPS+).
 Rastreabilidade: CP11 — Segurança, sigilo e controle de acesso (transversal às features); responde ao risco IS05 — Dependência tecnológica da intervenção social (Seção 3).
+
+### Acessibilidade e Usabilidade (CP12)
+
+CP12 tem duas features (**Ativar modo de alto contraste** e **Ajustar tamanho do texto**), mas os RNFs abaixo são requisitos de qualidade transversais às páginas voltadas ao público externo (inscrição, consulta de posição na fila, agendamento e confirmação de presença) como um todo — não restringem uma única feature isoladamente, e por isso não foram forçados em uma das duas.
+
+**RNF04 — Conformidade com WCAG 2.2 nível AA**
+
+As páginas voltadas ao público externo devem atender a todos os critérios de sucesso de nível A e AA da WCAG 2.2 aplicáveis a conteúdo web, verificável pela combinação de ferramenta automatizada de auditoria de acessibilidade (ex.: Lighthouse ou axe) e inspeção/teste manual (incluindo navegação por teclado e leitor de tela), sem nenhuma ocorrência de falha de nível A ou AA apontada pela ferramenta ou identificada na inspeção manual.
+
+Classificação: acessibilidade (URPS+).
+Rastreabilidade: CP12 — Acessibilidade e usabilidade (transversal às features "Ativar modo de alto contraste" e "Ajustar tamanho do texto").
+
+**RNF05 — Navegação por teclado**
+
+As páginas voltadas ao público externo devem ser operáveis integralmente por teclado — incluindo tabulação entre elementos, ativação de botões e links, e preenchimento e envio de formulários —, sem dependência exclusiva do uso do mouse. Todo elemento interativo (campo, botão ou link) deve exibir um indicador visual de foco (contorno ou destaque) sempre que estiver em foco via teclado, permitindo identificar visualmente a posição atual da navegação.
+
+Classificação: acessibilidade (URPS+).
+Rastreabilidade: CP12 — Acessibilidade e usabilidade (transversal às features "Ativar modo de alto contraste" e "Ajustar tamanho do texto").
+
+**RNF06 — Responsividade da interface**
+
+As páginas voltadas ao público externo devem se adaptar corretamente a larguras de tela entre 320 e 1920 pixels, sem perda de funcionalidade, sem sobreposição ou corte de elementos e sem exigir rolagem horizontal em nenhuma largura desse intervalo.
+
+Classificação: usabilidade.
+Rastreabilidade: CP12 — Acessibilidade e usabilidade (transversal às features "Ativar modo de alto contraste" e "Ajustar tamanho do texto").
