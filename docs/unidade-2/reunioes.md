@@ -120,3 +120,50 @@ A reunião apresentou à Clínica Escola FBr o processo e a planilha de avaliaç
 ### Encerramento
 
 A reunião alinhou a metodologia de avaliação de valor de negócio dos requisitos com a Clínica Escola, com Karla assumindo o preenchimento da planilha ainda essa semana. O próximo passo da equipe é cruzar essas notas com o esforço técnico de implementação para propor tecnicamente o MVP, a ser validado com a Clínica Escola antes do início da codificação.
+
+---
+
+## Reunião de divisão de tarefas: revisão de requisitos e priorização do MVP
+
+**Data:** 24/09/2026
+**Local:** Reunião on-line (Google Meet)
+**Participantes:** Gabriel da Cunha Barbaceli; Jônatas Davi Oliveira Farias; Nicolas Lopes da Costa.
+
+![Registro da reunião de divisão de tarefas: revisão de requisitos e priorização do MVP](../assets/reuniao-4.jpeg)
+
+_Figura 6 — Registro da reunião de divisão de tarefas: revisão de requisitos e priorização do MVP, realizada em 24/09/2026._
+
+[Consultar ata completa em PDF](../assets/atas-reunioes/Ata_Reuniao_Divisao_Tarefas_Requisitos_MVP_24-09-2026.pdf)
+
+### Resumo
+
+A reunião formalizou a divisão da equipe em dois subgrupos para as duas entregas de 29/09: correção dos requisitos a partir do feedback recebido de outra equipe, e priorização dos requisitos com definição técnica do MVP.
+
+### Contexto
+
+- A equipe precisa entregar duas atividades até 29/09, ao meio-dia: a correção dos RFs/RNFs apontados pela equipe "sem requisitos" e a priorização dos requisitos com definição técnica do MVP.
+- Gabriel já havia definido previamente a divisão em dois subgrupos e usou a reunião para comunicar e detalhar essa divisão ao grupo.
+
+### Decisões
+
+- A equipe foi dividida em dois subgrupos: Maria Clara, Luís e Joaquim ficam com a correção dos requisitos; Gabriel, Nicolas e Jônatas ficam com a priorização e definição do MVP.
+- Nicolas pontua o esforço técnico dos requisitos funcionais de CP1 a CP7 (RF1 a RF32).
+- Jônatas pontua o esforço técnico dos requisitos funcionais de CP8 a CP14 (RF33 a RF62) e classifica os requisitos não funcionais.
+- Após receber as pontuações, Gabriel cruza o resultado com o valor de negócio já preenchido por Robson (Clínica Escola FBr) para montar a matriz de priorização e a proposta de MVP.
+- O escopo de MVP levantado na primeira call com a FBr, que ficou muito amplo, não será usado como ponto de partida — o MVP será definido do zero, a partir da matriz de priorização.
+
+### Pontos discutidos
+
+- Um integrante estava com uma PR pendente por dúvida sobre o escopo do MVP levantado anteriormente com a FBr, ainda sem resposta do professor. Gabriel orientou que esse escopo prévio não é mais válido para a atividade atual, e que o tamanho do MVP só deve ser reavaliado depois de pronta a matriz de priorização, com apoio do monitor se necessário.
+- Ainda não há data marcada para uma nova reunião com a Clínica Escola FBr; a ideia inicial é enviar a proposta de MVP para aprovação pelo grupo do WhatsApp, deixando uma conversa mais formal para quando a equipe começar a implementar funcionalidades.
+- O monitor não confirmou presença nesta reunião; Gabriel pretende buscar uma call individual com ele para atualizá-lo sobre o andamento.
+
+### Próximos passos
+
+- Até 26/09: prazo preferencial para Nicolas e Jônatas concluírem a pontuação de esforço técnico.
+- Até 27/09 (noite), no limite manhã de 28/09: prazo final para a entrega das pontuações, dando tempo para Gabriel montar a matriz e a proposta de MVP.
+- 29/09, até meio-dia: entrega das duas atividades ao professor da disciplina.
+
+### Encerramento
+
+A reunião formalizou a divisão da equipe em dois subgrupos e detalhou as responsabilidades de cada um nas duas entregas de 29/09. O próximo passo é Nicolas e Jônatas pontuarem o esforço técnico dos requisitos, para que Gabriel possa cruzar com o valor de negócio da FBr e propor o MVP.
