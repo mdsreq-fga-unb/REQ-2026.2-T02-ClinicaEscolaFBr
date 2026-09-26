@@ -23,7 +23,7 @@ Os requisitos funcionais (RFs) são declarados a partir da decomposição das Ca
   Conjunto: Fila de espera e consulta de posição
     Feature: Ordenar inscritos na fila de espera
     Feature: Consultar posição individual na fila
-    Feature: Informar condições gerais da fila
+    Feature: Manter e informar condições gerais da fila
 
 Área: Agendamento e acompanhamento de sessões
   Conjunto: Agendamento
@@ -130,7 +130,7 @@ As funcionalidades destinadas ao público externo devem observar os requisitos d
 
 O sistema deve permitir que o interessado realize uma solicitação de atendimento psicológico por meio de formulário eletrônico, acessível a partir de link divulgado no site e nas redes sociais da FBr, informando seus dados cadastrais e a queixa que motivou a busca pelo atendimento.
 
-O formulário deve exigir, como campos obrigatórios — confirmados pela Clínica Escola na reunião de 26/08/2026 ([ata](../../unidade-1/reunioes.md)) —, os seguintes: nome completo, data de nascimento, CPF, RG, endereço, estado civil e a queixa (motivo da busca pelo atendimento); quando o interessado for menor de idade, o formulário deve exigir também o nome do responsável legal. O CPF e o RG são coletados apenas como texto informado pelo próprio interessado — a Clínica Escola não exige, nem o sistema deve solicitar, o envio de cópia digitalizada desses documentos. O sistema deve verificar se os campos obrigatórios foram preenchidos e solicitar a confirmação do interessado antes de registrar a inscrição.
+O formulário deve exigir, como campos obrigatórios — confirmados pela Clínica Escola na reunião de 26/08/2026 ([ata](../../unidade-1/reunioes.md)) —, os seguintes: nome completo, data de nascimento, CPF, RG, endereço, estado civil e a queixa (motivo da busca pelo atendimento); quando o interessado for menor de idade, o formulário deve exigir também o nome do responsável legal. Para viabilizar os lembretes e a verificação de identidade previstos nos RF13 e RF52, o interessado deve informar pelo menos um canal de contato válido entre telefone celular e e-mail e indicar, entre os canais cadastrados, o canal preferencial. O formulário também deve coletar, para a triagem, a percepção de urgência e um campo de histórico relevante informado pelo interessado, ambos como declarações do próprio solicitante. O CPF e o RG são coletados apenas como texto informado pelo próprio interessado — a Clínica Escola não exige, nem o sistema deve solicitar, o envio de cópia digitalizada desses documentos. O sistema deve validar o formato dos dados de contato, verificar os campos obrigatórios e solicitar a confirmação do interessado antes de registrar a inscrição.
 
 Após a conclusão do envio, o sistema deve armazenar a solicitação e gerar um identificador único, que será utilizado para o acompanhamento da inscrição nas etapas posteriores de triagem e fila de espera.
 
@@ -147,6 +147,10 @@ _Critérios de aceitação:_
 - Dado que ocorreu uma falha antes da confirmação do registro, quando o interessado tentar concluir a inscrição, então o sistema não deve apresentar uma confirmação de inscrição realizada sem que exista um registro correspondente.
 
 - Dado o preenchimento do formulário, quando o interessado chegar aos campos de CPF e RG, então o sistema deve solicitar apenas a digitação desses números, sem oferecer ou exigir o envio de cópia digitalizada ou foto do documento.
+
+- Dado que o interessado informou telefone celular, e-mail ou ambos, quando confirmar o cadastro, então o sistema deve validar o formato dos canais informados, exigir ao menos um deles e registrar qual canal cadastrado foi indicado como preferencial.
+
+- Dada uma solicitação de atendimento, quando o formulário for enviado, então o sistema deve exigir a queixa, a percepção de urgência e o histórico relevante informado para compor a triagem, mantendo explícito que essas respostas são declarações do interessado.
 
 _Rastreabilidade:_ Feature "Registrar solicitação de atendimento on-line" → CP1 — Inscrição on-line → OE1/OE4.
 
@@ -208,11 +212,11 @@ A formulação desta CP na atividade de decomposição menciona pré-classifica�
 
 **RF4 — Organizar informações da inscrição para triagem**
 
-O sistema deve apresentar à equipe clínica autorizada as inscrições recebidas, identificadas pelo número de inscrição, com as respostas do formulário necessárias à triagem, incluindo queixa, urgência percebida e histórico informado quando esses campos estiverem definidos no formulário aprovado pela Clínica Escola. A apresentação deve distinguir informação declarada pelo interessado de avaliação registrada pela equipe e indicar dados ausentes, sem preencher lacunas por inferência.
+O sistema deve apresentar aos supervisores e à coordenação as inscrições recebidas, identificadas pelo número de inscrição, com os três campos de triagem definidos no RF1: queixa, percepção de urgência e histórico relevante informado. A apresentação deve distinguir informação declarada pelo interessado de avaliação registrada pela equipe e indicar dados ausentes em inscrições legadas, sem preencher lacunas por inferência.
 
 _Critérios de aceitação:_
 
-- Dada uma inscrição registrada pelo canal on-line ou assistido, quando um integrante autorizado da equipe clínica abrir a triagem, então o sistema deve apresentar o número da inscrição e as respostas registradas para os campos de triagem disponíveis.
+- Dada uma inscrição registrada pelo canal on-line ou assistido, quando um supervisor ou integrante da coordenação abrir a triagem, então o sistema deve apresentar o número da inscrição, a queixa, a percepção de urgência e o histórico relevante informado.
 - Dado um campo de triagem sem resposta registrada, quando a inscrição for apresentada, então o sistema deve indicar a ausência da informação, sem atribuir conteúdo presumido.
 - Dado um usuário sem autorização para acessar dados de triagem, quando tentar consultar uma inscrição, então o sistema deve impedir a visualização das respostas.
 
@@ -222,13 +226,15 @@ _Rastreabilidade:_ Feature "Organizar informações da inscrição para triagem"
 
 **RF5 — Sinalizar pontos de atenção da inscrição**
 
-O sistema deve destacar, para a equipe clínica autorizada, respostas do formulário que correspondam a pontos de atenção definidos e aprovados pela Clínica Escola. Cada sinalização deve permitir identificar a resposta que a originou e deve ser apresentada como informação para avaliação humana, sem atribuir uma cor de prioridade, ordenar o inscrito na fila ou concluir a triagem automaticamente. As opções do formulário e as regras de sinalização dependem de validação com a FBr antes da implementação.
+O sistema deve destacar, para supervisores e integrantes da coordenação, respostas do formulário que correspondam a pontos de atenção definidos em regras institucionais documentadas, aprovadas e publicadas pela coordenação da Clínica Escola. Cada versão do conjunto de regras deve possuir identificador, data de vigência e responsável pela aprovação; somente a versão vigente pode produzir novas sinalizações, sem alterar retroativamente as sinalizações já registradas. Cada sinalização deve permitir identificar a resposta e a versão da regra que a originaram e deve ser apresentada como informação para avaliação humana, sem atribuir uma cor de prioridade, ordenar o inscrito na fila ou concluir a triagem automaticamente. Enquanto não houver uma versão aprovada e vigente, o sistema deve apresentar as respostas para avaliação humana sem produzir sinalizações automáticas.
 
 _Critérios de aceitação:_
 
 - Dada uma inscrição com resposta correspondente a uma regra de sinalização aprovada, quando a equipe clínica consultar a triagem, então o sistema deve destacar o ponto de atenção e a resposta que o originou.
 - Dada uma resposta que não corresponda a regra aprovada, quando a inscrição for consultada, então o sistema não deve produzir uma sinalização clínica baseada em regra presumida.
 - Dada uma inscrição com um ou mais pontos de atenção, quando estes forem apresentados, então a prioridade clínica deve continuar pendente até a decisão da equipe autorizada.
+- Dada a publicação de uma nova versão das regras pela coordenação, quando novas inscrições forem triadas, então o sistema deve aplicar apenas a versão vigente e preservar, nas sinalizações anteriores, a identificação da versão que as produziu.
+- Dada a ausência de regras aprovadas e vigentes, quando a inscrição for consultada, então o sistema deve apresentar as respostas sem gerar pontos de atenção por regra não documentada.
 
 _Rastreabilidade:_ Feature "Sinalizar pontos de atenção da inscrição" → CP2 — Triagem e sinalização de casos → OE2/OE1. Dependência: RF4; restrição transversal: CP12 — Segurança, sigilo e controle de acesso.
 
@@ -236,17 +242,17 @@ _Rastreabilidade:_ Feature "Sinalizar pontos de atenção da inscrição" → CP
 
 **RF6 — Registrar prioridade clínica do inscrito**
 
-O sistema deve permitir que integrante autorizado da equipe clínica registre a classificação final de uma inscrição como vermelha, amarela ou verde, após avaliar as informações e sinalizações disponíveis. Deve ser possível corrigir uma classificação mediante nova decisão autorizada, preservando o histórico das classificações e o responsável por cada decisão. Inscrições sem decisão devem permanecer com prioridade pendente e não devem ser tratadas pela fila como classificadas. O sistema deve disponibilizar à CP3 somente a prioridade final vigente definida pela equipe clínica.
+O sistema deve permitir exclusivamente que um supervisor ou integrante da coordenação registre a classificação final de uma inscrição como vermelha, amarela ou verde, após avaliar as informações e sinalizações disponíveis. Deve ser possível corrigir uma classificação mediante nova decisão de um desses perfis, preservando o histórico das classificações e o responsável por cada decisão. Inscrições sem decisão devem permanecer com prioridade pendente e não devem ser tratadas pela fila como classificadas. O sistema deve disponibilizar à CP3 somente a prioridade final vigente definida pela equipe clínica.
 
-A classificação continua sendo um julgamento clínico da equipe, não uma regra automatizada — mas, segundo a reunião de 26/08/2026 com a Clínica Escola ([ata](../../unidade-1/reunioes.md)), a própria FBr descreveu a referência que hoje orienta essa decisão: prioridade vermelha para quadro clínico já caracterizado (ex.: quadros depressivos ou de ansiedade), especialmente quando o interessado já está em uso de medicação; prioridade amarela para sofrimento emocional pontual, sem caracterização de quadro clínico e sem uso de medicação (ex.: luto); e prioridade verde quando não há indício de adoecimento e a busca é por desenvolvimento pessoal, sendo esse grupo atendido apenas se houver vaga disponível após o atendimento das prioridades vermelha e amarela. O sistema pode exibir esses critérios como apoio textual à decisão da equipe clínica, mas não deve calculá-los nem sugerir automaticamente uma cor a partir das respostas do formulário.
+A classificação continua sendo um julgamento clínico da equipe, não uma regra automatizada — mas, segundo a reunião de 26/08/2026 com a Clínica Escola ([ata](../../unidade-1/reunioes.md)), a própria FBr descreveu a referência que hoje orienta essa decisão: prioridade vermelha para quadro clínico já caracterizado (ex.: quadros depressivos ou de ansiedade), especialmente quando o interessado já está em uso de medicação; prioridade amarela para sofrimento emocional pontual, sem caracterização de quadro clínico e sem uso de medicação (ex.: luto); e prioridade verde quando não há indício de adoecimento e a busca é por desenvolvimento pessoal, sendo esse grupo atendido apenas se houver vaga disponível após o atendimento das prioridades vermelha e amarela. A tela de decisão deve exibir esses critérios como apoio textual ao supervisor ou à coordenação, mas não deve calculá-los nem sugerir automaticamente uma cor a partir das respostas do formulário.
 
 _Critérios de aceitação:_
 
-- Dada uma inscrição com triagem pendente, quando um integrante autorizado da equipe clínica confirmar uma das três prioridades, então o sistema deve registrar a cor escolhida, o responsável e a data e hora da decisão.
+- Dada uma inscrição com triagem pendente, quando um supervisor ou integrante da coordenação confirmar uma das três prioridades, então o sistema deve registrar a cor escolhida, o responsável e a data e hora da decisão.
 - Dado um usuário sem autorização clínica, quando tentar registrar ou alterar a prioridade, então o sistema deve recusar a ação e preservar a classificação vigente.
 - Dada uma inscrição ainda sem classificação confirmada, quando a fila consultar sua prioridade, então o sistema deve informar situação pendente, sem usar sinalizações como prioridade final.
 - Dada uma alteração autorizada de prioridade, quando a equipe confirmar a nova cor, então o sistema deve manter o histórico da decisão anterior e disponibilizar a classificação vigente para a fila da CP3.
-- Dada a tela de registro de prioridade, quando exibida a um integrante autorizado da equipe clínica, então o sistema pode apresentar a referência vermelha/amarela/verde definida pela Clínica Escola como apoio textual à decisão, sem preencher ou sugerir automaticamente a cor.
+- Dada a tela de registro de prioridade, quando exibida a um supervisor ou integrante da coordenação, então o sistema deve apresentar a referência vermelha/amarela/verde definida pela Clínica Escola como apoio textual à decisão, sem preencher ou sugerir automaticamente a cor.
 
 _Rastreabilidade:_ Feature "Registrar prioridade clínica do inscrito" → CP2 — Triagem e sinalização de casos → OE2/OE1. Dependência: RF4/RF5; integração: RF7 (CP3); restrição transversal: CP12 — Segurança, sigilo e controle de acesso.
 
@@ -300,33 +306,25 @@ _Rastreabilidade:_ Feature "Ordenar inscritos na fila de espera" → CP3 — Fil
 
 **RF8 — Consultar posição individual na fila**
 
-O sistema deve permitir que o inscrito consulte sua posição e situação atual na fila de espera da Clínica Escola FBr, utilizando seu CPF ou número de inscrição para localizar a solicitação.
-
-Antes de apresentar as informações individuais, o sistema deve verificar a identidade do inscrito conforme o RF52 — Verificar identidade do paciente ou responsável, definido na CP12. A verificação deve exigir CPF ou número de inscrição e um código de uso único enviado ao contato cadastrado, permitindo o acesso exclusivamente às informações da inscrição correspondente.
-
-A consulta deve apresentar exclusivamente as informações relativas à própria solicitação, sem divulgar nomes, dados cadastrais, queixas ou classificações clínicas dos demais inscritos.
-
-O sistema deve informar que a posição na fila pode sofrer alterações em razão das prioridades estabelecidas na triagem e das movimentações da fila, não representando garantia de prazo ou data de atendimento.
+O sistema deve permitir que o inscrito consulte sua posição e situação atual na fila de espera da Clínica Escola FBr, localizando a solicitação por CPF ou número de inscrição. Antes de apresentar o resultado, o fluxo deve executar a verificação de identidade definida no RF52. As condições de privacidade e de comunicação do resultado são estabelecidas, respectivamente, pelos RNF6 e RNF7.
 
 _Critérios de aceitação:_
 
-- Dado um inscrito que tenha informado seu CPF ou número de inscrição e confirmado sua identidade por meio do código de uso único previsto no RF52, quando solicitar a consulta da fila de espera, então o sistema deve apresentar exclusivamente sua posição e situação atual na fila.
+- Dado um inscrito que localizou sua solicitação e concluiu a verificação de identidade do RF52, quando solicitar a consulta, então o sistema deve apresentar a posição e a situação atual da inscrição conforme os RNF6 e RNF7.
 
-- Dado um usuário que não tenha comprovado autorização para consultar determinada inscrição, quando tentar acessar suas informações, então o sistema deve impedir a divulgação da posição e da situação individual correspondente.
-
-- Dada uma consulta individual autorizada, quando o sistema apresentar a posição do inscrito, então não deve exibir nomes, dados cadastrais, queixas ou informações clínicas dos demais integrantes da fila.
+- Dada uma tentativa sem verificação de identidade concluída, quando houver solicitação da posição, então o sistema deve negar a consulta conforme o RNF6.
 
 - Dada uma alteração na prioridade ou na situação dos inscritos que modifique o posicionamento na fila, quando o interessado realizar uma nova consulta autorizada, então o sistema deve apresentar sua posição atualizada.
 
-- Dada uma consulta de posição realizada com sucesso, quando o resultado for apresentado, então o sistema deve informar que a posição poderá variar e que não existe garantia de atendimento em uma data ou prazo específico.
-
 _Rastreabilidade:_ Feature "Consultar posição individual na fila" → CP3 — Fila de espera e consulta de posição → OE4/OE7 → IS03 — Expectativa sobre a fila. Dependência: RF52 — Verificar identidade do paciente ou responsável (CP12).
 
-#### Feature — Informar condições gerais da fila
+#### Feature — Manter e informar condições gerais da fila
 
-**RF9 — Informar condições gerais da fila**
+**RF9 — Manter e informar condições gerais da fila**
 
-O sistema deve permitir que o interessado consulte informações institucionais sobre o funcionamento da fila de espera da Clínica Escola FBr, incluindo os critérios gerais de atendimento e a capacidade de atendimento divulgada pela coordenação.
+O sistema deve permitir que a coordenação cadastre, revise e publique informações institucionais sobre o funcionamento da fila de espera da Clínica Escola FBr, incluindo os critérios gerais de atendimento e a capacidade de atendimento. Cada publicação deve registrar o conteúdo, o responsável e a data e hora, substituindo a versão pública anterior sem apagar seu histórico.
+
+O sistema deve permitir que qualquer interessado consulte somente a versão vigente publicada pela coordenação.
 
 As informações apresentadas devem corresponder ao conteúdo institucional aprovado pela Clínica Escola e conter a data da última atualização.
 
@@ -336,7 +334,9 @@ Quando não houver informação de capacidade aprovada e vigente, o sistema não
 
 _Critérios de aceitação:_
 
-- Dado que a coordenação tenha aprovado e disponibilizado informações institucionais sobre a fila, quando o interessado acessar a página correspondente, então o sistema deve apresentar os critérios gerais de atendimento e a capacidade divulgada, acompanhados da data de atualização.
+- Dada uma nova versão preenchida pela coordenação, quando ela confirmar a publicação, então o sistema deve registrar o responsável e a data e hora, preservar a versão anterior no histórico administrativo e tornar pública somente a nova versão.
+
+- Dado que a coordenação tenha publicado informações institucionais sobre a fila, quando o interessado acessar a página correspondente, então o sistema deve apresentar os critérios gerais de atendimento e a capacidade divulgada, acompanhados da data de atualização.
 
 - Dado que não exista informação de capacidade aprovada ou vigente, quando o interessado consultar as condições gerais da fila, então o sistema não deve apresentar uma quantidade estimada de vagas como disponibilidade confirmada.
 
@@ -344,7 +344,7 @@ _Critérios de aceitação:_
 
 - Dada uma alteração nas informações institucionais aprovada pela coordenação, quando o conteúdo atualizado for publicado, então o sistema deve substituir a informação anterior e apresentar a nova data de atualização.
 
-_Rastreabilidade:_ Feature "Informar condições gerais da fila" → CP3 — Fila de espera e consulta de posição → OE4/OE7 → IS02 — Aumento da demanda.
+_Rastreabilidade:_ Feature "Manter e informar condições gerais da fila" → CP3 — Fila de espera e consulta de posição → OE4/OE7 → IS02 — Aumento da demanda.
 
 ### Agendamento, Confirmação e Remarcação (CP4)
 
@@ -582,17 +582,18 @@ _Rastreabilidade:_ Feature "Consultar histórico de responsáveis do caso" → C
 
 A CP6 foi decomposta em uma feature: a consulta ao prontuário eletrônico do paciente pelo estagiário responsável e por seu supervisor. O registro da evolução de cada sessão passa a ser tratado como capacidade própria na CP7 — Registro de evolução por sessão, e a consolidação do relatório final do ciclo de atendimento passa a ser tratada na CP8 — Geração do relatório final de evolução, conforme a decomposição em três características já registrada na [Solução Proposta, §2.3](../../unidade-1/solucao-proposta.md#23-caracteristicas-de-produto-mapeadas-com-os-objetivos-especificos). Esta seção substitui a decomposição consolidada anteriormente declarada sob o rótulo único "CP6" (issue #34), que reunia prontuário, evolução e relatório final antes da separação em CP6/CP7/CP8.
 
-O acesso ao prontuário depende do vínculo de responsabilidade definido na CP5 e está sujeito à restrição de acesso do RF55 — Restringir acesso ao prontuário (CP12). O conteúdo obrigatório do prontuário ainda depende de validação com a FBr.
+O acesso ao prontuário depende do vínculo de responsabilidade definido na CP5 e está sujeito à restrição de acesso do RF55 — Restringir acesso ao prontuário (CP12). Para tornar a completude verificável sem presumir conteúdo diagnóstico, o prontuário possui o conjunto mínimo de dados estruturais definido no RF27; campos clínicos adicionais somente podem ser acrescentados após validação institucional.
 
 #### Feature — Consultar prontuário do paciente
 
 **RF27 — Consultar prontuário do paciente**
 
-O sistema deve apresentar ao estagiário responsável e ao seu supervisor o prontuário eletrônico do paciente vinculado ao caso, reunindo a identificação do caso e seus registros clínicos de evolução. A consulta deve refletir o vínculo de responsabilidade vigente, inclusive após transferência de caso (RF25), e preservar a associação dos registros ao paciente e ao ciclo de atendimento correspondente. O acesso de outros perfis ao conteúdo clínico segue a restrição do RF55.
+O sistema deve apresentar ao estagiário responsável e ao seu supervisor o prontuário eletrônico do paciente vinculado ao caso. O prontuário deve conter, no mínimo: identificação do paciente e do caso; identificação do ciclo de atendimento; estagiário e supervisor responsáveis, inclusive o histórico de responsáveis; sessões do ciclo com data e situação; evoluções vinculadas às sessões, com original, correções e complementos; e relatório final, quando existente, com sua versão e estado de revisão. A consulta deve refletir o vínculo de responsabilidade vigente, inclusive após transferência de caso (RF25), e preservar a associação de cada registro ao paciente, ao caso e ao ciclo correspondente. O acesso de outros perfis ao conteúdo clínico segue a restrição do RF55.
 
 _Critérios de aceitação:_
 
-- Dado um caso vinculado a um estagiário e supervisor, quando um deles abrir o prontuário, então o sistema deve apresentar os registros clínicos associados ao paciente e ao ciclo correspondente.
+- Dado um caso vinculado a um estagiário e supervisor, quando um deles abrir o prontuário, então o sistema deve apresentar todos os elementos mínimos aplicáveis ao ciclo: identificação do paciente, caso e ciclo; responsáveis; sessões; evoluções com correções e complementos; e relatório final, quando existente.
+- Dado que um dos elementos mínimos ainda não possua registro no ciclo, quando o prontuário for consultado, então o sistema deve indicar sua ausência, sem omitir a seção nem criar conteúdo clínico presumido.
 - Dado um caso transferido para novo responsável, quando o novo estagiário ou supervisor autorizado abrir o prontuário, então deve encontrar os registros anteriores preservados.
 - Dado um usuário sem vínculo clínico vigente com o caso, quando tentar abrir o prontuário, então o sistema deve negar acesso ao conteúdo clínico.
 
@@ -605,7 +606,7 @@ _Rastreabilidade:_ Feature "Consultar prontuário do paciente" → CP6 — Pront
 
 ### Registro de evolução por sessão (CP7)
 
-A CP7 foi decomposta em quatro features: registro da evolução de uma sessão realizada, correção de um registro já salvo, consulta da evolução de uma sessão específica e consulta do histórico consolidado de evoluções do ciclo de atendimento — esta última incorporada nesta revisão a partir da decomposição anteriormente consolidada sob o rótulo único "CP6" (issue #34), que também tratava do prontuário e do relatório final antes da separação em três características (CP6/CP7/CP8) confirmada na [Solução Proposta, §2.3](../../unidade-1/solucao-proposta.md#23-caracteristicas-de-produto-mapeadas-com-os-objetivos-especificos).
+A CP7 foi decomposta em cinco features: registro da evolução de uma sessão realizada, correção de um registro já salvo, registro de complemento, consulta da evolução de uma sessão específica e consulta do histórico consolidado de evoluções do ciclo de atendimento — esta última incorporada nesta revisão a partir da decomposição anteriormente consolidada sob o rótulo único "CP6" (issue #34), que também tratava do prontuário e do relatório final antes da separação em três características (CP6/CP7/CP8) confirmada na [Solução Proposta, §2.3](../../unidade-1/solucao-proposta.md#23-caracteristicas-de-produto-mapeadas-com-os-objetivos-especificos).
 
 O registro de evolução depende de uma sessão já realizada (CP4) e do vínculo entre paciente e estagiário responsável (CP5). O acesso ao conteúdo registrado é restrito ao estagiário responsável e ao seu supervisor, conforme os perfis definidos na CP12 — Segurança, sigilo e controle de acesso. A evolução registrada alimenta o prontuário eletrônico (CP6) e, ao fim do ciclo, o relatório final de evolução (CP8).
 
@@ -629,7 +630,7 @@ _Rastreabilidade:_ Feature "Registrar evolução da sessão realizada" → CP7 �
 
 **RF29 — Corrigir evolução registrada**
 
-O sistema deve permitir que o estagiário responsável, ou o supervisor do caso, corrija um registro de evolução já salvo, preservando o conteúdo original para fins de auditoria — não deve haver sobrescrita silenciosa. Toda correção deve registrar autor, data/hora e, quando aplicável, o motivo da alteração. Conforme confirmado pela Clínica Escola, o prazo para correção vai até as datas das provas do semestre letivo vigente (calendário acadêmico da instituição de ensino), prazo que deve ser reconfirmado a cada semestre.
+O sistema deve permitir que o estagiário responsável, ou o supervisor do caso, corrija um registro de evolução já salvo, preservando o conteúdo original para fins de auditoria — não deve haver sobrescrita silenciosa. Toda correção deve exigir e registrar autor, data/hora e motivo da alteração. Conforme confirmado pela Clínica Escola, o prazo para correção vai até as datas das provas do semestre letivo vigente (calendário acadêmico da instituição de ensino), prazo que deve ser reconfirmado a cada semestre.
 
 _Critérios de aceitação:_
 
@@ -657,34 +658,35 @@ _Rastreabilidade:_ Feature "Registrar complemento de evolução da sessão" → 
 
 **RF31 — Consultar evolução de uma sessão específica**
 
-O sistema deve permitir que o estagiário responsável e o seu supervisor consultem o registro de evolução vinculado a uma sessão específica, incluindo eventuais correções e seus históricos. O acesso a esse conteúdo deve respeitar a restrição de acesso ao prontuário definida na CP12.
+O sistema deve permitir que o estagiário responsável e o seu supervisor consultem o registro de evolução vinculado a uma sessão específica, apresentando o conteúdo original, todas as correções com seus históricos e todos os complementos em ordem cronológica. A interface deve distinguir visual e textualmente correções de complementos, sem substituir o registro original. O acesso a esse conteúdo deve respeitar a restrição de acesso ao prontuário definida na CP12.
 
 _Critérios de aceitação:_
 
-- Dada uma sessão com evolução registrada, quando o estagiário responsável ou o supervisor consultarem essa sessão, então o sistema deve apresentar o conteúdo da evolução, incluindo o histórico de correções, se houver.
+- Dada uma sessão com evolução registrada, quando o estagiário responsável ou o supervisor consultarem essa sessão, então o sistema deve apresentar o original, as correções e os complementos, com autor e data/hora de cada item, diferenciando a revisão de conteúdo da informação adicional.
 - Dado um usuário sem vínculo clínico vigente com o caso, quando tentar consultar a evolução de uma sessão, então o sistema deve negar o acesso.
 
-_Rastreabilidade:_ Feature "Consultar evolução de uma sessão específica" → CP7 — Registro de evolução por sessão → OE5. Dependência: RF28, RF29; restrição transversal: CP12.
+_Rastreabilidade:_ Feature "Consultar evolução de uma sessão específica" → CP7 — Registro de evolução por sessão → OE5. Dependência: RF28, RF29 e RF30; restrição transversal: CP12.
 
 #### Feature — Consultar histórico de evolução do paciente
 
 **RF32 — Consultar histórico de evolução do paciente**
 
-O sistema deve permitir que o estagiário responsável e seu supervisor consultem, no prontuário, as evoluções registradas para o ciclo de atendimento do paciente, identificando a sessão, a data e o autor de cada registro. O histórico deve manter os registros anteriores quando houver transferência de responsável, sem misturar ciclos distintos do mesmo paciente. Esta feature difere da consulta de uma sessão específica (RF31) por reunir, em uma única visão cronológica, todas as evoluções do ciclo, em vez do registro de uma sessão isolada.
+O sistema deve permitir que o estagiário responsável e seu supervisor consultem, no prontuário, as evoluções registradas para o ciclo de atendimento do paciente, identificando a sessão, a data e o autor de cada registro. Para cada sessão, o histórico deve apresentar o registro original, todas as correções e todos os complementos, diferenciados por tipo, autor e data/hora e ordenados cronologicamente. O histórico deve manter os registros anteriores quando houver transferência de responsável, sem misturar ciclos distintos do mesmo paciente. Esta feature difere da consulta de uma sessão específica (RF31) por reunir, em uma única visão cronológica, todas as evoluções do ciclo, em vez do registro de uma sessão isolada.
 
 _Critérios de aceitação:_
 
-- Dado um ciclo com evoluções registradas, quando usuário clínico autorizado consultar o histórico, então o sistema deve apresentar os registros vinculados às respectivas sessões, em ordem cronológica.
+- Dado um ciclo com evoluções registradas, quando usuário clínico autorizado consultar o histórico, então o sistema deve apresentar, por sessão e em ordem cronológica, os registros originais, as correções e os complementos, distinguindo cada tipo e identificando seu autor e data/hora.
 - Dado um ciclo sem evoluções, quando o histórico for aberto, então o sistema deve informar que não há registros, sem exibir dados de outro ciclo.
 - Dado um usuário sem acesso ao prontuário, quando tentar consultar o histórico, então o sistema deve negar a consulta.
 
-_Rastreabilidade:_ Feature "Consultar histórico de evolução do paciente" → CP7 — Registro de evolução por sessão → OE5/OE2. Dependência: RF27 (CP6), RF28; restrição transversal: RF55 (CP12).
+_Rastreabilidade:_ Feature "Consultar histórico de evolução do paciente" → CP7 — Registro de evolução por sessão → OE5/OE2. Dependência: RF27 (CP6), RF28, RF29 e RF30; restrição transversal: RF55 (CP12).
 
 #### Modelo de domínio da CP7
 
-- **Evolução:** entidade vinculada a Sessão, Paciente e Ciclo de atendimento; atributos: conteúdo, autor, data/hora de criação; pode ter versões (original + correções).
+- **Evolução:** entidade vinculada a Sessão, Paciente e Ciclo de atendimento; atributos: conteúdo, autor, data/hora de criação; pode ter versões (original + correções) e complementos cronológicos.
 - **Relação:** Evolução (N) — Sessão (1) — uma sessão pode ter um registro de evolução original, sujeito a correção (RF29) e a um ou mais complementos (RF30), conforme confirmado pela Clínica Escola.
 - **Correção:** sub-registro ou versão de Evolução, preservando o conteúdo anterior, autor e motivo da alteração.
+- **Complemento:** informação adicional vinculada à evolução, com autor e data/hora próprios, sem substituir o conteúdo original nem suas correções.
 
 ### Geração do relatório final de evolução (CP8)
 
@@ -694,23 +696,31 @@ A CP8 foi decomposta em uma feature: a geração do relatório final de evoluç�
 
 **RF33 — Gerar relatório final de evolução**
 
-O sistema deve permitir que o estagiário responsável gere um relatório final do ciclo de atendimento a partir das evoluções registradas, para revisão do supervisor responsável antes de qualquer conclusão institucional. O relatório deve identificar o paciente, o ciclo e os registros de origem utilizados e permitir verificar a correspondência entre o conteúdo consolidado e o histórico do prontuário. O sistema não deve completar lacunas clínicas por inferência. A quantidade de 8 a 10 sessões é a referência descrita na Solução Proposta; exceções, campos obrigatórios, formato de saída, aprovação e assinatura serão definidos com a FBr antes da implementação.
+O sistema deve permitir que o estagiário responsável elabore o relatório final do ciclo de atendimento a partir das evoluções registradas e o submeta ao supervisor responsável. O relatório deve conter, no mínimo: identificação do paciente e do ciclo; identificação do estagiário autor e do supervisor; período e sessões consideradas; síntese da condição inicial relatada; síntese da evolução ao longo do acompanhamento; orientações de continuidade; identificação dos registros de origem; número da versão; data de geração; e estado `rascunho`, `em revisão`, `devolvido para ajustes` ou `aprovado`. O sistema deve permitir verificar a correspondência entre o conteúdo consolidado e o histórico do prontuário e não deve completar lacunas clínicas por inferência.
+
+O supervisor deve poder aprovar o relatório ou devolvê-lo ao estagiário com observações obrigatórias. Cada nova submissão deve gerar versão distinguível, preservando as versões e decisões anteriores. Somente uma versão aprovada, com identificação do supervisor e data/hora da aprovação, pode ser finalizada em PDF para impressão; o documento deve conter campo para assinatura manuscrita do supervisor. A secretaria deve poder imprimir exclusivamente a versão aprovada e, antes de registrar a entrega presencial ao paciente ou ao responsável legal, deve confirmar no sistema que a via foi assinada. O sistema deve registrar a data e o responsável pela impressão e pela entrega e não deve disponibilizar o relatório para download ou envio por e-mail ao paciente.
+
+A referência institucional é o encerramento de um ciclo de 8 a 10 sessões. Se o ciclo for encerrado fora dessa faixa, o estagiário deve registrar a justificativa no relatório antes de submetê-lo à revisão.
 
 Conforme confirmado pela Clínica Escola na reunião de 26/08/2026 ([ata](../../unidade-1/reunioes.md)), o relatório final não se destina apenas à revisão interna do supervisor: ao final do ciclo, o relatório aprovado deve ser entregue ao próprio paciente, apresentando como ele estava, como evoluiu ao longo do acompanhamento e orientações sobre a continuidade do seu desenvolvimento. Após a aprovação pelo supervisor, o sistema deve, portanto, permitir que o relatório seja disponibilizado ao paciente (ou ao seu responsável legal, quando menor de idade), e não apenas ao corpo clínico e à coordenação. Conforme confirmado pela Clínica Escola, a entrega ao paciente deve ser impressa, pela secretaria — não por download ou e-mail.
 
 _Critérios de aceitação:_
 
-- Dado um ciclo com evoluções registradas, quando o estagiário responsável solicitar o relatório, então o sistema deve gerar uma versão vinculada ao ciclo e aos registros de origem, disponível ao supervisor do caso para revisão.
+- Dado um ciclo com evoluções registradas, quando o estagiário responsável criar e submeter o relatório com todos os campos obrigatórios, então o sistema deve gerar uma versão vinculada ao ciclo e aos registros de origem, com estado `em revisão`, disponível ao supervisor do caso.
 - Dado um ciclo sem evoluções registradas, quando houver solicitação do relatório, então o sistema deve informar a ausência de registros de origem e não produzir conteúdo clínico presumido.
 - Dado um usuário sem vínculo clínico vigente com o caso, quando tentar gerar ou consultar o relatório, então o sistema deve negar o acesso.
 - Dada uma evolução ausente ou incompleta no período selecionado, quando o relatório for gerado, então a lacuna deve permanecer identificável para revisão humana, sem texto clínico criado pelo sistema.
-- Dado um relatório final aprovado pelo supervisor, quando a aprovação for confirmada, então o sistema deve torná-lo disponível para entrega ao paciente (ou ao seu responsável legal, quando menor de idade), e não apenas ao corpo clínico.
+- Dado um relatório em revisão, quando o supervisor o devolver, então o sistema deve exigir observações, registrar a decisão e permitir que o estagiário produza nova versão sem apagar as anteriores.
+- Dado um relatório em revisão, quando o supervisor o aprovar, então o sistema deve registrar o supervisor e a data/hora, bloquear alterações na versão aprovada e permitir sua finalização em PDF com campo para assinatura manuscrita.
+- Dado um relatório sem aprovação, quando houver tentativa de finalização ou impressão pela secretaria, então o sistema deve impedir a operação.
+- Dado um relatório final aprovado, quando a secretaria solicitar a entrega, então o sistema deve permitir a impressão da versão aprovada e exigir a confirmação de que a via foi assinada antes de registrar quem a entregou e quando, sem disponibilizar download ou envio por e-mail ao destinatário.
+- Dado um ciclo encerrado com menos de 8 ou mais de 10 sessões, quando o relatório for submetido, então o sistema deve exigir uma justificativa para a exceção.
 
 _Rastreabilidade:_ Feature "Gerar relatório final de evolução" → CP8 — Geração do relatório final de evolução → OE5/OE6. Dependência: RF28, RF32 (CP7); restrição transversal: RF55 (CP12).
 
 #### Modelo de domínio da CP8
 
-- **Relatório final:** documento derivado das evoluções de um ciclo (CP7), com versão e registros de origem identificáveis; seu estado de revisão e aprovação depende de regra institucional; após aprovado, é destinado tanto ao acervo institucional quanto à entrega ao paciente.
+- **Relatório final:** documento derivado das evoluções de um ciclo (CP7), com campos obrigatórios, versão, estado e registros de origem identificáveis; após aprovação do supervisor, é finalizado em PDF para o acervo institucional e para impressão pela secretaria e entrega presencial ao paciente.
 
 ### Controle de assiduidade e alertas (CP9)
 
@@ -1083,17 +1093,19 @@ _Rastreabilidade:_ Feature "Registrar consentimento para tratamento de dados" �
 
 A CP13 foi decomposta em três features, que organizam a transferência de um caso e de seu histórico clínico quando o estagiário responsável conclui o estágio, preservando a continuidade do acompanhamento do paciente nos semestres seguintes, conforme a [Solução Proposta, §2.3](../../unidade-1/solucao-proposta.md#23-caracteristicas-de-produto-mapeadas-com-os-objetivos-especificos).
 
-Diferentemente da transferência de caso já prevista na CP5 (RF25 — Transferir caso para outro estagiário ou supervisor), que trata de uma reorganização pontual e a qualquer momento do semestre, a CP13 trata do processo estruturado de virada de semestre: identificar, para cada estagiário que está concluindo o estágio, os casos ativos sob sua responsabilidade, registrar a decisão de continuidade (ou de encerramento) de cada um e, quando aplicável, efetivar a transferência para o novo estagiário responsável, reaproveitando o mecanismo do RF25. Esta CP depende de definições institucionais do fluxo de encerramento e transferência de estágio ainda não fechadas com a FBr, e por isso é tratada na Solução Proposta como visão de produto de mais longo prazo, fora do MVP e do escopo desejável imediato.
+Diferentemente da transferência de caso já prevista na CP5 (RF25 — Transferir caso para outro estagiário ou supervisor), que trata de uma reorganização pontual e a qualquer momento do semestre, a CP13 trata do processo estruturado de virada de semestre: identificar, para cada estagiário que está concluindo o estágio, os casos ativos sob sua responsabilidade, registrar a decisão de continuidade (ou de encerramento) de cada um e, quando aplicável, efetivar a transferência para o novo estagiário responsável, reaproveitando o mecanismo do RF25. Para tornar esse fluxo verificável, os requisitos abaixo adotam datas configuradas por semestre e confirmação explícita da coordenação; a CP permanece como visão de produto de mais longo prazo, fora do MVP e do escopo desejável imediato.
 
 #### Feature — Listar casos elegíveis para continuidade entre semestres
 
 **RF58 — Listar casos elegíveis para continuidade entre semestres**
 
-O sistema deve permitir que a coordenação liste, próximo ao fim do semestre, os casos ativos cujo estagiário responsável está concluindo o estágio (RF54 — Desativar usuário institucional) ou deixará a Clínica Escola, para apoiar o planejamento da continuidade do acompanhamento. Casos sem decisão de continuidade registrada (RF59) devem permanecer na lista até que uma decisão seja tomada.
+O sistema deve permitir que a coordenação configure, para cada semestre, a data de encerramento e a data de início do planejamento de continuidade, além de marcar os estagiários cujo vínculo terminará no encerramento. A partir da data de início configurada, o sistema deve listar os casos ativos desses estagiários para apoiar o planejamento da continuidade do acompanhamento. Essa marcação representa um desligamento futuro planejado e não desativa antecipadamente o acesso do estagiário; a desativação efetiva continua sujeita ao RF54. Casos sem decisão de continuidade registrada (RF59) devem permanecer na lista até que uma decisão seja tomada.
 
 _Critérios de aceitação:_
 
-- Dado um estagiário marcado para desligamento ao fim do semestre, quando a coordenação abrir a lista de continuidade, então o sistema deve exibir todos os casos ativos sob responsabilidade desse estagiário.
+- Dado um semestre com datas configuradas e um estagiário marcado para encerramento de vínculo, quando a data de início do planejamento for alcançada e a coordenação abrir a lista, então o sistema deve exibir todos os casos ativos sob responsabilidade desse estagiário.
+- Dada uma data anterior ao início do planejamento configurado, quando a coordenação consultar a continuidade daquele semestre, então o sistema deve informar que o período ainda não foi iniciado e não deve tratar os casos como pendentes.
+- Dado um estagiário marcado para encerramento futuro, quando a marcação for registrada, então o sistema deve preservar seu acesso vigente até que a desativação do RF54 seja efetivada.
 - Dado um caso já com decisão de continuidade registrada (RF59), quando a lista for consultada, então esse caso não deve aparecer como pendente.
 - Dado que nenhum estagiário sob responsabilidade de casos ativos está marcado para desligamento, quando a coordenação abrir a lista, então o sistema deve informar que não há casos pendentes de decisão de continuidade.
 
@@ -1105,11 +1117,15 @@ _Rastreabilidade:_ Feature "Listar casos elegíveis para continuidade entre seme
 
 O sistema deve permitir que a coordenação ou o supervisor do caso registre, para cada caso listado (RF58), a decisão de continuidade: indicar o novo estagiário responsável para o semestre seguinte, ou encerrar o acompanhamento, informando o motivo em ambos os casos. Toda decisão deve ficar registrada com autor e data.
 
+Somente a coordenação pode corrigir uma decisão já registrada. A correção deve exigir motivo, preservar integralmente a decisão anterior, registrar autor e data/hora e gerar uma nova versão vigente. Se a transferência ainda não tiver sido efetivada, a nova decisão substitui a anterior como instrução pendente. Se a transferência já tiver sido efetivada, a correção não pode desfazê-la silenciosamente: o sistema deve exigir uma ação de reversão ou uma nova transferência autorizada, vinculada à correção e executada conforme RF60 e RF25.
+
 _Critérios de aceitação:_
 
 - Dado um caso pendente de decisão, quando a coordenação ou o supervisor registrar a continuidade indicando um novo estagiário, então o sistema deve associar a decisão ao caso, com o novo responsável indicado, o autor e a data.
 - Dado um caso pendente de decisão, quando a coordenação ou o supervisor registrar o encerramento do acompanhamento com motivo, então o sistema deve marcar o caso como encerrado por continuidade não efetivada, sem vinculá-lo a um novo estagiário.
-- Dado um caso já com decisão registrada, quando houver tentativa de registrar uma nova decisão sem justificativa de correção, então o sistema deve impedir a duplicidade de decisão.
+- Dado um caso já com decisão registrada, quando um supervisor ou outro perfil tentar corrigi-la, então o sistema deve negar a ação; somente a coordenação pode efetuar a correção.
+- Dada uma decisão ainda não efetivada, quando a coordenação corrigi-la com motivo, então o sistema deve preservar a versão anterior e considerar a nova versão como instrução vigente para a continuidade.
+- Dada uma decisão cuja transferência já foi efetivada, quando a coordenação registrar uma correção, então o sistema deve preservar a transferência realizada e exigir reversão ou nova transferência explícita, vinculada à correção, sem alterar silenciosamente o responsável atual.
 
 _Rastreabilidade:_ Feature "Registrar decisão de continuidade do caso" → CP13 — Continuidade de casos entre semestres → OE5/OE6. Dependência: RF58.
 
@@ -1117,18 +1133,19 @@ _Rastreabilidade:_ Feature "Registrar decisão de continuidade do caso" → CP13
 
 **RF60 — Vincular caso a novo estagiário na continuidade**
 
-Quando a decisão de continuidade (RF59) indicar um novo estagiário responsável, o sistema deve efetivar a transferência do caso reaproveitando o mecanismo do RF25 — Transferir caso para outro estagiário ou supervisor, preservando integralmente o histórico do paciente (sessões, evoluções e vínculos anteriores) e vinculando a transferência à decisão de continuidade que a originou, em vez de a um motivo avulso.
+Quando a decisão de continuidade vigente (RF59) indicar um novo estagiário responsável, o sistema deve permitir que a coordenação confirme explicitamente a transferência na data de encerramento do semestre configurada no RF58 ou depois dela. A mudança não deve ocorrer automaticamente apenas pela passagem da data. Após a confirmação, o sistema deve efetivar a transferência reaproveitando o mecanismo do RF25 — Transferir caso para outro estagiário ou supervisor, preservando integralmente o histórico do paciente (sessões, evoluções e vínculos anteriores) e vinculando a transferência à decisão de continuidade que a originou, em vez de a um motivo avulso.
 
 _Critérios de aceitação:_
 
-- Dada uma decisão de continuidade com novo estagiário indicado, quando a transferência for efetivada, então o sistema deve registrar o novo estagiário como responsável, manter todo o histórico do paciente disponível a ele, revogar o acesso do estagiário anterior e vincular a transferência à decisão de continuidade de origem (RF59).
-- Dado um caso cuja decisão de continuidade foi de encerramento, quando o semestre virar, então o sistema não deve efetivar nenhuma transferência para esse caso.
+- Dada uma decisão vigente com novo estagiário indicado e alcançada a data de encerramento do semestre, quando a coordenação confirmar a transferência, então o sistema deve registrar o novo estagiário como responsável, manter todo o histórico do paciente disponível a ele, revogar o acesso do estagiário anterior e vincular a transferência à versão vigente da decisão de origem (RF59).
+- Dada uma decisão com novo estagiário indicado, quando a data de encerramento for alcançada sem confirmação da coordenação, então o sistema deve manter a transferência pendente e não alterar automaticamente o responsável.
+- Dado um caso cuja decisão de continuidade vigente seja de encerramento, quando a coordenação consultar as ações da virada de semestre, então o sistema não deve oferecer nem efetivar transferência para esse caso.
 
 _Rastreabilidade:_ Feature "Vincular caso a novo estagiário na continuidade" → CP13 — Continuidade de casos entre semestres → OE5/OE6. Dependência: RF59, RF25 (CP5).
 
 #### Modelo de domínio da CP13
 
-- **Decisão de continuidade:** vinculada ao caso, ao estagiário que está concluindo o estágio, ao autor e à data; indica o novo estagiário responsável ou o encerramento do acompanhamento, com motivo.
+- **Decisão de continuidade:** vinculada ao caso, ao estagiário que está concluindo o estágio, ao autor e à data; indica o novo estagiário responsável ou o encerramento do acompanhamento, com motivo e histórico de versões quando houver correção.
 - **Transferência de continuidade:** reaproveita a entidade de transferência já definida na CP5, acrescentando o vínculo com a decisão de continuidade que a originou.
 
 ### Acessibilidade e Usabilidade (CP14)
