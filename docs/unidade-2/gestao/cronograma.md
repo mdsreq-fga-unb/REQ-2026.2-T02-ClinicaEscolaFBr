@@ -25,9 +25,20 @@ O planejamento da Unidade 2 dá continuidade à abordagem ágil, ao ciclo de vid
 | 11/10 a 12/10                    | Preparação da entrega                               | Revisão final da rastreabilidade, atualização das evidências do cronograma, inclusão das Lições Aprendidas, preparação dos slides e gravação do vídeo de apresentação.              | Organização e atualização (rastreabilidade final). | Slides, vídeo e Lições Aprendidas prontos. |
 | 13/10                            | Entrega                                             | Publicação do GitHub Pages, conferência dos artefatos e entrega oficial da Unidade 2.                                                                                               | Organização e atualização (publicação final). | Unidade 2 entregue. |
 
-### Escopo de requisitos: as 12 CPs
+### Escopo de requisitos: as 14 CPs
 
-Todas as 12 CPs têm seus requisitos elaborados no Ciclo 1, cada uma sob responsabilidade de um integrante: Jônatas — CP1 e CP3; Maria Clara — CP5 e CP9; Luís Henrique — CP2 e CP6; Joaquim — CP11 e CP8; Nicolas — CP4 e CP7; Gabriel — CP12 e CP10 ([Evidência: divisão das características de produto](../reunioes.md#3-divisao-das-caracteristicas-de-produto)).
+O escopo de requisitos da Unidade 2 cobre, na numeração final adotada pela equipe, as 14 Características de Produto (CP1 a CP14). A divisão original de responsabilidades ([Evidência: divisão das características de produto](../reunioes.md#3-divisao-das-caracteristicas-de-produto)) foi feita com uma numeração provisória de 12 CPs, anterior à decomposição em features (issues [#33](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/issues/33), [#34](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/issues/34), [#36](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/issues/36), [#37](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/issues/37) e [#38](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/issues/38)) e à criação da CP13. A tabela abaixo relaciona essa divisão original à cobertura efetiva, já na numeração final:
+
+| Integrante | CP(s) na divisão original (numeração provisória) | CP(s) cobertas (numeração final) |
+| --- | --- | --- |
+| Jônatas | CP1 e CP3 | CP1 e CP3 |
+| Maria Clara | CP5 e CP9 (declaração de comparecimento) | CP5; CP10 (parte — declaração de comparecimento) |
+| Luís Henrique | CP2 e CP6 (prontuário, evolução e relatório final) | CP2, CP6, CP7 e CP8 |
+| Joaquim | CP11 (segurança) e CP8 (contribuição social) | CP12; CP10 (parte — contribuição social) |
+| Nicolas | CP4 e CP7 (controle de assiduidade e alertas) | CP4; CP9 — ver observação abaixo |
+| Gabriel | CP12 (acessibilidade) e CP10 (indicadores) | CP14 e CP11 |
+| — | não fazia parte da divisão original | CP13 — nova, incluída nesta unidade |
+
 
 A priorização entre essas CPs ocorre em 29/09/2026, ao final deste ciclo, por meio de uma avaliação formal de valor de negócio e de esforço técnico junto ao cliente. Apenas as CPs então priorizadas seguem para os ciclos de construção das Unidades 3 e 4 (ver Unidade 1, Seção 6.2).
 

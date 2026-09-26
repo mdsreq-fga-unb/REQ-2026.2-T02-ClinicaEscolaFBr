@@ -1,6 +1,6 @@
 # Clínica Escola FBr - Documentação do Projeto
 
-**Versão 1.13**
+**Versão 2.22**
 **Documento de Visão do Produto e Projeto**
 
 ---
@@ -104,3 +104,26 @@ Navegue pelo menu para acompanhar a documentação das Unidades 1 e 2. A Unidade
 | 08/09/2026 | 1.14   | Inclusão do vídeo de apresentação da entrega da Unidade 1                                                                                 | Joaquim José                                                              |
 | 17/09/2026 | 2.0    | Reorganização da documentação para a Unidade 2: migração dos requisitos para `docs/unidade-2/`, inclusão do cronograma detalhado da Unidade 2 (com a atividade de priorização e definição do MVP), atualização da navegação, do README e do mapeamento de arquivos, e registro da reunião de divisão de tarefas de 17/09 | Gabriel Barbaceli                                                         |
 | 18/09/2026 | 2.1    | Revisão dos cronogramas das Unidades 1 e 2 conforme a issue #20: explicitação dos processos FDD por ciclo, mapeamento das atividades de Engenharia de Requisitos, distribuição das CPs no tempo com justificativa de capacidade até o fim do projeto, explicitação de ciclos de 1 a 2 semanas e remoção das menções ao MVP como já definido (definição formal prevista para 29/09/2026) | Gabriel Barbaceli                                                         |
+| 20/09/2026 | 2.2 | Declaração dos primeiros RFs e RNFs de indicadores operacionais e relatórios institucionais (CP11), no âmbito do PR #28 | Gabriel Barbaceli |
+| 21/09/2026 | 2.3 | Detalhamento do texto da intervenção social (seção 3) | Jônatas |
+| 21/09/2026 | 2.4 | Declaração dos requisitos funcionais de CP1 (Inscrição on-line) e CP3 (Fila de espera e consulta de posição) | Jônatas |
+| 21/09/2026 | 2.5 | Inclusão dos requisitos não funcionais de CP1 e CP3 | Jônatas |
+| 21/09/2026 | 2.6 | Declaração das features, RFs e RNFs da CP10 (declaração de comparecimento), referente à decomposição da issue #37 | Maria Clara |
+| 21/09/2026 | 2.7 | Declaração das features, RFs e RNFs de CP10 (contribuição social) e CP12 (segurança, sigilo e controle de acesso), referente às issues #36 e #38 | Joaquim José |
+| 21/09/2026 | 2.8 | Vinculação das features de CP10 e CP12 às respectivas issues de rastreabilidade | Joaquim José |
+| 21/09/2026 | 2.9 | Ajustes de redação nos requisitos de CP14 (acessibilidade e usabilidade) | Gabriel Barbaceli |
+| 21/09/2026 | 2.10 | Ajustes de redação nos RFs de contribuição social (CP10) e de restrição de acesso ao prontuário (CP12), conforme revisão | Joaquim José |
+| 21/09/2026 | 2.11 | Esclarecimento do RF07 (Registrar inscrição assistida, restrito ao perfil de secretaria) e do RF09 (Consultar posição na fila, com verificação de identidade) | Jônatas |
+| 21/09/2026 | 2.12 | Esclarecimento do mecanismo de verificação de identidade no RNF09 (privacidade e controle de acesso à consulta de fila) | Jônatas |
+| 21/09/2026 | 2.13 | Declaração das features, RFs e RNFs da CP5 (distribuição de casos e transferência entre estagiários), referente à decomposição da issue #33 | Maria Clara |
+| 21/09/2026 | 2.14 | Atualização da Solução Proposta (seção 2.3), refletindo a renumeração final das Características de Produto (CP1–CP14) | Nicolas Lopes |
+| 21/09/2026 | 2.15 | Revisão do processo de Engenharia de Requisitos (seção 5) | Luís Henrique |
+| 21/09/2026 | 2.16 | Revisão extensa dos requisitos funcionais e não funcionais de inscrição on-line (CP1) e fila de espera (CP3), com maior detalhamento de critérios de aceitação e conformidade | Gabriel Barbaceli |
+| 21/09/2026 | 2.17 | Remoção de pontos já resolvidos na lista de validação com a FBr da CP5 | Gabriel Barbaceli |
+| 21/09/2026 | 2.18 | Revisão dos requisitos funcionais e não funcionais de registro e consulta da contribuição social (CP10) | Gabriel Barbaceli |
+| 21/09/2026 | 2.19 | Declaração das features, RFs e RNFs da CP2 (Triagem) | Luís Henrique |
+| 21/09/2026 | 2.20 | Declaração das features, RFs e RNFs de CP6 (Prontuário eletrônico), CP7 (Registro de evolução por sessão) e CP8 (Geração do relatório final de evolução), referente à decomposição da issue #34 | Luís Henrique |
+| 21/09/2026 | 2.21 | Atualização de referências cruzadas de controle de acesso (CP12) nos demais RFs/RNFs e no processo de Engenharia de Requisitos | Gabriel Barbaceli |
+| 21/09/2026 | 2.22 | Adição dos requisitos não funcionais de CP4 (Agendamento, confirmação e remarcação) e CP7 (Registro de evolução por sessão) | Nicolas Lopes |
+| 23/09/2026 | 2.23 | Incorporação das respostas da Clínica Escola FBr aos pontos em aberto: adição dos requisitos RF30, RF38, RF40 e RF43 (complemento de evolução, reversão de desligamento por faltas, reprovação do estagiário por faltas e bloqueio de agendamento por contribuição pendente), remoção do requisito "Emitir declaração consolidada por período" (antigo RF43) e renumeração de RF30 a RF62 em `funcionais.md`, com atualização das referências correspondentes em `nao-funcionais.md` | Gabriel Barbaceli |
+| 24/09/2026 | 2.24 | Registro da reunião de divisão de tarefas de 24/09: divisão da equipe em dois subgrupos para as entregas de 29/09 (correção dos requisitos a partir do feedback recebido de outra equipe, e priorização/definição técnica do MVP), com ata e registro fotográfico em `docs/unidade-2/reunioes.md` | Gabriel Barbaceli |
