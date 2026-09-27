@@ -229,18 +229,27 @@ A CP5 tem nove features (ver [Requisitos Funcionais](funcionais.md)); os RNFs ab
 
 **RNF16 — Autorização para distribuição, vínculo e transferência de casos**
 
-Somente a coordenação e os supervisores autorizados podem distribuir, vincular e transferir casos; o estagiário e o supervisor só podem acessar os casos sob sua própria responsabilidade.
+A distribuição de casos a supervisores é exclusiva da coordenação (RF20); a vinculação de um estagiário a um caso é exclusiva do supervisor responsável por esse caso (RF21); e a transferência de responsável segue a mesma restrição por perfil do RF25 — o supervisor responsável só pode transferir o caso para outro estagiário sob sua própria supervisão, enquanto a transferência para outro supervisor é exclusiva da coordenação. Fora dessas operações, o estagiário e o supervisor só podem acessar os casos sob sua própria responsabilidade.
 
-A conformidade deve ser verificada por testes de autorização, com cenários positivos e negativos, para os perfis paciente, secretaria, estagiário, supervisor e coordenação, sem nenhum acesso indevido.
+A conformidade deve ser verificada por testes de autorização, com cenários positivos e negativos, para os perfis paciente, secretaria, estagiário, supervisor e coordenação, incluindo a tentativa de um supervisor distribuir um caso ou transferi-lo para outro supervisor, sem nenhum acesso indevido.
 
 Classificação: segurança (URPS+).
 Rastreabilidade: CP5 — Distribuição de casos entre supervisores e estagiários (transversal a todas as features da CP5).
 
 **RNF17 — Privacidade dos dados nas telas de distribuição e consulta**
 
-As telas de distribuição de casos e de consulta de responsáveis devem exibir apenas os dados necessários a cada perfil; dados clínicos só podem aparecer a quem tem acesso ao prontuário do caso, conforme a CP12.
+As telas de distribuição de casos e de consulta de responsáveis devem exibir, para cada perfil, exatamente os campos abaixo, e nenhum outro:
 
-A conformidade deve ser verificada por revisão das telas por perfil e por teste do conteúdo efetivamente exibido, confirmando a ausência de campos clínicos para perfis sem acesso ao prontuário.
+| Perfil                    | Campos exibidos |
+| ------------------------- | ---------------- |
+| Secretaria                | Paciente, estagiário responsável, supervisor responsável, situação de distribuição (pendente/distribuído) |
+| Estagiário                | Os mesmos campos da secretaria, restritos aos próprios casos (RF23) |
+| Supervisor                | Os mesmos campos da secretaria, para os próprios casos e os dos seus estagiários (RF23), mais as áreas de especialidade dos supervisores (RF19) na tela de distribuição |
+| Coordenação                | Todos os campos acima, sem restrição de caso |
+
+Nenhum perfil sem acesso ao prontuário (RF55, CP12) deve visualizar dado clínico (queixa, prioridade, evolução) nessas telas.
+
+A conformidade deve ser verificada por revisão das telas por perfil, comparando o conteúdo exibido com a matriz acima, e por teste do conteúdo efetivamente exibido, confirmando a ausência de campos clínicos para perfis sem acesso ao prontuário.
 
 Classificação: privacidade (URPS+).
 Rastreabilidade: CP5 — Distribuição de casos entre supervisores e estagiários (transversal às features "Listar casos aguardando distribuição", "Consultar responsáveis pelo caso" e "Consultar casos sob responsabilidade do estagiário ou supervisor").
@@ -256,9 +265,9 @@ Rastreabilidade: CP5 — Distribuição de casos entre supervisores e estagiári
 
 **RNF19 — Integridade dos vínculos de responsabilidade**
 
-Nenhum caso ativo pode ficar sem supervisor e estagiário responsáveis após a distribuição, nem ter dois responsáveis principais vigentes ao mesmo tempo, salvo confirmação futura do atendimento em dupla (RN5.9).
+Após a distribuição (RF20), todo caso ativo deve ter um supervisor responsável vigente, admitindo-se o estado transitório "aguardando vínculo de estagiário" até que o RF21 seja concluído. Nenhum caso pode ter dois supervisores ou dois estagiários principais vigentes ao mesmo tempo, salvo confirmação futura do atendimento em dupla (RN5.9).
 
-A conformidade deve ser garantida por restrições de integridade no banco de dados, além de testes de regra de negócio, sem nenhuma inconsistência de vínculo identificada.
+A conformidade deve ser garantida por restrições de integridade no banco de dados, além de testes de regra de negócio, confirmando que um caso distribuído sem estagiário vinculado permanece válido no estado "aguardando vínculo", e sem nenhuma inconsistência de vínculo identificada nos demais casos.
 
 Classificação: confiabilidade (URPS+).
 Rastreabilidade: CP5 — Distribuição de casos entre supervisores e estagiários (transversal às features "Distribuir caso a supervisor conforme área de especialidade", "Vincular paciente a estagiário responsável" e "Transferir caso para outro estagiário ou supervisor").
@@ -274,9 +283,9 @@ Rastreabilidade: Feature "Transferir caso para outro estagiário ou supervisor" 
 
 **RNF21 — Desempenho das listagens e operações de vínculo**
 
-As listagens de casos e as operações de distribuição, vínculo e consulta de responsáveis devem responder rapidamente, considerando o volume de casos da clínica (cerca de 100 vagas e 160 a 180 inscrições por semestre).
+As listagens de casos e as operações de distribuição, vínculo e consulta de responsáveis devem responder em até 3 segundos em 95% das requisições, no cenário de referência do RNF12 (30 usuários simultâneos por 10 minutos, massa de dados de dois semestres — cerca de 360 inscrições, 200 pacientes e 4.000 sessões —, ambiente de homologação igual ao servidor de produção, medição no servidor).
 
-A conformidade deve ser verificada por teste de desempenho com dados representativos, com listagens e operações de vínculo respondendo em até 3 segundos em 95% das requisições, em condições normais de uso.
+A conformidade deve ser verificada por teste de desempenho reproduzindo o cenário de referência acima, confirmando que 95% das requisições atendem ao limite de 3 segundos.
 
 Classificação: desempenho (URPS+).
 Rastreabilidade: CP5 — Distribuição de casos entre supervisores e estagiários (transversal às features "Listar casos aguardando distribuição", "Consultar responsáveis pelo caso", "Consultar casos sob responsabilidade do estagiário ou supervisor" e "Visualizar distribuição de casos por supervisor").
@@ -285,19 +294,19 @@ Rastreabilidade: CP5 — Distribuição de casos entre supervisores e estagiári
 
 O supervisor e a coordenação devem conseguir distribuir e vincular casos sem treinamento prévio, inclusive a partir do celular, concluindo a distribuição de um caso em até 3 interações a partir da lista de pendentes.
 
-A conformidade deve ser verificada por teste de usabilidade com usuários representativos, em telas responsivas.
+A conformidade deve ser verificada por teste de usabilidade com uma amostra mínima de 5 participantes representativos por perfil (supervisor e coordenação), em telas responsivas, com pelo menos 90% dos participantes concluindo a tarefa sem auxílio externo.
 
 Classificação: usabilidade (URPS+).
 Rastreabilidade: CP5 — Distribuição de casos entre supervisores e estagiários (transversal às features "Listar casos aguardando distribuição", "Distribuir caso a supervisor conforme área de especialidade" e "Vincular paciente a estagiário responsável").
 
 **RNF23 — Manutenibilidade das áreas de especialidade**
 
-A lista de áreas de especialidade e sua associação aos supervisores deve poder ser mantida pela coordenação diretamente pela interface, sem necessidade de alteração de código ou intervenção técnica.
+As áreas de especialidade e sua associação aos supervisores (RF19) devem ser armazenadas como dado configurável, e não como valor fixo no código-fonte, de modo que a inclusão, edição ou remoção de uma área pela interface (RF19) fique disponível para uso na distribuição (RF20) imediatamente, sem exigir alteração de código, recompilação ou novo deploy da aplicação.
 
-A conformidade deve ser verificada por teste de aceitação com o perfil de coordenação, incluindo, editando e removendo áreas de especialidade.
+A conformidade deve ser verificada por inspeção técnica do modelo de dados, confirmando que as áreas de especialidade não estão fixadas no código, e por teste de aceitação: a coordenação inclui uma nova área pela interface e confirma sua disponibilidade imediata na tela de distribuição (RF20), sem reinício ou nova implantação da aplicação.
 
-Classificação: manutenibilidade (URPS+).
-Rastreabilidade: Feature "Registrar áreas de especialidade do supervisor" → CP5 — Distribuição de casos entre supervisores e estagiários.
+Classificação: modificabilidade (URPS+).
+Rastreabilidade: Feature "Registrar áreas de especialidade do supervisor" → CP5 — Distribuição de casos entre supervisores e estagiários. Dependência: RF19, RF20.
 
 **RNF24 — Acessibilidade das telas de distribuição e consulta**
 
@@ -444,9 +453,9 @@ A CP10 reúne as condições de qualidade das antigas características "Registro
 
 **RNF36 — Auditoria dos registros de contribuição social**
 
-Todo registro de pagamento da contribuição social (RF41) deve guardar o usuário responsável, a data/hora da operação, o paciente, o valor, a data e a forma de pagamento. Esses dados não podem ser apagados nem sobrescritos, e devem ficar disponíveis para consulta pela coordenação por, no mínimo, 24 meses, prazo compatível com o ciclo de fiscalização do CRP (mesmo prazo do RNF48).
+Todo registro de pagamento da contribuição social (RF41) deve guardar o usuário responsável, a data/hora da operação, o paciente, o valor, a data e a forma de pagamento. Toda alteração do parâmetro institucional "valor da contribuição social" (RF41) deve guardar o valor anterior, o novo valor, o autor da alteração e a data/hora. Esses dados não podem ser apagados nem sobrescritos. Um registro de pagamento incorreto só pode ser alterado pela correção versionada do RF66 — Corrigir registro de pagamento da contribuição social do paciente, que deve guardar o motivo da correção, o autor, a data/hora e preservar o registro anterior, íntegro e consultável. Todos esses dados devem ficar disponíveis para consulta pela coordenação por, no mínimo, 24 meses, prazo compatível com o ciclo de fiscalização do CRP (mesmo prazo do RNF48).
 
-A conformidade deve ser verificada por inspeção: registrar pagamentos com dados fictícios, conferir se todos os campos acima foram guardados e confirmar que nenhum perfil consegue apagá-los ou alterá-los pela interface.
+A conformidade deve ser verificada por inspeção: registrar pagamentos, alterar o parâmetro de valor e corrigir um pagamento com dados fictícios, conferir se todos os campos acima foram guardados (inclusive o registro anterior preservado após a correção) e confirmar que nenhum perfil consegue apagá-los ou sobrescrevê-los diretamente pela interface.
 
 Classificação: auditoria (URPS+).
 Rastreabilidade: Feature "Registrar pagamento da contribuição social do paciente" → CP10 — Registros administrativos do atendimento.
@@ -457,36 +466,36 @@ Este conjunto reúne cinco features (ver [Requisitos Funcionais](funcionais.md))
 
 **RNF37 — Privacidade dos dados na declaração**
 
-A declaração de comparecimento deve conter apenas os dados estritamente necessários e nenhum dado clínico (queixa, prioridade, diagnóstico, evolução), com o conteúdo mínimo aprovado pela FBr.
+A declaração de comparecimento deve conter exatamente os seguintes campos, e nenhum outro: nome do paciente, data e horário da sessão, nome do estagiário que realizou o atendimento, assinatura e carimbo do psicólogo responsável e o número de CRP (RF45). Nenhum dado clínico (queixa, prioridade, diagnóstico, evolução) pode constar do documento. O modelo institucional do documento é mantido pela coordenação como versão vigente, aprovada pela Clínica Escola; qualquer alteração do modelo gera uma nova versão, sem afetar declarações já emitidas sob a versão anterior.
 
-A conformidade deve ser verificada por revisão do modelo do documento e por teste do conteúdo efetivamente gerado, confirmando a ausência de campos clínicos.
+A conformidade deve ser verificada por revisão do modelo do documento vigente, confirmando que contém exatamente os campos listados, e por teste do conteúdo efetivamente gerado, confirmando a ausência de campos clínicos ou adicionais.
 
 Classificação: privacidade (URPS+).
 Rastreabilidade: CP10 — Registros administrativos do atendimento (transversal às features "Emitir declaração de comparecimento do paciente" e "Reemitir declaração de comparecimento").
 
 **RNF38 — Autorização para emissão e consulta**
 
-Somente perfis autorizados podem emitir declarações, e o paciente ou responsável só pode acessar e emitir declarações das próprias sessões.
+Podem listar, emitir e reemitir declarações: a secretaria, autenticada institucionalmente (RF50), para qualquer paciente; e o paciente ou responsável legal, com identidade verificada pelo RF52 (CP12) — não por autenticação institucional, já que esse público não possui conta —, exclusivamente para as próprias sessões. Estagiário e supervisor não têm acesso a essas funcionalidades.
 
-A conformidade deve ser verificada por testes de autorização, com cenários positivos e negativos, para os perfis paciente, secretaria, estagiário e supervisor, sem nenhum acesso indevido.
+A conformidade deve ser verificada por testes de autorização, com cenários positivos e negativos, para os perfis secretaria, paciente/responsável (com e sem identidade verificada), estagiário e supervisor, sem nenhum acesso indevido.
 
 Classificação: segurança (URPS+).
 Rastreabilidade: CP10 — Registros administrativos do atendimento (transversal às features "Listar sessões com comparecimento registrado do paciente", "Emitir declaração de comparecimento do paciente" e "Reemitir declaração de comparecimento").
 
 **RNF39 — Auditoria de emissões e reemissões**
 
-Toda emissão e reemissão de declaração deve ser registrada com usuário, data/hora, sessão e paciente, distinguindo emissão original de reemissão.
+Toda emissão e reemissão de declaração (RF45, RF46) deve ser registrada com: o usuário que a solicitou (secretaria ou paciente/responsável com identidade verificada, RF52), a data/hora, a sessão de origem, o paciente e o tipo de operação (emissão original ou reemissão), distinguindo-se claramente uma da outra. Tentativas negadas por falta de permissão (RNF38) também devem ser registradas.
 
-A conformidade deve ser verificada por teste de integração, confirmando o registro de auditoria após cada emissão e reemissão.
+A conformidade deve ser verificada por teste de integração, confirmando o registro de auditoria após cada emissão, reemissão e tentativa negada, com todos os campos acima presentes.
 
 Classificação: auditoria (URPS+).
-Rastreabilidade: Feature "Emitir declaração de comparecimento do paciente" → CP10 — Registros administrativos do atendimento; relacionada à feature "Reemitir declaração de comparecimento".
+Rastreabilidade: Features "Emitir declaração de comparecimento do paciente" e "Reemitir declaração de comparecimento" → CP10 — Registros administrativos do atendimento.
 
 **RNF40 — Tempo de geração da declaração**
 
-A geração da declaração deve ser rápida o suficiente para o atendimento presencial na secretaria: o documento deve ficar disponível em até 5 segundos em 95% das solicitações, em condições normais de uso.
+A geração da declaração deve ser rápida o suficiente para o atendimento presencial na secretaria: o documento deve ficar disponível em até 5 segundos em 95% das solicitações, no cenário de referência do RNF12 (30 usuários simultâneos por 10 minutos, massa de dados de dois semestres, ambiente de homologação igual ao servidor de produção, medição no servidor).
 
-A conformidade deve ser verificada por teste de desempenho com dados representativos.
+A conformidade deve ser verificada por teste de desempenho reproduzindo o cenário de referência acima.
 
 Classificação: desempenho (URPS+).
 Rastreabilidade: CP10 — Registros administrativos do atendimento (transversal às features "Emitir declaração de comparecimento do paciente" e "Reemitir declaração de comparecimento").
@@ -495,7 +504,7 @@ Rastreabilidade: CP10 — Registros administrativos do atendimento (transversal 
 
 A emissão da declaração deve ser simples tanto para a secretaria quanto para pacientes com pouca familiaridade com tecnologia, concluída em até 3 interações a partir da tela do paciente, sem necessidade de treinamento prévio.
 
-A conformidade deve ser verificada por teste de usabilidade com usuários representativos.
+A conformidade deve ser verificada por teste de usabilidade com uma amostra mínima de 5 participantes representativos por público (secretaria e pacientes/responsáveis), com pelo menos 90% concluindo a emissão sem auxílio externo.
 
 Classificação: usabilidade (URPS+).
 Rastreabilidade: Feature "Listar sessões com comparecimento registrado do paciente" → CP10 — Registros administrativos do atendimento; relacionada à feature "Emitir declaração de comparecimento do paciente".
@@ -506,32 +515,32 @@ O documento gerado deve ser entregue ao paciente em formato impresso (papel), co
 
 A conformidade deve ser verificada por inspeção do documento em impressão e em dispositivo móvel.
 
-Classificação: portabilidade (URPS+).
+Classificação: compatibilidade e restrição de produto (URPS+).
 Rastreabilidade: CP10 — Registros administrativos do atendimento (transversal às features "Emitir declaração de comparecimento do paciente" e "Reemitir declaração de comparecimento").
 
 **RNF43 — Acessibilidade da tela de emissão e do documento**
 
-A tela de emissão e o documento gerado devem ser acessíveis a pessoas com limitações visuais: texto pesquisável (não em imagem), contraste adequado e navegação por teclado, seguindo a mesma meta de conformidade definida para a CP14 (RNF56).
+A tela de emissão e a de listagem de sessões (RF44) devem ser acessíveis a pessoas com limitações visuais, seguindo a mesma meta de conformidade definida para a CP14 (RNF56): navegação por teclado, contraste adequado e compatibilidade com leitor de tela.
 
-A conformidade deve ser verificada com leitor de tela e checklist de acessibilidade.
+A conformidade deve ser verificada com leitor de tela e checklist de acessibilidade nas telas envolvidas.
 
 Classificação: acessibilidade (URPS+).
 Rastreabilidade: Feature "Listar sessões com comparecimento registrado do paciente" → CP10 — Registros administrativos do atendimento; relacionada à feature "Emitir declaração de comparecimento do paciente" e à CP14 — Acessibilidade e usabilidade.
 
 **RNF44 — Integridade do conteúdo da declaração**
 
-O conteúdo da declaração deve refletir fielmente o registro da sessão no momento da emissão, e a reemissão deve manter consistência com o conteúdo original, salvo correção do registro.
+O conteúdo da declaração deve refletir fielmente o registro da sessão no momento da emissão, e a reemissão deve manter consistência com o conteúdo original, salvo correção do registro. Quando o registro de origem for corrigido depois da emissão, a reemissão (RF46) deve refletir a versão corrigida, e a verificação pública de autenticidade (RF47) deve sinalizar que o documento originalmente emitido não corresponde mais ao registro vigente, sem exibir os dados desatualizados.
 
-A conformidade deve ser verificada por teste comparando o documento gerado com os dados de origem, confirmando que 100% dos campos coincidem com o registro da sessão.
+A conformidade deve ser verificada por teste comparando o documento gerado com os dados de origem, confirmando que 100% dos campos coincidem com o registro da sessão, e por teste corrigindo o registro de uma sessão já declarada, confirmando a reemissão com o conteúdo corrigido e o aviso de desatualização na verificação pública do código original.
 
 Classificação: confiabilidade (URPS+).
 Rastreabilidade: Feature "Emitir declaração de comparecimento do paciente" → CP10 — Registros administrativos do atendimento; relacionada à feature "Reemitir declaração de comparecimento".
 
 **RNF45 — Segurança da consulta pública de autenticidade**
 
-A verificação de autenticidade por terceiros não deve expor dados pessoais além do necessário: a consulta pública deve retornar apenas a confirmação de autenticidade e os dados mínimos definidos com a FBr.
+A verificação de autenticidade por terceiros não deve expor dados pessoais além do necessário. Para um código **válido** (declaração vigente, sem correção posterior do registro de origem), a consulta pública deve retornar apenas a confirmação de autenticidade, o nome do paciente, a data e o horário da sessão e o nome do estagiário, sem informação clínica (RF47). Para um código **inválido** (inexistente ou digitado incorretamente), deve retornar apenas uma mensagem genérica de código inválido, sem indicar o motivo. Para um código **revogado** (declaração cujo registro de origem foi corrigido após a emissão, tornando-a substituída por uma reemissão), deve informar que o documento não corresponde mais ao registro vigente, sem exibir os dados anteriores.
 
-A conformidade deve ser verificada por teste da consulta pública e revisão dos dados retornados.
+A conformidade deve ser verificada por teste da consulta pública nos três estados (válido, inválido e revogado) e revisão dos dados retornados em cada um.
 
 Classificação: segurança (URPS+).
 Rastreabilidade: Feature "Validar autenticidade da declaração" → CP10 — Registros administrativos do atendimento.
