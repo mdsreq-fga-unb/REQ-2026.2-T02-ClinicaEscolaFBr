@@ -353,18 +353,18 @@ Rastreabilidade: Feature "Gerar relatório final de evolução" → CP8 — Gera
 
 ### Controle de assiduidade e alertas (CP9)
 
-A CP9 tem cinco features (ver [Requisitos Funcionais](funcionais.md)); os RNFs abaixo estabelecem condições de qualidade para a contagem de faltas, o alerta de limite e a liberação da vaga, complementando a declaração tardia desta CP (ver a nota de contexto na seção correspondente de [Requisitos Funcionais](funcionais.md#controle-de-assiduidade-e-alertas-cp9)).
+A CP9 tem nove features (ver [Requisitos Funcionais](funcionais.md)); os RNFs abaixo estabelecem condições de qualidade para a contagem de faltas, o alerta de limite e a liberação da vaga, complementando a declaração tardia desta CP (ver a nota de contexto na seção correspondente de [Requisitos Funcionais](funcionais.md#controle-de-assiduidade-e-alertas-cp9)).
 
 #### Controle de faltas do paciente
 
 **RNF32 — Integridade e auditoria da contagem de faltas**
 
-A contagem de faltas consecutivas do paciente (RF35) e os eventos que a originam (RF34, RF14, RF15) devem ser registrados de forma íntegra e não podem ser apagados ou alterados sem registro de quem alterou, quando e por quê. Toda decisão de desligamento por faltas (RF37) deve preservar o histórico de faltas que a fundamentou, mesmo após a liberação da vaga.
+A contagem de faltas do paciente no ciclo (RF35) e os eventos que a originam (RF34 e RF15) devem ser registrados de forma íntegra e não podem ser apagados ou alterados sem registro de quem alterou, quando e por quê. Toda decisão de desligamento por faltas (RF37) deve preservar o histórico de faltas que a fundamentou, mesmo após a liberação da vaga.
 
 A conformidade deve ser verificada registrando faltas com dados fictícios e confirmando, por inspeção do histórico, que nenhum perfil consegue apagar ou alterar os registros de falta sem deixar rastro da alteração.
 
 Classificação: auditoria (URPS+).
-Rastreabilidade: Feature "Contabilizar faltas consecutivas do paciente" → CP9 — Controle de assiduidade e alertas; relacionada às features "Registrar falta do paciente na sessão" e "Desligar paciente por faltas e liberar vaga".
+Rastreabilidade: Feature "Contabilizar faltas do paciente no ciclo" → CP9 — Controle de assiduidade e alertas; relacionada às features "Registrar falta do paciente na sessão" e "Desligar paciente por faltas e liberar vaga".
 
 **RNF33 — Visibilidade do alerta de limite de faltas**
 
@@ -388,12 +388,12 @@ Rastreabilidade: Feature "Desligar paciente por faltas e liberar vaga" → CP9 �
 
 **RNF35 — Privacidade dos dados de faltas do estagiário**
 
-A relação de faltas do estagiário (RF39) deve ser visível apenas ao supervisor responsável e à coordenação, conforme os perfis definidos na CP12, e não deve ser exposta a outros estagiários nem a pacientes.
+A relação de faltas do estagiário (RF39), a contagem de faltas no semestre (RF40), a sinalização de reprovação (RF63) e a decisão institucional sobre ela (RF64) devem ser visíveis apenas ao supervisor responsável e à coordenação, conforme os perfis definidos na CP12, e não deve ser exposta a outros estagiários nem a pacientes.
 
 A conformidade deve ser verificada testando o acesso de um usuário sem vínculo de supervisão à relação de faltas de um estagiário e confirmando a negação do acesso.
 
 Classificação: segurança e privacidade (URPS+).
-Rastreabilidade: Feature "Consolidar faltas do estagiário para a supervisão" → CP9 — Controle de assiduidade e alertas; relacionada à CP12 — Segurança, sigilo e controle de acesso.
+Rastreabilidade: Features "Consolidar faltas do estagiário para a supervisão", "Contabilizar faltas do estagiário no semestre", "Sinalizar reprovação do estagiário por faltas" e "Registrar decisão institucional sobre a reprovação do estagiário" → CP9 — Controle de assiduidade e alertas; relacionada à CP12 — Segurança, sigilo e controle de acesso.
 
 ### Registros administrativos do atendimento (CP10)
 
@@ -508,21 +508,21 @@ Os quatro indicadores exibidos pelo RF48 (vagas ocupadas, tempo médio de espera
 Classificação: confiabilidade (URPS+).
 Rastreabilidade: Feature "Consultar indicadores operacionais" → CP11 — Indicadores e relatórios institucionais.
 
-#### Feature — Gerar e exportar relatório institucional [#23](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/issues/23)
+#### Feature — Exportar relatório institucional em PDF [#23](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/issues/23)
 
 **RNF47 — Tempo de geração do relatório institucional**
 
-O sistema deve gerar e exibir em tela o relatório institucional consolidado (RF49) em até 5 segundos, contados do acionamento da geração pela coordenação até a exibição completa do conteúdo, para qualquer período de referência de até 12 meses e com até 10 usuários realizando consultas ou gerações de relatórios simultaneamente.
+O sistema deve exibir em tela os indicadores operacionais (RF48) e gerar o arquivo PDF do relatório institucional (RF49) em até 5 segundos cada, contados, respectivamente, do acionamento da consulta até a exibição completa dos indicadores e do acionamento da exportação até o arquivo ficar disponível para download, para qualquer período de referência de até 12 meses e com até 10 usuários realizando consultas ou exportações simultaneamente.
 
 Classificação: desempenho (URPS+).
-Rastreabilidade: Feature "Gerar e exportar relatório institucional" → CP11 — Indicadores e relatórios institucionais.
+Rastreabilidade: Features "Consultar indicadores operacionais" e "Exportar relatório institucional em PDF" → CP11 — Indicadores e relatórios institucionais.
 
 **RNF48 — Auditoria de relatórios institucionais**
 
-Para cada geração ou exportação do relatório institucional (RF49), o sistema deve registrar o usuário responsável, a data e a hora da operação e o período consultado, mantendo esse registro acessível para consulta por qualquer usuário com perfil de coordenação por, no mínimo, 24 meses a partir do registro, compatível com o ciclo de fiscalização do CRP.
+Para cada exportação do relatório institucional (RF49), o sistema deve registrar o usuário responsável, a data e a hora da operação e o período consultado, mantendo esse registro acessível para consulta por qualquer usuário com perfil de coordenação por, no mínimo, 24 meses a partir do registro, compatível com o ciclo de fiscalização do CRP.
 
 Classificação: auditoria (URPS+).
-Rastreabilidade: Feature "Gerar e exportar relatório institucional" → CP11 — Indicadores e relatórios institucionais.
+Rastreabilidade: Feature "Exportar relatório institucional em PDF" → CP11 — Indicadores e relatórios institucionais.
 
 ### Segurança, Sigilo e Controle de Acesso (CP12)
 
