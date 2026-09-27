@@ -26,6 +26,21 @@ As decisões seguem as categorias abaixo:
 | RF16      | OK               | Não aplicável     | Nenhum problema identificado. |
 | RF17      | OK               | Não aplicável     | Nenhum problema identificado. |
 
+### Distribuição de Casos entre Supervisores e Estagiários (CP5)
+
+| Requisito | Tipo apontado  | Decisão             | Justificativa e alteração realizada |
+| --------- | -------------- | ------------------- | ----------------------------------- |
+| RF18      | OK             | Não aplicável       | Nenhum problema identificado. |
+| RF19      | OK             | Não aplicável       | Nenhum problema identificado. |
+| RF20      | Lacuna         | Aceito              | A área de especialidade exigida pelo caso passou a ser registrada pela equipe clínica no mesmo momento em que confirma a prioridade (RF6, CP2), tornando-se a origem consumida pela distribuição; quando nenhuma área é indicada, o caso pode ser distribuído a qualquer supervisor compatível. O modelo de domínio da CP2, o RF6 e a rastreabilidade do RF20 foram atualizados. |
+| RF21      | Lacuna         | Parcialmente aceito | "Estagiário ativo no semestre" passou a ser definido como o estagiário com conta institucional ativa (RF53/RF54), condição já registrada e testável. A gestão de semestres letivos e do vínculo acadêmico do estagiário com a instituição de ensino permanece fora do escopo do sistema, que trata apenas do acesso institucional controlado pela coordenação. |
+| RF22      | Inconsistência | Aceito              | A descrição foi ajustada para incluir estagiário e supervisor entre os perfis que consultam os responsáveis pelo caso, alinhando-a ao critério de aceitação já existente. |
+| RF23      | Verificabilidade | Aceito            | Foram acrescentados critérios de aceitação para a consulta do supervisor (casos próprios e dos estagiários sob sua supervisão) e para a tentativa de consulta sem vínculo com o caso, que passa a ser negada. |
+| RF24      | OK             | Não aplicável       | Nenhum problema identificado. |
+| RF25      | Ambiguidade    | Aceito              | A transferência foi delimitada por perfil: o supervisor responsável só pode transferir o caso para outro estagiário sob sua própria supervisão; a transferência para outro supervisor passou a ser ação exclusiva da coordenação, coerente com o RNF16. Foram acrescentados critérios de aceitação para as duas hipóteses e para a tentativa indevida do supervisor. |
+| RF26      | Clareza        | Aceito              | Foram definidos os perfis autorizados a consultar o histórico: o estagiário e o supervisor responsáveis vigentes; qualquer supervisor que já tenha figurado no histórico, restrito ao próprio período; e a coordenação, sem restrição. Foram acrescentados critérios de aceitação para essas hipóteses e para a negativa a quem nunca teve vínculo com o caso. |
+
+
 ### Controle de Assiduidade e Alertas (CP9)
 
 | Requisito | Tipo apontado             | Decisão             | Justificativa e alteração realizada |
@@ -37,6 +52,18 @@ As decisões seguem as categorias abaixo:
 | RF38      | OK                        | Não aplicável       | Nenhum problema identificado. O critério da reversão com vaga não realocada foi ajustado para refletir o novo RF37 (restauração do vínculo e das sessões). |
 | RF39      | OK                        | Não aplicável       | Nenhum problema identificado. |
 | RF40      | Escopo amplo e lacuna     | Aceito              | Separado em três requisitos, espelhando a estrutura do controle de faltas do paciente: RF40 — Contabilizar faltas do estagiário no semestre; RF63 — Sinalizar reprovação do estagiário por faltas; RF64 — Registrar decisão institucional sobre a reprovação do estagiário. O encerramento da sinalização foi definido: ela termina quando a coordenação registra a decisão (reprovação confirmada ou não aplicada, com justificativa). Os novos requisitos receberam numeração a partir de RF63 para não alterar os IDs RF1–RF62 já usados na avaliação de valor de negócio da FBr e na pontuação de esforço. |
+
+### Registros Administrativos do Atendimento (CP10)
+
+| Requisito | Tipo apontado  | Decisão | Justificativa e alteração realizada |
+| --------- | -------------- | ------- | ----------------------------------- |
+| RF41      | Ambiguidade    | Aceito  | O valor de R$ 35,00 passou a ser um parâmetro institucional configurável exclusivamente pela coordenação (não pela secretaria), com o padrão de R$ 35,00 mantido; toda alteração é registrada com valor anterior, novo valor, autor e data/hora, e vale só para pagamentos registrados depois dela. Foram acrescentados critérios de aceitação para a alteração do parâmetro e para a tentativa por perfil não autorizado. |
+| RF42      | Inconsistência | Aceito  | A descrição passou a mencionar explicitamente o estagiário entre os perfis que consultam a contribuição social, restrito aos pacientes vinculados a ele e apenas à situação (sem forma de pagamento), alinhando a descrição ao critério de aceitação já existente. |
+| RF43      | OK             | Não aplicável | Nenhum problema identificado. |
+| RF44      | Inconsistência | Aceito  | "Usuário autenticado" foi substituído por "secretaria, ou paciente/responsável com identidade verificada (RF52)", já que esse público não possui conta nem senha (CP12). A dependência do RF52 foi explicitada na rastreabilidade. |
+| RF45      | Incompletude   | Aceito  | Foram acrescentados critérios de aceitação para a presença de assinatura, carimbo e número de CRP no documento, para o bloqueio da emissão ao responsável de paciente menor de idade sem a Autorização preenchida, e para a ausência de download ou envio por e-mail. A referência a "paciente autenticado" também foi corrigida para "identidade verificada (RF52)". |
+| RF46      | Clareza        | Aceito  | Foram definidos os perfis autorizados a solicitar a reemissão: os mesmos autorizados a emitir a declaração original (RF45) — secretaria, para qualquer paciente, e paciente/responsável com identidade verificada, exclusivamente para as próprias sessões. Foi acrescentado critério de aceitação para a tentativa de reemissão de declaração de outro paciente. |
+| RF47      | Verificabilidade | Aceito | Os dados retornados pela consulta pública foram enumerados: para código válido e vigente, confirmação de autenticidade, nome do paciente, data e horário da sessão e nome do estagiário (os mesmos já impressos na declaração), sem dado clínico; para código inexistente, mensagem genérica; para declaração cujo registro foi corrigido após a emissão, aviso de desatualização, sem exibir os dados anteriores. O RNF45 foi ajustado à mesma definição. |
 
 ### Indicadores e Relatórios Institucionais (CP11)
 
