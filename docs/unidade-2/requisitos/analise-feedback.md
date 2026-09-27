@@ -13,6 +13,60 @@ As decisões seguem as categorias abaixo:
 
 ## Requisitos funcionais
 
+### Inscrição on-line (CP1)
+
+| Requisito | Tipo apontado  | Decisão       | Justificativa e alteração realizada |
+| --------- | -------------- | ------------- | ----------------------------------- |
+| RF1       | Inconsistência | Aceito        | Foram incluídos telefone celular e e-mail, com exigência de ao menos um canal válido e indicação do canal preferencial. Também foram definidos no formulário os campos de triagem usados pelo RF4: queixa, percepção de urgência e histórico relevante informado. |
+| RF2       | OK             | Não aplicável | Nenhum problema identificado. |
+| RF3       | OK             | Não aplicável | Nenhum problema identificado. |
+
+### Triagem e Sinalização de Casos (CP2)
+
+| Requisito | Tipo apontado  | Decisão | Justificativa e alteração realizada |
+| --------- | -------------- | ------- | ----------------------------------- |
+| RF4       | Ambiguidade    | Aceito  | A condição aberta foi eliminada: queixa, percepção de urgência e histórico relevante passaram a ser campos definidos no RF1 e são apresentados na triagem. |
+| RF5       | Verificabilidade | Aceito | As regras de sinalização passaram a exigir versão identificada, data de vigência, aprovação da coordenação e histórico de publicação. Na ausência de regra vigente, o sistema apresenta as respostas sem produzir sinalização automática. |
+| RF6       | Clareza        | Aceito  | Os perfis autorizados foram definidos como supervisor e coordenação, e a apresentação textual dos critérios vermelho/amarelo/verde passou de opcional para obrigatória, sem sugestão automática de cor. |
+
+### Fila de Espera e Consulta de Posição (CP3)
+
+| Requisito | Tipo apontado      | Decisão       | Justificativa e alteração realizada |
+| --------- | ------------------ | ------------- | ----------------------------------- |
+| RF7       | OK                 | Não aplicável | Nenhum problema identificado. |
+| RF8       | Redundância parcial | Aceito       | O RF8 foi reduzido ao fluxo funcional da consulta e passou a referenciar o RF52 para verificação de identidade e os RNF6/RNF7 para privacidade e comunicação, sem repetir essas regras. |
+| RF9       | Lacuna             | Aceito        | A feature passou a permitir que a coordenação cadastre, revise e publique o conteúdo institucional da fila, preservando versões anteriores e expondo ao público apenas a versão vigente. |
+
+### Prontuário Eletrônico (CP6)
+
+| Requisito | Tipo apontado  | Decisão | Justificativa e alteração realizada |
+| --------- | -------------- | ------- | ----------------------------------- |
+| RF27      | Verificabilidade | Aceito | Foi definido o conjunto mínimo verificável do prontuário: identificação do paciente, caso e ciclo; responsáveis; sessões; evoluções com correções e complementos; e relatório final, quando existente. |
+
+### Registro de Evolução por Sessão (CP7)
+
+| Requisito | Tipo apontado | Decisão       | Justificativa e alteração realizada |
+| --------- | ------------- | ------------- | ----------------------------------- |
+| RF28      | OK            | Não aplicável | Nenhum problema identificado. |
+| RF29      | Inconsistência | Aceito       | O motivo passou a ser obrigatório em toda correção, alinhando o RF29 ao RNF28. |
+| RF30      | OK            | Não aplicável | Nenhum problema identificado. |
+| RF31      | Incompletude  | Aceito        | A consulta de uma sessão passou a apresentar o original, todas as correções e todos os complementos, distinguindo revisão de conteúdo de informação adicional. |
+| RF32      | Incompletude  | Aceito        | O histórico consolidado passou a exigir original, correções e complementos por sessão, com tipo, autor, data/hora e ordem cronológica. |
+
+### Geração do Relatório Final de Evolução (CP8)
+
+| Requisito | Tipo apontado | Decisão | Justificativa e alteração realizada |
+| --------- | ------------- | ------- | ----------------------------------- |
+| RF33      | Incompletude  | Aceito  | Foram detalhados os campos obrigatórios, estados, versionamento, submissão, devolução, aprovação, assinatura manuscrita, geração em PDF, impressão pela secretaria e entrega presencial ao paciente ou responsável. |
+
+### Continuidade de Casos entre Semestres (CP13)
+
+| Requisito | Tipo apontado | Decisão | Justificativa e alteração realizada |
+| --------- | ------------- | ------- | ----------------------------------- |
+| RF58      | Ambiguidade   | Aceito  | O marco temporal passou a ser definido por datas de início do planejamento e de encerramento configuradas pela coordenação para cada semestre; também foi declarada a marcação do desligamento futuro do estagiário. |
+| RF59      | Incompletude  | Aceito  | Foi declarado o fluxo de correção: somente a coordenação pode corrigir, com motivo, versionamento e tratamento explícito dos efeitos sobre transferências pendentes ou já efetivadas. |
+| RF60      | Ambiguidade   | Aceito  | A transferência passou a depender de confirmação explícita da coordenação na data de encerramento ou depois dela; a passagem da data, sozinha, não altera o responsável. |
+
 ### Agendamento, Confirmação e Remarcação (CP4)
 
 | Requisito | Tipo apontado    | Decisão           | Justificativa e alteração realizada |
@@ -93,6 +147,58 @@ As decisões seguem as categorias abaixo:
 | RF62      | OK            | Não aplicável | Nenhum problema identificado. |
 
 ## Requisitos não funcionais
+
+### Inscrição on-line (CP1)
+
+| Requisito | Tipo apontado       | Decisão       | Justificativa e alteração realizada |
+| --------- | ------------------- | ------------- | ----------------------------------- |
+| RNF1      | OK                  | Não aplicável | Nenhum problema identificado. A verificação foi apenas alinhada aos novos campos de contato do RF1. |
+| RNF2      | Redundância parcial | Aceito        | A regra sobre o conteúdo permitido no comprovante permaneceu somente no RF2. O RNF2 passou a conter apenas as proteções adicionais contra exposição de dados clínicos no endereço eletrônico e nas mensagens públicas. |
+
+### Triagem e Sinalização de Casos (CP2)
+
+| Requisito | Tipo apontado       | Decisão | Justificativa e alteração realizada |
+| --------- | ------------------- | ------- | ----------------------------------- |
+| RNF3      | Clareza             | Aceito  | Foram definidos supervisor e coordenação como perfis de triagem e incluídos testes de acesso negado para secretaria, estagiário e usuário externo. |
+| RNF4      | Verificabilidade    | Aceito  | A origem da sinalização passou a incluir versão, vigência, aprovador e histórico de publicação da regra, com teste de troca de versão e de ausência de regra vigente. |
+| RNF5      | Redundância parcial | Aceito  | Os perfis e dados da decisão ficaram somente no RF6. O RNF5 passou a tratar exclusivamente de integridade, imutabilidade, encadeamento cronológico e reconstrução da trilha de auditoria. |
+
+### Fila de Espera e Consulta de Posição (CP3)
+
+| Requisito | Tipo apontado    | Decisão | Justificativa e alteração realizada |
+| --------- | ---------------- | ------- | ----------------------------------- |
+| RNF6      | Incompletude     | Aceito  | Foram definidos código de 6 dígitos, validade de 10 minutos, uso único, 5 tentativas, reenvio após 60 segundos, invalidação do código anterior, limite de 3 envios por identificador em 60 minutos e bloqueio de 60 minutos, alinhados ao RF52. |
+| RNF7      | Verificabilidade | Aceito  | Foram definidos público-alvo, teste de compreensão sem ajuda, amostra mínima de 10 participantes e taxa mínima de 90% de respostas corretas sobre variação da posição e ausência de garantia de data. |
+| RNF8      | Lacuna           | Aceito  | Foram definidos autoria, data/hora, histórico de publicação, permissão exclusiva da coordenação e teste negativo de publicação por perfil não autorizado. |
+
+### Prontuário Eletrônico (CP6)
+
+| Requisito | Tipo apontado       | Decisão | Justificativa e alteração realizada |
+| --------- | ------------------- | ------- | ----------------------------------- |
+| RNF25     | Redundância parcial | Aceito  | A declaração dos perfis autorizados ficou somente no RF55. O RNF25 passou a tratar exclusivamente da não exposição de conteúdo ou da existência de seções clínicas em interface, URLs, notificações, mensagens e respostas negadas do servidor. |
+
+### Registro de Evolução por Sessão (CP7)
+
+| Requisito | Tipo apontado       | Decisão       | Justificativa e alteração realizada |
+| --------- | ------------------- | ------------- | ----------------------------------- |
+| RNF26     | Redundância parcial | Aceito        | A declaração dos perfis autorizados ficou somente no RF55. O RNF26 passou a tratar exclusivamente da não exposição do original, das correções, dos complementos ou de sua existência em respostas negadas. |
+| RNF27     | OK                  | Não aplicável | Nenhum problema identificado. A abrangência já contempla correções e complementos. |
+| RNF28     | Inconsistência      | Aceito        | O RNF28 já exigia motivo em toda correção; o RF29 foi alinhado para adotar a mesma regra. |
+| RNF29     | Verificabilidade    | Aceito        | Foram definidos carga de 30 usuários simultâneos por 10 minutos, massa de 4.000 sessões/evoluções, proporção de correções e complementos, rede mínima, infraestrutura de homologação equivalente à produção e medição separada do percentil 95. |
+| RNF30     | Verificabilidade    | Aceito        | Foram definidos limite de 3 minutos, no máximo 6 interações, teste com pelo menos 10 estagiários e taxa mínima de 90% de sucesso na primeira tentativa sem ajuda. |
+
+### Geração do Relatório Final de Evolução (CP8)
+
+| Requisito | Tipo apontado | Decisão | Justificativa e alteração realizada |
+| --------- | ------------- | ------- | ----------------------------------- |
+| RNF31     | Incompletude  | Aceito  | Foram definidos versionamento de submissões, devoluções e aprovações, impressão exclusiva da versão aprovada, ausência de download/e-mail ao paciente e confirmação da assinatura manuscrita na entrega. |
+
+### Continuidade de Casos entre Semestres (CP13)
+
+| Requisito | Tipo apontado | Decisão       | Justificativa e alteração realizada |
+| --------- | ------------- | ------------- | ----------------------------------- |
+| RNF54     | Incompletude  | Aceito        | Foi definido prazo mínimo de guarda de 5 anos após o encerramento do caso ou a última decisão, destinação somente com autorização da pessoa psicóloga responsável técnica, bloqueio por obrigação de guarda adicional e auditoria da eliminação ou anonimização. |
+| RNF55     | OK            | Não aplicável | Nenhum problema identificado. A integridade já abrange sessões, evoluções, correções, complementos, relatórios, decisões, transferências e vínculos anteriores. |
 
 ### Agendamento, Confirmação e Remarcação (CP4)
 
@@ -190,5 +296,5 @@ As correções acima exigiram ajustes em requisitos que não tinham apontamento,
 ## Pendências de validação com a FBr
 
 - Valores padrão dos parâmetros de agendamento da CP4: duração da sessão (50 minutos), antecedência do lembrete (24 horas), prazo de confirmação (12 horas) e antecedência mínima para cancelamento sem falta (24 horas).
-- Carga de referência de 30 usuários simultâneos usada no RNF12 (e, por referência, no RNF34).
+- Carga de referência de 30 usuários simultâneos usada nos RNF12 e RNF29 (e, por referência, no RNF34).
 - Base legal do tratamento dos dados de saúde (RF57) e canal de atendimento dos demais direitos do titular.
