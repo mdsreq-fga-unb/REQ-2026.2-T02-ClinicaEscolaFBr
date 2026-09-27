@@ -37,36 +37,6 @@ As decisões seguem as categorias abaixo:
 | RF8       | Redundância parcial | Aceito       | O RF8 foi reduzido ao fluxo funcional da consulta e passou a referenciar o RF52 para verificação de identidade e os RNF6/RNF7 para privacidade e comunicação, sem repetir essas regras. |
 | RF9       | Lacuna             | Aceito        | A feature passou a permitir que a coordenação cadastre, revise e publique o conteúdo institucional da fila, preservando versões anteriores e expondo ao público apenas a versão vigente. |
 
-### Prontuário Eletrônico (CP6)
-
-| Requisito | Tipo apontado  | Decisão | Justificativa e alteração realizada |
-| --------- | -------------- | ------- | ----------------------------------- |
-| RF27      | Verificabilidade | Aceito | Foi definido o conjunto mínimo verificável do prontuário: identificação do paciente, caso e ciclo; responsáveis; sessões; evoluções com correções e complementos; e relatório final, quando existente. |
-
-### Registro de Evolução por Sessão (CP7)
-
-| Requisito | Tipo apontado | Decisão       | Justificativa e alteração realizada |
-| --------- | ------------- | ------------- | ----------------------------------- |
-| RF28      | OK            | Não aplicável | Nenhum problema identificado. |
-| RF29      | Inconsistência | Aceito       | O motivo passou a ser obrigatório em toda correção, alinhando o RF29 ao RNF28. |
-| RF30      | OK            | Não aplicável | Nenhum problema identificado. |
-| RF31      | Incompletude  | Aceito        | A consulta de uma sessão passou a apresentar o original, todas as correções e todos os complementos, distinguindo revisão de conteúdo de informação adicional. |
-| RF32      | Incompletude  | Aceito        | O histórico consolidado passou a exigir original, correções e complementos por sessão, com tipo, autor, data/hora e ordem cronológica. |
-
-### Geração do Relatório Final de Evolução (CP8)
-
-| Requisito | Tipo apontado | Decisão | Justificativa e alteração realizada |
-| --------- | ------------- | ------- | ----------------------------------- |
-| RF33      | Incompletude  | Aceito  | Foram detalhados os campos obrigatórios, estados, versionamento, submissão, devolução, aprovação, assinatura manuscrita, geração em PDF, impressão pela secretaria e entrega presencial ao paciente ou responsável. |
-
-### Continuidade de Casos entre Semestres (CP13)
-
-| Requisito | Tipo apontado | Decisão | Justificativa e alteração realizada |
-| --------- | ------------- | ------- | ----------------------------------- |
-| RF58      | Ambiguidade   | Aceito  | O marco temporal passou a ser definido por datas de início do planejamento e de encerramento configuradas pela coordenação para cada semestre; também foi declarada a marcação do desligamento futuro do estagiário. |
-| RF59      | Incompletude  | Aceito  | Foi declarado o fluxo de correção: somente a coordenação pode corrigir, com motivo, versionamento e tratamento explícito dos efeitos sobre transferências pendentes ou já efetivadas. |
-| RF60      | Ambiguidade   | Aceito  | A transferência passou a depender de confirmação explícita da coordenação na data de encerramento ou depois dela; a passagem da data, sozinha, não altera o responsável. |
-
 ### Agendamento, Confirmação e Remarcação (CP4)
 
 | Requisito | Tipo apontado    | Decisão           | Justificativa e alteração realizada |
@@ -94,6 +64,28 @@ As decisões seguem as categorias abaixo:
 | RF25      | Ambiguidade    | Aceito              | A transferência foi delimitada por perfil: o supervisor responsável só pode transferir o caso para outro estagiário sob sua própria supervisão; a transferência para outro supervisor passou a ser ação exclusiva da coordenação, coerente com o RNF16. Foram acrescentados critérios de aceitação para as duas hipóteses e para a tentativa indevida do supervisor. |
 | RF26      | Clareza        | Aceito              | Foram definidos os perfis autorizados a consultar o histórico: o estagiário e o supervisor responsáveis vigentes; qualquer supervisor que já tenha figurado no histórico, restrito ao próprio período; e a coordenação, sem restrição. Foram acrescentados critérios de aceitação para essas hipóteses e para a negativa a quem nunca teve vínculo com o caso. |
 
+
+### Prontuário Eletrônico (CP6)
+
+| Requisito | Tipo apontado  | Decisão | Justificativa e alteração realizada |
+| --------- | -------------- | ------- | ----------------------------------- |
+| RF27      | Verificabilidade | Aceito | Foi definido o conjunto mínimo verificável do prontuário: identificação do paciente, caso e ciclo; responsáveis; sessões; evoluções com correções e complementos; e relatório final, quando existente. |
+
+### Registro de Evolução por Sessão (CP7)
+
+| Requisito | Tipo apontado | Decisão       | Justificativa e alteração realizada |
+| --------- | ------------- | ------------- | ----------------------------------- |
+| RF28      | OK            | Não aplicável | Nenhum problema identificado. |
+| RF29      | Inconsistência | Aceito       | O motivo passou a ser obrigatório em toda correção, alinhando o RF29 ao RNF28. |
+| RF30      | OK            | Não aplicável | Nenhum problema identificado. |
+| RF31      | Incompletude  | Aceito        | A consulta de uma sessão passou a apresentar o original, todas as correções e todos os complementos, distinguindo revisão de conteúdo de informação adicional. |
+| RF32      | Incompletude  | Aceito        | O histórico consolidado passou a exigir original, correções e complementos por sessão, com tipo, autor, data/hora e ordem cronológica. |
+
+### Geração do Relatório Final de Evolução (CP8)
+
+| Requisito | Tipo apontado | Decisão | Justificativa e alteração realizada |
+| --------- | ------------- | ------- | ----------------------------------- |
+| RF33      | Incompletude  | Aceito  | Foram detalhados os campos obrigatórios, estados, versionamento, submissão, devolução, aprovação, assinatura manuscrita, geração em PDF, impressão pela secretaria e entrega presencial ao paciente ou responsável. |
 
 ### Controle de Assiduidade e Alertas (CP9)
 
@@ -139,6 +131,14 @@ As decisões seguem as categorias abaixo:
 | RF56      | OK             | Não aplicável       | Nenhum problema identificado. |
 | RF57      | Incompletude   | Parcialmente aceito | A revogação foi declarada em um novo requisito, RF65 — Registrar revogação do consentimento, com efeitos (saída da fila, bloqueio de agendamentos e comunicações, sinalização para encerramento do atendimento) e retenção (guarda mínima de 5 anos do registro documental, Resolução CFP nº 1/2009, e LGPD, art. 16, I). O termo passou a informar o prazo de guarda e a forma de revogação. Não foi possível atender integralmente: a base legal (consentimento, art. 11, I, ou tutela da saúde, art. 11, II, "f", da LGPD) depende da FBr, como controladora, e ficou registrada como pendência; até lá, o sistema adota o cenário mais restritivo (consentimento revogável). Os demais direitos do art. 18 foram declarados fora do escopo atual, atendidos pelo canal institucional da FBr, até que a FBr indique o contrário. |
 
+### Continuidade de Casos entre Semestres (CP13)
+
+| Requisito | Tipo apontado | Decisão | Justificativa e alteração realizada |
+| --------- | ------------- | ------- | ----------------------------------- |
+| RF58      | Ambiguidade   | Aceito  | O marco temporal passou a ser definido por datas de início do planejamento e de encerramento configuradas pela coordenação para cada semestre; também foi declarada a marcação do desligamento futuro do estagiário. |
+| RF59      | Incompletude  | Aceito  | Foi declarado o fluxo de correção: somente a coordenação pode corrigir, com motivo, versionamento e tratamento explícito dos efeitos sobre transferências pendentes ou já efetivadas. |
+| RF60      | Ambiguidade   | Aceito  | A transferência passou a depender de confirmação explícita da coordenação na data de encerramento ou depois dela; a passagem da data, sozinha, não altera o responsável. |
+
 ### Acessibilidade e Usabilidade (CP14)
 
 | Requisito | Tipo apontado | Decisão       | Justificativa e alteração realizada |
@@ -171,35 +171,6 @@ As decisões seguem as categorias abaixo:
 | RNF7      | Verificabilidade | Aceito  | Foram definidos público-alvo, teste de compreensão sem ajuda, amostra mínima de 10 participantes e taxa mínima de 90% de respostas corretas sobre variação da posição e ausência de garantia de data. |
 | RNF8      | Lacuna           | Aceito  | Foram definidos autoria, data/hora, histórico de publicação, permissão exclusiva da coordenação e teste negativo de publicação por perfil não autorizado. |
 
-### Prontuário Eletrônico (CP6)
-
-| Requisito | Tipo apontado       | Decisão | Justificativa e alteração realizada |
-| --------- | ------------------- | ------- | ----------------------------------- |
-| RNF25     | Redundância parcial | Aceito  | A declaração dos perfis autorizados ficou somente no RF55. O RNF25 passou a tratar exclusivamente da não exposição de conteúdo ou da existência de seções clínicas em interface, URLs, notificações, mensagens e respostas negadas do servidor. |
-
-### Registro de Evolução por Sessão (CP7)
-
-| Requisito | Tipo apontado       | Decisão       | Justificativa e alteração realizada |
-| --------- | ------------------- | ------------- | ----------------------------------- |
-| RNF26     | Redundância parcial | Aceito        | A declaração dos perfis autorizados ficou somente no RF55. O RNF26 passou a tratar exclusivamente da não exposição do original, das correções, dos complementos ou de sua existência em respostas negadas. |
-| RNF27     | OK                  | Não aplicável | Nenhum problema identificado. A abrangência já contempla correções e complementos. |
-| RNF28     | Inconsistência      | Aceito        | O RNF28 já exigia motivo em toda correção; o RF29 foi alinhado para adotar a mesma regra. |
-| RNF29     | Verificabilidade    | Aceito        | Foram definidos carga de 30 usuários simultâneos por 10 minutos, massa de 4.000 sessões/evoluções, proporção de correções e complementos, rede mínima, infraestrutura de homologação equivalente à produção e medição separada do percentil 95. |
-| RNF30     | Verificabilidade    | Aceito        | Foram definidos limite de 3 minutos, no máximo 6 interações, teste com pelo menos 10 estagiários e taxa mínima de 90% de sucesso na primeira tentativa sem ajuda. |
-
-### Geração do Relatório Final de Evolução (CP8)
-
-| Requisito | Tipo apontado | Decisão | Justificativa e alteração realizada |
-| --------- | ------------- | ------- | ----------------------------------- |
-| RNF31     | Incompletude  | Aceito  | Foram definidos versionamento de submissões, devoluções e aprovações, impressão exclusiva da versão aprovada, ausência de download/e-mail ao paciente e confirmação da assinatura manuscrita na entrega. |
-
-### Continuidade de Casos entre Semestres (CP13)
-
-| Requisito | Tipo apontado | Decisão       | Justificativa e alteração realizada |
-| --------- | ------------- | ------------- | ----------------------------------- |
-| RNF54     | Incompletude  | Aceito        | Foi definido prazo mínimo de guarda de 5 anos após o encerramento do caso ou a última decisão, destinação somente com autorização da pessoa psicóloga responsável técnica, bloqueio por obrigação de guarda adicional e auditoria da eliminação ou anonimização. |
-| RNF55     | OK            | Não aplicável | Nenhum problema identificado. A integridade já abrange sessões, evoluções, correções, complementos, relatórios, decisões, transferências e vínculos anteriores. |
-
 ### Agendamento, Confirmação e Remarcação (CP4)
 
 | Requisito | Tipo apontado       | Decisão       | Justificativa e alteração realizada |
@@ -225,6 +196,28 @@ As decisões seguem as categorias abaixo:
 | RNF22     | Verificabilidade        | Aceito        | Foram definidos a amostra mínima (5 participantes por perfil) e o percentual mínimo de conclusão sem auxílio (90%) para o teste de usabilidade "sem treinamento prévio". |
 | RNF23     | Classificação incorreta | Aceito        | O requisito duplicava, como "manutenibilidade", a funcionalidade administrativa já declarada no RF19. A regra de negócio permaneceu apenas no RF19, e o RNF23 foi reformulado como "Modificabilidade do cadastro de áreas de especialidade": uma meta técnica verificável (armazenamento como dado configurável, sem exigir alteração de código ou novo deploy). |
 | RNF24     | OK                      | Não aplicável | Nenhum problema identificado. |
+
+### Prontuário Eletrônico (CP6)
+
+| Requisito | Tipo apontado       | Decisão | Justificativa e alteração realizada |
+| --------- | ------------------- | ------- | ----------------------------------- |
+| RNF25     | Redundância parcial | Aceito  | A declaração dos perfis autorizados ficou somente no RF55. O RNF25 passou a tratar exclusivamente da não exposição de conteúdo ou da existência de seções clínicas em interface, URLs, notificações, mensagens e respostas negadas do servidor. |
+
+### Registro de Evolução por Sessão (CP7)
+
+| Requisito | Tipo apontado       | Decisão       | Justificativa e alteração realizada |
+| --------- | ------------------- | ------------- | ----------------------------------- |
+| RNF26     | Redundância parcial | Aceito        | A declaração dos perfis autorizados ficou somente no RF55. O RNF26 passou a tratar exclusivamente da não exposição do original, das correções, dos complementos ou de sua existência em respostas negadas. |
+| RNF27     | OK                  | Não aplicável | Nenhum problema identificado. A abrangência já contempla correções e complementos. |
+| RNF28     | Inconsistência      | Aceito        | O RNF28 já exigia motivo em toda correção; o RF29 foi alinhado para adotar a mesma regra. |
+| RNF29     | Verificabilidade    | Aceito        | Foram definidos carga de 30 usuários simultâneos por 10 minutos, massa de 4.000 sessões/evoluções, proporção de correções e complementos, rede mínima, infraestrutura de homologação equivalente à produção e medição separada do percentil 95. |
+| RNF30     | Verificabilidade    | Aceito        | Foram definidos limite de 3 minutos, no máximo 6 interações, teste com pelo menos 10 estagiários e taxa mínima de 90% de sucesso na primeira tentativa sem ajuda. |
+
+### Geração do Relatório Final de Evolução (CP8)
+
+| Requisito | Tipo apontado | Decisão | Justificativa e alteração realizada |
+| --------- | ------------- | ------- | ----------------------------------- |
+| RNF31     | Incompletude  | Aceito  | Foram definidos versionamento de submissões, devoluções e aprovações, impressão exclusiva da versão aprovada, ausência de download/e-mail ao paciente e confirmação da assinatura manuscrita na entrega. |
 
 ### Controle de Assiduidade e Alertas (CP9)
 
@@ -267,6 +260,13 @@ As decisões seguem as categorias abaixo:
 | RNF51     | Incompletude     | Aceito        | A criptografia em repouso passou a abranger todos os dados pessoais sensíveis (dados de saúde) tratados pelo sistema: queixa, histórico e urgência da inscrição, sinalizações e prioridade da triagem, evoluções e relatório final. Foi definida a gestão das chaves: armazenamento fora do banco e do repositório, acesso restrito ao responsável técnico, rotação anual ou imediata em caso de suspeita, com registro. |
 | RNF52     | Verificabilidade | Aceito        | O prazo de 5 anos deixou de depender de confirmação: é o mínimo normativo de guarda do registro documental do serviço psicológico (Resolução CFP nº 1/2009, art. 4º, § 1º). A FBr pode apenas ampliá-lo, o que não afeta a verificação do mínimo. |
 | RNF53     | Lacuna           | Aceito        | Foi acrescentado o tempo máximo de recuperação: até 8 horas da detecção da falha até o serviço voltar a operar com os dados da última cópia, verificado por teste de restauração cronometrado a cada semestre, com procedimento documentado. |
+
+### Continuidade de Casos entre Semestres (CP13)
+
+| Requisito | Tipo apontado | Decisão       | Justificativa e alteração realizada |
+| --------- | ------------- | ------------- | ----------------------------------- |
+| RNF54     | Incompletude  | Aceito        | Foi definido prazo mínimo de guarda de 5 anos após o encerramento do caso ou a última decisão, destinação somente com autorização da pessoa psicóloga responsável técnica, bloqueio por obrigação de guarda adicional e auditoria da eliminação ou anonimização. |
+| RNF55     | OK            | Não aplicável | Nenhum problema identificado. A integridade já abrange sessões, evoluções, correções, complementos, relatórios, decisões, transferências e vínculos anteriores. |
 
 ### Acessibilidade e Usabilidade (CP14)
 
