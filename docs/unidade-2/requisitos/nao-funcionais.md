@@ -29,11 +29,9 @@ Rastreabilidade: Feature "Registrar solicitação de atendimento on-line" → CP
 
 **RNF2 — Proteção das informações no comprovante de inscrição**
 
-O comprovante eletrônico emitido após o registro da solicitação (RF2) deve apresentar somente as informações necessárias à confirmação do recebimento da inscrição, sem divulgar a queixa informada pelo interessado ou outros dados clínicos registrados no formulário.
-
 As informações clínicas não devem ser incluídas no endereço eletrônico utilizado para acessar a confirmação nem em mensagens públicas de sucesso ou erro relacionadas à emissão do comprovante.
 
-A conformidade deve ser verificada mediante a emissão de comprovantes com dados fictícios, a inspeção de seu conteúdo e a verificação das informações apresentadas na interface e no endereço eletrônico da confirmação.
+A conformidade deve ser verificada com inscrições fictícias contendo queixa e outros dados clínicos, confirmando que essas informações não aparecem no endereço eletrônico nem nas mensagens públicas de sucesso ou erro. O conteúdo permitido no comprovante é definido pelo RF2 e não é repetido neste RNF.
 
 Classificação: segurança e privacidade (URPS+).
 Rastreabilidade: Feature "Emitir comprovante de inscrição" → CP1 — Inscrição on-line; relacionada à CP12 — Segurança, sigilo e controle de acesso.
@@ -64,10 +62,10 @@ Rastreabilidade: Feature "Sinalizar pontos de atenção da inscrição" → CP2 
 
 **RNF5 — Integridade e auditoria das decisões de prioridade**
 
-O registro e a alteração da prioridade devem preservar a classificação anterior, a nova classificação, o supervisor ou integrante da coordenação responsável e a data e hora de cada decisão. Uma decisão anterior não deve ser sobrescrita ou apagada por uma revisão posterior. A conformidade deve ser verificada com uma inscrição fictícia classificada e depois reclassificada por um desses dois perfis, seguida de tentativa de alteração por secretaria ou estagiário; o histórico deve permanecer íntegro e a fila deve receber apenas a decisão vigente confirmada.
+O histórico das decisões de prioridade do RF6 deve ser imutável e acrescentado cronologicamente: uma reclassificação deve criar um novo evento de auditoria vinculado à decisão anterior, sem sobrescrever, alterar ou apagar eventos já registrados. A conformidade deve ser verificada classificando e reclassificando uma inscrição fictícia e, em seguida, tentando alterar e excluir eventos anteriores pela interface; a trilha deve permanecer íntegra e permitir reconstruir a sequência das decisões. Os perfis autorizados e os dados funcionais de cada decisão permanecem definidos exclusivamente no RF6.
 
-Classificação: confiabilidade, segurança e auditoria (URPS+).
-Rastreabilidade: Feature "Registrar prioridade clínica do inscrito" → CP2 — Triagem e sinalização de casos; integração com RF7 (CP3) e controles da CP12 — Segurança, sigilo e controle de acesso.
+Classificação: confiabilidade e auditoria (URPS+).
+Rastreabilidade: Feature "Registrar prioridade clínica do inscrito" → CP2 — Triagem e sinalização de casos; integração com RF7 (CP3).
 
 ### Fila de espera e consulta de posição (CP3)
 
@@ -83,11 +81,11 @@ Os requisitos de acessibilidade e responsividade da CP14 também se aplicam às 
 
 A consulta individual da fila de espera (RF8) deve impedir que o conhecimento isolado do CPF ou do número de inscrição permita a um usuário não autorizado acessar informações individuais de outro inscrito.
 
-O sistema deve exigir a verificação da identidade do solicitante conforme o RF52 da CP12, mediante CPF ou número de inscrição e código de uso único enviado ao contato cadastrado. A posição e a situação individual na fila somente devem ser apresentadas após a confirmação bem-sucedida da identidade, respeitando as restrições de acesso estabelecidas na CP12.
+O sistema deve exigir a verificação da identidade do solicitante conforme o RF52 da CP12, mediante CPF ou número de inscrição e código de uso único enviado ao contato cadastrado. O código deve possuir 6 dígitos numéricos, validade de 10 minutos e uso único, com no máximo 5 tentativas incorretas. Um reenvio somente pode ocorrer após 60 segundos e deve invalidar o código anterior. Devem ser permitidos, no máximo, 3 códigos por CPF ou número de inscrição em uma janela de 60 minutos; atingido o limite, novas solicitações para o identificador ficam bloqueadas por 60 minutos. A posição e a situação individual na fila somente devem ser apresentadas após a confirmação bem-sucedida da identidade.
 
 As respostas de consultas não autorizadas não devem revelar a posição, a classificação de prioridade, a queixa ou outros dados individuais da solicitação consultada.
 
-A conformidade deve ser verificada por meio de testes com inscrições fictícias, contemplando consultas autorizadas e tentativas de acesso a registros de terceiros mediante o conhecimento de seus identificadores.
+A conformidade deve ser verificada por meio de testes automatizados com inscrições fictícias, contemplando: código válido dentro de 10 minutos; código expirado; reutilização; 5 tentativas incorretas; reenvio antes e depois de 60 segundos; invalidação do código anterior; envio de 3 códigos em 60 minutos; bloqueio da quarta solicitação; e tentativas de acesso a registros de terceiros mediante o conhecimento de seus identificadores.
 
 Em todos os casos de acesso não autorizado, nenhuma informação individual da inscrição consultada deve ser divulgada.
 
@@ -100,7 +98,7 @@ A interface de consulta da fila de espera (RF8) deve apresentar de forma clara e
 
 O aviso deve ser exibido junto ao resultado da consulta, sem exigir que o interessado acesse outra página, abra um documento adicional ou realize uma operação específica para visualizar essa informação.
 
-A conformidade deve ser verificada em testes da interface, confirmando que todas as consultas individuais realizadas com sucesso apresentam a informação sobre a possibilidade de alteração da posição e a ausência de garantia de prazo de atendimento.
+A conformidade deve ser verificada por teste de compreensão com, no mínimo, 10 participantes representativos do público externo da Clínica Escola — interessados inscritos, pacientes ou responsáveis legais, incluindo participantes com baixa familiaridade digital. Após concluir a consulta sem explicação adicional do avaliador, cada participante deve responder, com suas próprias palavras, se a posição pode mudar e se ela garante uma data de atendimento. O requisito é atendido quando pelo menos 90% dos participantes responderem corretamente às duas questões e todas as consultas apresentarem o aviso junto ao resultado.
 
 Classificação: usabilidade (URPS+).
 Rastreabilidade: Feature "Consultar posição individual na fila" → CP3 — Fila de espera e consulta de posição → IS03 — Expectativa sobre a fila.
@@ -316,9 +314,9 @@ A CP6 tem uma feature (ver [Requisitos Funcionais](funcionais.md)); o RNF abaixo
 
 **RNF25 — Sigilo do conteúdo do prontuário**
 
-O prontuário eletrônico deve ser acessível somente ao estagiário responsável pelo caso e ao seu supervisor, conforme o vínculo vigente e o RF55 — Restringir acesso ao prontuário (CP12). Listagens, mensagens de erro e respostas a solicitações negadas não devem expor conteúdo clínico a outros perfis. A consulta autorizada deve apresentar as seções mínimas definidas no RF27 e indicar explicitamente as que ainda não possuem registros, sem confundir ausência de dado com falha de carregamento.
+Listagens, resultados de busca, endereços eletrônicos, notificações, mensagens de erro e respostas do servidor não devem expor conteúdo do prontuário quando o acesso for negado pelo RF55. A resposta negada também não deve revelar quais seções clínicas possuem ou não registros. Os perfis e vínculos autorizados permanecem definidos exclusivamente no RF55.
 
-A conformidade deve ser verificada com casos fictícios completos e incompletos, testando a presença das seções mínimas e o acesso permitido e negado antes e depois de uma transferência de responsável.
+A conformidade deve ser verificada com prontuários fictícios completos e incompletos, inspecionando a interface e as respostas do servidor em tentativas negadas antes e depois de uma transferência de responsável e confirmando que nenhum conteúdo ou indicador de existência das seções clínicas é exposto.
 
 Classificação: segurança e privacidade (URPS+).
 Rastreabilidade: Feature "Consultar prontuário do paciente" → CP6 — Prontuário eletrônico; relacionada ao RF55 (CP12).
@@ -329,9 +327,9 @@ A CP7 tem cinco features (ver [Requisitos Funcionais](funcionais.md)); os RNFs a
 
 **RNF26 — Sigilo do conteúdo da evolução**
 
-O conteúdo de uma evolução registrada deve ser acessível somente ao estagiário responsável pelo caso e ao seu supervisor, conforme o vínculo vigente definido na CP5 e a restrição de acesso ao prontuário (RF55, CP12). Listagens, mensagens de erro e respostas a solicitações negadas não devem expor conteúdo clínico a outros perfis.
+Listagens, resultados de busca, endereços eletrônicos, notificações, mensagens de erro e respostas do servidor não devem expor o conteúdo original, as correções ou os complementos de uma evolução quando o acesso for negado pelo RF55. A resposta negada também não deve revelar a existência ou a quantidade desses registros. Os perfis e vínculos autorizados permanecem definidos exclusivamente no RF55.
 
-A conformidade deve ser verificada com casos fictícios, testando acesso permitido e negado antes e depois de uma transferência de responsável.
+A conformidade deve ser verificada com evoluções fictícias contendo correções e complementos, inspecionando a interface e as respostas do servidor em tentativas negadas antes e depois de uma transferência de responsável e confirmando que nenhum conteúdo ou indicador de existência dos registros é exposto.
 
 Classificação: segurança e privacidade (URPS+).
 Rastreabilidade: CP7 — Registro de evolução por sessão (transversal às features "Registrar evolução da sessão realizada", "Corrigir evolução registrada", "Registrar complemento de evolução da sessão", "Consultar evolução de uma sessão específica" e "Consultar histórico de evolução do paciente"); relacionada à CP12 — Segurança, sigilo e controle de acesso.
@@ -356,18 +354,23 @@ Rastreabilidade: Feature "Corrigir evolução registrada" → CP7 — Registro d
 
 **RNF29 — Desempenho do registro e da consulta de evolução**
 
-O registro de uma nova evolução e a consulta de uma evolução já registrada, incluindo correções e complementos, devem apresentar retorno em até 2 segundos para 95% das requisições em condições normais de uso.
+O registro de uma nova evolução e a consulta de uma evolução já registrada, incluindo correções e complementos, devem apresentar retorno de ponta a ponta em até 2 segundos para 95% das requisições no cenário de referência abaixo:
 
-A conformidade deve ser verificada por teste de desempenho com dados representativos do volume de sessões da clínica.
+- **Carga:** 30 usuários simultâneos, distribuídos igualmente entre registro e consulta, executando as operações continuamente por 10 minutos.
+- **Massa de dados:** dois semestres de operação, com cerca de 200 pacientes atendidos, 4.000 sessões e 4.000 evoluções; pelo menos 20% das evoluções devem possuir uma correção e 20% devem possuir um complemento.
+- **Rede:** conexão do cliente com pelo menos 20 Mbps, latência de ida e volta de até 50 ms e sem perda de pacotes durante o teste.
+- **Infraestrutura:** ambiente de homologação com a mesma configuração do servidor de produção da FBr; a quantidade de vCPUs, memória, versão do banco de dados e versão da aplicação deve ser registrada no relatório do teste.
+
+A conformidade deve ser verificada por teste de carga automatizado, por exemplo com k6 ou JMeter, calculando separadamente o percentil 95 do tempo de resposta de ponta a ponta para registro e consulta. A carga de 30 usuários é uma estimativa técnica da equipe e deve ser validada com a FBr antes do aceite definitivo.
 
 Classificação: desempenho (URPS+).
 Rastreabilidade: CP7 — Registro de evolução por sessão (transversal às features "Registrar evolução da sessão realizada" e "Consultar evolução de uma sessão específica").
 
 **RNF30 — Usabilidade do registro de evolução**
 
-O registro de uma evolução deve ser simples e rápido o suficiente para ser preenchido pelo estagiário logo após a sessão, sem exigir treinamento prévio além da orientação inicial de uso do sistema.
+Um estagiário deve conseguir localizar uma sessão realizada, preencher a evolução e concluir o salvamento em até 3 minutos e com, no máximo, 6 interações com componentes da interface, desconsiderando a digitação do conteúdo clínico. Consideram-se interações os cliques, toques ou comandos de teclado usados para selecionar a sessão, abrir o formulário, acionar controles e confirmar o salvamento.
 
-A conformidade deve ser verificada por teste de usabilidade com estagiários representativos, medindo o tempo e o número de interações necessários para concluir um registro.
+A conformidade deve ser verificada por teste de tarefa com, no mínimo, 10 estagiários representativos, após uma orientação inicial de até 15 minutos e sem ajuda durante a execução. O requisito é atendido quando pelo menos 90% dos participantes concluírem corretamente o registro na primeira tentativa, dentro dos limites de 3 minutos e 6 interações, sem associar a evolução à sessão ou ao paciente incorreto.
 
 Classificação: usabilidade (URPS+).
 Rastreabilidade: Feature "Registrar evolução da sessão realizada" → CP7 — Registro de evolução por sessão.
@@ -633,9 +636,11 @@ A CP13 tem três features (ver [Requisitos Funcionais](funcionais.md)); os RNFs 
 
 **RNF54 — Auditoria das decisões de continuidade**
 
-Toda decisão de continuidade (RF59) deve ser registrada com o caso, o estagiário que está concluindo o estágio, o novo estagiário indicado ou o motivo do encerramento, o autor da decisão e a data. Cada correção deve preservar a versão anterior e registrar a nova decisão, o motivo, o integrante da coordenação responsável, a data/hora e o efeito sobre uma transferência pendente ou já efetivada. Esses registros não podem ser apagados nem sobrescritos e devem permanecer disponíveis para consulta pela coordenação.
+Toda decisão de continuidade (RF59) deve ser registrada com o caso, o estagiário que está concluindo o estágio, o novo estagiário indicado ou o motivo do encerramento, o autor da decisão e a data. Cada correção deve preservar a versão anterior e registrar a nova decisão, o motivo, o integrante da coordenação responsável, a data/hora e o efeito sobre uma transferência pendente ou já efetivada. Esses registros não podem ser apagados nem sobrescritos e devem ser mantidos por, no mínimo, 5 anos contados do encerramento do caso ou da última decisão de continuidade, prevalecendo a data mais recente, conforme o período mínimo de guarda estabelecido pela Resolução CFP nº 5/2025 para documentos decorrentes da prestação de serviços psicológicos.
 
-A conformidade deve ser verificada registrando decisões de continuidade e de encerramento com dados fictícios, corrigindo-as antes e depois de uma transferência e confirmando que somente a coordenação pode corrigir, sempre com motivo e sem apagar versões ou desfazer transferências silenciosamente.
+Após o prazo mínimo, a eliminação ou anonimização somente pode ocorrer mediante autorização registrada da pessoa psicóloga responsável técnica e conforme a política institucional da FBr. O sistema deve impedir a destinação enquanto houver prazo adicional previsto em lei, determinação judicial, fiscalização, investigação ou outra necessidade formal de manutenção, e deve registrar o responsável, a data/hora, o método e o fundamento da destinação realizada.
+
+A conformidade deve ser verificada registrando decisões de continuidade e de encerramento com dados fictícios, corrigindo-as antes e depois de uma transferência e confirmando que somente a coordenação pode corrigir, sempre com motivo e sem apagar versões ou desfazer transferências silenciosamente. Devem ser testados também: tentativa de destinação antes de 5 anos; bloqueio por obrigação de guarda adicional; e destinação autorizada após o prazo, com geração do respectivo registro de auditoria.
 
 Classificação: auditoria (URPS+).
 Rastreabilidade: Feature "Registrar decisão de continuidade do caso" → CP13 — Continuidade de casos entre semestres.
