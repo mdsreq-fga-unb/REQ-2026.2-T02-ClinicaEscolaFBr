@@ -531,34 +531,36 @@ _Rastreabilidade:_ Feature "Registrar áreas de especialidade do supervisor" →
 
 **RF20 — Distribuir caso a supervisor conforme área de especialidade**
 
-O sistema deve permitir que a coordenação atribua cada caso pendente (RF18) a um supervisor, considerando a compatibilidade entre a área de especialidade exigida pelo caso e as áreas registradas para os supervisores (RF19). Um caso só pode ter um supervisor responsável vigente por vez, e a atribuição deve ficar registrada com data e autor. Quando não houver supervisor compatível com a área exigida, o sistema deve informar essa condição e permitir a atribuição manual a outro supervisor, registrando a exceção. A reatribuição de um caso que já possui supervisor deve ser feita exclusivamente pela transferência de caso (RF25), e não por uma nova distribuição.
+O sistema deve permitir que a coordenação atribua cada caso pendente (RF18) a um supervisor, considerando a compatibilidade entre a área de especialidade exigida pelo caso — quando registrada pela equipe clínica junto à confirmação da prioridade (RF6, CP2) — e as áreas registradas para os supervisores (RF19). Quando o caso não tiver área de especialidade registrada, a distribuição não deve exigir compatibilidade, podendo ser feita a qualquer supervisor. Um caso só pode ter um supervisor responsável vigente por vez, e a atribuição deve ficar registrada com data e autor. Quando não houver supervisor compatível com a área exigida, o sistema deve informar essa condição e permitir a atribuição manual a outro supervisor, registrando a exceção. A reatribuição de um caso que já possui supervisor deve ser feita exclusivamente pela transferência de caso (RF25), e não por uma nova distribuição.
 
 _Critérios de aceitação:_
 
 - Dado um caso que exige determinada área de especialidade e um supervisor que atua nessa área, quando a coordenação distribuir o caso a esse supervisor, então o sistema deve registrar o supervisor como responsável pelo caso, com data e autor da atribuição.
 - Dado um caso sem supervisor compatível disponível, quando a coordenação tentar distribuí-lo, então o sistema deve informar a ausência de compatibilidade e permitir a atribuição manual, registrando a exceção.
 - Dado um caso que já possui supervisor responsável, quando um usuário tentar distribuí-lo novamente, então o sistema deve bloquear a ação e orientar o uso da transferência de caso (RF25).
+- Dado um caso sem área de especialidade registrada, quando a coordenação o distribuir, então o sistema deve permitir a atribuição a qualquer supervisor, sem exigir compatibilidade.
 
-_Rastreabilidade:_ Feature "Distribuir caso a supervisor conforme área de especialidade" → CP5 — Distribuição de casos entre supervisores e estagiários → OE5. Dependência: RF18, RF19.
+_Rastreabilidade:_ Feature "Distribuir caso a supervisor conforme área de especialidade" → CP5 — Distribuição de casos entre supervisores e estagiários → OE5. Dependência: RF18, RF19, RF6 (CP2).
 
 #### Feature — Vincular paciente a estagiário responsável
 
 **RF21 — Vincular paciente a estagiário responsável**
 
-O sistema deve permitir que o supervisor vincule cada paciente sob sua responsabilidade a um estagiário ativo no semestre, responsável pelo atendimento. Após o vínculo, o caso passa a ter estagiário e supervisor identificados, e o estagiário vinculado passa a ter acesso ao prontuário do caso, respeitando os perfis e restrições definidos na CP12. O supervisor só pode vincular estagiários a casos sob sua própria responsabilidade, e o vínculo deve ficar registrado com data e autor.
+O sistema deve permitir que o supervisor vincule cada paciente sob sua responsabilidade a um estagiário com conta institucional ativa (RF53 e RF54), responsável pelo atendimento. A gestão de semestres letivos e do vínculo acadêmico do estagiário com a instituição de ensino não faz parte do escopo deste sistema: a condição de "estagiário ativo" equivale à conta institucional mantida ativa pela coordenação, que a desativa (RF54) ao término do estágio, retirando-o das opções de vinculação. Após o vínculo, o caso passa a ter estagiário e supervisor identificados, e o estagiário vinculado passa a ter acesso ao prontuário do caso, respeitando os perfis e restrições definidos na CP12. O supervisor só pode vincular estagiários a casos sob sua própria responsabilidade, e o vínculo deve ficar registrado com data e autor.
 
 _Critérios de aceitação:_
 
 - Dado um caso sob a responsabilidade de um supervisor, quando ele vincular um estagiário ao caso, então o sistema deve registrar o estagiário como responsável pelo caso e conceder a ele acesso ao caso.
 - Dado um caso sob a responsabilidade de um supervisor, quando outro supervisor tentar vincular um estagiário a esse caso, então o sistema deve negar a ação.
+- Dado um estagiário com conta desativada (RF54), quando o supervisor tentar vinculá-lo a um caso, então o sistema não deve oferecê-lo como opção de vinculação.
 
-_Rastreabilidade:_ Feature "Vincular paciente a estagiário responsável" → CP5 — Distribuição de casos entre supervisores e estagiários → OE5. Dependência: RF20.
+_Rastreabilidade:_ Feature "Vincular paciente a estagiário responsável" → CP5 — Distribuição de casos entre supervisores e estagiários → OE5. Dependência: RF20, RF53/RF54 (CP12).
 
 #### Feature — Consultar responsáveis pelo caso
 
 **RF22 — Consultar responsáveis pelo caso**
 
-O sistema deve exibir, para cada caso, o estagiário e o supervisor responsáveis, para uso da secretaria no agendamento e da coordenação no acompanhamento. A consulta deve exibir apenas o nome do estagiário e do supervisor responsáveis, sem expor dados clínicos a perfis que não têm acesso ao prontuário, e casos ainda sem responsáveis devem ser sinalizados como pendentes de distribuição.
+O sistema deve exibir, para cada caso, o estagiário e o supervisor responsáveis, para uso da secretaria no agendamento, do próprio estagiário e supervisor no acompanhamento do caso, e da coordenação no acompanhamento geral. A consulta deve exibir apenas o nome do estagiário e do supervisor responsáveis, sem expor dados clínicos a perfis que não têm acesso ao prontuário, e casos ainda sem responsáveis devem ser sinalizados como pendentes de distribuição.
 
 _Critério de aceitação:_ dado um caso com estagiário e supervisor já vinculados, quando a secretaria, o estagiário, o supervisor ou a coordenação consultarem o caso, então o sistema deve exibir os responsáveis sem exibir dados clínicos.
 
@@ -570,7 +572,11 @@ _Rastreabilidade:_ Feature "Consultar responsáveis pelo caso" → CP5 — Distr
 
 O sistema deve permitir que o estagiário ou o supervisor consultem a lista de casos vinculados a eles, identificando o paciente, a prioridade e a situação de cada caso. O estagiário deve visualizar apenas os casos vinculados a ele, enquanto o supervisor deve visualizar os casos sob sua responsabilidade e os de seus estagiários.
 
-_Critério de aceitação:_ dado um estagiário vinculado a um conjunto de casos, quando ele abrir a lista de seus casos, então o sistema deve exibir exclusivamente os casos vinculados a ele.
+_Critérios de aceitação:_
+
+- Dado um estagiário vinculado a um conjunto de casos, quando ele abrir a lista de seus casos, então o sistema deve exibir exclusivamente os casos vinculados a ele.
+- Dado um supervisor responsável por um conjunto de casos e pelos estagiários vinculados a eles, quando ele abrir a lista, então o sistema deve exibir tanto os casos sob sua responsabilidade direta quanto os dos seus estagiários.
+- Dado um estagiário ou supervisor sem vínculo com um determinado caso, quando ele tentar consultá-lo diretamente, então o sistema deve negar o acesso e não deve exibi-lo na lista.
 
 _Rastreabilidade:_ Feature "Consultar casos sob responsabilidade do estagiário ou supervisor" → CP5 — Distribuição de casos entre supervisores e estagiários → OE5. Dependência: RF21.
 
@@ -588,19 +594,27 @@ _Rastreabilidade:_ Feature "Visualizar distribuição de casos por supervisor" �
 
 **RF25 — Transferir caso para outro estagiário ou supervisor**
 
-O sistema deve permitir que o supervisor ou a coordenação transfiram um caso ativo para outro estagiário ou supervisor — por exemplo, ao término do estágio, na saída do estagiário ou por reorganização da carga —, preservando o histórico do paciente (sessões, evolução e vínculos anteriores). A transferência deve exigir a indicação do novo responsável e do motivo, e deve ficar registrada, vinculada à atribuição anterior. A partir da transferência, o responsável anterior perde o acesso ao caso, e o novo responsável passa a ter acesso a todo o histórico.
+O sistema deve permitir a transferência de um caso ativo, preservando o histórico do paciente (sessões, evolução e vínculos anteriores), com os seguintes limites por perfil, coerentes com o RNF16: o **supervisor responsável pelo caso** pode transferi-lo apenas para outro estagiário sob a sua própria supervisão; transferir o caso para outro supervisor — por exemplo, ao término do estágio, na saída do estagiário ou por reorganização da carga — é ação exclusiva da **coordenação**, que pode transferir qualquer caso, para qualquer supervisor ou estagiário. A transferência deve exigir a indicação do novo responsável e do motivo, e deve ficar registrada, vinculada à atribuição anterior. A partir da transferência, o responsável anterior perde o acesso ao caso, e o novo responsável passa a ter acesso a todo o histórico.
 
-_Critério de aceitação:_ dado um caso vinculado a um estagiário que concluiu o estágio, quando o supervisor transferir o caso para outro estagiário, então o sistema deve registrar o novo estagiário como responsável, manter o histórico do paciente disponível a ele e revogar o acesso do estagiário anterior.
+_Critérios de aceitação:_
 
-_Rastreabilidade:_ Feature "Transferir caso para outro estagiário ou supervisor" → CP5 — Distribuição de casos entre supervisores e estagiários → OE5. Dependência: RF21.
+- Dado um caso vinculado a um estagiário que concluiu o estágio, quando o supervisor responsável transferir o caso para outro estagiário sob sua supervisão, então o sistema deve registrar o novo estagiário como responsável, manter o histórico do paciente disponível a ele e revogar o acesso do estagiário anterior.
+- Dado um caso sob responsabilidade do supervisor A, quando A tentar transferi-lo para um estagiário do supervisor B, então o sistema deve negar a ação e orientar o uso da transferência pela coordenação.
+- Dado um caso ativo, quando a coordenação transferi-lo para outro supervisor, então o sistema deve registrar o novo supervisor e, quando indicado, o novo estagiário responsável, preservando o histórico e revogando o acesso dos responsáveis anteriores.
+
+_Rastreabilidade:_ Feature "Transferir caso para outro estagiário ou supervisor" → CP5 — Distribuição de casos entre supervisores e estagiários → OE5. Dependência: RF21; restrição transversal: RNF16.
 
 #### Feature — Consultar histórico de responsáveis do caso
 
 **RF26 — Consultar histórico de responsáveis do caso**
 
-O sistema deve permitir consultar a sequência de supervisores e estagiários que já foram responsáveis por um caso, com a data e o motivo de cada mudança, listados em ordem cronológica. O acesso a esse histórico deve respeitar os perfis de acesso definidos na CP12.
+O sistema deve permitir consultar a sequência de supervisores e estagiários que já foram responsáveis por um caso, com a data e o motivo de cada mudança, listados em ordem cronológica. Podem consultar o histórico: o estagiário e o supervisor responsáveis vigentes pelo caso; qualquer supervisor que já tenha figurado no histórico daquele caso, exclusivamente quanto ao próprio período de responsabilidade; e a coordenação, sem restrição. Um estagiário ou supervisor sem nenhum vínculo, atual ou passado, com o caso não deve ter acesso ao histórico.
 
-_Critério de aceitação:_ dado um caso que já passou por uma ou mais transferências de responsável, quando um usuário autorizado consultar seu histórico, então o sistema deve listar, em ordem cronológica, cada vínculo com responsável, período e motivo do encerramento.
+_Critérios de aceitação:_
+
+- Dado um caso que já passou por uma ou mais transferências de responsável, quando o estagiário ou supervisor responsáveis vigentes, ou a coordenação, consultarem seu histórico, então o sistema deve listar, em ordem cronológica, cada vínculo com responsável, período e motivo do encerramento.
+- Dado um caso já transferido, quando um supervisor que respondeu por ele anteriormente consultar o histórico, então o sistema deve exibir apenas o próprio período de responsabilidade, sem os demais.
+- Dado um estagiário ou supervisor sem qualquer vínculo, atual ou passado, com o caso, quando tentar consultar seu histórico, então o sistema deve negar o acesso.
 
 _Rastreabilidade:_ Feature "Consultar histórico de responsáveis do caso" → CP5 — Distribuição de casos entre supervisores e estagiários → OE5. Dependência: RF21, RF25.
 
@@ -914,13 +928,15 @@ O controle da taxa é feito hoje à mão ([ata de 26/08/2026](../../unidade-1/re
 
 **RF41 — Registrar pagamento da contribuição social**
 
-O sistema deve permitir que um usuário com perfil de secretaria registre o pagamento da contribuição social de um paciente, informando a data do pagamento e a forma de pagamento (dinheiro, Pix ou cartão, conforme confirmado pela Clínica Escola — a cobrança em si é feita pela secretaria por fora do sistema; o sistema apenas registra o pagamento já efetivado, sem processar ou transitar valores), com o valor de R$ 35,00 preenchido por padrão. Cada paciente pode ter apenas um pagamento de contribuição social registrado por ciclo de atendimento, já que a taxa é semestral: conforme confirmado pela Clínica Escola, ela é cobrada uma vez por semestre e volta a ser devida caso o paciente se inscreva novamente em outro semestre. Não há isenção da taxa para pacientes sem condição de pagar. Para este requisito, **ciclo de atendimento** é o período de acompanhamento de um paciente que vai da primeira sessão até o encerramento do atendimento (conclusão das sessões com o relatório final, desligamento por faltas ou desistência) dentro do mesmo semestre.
+O sistema deve permitir que um usuário com perfil de secretaria registre o pagamento da contribuição social de um paciente, informando a data do pagamento e a forma de pagamento (dinheiro, Pix ou cartão, conforme confirmado pela Clínica Escola — a cobrança em si é feita pela secretaria por fora do sistema; o sistema apenas registra o pagamento já efetivado, sem processar ou transitar valores). O valor é um parâmetro institucional "valor da contribuição social", configurável exclusivamente pela coordenação, com padrão de R$ 35,00; a secretaria não altera o valor no momento do registro, apenas confirma o pagamento do valor vigente no parâmetro. Toda alteração do parâmetro pela coordenação deve ser registrada com o valor anterior, o novo valor, o autor e a data/hora, e passa a valer somente para pagamentos registrados a partir dela, sem alterar pagamentos já efetivados. Cada paciente pode ter apenas um pagamento de contribuição social registrado por ciclo de atendimento, já que a taxa é semestral: conforme confirmado pela Clínica Escola, ela é cobrada uma vez por semestre e volta a ser devida caso o paciente se inscreva novamente em outro semestre. Não há isenção da taxa para pacientes sem condição de pagar. Para este requisito, **ciclo de atendimento** é o período de acompanhamento de um paciente que vai da primeira sessão até o encerramento do atendimento (conclusão das sessões com o relatório final, desligamento por faltas ou desistência) dentro do mesmo semestre.
 
 _Critérios de aceitação:_
 
-- Dado um paciente com contribuição pendente, quando a secretaria registrar o pagamento com data e forma de pagamento, então o sistema deve marcar a contribuição do paciente como **efetivada** e guardar o valor, a data, a forma de pagamento, o usuário que registrou e a data/hora do registro.
+- Dado um paciente com contribuição pendente, quando a secretaria registrar o pagamento com data e forma de pagamento, então o sistema deve marcar a contribuição do paciente como **efetivada** e guardar o valor vigente no parâmetro, a data, a forma de pagamento, o usuário que registrou e a data/hora do registro.
 - Dado um paciente que já possui contribuição efetivada no ciclo de atendimento atual, quando a secretaria tentar registrar um novo pagamento, então o sistema deve impedir o registro duplicado e informar a data do pagamento já registrado.
 - Dado um usuário sem perfil de secretaria, quando tentar registrar um pagamento, então o sistema deve impedir a operação.
+- Dado o parâmetro "valor da contribuição social" com o padrão de R$ 35,00, quando a coordenação alterá-lo, então o sistema deve registrar a mudança com valor anterior, novo valor, autor e data/hora, aplicando o novo valor apenas aos pagamentos registrados depois da alteração.
+- Dado um usuário sem perfil de coordenação, quando tentar alterar o parâmetro do valor, então o sistema deve impedir a operação.
 
 _Rastreabilidade:_ Feature "Registrar pagamento da contribuição social do paciente" → CP10 — Registros administrativos do atendimento → OE6/OE4.
 
@@ -928,7 +944,7 @@ _Rastreabilidade:_ Feature "Registrar pagamento da contribuição social do paci
 
 **RF42 — Consultar situação da contribuição social**
 
-O sistema deve permitir que usuários com perfil de secretaria ou de coordenação consultem a situação da contribuição social dos pacientes em atendimento, com filtro por situação (**efetivada** ou **pendente**). Para cada paciente, a consulta deve mostrar o nome, a situação, a data da primeira sessão e, quando efetivada, a data do pagamento. A situação também deve ser indicada na agenda do dia, junto à primeira sessão do paciente, para que a pendência seja percebida no momento em que a taxa é exigida. A partir da 2ª sessão do paciente, a pendência deixa de ser apenas informativa e passa a bloquear o agendamento, conforme o RF43.
+O sistema deve permitir que usuários com perfil de secretaria ou de coordenação consultem a situação da contribuição social dos pacientes em atendimento, com filtro por situação (**efetivada** ou **pendente**). Para cada paciente, a consulta deve mostrar o nome, a situação, a data da primeira sessão e, quando efetivada, a data do pagamento. O estagiário também pode consultar a contribuição social, mas apenas dos pacientes vinculados a ele (RF21) e apenas a situação (efetivada ou pendente), sem a forma de pagamento nem os dados de outros pacientes. A situação também deve ser indicada na agenda do dia, junto à primeira sessão do paciente, para que a pendência seja percebida no momento em que a taxa é exigida. A partir da 2ª sessão do paciente, a pendência deixa de ser apenas informativa e passa a bloquear o agendamento, conforme o RF43.
 
 _Critérios de aceitação:_
 
@@ -961,15 +977,15 @@ Este conjunto reúne quatro features que permitem que a secretaria ou o próprio
 
 **RF44 — Listar sessões com comparecimento registrado do paciente**
 
-O sistema deve listar, para um usuário autenticado com perfil autorizado (secretaria, ou o próprio paciente/responsável no caso de suas próprias sessões), as sessões do paciente nas quais a presença foi registrada, para que o usuário escolha a sessão a declarar. Quando não houver sessão elegível, o sistema deve informar isso de forma clara, sem exibir erro técnico.
+O sistema deve listar, para um usuário com perfil autorizado (secretaria) ou para o próprio paciente/responsável, após verificação de identidade (RF52, CP12) — já que esse público não possui conta nem senha —, as sessões do paciente nas quais a presença foi registrada, para que o usuário escolha a sessão a declarar. Quando não houver sessão elegível, o sistema deve informar isso de forma clara, sem exibir erro técnico.
 
 _Critérios de aceitação:_
 
 - Dado um paciente com sessões registradas, quando a lista de sessões elegíveis for exibida, então devem aparecer somente as sessões com presença registrada, com data, horário e nome do estagiário.
-- Dado um paciente ou responsável autenticado, quando ele acessar a lista de sessões, então deve visualizar somente as suas próprias sessões.
+- Dado um paciente ou responsável que teve a identidade verificada pelo RF52, quando ele acessar a lista de sessões, então deve visualizar somente as suas próprias sessões.
 - Dado um paciente sem nenhuma sessão com presença registrada, quando ele acessar a área de declarações, então o sistema deve informar que não há sessões disponíveis para declaração.
 
-_Rastreabilidade:_ Feature "Listar sessões com comparecimento registrado do paciente" → CP10 — Registros administrativos do atendimento → OE6/OE5.
+_Rastreabilidade:_ Feature "Listar sessões com comparecimento registrado do paciente" → CP10 — Registros administrativos do atendimento → OE6/OE5. Dependência: RF52 (CP12).
 
 #### Feature — Emitir declaração de comparecimento do paciente
 
@@ -982,9 +998,14 @@ _Critérios de aceitação:_
 - Dada uma sessão com presença registrada, quando a secretaria ou o paciente/responsável solicitar a emissão, então o sistema deve gerar o documento com a data, o horário e o nome do estagiário corretos, conforme o registro da sessão, e registrar a emissão para auditoria.
 - Dada uma sessão sem presença registrada (falta ou cancelamento), quando a emissão for solicitada, então o sistema deve bloquear a emissão e informar o motivo.
 - Dado um usuário sem permissão para a sessão solicitada, quando tentar emitir a declaração, então o sistema deve negar a emissão e registrar a tentativa.
-- Dado um paciente autenticado, quando ele tentar emitir a declaração de uma sessão de outro paciente, então o sistema deve negar o acesso.
+- Dado um paciente ou responsável com identidade verificada (RF52), quando ele tentar emitir a declaração de uma sessão de outro paciente, então o sistema deve negar o acesso.
+- Dado o documento gerado, quando exibido em pré-visualização ou impresso, então deve conter a assinatura e o carimbo do psicólogo responsável e o número de CRP, além da data, do horário e do nome do estagiário.
+- Dado um paciente menor de idade cujo responsável legal ainda não preencheu a Autorização para Acompanhamento Psicoterapêutico de Crianças e Adolescentes, quando o responsável solicitar a emissão, então o sistema deve bloquear a emissão e informar a pendência da autorização.
+- Dado um paciente menor de idade com a autorização já preenchida, quando o responsável legal solicitar a emissão, então o sistema deve gerar o documento normalmente.
+- Dado o documento gerado, quando inspecionado, então não deve conter download nem opção de envio por e-mail, apenas visualização em tela e impressão.
 
-_Rastreabilidade:_ Feature "Emitir declaração de comparecimento do paciente" → CP10 — Registros administrativos do atendimento → OE6/OE5.
+_Rastreabilidade:_ Feature "Emitir declaração de comparecimento do paciente" → CP10 — Registros administrativos do atendimento → OE6/OE5. Dependência: RF52 (CP12).
+
 
 #### Feature — Reemitir declaração de comparecimento
 
@@ -1000,9 +1021,13 @@ _Rastreabilidade:_ Feature "Reemitir declaração de comparecimento" → CP10 �
 
 **RF47 — Validar autenticidade da declaração**
 
-O sistema deve permitir que um terceiro (por exemplo, empregador ou escola) confirme que uma declaração apresentada foi emitida pela Clínica Escola FBr, por meio de um código único de verificação impresso no documento. A consulta ao código deve confirmar a autenticidade sem expor dados pessoais além dos estritamente necessários.
+O sistema deve permitir que um terceiro (por exemplo, empregador ou escola) confirme que uma declaração apresentada foi emitida pela Clínica Escola FBr, por meio de um código único de verificação impresso no documento. Para um código válido correspondente a uma declaração vigente (não revogada por correção do registro de origem), a consulta deve retornar exatamente: a confirmação de autenticidade, o nome do paciente, a data e o horário da sessão e o nome do estagiário — os mesmos dados já impressos na própria declaração, sem qualquer informação clínica. Para um código inexistente ou digitado incorretamente, a consulta deve retornar apenas uma mensagem genérica de código inválido, sem indicar o motivo específico. Para um código de uma declaração cujo registro de origem foi corrigido após a emissão (RF45/RF46), a consulta deve informar que o documento não corresponde mais ao registro vigente, sem exibir os dados desatualizados.
 
-_Critério de aceitação:_ dado um código de verificação impresso em uma declaração emitida, quando ele for consultado, então o sistema deve confirmar a autenticidade da declaração sem expor dados pessoais além do estritamente necessário.
+_Critérios de aceitação:_
+
+- Dado um código de verificação válido e vigente, quando consultado, então o sistema deve retornar a confirmação de autenticidade, o nome do paciente, a data e o horário da sessão e o nome do estagiário, sem dado clínico.
+- Dado um código inexistente, quando consultado, então o sistema deve retornar apenas uma mensagem genérica de código inválido.
+- Dado um código de uma declaração cujo registro de origem foi corrigido após a emissão, quando consultado, então o sistema deve informar que o documento não corresponde mais ao registro vigente, sem exibir os dados anteriores.
 
 _Rastreabilidade:_ Feature "Validar autenticidade da declaração" → CP10 — Registros administrativos do atendimento → OE6/OE5.
 
