@@ -1,0 +1,133 @@
+# 8.3 Análise do Feedback da Verificação Cruzada
+
+Esta seção registra a análise dos apontamentos feitos pela equipe **Sem Requisitos** na verificação cruzada dos requisitos funcionais (RFs) e não funcionais (RNFs), realizada entre 22/09 e 24/09/2026 ([cronograma da Unidade 2](../gestao/cronograma.md)). Cada apontamento foi analisado pelo integrante responsável pela CP correspondente, que corrigiu o requisito quando pertinente e registrou a decisão tomada, com a justificativa. As decisões são revisadas em conjunto pela equipe, com participação do monitor, antes da publicação da versão final.
+
+As decisões seguem as categorias abaixo:
+
+| Decisão                 | Significado                                                                                                   |
+| ----------------------- | ------------------------------------------------------------------------------------------------------------- |
+| **Aceito**              | O apontamento procede e o requisito foi corrigido conforme o ajuste recomendado ou de forma equivalente.     |
+| **Parcialmente aceito** | O apontamento procede em parte; parte do ajuste foi feita e o restante foi descartado ou depende da FBr.     |
+| **Não aceito**          | O apontamento não procede; o requisito foi mantido, com a justificativa registrada.                           |
+| **Não aplicável**       | A verificação não identificou problema no requisito ("OK"); nenhuma alteração foi necessária.                |
+
+## Requisitos funcionais
+
+### Agendamento, Confirmação e Remarcação (CP4)
+
+| Requisito | Tipo apontado    | Decisão           | Justificativa e alteração realizada |
+| --------- | ---------------- | ----------------- | ----------------------------------- |
+| RF10      | Lacuna           | Aceito            | Sem horário de término não havia como verificar a sobreposição. A sessão passou a ter horário de início e término, com o término calculado pela duração padrão (parâmetro configurável pela coordenação, padrão de 50 minutos). A sobreposição foi definida como interseção dos intervalos, e sessões em sequência (término = início) foram explicitamente permitidas, com critérios de aceitação para os dois casos. |
+| RF11      | OK               | Não aplicável     | Nenhum problema identificado. |
+| RF12      | Inconsistência   | Aceito            | A descrição proibia a segunda remarcação e o critério a permitia com justificativa. Foi definido que o limite de uma remarcação a pedido do paciente admite exceção, que somente a coordenação pode aprovar, com registro da justificativa, do aprovador e da data/hora. Também foi explicitado que o reagendamento motivado pela ausência do estagiário (RF16/RF17) não conta para o limite do paciente. |
+| RF13      | Verificabilidade | Aceito            | A antecedência passou a ser o parâmetro "antecedência do lembrete", configurável pela coordenação, com padrão de 24 horas. Foram definidos o comportamento para sessões agendadas com menos antecedência (envio imediato) e a aplicação do novo valor às sessões ainda não lembradas. O valor padrão será validado com a FBr. |
+| RF14      | Verificabilidade | Aceito            | O prazo passou a ser o parâmetro "prazo de confirmação de presença", configurável pela coordenação, com padrão de até 12 horas antes da sessão, e os critérios de aceitação ganharam horários concretos. O valor padrão será validado com a FBr. |
+| RF15      | Verificabilidade | Aceito            | A antecedência mínima passou a ser o parâmetro "antecedência mínima para cancelamento sem falta", configurável pela coordenação, com padrão de 24 horas. Os limites exatos foram definidos (igual ou maior que o mínimo: no prazo; menor: fora do prazo e conta como falta; após o início: não pode cancelar). O valor padrão será validado com a FBr. |
+| RF16      | OK               | Não aplicável     | Nenhum problema identificado. |
+| RF17      | OK               | Não aplicável     | Nenhum problema identificado. |
+
+### Controle de Assiduidade e Alertas (CP9)
+
+| Requisito | Tipo apontado             | Decisão             | Justificativa e alteração realizada |
+| --------- | ------------------------- | ------------------- | ----------------------------------- |
+| RF34      | OK                        | Não aplicável       | Nenhum problema identificado. O critério de aceitação foi apenas ajustado para não confundir "comparecimento" com a confirmação de presença do RF14 (ver ajustes de consistência). |
+| RF35      | Inconsistência            | Aceito              | Mantida a regra confirmada pela Clínica Escola: duas faltas no ciclo de atendimento, consecutivas ou não. O título passou a "Contabilizar faltas do paciente no ciclo", e a descrição, os critérios, o modelo de domínio da CP9, a lista de features e o RNF32 foram uniformizados; o modelo de domínio não diz mais que a contagem é zerada por comparecimento. A ausência de confirmação (RF14) deixou de contar como falta, para não penalizar um paciente que compareceu sem confirmar. |
+| RF36      | Inconsistência            | Aceito              | O gatilho do alerta foi alinhado à regra do RF35 (duas faltas no ciclo, consecutivas ou não). |
+| RF37      | Escopo amplo e ambiguidade | Parcialmente aceito | A realocação foi retirada do requisito: não é automática e é confirmada pelo supervisor do estagiário ao vincular o novo paciente (RF21), após a distribuição pela coordenação (RF20), quando necessária. Desligamento e liberação da vaga foram mantidos no mesmo requisito, agora descritos como duas etapas distintas, porque a liberação é efeito automático do desligamento, sem ator nem decisão própria (RNF34); separá-los criaria um requisito sem interação do usuário. |
+| RF38      | OK                        | Não aplicável       | Nenhum problema identificado. O critério da reversão com vaga não realocada foi ajustado para refletir o novo RF37 (restauração do vínculo e das sessões). |
+| RF39      | OK                        | Não aplicável       | Nenhum problema identificado. |
+| RF40      | Escopo amplo e lacuna     | Aceito              | Separado em três requisitos, espelhando a estrutura do controle de faltas do paciente: RF40 — Contabilizar faltas do estagiário no semestre; RF63 — Sinalizar reprovação do estagiário por faltas; RF64 — Registrar decisão institucional sobre a reprovação do estagiário. O encerramento da sinalização foi definido: ela termina quando a coordenação registra a decisão (reprovação confirmada ou não aplicada, com justificativa). Os novos requisitos receberam numeração a partir de RF63 para não alterar os IDs RF1–RF62 já usados na avaliação de valor de negócio da FBr e na pontuação de esforço. |
+
+### Indicadores e Relatórios Institucionais (CP11)
+
+| Requisito | Tipo apontado | Decisão | Justificativa e alteração realizada |
+| --------- | ------------- | ------- | ----------------------------------- |
+| RF48      | Ambiguidade   | Aceito  | Os indicadores foram classificados em "de posição" (vagas ocupadas e distribuição por supervisor), calculados na data de referência (fim da data final do intervalo, ou o momento da consulta quando a data final é hoje), e "de fluxo" (tempo médio de espera e taxa de evasão), calculados sobre todo o intervalo. Foram definidos a fórmula de cada indicador, o conceito de paciente em atendimento ativo, a precisão (uma casa decimal) e a origem do total de vagas ofertadas (capacidade registrada pela coordenação no RF9, sem estimativa quando ausente). |
+| RF49      | Escopo amplo  | Aceito  | A apresentação em tela já era atendida pelo RF48, o que duplicava o escopo. O RF49 passou a tratar só da exportação ("Exportar relatório institucional em PDF"), com o conteúdo mínimo do arquivo definido. Os RNF47 e RNF48 foram ajustados à nova divisão. |
+
+### Segurança, Sigilo e Controle de Acesso (CP12)
+
+| Requisito | Tipo apontado  | Decisão             | Justificativa e alteração realizada |
+| --------- | -------------- | ------------------- | ----------------------------------- |
+| RF50      | OK             | Não aplicável       | Nenhum problema identificado. |
+| RF51      | OK             | Não aplicável       | Nenhum problema identificado. |
+| RF52      | Incompletude   | Aceito              | Foram definidos o formato e a validade do código (6 dígitos, 10 minutos, uso único), o limite de tentativas (5 por código), a regra de reenvio (após 60 segundos, invalidando o anterior), o bloqueio contra solicitações abusivas (3 códigos por identificador em 60 minutos, com bloqueio de 60 minutos) e as mensagens genéricas. Os valores são uma proposta técnica da equipe e passam a ser a referência do RNF6 (CP3). |
+| RF53      | Lacuna         | Aceito              | Foi declarado o fluxo de convite e ativação: o usuário é criado como "pendente de ativação", recebe por e-mail um link de uso único válido por 72 horas, define a própria senha (conforme o RNF49) e só então consegue se autenticar. A coordenação pode reenviar o convite e nunca define nem vê a senha. |
+| RF54      | OK             | Não aplicável       | Nenhum problema identificado. |
+| RF55      | Rastreabilidade | Aceito             | As referências foram corrigidas: o prontuário (CP6) reúne os registros de evolução (CP7) e o relatório final (CP8). A regra de acesso não foi alterada. |
+| RF56      | OK             | Não aplicável       | Nenhum problema identificado. |
+| RF57      | Incompletude   | Parcialmente aceito | A revogação foi declarada em um novo requisito, RF65 — Registrar revogação do consentimento, com efeitos (saída da fila, bloqueio de agendamentos e comunicações, sinalização para encerramento do atendimento) e retenção (guarda mínima de 5 anos do registro documental, Resolução CFP nº 1/2009, e LGPD, art. 16, I). O termo passou a informar o prazo de guarda e a forma de revogação. Não foi possível atender integralmente: a base legal (consentimento, art. 11, I, ou tutela da saúde, art. 11, II, "f", da LGPD) depende da FBr, como controladora, e ficou registrada como pendência; até lá, o sistema adota o cenário mais restritivo (consentimento revogável). Os demais direitos do art. 18 foram declarados fora do escopo atual, atendidos pelo canal institucional da FBr, até que a FBr indique o contrário. |
+
+### Acessibilidade e Usabilidade (CP14)
+
+| Requisito | Tipo apontado | Decisão       | Justificativa e alteração realizada |
+| --------- | ------------- | ------------- | ----------------------------------- |
+| RF61      | OK            | Não aplicável | Nenhum problema identificado. |
+| RF62      | OK            | Não aplicável | Nenhum problema identificado. |
+
+## Requisitos não funcionais
+
+### Agendamento, Confirmação e Remarcação (CP4)
+
+| Requisito | Tipo apontado       | Decisão       | Justificativa e alteração realizada |
+| --------- | ------------------- | ------------- | ----------------------------------- |
+| RNF9      | OK                  | Não aplicável | Nenhum problema identificado. |
+| RNF10     | Redundância parcial | Aceito        | A auditoria das operações sobre a sessão foi centralizada no RNF10, com uma tabela dos dados registrados em cada operação (agendamento, remarcação, aprovação de exceção, confirmação, cancelamento e ausência do estagiário). Os RF10, RF12, RF14, RF15 e RF16 deixaram de repetir essas regras e passaram a referenciar o RNF10; nos RFs ficaram apenas os dados de negócio (motivo, justificativa, classificação). |
+| RNF11     | Verificabilidade    | Aceito        | Foram definidos o que conta como entrega (aceite pelo provedor), a fórmula e a janela (mês civil, por canal), o número de novas tentativas, as falhas externas excluídas do cálculo (contato inválido e indisponibilidade registrada do provedor), os responsáveis por cada tipo de falha, a sinalização à secretaria e uma amostra mínima de teste (200 lembretes por canal). |
+| RNF12     | Verificabilidade    | Aceito        | "Condições normais de uso" foi substituído por um cenário de referência: 30 usuários simultâneos por 10 minutos, massa de dados de dois semestres (cerca de 360 inscrições, 200 pacientes e 4.000 sessões), ambiente de homologação igual ao servidor de produção e medição no servidor, sem a rede do usuário. A carga de 30 usuários é estimativa da equipe e será validada com a FBr. |
+| RNF13     | Redundância         | Aceito        | A regra de quem acessa cada agenda ficou só no RF11. O RNF13 passou a tratar de uma propriedade diferente, a minimização de dados: a agenda expõe apenas nome, data, horário e status, sem contato, CPF, queixa, prioridade ou evolução, e a restrição do RF11 também vale para requisições feitas diretamente ao servidor. |
+| RNF14     | Verificabilidade    | Aceito        | Foram definidos o horário comercial, a janela de apuração (mês civil), a fórmula com exemplo (132 minutos em um mês de 22 dias úteis), o que conta como minuto indisponível e as manutenções programadas excluídas (fora do horário comercial, ou comunicadas com 48 horas de antecedência e limitadas a 4 horas por mês). |
+| RNF15     | Incompletude        | Aceito        | Foram definidas as proteções do link de confirmação: token aleatório de pelo menos 128 bits sem dados do paciente no endereço, validade até o fim do prazo de confirmação, invalidação por remarcação ou cancelamento, uso único, comportamento após expiração ou reutilização, dados mínimos exibidos e os testes de segurança correspondentes. |
+
+### Controle de Assiduidade e Alertas (CP9)
+
+| Requisito | Tipo apontado    | Decisão       | Justificativa e alteração realizada |
+| --------- | ---------------- | ------------- | ----------------------------------- |
+| RNF32     | Inconsistência   | Aceito        | Alinhado à regra final do RF35: contagem de faltas no ciclo, consecutivas ou não, originada pela falta registrada (RF34) e pelo cancelamento fora do prazo (RF15). |
+| RNF33     | Incompletude     | Aceito        | O alerta passou a exigir ícone e o texto "Limite de faltas atingido" além da cor, com anúncio por leitor de tela, em conformidade com o critério 1.4.1 da WCAG 2.2 e o RNF56; a verificação inclui exibição em escala de cinza e inspeção automatizada. |
+| RNF34     | Verificabilidade | Aceito        | "Imediatamente" foi substituído por um limite mensurável: até 5 segundos após a confirmação do desligamento, no cenário de carga do RNF12, verificado por 20 medições automatizadas. |
+| RNF35     | OK               | Não aplicável | Nenhum problema identificado. A abrangência foi estendida aos novos RF40, RF63 e RF64 (ver ajustes de consistência). |
+
+### Indicadores e Relatórios Institucionais (CP11)
+
+| Requisito | Tipo apontado | Decisão       | Justificativa e alteração realizada |
+| --------- | ------------- | ------------- | ----------------------------------- |
+| RNF46     | OK            | Não aplicável | Nenhum problema identificado. |
+| RNF47     | OK            | Não aplicável | Nenhum problema identificado. O texto foi ajustado à nova divisão entre RF48 e RF49 (ver ajustes de consistência). |
+| RNF48     | OK            | Não aplicável | Nenhum problema identificado. O texto foi ajustado à nova divisão entre RF48 e RF49 (ver ajustes de consistência). |
+
+### Segurança, Sigilo e Controle de Acesso (CP12)
+
+| Requisito | Tipo apontado    | Decisão       | Justificativa e alteração realizada |
+| --------- | ---------------- | ------------- | ----------------------------------- |
+| RNF49     | OK               | Não aplicável | Nenhum problema identificado. |
+| RNF50     | OK               | Não aplicável | Nenhum problema identificado. |
+| RNF51     | Incompletude     | Aceito        | A criptografia em repouso passou a abranger todos os dados pessoais sensíveis (dados de saúde) tratados pelo sistema: queixa, histórico e urgência da inscrição, sinalizações e prioridade da triagem, evoluções e relatório final. Foi definida a gestão das chaves: armazenamento fora do banco e do repositório, acesso restrito ao responsável técnico, rotação anual ou imediata em caso de suspeita, com registro. |
+| RNF52     | Verificabilidade | Aceito        | O prazo de 5 anos deixou de depender de confirmação: é o mínimo normativo de guarda do registro documental do serviço psicológico (Resolução CFP nº 1/2009, art. 4º, § 1º). A FBr pode apenas ampliá-lo, o que não afeta a verificação do mínimo. |
+| RNF53     | Lacuna           | Aceito        | Foi acrescentado o tempo máximo de recuperação: até 8 horas da detecção da falha até o serviço voltar a operar com os dados da última cópia, verificado por teste de restauração cronometrado a cada semestre, com procedimento documentado. |
+
+### Acessibilidade e Usabilidade (CP14)
+
+| Requisito | Tipo apontado       | Decisão       | Justificativa e alteração realizada |
+| --------- | ------------------- | ------------- | ----------------------------------- |
+| RNF56     | OK                  | Não aplicável | Nenhum problema identificado. |
+| RNF57     | Redundância         | Aceito        | A operação por teclado e o foco visível foram reconhecidos como parte do RNF56 (critérios 2.1.1 e 2.4.7). O RNF57 passou a definir uma exigência adicional, "Aparência reforçada do indicador de foco", seguindo o critério 2.4.13 (nível AAA): contorno equivalente a 2 pixels e contraste de 3:1, também no alto contraste e nos três tamanhos de texto. A exigência se justifica pelo paciente com baixa visão já atendido pela clínica. |
+| RNF58     | Redundância parcial | Aceito        | O refluxo em 320 pixels foi reconhecido como parte do RNF56 (critério 1.4.10), e o RNF58 passou a tratar apenas da extensão responsiva até 1920 pixels, com as larguras de verificação definidas. |
+
+## Ajustes de consistência decorrentes
+
+As correções acima exigiram ajustes em requisitos que não tinham apontamento, para manter o conjunto coerente:
+
+- **RF14 e RF34:** a ausência de confirmação de presença passou a apenas sinalizar a sessão para a secretaria, sem gerar falta; o critério do RF34 deixou de usar "confirmação de comparecimento", que se confundia com a confirmação do RF14.
+- **RF10, RF14 e RF16:** passaram a referenciar o RNF10 (auditoria) e, no caso do RF14, o RNF15 (proteção do link de confirmação).
+- **RF37:** a referência à "liberação imediata" passou a apontar para o limite de 5 segundos do RNF34.
+- **RF38:** a reversão de um desligamento cuja vaga ainda não foi realocada passou a restaurar o vínculo com o estagiário e a indicar o reagendamento das sessões canceladas, coerente com o novo RF37.
+- **RF39:** a referência à sinalização de reprovação passou a apontar para o RF63.
+- **RNF35:** a restrição de visibilidade foi estendida à contagem (RF40), à sinalização (RF63) e à decisão (RF64).
+- **RNF47 e RNF48:** alinhados à separação entre a consulta em tela (RF48) e a exportação em PDF (RF49).
+
+## Pendências de validação com a FBr
+
+- Valores padrão dos parâmetros de agendamento da CP4: duração da sessão (50 minutos), antecedência do lembrete (24 horas), prazo de confirmação (12 horas) e antecedência mínima para cancelamento sem falta (24 horas).
+- Carga de referência de 30 usuários simultâneos usada no RNF12 (e, por referência, no RNF34).
+- Base legal do tratamento dos dados de saúde (RF57) e canal de atendimento dos demais direitos do titular.

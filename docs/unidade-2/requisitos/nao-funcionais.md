@@ -137,45 +137,73 @@ Rastreabilidade: CP4 — Agendamento, confirmação e remarcação (transversal 
 
 **RNF10 — Auditoria das operações sobre a sessão**
 
-Todo agendamento, remarcação, confirmação e cancelamento de sessão deve ser registrado com usuário responsável, data/hora e o estado anterior e novo da sessão. Esses registros não podem ser apagados nem sobrescritos.
+Este RNF concentra a regra de auditoria de todas as operações sobre a sessão; os RFs da CP4 apenas o referenciam. Cada uma das operações abaixo deve gerar um registro de auditoria com o usuário responsável (ou a indicação "paciente", quando feita pelo link do RF14), a data/hora, o estado anterior e o novo estado da sessão e os dados específicos da operação:
 
-A conformidade deve ser verificada por teste de integração, confirmando o registro de auditoria após cada uma dessas operações.
+| Operação                                         | Dados específicos registrados                                             |
+| ------------------------------------------------ | ------------------------------------------------------------------------- |
+| Agendamento (RF10)                               | data, horário de início e de término                                      |
+| Remarcação (RF12)                                | data/horário anterior e novo, justificativa e origem do pedido            |
+| Aprovação de remarcação excedente (RF12)         | justificativa da exceção e usuário aprovador                              |
+| Confirmação de presença (RF14)                   | canal da confirmação (link do lembrete ou secretaria)                     |
+| Cancelamento pelo paciente (RF15)                | motivo e classificação ("no prazo" ou "fora do prazo")                    |
+| Registro de ausência do estagiário (RF16)        | motivo                                                                    |
+
+Esses registros não podem ser apagados nem sobrescritos por nenhum perfil, e devem ser mantidos enquanto os dados da sessão forem mantidos.
+
+A conformidade deve ser verificada por teste de integração que execute cada operação da tabela e confirme o registro de auditoria correspondente, com todos os dados listados, e por inspeção, confirmando que a interface não oferece meio de alterar ou apagar esses registros.
 
 Classificação: auditoria (URPS+).
 Rastreabilidade: CP4 — Agendamento, confirmação e remarcação (transversal às features "Agendar sessão do paciente", "Reagendar sessão do paciente", "Confirmar presença em sessão agendada", "Registrar cancelamento de sessão pelo paciente" e "Registrar cancelamento de sessão pelo estagiário").
 
 **RNF11 — Confiabilidade do envio de lembretes**
 
-O sistema deve garantir uma taxa de entrega de pelo menos 98% dos lembretes de sessão enviados, com nova tentativa automática em caso de falha de envio dentro de 1 hora, e deve registrar o envio ou a falha de cada lembrete para consulta posterior.
+O sistema deve entregar ao provedor de envio pelo menos 98% dos lembretes de sessão (RF13), medidos separadamente para cada canal (e-mail e SMS). Como o sistema não controla a chegada da mensagem ao aparelho do paciente, considera-se **entregue** o lembrete aceito pelo provedor de e-mail ou de SMS.
 
-A conformidade deve ser verificada por teste com envio simulado, incluindo cenários de falha, conferindo a taxa de entrega e o registro de tentativas.
+- **Fórmula e janela:** taxa de cada canal = lembretes aceitos pelo provedor ÷ lembretes programados no canal × 100, apurada por mês civil, sobre todos os lembretes programados no mês.
+- **Nova tentativa:** um lembrete recusado ou sem resposta do provedor deve ser reenviado automaticamente até 3 vezes, dentro de 1 hora após a primeira tentativa.
+- **Falhas externas:** saem do denominador, mas continuam registradas, os lembretes que falharam por contato inválido informado na inscrição e os que falharam durante indisponibilidade do provedor registrada no seu painel de status. A qualidade do cadastro é responsabilidade da secretaria, e a indisponibilidade do provedor é acompanhada pela equipe técnica.
+- **Tratamento da falha:** quando as tentativas se esgotarem nos dois canais, a sessão deve ser sinalizada à secretaria para contato por telefone.
+
+O envio e cada falha de cada lembrete devem ser registrados para consulta posterior.
+
+A conformidade deve ser verificada por teste com provedor simulado, sobre uma amostra de pelo menos 200 lembretes por canal, com falhas injetadas em 10% deles, conferindo as novas tentativas, a taxa de entrega calculada, a exclusão das falhas externas e a sinalização à secretaria; em produção, pelo relatório mensal da taxa de cada canal.
 
 Classificação: confiabilidade (URPS+).
 Rastreabilidade: Feature "Enviar lembrete de sessão agendada" → CP4 — Agendamento, confirmação e remarcação.
 
 **RNF12 — Tempo de resposta nas operações de agendamento**
 
-As operações de agendar, reagendar, confirmar presença e registrar cancelamento devem apresentar retorno em até 2 segundos para 95% das requisições realizadas em condições normais de uso.
+As operações de agendar, reagendar, confirmar presença e registrar cancelamento devem apresentar retorno em até 2 segundos para 95% das requisições no cenário de referência abaixo. O tempo é medido no servidor, do recebimento da requisição ao envio da resposta, sem incluir a rede do usuário.
 
-A conformidade deve ser verificada por teste de desempenho com dados representativos do volume da clínica (cerca de 100 vagas e 160 a 180 inscrições por semestre).
+- **Carga:** 30 usuários simultâneos executando essas operações de forma contínua por 10 minutos, estimativa da equipe para o pico de uso de secretaria, estagiários e supervisores, a validar com a FBr.
+- **Massa de dados:** dois semestres de operação, com cerca de 360 inscrições, 200 pacientes atendidos e 4.000 sessões registradas, a partir do volume da clínica de 100 vagas e 160 a 180 inscrições por semestre.
+- **Infraestrutura:** ambiente de homologação com a mesma configuração do servidor de produção (VPS da FBr).
+
+A conformidade deve ser verificada por teste de carga automatizado (por exemplo, k6 ou JMeter) nesse cenário, conferindo o percentil 95 do tempo de resposta de cada operação.
 
 Classificação: desempenho (URPS+).
 Rastreabilidade: CP4 — Agendamento, confirmação e remarcação (transversal às features "Agendar sessão do paciente", "Reagendar sessão do paciente", "Confirmar presença em sessão agendada", "Registrar cancelamento de sessão pelo paciente" e "Registrar cancelamento de sessão pelo estagiário").
 
-**RNF13 — Privacidade da agenda por perfil**
+**RNF13 — Minimização de dados na agenda**
 
-O estagiário deve visualizar apenas sua própria agenda de sessões; o supervisor deve visualizar apenas a agenda dos estagiários sob sua supervisão, conforme o vínculo definido na CP5.
+Quem pode consultar cada agenda é definido no RF11. Este RNF restringe **o que** a agenda expõe: cada sessão da agenda deve apresentar apenas o nome do paciente, a data, o horário de início e de término e o status. Dados de contato, CPF, queixa, prioridade clínica e qualquer conteúdo de evolução não devem constar da agenda, nem na tela nem nas respostas do servidor que a alimentam. A restrição de acesso do RF11 deve ser aplicada também no servidor, de modo que uma requisição feita diretamente, sem passar pela interface, não retorne a agenda de um estagiário sem vínculo.
 
-A conformidade deve ser verificada por testes de autorização, com cenários positivos e negativos, confirmando a ausência de acesso à agenda de estagiários sem vínculo de supervisão.
+A conformidade deve ser verificada por inspeção das respostas do servidor à consulta da agenda, confirmando a ausência dos campos não permitidos, e por teste de requisição direta ao servidor com um usuário sem vínculo de supervisão, confirmando a negação.
 
 Classificação: privacidade (URPS+).
 Rastreabilidade: Feature "Consultar agenda de sessões do estagiário" → CP4 — Agendamento, confirmação e remarcação; relacionada à CP12 — Segurança, sigilo e controle de acesso.
 
 **RNF14 — Disponibilidade do módulo de agendamento**
 
-O módulo de agendamento e confirmação deve estar disponível em pelo menos 99% do horário comercial (8h–18h, dias úteis), dado que indisponibilidades nesse módulo impactam diretamente a operação da clínica.
+O módulo de agendamento e confirmação deve estar disponível em pelo menos 99% do horário comercial, dado que indisponibilidades nesse módulo impactam diretamente a operação da clínica.
 
-A conformidade deve ser verificada por monitoramento contínuo de disponibilidade durante o período de operação.
+- **Horário comercial:** das 8h às 18h, de segunda a sexta-feira, exceto os feriados do calendário acadêmico da FBr.
+- **Janela de apuração:** mês civil.
+- **Fórmula:** disponibilidade = (minutos de horário comercial no mês − minutos indisponíveis) ÷ minutos de horário comercial no mês × 100. Em um mês com 22 dias úteis (13.200 minutos), o limite é de 132 minutos indisponíveis.
+- **Minuto indisponível:** minuto em que a verificação automática de disponibilidade falha, isto é, a página de agendamento não responde em até 10 segundos ou responde com erro do servidor.
+- **Indisponibilidades excluídas:** manutenções programadas fora do horário comercial e manutenções dentro do horário comercial comunicadas à secretaria com pelo menos 48 horas de antecedência, limitadas a 4 horas por mês; o que exceder esse limite conta como indisponibilidade.
+
+A conformidade deve ser verificada por monitor externo que consulte a página de agendamento a cada minuto durante o horário comercial, com relatório mensal da disponibilidade calculada pela fórmula acima.
 
 Classificação: confiabilidade (URPS+).
 Rastreabilidade: CP4 — Agendamento, confirmação e remarcação (transversal a todas as features).
@@ -184,9 +212,17 @@ Rastreabilidade: CP4 — Agendamento, confirmação e remarcação (transversal 
 
 A confirmação de presença deve ser possível a partir do link enviado no lembrete (RF13), sem exigir login ou cadastro de senha, em no máximo 2 interações, considerando o público com pouca familiaridade com tecnologia atendido pela clínica.
 
-A conformidade deve ser verificada por teste de usabilidade com usuários representativos, incluindo pessoas com baixo letramento digital.
+Como o link dispensa login, ele deve ser protegido contra uso por terceiros:
 
-Classificação: usabilidade (URPS+).
+- **Token imprevisível:** o link deve conter um token gerado aleatoriamente, com pelo menos 128 bits de entropia, vinculado a uma única sessão e sem nenhum dado do paciente (nome, CPF ou número de inscrição) no endereço.
+- **Validade:** o token vale até o fim do prazo de confirmação da sessão (RF14); uma remarcação (RF12) ou um cancelamento (RF15/RF16) invalida o token anterior, e uma remarcação gera um novo.
+- **Uso único:** após a confirmação, o token não permite nenhuma nova operação; ao ser aberto de novo, o link apenas informa que a presença já foi confirmada.
+- **Expiração ou token inválido:** o sistema deve informar que o link não é mais válido e orientar o contato com a secretaria, sem exibir dados da sessão.
+- **Dados exibidos:** a página de confirmação mostra apenas a data e o horário da sessão e o primeiro nome do paciente, e não permite nenhuma outra operação, como cancelar ou remarcar.
+
+A conformidade deve ser verificada por teste de usabilidade com usuários representativos, incluindo pessoas com baixo letramento digital, e por testes de segurança que abram o link após o uso, após o fim do prazo, após uma remarcação e com um token alterado, confirmando em todos os casos a recusa sem exposição de dados.
+
+Classificação: usabilidade e segurança (URPS+).
 Rastreabilidade: Feature "Confirmar presença em sessão agendada" → CP4 — Agendamento, confirmação e remarcação; relacionada à CP14 — Acessibilidade e usabilidade.
 
 ### Distribuição de casos entre supervisores e estagiários (CP5)
@@ -353,33 +389,33 @@ Rastreabilidade: Feature "Gerar relatório final de evolução" → CP8 — Gera
 
 ### Controle de assiduidade e alertas (CP9)
 
-A CP9 tem cinco features (ver [Requisitos Funcionais](funcionais.md)); os RNFs abaixo estabelecem condições de qualidade para a contagem de faltas, o alerta de limite e a liberação da vaga, complementando a declaração tardia desta CP (ver a nota de contexto na seção correspondente de [Requisitos Funcionais](funcionais.md#controle-de-assiduidade-e-alertas-cp9)).
+A CP9 tem nove features (ver [Requisitos Funcionais](funcionais.md)); os RNFs abaixo estabelecem condições de qualidade para a contagem de faltas, o alerta de limite e a liberação da vaga, complementando a declaração tardia desta CP (ver a nota de contexto na seção correspondente de [Requisitos Funcionais](funcionais.md#controle-de-assiduidade-e-alertas-cp9)).
 
 #### Controle de faltas do paciente
 
 **RNF32 — Integridade e auditoria da contagem de faltas**
 
-A contagem de faltas consecutivas do paciente (RF35) e os eventos que a originam (RF34, RF14, RF15) devem ser registrados de forma íntegra e não podem ser apagados ou alterados sem registro de quem alterou, quando e por quê. Toda decisão de desligamento por faltas (RF37) deve preservar o histórico de faltas que a fundamentou, mesmo após a liberação da vaga.
+A contagem de faltas do paciente no ciclo (RF35) e os eventos que a originam (RF34 e RF15) devem ser registrados de forma íntegra e não podem ser apagados ou alterados sem registro de quem alterou, quando e por quê. Toda decisão de desligamento por faltas (RF37) deve preservar o histórico de faltas que a fundamentou, mesmo após a liberação da vaga.
 
 A conformidade deve ser verificada registrando faltas com dados fictícios e confirmando, por inspeção do histórico, que nenhum perfil consegue apagar ou alterar os registros de falta sem deixar rastro da alteração.
 
 Classificação: auditoria (URPS+).
-Rastreabilidade: Feature "Contabilizar faltas consecutivas do paciente" → CP9 — Controle de assiduidade e alertas; relacionada às features "Registrar falta do paciente na sessão" e "Desligar paciente por faltas e liberar vaga".
+Rastreabilidade: Feature "Contabilizar faltas do paciente no ciclo" → CP9 — Controle de assiduidade e alertas; relacionada às features "Registrar falta do paciente na sessão" e "Desligar paciente por faltas e liberar vaga".
 
 **RNF33 — Visibilidade do alerta de limite de faltas**
 
-O alerta de limite de faltas (RF36) deve ser exibido com destaque visual (cor vermelha) e permanecer visível à secretaria, ao estagiário responsável e à coordenação em toda sessão de uso, sem exigir navegação adicional para localizá-lo, até que a decisão de desligamento seja registrada.
+O alerta de limite de faltas (RF36) deve ser exibido com destaque visual (cor vermelha) e permanecer visível à secretaria, ao estagiário responsável e à coordenação em toda sessão de uso, sem exigir navegação adicional para localizá-lo, até que a decisão de desligamento seja registrada. A cor não pode ser o único meio de transmitir o alerta: ele deve trazer também um ícone de alerta e o texto "Limite de faltas atingido", com o nome do paciente, e ser anunciado por leitores de tela, atendendo ao critério 1.4.1 (Uso de cor) da WCAG 2.2 e à meta do RNF56.
 
-A conformidade deve ser verificada demonstrando, para um paciente com o limite de faltas atingido, que o alerta aparece de forma destacada aos três perfis mencionados ao acessarem o sistema, sem etapas de navegação adicionais.
+A conformidade deve ser verificada demonstrando, para um paciente com o limite de faltas atingido, que o alerta aparece de forma destacada aos três perfis mencionados ao acessarem o sistema, sem etapas de navegação adicionais; exibindo a tela em escala de cinza, para confirmar que o alerta continua identificável pelo ícone e pelo texto; e por inspeção com leitor de tela e ferramenta automatizada de acessibilidade (ex.: axe), sem falhas de nível A ou AA no componente.
 
 Classificação: usabilidade (URPS+).
 Rastreabilidade: Feature "Emitir alerta de limite de faltas atingido" → CP9 — Controle de assiduidade e alertas.
 
 **RNF34 — Tempo de liberação da vaga após desligamento**
 
-A liberação da vaga e a sinalização para realocação à fila de espera (CP3) devem ocorrer imediatamente após o registro do desligamento (RF37), sem intervenção manual adicional, para evitar que a vaga permaneça ociosa — o problema que motivou a criação desta CP.
+A liberação da vaga e a sinalização "vaga liberada aguardando realocação" (RF37) devem ser concluídas em até 5 segundos após a confirmação do desligamento, sem intervenção manual adicional, e estar visíveis à coordenação e ao supervisor do estagiário a partir desse momento, para evitar que a vaga permaneça ociosa — o problema que motivou a criação desta CP. O prazo vale no cenário de carga de referência do RNF12.
 
-A conformidade deve ser verificada por teste, confirmando que, imediatamente após o registro do desligamento de um paciente fictício, a vaga correspondente aparece disponível para realocação na fila de espera (CP3).
+A conformidade deve ser verificada por teste automatizado que registre o desligamento de um paciente fictício e meça o tempo até a vaga aparecer como liberada, com o próximo inscrito elegível indicado (RF7), na tela da coordenação e do supervisor, repetido 20 vezes, com todas as medições em até 5 segundos.
 
 Classificação: desempenho (URPS+).
 Rastreabilidade: Feature "Desligar paciente por faltas e liberar vaga" → CP9 — Controle de assiduidade e alertas; relacionada à CP3 — Fila de espera e consulta de posição.
@@ -388,12 +424,12 @@ Rastreabilidade: Feature "Desligar paciente por faltas e liberar vaga" → CP9 �
 
 **RNF35 — Privacidade dos dados de faltas do estagiário**
 
-A relação de faltas do estagiário (RF39) deve ser visível apenas ao supervisor responsável e à coordenação, conforme os perfis definidos na CP12, e não deve ser exposta a outros estagiários nem a pacientes.
+A relação de faltas do estagiário (RF39), a contagem de faltas no semestre (RF40), a sinalização de reprovação (RF63) e a decisão institucional sobre ela (RF64) devem ser visíveis apenas ao supervisor responsável e à coordenação, conforme os perfis definidos na CP12, e não deve ser exposta a outros estagiários nem a pacientes.
 
 A conformidade deve ser verificada testando o acesso de um usuário sem vínculo de supervisão à relação de faltas de um estagiário e confirmando a negação do acesso.
 
 Classificação: segurança e privacidade (URPS+).
-Rastreabilidade: Feature "Consolidar faltas do estagiário para a supervisão" → CP9 — Controle de assiduidade e alertas; relacionada à CP12 — Segurança, sigilo e controle de acesso.
+Rastreabilidade: Features "Consolidar faltas do estagiário para a supervisão", "Contabilizar faltas do estagiário no semestre", "Sinalizar reprovação do estagiário por faltas" e "Registrar decisão institucional sobre a reprovação do estagiário" → CP9 — Controle de assiduidade e alertas; relacionada à CP12 — Segurança, sigilo e controle de acesso.
 
 ### Registros administrativos do atendimento (CP10)
 
@@ -508,21 +544,21 @@ Os quatro indicadores exibidos pelo RF48 (vagas ocupadas, tempo médio de espera
 Classificação: confiabilidade (URPS+).
 Rastreabilidade: Feature "Consultar indicadores operacionais" → CP11 — Indicadores e relatórios institucionais.
 
-#### Feature — Gerar e exportar relatório institucional [#23](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/issues/23)
+#### Feature — Exportar relatório institucional em PDF [#23](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/issues/23)
 
 **RNF47 — Tempo de geração do relatório institucional**
 
-O sistema deve gerar e exibir em tela o relatório institucional consolidado (RF49) em até 5 segundos, contados do acionamento da geração pela coordenação até a exibição completa do conteúdo, para qualquer período de referência de até 12 meses e com até 10 usuários realizando consultas ou gerações de relatórios simultaneamente.
+O sistema deve exibir em tela os indicadores operacionais (RF48) e gerar o arquivo PDF do relatório institucional (RF49) em até 5 segundos cada, contados, respectivamente, do acionamento da consulta até a exibição completa dos indicadores e do acionamento da exportação até o arquivo ficar disponível para download, para qualquer período de referência de até 12 meses e com até 10 usuários realizando consultas ou exportações simultaneamente.
 
 Classificação: desempenho (URPS+).
-Rastreabilidade: Feature "Gerar e exportar relatório institucional" → CP11 — Indicadores e relatórios institucionais.
+Rastreabilidade: Features "Consultar indicadores operacionais" e "Exportar relatório institucional em PDF" → CP11 — Indicadores e relatórios institucionais.
 
 **RNF48 — Auditoria de relatórios institucionais**
 
-Para cada geração ou exportação do relatório institucional (RF49), o sistema deve registrar o usuário responsável, a data e a hora da operação e o período consultado, mantendo esse registro acessível para consulta por qualquer usuário com perfil de coordenação por, no mínimo, 24 meses a partir do registro, compatível com o ciclo de fiscalização do CRP.
+Para cada exportação do relatório institucional (RF49), o sistema deve registrar o usuário responsável, a data e a hora da operação e o período consultado, mantendo esse registro acessível para consulta por qualquer usuário com perfil de coordenação por, no mínimo, 24 meses a partir do registro, compatível com o ciclo de fiscalização do CRP.
 
 Classificação: auditoria (URPS+).
-Rastreabilidade: Feature "Gerar e exportar relatório institucional" → CP11 — Indicadores e relatórios institucionais.
+Rastreabilidade: Feature "Exportar relatório institucional em PDF" → CP11 — Indicadores e relatórios institucionais.
 
 ### Segurança, Sigilo e Controle de Acesso (CP12)
 
@@ -554,18 +590,26 @@ Rastreabilidade: Feature "Encerrar sessão do usuário" → CP12 — Segurança,
 
 **RNF51 — Criptografia dos dados**
 
-Toda comunicação entre o navegador e o sistema deve usar HTTPS com TLS 1.2 ou superior, e requisições feitas por HTTP devem ser redirecionadas para HTTPS. Os dados clínicos do prontuário (registros de evolução e relatório final) devem ser armazenados criptografados no banco de dados.
+Toda comunicação entre o navegador e o sistema deve usar HTTPS com TLS 1.2 ou superior, e requisições feitas por HTTP devem ser redirecionadas para HTTPS.
 
-A conformidade deve ser verificada por ferramenta de análise de configuração TLS (ex.: SSL Labs), por teste de acesso via HTTP e por inspeção do banco de dados, confirmando que o conteúdo clínico não aparece em texto legível.
+**Criptografia em repouso.** Todos os dados pessoais sensíveis (LGPD, art. 5º, II), que neste sistema são os dados de saúde, devem ser armazenados criptografados no banco de dados. Isso inclui a queixa, o histórico relevante e a percepção de urgência informados na inscrição (RF1/RF3), as sinalizações e a prioridade clínica da triagem (RF5/RF6), os registros de evolução, correções e complementos (CP7) e o relatório final (CP8). As cópias de segurança seguem o RNF53.
+
+**Gestão das chaves:**
+
+- **Armazenamento:** as chaves de criptografia ficam fora do banco de dados e do repositório de código, em variável de ambiente ou cofre de segredos do servidor.
+- **Acesso:** somente o responsável técnico designado pela FBr para o servidor tem acesso às chaves; a aplicação as lê em tempo de execução, e nenhum perfil de usuário do sistema consegue visualizá-las.
+- **Rotação:** as chaves são trocadas pelo menos uma vez por ano e imediatamente em caso de suspeita de comprometimento, com a recriptografia dos dados existentes; cada troca é registrada com data e responsável.
+
+A conformidade deve ser verificada por ferramenta de análise de configuração TLS (ex.: SSL Labs), por teste de acesso via HTTP, por inspeção do banco de dados, confirmando que nenhum dos campos listados aparece em texto legível, por inspeção do repositório de código, confirmando a ausência de chaves, e por um teste de rotação em ambiente de homologação, confirmando que os dados continuam legíveis pela aplicação após a troca.
 
 Classificação: segurança (URPS+).
-Rastreabilidade: Feature "Restringir acesso ao prontuário do paciente" → CP12 — Segurança, sigilo e controle de acesso.
+Rastreabilidade: Feature "Restringir acesso ao prontuário do paciente" → CP12 — Segurança, sigilo e controle de acesso; transversal aos dados de saúde tratados na CP1, CP2, CP7 e CP8.
 
 #### Feature — Consultar registro de acessos ao prontuário [#51](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/issues/51)
 
 **RNF52 — Trilha de auditoria de acessos ao prontuário**
 
-O sistema deve registrar automaticamente todo acesso ao prontuário, permitido ou negado, com o usuário, o perfil, a data/hora, o paciente e a operação realizada. Nenhum perfil pode alterar ou apagar esses registros, que devem ser mantidos por, no mínimo, 5 anos, prazo mínimo de guarda do registro documental definido pelo CFP (a confirmar com a FBr).
+O sistema deve registrar automaticamente todo acesso ao prontuário, permitido ou negado, com o usuário, o perfil, a data/hora, o paciente e a operação realizada. Nenhum perfil pode alterar ou apagar esses registros, que devem ser mantidos por, no mínimo, 5 anos a partir do acesso. Esse é o prazo mínimo de guarda do registro documental do serviço psicológico fixado pela Resolução CFP nº 1/2009 (art. 4º, § 1º); por ser um mínimo normativo, não depende de confirmação da FBr, que pode apenas ampliá-lo por política institucional.
 
 A conformidade deve ser verificada por teste: realizar acessos permitidos e negados com usuários de teste e conferir se todos aparecem na consulta do RF56, e por inspeção, confirmando que a interface não oferece meio de alterar ou apagar os registros.
 
@@ -576,9 +620,9 @@ Rastreabilidade: Feature "Consultar registro de acessos ao prontuário" → CP12
 
 **RNF53 — Cópia de segurança e recuperação dos dados**
 
-O sistema deve fazer cópia de segurança completa dos dados pelo menos uma vez por dia, de forma que uma falha cause a perda de, no máximo, 24 horas de registros. As cópias devem ser armazenadas criptografadas, fora do servidor principal, e a restauração deve ser testada pelo menos uma vez por semestre.
+O sistema deve fazer cópia de segurança completa dos dados pelo menos uma vez por dia, de forma que uma falha cause a perda de, no máximo, 24 horas de registros (ponto de recuperação). Após uma falha que torne o sistema ou os dados indisponíveis, o serviço deve voltar a operar com os dados da última cópia em até 8 horas contadas da detecção da falha (tempo de recuperação), o que corresponde, no pior caso, a um dia de atendimento em que a clínica recorre ao registro manual. As cópias devem ser armazenadas criptografadas, fora do servidor principal, e a restauração deve ser testada pelo menos uma vez por semestre, seguindo um procedimento de restauração documentado.
 
-A conformidade deve ser verificada por inspeção do histórico de cópias (uma cópia por dia) e por um teste de restauração em ambiente separado, conferindo se os dados restaurados correspondem aos da última cópia.
+A conformidade deve ser verificada por inspeção do histórico de cópias (uma cópia por dia) e por um teste de restauração em ambiente separado, cronometrado do início do procedimento até o sistema voltar a atender, confirmando que o tempo total fica em até 8 horas e que os dados restaurados correspondem aos da última cópia.
 
 Classificação: confiabilidade (URPS+).
 Rastreabilidade: CP12 — Segurança, sigilo e controle de acesso (transversal às features); responde ao risco IS05 — Dependência tecnológica da intervenção social (Seção 3).
@@ -618,16 +662,24 @@ As páginas voltadas ao público externo devem atender a todos os critérios de 
 Classificação: acessibilidade (URPS+).
 Rastreabilidade: CP14 — Acessibilidade e usabilidade (transversal às features "Ativar modo de alto contraste" e "Ajustar tamanho do texto").
 
-**RNF57 — Navegação por teclado**
+**RNF57 — Aparência reforçada do indicador de foco**
 
-As páginas voltadas ao público externo devem ser operáveis integralmente por teclado — incluindo tabulação entre elementos, ativação de botões e links, e preenchimento e envio de formulários —, sem dependência exclusiva do uso do mouse. Todo elemento interativo (campo, botão ou link) deve exibir um indicador visual de foco (contorno ou destaque) sempre que estiver em foco via teclado, permitindo identificar visualmente a posição atual da navegação.
+A operação por teclado e a existência de um indicador de foco visível já fazem parte da conformidade exigida pelo RNF56 (critérios 2.1.1 e 2.4.7 da WCAG 2.2). Este RNF acrescenta uma exigência além do nível AA, motivada pelo atendimento de pacientes com baixa visão confirmado pela Clínica Escola: o indicador de foco das páginas voltadas ao público externo deve seguir o critério 2.4.13 (Aparência do foco, nível AAA) da WCAG 2.2. Em todo elemento interativo (campo, botão ou link) em foco, o indicador deve:
+
+- ter área pelo menos igual à de um contorno de 2 pixels de espessura ao redor do elemento;
+- ter razão de contraste de pelo menos 3:1 entre os pixels do estado com foco e os do estado sem foco;
+- manter essas duas condições também no modo de alto contraste (RF61) e nos três níveis de tamanho de texto (RF62).
+
+A conformidade deve ser verificada navegando por teclado por todas as páginas voltadas ao público externo, nas combinações de contraste e tamanho de texto, e medindo, com ferramenta de verificação de contraste, a espessura e o contraste do indicador de cada tipo de elemento interativo.
 
 Classificação: acessibilidade (URPS+).
 Rastreabilidade: CP14 — Acessibilidade e usabilidade (transversal às features "Ativar modo de alto contraste" e "Ajustar tamanho do texto").
 
 **RNF58 — Responsividade da interface**
 
-As páginas voltadas ao público externo devem se adaptar corretamente a larguras de tela entre 320 e 1920 pixels, sem perda de funcionalidade, sem sobreposição ou corte de elementos e sem exigir rolagem horizontal em nenhuma largura desse intervalo.
+A adaptação à largura de 320 pixels já é exigida pelo RNF56 (critério 1.4.10 — Refluxo da WCAG 2.2). Este RNF estende a exigência às telas maiores: as páginas voltadas ao público externo devem se adaptar a qualquer largura de tela entre 320 e 1920 pixels, cobrindo celulares, tablets e computadores, sem perda de funcionalidade, sem sobreposição ou corte de elementos e sem exigir rolagem horizontal.
+
+A conformidade deve ser verificada exibindo cada página voltada ao público externo nas larguras de 360, 768, 1024, 1366 e 1920 pixels, com a ferramenta de simulação de dispositivos do navegador, e confirmando em cada uma a ausência de rolagem horizontal, sobreposição, corte ou funcionalidade inacessível.
 
 Classificação: usabilidade (URPS+).
 Rastreabilidade: CP14 — Acessibilidade e usabilidade (transversal às features "Ativar modo de alto contraste" e "Ajustar tamanho do texto").
