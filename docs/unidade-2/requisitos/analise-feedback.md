@@ -106,6 +106,20 @@ As decisões seguem as categorias abaixo:
 | RNF14     | Verificabilidade    | Aceito        | Foram definidos o horário comercial, a janela de apuração (mês civil), a fórmula com exemplo (132 minutos em um mês de 22 dias úteis), o que conta como minuto indisponível e as manutenções programadas excluídas (fora do horário comercial, ou comunicadas com 48 horas de antecedência e limitadas a 4 horas por mês). |
 | RNF15     | Incompletude        | Aceito        | Foram definidas as proteções do link de confirmação: token aleatório de pelo menos 128 bits sem dados do paciente no endereço, validade até o fim do prazo de confirmação, invalidação por remarcação ou cancelamento, uso único, comportamento após expiração ou reutilização, dados mínimos exibidos e os testes de segurança correspondentes. |
 
+### Distribuição de Casos entre Supervisores e Estagiários (CP5)
+
+| Requisito | Tipo apontado          | Decisão       | Justificativa e alteração realizada |
+| --------- | ----------------------- | ------------- | ----------------------------------- |
+| RNF16     | Inconsistência          | Aceito        | A regra genérica ("coordenação e supervisores autorizados podem distribuir, vincular e transferir casos") foi substituída por uma matriz coerente com cada RF: distribuição exclusiva da coordenação (RF20), vínculo exclusivo do supervisor do caso (RF21) e transferência restrita por perfil (RF25) — supervisor só transfere para estagiário sob sua própria supervisão; troca de supervisor é exclusiva da coordenação. |
+| RNF17     | Verificabilidade        | Aceito        | Foi acrescentada uma matriz perfil × campo (secretaria, estagiário, supervisor e coordenação) com os campos exatos exibidos em cada tela, substituindo "apenas os dados necessários a cada perfil". |
+| RNF18     | OK                      | Não aplicável | Nenhum problema identificado. |
+| RNF19     | Conflito                | Aceito        | A regra foi ajustada para admitir o estado transitório "aguardando vínculo de estagiário", já que o RF20 distribui o caso a um supervisor antes de o RF21 vincular o estagiário; a proibição passou a valer apenas para a ausência de supervisor após a distribuição e para dois responsáveis principais vigentes ao mesmo tempo. |
+| RNF20     | OK                      | Não aplicável | Nenhum problema identificado. |
+| RNF21     | Verificabilidade        | Aceito        | A meta de 3 segundos foi incorporada ao enunciado (antes só constava no método de verificação), e "condições normais de uso" foi substituído pelo mesmo cenário de referência do RNF12 (30 usuários simultâneos, massa de dois semestres, ambiente de homologação). |
+| RNF22     | Verificabilidade        | Aceito        | Foram definidos a amostra mínima (5 participantes por perfil) e o percentual mínimo de conclusão sem auxílio (90%) para o teste de usabilidade "sem treinamento prévio". |
+| RNF23     | Classificação incorreta | Aceito        | O requisito duplicava, como "manutenibilidade", a funcionalidade administrativa já declarada no RF19. A regra de negócio permaneceu apenas no RF19, e o RNF23 foi reformulado como "Modificabilidade do cadastro de áreas de especialidade": uma meta técnica verificável (armazenamento como dado configurável, sem exigir alteração de código ou novo deploy). |
+| RNF24     | OK                      | Não aplicável | Nenhum problema identificado. |
+
 ### Controle de Assiduidade e Alertas (CP9)
 
 | Requisito | Tipo apontado    | Decisão       | Justificativa e alteração realizada |
@@ -114,6 +128,21 @@ As decisões seguem as categorias abaixo:
 | RNF33     | Incompletude     | Aceito        | O alerta passou a exigir ícone e o texto "Limite de faltas atingido" além da cor, com anúncio por leitor de tela, em conformidade com o critério 1.4.1 da WCAG 2.2 e o RNF56; a verificação inclui exibição em escala de cinza e inspeção automatizada. |
 | RNF34     | Verificabilidade | Aceito        | "Imediatamente" foi substituído por um limite mensurável: até 5 segundos após a confirmação do desligamento, no cenário de carga do RNF12, verificado por 20 medições automatizadas. |
 | RNF35     | OK               | Não aplicável | Nenhum problema identificado. A abrangência foi estendida aos novos RF40, RF63 e RF64 (ver ajustes de consistência). |
+
+### Registros Administrativos do Atendimento (CP10)
+
+| Requisito | Tipo apontado           | Decisão       | Justificativa e alteração realizada |
+| --------- | ------------------------ | ------------- | ----------------------------------- |
+| RNF36     | Incompletude             | Aceito        | Não havia procedimento para corrigir um pagamento registrado com valor, data ou forma incorretos, já que os registros não podem ser apagados nem sobrescritos. Foi criado o RF66 — Corrigir registro de pagamento da contribuição social do paciente, com correção versionada (motivo, autor, data e preservação do registro anterior), e o RNF36 passou a exigir também a auditoria dessa correção e da alteração do parâmetro de valor (RF41). |
+| RNF37     | Verificabilidade         | Aceito        | "Conteúdo mínimo aprovado pela FBr" foi substituído pela enumeração exata dos campos permitidos (nome do paciente, data, horário, nome do estagiário, assinatura, carimbo e CRP do psicólogo), com o modelo institucional tratado como versão vigente mantida pela coordenação. |
+| RNF38     | Clareza                  | Aceito        | Os perfis autorizados foram enumerados (secretaria autenticada institucionalmente; paciente/responsável com identidade verificada pelo RF52), distinguindo explicitamente autenticação institucional de verificação do paciente, e excluindo estagiário e supervisor. |
+| RNF39     | Redundância              | Aceito        | A auditoria de emissão e reemissão, antes repetida no RF45 e no RF46, foi centralizada no RNF39 (usuário, data/hora, sessão, paciente, tipo de operação e tentativas negadas); os RF45 e RF46 passaram a apenas referenciá-lo. |
+| RNF40     | Verificabilidade         | Aceito        | "Condições normais de uso" foi substituído pelo mesmo cenário de referência do RNF12 (30 usuários simultâneos, ambiente de homologação, medição no servidor). |
+| RNF41     | Verificabilidade         | Aceito        | Foram definidos a amostra mínima (5 participantes por público) e o percentual mínimo de conclusão sem auxílio (90%) para o teste de usabilidade da emissão. |
+| RNF42     | Classificação incorreta | Aceito        | O conteúdo tratava de formato, compatibilidade e usabilidade do documento, não de portabilidade do software entre ambientes; foi retitulado ("Formato e compatibilidade do documento") e reclassificado como compatibilidade e restrição de produto. |
+| RNF43     | Escopo amplo             | Aceito        | O requisito reunia acessibilidade da tela de emissão e do documento gerado, com critérios e técnicas de avaliação diferentes. Foi mantido apenas o escopo da tela de emissão, e a acessibilidade do documento (PDF pesquisável, com tags de leitura) passou a um requisito próprio, o novo RNF59 — Acessibilidade do documento gerado. |
+| RNF44     | OK                       | Não aplicável | Nenhum problema identificado. O requisito já havia recebido, na correção do RF47 (ver seção de requisitos funcionais), uma cláusula adicional sobre a coerência entre reemissão e verificação pública quando o registro de origem é corrigido (ver ajustes de consistência). |
+| RNF45     | Verificabilidade         | Aceito        | "Dados mínimos definidos com a FBr" foi substituído pela enumeração exata do retorno para os três estados do código de verificação — válido, inválido e revogado —, com a mesma terminologia agora usada no RF47. |
 
 ### Indicadores e Relatórios Institucionais (CP11)
 
@@ -152,6 +181,11 @@ As correções acima exigiram ajustes em requisitos que não tinham apontamento,
 - **RF39:** a referência à sinalização de reprovação passou a apontar para o RF63.
 - **RNF35:** a restrição de visibilidade foi estendida à contagem (RF40), à sinalização (RF63) e à decisão (RF64).
 - **RNF47 e RNF48:** alinhados à separação entre a consulta em tela (RF48) e a exportação em PDF (RF49).
+- **RF6 (CP2):** passou a permitir o registro, opcional, da área de especialidade clínica exigida pelo caso, consumida pela distribuição (RF20, CP5); o modelo de domínio da CP2 foi atualizado.
+- **RNF45 e RF47:** enumeração de dados unificada e terminologia alinhada (código válido/inválido/revogado) entre os dois requisitos.
+- **RF19:** passou a referenciar o RNF23 (modificabilidade) na rastreabilidade, após a reformulação deste último.
+- **RF45 e RF46:** deixaram de descrever a auditoria de emissão e reemissão diretamente, passando a referenciar o RNF39, que centraliza essa regra.
+- **RF41 e RNF36:** deram origem ao RF66 — Corrigir registro de pagamento da contribuição social do paciente, necessário para que a correção versionada exigida pelo RNF36 tivesse uma funcionalidade correspondente.
 
 ## Pendências de validação com a FBr
 
