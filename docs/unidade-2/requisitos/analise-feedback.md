@@ -246,7 +246,7 @@ As decisões seguem as categorias abaixo:
 | RNF40     | Verificabilidade         | Aceito        | "Condições normais de uso" foi substituído pelo mesmo cenário de referência do RNF12 (30 usuários simultâneos, ambiente de homologação, medição no servidor). |
 | RNF41     | Verificabilidade         | Aceito        | Foram definidos a amostra mínima (5 participantes por público) e o percentual mínimo de conclusão sem auxílio (90%) para o teste de usabilidade da emissão. |
 | RNF42     | Classificação incorreta | Aceito        | O conteúdo tratava de formato, compatibilidade e usabilidade do documento, não de portabilidade do software entre ambientes; foi retitulado ("Formato e compatibilidade do documento") e reclassificado como compatibilidade e restrição de produto. |
-| RNF43     | Escopo amplo             | Aceito        | O requisito reunia acessibilidade da tela de emissão e do documento gerado, sob um único critério, mas os dois têm técnicas de verificação diferentes. Foi reorganizado em dois critérios distintos (tela e documento), com métodos de verificação próprios para cada um. |
+| RNF43     | Escopo amplo             | Aceito        | O requisito reunia, sob um único critério, a acessibilidade da tela de emissão e a do documento gerado, que têm técnicas de verificação diferentes. O escopo foi restrito à tela de emissão e à de listagem de sessões (RF44); a acessibilidade do documento gerado (PDF) fica pendente de um requisito próprio, a definir com a equipe. |
 | RNF44     | OK                       | Não aplicável | Nenhum problema identificado. O requisito já havia recebido, na correção do RF47 (ver seção de requisitos funcionais), uma cláusula adicional sobre a coerência entre reemissão e verificação pública quando o registro de origem é corrigido (ver ajustes de consistência). |
 | RNF45     | Verificabilidade         | Aceito        | "Dados mínimos definidos com a FBr" foi substituído pela enumeração exata do retorno para os três estados do código de verificação — válido, inválido e revogado —, com a mesma terminologia agora usada no RF47. |
 
@@ -291,7 +291,6 @@ As correções acima exigiram ajustes em requisitos que não tinham apontamento,
 - **RNF45 e RF47:** enumeração de dados unificada e terminologia alinhada (código válido/inválido/revogado) entre os dois requisitos.
 - **RF19:** passou a referenciar o RNF23 (modificabilidade) na rastreabilidade, após a reformulação deste último.
 - **RF45 e RF46:** deixaram de descrever a auditoria de emissão e reemissão diretamente, passando a referenciar o RNF39, que centraliza essa regra.
-- **RF41 e RNF36:** deram origem ao RF66 — Corrigir registro de pagamento da contribuição social do paciente, necessário para que a correção versionada exigida pelo RNF36 tivesse uma funcionalidade correspondente.
 
 ## Pendências de validação com a FBr
 

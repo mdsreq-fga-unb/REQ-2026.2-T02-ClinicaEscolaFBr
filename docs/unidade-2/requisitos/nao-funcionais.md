@@ -453,7 +453,7 @@ A CP10 reúne as condições de qualidade das antigas características "Registro
 
 **RNF36 — Auditoria dos registros de contribuição social**
 
-Todo registro de pagamento da contribuição social (RF41) deve guardar o usuário responsável, a data/hora da operação, o paciente, o valor, a data e a forma de pagamento. Toda alteração do parâmetro institucional "valor da contribuição social" (RF41) deve guardar o valor anterior, o novo valor, o autor da alteração e a data/hora. Esses dados não podem ser apagados nem sobrescritos. Um registro de pagamento incorreto só pode ser alterado pela correção versionada do RF66 — Corrigir registro de pagamento da contribuição social do paciente, que deve guardar o motivo da correção, o autor, a data/hora e preservar o registro anterior, íntegro e consultável. Todos esses dados devem ficar disponíveis para consulta pela coordenação por, no mínimo, 24 meses, prazo compatível com o ciclo de fiscalização do CRP (mesmo prazo do RNF48).
+Todo registro de pagamento da contribuição social (RF41) deve guardar o usuário responsável, a data/hora da operação, o paciente, o valor, a data e a forma de pagamento. Toda alteração do parâmetro institucional "valor da contribuição social" (RF41) deve guardar o valor anterior, o novo valor, o autor da alteração e a data/hora. Esses dados não podem ser apagados nem sobrescritos. Um registro de pagamento incorreto só pode ser alterado por uma correção versionada, registrada pela secretaria, que deve guardar o motivo da correção, o autor, a data/hora e preservar o registro anterior, íntegro e consultável. Todos esses dados devem ficar disponíveis para consulta pela coordenação por, no mínimo, 24 meses, prazo compatível com o ciclo de fiscalização do CRP (mesmo prazo do RNF48).
 
 A conformidade deve ser verificada por inspeção: registrar pagamentos, alterar o parâmetro de valor e corrigir um pagamento com dados fictícios, conferir se todos os campos acima foram guardados (inclusive o registro anterior preservado após a correção) e confirmar que nenhum perfil consegue apagá-los ou sobrescrevê-los diretamente pela interface.
 
@@ -518,7 +518,7 @@ A conformidade deve ser verificada por inspeção do documento em impressão e e
 Classificação: compatibilidade e restrição de produto (URPS+).
 Rastreabilidade: CP10 — Registros administrativos do atendimento (transversal às features "Emitir declaração de comparecimento do paciente" e "Reemitir declaração de comparecimento").
 
-**RNF43 — Acessibilidade da tela de emissão e do documento**
+**RNF43 — Acessibilidade da tela de emissão**
 
 A tela de emissão e a de listagem de sessões (RF44) devem ser acessíveis a pessoas com limitações visuais, seguindo a mesma meta de conformidade definida para a CP14 (RNF56): navegação por teclado, contraste adequado e compatibilidade com leitor de tela.
 
