@@ -370,7 +370,7 @@ O canal do lembrete (e-mail e SMS) e o limite de uma remarcação por paciente n
 
 **RF10 — Agendar sessão do paciente**
 
-O sistema deve permitir que a secretaria ou o estagiário responsável agende uma sessão para um paciente já vinculado a um estagiário (CP5), informando a data e o horário de início. O horário de término é calculado pela duração padrão da sessão (parâmetro de agendamento, padrão de 50 minutos) e pode ser ajustado por quem agenda, desde que seja posterior ao início. Duas sessões se sobrepõem quando o intervalo entre o início e o término de uma tem algum instante em comum com o da outra; sessões em sequência, em que o término de uma coincide com o início da seguinte, não se sobrepõem. O sistema deve impedir o agendamento de sessões sobrepostas para o mesmo estagiário ou para o mesmo paciente, e deve registrar o status inicial da sessão como "agendada", com paciente, estagiário, data, horário de início e horário de término associados. O agendamento não deve ocorrer para pacientes sem estagiário responsável vinculado.
+O sistema deve permitir que a secretaria ou o estagiário responsável agende uma sessão para um paciente já vinculado a um estagiário (CP5), informando a data e o horário de início. O horário de término é calculado pela duração padrão da sessão (parâmetro de agendamento, padrão de 50 minutos) e pode ser ajustado por quem agenda, desde que seja posterior ao início. Duas sessões se sobrepõem quando o intervalo entre o início e o término de uma tem algum instante em comum com o da outra; sessões em sequência, em que o término de uma coincide com o início da seguinte, não se sobrepõem. O sistema deve impedir o agendamento de sessões sobrepostas para o mesmo estagiário ou para o mesmo paciente, e deve registrar o status inicial da sessão como "agendada", com paciente, estagiário, data, horário de início e horário de término associados. O agendamento não deve ocorrer para pacientes sem estagiário responsável vinculado. O registro de auditoria do agendamento segue o RNF10.
 
 _Critérios de aceitação:_
 
@@ -399,7 +399,7 @@ _Rastreabilidade:_ Feature "Consultar agenda de sessões do estagiário" → CP4
 
 **RF12 — Reagendar sessão do paciente**
 
-O sistema deve permitir que a secretaria ou o estagiário responsável altere a data ou o horário de uma sessão ainda não realizada, aplicando as mesmas regras de término e de sobreposição do RF10 e preservando o registro da sessão original e da remarcação para fins de auditoria e do relatório final de evolução (CP6/CP7/CP8). Toda remarcação exige o registro de uma justificativa.
+O sistema deve permitir que a secretaria ou o estagiário responsável altere a data ou o horário de uma sessão ainda não realizada, aplicando as mesmas regras de término e de sobreposição do RF10 e preservando a data/horário original da sessão, que continua disponível para o relatório final de evolução (CP6/CP7/CP8). Toda remarcação exige uma justificativa. O registro de auditoria da remarcação e da aprovação de exceção segue o RNF10.
 
 Conforme confirmado pela Clínica Escola, o paciente pode pedir a remarcação de suas sessões no máximo uma vez dentro do ciclo de acompanhamento. Esse limite admite exceção, que somente a coordenação pode autorizar: a remarcação excedente fica bloqueada até que a coordenação a aprove, e o sistema deve registrar a justificativa da exceção, o usuário que a aprovou e a data/hora da aprovação. Remarcações motivadas pela ausência do estagiário (RF16/RF17) não contam para o limite do paciente.
 
@@ -408,7 +408,7 @@ _Critérios de aceitação:_
 - Dada uma sessão agendada ainda não realizada, quando a secretaria ou o estagiário alterar a data ou o horário informando a justificativa, então o sistema deve atualizar a sessão e manter o registro da data/horário anterior e da justificativa vinculado à sessão.
 - Dada uma sessão já realizada ou cancelada pelo paciente (RF15), quando houver tentativa de reagendamento, então o sistema deve impedir a operação.
 - Dado um paciente que já remarcou uma sessão a pedido próprio dentro do ciclo de acompanhamento atual, quando a secretaria ou o estagiário tentar uma nova remarcação a pedido do paciente, então o sistema deve bloquear a operação e informar que ela depende de aprovação da coordenação.
-- Dada uma remarcação excedente bloqueada, quando a coordenação aprová-la informando a justificativa da exceção, então o sistema deve efetivar a remarcação e registrar a justificativa, o usuário aprovador e a data/hora da aprovação.
+- Dada uma remarcação excedente bloqueada, quando a coordenação aprová-la informando a justificativa da exceção, então o sistema deve efetivar a remarcação e gerar o registro de auditoria do RNF10, com a justificativa da exceção e o usuário aprovador.
 - Dada uma sessão cancelada por ausência do estagiário (RF16), quando ela for reagendada pela opção oferecida ao paciente (RF17), então o sistema deve permitir o reagendamento e não deve contabilizá-lo no limite do paciente.
 
 _Rastreabilidade:_ Feature "Reagendar sessão do paciente" → CP4 — Agendamento, confirmação e remarcação → OE3/OE4. Dependência: RF10.
@@ -417,7 +417,7 @@ _Rastreabilidade:_ Feature "Reagendar sessão do paciente" → CP4 — Agendamen
 
 **RF13 — Enviar lembrete de sessão agendada**
 
-O sistema deve enviar automaticamente um lembrete ao paciente antes de uma sessão agendada, registrando o envio ou a eventual falha de envio para fins de auditoria. O lembrete deve ser enviado por e-mail e por SMS (ambos os canais), conforme confirmado pela Clínica Escola, para os contatos cadastrados na inscrição, e deve conter a data, o horário e o link de confirmação de presença (RF14). O momento do envio é definido pelo parâmetro "antecedência do lembrete" (padrão de 24 horas antes do início da sessão), configurável pela coordenação. Sessões agendadas quando já falta menos do que essa antecedência para o início devem ter o lembrete enviado no momento do agendamento.
+O sistema deve enviar automaticamente um lembrete ao paciente antes de uma sessão agendada, registrando o envio ou a eventual falha de envio conforme o RNF11. O lembrete deve ser enviado por e-mail e por SMS (ambos os canais), conforme confirmado pela Clínica Escola, para os contatos cadastrados na inscrição, e deve conter a data, o horário e o link de confirmação de presença (RF14). O momento do envio é definido pelo parâmetro "antecedência do lembrete" (padrão de 24 horas antes do início da sessão), configurável pela coordenação. Sessões agendadas quando já falta menos do que essa antecedência para o início devem ter o lembrete enviado no momento do agendamento.
 
 _Critérios de aceitação:_
 
@@ -432,11 +432,11 @@ _Rastreabilidade:_ Feature "Enviar lembrete de sessão agendada" → CP4 — Age
 
 **RF14 — Confirmar presença em sessão agendada**
 
-O sistema deve permitir que o paciente confirme presença em uma sessão agendada até o prazo de confirmação, definido pelo parâmetro "prazo de confirmação de presença" (padrão: até 12 horas antes do início da sessão), configurável pela coordenação. Ao confirmar, o sistema deve atualizar o status da sessão para "confirmada", registrando data, hora e usuário responsável pela confirmação. Sessões não confirmadas até o fim do prazo devem ser sinalizadas para a secretaria, para contato ativo com o paciente. A ausência de confirmação não é, por si só, uma falta: a falta só é registrada quando o paciente não comparece à sessão (RF34).
+O sistema deve permitir que o paciente confirme presença em uma sessão agendada até o prazo de confirmação, definido pelo parâmetro "prazo de confirmação de presença" (padrão: até 12 horas antes do início da sessão), configurável pela coordenação. Ao confirmar, o sistema deve atualizar o status da sessão para "confirmada" e gerar o registro de auditoria do RNF10. Sessões não confirmadas até o fim do prazo devem ser sinalizadas para a secretaria, para contato ativo com o paciente. A ausência de confirmação não é, por si só, uma falta: a falta só é registrada quando o paciente não comparece à sessão (RF34). O link de confirmação enviado no lembrete segue as proteções do RNF15.
 
 _Critérios de aceitação:_
 
-- Dada uma sessão agendada para as 14h00, com o prazo de confirmação configurado em 12 horas, quando o paciente confirmar presença até as 2h00 do mesmo dia, então o sistema deve atualizar o status para "confirmada", com data, hora e usuário responsável.
+- Dada uma sessão agendada para as 14h00, com o prazo de confirmação configurado em 12 horas, quando o paciente confirmar presença até as 2h00 do mesmo dia, então o sistema deve atualizar o status para "confirmada" e gerar o registro de auditoria do RNF10.
 - Dada a mesma sessão, quando o paciente tentar confirmar após as 2h00, então o sistema deve recusar a confirmação e orientar o paciente a entrar em contato com a secretaria.
 - Dada uma sessão cujo prazo de confirmação expirou sem confirmação do paciente, quando o prazo for atingido, então o sistema deve sinalizar a sessão para a secretaria, sem registrar falta.
 - Dada uma sessão já cancelada, quando houver tentativa de confirmação, então o sistema deve impedir a operação.
@@ -456,7 +456,7 @@ Depois do horário de início, a sessão não pode mais ser cancelada; o não co
 
 _Critérios de aceitação:_
 
-- Dada uma sessão agendada para as 14h00 de uma quinta-feira, com antecedência mínima de 24 horas, quando o paciente ou a secretaria registrar o cancelamento às 14h00 da quarta-feira ou antes, com um motivo, então o sistema deve atualizar o status da sessão para "cancelada", registrar o motivo, o autor e a data/hora e classificar o cancelamento como "no prazo".
+- Dada uma sessão agendada para as 14h00 de uma quinta-feira, com antecedência mínima de 24 horas, quando o paciente ou a secretaria registrar o cancelamento às 14h00 da quarta-feira ou antes, com um motivo, então o sistema deve atualizar o status da sessão para "cancelada", guardar o motivo, classificar o cancelamento como "no prazo" e gerar o registro de auditoria do RNF10.
 - Dada a mesma sessão, quando o cancelamento for registrado às 14h01 da quarta-feira ou depois, antes do início da sessão, então o sistema deve classificá-lo como "fora do prazo" e gerar o evento de falta para a CP9.
 - Dada uma sessão cujo horário de início já passou, ou já realizada, quando houver tentativa de cancelamento, então o sistema deve impedir a operação.
 
@@ -466,7 +466,7 @@ _Rastreabilidade:_ Feature "Registrar cancelamento de sessão pelo paciente" →
 
 **RF16 — Registrar cancelamento de sessão pelo estagiário**
 
-O sistema deve permitir que o estagiário, o supervisor ou a secretaria registrem a ausência prevista do estagiário em uma sessão já agendada, informando o motivo. O registro deve disparar a notificação ao paciente afetado (RF17).
+O sistema deve permitir que o estagiário, o supervisor ou a secretaria registrem a ausência prevista do estagiário em uma sessão já agendada, informando o motivo. O registro deve disparar a notificação ao paciente afetado (RF17); a auditoria da operação segue o RNF10.
 
 _Critérios de aceitação:_
 
@@ -797,7 +797,7 @@ O sistema deve permitir que a secretaria ou a coordenação registre o desligame
 1. **Desligamento** (ação do usuário): a secretaria ou a coordenação confirma o desligamento, e o sistema registra a decisão e atualiza o status do paciente para "desligado por faltas".
 2. **Liberação da vaga** (efeito automático do desligamento, sem nova ação do usuário): o sistema encerra o vínculo do paciente com o estagiário, cancela as sessões futuras dele e passa a contar a vaga como livre no estagiário, sinalizando-a como "vaga liberada aguardando realocação" à coordenação e ao supervisor do estagiário, junto com o próximo inscrito elegível na fila de espera (CP3 — RF7).
 
-A **realocação** da vaga a outro inscrito não é automática nem faz parte deste requisito: ela é confirmada pelo supervisor do estagiário ao vincular o novo paciente (RF21), depois de a coordenação distribuir o caso a esse supervisor, quando ainda não estiver distribuído (RF20). Conforme confirmado pela Clínica Escola, a vaga deve ser liberada em até uma semana após o desligamento; a liberação imediata definida neste requisito e no RNF34 já atende a essa exigência com folga.
+A **realocação** da vaga a outro inscrito não é automática nem faz parte deste requisito: ela é confirmada pelo supervisor do estagiário ao vincular o novo paciente (RF21), depois de a coordenação distribuir o caso a esse supervisor, quando ainda não estiver distribuído (RF20). Conforme confirmado pela Clínica Escola, a vaga deve ser liberada em até uma semana após o desligamento; a liberação em até 5 segundos definida no RNF34 já atende a essa exigência com folga.
 
 _Critérios de aceitação:_
 
