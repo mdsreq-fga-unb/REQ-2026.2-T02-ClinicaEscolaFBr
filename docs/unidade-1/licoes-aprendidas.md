@@ -4,7 +4,7 @@
 
 - A entrevista com o cliente precisa partir de um roteiro organizado, mas deve permitir perguntas de aprofundamento. As perguntas sobre fluxo, atores, regras, restrições e problemas revelaram informações que não apareceriam apenas na descrição inicial do projeto.
 - O problema mais relevante para o cliente deve orientar o escopo. A confirmação de presença, as faltas e o reaproveitamento de vagas foram priorizados porque afetam simultaneamente o atendimento à comunidade e a formação prática dos estagiários.
-- A delimitação explícita do MVP evita que funcionalidades desejáveis, como relatórios institucionais e prontuário completo, concorram com as entregas essenciais do semestre.
+- A delimitação explícita do MVP evita que funcionalidades desejáveis, como indicadores institucionais e a continuidade de casos entre semestres, concorram com as entregas essenciais do semestre.
 - A modelagem do domínio e a organização por features ajudam a transformar um processo manual amplo em funcionalidades menores, rastreáveis e passíveis de validação com o cliente.
 - A rastreabilidade precisa ser construída desde o início. Registrar decisões, atas, responsáveis, prioridades e vínculos entre características de produto e features reduz ambiguidades nas etapas seguintes.
 - A documentação publicada exige revisão específica de links, imagens, navegação e estrutura de diretórios. O conteúdo pode estar correto e ainda assim a entrega falhar por problemas de organização ou publicação.

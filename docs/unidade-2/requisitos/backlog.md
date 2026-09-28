@@ -2,9 +2,22 @@
 
 ## 10.2 Priorização e Recorte do MVP
 
-### 10.2.1 Avaliação do Esforço Técnico
+### 10.2.1 Avaliação de Valor de Negócio e de Esforço Técnico
 
-#### 10.2.1.1 Escalas adotadas
+#### 10.2.1.1 Escala e critérios de valor de negócio
+
+O valor de negócio de cada RF foi avaliado pela Clínica Escola FBr — Karla (secretaria) e Robson (coordenador do curso de Psicologia) —, a partir de um rascunho inicial preenchido pela equipe como ponto de partida, conforme alinhado na reunião de 24/09/2026 (ver [Reuniões da Unidade 2](../reunioes.md)). A escala adotada segue o método MoSCoW, com cada categoria associada a uma pontuação mensurável de 1 a 4, de significado claramente definido:
+
+| Pontuação | Classificação | Interpretação |
+| --- | --- | --- |
+| 4 | Must have | Indispensável para resolver o problema central ou viabilizar o produto |
+| 3 | Should have | Muito importante, mas o produto ainda pode operar temporariamente sem o requisito |
+| 2 | Could have | Agrega valor, mas pode ser adiado sem comprometer o objetivo principal |
+| 1 | Won't have now | Não é prioritário para a versão atual |
+
+A atribuição de cada nota não ficou restrita à etiqueta MoSCoW isolada: para cada RF, a Clínica Escola registrou uma justificativa em frase curta explicando o porquê da nota. Lidas em conjunto, essas justificativas apontam para critérios recorrentes — a importância do requisito para o problema central do projeto (as falhas de agendamento e de confirmação de presença que hoje produzem horários ociosos), a contribuição para os objetivos específicos da [Solução Proposta](../../unidade-1/solucao-proposta.md#22-objetivos-especificos-oe-do-produto), o impacto percebido por pacientes, estagiários e supervisores, e a dependência de outras funcionalidades já priorizadas — mas não seguiram um checklist formal aplicado requisito a requisito. As justificativas individuais estão registradas por RF na coluna "Justificativa do cliente" da tabela consolidada ([10.2.1.4](#10214-tabela-consolidada)).
+
+#### 10.2.1.2 Escalas adotadas
 
 Foram mantidas as três escalas propostas pela disciplina, todas orientadas no mesmo sentido (quanto maior a pontuação, maior o custo ou o risco).
 
@@ -37,7 +50,7 @@ O esforço considera o desenvolvimento completo do requisito — persistência, 
 | 3 | A equipe precisa desenvolver conhecimentos relevantes |
 | 4 | A equipe ainda não possui os conhecimentos ou recursos necessários |
 
-#### 10.2.1.2 Regra de consolidação
+#### 10.2.1.3 Regra de consolidação
 
 O esforço técnico consolidado de cada requisito é a média aritmética simples dos três critérios:
 
@@ -52,7 +65,7 @@ Regras definidas previamente e aplicadas de forma uniforme a todos os requisitos
 3. O valor decimal é o valor de referência. Quando for necessário convertê-lo para a escala de 1 a 4 (por exemplo, para posicionar o requisito na matriz 4 × 4), aplica-se o arredondamento para o inteiro mais próximo, com 0,5 arredondado para cima.
 4. A avaliação considerou a **descrição completa** de cada requisito, seus critérios de aceitação, suas dependências declaradas e as restrições transversais indicadas na rastreabilidade — não apenas o nome do requisito.
 
-#### 10.2.1.3 Tabela consolidada
+#### 10.2.1.4 Tabela consolidada
 
 | Código | Requisito | CP | Valor de negócio | Justificativa do cliente | Esforço | Complexidade | Lacuna de capacidade | Esforço técnico consolidado |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- |
@@ -122,32 +135,32 @@ Regras definidas previamente e aplicadas de forma uniforme a todos os requisitos
 | RF61 | Ativar modo de alto contraste | CP14 | 2 | Recurso específico de acessibilidade; a acessibilidade geral já é obrigatória pelo RNF56 | 2 | 2 | 2 | **2,0** |
 | RF62 | Ajustar tamanho do texto | CP14 | 2 | Recurso específico de acessibilidade complementar ao RNF56 | 3 | 3 | 2 | **2,7** |
 
-#### 10.2.1.4 Classificação preliminar dos Requisitos Não Funcionais
+#### 10.2.1.5 Classificação dos Requisitos Não Funcionais para o MVP
 
-A classificação abaixo é **preliminar** e foi produzida para permitir a continuidade da priorização antes da consolidação final da matriz 4 × 4. Como cenário de referência, foram considerados o núcleo provável do MVP, as dependências necessárias para completar esses fluxos e os RNFs mínimos de segurança, privacidade, acessibilidade, integridade e operação.
+A classificação abaixo relaciona cada Requisito Não Funcional (RNF) ao recorte final do MVP definido na seção [10.2.3](#1023-definicao-do-mvp), usando quatro categorias: **Obrigatório para o MVP** (aplica-se independentemente do RF específico, por decorrer de exigência transversal de segurança, privacidade, acessibilidade, integridade ou continuidade operacional), **Associado a RF do MVP** (sua aplicabilidade decorre diretamente de um RF que está no MVP), **Evolutivo** (o RF relacionado está no MVP, mas o próprio RNF pode ser refinado em iterações posteriores, sem bloquear o lançamento) e **Não aplicável ao MVP** (depende de um RF que ficou fora do recorte atual, a ser reavaliado se esse RF for incorporado). A classificação foi conferida requisito a requisito contra os 50 RFs efetivamente selecionados na seção 10.2.3 — inclusive a promoção de RF10 por dependência.
 
 | Código | Requisito não funcional | Classificação | RF/escopo relacionado | Justificativa |
 | --- | --- | --- | --- | --- |
 | RNF1 | Identificação e recuperação de erros no formulário | Associado a RF do MVP | RF1 | Aplica-se diretamente à inscrição on-line e evita perda dos dados válidos durante correções. |
-| RNF2 | Proteção das informações no comprovante de inscrição | Não aplicável ao MVP | RF2 | Depende do comprovante de inscrição; reavaliar caso RF2 seja selecionado no recorte final. |
+| RNF2 | Proteção das informações no comprovante de inscrição | Associado a RF do MVP | RF2 | RF2 está no recorte do MVP (Should have de esforço baixo); o comprovante de inscrição existe desde a primeira versão e sua proteção deve acompanhar o requisito. |
 | RNF3 | Sigilo das informações de triagem | Obrigatório para o MVP | CP2 | Protege dados sensíveis de triagem e é condição mínima de privacidade. |
-| RNF4 | Rastreabilidade das regras de sinalização | Não aplicável ao MVP | RF5 | Depende da sinalização automática de pontos de atenção; reavaliar se RF5 entrar no MVP. |
+| RNF4 | Rastreabilidade das regras de sinalização | Não aplicável ao MVP | RF5 | Depende da sinalização automática de pontos de atenção; RF5 fica fora do MVP. Reavaliar se RF5 for incorporado. |
 | RNF5 | Integridade e auditoria das decisões de prioridade | Obrigatório para o MVP | RF6 | A prioridade clínica afeta a fila e precisa preservar autoria, histórico e integridade. |
 | RNF6 | Privacidade e controle de acesso à consulta da fila | Obrigatório para o MVP | RF8, RF52 | A consulta individual envolve dado pessoal e exige verificação de identidade. |
 | RNF7 | Compreensibilidade das informações sobre a posição na fila | Associado a RF do MVP | RF8 | Acompanha a consulta de posição e evita interpretação da posição como garantia de prazo. |
-| RNF8 | Confiabilidade das informações institucionais da fila | Não aplicável ao MVP | RF9 | Relaciona-se às informações gerais da fila; reavaliar caso RF9 seja selecionado. |
-| RNF9 | Integridade do agendamento | Obrigatório para o MVP | CP4 | Evita conflitos de agenda e estados incompatíveis; condição operacional mínima. |
-| RNF10 | Auditoria das operações sobre a sessão | Associado a RF do MVP | RF10, RF12, RF14, RF15, RF16 | Acompanha operações de sessão e preserva rastreabilidade das alterações. |
-| RNF11 | Confiabilidade do envio de lembretes | Evolutivo | RF13 | A meta de confiabilidade do envio pode ser refinada após o fluxo básico de agendamento. |
-| RNF12 | Tempo de resposta nas operações de agendamento | Evolutivo | CP4 | Meta quantitativa de desempenho que pode ser calibrada com testes de carga. |
+| RNF8 | Confiabilidade das informações institucionais da fila | Não aplicável ao MVP | RF9 | Relaciona-se às informações gerais da fila; RF9 fica fora do MVP. Reavaliar se RF9 for incorporado. |
+| RNF9 | Integridade do agendamento | Obrigatório para o MVP | CP4 | Evita conflitos de agenda e estados incompatíveis; condição operacional mínima, reforçada pela promoção de RF10 ao MVP. |
+| RNF10 | Auditoria das operações sobre a sessão | Associado a RF do MVP | RF10, RF12, RF14, RF16 | Acompanha agendamento, reagendamento, confirmação de presença e cancelamento pelo estagiário — todos no MVP — preservando rastreabilidade das alterações; o cancelamento pelo paciente (RF15) fica fora por ora e entra no escopo de auditoria quando for incorporado. |
+| RNF11 | Confiabilidade do envio de lembretes | Evolutivo | RF13 | RF13 fica fora do MVP; a meta de confiabilidade do envio é refinada quando o lembrete automático for incorporado. |
+| RNF12 | Tempo de resposta nas operações de agendamento | Evolutivo | CP4 | Meta quantitativa de desempenho que pode ser calibrada com testes de carga após o fluxo mínimo (RF10–RF12, RF14, RF16–RF17) estar em produção. |
 | RNF13 | Minimização de dados na agenda | Obrigatório para o MVP | RF11 | Reduz exposição de dados e atende ao princípio de minimização. |
-| RNF14 | Disponibilidade do módulo de agendamento | Evolutivo | CP4 | Meta formal de disponibilidade depende de infraestrutura e monitoramento. |
+| RNF14 | Disponibilidade do módulo de agendamento | Evolutivo | CP4 | Meta formal de disponibilidade depende de infraestrutura e monitoramento, a formalizar após o MVP. |
 | RNF15 | Usabilidade da confirmação de presença pelo paciente | Associado a RF do MVP | RF14 | Acompanha a confirmação de presença e a proteção do fluxo público. |
-| RNF16 | Autorização para distribuição, vínculo e transferência de casos | Obrigatório para o MVP | RF20, RF21, RF25 | Alterações de responsabilidade clínica exigem autorização por perfil. |
+| RNF16 | Autorização para distribuição, vínculo e transferência de casos | Obrigatório para o MVP | RF20, RF21 | Alterações de responsabilidade clínica exigem autorização por perfil; a transferência de caso (RF25) fica fora do MVP por ora e será revisitada quando reintroduzida. |
 | RNF17 | Privacidade dos dados nas telas de distribuição e consulta | Obrigatório para o MVP | CP5 | As telas de distribuição não devem expor dados além do necessário. |
-| RNF18 | Auditoria de atribuições, vínculos e transferências | Associado a RF do MVP | RF20, RF21, RF25 | Acompanha alterações de responsáveis e preserva rastreabilidade. |
+| RNF18 | Auditoria de atribuições, vínculos e transferências | Associado a RF do MVP | RF20, RF21 | Acompanha distribuição e vínculo de responsáveis e preserva rastreabilidade; a auditoria da transferência (RF25) é tratada quando o requisito voltar ao escopo. |
 | RNF19 | Integridade dos vínculos de responsabilidade | Obrigatório para o MVP | RF20, RF21 | Impede vínculos incompatíveis e preserva consistência de responsabilidade. |
-| RNF20 | Continuidade do histórico na troca de responsável | Não aplicável ao MVP | RF25 | Depende da transferência de caso; reavaliar se RF25 for selecionado. |
+| RNF20 | Continuidade do histórico na troca de responsável | Não aplicável ao MVP | RF25 | Depende da transferência de caso; RF25 fica fora do MVP. Reavaliar se for incorporado. |
 | RNF21 | Desempenho das listagens e operações de vínculo | Evolutivo | CP5 | Meta de desempenho a refinar com massa de dados representativa. |
 | RNF22 | Usabilidade da distribuição e do vínculo de casos | Evolutivo | RF20, RF21 | Meta específica de usabilidade que pode ser refinada após validação do fluxo. |
 | RNF23 | Manutenibilidade das áreas de especialidade | Evolutivo | RF19 | Propriedade de modificabilidade importante, mas não impede a operação mínima. |
@@ -155,7 +168,7 @@ A classificação abaixo é **preliminar** e foi produzida para permitir a conti
 | RNF25 | Sigilo do conteúdo do prontuário | Obrigatório para o MVP | RF27, RF55 | O prontuário contém dados de saúde e exige proteção desde qualquer versão utilizável. |
 | RNF26 | Sigilo do conteúdo da evolução | Obrigatório para o MVP | RF28, RF55 | As evoluções contêm dados clínicos sensíveis e exigem sigilo. |
 | RNF27 | Integridade e proveniência dos registros de evolução | Obrigatório para o MVP | RF28, RF31, RF32 | Registros clínicos precisam preservar autor, sessão, paciente e histórico. |
-| RNF28 | Auditoria das correções de evolução | Não aplicável ao MVP | RF29 | Depende da funcionalidade específica de correção; reavaliar se RF29 entrar no MVP. |
+| RNF28 | Auditoria das correções de evolução | Não aplicável ao MVP | RF29 | Depende da funcionalidade específica de correção; RF29 fica fora do MVP. Reavaliar se for incorporado. |
 | RNF29 | Desempenho do registro e da consulta de evolução | Evolutivo | CP7 | Meta quantitativa de desempenho a aferir após implementação do fluxo funcional. |
 | RNF30 | Usabilidade do registro de evolução | Evolutivo | RF28 | Meta de tempo/interações que pode ser refinada com testes de estagiários. |
 | RNF31 | Fidelidade e rastreabilidade do relatório final | Associado a RF do MVP | RF33 | Acompanha o relatório final e garante correspondência com as evoluções e versões. |
@@ -172,25 +185,24 @@ A classificação abaixo é **preliminar** e foi produzida para permitir a conti
 | RNF42 | Portabilidade do documento | Associado a RF do MVP | RF45 | Acompanha a emissão e garante PDF A4 legível para uso externo. |
 | RNF43 | Acessibilidade da tela de emissão | Obrigatório para o MVP | RF44, RF45 | A interface de emissão deve atender requisitos mínimos de acessibilidade. |
 | RNF44 | Integridade do conteúdo da declaração | Associado a RF do MVP | RF45, RF46 | Garante coerência entre documento emitido/reemitido e registro de origem. |
-| RNF45 | Segurança da consulta pública de autenticidade | Não aplicável ao MVP | RF47 | É exclusiva da validação pública de autenticidade, de menor prioridade no cenário provisório. |
-| RNF46 | Atualização dos indicadores operacionais | Não aplicável ao MVP | RF48 | Depende da consulta de indicadores; reavaliar se RF48 entrar no MVP. |
-| RNF47 | Tempo de geração do relatório institucional | Não aplicável ao MVP | RF48, RF49 | Aplica-se a indicadores/exportação institucional, tratados como posterior no cenário provisório. |
-| RNF48 | Auditoria de relatórios institucionais | Não aplicável ao MVP | RF49 | É exclusiva da exportação do relatório institucional. |
+| RNF45 | Segurança da consulta pública de autenticidade | Não aplicável ao MVP | RF47 | É exclusiva da validação pública de autenticidade; RF47 fica fora do MVP. |
+| RNF46 | Atualização dos indicadores operacionais | Não aplicável ao MVP | RF48 | Depende da consulta de indicadores; RF48 fica fora do MVP. Reavaliar se for incorporado. |
+| RNF47 | Tempo de geração do relatório institucional | Não aplicável ao MVP | RF48, RF49 | Aplica-se a indicadores/exportação institucional, ambos fora do MVP final. |
+| RNF48 | Auditoria de relatórios institucionais | Não aplicável ao MVP | RF49 | É exclusiva da exportação do relatório institucional; RF49 fica fora do MVP. |
 | RNF49 | Proteção das credenciais de acesso | Obrigatório para o MVP | RF50, RF53 | Senha, hash e bloqueio contra tentativas são controles mínimos de autenticação. |
 | RNF50 | Expiração da sessão por inatividade | Obrigatório para o MVP | RF50, RF51 | Reduz exposição de dados em computadores compartilhados. |
 | RNF51 | Criptografia dos dados | Obrigatório para o MVP | Transversal | Protege dados sensíveis em trânsito e em repouso; condição de segurança e privacidade. |
 | RNF52 | Trilha de auditoria de acessos ao prontuário | Obrigatório para o MVP | RF55, RF56 | Acesso ao prontuário exige rastreabilidade de acessos permitidos e negados. |
 | RNF53 | Cópia de segurança e recuperação dos dados | Obrigatório para o MVP | Transversal | Requisito mínimo de continuidade operacional e preservação dos registros. |
-| RNF54 | Auditoria das decisões de continuidade | Não aplicável ao MVP | RF59 | Depende do fluxo de continuidade entre semestres; reavaliar se RF59 entrar no MVP. |
-| RNF55 | Integridade do histórico na continuidade | Não aplicável ao MVP | RF60 | Aplica-se à continuidade/transferência entre semestres; reavaliar se RF60 entrar no MVP. |
-| RNF56 | Conformidade com WCAG 2.2 nível AA | Obrigatório para o MVP | CP14 / páginas externas | Acessibilidade foi confirmada como mandatória pela FBr/MEC e deve existir desde o MVP. |
-| RNF57 | Aparência reforçada do indicador de foco | Evolutivo | RF61, RF62 / páginas externas | Exigência adicional de nível AAA; importante para baixa visão, mas vai além do mínimo AA obrigatório. |
+| RNF54 | Auditoria das decisões de continuidade | Não aplicável ao MVP | RF59 | Depende do fluxo de continuidade entre semestres; toda a CP13 (RF58–RF60) fica fora do MVP. |
+| RNF55 | Integridade do histórico na continuidade | Não aplicável ao MVP | RF60 | Aplica-se à continuidade/transferência entre semestres; RF60 fica fora do MVP. |
+| RNF56 | Conformidade com WCAG 2.2 nível AA | Obrigatório para o MVP | CP14 / páginas externas | Acessibilidade foi confirmada como mandatória pela FBr/MEC e deve existir desde o MVP, mesmo com RF61 e RF62 fora do recorte técnico. |
+| RNF57 | Aparência reforçada do indicador de foco | Evolutivo | RF61, RF62 / páginas externas | Exigência adicional de nível AAA; RF61 e RF62 ficam fora do MVP, mas a meta AA do RNF56 permanece obrigatória. |
 | RNF58 | Responsividade da interface | Obrigatório para o MVP | Páginas externas | A solução é web responsiva e precisa funcionar entre 320 e 1920 px sem perda funcional. |
-
 
 ### 10.2.2 Matriz de Priorização (Valor de Negócio × Esforço Técnico)
 
-A matriz cruza o valor de negócio de cada RF (1 a 4, resposta da Clínica Escola FBr à planilha de avaliação) com o esforço técnico consolidado, convertido para a escala inteira de 1 a 4 pela regra 3 da seção [10.2.1.2](#1021-avaliacao-do-esforco-tecnico) (arredondamento para o inteiro mais próximo, com 0,5 para cima). Os 65 RFs atualmente declarados (RF1 a RF65) estão distribuídos no gráfico abaixo, dividido nos quatro quadrantes apresentados pelo professor na atividade: **Quick wins** (valor alto, esforço baixo), **Grandes projetos** (valor alto, esforço alto), **Preenchimento** (valor baixo, esforço baixo) e **Tarefas ingratas** (valor baixo, esforço alto).
+A matriz cruza o valor de negócio de cada RF (1 a 4, resposta da Clínica Escola FBr à planilha de avaliação) com o esforço técnico consolidado, convertido para a escala inteira de 1 a 4 pela regra 3 da seção [10.2.1.3](#10213-regra-de-consolidacao) (arredondamento para o inteiro mais próximo, com 0,5 para cima). Os 65 RFs atualmente declarados (RF1 a RF65) estão distribuídos no gráfico abaixo, dividido nos quatro quadrantes apresentados pelo professor na atividade: **Quick wins** (valor alto, esforço baixo), **Grandes projetos** (valor alto, esforço alto), **Preenchimento** (valor baixo, esforço baixo) e **Tarefas ingratas** (valor baixo, esforço alto).
 
 ![Matriz de Priorização — Valor de Negócio × Esforço Técnico (RF1 a RF65)](../../assets/matriz-priorizacao-mvp.png)
 
@@ -204,8 +216,9 @@ O corte de MVP foi definido a partir da própria escala de valor de negócio usa
 2. **Valor 1 (Won't have now):** fica fora do MVP independentemente do esforço técnico, porque o próprio cliente já definiu que não é prioridade para esta versão.
 3. **Valor 3 (Should have):** entra no MVP somente com esforço técnico baixo ou moderado (1 ou 2). Com esforço alto ou muito alto (3 ou 4), fica para depois — o sistema consegue operar um tempo sem esses requisitos, e não vale o risco de entregar algo caro que não é indispensável.
 4. **Valor 2 (Could have):** entra no MVP somente com esforço técnico muito baixo (1), quando o custo de entregar já é praticamente o de não entregar. Com esforço 2 ou mais, fica para depois.
+5. **Exceção por dependência funcional:** um requisito que a regra 3 ou 4 excluiria pode ser promovido ao MVP quando outros requisitos já incluídos dependem diretamente dele para formar um fluxo de uso minimamente completo — situação prevista no enunciado da atividade ("Um RF de alto valor e alto esforço não deve ser automaticamente descartado" e a necessidade de "formar um fluxo de uso minimamente completo"). Essa exceção foi aplicada uma única vez, a RF10 (ver tabela abaixo): RF11, RF12, RF14, RF16, RF17 e RF43 já estão no MVP e pressupõem uma sessão previamente agendada — sem RF10, esses seis requisitos não têm sobre o que operar. A regra 3 classificaria RF10 como fora do MVP (Should have, esforço alto); a exceção por dependência o promove para dentro. Nenhum outro RF excluído pelas regras 1–4 tem essa mesma condição de bloqueio: os demais RFs fora do MVP (RF5, RF9, RF13, RF15, RF25, RF26, RF29, RF47, RF48, RF49, RF58, RF59, RF60, RF61, RF62) são consultas, refinamentos ou fluxos que os RFs do MVP não pressupõem como pré-condição de existir.
 
-Aplicando o critério aos 65 RFs (RF1 a RF65): **49 entram no MVP** e **16 ficam para uma versão posterior** — 39 por serem *Must have*, 8 *Should have* de baixo esforço e 2 *Could have* de esforço mínimo; dos 16 de fora, 10 são *Should have* de esforço alto, 4 são *Could have* de esforço moderado/alto e 2 são *Won't have now*.
+Aplicando o critério aos 65 RFs (RF1 a RF65): **50 entram no MVP** e **15 ficam para uma versão posterior** — 39 por serem *Must have*, 8 *Should have* de baixo esforço, 1 *Should have* de esforço alto promovido por dependência (RF10) e 2 *Could have* de esforço mínimo; dos 15 de fora, 9 são *Should have* de esforço alto, 4 são *Could have* de esforço moderado/alto e 2 são *Won't have now*.
 
 A tabela abaixo aplica o critério requisito a requisito, mantendo a rastreabilidade entre CP, valor de negócio, esforço técnico e a decisão:
 
@@ -220,7 +233,7 @@ A tabela abaixo aplica o critério requisito a requisito, mantendo a rastreabili
 | RF7 | CP3 | 4 | 3 | Sim | Must have — indispensável; entra independentemente do esforço. |
 | RF8 | CP3 | 4 | 2 | Sim | Must have — indispensável; entra independentemente do esforço. |
 | RF9 | CP3 | 2 | 2 | Não | Could have com esforço moderado/alto — pode esperar, conforme a própria definição do cliente. |
-| RF10 | CP4 | 3 | 3 | Não | Should have com esforço alto — o sistema opera um tempo sem isso; adiado para reduzir risco do MVP. |
+| RF10 | CP4 | 3 | 3 | Sim | Should have com esforço alto, mas promovido ao MVP por dependência: RF11, RF12, RF14, RF16, RF17 e RF43 (todos no MVP) pressupõem uma sessão já agendada — sem RF10 esses RFs não têm sobre o que operar, quebrando o fluxo mínimo de uso. |
 | RF11 | CP4 | 4 | 2 | Sim | Must have — indispensável; entra independentemente do esforço. |
 | RF12 | CP4 | 4 | 3 | Sim | Must have — indispensável; entra independentemente do esforço. |
 | RF13 | CP4 | 3 | 4 | Não | Should have com esforço alto — o sistema opera um tempo sem isso; adiado para reduzir risco do MVP. |
@@ -277,4 +290,4 @@ A tabela abaixo aplica o critério requisito a requisito, mantendo a rastreabili
 | RF61 | CP14 | 2 | 2 | Não | Could have com esforço moderado/alto — pode esperar, conforme a própria definição do cliente. |
 | RF62 | CP14 | 2 | 3 | Não | Could have com esforço moderado/alto — pode esperar, conforme a própria definição do cliente. |
 
-**Este recorte é uma proposta técnica da equipe**, construída a partir dos dados já validados com a FBr (valor de negócio) e da avaliação interna de esforço; segue para validação em conjunto com a equipe antes de ser considerado definitivo, no mesmo espírito das demais pendências registradas na [seção 8.3](analise-feedback.md#pendencias-de-validacao-com-a-fbr). A classificação preliminar dos RNFs (seção 10.2.1.4) ainda precisa ser revisitada à luz deste recorte final de RFs, como já registrado naquela seção.
+**Este recorte é uma proposta técnica da equipe**, construída a partir dos dados já validados com a FBr (valor de negócio) e da avaliação interna de esforço; segue para validação em conjunto com a equipe antes de ser considerado definitivo, no mesmo espírito das demais pendências registradas na [seção 8.3](analise-feedback.md#pendencias-de-validacao-com-a-fbr). A classificação dos RNFs para o MVP (seção [10.2.1.5](#10215-classificacao-dos-requisitos-nao-funcionais-para-o-mvp)) já reflete este recorte final de 50 RFs, incluindo a promoção de RF10 por dependência.
