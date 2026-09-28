@@ -190,16 +190,11 @@ A classificação abaixo é **preliminar** e foi produzida para permitir a conti
 
 ### 10.2.2 Matriz de Priorização (Valor de Negócio × Esforço Técnico)
 
-A matriz cruza o valor de negócio de cada RF (1 a 4, resposta da Clínica Escola FBr à planilha de avaliação) com o esforço técnico consolidado, convertido para a escala inteira de 1 a 4 pela regra 3 da seção [10.2.1.2](#1021-avaliacao-do-esforco-tecnico) (arredondamento para o inteiro mais próximo, com 0,5 para cima). Os 65 RFs atualmente declarados (RF1 a RF65) estão distribuídos nas 16 células abaixo.
+A matriz cruza o valor de negócio de cada RF (1 a 4, resposta da Clínica Escola FBr à planilha de avaliação) com o esforço técnico consolidado, convertido para a escala inteira de 1 a 4 pela regra 3 da seção [10.2.1.2](#1021-avaliacao-do-esforco-tecnico) (arredondamento para o inteiro mais próximo, com 0,5 para cima). Os 65 RFs atualmente declarados (RF1 a RF65) estão distribuídos no gráfico abaixo, dividido nos quatro quadrantes apresentados pelo professor na atividade: **Quick wins** (valor alto, esforço baixo), **Grandes projetos** (valor alto, esforço alto), **Preenchimento** (valor baixo, esforço baixo) e **Tarefas ingratas** (valor baixo, esforço alto).
 
-| Valor de negócio (linhas) / Esforço técnico (colunas) | 1 — baixo | 2 — moderado | 3 — alto | 4 — muito alto |
-| --- | --- | --- | --- | --- |
-| **4** | **RF19**, **RF51** | **RF4**, **RF8**, **RF11**, **RF18**, **RF23**, **RF28**, **RF31**, **RF34**, **RF35**, **RF36**, **RF40**, **RF63**, **RF64**, **RF41**, **RF42**, **RF50**, **RF54** | **RF1**, **RF6**, **RF7**, **RF12**, **RF14**, **RF20**, **RF21**, **RF32**, **RF43**, **RF45**, **RF53**, **RF56**, **RF57** | **RF27**, **RF33**, **RF37**, **RF38**, **RF52**, **RF55**, **RF65** |
-| **3** | **RF2** | **RF3**, **RF16**, **RF17**, **RF30**, **RF39**, **RF44**, **RF46** | RF10, RF15, RF29, RF58, RF60 | RF5, RF13, RF25, RF48, RF59 |
-| **2** | **RF22**, **RF24** | RF9, RF61 | RF47, RF62 | — |
-| **1** | — | RF26, RF49 | — | — |
+![Matriz de Priorização — Valor de Negócio × Esforço Técnico (RF1 a RF65)](../../assets/matriz-priorizacao-mvp.png)
 
-Os códigos em **negrito** compõem o recorte de MVP proposto na seção 10.2.3; os demais ficam para uma versão posterior. O critério de corte, célula a célula, está detalhado a seguir.
+Os pontos em azul compõem o recorte de MVP proposto na seção 10.2.3; os pontos em laranja ficam para uma versão posterior. Dentro de cada célula da matriz (mesmo valor e mesmo esforço), os RFs são dispersos lado a lado apenas para permitir a leitura individual de cada ponto — essa dispersão não representa nenhuma ordem adicional de prioridade dentro da célula. A tabela completa com o valor, o esforço e a decisão de MVP de cada RF, célula a célula, está detalhada na seção 10.2.3 a seguir.
 
 ### 10.2.3 Definição do MVP
 
