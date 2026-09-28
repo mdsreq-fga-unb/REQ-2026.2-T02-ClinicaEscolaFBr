@@ -2,6 +2,8 @@
 
 Esta seção registra a análise dos apontamentos feitos pela equipe **Sem Requisitos** na verificação cruzada dos requisitos funcionais (RFs) e não funcionais (RNFs), realizada entre 22/09 e 24/09/2026 ([cronograma da Unidade 2](../gestao/cronograma.md)). Cada apontamento foi analisado pelo integrante responsável pela CP correspondente, que corrigiu o requisito quando pertinente e registrou a decisão tomada, com a justificativa. As decisões são revisadas em conjunto pela equipe, com participação do monitor, antes da publicação da versão final.
 
+A planilha original de apontamentos da equipe **Sem Requisitos**, com as colunas **Decisão da equipe** e **Justificativa e ajuste realizado** desta análise preenchidas para todos os RFs e RNFs, está disponível em [`docs/assets/Feedbacks_semrequisitos_to_storm_com_decisoes.xlsx`](../../assets/Feedbacks_semrequisitos_to_storm_com_decisoes.xlsx) para consulta e conferência cruzada com as tabelas abaixo.
+
 As decisões seguem as categorias abaixo:
 
 | Decisão                 | Significado                                                                                                   |
