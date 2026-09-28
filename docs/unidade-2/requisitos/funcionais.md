@@ -6,118 +6,108 @@ Os requisitos funcionais (RFs) são declarados a partir da decomposição das Ca
 
 ### Lista de features (FDD)
 
-```text
-Área: Inscrição no atendimento
-  Conjunto: Inscrição on-line
-    Feature: Registrar solicitação de atendimento on-line
-    Feature: Emitir comprovante de inscrição
-    Feature: Registrar inscrição assistida
+Sumário de todas as features declaradas, organizadas por Área e Conjunto conforme o processo FDD. Cada item é um link que leva à declaração completa da feature (e dos RFs associados) na seção correspondente desta página.
 
-Área: Triagem clínica
-  Conjunto: Triagem e sinalização de casos
-    Feature: Organizar informações da inscrição para triagem
-    Feature: Sinalizar pontos de atenção da inscrição
-    Feature: Registrar prioridade clínica do inscrito
+- **Área: Inscrição no atendimento**
+    - *Conjunto: Inscrição on-line*
+        - [Registrar solicitação de atendimento on-line](#feature-registrar-solicitacao-de-atendimento-on-line)
+        - [Emitir comprovante de inscrição](#feature-emitir-comprovante-de-inscricao)
+        - [Registrar inscrição assistida](#feature-registrar-inscricao-assistida)
+- **Área: Triagem clínica**
+    - *Conjunto: Triagem e sinalização de casos*
+        - [Organizar informações da inscrição para triagem](#feature-organizar-informacoes-da-inscricao-para-triagem)
+        - [Sinalizar pontos de atenção da inscrição](#feature-sinalizar-pontos-de-atencao-da-inscricao)
+        - [Registrar prioridade clínica do inscrito](#feature-registrar-prioridade-clinica-do-inscrito)
+- **Área: Gestão da fila de espera**
+    - *Conjunto: Fila de espera e consulta de posição*
+        - [Ordenar inscritos na fila de espera](#feature-ordenar-inscritos-na-fila-de-espera)
+        - [Consultar posição individual na fila](#feature-consultar-posicao-individual-na-fila)
+        - [Manter e informar condições gerais da fila](#feature-manter-e-informar-condicoes-gerais-da-fila)
+- **Área: Agendamento e acompanhamento de sessões**
+    - *Conjunto: Agendamento*
+        - [Agendar sessão do paciente](#feature-agendar-sessao-do-paciente)
+        - [Consultar agenda de sessões do estagiário](#feature-consultar-agenda-de-sessoes-do-estagiario)
+        - [Reagendar sessão do paciente](#feature-reagendar-sessao-do-paciente)
+    - *Conjunto: Confirmação e lembrete*
+        - [Enviar lembrete de sessão agendada](#feature-enviar-lembrete-de-sessao-agendada)
+        - [Confirmar presença em sessão agendada](#feature-confirmar-presenca-em-sessao-agendada)
+    - *Conjunto: Cancelamento*
+        - [Registrar cancelamento de sessão pelo paciente](#feature-registrar-cancelamento-de-sessao-pelo-paciente)
+        - [Registrar cancelamento de sessão pelo estagiário](#feature-registrar-cancelamento-de-sessao-pelo-estagiario)
+        - [Notificar paciente sobre ausência do estagiário](#feature-notificar-paciente-sobre-ausencia-do-estagiario)
+- **Área: Gestão de casos**
+    - *Conjunto: Distribuição entre supervisores*
+        - [Listar casos aguardando distribuição](#feature-listar-casos-aguardando-distribuicao)
+        - [Registrar áreas de especialidade do supervisor](#feature-registrar-areas-de-especialidade-do-supervisor)
+        - [Distribuir caso a supervisor conforme área de especialidade](#feature-distribuir-caso-a-supervisor-conforme-area-de-especialidade)
+    - *Conjunto: Vinculação a estagiário*
+        - [Vincular paciente a estagiário responsável](#feature-vincular-paciente-a-estagiario-responsavel)
+        - [Consultar responsáveis pelo caso](#feature-consultar-responsaveis-pelo-caso)
+        - [Consultar casos sob responsabilidade do estagiário ou supervisor](#feature-consultar-casos-sob-responsabilidade-do-estagiario-ou-supervisor)
+    - *Conjunto: Acompanhamento e reorganização*
+        - [Visualizar distribuição de casos por supervisor](#feature-visualizar-distribuicao-de-casos-por-supervisor)
+        - [Transferir caso para outro estagiário ou supervisor](#feature-transferir-caso-para-outro-estagiario-ou-supervisor)
+        - [Consultar histórico de responsáveis do caso](#feature-consultar-historico-de-responsaveis-do-caso)
+- **Área: Acompanhamento clínico**
+    - *Conjunto: Prontuário*
+        - [Consultar prontuário do paciente](#feature-consultar-prontuario-do-paciente)
+    - *Conjunto: Registro de evolução por sessão*
+        - [Registrar evolução da sessão realizada](#feature-registrar-evolucao-da-sessao-realizada)
+        - [Corrigir evolução registrada](#feature-corrigir-evolucao-registrada)
+        - [Registrar complemento de evolução da sessão](#feature-registrar-complemento-de-evolucao-da-sessao)
+        - [Consultar evolução de uma sessão específica](#feature-consultar-evolucao-de-uma-sessao-especifica)
+        - [Consultar histórico de evolução do paciente](#feature-consultar-historico-de-evolucao-do-paciente)
+    - *Conjunto: Encerramento do ciclo*
+        - [Gerar relatório final de evolução](#feature-gerar-relatorio-final-de-evolucao)
+- **Área: Assiduidade e alertas**
+    - *Conjunto: Controle de faltas do paciente*
+        - [Registrar falta do paciente na sessão](#feature-registrar-falta-do-paciente-na-sessao)
+        - [Contabilizar faltas do paciente no ciclo](#feature-contabilizar-faltas-do-paciente-no-ciclo)
+        - [Emitir alerta de limite de faltas atingido](#feature-emitir-alerta-de-limite-de-faltas-atingido)
+        - [Desligar paciente por faltas e liberar vaga](#feature-desligar-paciente-por-faltas-e-liberar-vaga)
+        - [Reverter desligamento de paciente por faltas](#feature-reverter-desligamento-de-paciente-por-faltas)
+    - *Conjunto: Controle de faltas do estagiário*
+        - [Consolidar faltas do estagiário para a supervisão](#feature-consolidar-faltas-do-estagiario-para-a-supervisao)
+        - [Contabilizar faltas do estagiário no semestre](#feature-contabilizar-faltas-do-estagiario-no-semestre)
+        - [Sinalizar reprovação do estagiário por faltas](#feature-sinalizar-reprovacao-do-estagiario-por-faltas)
+        - [Registrar decisão institucional sobre a reprovação do estagiário](#feature-registrar-decisao-institucional-sobre-a-reprovacao-do-estagiario)
+- **Área: Registros administrativos do atendimento**
+    - *Conjunto: Contribuição social*
+        - [Registrar pagamento da contribuição social do paciente](#feature-registrar-pagamento-da-contribuicao-social-do-paciente-43)
+        - [Consultar situação da contribuição social dos pacientes](#feature-consultar-situacao-da-contribuicao-social-dos-pacientes-44)
+        - [Bloquear agendamento por contribuição social pendente](#feature-bloquear-agendamento-por-contribuicao-social-pendente)
+    - *Conjunto: Declaração de comparecimento*
+        - [Listar sessões com comparecimento registrado do paciente](#feature-listar-sessoes-com-comparecimento-registrado-do-paciente)
+        - [Emitir declaração de comparecimento do paciente](#feature-emitir-declaracao-de-comparecimento-do-paciente)
+        - [Reemitir declaração de comparecimento](#feature-reemitir-declaracao-de-comparecimento)
+        - [Validar autenticidade da declaração](#feature-validar-autenticidade-da-declaracao)
+- **Área: Gestão institucional**
+    - *Conjunto: Indicadores e relatórios institucionais*
+        - [Consultar indicadores operacionais](#feature-consultar-indicadores-operacionais-22)
+        - [Exportar relatório institucional em PDF](#feature-exportar-relatorio-institucional-em-pdf-23)
+- **Área: Acesso e segurança**
+    - *Conjunto: Autenticação*
+        - [Autenticar usuário institucional](#feature-autenticar-usuario-institucional-45)
+        - [Encerrar sessão do usuário](#feature-encerrar-sessao-do-usuario-46)
+        - [Verificar identidade do paciente ou responsável](#feature-verificar-identidade-do-paciente-ou-responsavel-47)
+    - *Conjunto: Controle de acesso por perfil*
+        - [Cadastrar usuário institucional com perfil de acesso](#feature-cadastrar-usuario-institucional-com-perfil-de-acesso-48)
+        - [Desativar usuário institucional](#feature-desativar-usuario-institucional-49)
+        - [Restringir acesso ao prontuário do paciente](#feature-restringir-acesso-ao-prontuario-do-paciente-50)
+    - *Conjunto: Proteção de dados*
+        - [Consultar registro de acessos ao prontuário](#feature-consultar-registro-de-acessos-ao-prontuario-51)
+        - [Registrar consentimento para tratamento de dados](#feature-registrar-consentimento-para-tratamento-de-dados-52)
+        - [Registrar revogação do consentimento](#feature-registrar-revogacao-do-consentimento)
+- **Área: Continuidade do atendimento**
+    - *Conjunto: Continuidade de casos entre semestres*
+        - [Listar casos elegíveis para continuidade entre semestres](#feature-listar-casos-elegiveis-para-continuidade-entre-semestres)
+        - [Registrar decisão de continuidade do caso](#feature-registrar-decisao-de-continuidade-do-caso)
+        - [Vincular caso a novo estagiário na continuidade](#feature-vincular-caso-a-novo-estagiario-na-continuidade)
+- **Área: Acessibilidade e usabilidade**
+    - *Conjunto: Personalização de exibição*
+        - [Ativar modo de alto contraste](#feature-ativar-modo-de-alto-contraste-24)
+        - [Ajustar tamanho do texto](#feature-ajustar-tamanho-do-texto-25)
 
-Área: Gestão da fila de espera
-  Conjunto: Fila de espera e consulta de posição
-    Feature: Ordenar inscritos na fila de espera
-    Feature: Consultar posição individual na fila
-    Feature: Manter e informar condições gerais da fila
-
-Área: Agendamento e acompanhamento de sessões
-  Conjunto: Agendamento
-    Feature: Agendar sessão do paciente
-    Feature: Consultar agenda de sessões do estagiário
-    Feature: Reagendar sessão do paciente
-  Conjunto: Confirmação e lembrete
-    Feature: Enviar lembrete de sessão agendada
-    Feature: Confirmar presença em sessão agendada
-  Conjunto: Cancelamento
-    Feature: Registrar cancelamento de sessão pelo paciente
-    Feature: Registrar cancelamento de sessão pelo estagiário
-    Feature: Notificar paciente sobre ausência do estagiário
-
-Área: Gestão de casos
-  Conjunto: Distribuição entre supervisores
-    Feature: Listar casos aguardando distribuição
-    Feature: Registrar áreas de especialidade do supervisor
-    Feature: Distribuir caso a supervisor conforme área de especialidade
-  Conjunto: Vinculação a estagiário
-    Feature: Vincular paciente a estagiário responsável
-    Feature: Consultar responsáveis pelo caso
-    Feature: Consultar casos sob responsabilidade do estagiário ou supervisor
-  Conjunto: Acompanhamento e reorganização
-    Feature: Visualizar distribuição de casos por supervisor
-    Feature: Transferir caso para outro estagiário ou supervisor
-    Feature: Consultar histórico de responsáveis do caso
-
-Área: Acompanhamento clínico
-  Conjunto: Prontuário
-    Feature: Consultar prontuário do paciente
-  Conjunto: Registro de evolução por sessão
-    Feature: Registrar evolução da sessão realizada
-    Feature: Corrigir evolução registrada
-    Feature: Registrar complemento de evolução da sessão
-    Feature: Consultar evolução de uma sessão específica
-    Feature: Consultar histórico de evolução do paciente
-  Conjunto: Encerramento do ciclo
-    Feature: Gerar relatório final de evolução
-
-Área: Assiduidade e alertas
-  Conjunto: Controle de faltas do paciente
-    Feature: Registrar falta do paciente na sessão
-    Feature: Contabilizar faltas do paciente no ciclo
-    Feature: Emitir alerta de limite de faltas atingido
-    Feature: Desligar paciente por faltas e liberar vaga
-    Feature: Reverter desligamento de paciente por faltas
-  Conjunto: Controle de faltas do estagiário
-    Feature: Consolidar faltas do estagiário para a supervisão
-    Feature: Contabilizar faltas do estagiário no semestre
-    Feature: Sinalizar reprovação do estagiário por faltas
-    Feature: Registrar decisão institucional sobre a reprovação do estagiário
-
-Área: Registros administrativos do atendimento
-  Conjunto: Contribuição social
-    Feature: Registrar pagamento da contribuição social do paciente
-    Feature: Consultar situação da contribuição social dos pacientes
-    Feature: Bloquear agendamento por contribuição social pendente
-  Conjunto: Declaração de comparecimento
-    Feature: Listar sessões com comparecimento registrado do paciente
-    Feature: Emitir declaração de comparecimento do paciente
-    Feature: Reemitir declaração de comparecimento
-    Feature: Validar autenticidade da declaração
-
-Área: Gestão institucional
-  Conjunto: Indicadores e relatórios institucionais
-    Feature: Consultar indicadores operacionais
-    Feature: Exportar relatório institucional em PDF
-
-Área: Acesso e segurança
-  Conjunto: Autenticação
-    Feature: Autenticar usuário institucional
-    Feature: Encerrar sessão do usuário
-    Feature: Verificar identidade do paciente ou responsável
-  Conjunto: Controle de acesso por perfil
-    Feature: Cadastrar usuário institucional com perfil de acesso
-    Feature: Desativar usuário institucional
-    Feature: Restringir acesso ao prontuário do paciente
-  Conjunto: Proteção de dados
-    Feature: Consultar registro de acessos ao prontuário
-    Feature: Registrar consentimento para tratamento de dados
-    Feature: Registrar revogação do consentimento
-
-Área: Continuidade do atendimento
-  Conjunto: Continuidade de casos entre semestres
-    Feature: Listar casos elegíveis para continuidade entre semestres
-    Feature: Registrar decisão de continuidade do caso
-    Feature: Vincular caso a novo estagiário na continuidade
-
-Área: Acessibilidade e usabilidade
-  Conjunto: Personalização de exibição
-    Feature: Ativar modo de alto contraste
-    Feature: Ajustar tamanho do texto
-```
 
 ### Inscrição on-line (CP1)
 
@@ -1244,7 +1234,7 @@ _Rastreabilidade:_ Feature "Registrar revogação do consentimento" → CP12 —
 
 A CP13 foi decomposta em três features, que organizam a transferência de um caso e de seu histórico clínico quando o estagiário responsável conclui o estágio, preservando a continuidade do acompanhamento do paciente nos semestres seguintes, conforme a [Solução Proposta, §2.3](../../unidade-1/solucao-proposta.md#23-caracteristicas-de-produto-mapeadas-com-os-objetivos-especificos).
 
-Diferentemente da transferência de caso já prevista na CP5 (RF25 — Transferir caso para outro estagiário ou supervisor), que trata de uma reorganização pontual e a qualquer momento do semestre, a CP13 trata do processo estruturado de virada de semestre: identificar, para cada estagiário que está concluindo o estágio, os casos ativos sob sua responsabilidade, registrar a decisão de continuidade (ou de encerramento) de cada um e, quando aplicável, efetivar a transferência para o novo estagiário responsável, reaproveitando o mecanismo do RF25. Para tornar esse fluxo verificável, os requisitos abaixo adotam datas configuradas por semestre e confirmação explícita da coordenação; a CP permanece como visão de produto de mais longo prazo, fora do MVP e do escopo desejável imediato.
+Diferentemente da transferência de caso já prevista na CP5 (RF25 — Transferir caso para outro estagiário ou supervisor), que trata de uma reorganização pontual e a qualquer momento do semestre, a CP13 trata do processo estruturado de virada de semestre: identificar, para cada estagiário que está concluindo o estágio, os casos ativos sob sua responsabilidade, registrar a decisão de continuidade (ou de encerramento) de cada um e, quando aplicável, efetivar a transferência para o novo estagiário responsável, reaproveitando o mecanismo do RF25. Para tornar esse fluxo verificável, os requisitos abaixo adotam datas configuradas por semestre e confirmação explícita da coordenação; a CP permanece como visão de produto de mais longo prazo, fora do MVP e do escopo desejável imediato, confirmado pelo recorte técnico de MVP em [10.2.3](backlog.md#1023-definicao-do-mvp) (RF58, RF59 e RF60 fora do MVP).
 
 #### Feature — Listar casos elegíveis para continuidade entre semestres
 

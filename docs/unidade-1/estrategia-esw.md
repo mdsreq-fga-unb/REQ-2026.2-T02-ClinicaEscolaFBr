@@ -45,9 +45,9 @@ O fluxo de inscrição, triagem por prioridade clínica, fila de espera, distrib
 
 ### 2. As características do produto já se decompõem em features pequenas e demonstráveis
 
-As doze características definidas na [Solução Proposta](solucao-proposta.md), da inscrição on-line ao controle de assiduidade e à emissão de declarações, correspondem a funcionalidades delimitadas, com valor perceptível para a clínica e para o paciente, compatíveis com a definição de feature adotada pelo FDD: uma pequena função valorizada pelo cliente, implementável em duas semanas ou menos e declarada no formato `<ação> <resultado> <objeto>`.
+As quatorze características definidas na [Solução Proposta](solucao-proposta.md), da inscrição on-line ao controle de assiduidade e à emissão de declarações, correspondem a funcionalidades delimitadas, com valor perceptível para a clínica e para o paciente, compatíveis com a definição de feature adotada pelo FDD: uma pequena função valorizada pelo cliente, implementável em duas semanas ou menos e declarada no formato `<ação> <resultado> <objeto>`.
 
-O escopo do MVP já foi delimitado com o cliente nas características CP1, CP2, CP3, CP4, CP5, CP7, CP11 e CP12, o que permite iniciar a construção da lista de features e o planejamento por feature sem etapa preparatória adicional.
+O escopo do MVP inicial foi delimitado com o cliente nas características CP1, CP2, CP3, CP4, CP5, CP9, CP12 e CP14 (numeração final da [Solução Proposta](solucao-proposta.md)), o que permitiu iniciar a construção da lista de features e o planejamento por feature sem etapa preparatória adicional. O recorte técnico final, cruzando valor de negócio e esforço requisito a requisito, está em [10.2.3 do Backlog de Produto](../unidade-2/requisitos/backlog.md#1023-definicao-do-mvp) e amplia esse ponto de partida para 51 dos 65 RFs declarados, incorporando também partes de CP6, CP7, CP8 e CP10.
 
 ### 3. As inspeções formais respondem à criticidade dos requisitos de sigilo e conformidade
 
