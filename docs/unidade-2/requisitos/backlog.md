@@ -291,3 +291,15 @@ A tabela abaixo aplica o critério requisito a requisito, mantendo a rastreabili
 | RF62 | CP14 | 2 | 3 | Não | Could have com esforço moderado/alto — pode esperar, conforme a própria definição do cliente. |
 
 **Este recorte é uma proposta técnica da equipe**, construída a partir dos dados já validados com a FBr (valor de negócio) e da avaliação interna de esforço; segue para validação em conjunto com a equipe antes de ser considerado definitivo, no mesmo espírito das demais pendências registradas na [seção 8.3](analise-feedback.md#pendencias-de-validacao-com-a-fbr). A classificação dos RNFs para o MVP (seção [10.2.1.5](#10215-classificacao-dos-requisitos-nao-funcionais-para-o-mvp)) já reflete este recorte final de 51 RFs, incluindo a promoção de RF10 e RF13 por dependência.
+
+### 10.2.4 Validação do MVP com o Cliente
+
+> **Pendente.** O recorte das seções [10.2.1](#1021-avaliacao-de-valor-de-negocio-e-de-esforco-tecnico) a [10.2.3](#1023-definicao-do-mvp) é, até este ponto, uma proposta técnica da equipe a partir do valor de negócio já avaliado pela Clínica Escola FBr (seção 8 de [analise-feedback.md](analise-feedback.md)) e do esforço técnico avaliado internamente. Falta validar esse recorte final do MVP diretamente com a FBr antes de considerá-lo definitivo. Esta seção será preenchida com o registro dessa validação assim que ela ocorrer, contendo:
+
+- **Quem participou:** _a preencher — representante(s) da Clínica Escola FBr e da equipe presentes na validação._
+- **Quando ocorreu:** _a preencher — data da reunião ou troca de validação._
+- **RFs aprovados para o MVP:** _a preencher — confirmação (ou ajuste) do recorte de 51 RFs da seção [10.2.3](#1023-definicao-do-mvp)._
+- **RNFs aplicáveis ao MVP:** _a preencher — confirmação (ou ajuste) da classificação da seção [10.2.1.5](#10215-classificacao-dos-requisitos-nao-funcionais-para-o-mvp)._
+- **Requisitos que ficaram para entregas futuras:** _a preencher — confirmação da lista de RFs/RNFs fora do recorte atual._
+- **Ajustes solicitados pelo cliente:** _a preencher._
+- **Decisões ou divergências registradas:** _a preencher._
