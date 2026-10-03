@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+
+{#-
+  Carrega a Inter como fonte variável (pesos 300 a 800), necessária para a
+  hierarquia tipográfica do tema. O bloco padrão do Material carrega apenas
+  os pesos 300, 400 e 700.
+-#}
+{% block fonts %}
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,300..800;1,14..32,300..800&family=JetBrains+Mono:wght@400;500;600&display=swap">
+  <style>:root{--md-text-font:"Inter";--md-code-font:"JetBrains Mono"}</style>
+{% endblock %}

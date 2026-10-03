@@ -1,89 +1,17 @@
-# Clínica Escola FBr - Documentação do Projeto
-
-**Versão 2.22**
-**Documento de Visão do Produto e Projeto**
-
+---
+template: home.html
+hide:
+  - navigation
 ---
 
-### Sobre o Projeto
+# Clínica Escola FBr — Documentação do projeto
 
-O **Clínica Escola FBr** é um sistema web responsivo desenvolvido para digitalizar e integrar a gestão da **Clínica Escola de Psicologia da Faculdade Brasília (FBr)**.
+Documentação do projeto · versão 2.31
 
-A Clínica Escola oferta aproximadamente **100 vagas por semestre** de atendimento psicológico gratuito à comunidade de Santa Maria/DF e entorno, com demanda de 160 a 180 inscrições. Atualmente toda a operação é manual e presencial (fichas em papel + planilha Excel), gerando:
+<details class="revision-history" id="historico-de-revisao" markdown>
+<summary>Histórico de revisão</summary>
 
-- Demora na confirmação de atendimentos
-- Faltas e cancelamentos sem aviso
-- Horários ociosos de estagiários
-- Baixa visibilidade da fila de espera
-- Dificuldade de geração de indicadores
-- Riscos no tratamento de dados sensíveis
-
-A solução digitaliza as etapas permitidas pela regulação (inscrição, triagem, agendamento, confirmação de presença, registro clínico e emissão de documentos), **sem alterar o caráter presencial do atendimento psicológico**, conforme exigido pelo Conselho Regional de Psicologia.
-
-**Cliente:** Faculdade Brasília – FBr
-**Representantes:** Robson Luís de Araújo (Coordenador do Curso de Psicologia / Clínica Escola), Thiago Cardoso Viana (Diretor de Financeiro e Tecnologia) e Karla Gardene Baima (Secretária Acadêmica).
-
----
-
-### Vídeo de Apresentação da Unidade 1
-
-<div class="video-container">
-  <iframe
-    src="https://www.youtube.com/embed/ysMmYmttAH8"
-    title="Apresentação da Unidade 1 — Clínica Escola FBr"
-    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-    allowfullscreen>
-  </iframe>
-</div>
-
-Apresentação da entrega da Unidade 1, cobrindo o cenário atual e a intervenção social, a solução proposta, a estratégia de Engenharia de Software, a Engenharia de Requisitos e a gestão do projeto.
-
-▶ **[Assistir no YouTube](https://youtu.be/ysMmYmttAH8)**
-
----
-
-### Visão Geral da Documentação
-
-Navegue pelo menu para acompanhar a documentação das Unidades 1 e 2. A Unidade 2 reúne os requisitos funcionais e não funcionais, o DoR, o DoD e o backlog de produto.
-
-- **Visão e Cenário**
-  Entendimento do problema, cenário atual e solução proposta.
-
-- **Engenharia de Software**
-  Estratégias, ciclo de vida e engenharia de requisitos.
-
-- **Gestão e Processos**
-  Cronograma de entregas, equipe, reuniões e retrospectiva da Unidade 1.
-
----
-
-### Mapeamento dos Arquivos
-
-| Arquivo | Seção | Conteúdo |
-| --- | --- | --- |
-| [`Cenário Atual`](unidade-1/cenario-atual.md) | Seção 1 | Identificação do cliente, contexto, Rich Picture, stakeholders e segmentação |
-| [`Solução Proposta`](unidade-1/solucao-proposta.md) | Seção 2 | Objetivos, características de produto (CPs), análise de mercado e benefícios |
-| [`Intervenção Social`](unidade-1/intervencao-social.md) | Seção 3 | Intervenção social do software |
-| [`Estratégia de ESW`](unidade-1/estrategia-esw.md) | Seção 4 | Abordagem de ESW, ciclo de vida e processo |
-| [`Engenharia de Requisitos`](unidade-1/engenharia-requisitos.md) | Seção 5 | Técnicas e atividades de Engenharia de Requisitos |
-| [`Cronograma e Entregas`](unidade-1/gestao/cronograma.md) | Seção 6 | Cronograma do projeto |
-| [`Equipe e Comunicação`](unidade-1/gestao/equipe-comunicacao.md) | Seção 7 | Membros, papéis, canal de comunicação e validação |
-| [`Requisitos Funcionais`](unidade-2/requisitos/funcionais.md) | Seção 8.1 | Lista de requisitos funcionais, atores, prioridades, critérios de aceitação e rastreabilidade |
-| [`Requisitos Não Funcionais`](unidade-2/requisitos/nao-funcionais.md) | Seção 8.2 | Lista URPS+ de requisitos mensuráveis de segurança, privacidade, acessibilidade, usabilidade, disponibilidade, desempenho e auditoria |
-| [`DoR e DoD`](unidade-2/requisitos/dor-dod.md) | Seção 9 | Critérios de prontidão e conclusão das features |
-| [`Backlog de Produto`](unidade-2/requisitos/backlog.md) | Seções 10.1 e 10.2 | Backlog geral, priorização e recorte do MVP |
-| [`Cronograma e Entregas da Unidade 2`](unidade-2/gestao/cronograma.md) | Apoio | Planejamento das atividades e entregáveis da Unidade 2 |
-| [`Reuniões da Unidade 2`](unidade-2/reunioes.md) | Apoio | Registros de elicitação, validação e acompanhamento dos requisitos |
-| [`Lições Aprendidas da Unidade 2`](unidade-2/licoes-aprendidas.md) | Seção 11.2 | Retrospectiva da Unidade 2 |
-| [`Lições Aprendidas`](unidade-1/licoes-aprendidas.md) | Seção 11 | Retrospectiva da Unidade 1 |
-| [`Referências`](unidade-1/referencias.md) | Seção 12 | Referências utilizadas nos artefatos da Unidade 1 |
-| [`Boas práticas no GitHub`](unidade-1/gestao/boas-praticas-github.md) | Apoio | Fluxo de colaboração, revisão e publicação |
-| [`Estudo de FDD`](unidade-1/estudos/fdd.md) | Apoio | Processo FDD adotado no projeto |
-| [`Reuniões da Unidade 1`](unidade-1/reunioes.md) | Apoio | Registros de alinhamento, levantamento e acompanhamento |
-
----
-
-### Histórico de Revisão
+Registro cronológico das versões e alterações do documento de visão e dos artefatos do projeto.
 
 | Data       | Versão | Descrição                                                                                                                                 | Autor                                                                     |
 | ---------- | ------ | ----------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------- |
@@ -134,3 +62,5 @@ Navegue pelo menu para acompanhar a documentação das Unidades 1 e 2. A Unidade
 | 27/09/2026 | 2.29 | Inclusão da avaliação do esforço técnico dos RF33 a RF65 (CP8–CP14), e da classificação preliminar dos RNF1–RNF58 para apoio à definição do MVP | Jônatas |
 | 28/09/2026 | 2.30 | Priorização e definição do MVP: avaliação de esforço técnico consolidada (10.2.1.4) e critérios de valor de negócio (10.2.1.1); matriz de priorização como gráfico de dispersão (10.2.2); recorte de MVP com rastreabilidade por RF (10.2.3), com RF10 e RF13 promovidos por dependência funcional (51 de 65 RFs); classificação dos RNFs para o MVP (10.2.1.5); nova seção de validação do MVP com o cliente (10.2.4, pendente); planilha de avaliação da equipe Sem Requisitos com colunas de decisão e justificativa; escopo do MVP atualizado em `solucao-proposta.md`, `estrategia-esw.md` e `licoes-aprendidas.md` | Gabriel Barbaceli |
 | 28/09/2026 | 2.31 | Transformação da Lista de features (FDD) em `funcionais.md` em um sumário navegável: cada feature passa a ser um link que leva até sua declaração completa na mesma página | Gabriel Barbaceli |
+
+</details>

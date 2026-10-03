@@ -167,3 +167,63 @@ A reunião formalizou a divisão da equipe em dois subgrupos para as duas entreg
 ### Encerramento
 
 A reunião formalizou a divisão da equipe em dois subgrupos e detalhou as responsabilidades de cada um nas duas entregas de 29/09. O próximo passo é Nicolas e Jônatas pontuarem o esforço técnico dos requisitos, para que Gabriel possa cruzar com o valor de negócio da FBr e propor o MVP.
+
+---
+
+## Reunião de correções finais do site e estrutura de documentação
+
+**Data:** 01/10/2026
+**Local:** Reunião on-line (Google Meet)
+**Participantes:** Gabriel da Cunha Barbaceli; Joaquim José da Fonseca Viana; Luís Henrique; Maria Clara Canuto; Nicolas Lopes da Costa; Jônatas Davi Oliveira Farias.
+
+![Registro da reunião de correções finais do site e estrutura de documentação](../assets/reuniao-5.jpeg)
+
+_Figura 7 — Registro da reunião de correções finais do site e estrutura de documentação, realizada em 01/10/2026._
+
+[Consultar ata completa em PDF](../assets/atas-reunioes/Ata_Reuniao_Correcoes_Finais_01-10-2026.pdf)
+
+### Resumo
+
+A reunião teve como objetivo revisar os ajustes finais do site, organizar a documentação e alinhar as entregas seguintes.
+
+### 1. Correções e organização do site
+
+- Manter a estrutura geral já revisada do site e registrar os ajustes antes da publicação.
+- Retirar o vídeo de apresentação e o histórico de versão da posição atual; foi discutida a possibilidade de reorganizar esses conteúdos em locais mais adequados.
+- Avaliar a colocação do histórico de versão ao final da documentação.
+- Manter as seções de requisitos em formato retrátil, considerado mais adequado para reduzir a quantidade de texto visível.
+- Avaliar também a organização retrátil da lista de features do FDD e de outras áreas extensas da documentação.
+- Verificar uma forma de tornar os requisitos não funcionais mais organizados, incluindo a possibilidade de seção retrátil.
+
+### 2. Vídeo de apresentação
+
+- Foi sugerida a criação de uma página inicial para a unidade, com o vídeo de entrega e atalhos para as páginas relacionadas.
+- A proposta deverá ser testada considerando a organização do menu lateral e a possibilidade de evitar ambiguidade visual. Caso não funcione bem, poderá ser descartada.
+
+### 3. Documentação e materiais de apoio
+
+- A documentação possui grande volume de texto; a organização retrátil foi identificada como uma forma de facilitar a navegação e reduzir a necessidade de rolagem.
+- Foi criado um material com referências, ferramentas, skills, componentes de interface e conteúdos utilizados no desenvolvimento do site, a ser compartilhado com a equipe.
+- Foi mencionado um conteúdo baseado no livro de Agassi para complementar uma parte ainda não inserida na documentação.
+
+### 4. Entregas e divisão de responsabilidades
+
+- Até 07/10 — resolver as três issues que permaneciam pendentes: Gabriel, Joaquim e Jônatas.
+- Até 07/10 — elaborar DoR e DoD: Maria Clara, Nicolas e Luís. Luís ficará responsável por liderar e revisar o conteúdo antes da publicação.
+- DoR e DoD devem permanecer consistentes entre si, evitando contradições entre os documentos.
+- Existe um esboço de DoD na página de equipe/comunicação que poderá ser utilizado como referência.
+- Até 10/10 — realizar a revisão final antes da entrega, incluindo consolidação da visão do produto e atualização do site.
+- Subir a validação do MVP para o cliente; a validação ainda depende do retorno de Robson.
+- Após a conclusão das atividades, gravar o vídeo de apresentação.
+- Gabriel ficará responsável pela elaboração dos slides da apresentação e fará os ajustes necessários antes de a equipe utilizá-los.
+
+### 5. Próximos passos
+
+- Registrar no grupo da equipe as tarefas e os encaminhamentos definidos na reunião.
+- Concluir as três issues pendentes e os documentos DoR/DoD até 07/10.
+- Realizar a revisão final, atualizar o site, consolidar a visão do produto e encaminhar a validação do MVP até 10/10.
+- Gravar o vídeo após a conclusão das demais atividades.
+
+### Encerramento
+
+A reunião consolidou os ajustes finais de organização do site e a divisão das entregas restantes. O próximo movimento é concluir as issues e a documentação até 07/10, seguido da revisão final e das demais atividades previstas até 10/10.

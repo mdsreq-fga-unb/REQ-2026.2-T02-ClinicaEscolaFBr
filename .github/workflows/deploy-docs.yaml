@@ -6,6 +6,7 @@ on:
       - main
     paths:
       - "docs/**"
+      - "overrides/**"
       - "mkdocs.yml"
       - ".github/workflows/deploy-docs.yml"
 

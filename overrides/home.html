@@ -1,0 +1,132 @@
+{% extends "main.html" %}
+
+{#-
+  Página inicial com um percurso principal e acessos secundários recolhidos.
+  Os efeitos (aurora, spotlight, contadores, revelação no scroll) são
+  progressivos: sem JavaScript ou com movimento reduzido, tudo fica visível.
+-#}
+{% set path = [
+  ("unidade-1/cenario-atual/", "hospital-building", "Entenda o cenário da clínica", "Problema, pessoas envolvidas e contexto do atendimento."),
+  ("unidade-1/solucao-proposta/", "lightbulb-on-outline", "Entenda a solução", "Objetivos e proposta de funcionamento do sistema."),
+  ("unidade-1/estrategia-esw/", "map-marker-path", "Veja o plano de desenvolvimento", "Estratégia de engenharia e organização da equipe."),
+  ("unidade-2/requisitos/funcionais/", "clipboard-text-outline", "Explore os requisitos", "Funcionalidades e requisitos de qualidade do sistema."),
+  ("unidade-2/requisitos/backlog/", "rocket-launch-outline", "Descubra o que entra no MVP", "Critérios de priorização e requisitos da primeira versão."),
+] %}
+
+{#- Liga o movimento antes da pintura para a entrada não "piscar".
+    Se o extra.js não carregar, o conteúdo volta a aparecer sozinho. -#}
+{% block extrahead %}
+  {{ super() }}
+  <script>
+    (function (d) {
+      if (!window.matchMedia || matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+      d.classList.add("fbr-motion");
+      setTimeout(function () { if (!d.classList.contains("fbr-ready")) d.classList.remove("fbr-motion"); }, 2500);
+    })(document.documentElement);
+  </script>
+{% endblock %}
+
+{% block tabs %}
+  {{ super() }}
+
+  <section class="home-hero" aria-label="Apresentação do projeto" data-spotlight>
+    <div class="home-hero__bg" aria-hidden="true">
+      <span class="home-hero__aurora home-hero__aurora--a"></span>
+      <span class="home-hero__aurora home-hero__aurora--b"></span>
+      <span class="home-hero__aurora home-hero__aurora--c"></span>
+      <span class="home-hero__grid"></span>
+      <span class="home-hero__spot"></span>
+    </div>
+
+    <div class="md-grid home-hero__inner">
+      <div class="home-hero__copy">
+        <p class="home-hero__badge fbr-reveal" style="--d: 0">
+          <span class="home-hero__badge-dot" aria-hidden="true"></span>
+          Engenharia de Requisitos · UnB 2026.2
+        </p>
+        <p class="home-hero__title" aria-hidden="true">
+          <span class="home-hero__word" style="--i: 0">Clínica</span>
+          <span class="home-hero__word" style="--i: 1">Escola</span>
+          <span class="home-hero__word home-hero__word--brand" style="--i: 2">FBr</span>
+        </p>
+        <p class="home-hero__lead fbr-reveal" style="--d: 4">
+          Conheça o contexto da clínica, a solução proposta e as prioridades do sistema.
+        </p>
+        <div class="home-hero__actions fbr-reveal" style="--d: 5">
+          <a class="fbr-button fbr-button--primary" href="{{ 'unidade-1/cenario-atual/' | url }}">
+            Começar pelo cenário
+            {% include ".icons/material/arrow-right.svg" %}
+          </a>
+          <a class="fbr-button fbr-button--ghost" href="{{ 'unidade-2/requisitos/funcionais/' | url }}">
+            Ir direto aos requisitos
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <a class="home-hero__scroll" href="#home-path-title">
+      <span>Role para conhecer o projeto</span>
+      <span class="home-hero__scroll-icon" aria-hidden="true">{% include ".icons/material/chevron-down.svg" %}</span>
+    </a>
+  </section>
+
+  {% if config.extra.home and config.extra.home.stats %}
+  <section class="home-stats md-grid" aria-label="Números do projeto">
+    <ul class="home-stats__list fbr-reveal">
+      {% for stat in config.extra.home.stats %}
+      <li class="home-stats__item">
+        <span class="home-stats__value" data-count="{{ stat.value }}">{{ stat.value }}</span>
+        <span class="home-stats__label">{{ stat.label }}</span>
+      </li>
+      {% endfor %}
+    </ul>
+  </section>
+  {% endif %}
+
+  <section class="home-path md-grid" aria-labelledby="home-path-title">
+    <div class="home-path__intro fbr-reveal">
+      <p class="home-path__eyebrow">Percurso sugerido</p>
+      <h2 id="home-path-title">Conheça o projeto em sequência</h2>
+      <p>Siga do problema às prioridades do sistema, ou abra qualquer etapa que seja relevante para você.</p>
+    </div>
+    <ol class="home-path__list">
+      {% for href, icon, title, text in path %}
+      <li class="fbr-reveal" style="--d: {{ loop.index0 }}">
+        <a class="home-card" href="{{ href | url }}" data-spotlight>
+          <span class="home-card__top" aria-hidden="true">
+            <span class="home-card__icon">{% include ".icons/material/" ~ icon ~ ".svg" %}</span>
+            <span class="home-card__number">{{ "%02d" | format(loop.index) }}</span>
+          </span>
+          <span class="home-card__title">{{ title }}</span>
+          <span class="home-card__text">{{ text }}</span>
+          <span class="home-card__arrow" aria-hidden="true">{% include ".icons/material/arrow-right.svg" %}</span>
+        </a>
+      </li>
+      {% endfor %}
+    </ol>
+  </section>
+
+{% endblock %}
+
+{#- "Outros documentos" depois do conteúdo do index.md (versão e histórico de revisão). -#}
+{% block content %}
+  {{ super() }}
+
+  <details class="home-more">
+    <summary>Outros documentos do projeto</summary>
+    <ul>
+      <li><a href="{{ 'unidade-1/gestao/cronograma/' | url }}">Cronograma da Unidade 1</a></li>
+      <li><a href="{{ 'unidade-2/gestao/cronograma/' | url }}">Cronograma da Unidade 2</a></li>
+      <li><a href="{{ 'unidade-2/requisitos/nao-funcionais/' | url }}">Requisitos não funcionais (qualidade do sistema)</a></li>
+      <li><a href="{{ 'unidade-2/requisitos/dor-dod/' | url }}">Critérios de preparação e conclusão (DoR e DoD)</a></li>
+      <li><a href="{{ 'analise-ux-capitulo-10/' | url }}">Análise e melhorias de UX — Capítulo 10</a></li>
+      <li><a href="{{ 'unidade-1/gestao/equipe-comunicacao/' | url }}">Equipe e comunicação</a></li>
+      <li><a href="{{ 'unidade-1/reunioes/' | url }}">Reuniões da Unidade 1</a></li>
+      <li><a href="{{ 'unidade-2/reunioes/' | url }}">Reuniões da Unidade 2</a></li>
+      <li><a href="{{ 'unidade-1/licoes-aprendidas/' | url }}">Lições aprendidas</a></li>
+      <li><a href="{{ 'unidade-1/referencias/' | url }}">Referências</a></li>
+      <li><a href="#historico-de-revisao">Histórico de revisão</a></li>
+      <li><a href="https://youtu.be/ysMmYmttAH8">Assistir à apresentação da Unidade 1</a></li>
+    </ul>
+  </details>
+{% endblock %}

@@ -1,33 +1,68 @@
 site_name: Clínica Escola FBr - Documentação
 site_description: Documentação do projeto Clínica Escola FBr para as entregas das Unidades 1 a 4.
-extra_css: [assets/stylesheets/extra.css]
+site_url: https://mdsreq-fga-unb.github.io/REQ-2026.2-T02-ClinicaEscolaFBr/
+repo_url: https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr
+repo_name: REQ-2026.2-T02-ClinicaEscolaFBr
+copyright: Clínica Escola FBr · Documentação acadêmica do projeto · 2026
+extra_css: [assets/stylesheets/extra.css, assets/stylesheets/reading.css]
+extra_javascript: [assets/javascripts/extra.js, assets/javascripts/reading.js]
 theme:
   name: material
-  logo: assets/favicon.png
+  custom_dir: overrides
+  logo: assets/images/logo-fbr.png
   favicon: assets/favicon.png
-  language: pt
+  language: pt-BR
+  font:
+    text: Inter
+    code: JetBrains Mono
+  icon:
+    repo: material/github
   palette:
-    - scheme: default
-      primary: indigo
-      accent: indigo
+    - media: "(prefers-color-scheme: light)"
+      scheme: default
+      primary: custom
+      accent: custom
       toggle:
-        icon: material/brightness-7
+        icon: material/weather-night
         name: Alternar para modo escuro
-    - scheme: slate
-      primary: indigo
-      accent: indigo
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
+      primary: custom
+      accent: custom
       toggle:
-        icon: material/brightness-4
+        icon: material/weather-sunny
         name: Alternar para modo claro
   features:
     - navigation.tabs
+    - navigation.tabs.sticky
     - navigation.sections
+    - navigation.path
     - navigation.top
+    - navigation.footer
+    - navigation.tracking
+    - toc.follow
     - search.suggest
     - search.highlight
     - content.code.copy
 
+# Números exibidos na página inicial (overrides/home.html).
+# Atualize aqui quando a quantidade de requisitos mudar.
+extra:
+  home:
+    stats:
+      - value: "100"
+        label: vagas de atendimento por semestre
+      - value: "14"
+        label: características de produto
+      - value: "65"
+        label: requisitos funcionais
+      - value: "58"
+        label: requisitos não funcionais
+
 markdown_extensions:
+  - pymdownx.emoji:
+      emoji_index: !!python/name:material.extensions.emoji.twemoji
+      emoji_generator: !!python/name:material.extensions.emoji.to_svg
   - pymdownx.superfences:
       custom_fences:
         - name: mermaid
@@ -39,10 +74,16 @@ markdown_extensions:
   - pymdownx.snippets
   - admonition
   - tables
+  - attr_list
+  - md_in_html
+  - toc:
+      permalink: "#"
+      permalink_title: Link para esta seção
 
 nav:
   - Início: index.md
-  - Unidade 1:
+  - Unidade 1 — Visão e planejamento:
+      - Início da unidade: unidade-1/index.md
       - 1. Cenário Atual: unidade-1/cenario-atual.md
       - 2. Solução Proposta: unidade-1/solucao-proposta.md
       - 3. Intervenção Social: unidade-1/intervencao-social.md
@@ -56,13 +97,15 @@ nav:
       - Estudo de FDD: unidade-1/estudos/fdd.md
       - Lições Aprendidas: unidade-1/licoes-aprendidas.md
       - Referências: unidade-1/referencias.md
-  - Unidade 2:
+  - Unidade 2 — Requisitos e priorização:
+      - Início da unidade: unidade-2/index.md
       - 8. Requisitos de Software:
           - 8.1 Requisitos Funcionais: unidade-2/requisitos/funcionais.md
           - 8.2 Requisitos Não Funcionais: unidade-2/requisitos/nao-funcionais.md
           - 8.3 Análise do Feedback: unidade-2/requisitos/analise-feedback.md
       - 9. DoR e DoD: unidade-2/requisitos/dor-dod.md
       - 10. Backlog de Produto: unidade-2/requisitos/backlog.md
+      - Melhorias de UX — Capítulo 10: analise-ux-capitulo-10.md
       - Cronograma e Entregas: unidade-2/gestao/cronograma.md
       - Reuniões: unidade-2/reunioes.md
       - Lições Aprendidas: unidade-2/licoes-aprendidas.md
