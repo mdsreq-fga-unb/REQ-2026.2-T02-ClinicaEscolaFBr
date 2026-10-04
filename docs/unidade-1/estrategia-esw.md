@@ -20,7 +20,7 @@ O quadro a seguir compara o **Feature-Driven Development (FDD)** e o **Extreme P
 
 | Características | FDD | XP |
 | --- | --- | --- |
-| **Natureza do processo** | Processo de engenharia de software orientado a features, com a modelagem do domínio na origem do processo. | Processo de engenharia de software orientado a práticas técnicas e de colaboração, com releases pequenos e iterações curtas, de poucas semanas. |
+| **Natureza do processo** | Processo de engenharia de software orientado a features, com a modelagem do domínio na origem do processo. | Processo de engenharia de software orientado a práticas técnicas e de colaboração, com releases pequenos e iterações de uma a três semanas. |
 | **Unidade de trabalho** | Feature: pequena função valorizada pelo cliente, declarada no formato `<ação> <resultado> <objeto>` e implementável em duas semanas ou menos. | História de usuário, escrita com o cliente, estimada pelos desenvolvedores e selecionada para a iteração conforme o valor. |
 | **Ponto de partida** | Modelo abrangente do domínio, construído em conjunto por especialistas do domínio e desenvolvedores, que fundamenta a identificação das features. | Jogo do planejamento com as histórias iniciais e uma metáfora do sistema; o projeto evolui de forma incremental, por design simples e refatoração, sem um modelo de domínio prévio obrigatório. |
 | **Estrutura do processo** | Cinco processos: desenvolver um modelo abrangente, construir uma lista de features, planejar por feature, projetar por feature e construir por feature. | Ciclos de release e de iteração, cada um com seu planejamento; dentro da iteração, as práticas técnicas são aplicadas de forma contínua. |
@@ -32,7 +32,7 @@ O quadro a seguir compara o **Feature-Driven Development (FDD)** e o **Extreme P
 | **Visibilidade do progresso** | Por feature: seis marcos (*domain walkthrough*, design, inspeção de design, código, inspeção de código e promoção para o build), com percentual de conclusão atribuído a cada marco. | Por iteração: histórias concluídas e aceitas pelos testes de aceitação, acompanhadas pelo *tracker* em relação às estimativas. |
 | **Documentação** | Concisa e orientada à prática, com modelo do domínio e projeto detalhado de cada feature antes da construção. | Mínima; o código, os testes e as histórias funcionam como principal documentação. |
 | **Papéis e responsabilidade** | Gerente de projeto, arquiteto-chefe, gerente de desenvolvimento, programadores-chefe, proprietários de classe e especialistas do domínio; a responsabilidade é individual por classe e por feature. | Programador, cliente, testador, *tracker*, *coach*, consultor e gerente; a propriedade do código é coletiva, e a responsabilização é sustentada pelos testes, pela programação em pares e pelos padrões de codificação. |
-| **Perfil de equipe adequado** | Descrito para projetos de médio a grande porte, com equipes familiarizadas com modelagem de domínio; em equipes menores, exige adaptação dos papéis. | Equipes pequenas, com o cliente disponível com frequência e com disciplina técnica para manter testes automatizados e programação em pares. |
+| **Perfil de equipe adequado** | Pressupõe seis papéis principais e a modelagem do domínio conduzida por um arquiteto-chefe; em equipes pequenas, exige acumular ou adaptar papéis. | Equipes de dois a dez programadores, com o cliente disponível com frequência e com disciplina técnica para manter testes automatizados e programação em pares. |
 | **Adaptação ao projeto da Clínica Escola FBr** | Viável com adaptações: o processo operacional da clínica serve de base para um modelo de domínio inicial, que segue sendo refinado com a FBr; as características de produto se decompõem em features; e as inspeções oferecem um ponto explícito para verificar requisitos de sigilo, proteção de dados e acessibilidade. | Viável com adaptações: o cliente participa por reuniões periódicas, e não por presença contínua; a programação em pares exigiria sessões síncronas frequentes entre integrantes com horários distintos; e a equipe ainda não domina a escrita de testes antes do código, prática da qual dependem a qualidade e o controle de mudanças do XP. |
 
 ## 4.3 Justificativa
@@ -79,7 +79,7 @@ Para uma equipe de seis integrantes, com disponibilidade variável ao longo do s
 
 ## 4.4 FDD adaptado ao projeto
 
-Palmer e Felsing (2002) descrevem o FDD para projetos de médio a grande porte, com papéis especializados e equipes familiarizadas com modelagem de domínio. Este projeto tem **seis estudantes em formação e prazo de um semestre letivo**. O processo adotado é, portanto, uma **adaptação do FDD**, e não a sua aplicação integral. As adaptações são as seguintes:
+Na forma descrita por Palmer e Felsing (2002), o FDD pressupõe papéis especializados — seis papéis principais, além de papéis de apoio — e a modelagem do domínio conduzida por um arquiteto-chefe com experiência nessa atividade. Este projeto tem **seis estudantes em formação e prazo de um semestre letivo**. O processo adotado é, portanto, uma **adaptação do FDD**, e não a sua aplicação integral. As adaptações são as seguintes:
 
 | Elemento do FDD original | Como é aplicado no projeto | Motivo da adaptação |
 | --- | --- | --- |

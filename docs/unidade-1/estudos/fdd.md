@@ -350,7 +350,7 @@ Essas métricas devem apoiar decisões. Elas não devem ser usadas para comparar
 
 ### Limites e cuidados
 
-- foi descrito para projetos de médio a grande porte, o que exige adaptá-lo a uma equipe de seis estudantes;
+- pressupõe papéis especializados, o que exige adaptá-lo a uma equipe de seis estudantes;
 - exige entendimento inicial razoável do domínio, que no projeto ainda está sendo elicitado e validado com a FBr;
 - pode virar apenas uma lista de tarefas se as features forem mal definidas;
 - precisa de disciplina para realizar inspeções e atualizar a documentação;
