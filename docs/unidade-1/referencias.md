@@ -27,3 +27,7 @@ As referências abaixo foram utilizadas na elaboração dos artefatos da Unidade
 12. **PSICOMANAGER.** Sistema para psicólogos e clínicas de psicologia. Disponível em: [PsicoManager](https://www.psicomanager.com.br/). Acesso em: ago. 2026.
 
 13. **REGISTROS DO PROJETO CLÍNICA ESCOLA FBr.** Entrevista com representantes da Clínica Escola em 26 ago. 2026; atas das reuniões de [20 ago. 2026](../assets/atas-reunioes/Ata_Reuniao_01_Projeto_Requisitos.pdf), [26 ago. 2026](../assets/atas-reunioes/Ata_Reuniao_Clinica_Escola_FBr_26-08-2026_ATUALIZADA.pdf) e [03 set. 2026](../assets/atas-reunioes/Ata_Reuniao_03-09-2026.pdf).
+
+14. **BECK, Kent.** _Extreme Programming Explained: Embrace Change_. Reading: Addison-Wesley, 1999. Utilizada no quadro comparativo da [Estratégia de ESW](estrategia-esw.md) (revisão de 04/10/2026).
+
+15. **SCHWABER, Ken; SUTHERLAND, Jeff.** _The Scrum Guide_. 2020. Disponível em: [scrumguides.org](https://scrumguides.org/scrum-guide.html). Acesso em: 04 out. 2026.
