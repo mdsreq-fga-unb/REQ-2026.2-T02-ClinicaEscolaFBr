@@ -37,7 +37,7 @@ Todos os integrantes ficaram responsáveis por pesquisar alternativas de abordag
 
 **Data:** 26/08/2026
 **Local:** Reunião on-line (Google Meet)
-**Participantes:** Equipe UnB e representantes da Clínica-Escola/FBr.
+**Participantes:** Gabriel Barbaceli; Luís Henrique; Maria Clara; Joaquim José da Fonseca Viana; Jônatas Davi Oliveira Farias; Nicolas Lopes; e representantes da Clínica-Escola/FBr.
 
 ![Registro da reunião de levantamento inicial de requisitos](../assets/reuniao-1-cliente.jpeg)
 
