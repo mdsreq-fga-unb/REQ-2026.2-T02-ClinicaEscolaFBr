@@ -1,26 +1,26 @@
 # Lições Aprendidas da Unidade 1
 
-### O que aprendemos
+Durante a Unidade 1, a equipe realizou a prospecção e definição do parceiro, preparou e conduziu o levantamento inicial com a Faculdade Brasília, definiu a estratégia de Engenharia de Software, estruturou a documentação do projeto no GitHub Pages e preparou a apresentação da proposta.
 
-- A entrevista com o cliente precisa partir de um roteiro organizado, mas deve permitir perguntas de aprofundamento. As perguntas sobre fluxo, atores, regras, restrições e problemas revelaram informações que não apareceriam apenas na descrição inicial do projeto.
-- O problema mais relevante para o cliente deve orientar o escopo. A confirmação de presença, as faltas e o reaproveitamento de vagas foram priorizados porque afetam simultaneamente o atendimento à comunidade e a formação prática dos estagiários.
-- A delimitação explícita do MVP evita que funcionalidades desejáveis, como indicadores institucionais e a continuidade de casos entre semestres, concorram com as entregas essenciais do semestre.
-- A modelagem do domínio e a organização por features ajudam a transformar um processo manual amplo em funcionalidades menores, rastreáveis e passíveis de validação com o cliente.
-- A rastreabilidade precisa ser construída desde o início. Registrar decisões, atas, responsáveis, prioridades e vínculos entre características de produto e features reduz ambiguidades nas etapas seguintes.
-- A documentação publicada exige revisão específica de links, imagens, navegação e estrutura de diretórios. O conteúdo pode estar correto e ainda assim a entrega falhar por problemas de organização ou publicação.
-- A comunicação assíncrona facilita os alinhamentos rápidos, mas decisões de escopo, responsabilidades e prazos precisam ser registradas no repositório para permanecerem consultáveis por toda a equipe.
+A partir dessas atividades, foram identificadas as seguintes lições aprendidas e ações realizadas pela equipe.
 
-### Dificuldades enfrentadas
+## Lições aprendidas e ações realizadas
 
-- Houve necessidade de conciliar a agenda de seis integrantes, as reuniões com o cliente e o calendário acadêmico em um período curto.
-- O processo atual da clínica reúne informações em fichas, planilhas, ligações e mensagens, o que exigiu consolidar diferentes fontes antes de definir os requisitos iniciais.
-- A equipe precisou compreender o FDD e, ao mesmo tempo, aplicá-lo à estrutura do projeto, especialmente na passagem do modelo abrangente para a lista de features.
-- Os requisitos de sigilo, acessibilidade e atendimento presencial introduziram restrições que precisam acompanhar todas as decisões do produto, e não apenas uma funcionalidade isolada.
+| Lição aprendida | Ação realizada | Responsável | Prazo | Evidência de conclusão |
+| --- | --- | --- | --- | --- |
+| A preparação da entrevista com o cliente precisava ir além de reunir perguntas: era necessário revisar o roteiro, retirar questões repetidas e organizar os tópicos de forma que a reunião cobrisse processos, atores, problemas e necessidades da Clínica Escola. | A equipe alinhou inicialmente as perguntas na reunião de 20/08 e, em 25/08, realizou a revisão das questões, removeu duplicidades e fechou o roteiro que seria utilizado com o cliente. | Equipe | 25/08/2026 | Roteiro preparado e utilizado na reunião de levantamento inicial de requisitos realizada em 26/08/2026, registrada na página de reuniões e em ata. |
+| O escopo da solução não deveria ser definido apenas a partir da visão inicial da equipe, mas principalmente a partir dos problemas relatados pelo cliente. | Na reunião de 26/08, a equipe levantou o fluxo real da Clínica Escola e identificou que o principal gargalo estava no agendamento e na confirmação dos atendimentos, envolvendo faltas, cancelamentos, remarcações, dificuldade de contato e reaproveitamento das vagas liberadas. Essas informações foram incorporadas à definição do problema e da solução proposta. | Equipe | 27/08/2026 para a consolidação inicial do documento | Registro da reunião de 26/08, seção de Cenário Atual e documentação da Solução Proposta. |
+| A escolha da abordagem e do processo de desenvolvimento precisava ser fundamentada nas características do projeto, e não apenas na preferência da equipe. | Todos os integrantes pesquisaram alternativas de abordagem, ciclo de vida e processo de desenvolvimento. As opções foram discutidas pela equipe e a estratégia adotada foi abordagem ágil, ciclo de vida ágil e Feature-Driven Development (FDD). | Todos os integrantes | 27/08/2026 | Seção de Estratégias de Engenharia de Software, contendo a estratégia priorizada, o quadro comparativo e a justificativa da escolha do FDD. |
+| As decisões, entregas e evidências do projeto precisavam permanecer registradas em um local comum, pois somente os alinhamentos realizados pelo grupo não garantiriam a rastreabilidade do trabalho. | A equipe definiu o GitHub como repositório central do projeto e organizou no GitHub Pages a documentação, os registros das reuniões e as evidências produzidas. Na reunião de 03/09 também foi definida a inclusão de fotos das reuniões e links para as atas completas. | Equipe; Gabriel responsável pela inclusão da foto e do link da ata na página de reuniões | Conteúdo no repositório até 05/09/2026 | Página de reuniões da Unidade 1 com registros, imagens e links para as atas; documentação publicada no GitHub Pages. |
+| Trabalhar apenas com a data final da entrega deixaria pouco tempo para revisão da documentação, preparação da apresentação e correção de pendências. | Na reunião de 03/09, a equipe reorganizou os prazos internos: revisão e conclusão do conteúdo, disponibilização dos arquivos no repositório, preparação da apresentação e gravação do vídeo foram distribuídas antes da entrega final. | Equipe, com acompanhamento do cronograma por Gabriel | Conteúdo no repositório até 05/09/2026; entrega final em 07/09/2026 | Cronograma da Unidade 1, registro da reunião de 03/09 e vídeo de apresentação gravado em 06/09/2026. |
+| A apresentação da entrega precisava sintetizar as principais decisões do projeto em vez de repetir todo o conteúdo disponível no GitHub Pages. | A equipe decidiu utilizar slides simples como apoio, dividir a apresentação em seis tópicos e organizar as falas de forma objetiva, apresentando o software como solução para o problema do cliente. | Equipe | Gravação em 06/09/2026 e apresentação em 08/09/2026 | Registro da reunião de 03/09, vídeo de apresentação da Unidade 1 e organização dos tópicos da apresentação. |
 
-### Ações para a próxima unidade
+## Dificuldades enfrentadas
 
-- Validar o modelo de domínio e as regras de negócio com o cliente antes de detalhar features dependentes.
-- Manter uma matriz de rastreabilidade entre necessidades, características de produto, features, requisitos e critérios de aceitação.
-- Registrar cada decisão relevante com data, participantes, responsável e impacto no escopo.
-- Aplicar uma revisão de links e uma construção local da documentação antes de cada entrega publicada.
-- Priorizar as features com critérios explícitos de valor, dependência, risco de segurança e viabilidade no semestre.
+Durante a Unidade 1, a equipe também identificou dificuldades que influenciaram a organização e a execução das atividades:
+
+- A necessidade de conciliar a disponibilidade dos seis integrantes da equipe com as reuniões, as atividades da disciplina e os prazos da entrega.
+- A compreensão do funcionamento da Clínica Escola exigiu consolidar informações de um processo que atualmente utiliza diferentes meios, como fichas físicas, planilhas compartilhadas, ligações e mensagens.
+- A equipe precisou estudar o FDD ao mesmo tempo em que definia como o processo seria aplicado ao projeto, relacionando a modelagem do domínio, a organização das funcionalidades e a estratégia de Engenharia de Requisitos.
+- O projeto envolve informações psicológicas sensíveis, o que fez com que aspectos como sigilo, controle de acesso, proteção de dados, acessibilidade e facilidade de uso precisassem ser considerados desde a definição inicial da solução.
+- A preparação da entrega exigiu coordenar, em um mesmo período, a revisão do conteúdo, a organização do GitHub Pages, a preparação dos slides, a divisão das falas e a gravação do vídeo de apresentação.
