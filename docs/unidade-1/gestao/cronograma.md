@@ -1,8 +1,8 @@
-# 6. CRONOGRAMA E ENTREGAS
+# 6. Cronograma e Entregas
 
 O planejamento da Clínica Escola FBr segue a abordagem ágil, o ciclo de vida ágil e o processo Feature-Driven Development (FDD). As atividades são organizadas por marcos de entrega e podem ser refinadas após as revisões, validações com a Faculdade Brasília (FBr) e demonstrações de features.
 
-### 6.1 Detalhamento da Unidade 1
+## 6.1 Detalhamento da Unidade 1
 
 | Período            | Fase / Processo FDD                                                                | Atividades Desenvolvidas                                                                                                                                                                                                    | Entregáveis / Produtos                                                                                                                                                      |
 | ------------------ | ---------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -22,7 +22,7 @@ O planejamento da Clínica Escola FBr segue a abordagem ágil, o ciclo de vida �
 | 07/09/2026         | Entrega do projeto                                                                 | Finalizar e entregar o projeto, sem novas implementações ou conteúdo pendente.                                                                                                                                              | Projeto entregue e pronto para apresentação.                                                                                                                                |
 | 08/09/2026         | Apresentação                                                                       | Realizar a apresentação presencial em sala, com duração total de 15 minutos.                                                                                                                                                | Apresentação concluída.                                                                                                                                                     |
 
-### 6.2 Visão Macro das Unidades 2, 3 e 4
+## 6.2 Visão Macro das Unidades 2, 3 e 4
 
 O planejamento das próximas unidades considera o calendário da disciplina e as datas oficiais já informadas pela equipe. As unidades representam marcos acadêmicos, e não fases isoladas do FDD.
 
@@ -40,6 +40,6 @@ Para tornar essa sobreposição verificável, o trabalho é organizado em **cicl
 | Ciclo 6 — 18/11 a 01/12/2026 (Unidade 4) | Construir por Feature (continuidade) / Integração   | Verificação e validação das pendências apontadas nas demonstrações anteriores; organização e atualização da rastreabilidade entre requisitos, features e entregas.                                                                                                  | Equipe completa. Entregável: incrementos integrados e pendências dos Ciclos 3 a 5 corrigidas.                                                                                                                                                       |
 | Ciclo 7 — 02/12 a 10/12/2026 (Unidade 4) | Construir por Feature (fechamento) / Aceite Final   | Verificação e validação final (demonstração integrada e aceite, conforme a Seção 7.3).                                                                                                                                                                              | Equipe completa. Entregável: produto estabilizado, apresentação e entrega final da Unidade 4 em 10/12/2026.                                                                                                                                         |
 
-### 6.3 Atualização do Planejamento
+## 6.3 Atualização do Planejamento
 
 Ao final de cada ciclo de desenvolvimento, a equipe revisará o andamento das features, os riscos, as dependências e os entregáveis. Alterações de escopo ou de prazo serão registradas no repositório do projeto e comunicadas ao cliente durante as reuniões de acompanhamento. A priorização permanecerá orientada pelo valor para a clínica, com foco inicial nas features priorizadas com o cliente: inscrição, triagem, fila de espera, distribuição de casos entre supervisores e estagiários, agendamento, confirmação de presença, controle de faltas, segurança e acessibilidade.

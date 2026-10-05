@@ -588,7 +588,8 @@ body {
 
 /* Trilha de navegação (acima do título) */
 .md-path {
-  margin: 0 0 0.6rem;
+  /* Mesmo recuo lateral do conteúdo: no celular a trilha encostava na borda. */
+  margin: 0 0.8rem 0.6rem;
   font-size: 0.66rem;
   font-weight: 600;
   letter-spacing: 0.02em;
@@ -596,6 +597,12 @@ body {
 
 .md-path__link {
   color: var(--fbr-ink-subtle);
+}
+
+@media screen and (min-width: 76.25em) {
+  .md-path {
+    margin-inline: 1.2rem;
+  }
 }
 
 .md-path__link:hover {
@@ -1201,14 +1208,17 @@ body {
 }
 
 .md-typeset details.req > summary.req__summary::after {
+  /* Reaproveita a seta do Material (máscara SVG), a mesma dos outros acordeões,
+     mas dentro do fluxo flex: centralizada verticalmente e alinhada à direita. */
   content: "";
+  position: static;
   flex: none;
-  width: 0.55rem;
-  height: 0.55rem;
+  width: 1rem;
+  height: 1rem;
   margin-left: auto;
-  border-right: 2px solid var(--fbr-ink-muted);
-  border-bottom: 2px solid var(--fbr-ink-muted);
-  transform: rotate(45deg) translateY(-0.12rem);
+  border: 0;
+  background-color: var(--fbr-ink-muted);
+  transform: rotate(0deg);
   transition: transform var(--fbr-fast) ease;
 }
 
@@ -1218,7 +1228,7 @@ body {
 }
 
 .md-typeset details.req[open] > summary.req__summary::after {
-  transform: rotate(225deg) translate(-0.08rem, -0.08rem);
+  transform: rotate(90deg);
 }
 
 .md-typeset details.req > summary.req__summary:focus-visible {

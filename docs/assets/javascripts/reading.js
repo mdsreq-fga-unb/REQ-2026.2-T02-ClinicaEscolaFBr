@@ -281,25 +281,38 @@
       var badge = el("span", "decision decision--" + key, text(td));
       td.replaceChildren(badge);
       var row = td.parentElement;
-      // Na tabela de legenda a decisão é a primeira coluna: essa linha nunca é ocultada.
-      if (td.cellIndex === 0) return;
+      // Na tabela de legenda a decisão é a primeira coluna: essa linha nunca é ocultada
+      // e não entra na contagem de decisões.
+      if (td.cellIndex === 0) {
+        badge.classList.add("decision--legend");
+        var legendBox = td.closest("details.table-toggle");
+        if (legendBox) legendBox.classList.add("table-toggle--legend");
+        return;
+      }
       if (key === "na") { row.classList.add("row--na"); naRows++; }
       row.classList.add("row--" + key);
     });
 
+    var totals = {};
     root.querySelectorAll("details.table-toggle").forEach(function (box) {
+      var summary = box.querySelector("summary");
+      var label = summary.querySelector(".table-toggle__label");
+      if (box.classList.contains("table-toggle--legend")) {
+        if (label) label.textContent = "Legenda das decisões";
+        box.open = true;
+        return;
+      }
       var counts = {};
-      box.querySelectorAll(".decision").forEach(function (b) {
+      box.querySelectorAll(".decision:not(.decision--legend)").forEach(function (b) {
         var k = b.className.replace(/.*decision--/, "");
         counts[k] = (counts[k] || 0) + 1;
+        totals[k] = (totals[k] || 0) + 1;
       });
-      var summary = box.querySelector("summary");
       if (!Object.keys(counts).length) return;
       // A tabela fica logo abaixo do título da CP: evita repetir o mesmo nome.
-      var label = summary.querySelector(".table-toggle__label");
-      var prev = box.previousElementSibling;
-      if (label && prev && /^H[1-6]$/.test(prev.tagName) && headingText(prev) === text(label)) {
+      if (label && label.classList.contains("table-toggle__label--generic")) {
         label.textContent = "Apontamentos da verificação";
+        label.classList.remove("table-toggle__label--generic");
       }
       ["accepted", "partial", "rejected", "na"].forEach(function (k) {
         if (!counts[k]) return;
@@ -307,6 +320,8 @@
         summary.appendChild(el("span", "decision-count decision--" + k, counts[k] + " " + label));
       });
     });
+
+    renderDecisionSummary(root, totals);
 
     if (!naRows) return;
     var bar = el("div", "decision-filter");
@@ -325,13 +340,49 @@
     if (anchor) anchor.before(bar); else root.appendChild(bar);
   }
 
+  /* Resumo em números de todas as decisões da página, com barra proporcional */
+  function renderDecisionSummary(root, totals) {
+    var keys = ["accepted", "partial", "rejected", "na"];
+    var total = keys.reduce(function (sum, k) { return sum + (totals[k] || 0); }, 0);
+    if (!total || root.querySelector(".decision-summary")) return;
+    var names = { accepted: "aceitos", partial: "parcialmente aceitos", rejected: "não aceitos", na: "sem alteração" };
+    var box = el("section", "decision-summary");
+    box.setAttribute("aria-label", "Resumo das decisões");
+    box.appendChild(el("p", "decision-summary__title", total + " apontamentos analisados"));
+    var bar = el("div", "decision-summary__bar");
+    bar.setAttribute("aria-hidden", "true");
+    var list = el("ul", "decision-summary__list");
+    keys.forEach(function (k) {
+      if (!totals[k]) return;
+      var seg = el("span", "decision-summary__seg decision--" + k);
+      seg.style.flexGrow = totals[k];
+      bar.appendChild(seg);
+      var item = el("li", "decision-summary__item");
+      item.appendChild(el("span", "decision-summary__dot decision--" + k));
+      item.appendChild(el("strong", "", String(totals[k])));
+      item.appendChild(document.createTextNode(" " + names[k]));
+      list.appendChild(item);
+    });
+    box.append(bar, list);
+    var anchor = root.querySelector("h2");
+    if (anchor) anchor.before(box); else root.appendChild(box);
+  }
+
   /* ---- H. Tempo de leitura nas páginas longas ---- */
   function enhanceReadingTime(root, cpHeadings) {
     if (root.querySelector(".reading-meta")) return;
     var words = (root.textContent || "").split(/\s+/).filter(Boolean).length;
     if (words < 1500) return;
     var meta = el("p", "reading-meta");
-    meta.appendChild(el("span", "reading-meta__time", "~" + Math.max(1, Math.round(words / WORDS_PER_MINUTE)) + " min de leitura"));
+    // Páginas de consulta (requisitos, decisões, tabelas longas) não são lidas de
+    // ponta a ponta: nelas o tempo de leitura assusta mais do que orienta.
+    var longTable = Array.prototype.some.call(root.querySelectorAll("table"), function (t) {
+      return t.querySelectorAll("tbody tr").length > 30;
+    });
+    var reference = !!root.querySelector("details.req, .decision") || longTable;
+    if (!reference) {
+      meta.appendChild(el("span", "reading-meta__time", "~" + Math.max(1, Math.round(words / WORDS_PER_MINUTE)) + " min de leitura"));
+    }
     var rfs = root.querySelectorAll("details.req--rf").length;
     var rnfs = root.querySelectorAll("details.req--rnf").length;
     if (rfs) meta.appendChild(el("span", "", rfs + " RFs"));
@@ -339,6 +390,7 @@
     var cps = cpHeadings.map(function (h) { return headingText(h).match(CP_HEADING)[1]; })
       .filter(function (code, i, all) { return all.indexOf(code) === i; }).length;
     if (cps) meta.appendChild(el("span", "", cps + (cps === 1 ? " CP" : " CPs")));
+    if (!meta.children.length) return;
     var first = root.querySelector("h1, h2");
     if (first) first.after(meta); else root.prepend(meta);
   }

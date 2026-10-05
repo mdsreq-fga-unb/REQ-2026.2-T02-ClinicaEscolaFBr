@@ -52,6 +52,15 @@ Não há atualmente um sistema integrado de gestão. As informações são manti
 
 ## 1.4 Identificação da Oportunidade ou Problema
 
+<div class="key-figures" markdown>
+
+- <span class="key-figures__value">100</span> vagas de atendimento por semestre
+- <span class="key-figures__value">160–180</span> inscrições por semestre
+- <span class="key-figures__value">8 a 10</span> sessões por paciente
+- <span class="key-figures__value">0</span> sistemas de gestão: fichas em papel, planilha Excel, telefone e WhatsApp
+
+</div>
+
 O projeto é necessário porque a Clínica Escola de Psicologia da FBr, que hoje oferta 100 vagas por semestre de atendimento psicológico gratuito à comunidade, opera integralmente de forma manual e presencial, apoiada apenas em fichas de papel e em uma planilha de Excel. Esse arranjo não sustenta o volume de demanda recebido, de 160 a 180 inscrições por semestre, e produz uma perda sistemática de atendimentos que poderiam ser realizados com a estrutura já existente.
 
 O principal gargalo identificado com o cliente está no **agendamento e na confirmação de presença**, apontados como as etapas mais trabalhosas do processo: o contato é feito por ligação ou WhatsApp, o paciente frequentemente não reconhece o número da clínica e a resposta demora. A consequência é dupla e imediata. Quando o paciente falta sem avisar, o estagiário permanece ocioso em um horário que poderia ter sido ocupado por outra pessoa da fila de espera, o que representa, ao mesmo tempo, a perda de um atendimento à comunidade e a perda de uma hora de prática para a formação do estudante. Não há, hoje, busca ativa de confirmação nem mecanismo ágil de realocação da vaga liberada.

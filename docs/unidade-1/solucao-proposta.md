@@ -44,6 +44,32 @@ A solução proposta para a Clínica Escola da FBr deverá contemplar, de forma 
 
 ### Escopo do MVP
 
+O recorte atual do MVP é feito **por requisito**: **51 dos 65 RFs** declarados, definidos na priorização da Unidade 2 ([seção 10.2.3 do Backlog de Produto](../unidade-2/requisitos/backlog.md#1023-definicao-do-mvp)), que cruzou o valor de negócio avaliado pela Clínica Escola FBr com o esforço técnico de cada RF. A tabela resume o recorte por característica; o detalhamento requisito a requisito está na seção 10.2.3.
+
+| CP | Característica | RFs no MVP | Situação | RFs fora do MVP |
+| --- | --- | --- | --- | --- |
+| CP1 | Inscrição on-line | 3 de 3 | Completa no MVP | — |
+| CP2 | Triagem e sinalização de casos | 2 de 3 | Parcial no MVP | RF5 |
+| CP3 | Fila de espera e consulta de posição | 2 de 3 | Parcial no MVP | RF9 |
+| CP4 | Agendamento, confirmação e remarcação | 7 de 8 | Parcial no MVP | RF15 |
+| CP5 | Distribuição de casos entre supervisores e estagiários | 7 de 9 | Parcial no MVP | RF25, RF26 |
+| CP6 | Prontuário eletrônico | 1 de 1 | Completa no MVP | — |
+| CP7 | Registro de evolução por sessão | 4 de 5 | Parcial no MVP | RF29 |
+| CP8 | Geração do relatório final de evolução | 1 de 1 | Completa no MVP | — |
+| CP9 | Controle de assiduidade e alertas | 9 de 9 | Completa no MVP | — |
+| CP10 | Registros administrativos do atendimento | 6 de 7 | Parcial no MVP | RF47 |
+| CP11 | Indicadores e relatórios institucionais | 0 de 2 | Fora do MVP | RF48, RF49 |
+| CP12 | Segurança, sigilo e controle de acesso | 9 de 9 | Completa no MVP | — |
+| CP13 | Continuidade de casos entre semestres | 0 de 3 | Fora do MVP | RF58, RF59, RF60 |
+| CP14 | Acessibilidade e usabilidade | 0 de 2 | Fora do MVP | RF61, RF62 |
+
+Na CP14, embora os dois RFs específicos (RF61 e RF62 — alto contraste e ajuste de tamanho de texto) fiquem para depois, o piso de conformidade WCAG 2.2 nível AA (RNF56) permanece obrigatório desde o MVP, por exigência confirmada da FBr/MEC.
+
+<details class="revision-note" markdown>
+<summary>Histórico: recorte inicial por característica (Unidade 1)</summary>
+
+Na Unidade 1, antes da priorização formal, o MVP foi definido por característica. Esse recorte foi refinado pela priorização da Unidade 2, resumida na tabela acima: CP6, CP7, CP8 e CP10, antes no escopo desejável, entraram substancialmente no MVP técnico; CP14 teve seus dois RFs específicos adiados; CP11 e CP13 permanecem fora do MVP. O texto original da Unidade 1 está preservado abaixo.
+
 Considerando o prazo de um semestre letivo e a priorização acordada com o cliente, o **Produto Mínimo Viável (MVP)** será composto pelas características:
 
 **CP1, CP2, CP3, CP4, CP5, CP9, CP12 e CP14**.
@@ -56,19 +82,19 @@ A característica **CP13** (continuidade de casos entre semestres) representa um
 
 > **Observação sobre a abrangência do MVP:** o MVP reúne oito características que incluem organização de triagem, fila priorizada, agendamento com notificações, distribuição de casos, segurança de dados sensíveis e acessibilidade. Esse volume de escopo é reconhecido pela equipe como um risco de cronograma a ser reavaliado com mais critério na etapa de priorização formal da disciplina (Unidade 2).
 
-> **Atualização (Unidade 2 — 28/09/2026):** a priorização técnica registrada em [10.2.1 a 10.2.3 do Backlog de Produto](../unidade-2/requisitos/backlog.md#1023-definicao-do-mvp) cruzou o valor de negócio avaliado pela Clínica Escola FBr com o esforço técnico de cada RF e refinou este recorte inicial por CP para um recorte final por RF (51 dos 65 RFs declarados). Principais divergências em relação ao escopo acima: **CP6, CP7, CP8 e CP10** (prontuário, registro de evolução, relatório final e registros administrativos), antes no escopo desejável, entraram substancialmente no MVP técnico — CP6, CP8, CP9 e CP12 completos, e CP2, CP3, CP4, CP5, CP7 e CP10 com uma ou duas exclusões pontuais cada (por exemplo, RF29 — correção de evolução — e RF47 — validação pública de autenticidade — ficam para depois). **CP14** (acessibilidade e usabilidade) teve seus dois RFs específicos (RF61 e RF62 — alto contraste e ajuste de tamanho de texto) adiados, mas o piso de conformidade WCAG 2.2 nível AA (RNF56) permanece obrigatório desde o MVP, por exigência confirmada da FBr/MEC. **CP11** (indicadores institucionais) e **CP13** (continuidade entre semestres) permanecem integralmente fora do MVP, como já indicado acima. O detalhamento requisito a requisito está na tabela da seção [10.2.3](../unidade-2/requisitos/backlog.md#1023-definicao-do-mvp).
+</details>
 
 ## 2.4 Tecnologias a Serem Utilizadas
 
 Conforme foi definido pela equipe, a stack tecnológica optada para o desenvolvimento da solução é definida por:
 
-- Front-end: TypeScript, com o framework Next.js, selecionado pela sua maturidade, documentação ampla e convenções bem estabelecidas de organização, reduzindo a curva de aprendizado para a equipe.
+**Front-end** TypeScript, com o framework Next.js, selecionado pela sua maturidade, documentação ampla e convenções bem estabelecidas de organização, reduzindo a curva de aprendizado para a equipe.
 
-- Back-end: TypeScript, com o framework NestJS, mantendo a linguagem do front-end, reduzindo a dispersão de trabalho da equipe entre as duas camadas da aplicação.
+**Back-end** TypeScript, com o framework NestJS, mantendo a linguagem do front-end, reduzindo a dispersão de trabalho da equipe entre as duas camadas da aplicação.
 
-- Banco de Dados: PostgreSQL, banco de dados relacional adequado à modelagem consistente dos perfis de acesso e das relações entre casos, sessões e responsáveis exigidas pelas características CP5 e CP12.
+**Banco de dados** PostgreSQL, banco de dados relacional adequado à modelagem consistente dos perfis de acesso e das relações entre casos, sessões e responsáveis exigidas pelas características CP5 e CP12.
 
-Controle de Versão e Documentação: GitHub como repositório central do código-fonte, diagramas e artefatos de requisitos, utilizando GitHub Projects para rastreamento de features e MkDocs/GitHub Pages para publicação da documentação do projeto.
+**Controle de versão e documentação** GitHub como repositório central do código-fonte, diagramas e artefatos de requisitos, utilizando GitHub Projects para rastreamento de features e MkDocs/GitHub Pages para publicação da documentação do projeto.
 
 ## 2.5 Pesquisa de Mercado e Análise Competitiva
 

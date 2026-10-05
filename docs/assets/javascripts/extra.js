@@ -232,22 +232,47 @@
     return "Tabela";
   }
 
+  /*
+   * Regra de abertura: a tabela que é o assunto da seção (até OPEN_MAX_ROWS
+   * linhas) já aparece aberta; tabelas longas de consulta (ex.: 65 RFs) e
+   * páginas com muitas tabelas (ex.: análise do feedback, onde o resumo de
+   * cada CP fica no cabeçalho) começam fechadas.
+   */
+  var OPEN_MAX_ROWS = 16;
+  var MANY_TABLES = 10;
+
   function enhanceCollapsibleTables(root) {
+    var blocks = [];
     root.querySelectorAll("table").forEach(function (table) {
       if (table.closest("details")) return;
       var block = table.closest(".md-typeset__scrollwrap") || table;
       if (block.parentElement !== root) return;
+      blocks.push({ table: table, block: block });
+    });
+    var manyTables = blocks.length >= MANY_TABLES;
 
-      var rows = table.querySelectorAll("tbody tr").length;
+    blocks.forEach(function (item) {
+      var block = item.block;
+      var rows = item.table.querySelectorAll("tbody tr").length;
       var caption = boldCaption(block);
       var details = el("details", "table-toggle");
       var summary = el("summary", "table-toggle__summary");
-      summary.appendChild(el("span", "table-toggle__label", caption ? text(caption) : tableLabel(block)));
+      // Sem legenda própria, o rótulo repetia o título da seção logo acima;
+      // "Tabela" + contagem evita a duplicação. O nome da seção fica guardado
+      // em data-section para quem precisar dele (ex.: análise do feedback).
+      var label = caption ? text(caption) : "Tabela";
+      var labelNode = el("span", "table-toggle__label", label);
+      if (!caption) {
+        details.dataset.section = tableLabel(block);
+        labelNode.classList.add("table-toggle__label--generic");
+      }
+      summary.appendChild(labelNode);
       if (caption) caption.remove();
       summary.appendChild(el("span", "table-toggle__count", rows + (rows === 1 ? " linha" : " linhas")));
       details.appendChild(summary);
       block.parentNode.insertBefore(details, block);
       details.appendChild(block);
+      if (!manyTables && rows <= OPEN_MAX_ROWS) details.open = true;
     });
   }
 
