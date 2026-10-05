@@ -4,6 +4,8 @@
 
 Feature-Driven Development, ou Desenvolvimento Orientado a Funcionalidades, é um processo ágil de Engenharia de Software organizado em torno da entrega frequente de funcionalidades pequenas, completas e percebidas pelo usuário. Em vez de planejar o produto apenas por camadas técnicas, o FDD estrutura o trabalho a partir do valor que o sistema entrega ao negócio.
 
+Este estudo tem como fonte principal a obra de Palmer e Felsing (2002), que descreve os cinco processos, os papéis, as práticas e o sistema de acompanhamento por marcos do FDD, complementada pelo material didático da disciplina (MARSICANO, 2026). As referências completas estão na [seção 10](#10-referencias). As aplicações à Clínica Escola FBr (seções 4 a 7) são decisões da equipe, e não prescrições do processo original.
+
 Uma feature é uma capacidade específica do produto, suficientemente pequena para ser projetada, implementada, testada e demonstrada em um período curto. Ela deve ser descrita de forma objetiva, normalmente no padrão:
 
 > **<ação> <resultado> <objeto>**
@@ -307,16 +309,16 @@ Para concluí-la, a Definition of Done (DoD) pode exigir:
 
 ## 6. Papéis no FDD
 
-Os papéis podem ser adaptados ao tamanho da equipe. Na Clínica Escola FBr, a divisão proposta é:
+Palmer e Felsing (2002) definem como papéis principais o gerente de projeto, o arquiteto-chefe, o gerente de desenvolvimento, os programadores-chefe, os proprietários de classe e os especialistas do domínio. Como o projeto tem seis integrantes, os papéis foram adaptados. A coluna **Origem** indica quais correspondem a papéis do FDD e quais foram criados pela equipe:
 
-| Papel                   | Responsabilidade                                                   |
-| ----------------------- | ------------------------------------------------------------------ |
-| Líder de projeto        | Acompanhar cronograma, riscos, comunicação e decisões.             |
-| Arquiteto-chefe         | Orientar arquitetura, padrões técnicos e integração.               |
-| Líder de requisitos     | Manter requisitos, critérios de aceitação e rastreabilidade.       |
-| Líder de feature        | Conduzir design, implementação, revisão e demonstração da feature. |
-| Especialista de domínio | Esclarecer regras e validar o comportamento esperado.              |
-| Inspetor                | Revisar design, código e evidências de teste.                      |
+| Papel                   | Responsabilidade                                                   | Origem                                              |
+| ----------------------- | ------------------------------------------------------------------ | --------------------------------------------------- |
+| Líder de projeto        | Acompanhar cronograma, riscos, comunicação e decisões.             | FDD (gerente de projeto)                            |
+| Arquiteto-chefe         | Orientar arquitetura, padrões técnicos e integração.               | FDD                                                 |
+| Líder de requisitos     | Manter requisitos, critérios de aceitação e rastreabilidade.       | Adaptação da equipe                                 |
+| Líder de feature        | Conduzir design, implementação, revisão e demonstração da feature. | FDD (programador-chefe), sem propriedade de classes |
+| Especialista de domínio | Esclarecer regras e validar o comportamento esperado.              | FDD                                                 |
+| Inspetor                | Revisar design, código e evidências de teste.                      | Adaptação da equipe                                 |
 
 Uma pessoa pode exercer mais de um papel, mas a revisão deve ser feita por outra pessoa sempre que possível. O cliente não precisa assumir papel técnico: os representantes da FBr atuam principalmente como especialistas de domínio e responsáveis pelo aceite.
 
@@ -340,7 +342,7 @@ Essas métricas devem apoiar decisões. Elas não devem ser usadas para comparar
 ### Vantagens
 
 - aproxima o desenvolvimento do valor de negócio;
-- facilita a divisão do trabalho em uma equipe pequena;
+- permite dividir o trabalho por feature, inclusive em uma equipe pequena, desde que os papéis sejam adaptados;
 - torna o progresso mais visível;
 - favorece entregas incrementais e demonstrações frequentes;
 - cria rastreabilidade entre domínio, requisitos, código e testes;
@@ -348,7 +350,8 @@ Essas métricas devem apoiar decisões. Elas não devem ser usadas para comparar
 
 ### Limites e cuidados
 
-- exige entendimento inicial razoável do domínio;
+- pressupõe papéis especializados, o que exige adaptá-lo a uma equipe de seis estudantes;
+- exige entendimento inicial razoável do domínio, que no projeto ainda está sendo elicitado e validado com a FBr;
 - pode virar apenas uma lista de tarefas se as features forem mal definidas;
 - precisa de disciplina para realizar inspeções e atualizar a documentação;
 - não fornece, sozinho, práticas detalhadas de testes, programação ou comunicação;
@@ -369,3 +372,8 @@ Para aplicar FDD no projeto:
 8. revisar o código e promover somente o que estiver pronto;
 9. demonstrar as features ao cliente;
 10. registrar aceite, feedback e próximos ajustes.
+
+## 10. Referências
+
+- MARSICANO, George. _Requisitos de Software – Comunicação é tudo!_ Versão 1.1, draft, 2026. Material didático da disciplina Requisitos de Software (FGA0313) – FCTE/UnB.
+- PALMER, Stephen R.; FELSING, John M. _A Practical Guide to Feature-Driven Development_. Upper Saddle River: Prentice Hall, 2002.
