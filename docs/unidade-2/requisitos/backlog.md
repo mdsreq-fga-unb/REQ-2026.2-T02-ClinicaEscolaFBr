@@ -137,7 +137,18 @@ Regras definidas previamente e aplicadas de forma uniforme a todos os requisitos
 
 #### 10.2.1.5 Classificação dos Requisitos Não Funcionais para o MVP
 
-A classificação abaixo relaciona cada Requisito Não Funcional (RNF) ao recorte final do MVP definido na seção [10.2.3](#1023-definicao-do-mvp), usando quatro categorias: **Obrigatório para o MVP** (aplica-se independentemente do RF específico, por decorrer de exigência transversal de segurança, privacidade, acessibilidade, integridade ou continuidade operacional), **Associado a RF do MVP** (sua aplicabilidade decorre diretamente de um RF que está no MVP), **Evolutivo** (o RF relacionado está no MVP, mas o próprio RNF pode ser refinado em iterações posteriores, sem bloquear o lançamento) e **Não aplicável ao MVP** (depende de um RF que ficou fora do recorte atual, a ser reavaliado se esse RF for incorporado). A classificação foi conferida requisito a requisito contra os 51 RFs efetivamente selecionados na seção 10.2.3 — inclusive a promoção de RF10 e RF13 por dependência.
+A classificação abaixo relaciona cada Requisito Não Funcional (RNF) ao recorte final do MVP definido na seção [10.2.3](#1023-definicao-do-mvp), usando quatro categorias:
+
+<div class="category-grid" markdown>
+
+- <span class="rnf-class rnf-class--required">Obrigatório para o MVP</span> Aplica-se independentemente do RF específico, por decorrer de exigência transversal de segurança, privacidade, acessibilidade, integridade ou continuidade operacional.
+- <span class="rnf-class rnf-class--linked">Associado a RF do MVP</span> Sua aplicabilidade decorre diretamente de um RF que está no MVP.
+- <span class="rnf-class rnf-class--evolving">Evolutivo</span> O RF relacionado está no MVP, mas o próprio RNF pode ser refinado em iterações posteriores, sem bloquear o lançamento.
+- <span class="rnf-class rnf-class--na">Não aplicável ao MVP</span> Depende de um RF que ficou fora do recorte atual, a ser reavaliado se esse RF for incorporado.
+
+</div>
+
+A classificação foi conferida requisito a requisito contra os 51 RFs efetivamente selecionados na seção 10.2.3 — inclusive a promoção de RF10 e RF13 por dependência.
 
 | Código | Requisito não funcional | Classificação | RF/escopo relacionado | Justificativa |
 | --- | --- | --- | --- | --- |
@@ -216,7 +227,19 @@ O corte de MVP foi definido a partir da própria escala de valor de negócio usa
 2. **Valor 1 (Won't have now):** fica fora do MVP independentemente do esforço técnico, porque o próprio cliente já definiu que não é prioridade para esta versão.
 3. **Valor 3 (Should have):** entra no MVP somente com esforço técnico baixo ou moderado (1 ou 2). Com esforço alto ou muito alto (3 ou 4), fica para depois — o sistema consegue operar um tempo sem esses requisitos, e não vale o risco de entregar algo caro que não é indispensável.
 4. **Valor 2 (Could have):** entra no MVP somente com esforço técnico muito baixo (1), quando o custo de entregar já é praticamente o de não entregar. Com esforço 2 ou mais, fica para depois.
-5. **Exceção por dependência funcional:** um requisito que a regra 3 ou 4 excluiria pode ser promovido ao MVP quando outros requisitos já incluídos dependem diretamente dele para formar um fluxo de uso minimamente completo — situação prevista no enunciado da atividade ("Um RF de alto valor e alto esforço não deve ser automaticamente descartado" e a necessidade de "formar um fluxo de uso minimamente completo"). Essa exceção foi aplicada duas vezes (ver tabela abaixo): a RF10 — RF11, RF12, RF14, RF16, RF17 e RF43 já estão no MVP e pressupõem uma sessão previamente agendada, sem a qual esses seis requisitos não têm sobre o que operar; e a RF13 — RF14 (Must have, no MVP) só consegue ser executado a partir do link de confirmação de presença que, conforme a própria descrição do requisito, é enviado exclusivamente no lembrete automático (RF13); sem RF13, não existe canal para o paciente confirmar presença, e nenhuma outra feature declarada oferece esse mesmo link. A regra 3 classificaria RF10 e RF13 como fora do MVP (ambos Should have, esforço alto); a exceção por dependência os promove para dentro. Nenhum outro RF excluído pelas regras 1–4 tem essa mesma condição de bloqueio: os demais RFs fora do MVP (RF5, RF9, RF15, RF25, RF26, RF29, RF47, RF48, RF49, RF58, RF59, RF60, RF61, RF62) são consultas, refinamentos ou fluxos que os RFs do MVP não pressupõem como pré-condição de existir. Em particular, RF5 aparece como "Dependência: RF4/RF5" na rastreabilidade de RF6 (CP2), mas a notação indica fontes alternativas de insumo para a decisão do supervisor — a própria RF6 descreve a classificação como julgamento clínico apoiado nas "informações e sinalizações disponíveis", e as informações organizadas por RF4 (no MVP) já bastam para essa decisão, com a sinalização automática de RF5 como reforço opcional. RF15 e RF29, por sua vez, aparecem como "Dependência" na rastreabilidade de RF34/RF35 (CP9) e de RF31/RF32 (CP7), respectivamente, mas apenas para casos de borda (diferenciar falta de cancelamento; exibir correções, quando existirem) que essas features do MVP continuam operando corretamente sem RF15/RF29. Em nenhum desses três casos a ausência do RF fora do MVP deixa o RF do MVP sem nada sobre o que operar — ao contrário de RF10 e RF13, cuja ausência impede por completo a execução dos RFs do MVP que dependem deles.
+5. **Exceção por dependência funcional:** um requisito que a regra 3 ou 4 excluiria pode ser promovido ao MVP quando outros requisitos já incluídos dependem diretamente dele para formar um fluxo de uso minimamente completo — situação prevista no enunciado da atividade ("Um RF de alto valor e alto esforço não deve ser automaticamente descartado" e a necessidade de "formar um fluxo de uso minimamente completo"). Essa exceção foi aplicada duas vezes:
+
+| RF promovido | Classificação pelas regras 1–4 | RFs do MVP que dependem dele | Por que o fluxo não fecha sem ele |
+| --- | --- | --- | --- |
+| [RF10](funcionais.md#rf10) — Agendar sessão do paciente | Should have, esforço alto (fora pela regra 3) | RF11, RF12, RF14, RF16, RF17 e RF43 | Os seis requisitos pressupõem uma sessão previamente agendada, sem a qual não têm sobre o que operar. |
+| [RF13](funcionais.md#rf13) — Enviar lembrete de sessão agendada | Should have, esforço alto (fora pela regra 3) | RF14 (Must have) | RF14 só consegue ser executado a partir do link de confirmação de presença que, conforme a própria descrição do requisito, é enviado exclusivamente no lembrete automático (RF13); sem RF13, não existe canal para o paciente confirmar presença, e nenhuma outra feature declarada oferece esse mesmo link. |
+
+<details class="revision-note" markdown>
+<summary>Por que os demais RFs fora do MVP não foram promovidos</summary>
+
+Nenhum outro RF excluído pelas regras 1–4 tem essa mesma condição de bloqueio: os demais RFs fora do MVP (RF5, RF9, RF15, RF25, RF26, RF29, RF47, RF48, RF49, RF58, RF59, RF60, RF61, RF62) são consultas, refinamentos ou fluxos que os RFs do MVP não pressupõem como pré-condição de existir. Em particular, RF5 aparece como "Dependência: RF4/RF5" na rastreabilidade de RF6 (CP2), mas a notação indica fontes alternativas de insumo para a decisão do supervisor — a própria RF6 descreve a classificação como julgamento clínico apoiado nas "informações e sinalizações disponíveis", e as informações organizadas por RF4 (no MVP) já bastam para essa decisão, com a sinalização automática de RF5 como reforço opcional. RF15 e RF29, por sua vez, aparecem como "Dependência" na rastreabilidade de RF34/RF35 (CP9) e de RF31/RF32 (CP7), respectivamente, mas apenas para casos de borda (diferenciar falta de cancelamento; exibir correções, quando existirem) que essas features do MVP continuam operando corretamente sem RF15/RF29. Em nenhum desses três casos a ausência do RF fora do MVP deixa o RF do MVP sem nada sobre o que operar — ao contrário de RF10 e RF13, cuja ausência impede por completo a execução dos RFs do MVP que dependem deles.
+
+</details>
 
 Aplicando o critério aos 65 RFs (RF1 a RF65): **51 entram no MVP** e **14 ficam para uma versão posterior** — 39 por serem *Must have*, 8 *Should have* de baixo esforço, 2 *Should have* de esforço alto promovidos por dependência (RF10 e RF13) e 2 *Could have* de esforço mínimo; dos 14 de fora, 8 são *Should have* de esforço alto, 4 são *Could have* de esforço moderado/alto e 2 são *Won't have now*.
 
@@ -294,7 +317,7 @@ A tabela abaixo aplica o critério requisito a requisito, mantendo a rastreabili
 
 ### 10.2.4 Validação do MVP com o Cliente
 
-> **Pendente.** O recorte das seções [10.2.1](#1021-avaliacao-de-valor-de-negocio-e-de-esforco-tecnico) a [10.2.3](#1023-definicao-do-mvp) é, até este ponto, uma proposta técnica da equipe a partir do valor de negócio já avaliado pela Clínica Escola FBr (seção 8 de [analise-feedback.md](analise-feedback.md)) e do esforço técnico avaliado internamente. Falta validar esse recorte final do MVP diretamente com a FBr antes de considerá-lo definitivo. Esta seção será preenchida com o registro dessa validação assim que ela ocorrer, contendo:
+> **Pendente.** O recorte das seções [10.2.1](#1021-avaliacao-de-valor-de-negocio-e-de-esforco-tecnico) a [10.2.3](#1023-definicao-do-mvp) é, até este ponto, uma proposta técnica da equipe a partir do valor de negócio já avaliado pela Clínica Escola FBr (ver [Análise do Feedback](analise-feedback.md)) e do esforço técnico avaliado internamente. Falta validar esse recorte final do MVP diretamente com a FBr antes de considerá-lo definitivo. Esta seção será preenchida com o registro dessa validação assim que ela ocorrer, contendo:
 
 - **Quem participou:** _a preencher — representante(s) da Clínica Escola FBr e da equipe presentes na validação._
 - **Quando ocorreu:** _a preencher — data da reunião ou troca de validação._

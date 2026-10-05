@@ -4,8 +4,8 @@ site_url: https://mdsreq-fga-unb.github.io/REQ-2026.2-T02-ClinicaEscolaFBr/
 repo_url: https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr
 repo_name: REQ-2026.2-T02-ClinicaEscolaFBr
 copyright: Clínica Escola FBr · Documentação acadêmica do projeto · 2026
-extra_css: [assets/stylesheets/extra.css, assets/stylesheets/reading.css]
-extra_javascript: [assets/javascripts/extra.js, assets/javascripts/reading.js]
+extra_css: [assets/stylesheets/extra.css, assets/stylesheets/reading.css, assets/stylesheets/melhorias.css]
+extra_javascript: [assets/javascripts/extra.js, assets/javascripts/reading.js, assets/javascripts/matriz.js, assets/javascripts/melhorias.js]
 theme:
   name: material
   custom_dir: overrides
@@ -93,10 +93,11 @@ nav:
           - 6. Cronograma e Entregas: unidade-1/gestao/cronograma.md
           - 7. Equipe e Comunicação: unidade-1/gestao/equipe-comunicacao.md
           - Boas práticas no GitHub: unidade-1/gestao/boas-praticas-github.md
-      - Reuniões: unidade-1/reunioes.md
-      - Estudo de FDD: unidade-1/estudos/fdd.md
-      - Lições Aprendidas: unidade-1/licoes-aprendidas.md
-      - Referências: unidade-1/referencias.md
+          - Reuniões: unidade-1/reunioes.md
+      - Estudos e referências:
+          - Estudo de FDD: unidade-1/estudos/fdd.md
+          - Lições Aprendidas: unidade-1/licoes-aprendidas.md
+          - Referências: unidade-1/referencias.md
   - Unidade 2 — Requisitos e priorização:
       - Início da unidade: unidade-2/index.md
       - 8. Requisitos de Software:
@@ -105,7 +106,9 @@ nav:
           - 8.3 Análise do Feedback: unidade-2/requisitos/analise-feedback.md
       - 9. DoR e DoD: unidade-2/requisitos/dor-dod.md
       - 10. Backlog de Produto: unidade-2/requisitos/backlog.md
-      - Melhorias de UX — Capítulo 10: analise-ux-capitulo-10.md
-      - Cronograma e Entregas: unidade-2/gestao/cronograma.md
-      - Reuniões: unidade-2/reunioes.md
-      - Lições Aprendidas: unidade-2/licoes-aprendidas.md
+      - Gestão do Projeto:
+          - Cronograma e Entregas: unidade-2/gestao/cronograma.md
+          - Reuniões: unidade-2/reunioes.md
+      - Aprendizados e documentação:
+          - Lições Aprendidas: unidade-2/licoes-aprendidas.md
+          - Melhorias de UX — Capítulo 10: analise-ux-capitulo-10.md

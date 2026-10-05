@@ -8,7 +8,7 @@ Este estudo tem como fonte principal a obra de Palmer e Felsing (2002), que desc
 
 Uma feature é uma capacidade específica do produto, suficientemente pequena para ser projetada, implementada, testada e demonstrada em um período curto. Ela deve ser descrita de forma objetiva, normalmente no padrão:
 
-> **<ação> <resultado> <objeto>**
+> **`<ação> <resultado> <objeto>`**
 
 Exemplos para a Clínica Escola FBr:
 

@@ -1,8 +1,8 @@
-# CRONOGRAMA E ENTREGAS DA UNIDADE 2
+# Cronograma e Entregas da Unidade 2
 
 O planejamento da Unidade 2 dá continuidade à abordagem ágil, ao ciclo de vida ágil e ao processo Feature-Driven Development (FDD) adotados na Unidade 1. O cronograma compreende o período de **15/09/2026 a 13/10/2026**, organizado em dois ciclos (ver Unidade 1, [Seção 6.2](../../unidade-1/gestao/cronograma.md#62-visao-macro-das-unidades-2-3-e-4)), e as atividades podem ser refinadas após as revisões, validações com a Faculdade Brasília (FBr) e demonstrações de features.
 
-### Ciclo 1 (15/09 a 29/09) — Elicitação, declaração e validação cruzada dos requisitos
+## Ciclo 1 (15/09 a 29/09) — Elicitação, declaração e validação cruzada dos requisitos
 
 | Período                         | Fase / Processo FDD                                 | Atividades Desenvolvidas                                                                                                                                                            | Atividade de ER / Resultado                                                                                  | Entregáveis / Produtos                                                                                                                                                                                                         |
 | -------------------------------- | ----------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -15,7 +15,7 @@ O planejamento da Unidade 2 dá continuidade à abordagem ágil, ao ciclo de vid
 | 27/09 a 28/09                    | Priorização e definição do escopo                   | Consolidação da tabela de avaliações, construção da matriz 4×4 (valor de negócio × esforço técnico) e seleção/confirmação dos RFs e RNFs priorizados, com o cliente.               | Análise e consenso (prioridades e matriz negociadas com a equipe). | [Matriz 4×4](../requisitos/backlog.md#1022-matriz-de-priorizacao-valor-de-negocio-esforco-tecnico) e [escopo priorizado (MVP)](../requisitos/backlog.md#1023-definicao-do-mvp) consolidados. |
 | 28/09 até 29/09, início da aula  | Publicação e validação com o cliente                | Publicação da versão final dos RFs e RNFs e validação do escopo priorizado com o cliente.                                                                                           | Verificação e validação (validação com o stakeholder/cliente). | Versão final dos RFs e RNFs, matriz, lista do escopo priorizado e justificativas publicadas no site. |
 
-### Ciclo 2 (29/09 a 13/10) — DoR, DoD e consolidação da entrega
+## Ciclo 2 (29/09 a 13/10) — DoR, DoD e consolidação da entrega
 
 | Período                         | Fase / Processo FDD                                 | Atividades Desenvolvidas                                                                                                                                                            | Atividade de ER / Resultado                                                                                  | Entregáveis / Produtos                                                                                                                                                                                                         |
 | -------------------------------- | ----------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -25,7 +25,7 @@ O planejamento da Unidade 2 dá continuidade à abordagem ágil, ao ciclo de vid
 | 11/10 a 12/10                    | Preparação da entrega                               | Revisão final da rastreabilidade, atualização das evidências do cronograma, inclusão das Lições Aprendidas, preparação dos slides e gravação do vídeo de apresentação.              | Organização e atualização (rastreabilidade final). | Slides, vídeo e Lições Aprendidas prontos. |
 | 13/10                            | Entrega                                             | Publicação do GitHub Pages, conferência dos artefatos e entrega oficial da Unidade 2.                                                                                               | Organização e atualização (publicação final). | Unidade 2 entregue. |
 
-### Escopo de requisitos: as 14 CPs
+## Escopo de requisitos: as 14 CPs
 
 O escopo de requisitos da Unidade 2 cobre, na numeração final adotada pela equipe, as 14 Características de Produto (CP1 a CP14). A divisão original de responsabilidades ([Evidência: divisão das características de produto](../reunioes.md#3-divisao-das-caracteristicas-de-produto)) foi feita com uma numeração provisória de 12 CPs, anterior à decomposição em features (issues [#33](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/issues/33), [#34](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/issues/34), [#36](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/issues/36), [#37](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/issues/37) e [#38](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/issues/38)) e à criação da CP13. A tabela abaixo relaciona essa divisão original à cobertura efetiva, já na numeração final:
 
@@ -42,7 +42,7 @@ O escopo de requisitos da Unidade 2 cobre, na numeração final adotada pela equ
 
 A priorização entre essas CPs ocorre em 29/09/2026, ao final deste ciclo, por meio de uma avaliação formal de valor de negócio e de esforço técnico junto ao cliente. Apenas as CPs então priorizadas seguem para os ciclos de construção das Unidades 3 e 4 (ver Unidade 1, Seção 6.2).
 
-### Entregáveis da Unidade 2
+## Entregáveis da Unidade 2
 
 #### Visão de Produto e Projeto atualizada
 
@@ -72,8 +72,8 @@ Também devem ser mantidos os vínculos entre requisitos, features, critérios d
 - evidências de cumprimento e atualização do cronograma;
 - documentação atualizada no site do projeto (GitHub Pages);
 - vídeo de apresentação da entrega da Unidade 2;
-- Lições Aprendidas da Unidade 2 (Seção 11.2).
+- [Lições Aprendidas da Unidade 2](../licoes-aprendidas.md).
 
-### Atualização do Planejamento
+## Atualização do Planejamento
 
 Ao final de cada ciclo de trabalho, a equipe revisará o andamento das features, as pendências de elicitação, os riscos, as dependências e os entregáveis. Alterações de escopo ou prazo serão registradas no repositório e comunicadas aos stakeholders nas reuniões de acompanhamento. O planejamento deve manter explícita a relação entre cada feature, seus critérios de aceitação e os requisitos não funcionais aplicáveis.

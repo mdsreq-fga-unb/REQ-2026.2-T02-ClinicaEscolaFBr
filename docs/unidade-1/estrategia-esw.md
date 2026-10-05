@@ -16,7 +16,12 @@ O detalhamento do processo adotado, seus cinco subprocessos e a decomposição d
 
 O quadro a seguir compara o **Feature-Driven Development (FDD)** e o **Extreme Programming (XP)**, dois processos de engenharia de software compatíveis com a abordagem ágil priorizada, considerando os aspectos relevantes para o desenvolvimento da solução da Clínica Escola FBr. As características do FDD seguem Palmer e Felsing (2002); as do XP seguem Beck (1999).
 
-> **Nota de revisão:** a versão anterior deste quadro comparava o FDD com o ScrumXP. A comparação foi substituída porque o Scrum é um framework de gerenciamento do trabalho, e não um processo de engenharia de software: ele não prescreve práticas de especificação, projeto, construção ou verificação (SCHWABER; SUTHERLAND, 2020). O XP, ao contrário, define práticas técnicas de engenharia e permite uma comparação no mesmo nível do FDD.
+<details class="revision-note" markdown>
+<summary>Nota de revisão: por que o quadro compara FDD e XP</summary>
+
+A versão anterior deste quadro comparava o FDD com o ScrumXP. A comparação foi substituída porque o Scrum é um framework de gerenciamento do trabalho, e não um processo de engenharia de software: ele não prescreve práticas de especificação, projeto, construção ou verificação (SCHWABER; SUTHERLAND, 2020). O XP, ao contrário, define práticas técnicas de engenharia e permite uma comparação no mesmo nível do FDD.
+
+</details>
 
 | Características | FDD | XP |
 | --- | --- | --- |

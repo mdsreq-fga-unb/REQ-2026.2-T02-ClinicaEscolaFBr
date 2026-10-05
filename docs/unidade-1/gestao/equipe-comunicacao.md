@@ -1,8 +1,8 @@
-# 7. INTERAÇÃO ENTRE EQUIPE E CLIENTE
+# 7. Interação entre Equipe e Cliente
 
 A interação do projeto será baseada em colaboração contínua entre a equipe de desenvolvimento e os especialistas de domínio da Faculdade Brasília (FBr). O processo FDD organizará o trabalho em features pequenas, rastreáveis e demonstráveis, permitindo validar progressivamente o modelo de domínio, o design e o comportamento do produto.
 
-### 7.1 Composição da Equipe
+## 7.1 Composição da Equipe
 
 | Integrante        | Atribuições operacionais                                                                                                                                                                                                                                 | Organização no FDD                                             |
 | ----------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------- |
@@ -17,7 +17,7 @@ No contexto do FDD, os Líderes de Feature conduzirão o detalhamento, o acompan
 
 Todos os integrantes da equipe participam de atividades de Engenharia de Requisitos, ainda que com ênfases diferentes: Luís Henrique concentra a elicitação, análise, declaração, representação, verificação e validação, evidenciada pela revisão final dos RFs/RNFs de sete CPs (CP1, CP2, CP3, CP6, CP7, CP8 e CP13) conforme a verificação cruzada (versão 2.26 do histórico de revisões); Maria Clara contribui na elicitação e na análise dos stakeholders, evidenciada pela inclusão do mapa de stakeholders na [Estratégia de ESW](../estrategia-esw.md) (versão 1.12); Nicolas contribui na definição das features e na delimitação do MVP, evidenciada pela avaliação de esforço técnico no [Backlog de Produto](../../unidade-2/requisitos/backlog.md) (versão 2.28); Jônatas contribui na análise do negócio que fundamenta os requisitos, evidenciada pelo detalhamento da [Intervenção Social](../intervencao-social.md) (versão 2.3); Gabriel participa da verificação da rastreabilidade entre requisitos, decisões e riscos, evidenciada pela priorização e pelo recorte do MVP (versão 2.30); e Joaquim participa da verificação da consistência dos requisitos com o modelo de domínio e a arquitetura, e da correção dos requisitos a partir da verificação cruzada, evidenciada pela correção dos RFs/RNFs das CP4, CP9, CP11, CP12 e CP14 e pela [Análise do Feedback (8.3)](../../unidade-2/requisitos/analise-feedback.md), PR #64.
 
-### 7.2 Comunicação
+## 7.2 Comunicação
 
 #### Comunicação interna
 
@@ -37,7 +37,7 @@ Todos os integrantes da equipe participam de atividades de Engenharia de Requisi
 
 O GitHub será o repositório central do código-fonte, dos diagramas de domínio e design, das decisões do projeto e dos artefatos de requisitos. A documentação será publicada com MkDocs e disponibilizada por meio do GitHub Pages. Pull requests e revisões serão utilizados para dar visibilidade às alterações e preservar a rastreabilidade do trabalho realizado.
 
-### 7.3 Processo de Validação
+## 7.3 Processo de Validação
 
 A validação ocorrerá de forma incremental, acompanhando os marcos do FDD e combinando inspeções internas, testes e demonstrações com o cliente. Cada feature deverá possuir descrição, prioridade, critérios de aceitação e vínculo com as necessidades do negócio antes de ser considerada pronta para o ciclo de desenvolvimento.
 
