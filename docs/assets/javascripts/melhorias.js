@@ -76,7 +76,11 @@
         chip.rel = "noopener";
         chip.addEventListener("click", function (e) { e.stopPropagation(); });
         summary.appendChild(chip);
+        // O original fica no título recolhido: fora do Tab e do leitor de tela
+        issue.setAttribute("aria-hidden", "true");
+        issue.tabIndex = -1;
       }
+      h.setAttribute("aria-hidden", "true");
     });
   }
 
