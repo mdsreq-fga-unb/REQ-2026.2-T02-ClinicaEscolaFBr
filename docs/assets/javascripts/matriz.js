@@ -112,8 +112,14 @@
       [String(inside), "RFs no MVP", "is-mvp"],
       [String(data.rfs.length - inside), "RFs para uma versão posterior", "is-later"]
     ];
-    var rnfCount = Object.keys(data.rnfs).length;
-    if (rnfCount) stats.push([String(rnfCount), "RNFs classificados para o MVP"]);
+    var rnfEntries = Object.keys(data.rnfs);
+    var rnfOutside = rnfEntries.filter(function (code) {
+      return data.rnfs[code] === "Não aplicável ao MVP";
+    }).length;
+    if (rnfEntries.length) {
+      stats.push([String(rnfEntries.length - rnfOutside), "RNFs no MVP", "is-mvp"]);
+      stats.push([String(rnfOutside), "RNFs fora do MVP", "is-later"]);
+    }
     stats.forEach(function (s) {
       var item = el("div", "mvp-summary__item" + (s[2] ? " " + s[2] : ""));
       item.appendChild(el("span", "mvp-summary__value", s[0]));
@@ -250,10 +256,7 @@
     section.appendChild(detail);
     section.appendChild(el("p", "prio-matrix__note", "Dentro de cada célula os RFs aparecem em ordem numérica, sem ordem de prioridade entre eles. Dados lidos das tabelas 10.2.1.4 e 10.2.3 desta página."));
 
-    var tip = el("div", "prio-matrix__tip");
-    tip.setAttribute("role", "tooltip");
-    tip.hidden = true;
-    document.body.appendChild(tip);
+    var tip = matrixTip();
 
     function describe(r) {
       return {
@@ -278,7 +281,6 @@
       tip.style.left = left + "px";
       tip.style.top = top + "px";
     }
-    function hideTip() { tip.hidden = true; }
 
     function select(chip) {
       chips.forEach(function (c) { c.classList.toggle("is-selected", c === chip); c.setAttribute("aria-pressed", c === chip ? "true" : "false"); });
@@ -304,7 +306,6 @@
       chip.addEventListener("blur", hideTip);
       chip.addEventListener("click", function () { hideTip(); select(chip); });
     });
-    window.addEventListener("scroll", hideTip, { passive: true });
 
     var state = { filter: "all", cp: "" };
     function apply() {
@@ -333,6 +334,19 @@
     keep.appendChild(figure);
   }
 
+  /* Dica única, reaproveitada entre execuções (como o lightbox de melhorias.js) */
+  var tipEl = null;
+  function hideTip() { if (tipEl) tipEl.hidden = true; }
+  function matrixTip() {
+    if (tipEl) return tipEl;
+    tipEl = el("div", "prio-matrix__tip");
+    tipEl.setAttribute("role", "tooltip");
+    tipEl.hidden = true;
+    document.body.appendChild(tipEl);
+    window.addEventListener("scroll", hideTip, { passive: true });
+    return tipEl;
+  }
+
   /* ---- Decisão de MVP nas páginas de RFs e RNFs ---- */
   var cache = null;
   function loadBacklog() {
@@ -345,7 +359,11 @@
         var root = doc.querySelector(".md-content__inner") || doc.body;
         return parseBacklog(root);
       })
-      .catch(function () { return null; });
+      .catch(function () {
+        // Não memoriza a falha: a próxima chamada tenta de novo
+        cache = null;
+        return null;
+      });
     return cache;
   }
 
