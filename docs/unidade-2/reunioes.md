@@ -297,3 +297,54 @@ As capturas abaixo, recolhidas em menus expansíveis, reproduzem a conversa no g
 ### Encerramento
 
 A validação foi concluída sem divergências em aberto. Ficaram para definição posterior o valor do prazo máximo de triagem e a data de entrega do relatório final de evolução (RF33), registrados em [Pendências de validação com a FBr](requisitos/analise-feedback.md#pendencias-de-validacao-com-a-fbr).
+
+---
+
+## Reunião de acompanhamento: validação do MVP, GitHub Pages e preparação para a apresentação
+
+**Data:** 08/10/2026
+**Local:** Reunião on-line (Google Meet)
+**Participantes:** Gabriel da Cunha Barbaceli; Maria Clara Canuto; Luís Henrique; Nicolas Lopes da Costa; Joaquim José da Fonseca Viana; Jônatas Davi Oliveira Farias.
+
+![Registro da reunião de acompanhamento: validação do MVP, GitHub Pages e preparação para a apresentação](../assets/reuniao-6.jpeg)
+
+_Figura 13 — Registro da reunião de acompanhamento: validação do MVP, GitHub Pages e preparação para a apresentação, realizada em 08/10/2026._
+
+[Consultar ata completa em PDF](../assets/atas-reunioes/Ata_Reuniao_Validacao_MVP_GitHub_Pages_08-10-2026.pdf)
+
+### Resumo
+
+A reunião teve como objetivo acompanhar as entregas, organizar a atualização do site e alinhar a preparação para a apresentação.
+
+### 1. Atualização do MVP e do site
+
+- A validação do MVP pelo cliente foi realizada por WhatsApp (ver [Validação do MVP com a Clínica Escola FBr](#validacao-do-mvp-com-a-clinica-escola-fbr)). Gabriel está atualizando o GitHub Pages com as evidências dessa validação, a nova versão do MVP, os requisitos incluídos e removidos, a matriz de priorização e as tabelas revisadas.
+- Gabriel já enviou a branch e irá criar um pull request (PR). A atualização inclui pequenas alterações nos scripts JavaScript desenvolvidos por Luís Henrique.
+- Luís Henrique e Jônatas Davi revisarão o PR, verificando inconsistências e possíveis problemas na atualização do site.
+
+### 2. Organização do GitHub
+
+- Foi encaminhada a criação de um template padrão para issues de desenvolvimento, incluindo referências ao DoR e ao DoD.
+- Também será revisada a estrutura do GitHub Projects, para identificar ajustes ou melhorias que facilitem o acompanhamento do trabalho.
+
+### 3. Documentação do DoR e do DoD
+
+- Maria Clara prevê entregar o DoR em 08/10, até meia-noite.
+- O DoD está em um pull request e ainda não foi aprovado nem incorporado à branch main. Maria já o revisou e pretende registrar comentários.
+- A revisão do DoD por Nicolas será coordenada com a revisão do DoR, para facilitar a comparação estrutural entre os documentos, que têm finalidades distintas.
+
+### 4. Prazos e preparação para a apresentação
+
+- Até 13/10 (terça-feira): finalizar as atividades pendentes e preparar os materiais para a apresentação.
+- 15/10 (quinta-feira): apresentação do projeto.
+- Após a incorporação do DoR, do DoD e da validação do cliente à branch main, ainda será necessário concluir os slides, gravar o vídeo da apresentação, consolidar a visão do produto e o escopo final e atualizar o site.
+- Gabriel ficará responsável pelos slides. A ata da reunião será enviada ao grupo da equipe.
+
+### 5. Combinados de acompanhamento
+
+- Continuar registrando as pautas das reuniões no local combinado.
+- Manter as evidências das validações e atividades documentadas.
+
+### Encerramento
+
+A equipe revisou o andamento das entregas do MVP e da documentação e alinhou os itens restantes para a apresentação de 15/10. O próximo passo é concluir o DoR, revisar e incorporar os documentos e a validação ao site, além de finalizar os materiais de apresentação.
