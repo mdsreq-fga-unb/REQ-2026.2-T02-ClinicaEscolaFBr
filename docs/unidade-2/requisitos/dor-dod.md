@@ -1,16 +1,6 @@
 ﻿# 9. DoR e DoD
-# Definição de Pronto (DoD)
 
 A validação ocorre de forma incremental, acompanhando os marcos do FDD e combinando inspeções internas, testes e demonstrações com o cliente.
-
-## Definição de Preparado (DoR)
-
-Uma feature só entra no ciclo de desenvolvimento quando possuir:
-
-- [ ] Descrição
-- [ ] Prioridade definida
-- [ ] Critérios de aceitação
-- [ ] Vínculo com as necessidades do negócio
 
 ## Definição de Pronto (DoD)
 
