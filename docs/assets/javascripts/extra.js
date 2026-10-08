@@ -234,7 +234,7 @@
 
   /*
    * Regra de abertura: a tabela que é o assunto da seção (até OPEN_MAX_ROWS
-   * linhas) já aparece aberta; tabelas longas de consulta (ex.: 65 RFs) e
+   * linhas) já aparece aberta; tabelas longas de consulta (ex.: 68 RFs) e
    * páginas com muitas tabelas (ex.: análise do feedback, onde o resumo de
    * cada CP fica no cabeçalho) começam fechadas.
    */

@@ -227,3 +227,73 @@ A reunião teve como objetivo revisar os ajustes finais do site, organizar a doc
 ### Encerramento
 
 A reunião consolidou os ajustes finais de organização do site e a divisão das entregas restantes. O próximo movimento é concluir as issues e a documentação até 07/10, seguido da revisão final e das demais atividades previstas até 10/10.
+
+---
+
+## Validação do MVP com a Clínica Escola FBr
+
+**Data:** 24/09/2026 a 08/10/2026 (duas rodadas)
+**Local:** Grupo de WhatsApp "Sistema Clínica Escola FBr - Alunos UnB"
+**Participantes:** Robson Luís de Araújo — coordenador do curso de Psicologia (FBr); Thiago Cardoso Viana — Diretor Financeiro e de Tecnologia (FBr); Gabriel da Cunha Barbaceli; Jônatas Davi Oliveira Farias; demais integrantes da equipe acompanhando o grupo.
+
+### Resumo
+
+A validação do recorte do MVP foi feita por mensagens no grupo de WhatsApp com a Clínica Escola FBr, canal previsto na [seção 7.2 — Comunicação com o Cliente](../unidade-1/gestao/equipe-comunicacao.md#comunicacao-com-o-cliente). O resultado — RFs aprovados, requisitos para entregas futuras, ajustes solicitados e pontos em aberto — está consolidado na [seção 10.2.4 do Backlog de Produto](requisitos/backlog.md#1024-validacao-do-mvp-com-o-cliente).
+
+### 1ª rodada (24/09 a 02/10/2026)
+
+- Em 24/09, a equipe enviou a proposta de MVP (`priorizacao-mvp-clinica-escola-fbr.pdf`), com os requisitos dentro e fora da primeira versão.
+- Em 02/10, Robson informou que já havia analisado e aprovado a proposta.
+- No mesmo dia, Thiago pediu alterações: incluir a transferência de caso (RF25), a sinalização de pontos de atenção na triagem (RF5) e o registro do aviso de ausência pelo paciente (RF15). Em compensação, indicou que poderiam ficar para depois o lembrete automático (RF13), o painel de distribuição (RF24) e a reprovação do estagiário, que só precisa estar pronta no fim do semestre.
+- A equipe respondeu ponto a ponto: RF15 e RF25 entram no MVP; recomendou manter o RF5 fora, já que a revisão humana da triagem (RF6) está garantida.
+- Thiago fechou a inclusão de RF15 e RF25 e aceitou deixar RF5 e RF26 fora, sob condições: prazo definido para a triagem, aviso fixo com os contatos do CVV (188) e do SAMU (192) no formulário de inscrição e registro, na transferência, de quem passou o caso para quem, quando e por quê. Também aceitou tratar a continuidade entre semestres caso a caso e perguntou como ficariam o encerramento por alta e a criação do prontuário.
+- A equipe informou que reorganizaria o escopo para manter a entrega do MVP no início de dezembro e traria as respostas às dúvidas, e Thiago concordou.
+
+### 2ª rodada (06/10 a 08/10/2026)
+
+- Em 06/10, a equipe enviou a proposta revisada, com os requisitos que permanecem, entram e saem do MVP e com três novos requisitos que respondem às dúvidas da 1ª rodada: RF66 (criar o prontuário com anamnese e contrato), RF67 (validação da evolução pelo supervisor) e RF68 (encerramento do caso por alta).
+- Em 07/10, Thiago aprovou a proposta ("Olhei a proposta e tá ok, podem seguir") com quatro observações de fechamento: o cancelamento para remarcar não conta falta do paciente nem do estagiário; a correção de evolução (RF29) deve guardar a versão original; o relatório final (RF33) fica fora, mas deve estar pronto antes do fim do semestre, junto com a reprovação do estagiário; e o apoio manual à inscrição deve ser a recepção preenchendo o mesmo formulário do sistema. Pediu ainda que o prazo da triagem fosse um parâmetro configurável, a ser definido pela coordenação.
+- Em 08/10, a equipe confirmou os pontos e combinou que a data do RF33 e da reprovação será fechada quando o cronograma da fase de construção estiver detalhado. Thiago encerrou a validação ("Certo, vamos em frente!").
+
+### Evidências
+
+As capturas abaixo, recolhidas em menus expansíveis, reproduzem a conversa no grupo. Os números de telefone dos participantes foram ocultados. As mensagens longas aparecem truncadas pelo próprio WhatsApp ("Ler mais"), mas o trecho visível basta para identificar cada etapa da validação.
+
+<details class="prio-matrix__static" markdown>
+<summary>Ver Figura 8 — Envio da proposta de MVP pela equipe (24/09), aprovação de Robson e início do pedido de alterações de Thiago (02/10).</summary>
+
+![Envio da proposta de MVP em 24/09 e primeiras respostas da FBr em 02/10](../assets/validacao-mvp/validacao-mvp-1.jpg)
+
+</details>
+
+<details class="prio-matrix__static" markdown>
+<summary>Ver Figura 9 — Pontos levantados por Thiago (RF25, RF5, RF15 e itens que podem ficar para depois) e resposta da equipe (02/10).</summary>
+
+![Pedido de alterações de Thiago e resposta ponto a ponto da equipe em 02/10](../assets/validacao-mvp/validacao-mvp-2.jpg)
+
+</details>
+
+<details class="prio-matrix__static" markdown>
+<summary>Ver Figura 10 — Fechamento de RF15 e RF25, condições para RF5 e RF26, dúvidas sobre alta e criação do prontuário e combinação da revisão do escopo (02/10).</summary>
+
+![Fechamento da 1ª rodada em 02/10](../assets/validacao-mvp/validacao-mvp-3.jpg)
+
+</details>
+
+<details class="prio-matrix__static" markdown>
+<summary>Ver Figura 11 — Envio da proposta revisada (06/10) e aprovação com quatro observações de fechamento (07/10).</summary>
+
+![Envio da proposta revisada em 06/10 e aprovação de Thiago em 07/10](../assets/validacao-mvp/validacao-mvp-4.jpg)
+
+</details>
+
+<details class="prio-matrix__static" markdown>
+<summary>Ver Figura 12 — Resposta da equipe às observações e encerramento da validação por Thiago (08/10).</summary>
+
+![Confirmação final da validação em 08/10](../assets/validacao-mvp/validacao-mvp-5.jpg)
+
+</details>
+
+### Encerramento
+
+A validação foi concluída sem divergências em aberto. Ficaram para definição posterior o valor do prazo máximo de triagem e a data de entrega do relatório final de evolução (RF33), registrados em [Pendências de validação com a FBr](requisitos/analise-feedback.md#pendencias-de-validacao-com-a-fbr).
