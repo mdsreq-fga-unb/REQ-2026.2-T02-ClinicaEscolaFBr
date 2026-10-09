@@ -1,6 +1,6 @@
-﻿# 9. Definition of Ready (DoR)
+﻿# 9.1 Definition of Ready (DoR)
 
-## 9.1 Objetivo
+## 9.1.2 Objetivo
 
 Este documento define os **critérios de entrada** para que uma feature, com os requisitos funcionais (RFs) que ela declara e os requisitos não funcionais (RNFs) que a restringem, possa ser **iniciada na construção**. Evita-se, assim, desenvolver requisitos incompletos, ambíguos ou ainda dependentes de validação com a Clínica Escola FBr, o que gera retrabalho e impede o teste objetivo.
 
@@ -15,7 +15,7 @@ Os critérios foram derivados da estrutura que os requisitos já seguem na [Seç
 - **Quem avalia:** o integrante responsável pela CP de origem faz a autoavaliação pelo checklist, e o responsável pela revisão do conjunto confirma antes da entrada.
 - **Resultado:** **Pronta**, **Pronta com ressalvas** ou **Não pronta** (seção 9.5).
 
-## 9.3 Checklist de critérios
+## 9.1.3 Checklist de critérios
 
 Os critérios **[B]** são **bloqueantes**: sem eles, a feature não entra na construção. Os critérios **[R]** são **recomendáveis**: podem ficar pendentes se a pendência for registrada.
 
@@ -97,7 +97,7 @@ Os critérios **[B]** são **bloqueantes**: sem eles, a feature não entra na co
 | R8.2 | A feature cabe em uma iteração. Se não couber, foi dividida em partes menores sem perder a rastreabilidade. | B |
 | R8.3 | Integrações externas (envio de e-mail e SMS, geração de PDF) e a massa de dados necessária para teste estão identificadas. | R |
 
-## 9.4 Verificação rápida da redação
+## 9.1.4 Verificação rápida da redação
 
 Antes de marcar os grupos de descrição e critérios como atendidos, confere-se se o requisito evita os problemas mais recorrentes na verificação cruzada:
 
@@ -109,7 +109,7 @@ Antes de marcar os grupos de descrição e critérios como atendidos, confere-se
 - **Incompletude:** partes obrigatórias da descrição sem critério de aceitação.
 - **Redundância:** a regra já está declarada em outro requisito.
 
-## 9.5 Resultado da avaliação
+## 9.1.5 Resultado da avaliação
 
 | Resultado | Condição | Consequência |
 | --------- | -------- | ------------ |
@@ -132,7 +132,7 @@ Critérios [B] não atendidos: <códigos e motivo>
 Pendências [R] e/ou com a FBr: <descrição, responsável, prazo>
 ```
 
-## 9.6 Situação conhecida na documentação
+## 9.1.6 Situação conhecida na documentação
 
 Com base na Seção 8.1 consultada em 08/10/2026, os pontos abaixo afetam a avaliação e devem ser conferidos antes de cada feature entrar na construção.
 
@@ -148,13 +148,13 @@ Com base na Seção 8.1 consultada em 08/10/2026, os pontos abaixo afetam a aval
 | Parâmetros de agendamento | Duração da sessão (50 min), antecedência do lembrete (24 h), prazo de confirmação (12 h) e antecedência mínima de cancelamento (24 h) são propostas a validar. | R2.4: atendido pelo parâmetro configurável. |
 | RNF12 | Carga de referência de 30 usuários simultâneos é estimativa a validar. | R5.3: atendido, com validação pendente. |
 
-## 9.7 Relação com os demais documentos
+## 9.1.7 Relação com os demais documentos
 
 - **DoD:** uma feature só é avaliada pelo DoD depois de passar pelo DoR. Os critérios de teste, qualidade e documentação de saída estão no DoD.
 - **Requisitos (8.1 e 8.2):** o DoR verifica a qualidade desses documentos. As correções decorrentes da verificação cruzada devem estar aplicadas antes da avaliação.
 - **Análise do Feedback (8.3):** concentra as pendências de validação com a FBr citadas no R4.2.
 - **Backlog de Produto (10):** fonte para o R1.5, sobre o pertencimento ao MVP e a ordem de entrega.
 
-## 9.8 Revisão deste documento
+## 9.1.8 Revisão deste documento
 
 O DoR é revisado ao fim de cada iteração, na retrospectiva, e atualizado quando um retrabalho causado por requisito mal definido revelar um critério que faltava.
