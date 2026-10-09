@@ -54,7 +54,7 @@ extra:
         label: vagas de atendimento por semestre
       - value: "14"
         label: características de produto
-      - value: "65"
+      - value: "68"
         label: requisitos funcionais
       - value: "58"
         label: requisitos não funcionais

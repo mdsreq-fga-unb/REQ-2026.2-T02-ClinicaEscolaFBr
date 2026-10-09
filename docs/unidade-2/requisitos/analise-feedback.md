@@ -299,3 +299,5 @@ As correções acima exigiram ajustes em requisitos que não tinham apontamento,
 - Valores padrão dos parâmetros de agendamento da CP4: duração da sessão (50 minutos), antecedência do lembrete (24 horas), prazo de confirmação (12 horas) e antecedência mínima para cancelamento sem falta (24 horas).
 - Carga de referência de 30 usuários simultâneos usada nos RNF12 e RNF29 (e, por referência, no RNF34).
 - Base legal do tratamento dos dados de saúde (RF57) e canal de atendimento dos demais direitos do titular.
+- Valor do parâmetro "prazo máximo para triagem" (RF4), a ser definido pela coordenação junto à FBr, conforme combinado na validação do MVP ([10.2.4](backlog.md#1024-validacao-do-mvp-com-o-cliente)).
+- Data de entrega do relatório final de evolução (RF33, fora do MVP) e da reprovação do estagiário (RF63/RF64), que a FBr pediu prontos antes do fim do semestre; a data será combinada quando o cronograma da fase de construção estiver detalhado.

@@ -261,7 +261,7 @@
 /* As classes .decision--* dão a cor de texto; a barra usa currentColor */
 .decision-summary .decision--na { color: var(--fbr-line-strong); }
 
-/* Categorias de RNF (10.2.1.5) */
+/* Categorias de RNF (10.2.3.1) */
 .md-typeset .category-grid > ul {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));

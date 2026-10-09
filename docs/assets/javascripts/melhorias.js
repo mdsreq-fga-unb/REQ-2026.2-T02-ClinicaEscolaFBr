@@ -121,7 +121,7 @@
         var cls = data.rnfs[card.id.toUpperCase()];
         var short = cls && RNF_SHORT[cls];
         if (!short) return;
-        addSummaryTag(card, short[0], short[1], cls + " (seção 10.2.1.5)");
+        addSummaryTag(card, short[0], short[1], cls + " (seção 10.2.3.1)");
       });
 
       // Cabeçalho da CP: "MVP: x de y RFs"

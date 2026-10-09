@@ -421,12 +421,7 @@
     }
   }
 
-  /* ---- J. Reuniões como cards recolhíveis, a mais recente aberta ---- */
-  function parseDate(value) {
-    var m = value.match(/(\d{2})\/(\d{2})\/(\d{4})/);
-    return m ? new Date(+m[3], +m[2] - 1, +m[1]).getTime() : 0;
-  }
-
+  /* ---- J. Reuniões como cards recolhíveis ---- */
   function enhanceMeetings(root) {
     var heads = Array.prototype.filter.call(root.children, function (node) {
       var next = node.nextElementSibling;
@@ -434,7 +429,8 @@
     });
     if (heads.length < 2 || root.querySelector("details.meeting")) return;
 
-    var cards = heads.map(function (h) {
+    // Todas as reuniões começam recolhidas; um link direto (#...) abre a de destino.
+    heads.forEach(function (h) {
       var meta = h.nextElementSibling;
       var date = (text(meta).match(/Data:\s*([^\s]+)/) || [])[1] || "";
       var card = el("details", "meeting");
@@ -449,10 +445,7 @@
         card.appendChild(node);
         node = next;
       }
-      return { card: card, time: parseDate(date) };
     });
-    cards.sort(function (a, b) { return b.time - a.time; });
-    cards[0].card.open = true;
   }
 
   /* ---- F. Índice lateral enxuto nas páginas de requisitos ---- */

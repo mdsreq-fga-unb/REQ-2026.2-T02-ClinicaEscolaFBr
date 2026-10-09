@@ -179,9 +179,9 @@ Este RNF concentra a regra de auditoria de todas as operações sobre a sessão;
 | Agendamento (RF10)                               | data, horário de início e de término                                      |
 | Remarcação (RF12)                                | data/horário anterior e novo, justificativa e origem do pedido            |
 | Aprovação de remarcação excedente (RF12)         | justificativa da exceção e usuário aprovador                              |
-| Confirmação de presença (RF14)                   | canal da confirmação (link do lembrete ou secretaria)                     |
-| Cancelamento pelo paciente (RF15)                | motivo e classificação ("no prazo" ou "fora do prazo")                    |
-| Registro de ausência do estagiário (RF16)        | motivo                                                                    |
+| Confirmação de presença (RF14)                   | canal da confirmação (link enviado no agendamento ou no lembrete, ou secretaria) |
+| Cancelamento pelo paciente (RF15)                | motivo e classificação ("no prazo", "fora do prazo" ou "administrativo para remarcação") |
+| Registro de ausência do estagiário (RF16)        | motivo e tipo ("ausência real" ou "administrativo para remarcação") |
 
 Esses registros não podem ser apagados nem sobrescritos por nenhum perfil, e devem ser mantidos enquanto os dados da sessão forem mantidos.
 
@@ -245,7 +245,7 @@ Rastreabilidade: CP4 — Agendamento, confirmação e remarcação (transversal 
 
 **RNF15 — Usabilidade da confirmação de presença pelo paciente**{ #rnf15 }
 
-A confirmação de presença deve ser possível a partir do link enviado no lembrete (RF13), sem exigir login ou cadastro de senha, em no máximo 2 interações, considerando o público com pouca familiaridade com tecnologia atendido pela clínica.
+A confirmação de presença deve ser possível a partir do link enviado no agendamento (RF10), e reforçado pelo lembrete automático quando este estiver disponível (RF13), sem exigir login ou cadastro de senha, em no máximo 2 interações, considerando o público com pouca familiaridade com tecnologia atendido pela clínica.
 
 Como o link dispensa login, ele deve ser protegido contra uso por terceiros:
 
@@ -365,7 +365,7 @@ Listagens, resultados de busca, endereços eletrônicos, notificações, mensage
 A conformidade deve ser verificada com prontuários fictícios completos e incompletos, inspecionando a interface e as respostas do servidor em tentativas negadas antes e depois de uma transferência de responsável e confirmando que nenhum conteúdo ou indicador de existência das seções clínicas é exposto.
 
 Classificação: segurança e privacidade (URPS+).
-Rastreabilidade: Feature "Consultar prontuário do paciente" → CP6 — Prontuário eletrônico; relacionada ao RF55 (CP12).
+Rastreabilidade: Features "Criar e inicializar o prontuário do paciente" e "Consultar prontuário do paciente" → CP6 — Prontuário eletrônico; relacionada ao RF55 (CP12).
 
 ### Registro de evolução por sessão (CP7)
 
@@ -382,12 +382,12 @@ Rastreabilidade: CP7 — Registro de evolução por sessão (transversal às fea
 
 **RNF27 — Integridade e proveniência dos registros de evolução**{ #rnf27 }
 
-Cada evolução persistida deve conservar sua associação à sessão, ao paciente, ao ciclo, ao autor e ao momento de registro. Correções e complementos devem conservar seu tipo, autor, data/hora, vínculo com o registro original e ordem cronológica. O histórico não deve ser perdido nem associado a outro caso após troca de responsável (RF25).
+Cada evolução persistida deve conservar sua associação à sessão, ao paciente, ao ciclo, ao autor e ao momento de registro. Correções e complementos devem conservar seu tipo, autor, data/hora, vínculo com o registro original e ordem cronológica. O histórico não deve ser perdido nem associado a outro caso após troca de responsável (RF25). A validação pelo supervisor (RF67) deve conservar o supervisor, a data/hora e a versão da evolução validada, e o encerramento por alta (RF68) deve conservar autor, confirmação do supervisor, data e motivo; nenhum desses registros pode ser apagado ou sobrescrito.
 
-A conformidade deve ser verificada por comparação entre sessão, evolução, correções, complementos e histórico antes e depois de uma transferência de caso.
+A conformidade deve ser verificada por comparação entre sessão, evolução, correções, complementos, validações, encerramento e histórico antes e depois de uma transferência de caso.
 
 Classificação: confiabilidade e auditoria (URPS+).
-Rastreabilidade: Feature "Registrar evolução da sessão realizada" → CP7 — Registro de evolução por sessão; relacionada a RF25 e RNF20.
+Rastreabilidade: Features "Registrar evolução da sessão realizada", "Validar evolução pelo supervisor" e "Encerrar caso por alta" → CP7 — Registro de evolução por sessão; relacionada a RF25 e RNF20.
 
 **RNF28 — Auditoria das correções de evolução**{ #rnf28 }
 
