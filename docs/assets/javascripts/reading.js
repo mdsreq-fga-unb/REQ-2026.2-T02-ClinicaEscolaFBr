@@ -2,7 +2,7 @@
  * Clínica Escola FBr — camada de leitura.
  *
  * Organiza visualmente as páginas longas sem alterar nenhum texto:
- * critérios Dado/Quando/Então, cabeçalho e contexto recolhível das CPs,
+ * cabeçalho e contexto recolhível das CPs,
  * resumo do requisito, etiquetas de referência (RF/RNF/CP/OE), barra de
  * contexto fixa, índice enxuto, decisões coloridas na análise do feedback,
  * tempo de leitura, cards de comparação e reuniões recolhíveis.
@@ -35,7 +35,7 @@
   function textNodes(root) {
     var walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT, {
       acceptNode: function (node) {
-        return node.parentElement.closest("a, code, summary, .ref-chip, .gwt") ? NodeFilter.FILTER_REJECT : NodeFilter.FILTER_ACCEPT;
+        return node.parentElement.closest("a, code, summary, .ref-chip") ? NodeFilter.FILTER_REJECT : NodeFilter.FILTER_ACCEPT;
       }
     });
     var nodes = [];
@@ -44,38 +44,6 @@
   }
 
   /* Envolve a primeira ocorrência de um padrão em um <span> */
-  function wrapFirst(root, pattern, className) {
-    var nodes = textNodes(root);
-    for (var i = 0; i < nodes.length; i++) {
-      var node = nodes[i];
-      var match = pattern.exec(node.nodeValue);
-      if (!match) continue;
-      var start = match.index + match[0].indexOf(match[1]);
-      var word = node.splitText(start);
-      word.splitText(match[1].length);
-      var span = el("span", className);
-      word.parentNode.replaceChild(span, word);
-      span.appendChild(word);
-      return span;
-    }
-    return null;
-  }
-
-  /* ---- A. Critérios de aceitação em Dado / Quando / Então ---- */
-  function enhanceCriteria(root) {
-    root.querySelectorAll(".req__criteria > li").forEach(function (li) {
-      if (li.dataset.gwt) return;
-      li.dataset.gwt = "1";
-      if (!/^Dad[oa]s?\b/.test(text(li))) return;
-      wrapFirst(li, /^\s*(Dad[oa]s?)\b/, "gwt gwt--given");
-      var when = wrapFirst(li, /,\s+(quando)\b/, "gwt gwt--when");
-      var then = wrapFirst(li, /,\s+(então)\b/, "gwt gwt--then");
-      // Quebra de linha visual antes de "quando" e "então" (o texto não muda).
-      [when, then].forEach(function (span) { if (span) span.before(el("br", "gwt-break")); });
-      if (when || then) li.classList.add("gwt-item");
-    });
-  }
-
   /* ---- B. Cabeçalho da CP com contagens e contexto recolhível ---- */
   function sectionNodes(heading) {
     var nodes = [];
@@ -464,7 +432,6 @@
     });
     var hasReqs = !!root.querySelector("details.req");
 
-    enhanceCriteria(root);
     if (hasReqs) enhanceCpSections(root, cpHeadings);
     enhanceRequirementBody(root);
     enhanceReferences(root, cpHeadings);

@@ -238,21 +238,21 @@ O registro da solicitação não representa confirmação de vaga ou garantia de
 
 _Critérios de aceitação:_
 
-- Dado que o interessado acessou o formulário de inscrição, quando preencher todos os campos obrigatórios e confirmar o envio, então o sistema deve registrar a solicitação e gerar um identificador único vinculado à inscrição.
+- O envio com todos os campos obrigatórios preenchidos registra a solicitação e gera um identificador único da inscrição.
 
-- Dado que o interessado deixou um ou mais campos obrigatórios sem preenchimento, quando tentar enviar o formulário, então o sistema deve impedir a conclusão da inscrição, identificar os campos pendentes e permitir sua correção sem descartar os demais dados já preenchidos.
+- O envio com campo obrigatório em branco é bloqueado, os campos pendentes são indicados e os dados já preenchidos são mantidos para correção.
 
-- Dada uma solicitação registrada com sucesso, quando o interessado concluir o processo de inscrição, então o sistema deve informar que a solicitação foi recebida e que o atendimento dependerá das etapas posteriores de triagem e disponibilidade de vagas.
+- Ao concluir a inscrição, o interessado é informado de que a solicitação foi recebida e de que o atendimento depende da triagem e da disponibilidade de vagas.
 
-- Dado que ocorreu uma falha antes da confirmação do registro, quando o interessado tentar concluir a inscrição, então o sistema não deve apresentar uma confirmação de inscrição realizada sem que exista um registro correspondente.
+- Nenhuma confirmação de inscrição é exibida se a solicitação não tiver sido efetivamente registrada.
 
-- Dado o preenchimento do formulário, quando o interessado chegar aos campos de CPF e RG, então o sistema deve solicitar apenas a digitação desses números, sem oferecer ou exigir o envio de cópia digitalizada ou foto do documento.
+- CPF e RG são pedidos apenas como números digitados, sem envio de cópia digitalizada ou foto do documento.
 
-- Dado que o interessado informou telefone celular, e-mail ou ambos, quando confirmar o cadastro, então o sistema deve validar o formato dos canais informados, exigir ao menos um deles e registrar qual canal cadastrado foi indicado como preferencial.
+- O formato dos canais informados é validado, pelo menos um canal (celular ou e-mail) é exigido e o canal preferencial fica registrado.
 
-- Dada uma solicitação de atendimento, quando o formulário for enviado, então o sistema deve exigir a queixa, a percepção de urgência e o histórico relevante informado para compor a triagem, mantendo explícito que essas respostas são declarações do interessado.
+- Queixa, percepção de urgência e histórico relevante são obrigatórios e ficam identificados como declarações do interessado.
 
-- Dado o formulário de inscrição, quando ele for exibido ao interessado, em qualquer etapa do preenchimento, então o sistema deve apresentar o aviso fixo com os contatos do CVV (188) e do SAMU (192).
+- O aviso com os contatos do CVV (188) e do SAMU (192) fica visível em todas as etapas do formulário.
 
 _Rastreabilidade:_ Feature "Registrar solicitação de atendimento on-line" → CP1 — Inscrição on-line → OE1/OE4.
 
@@ -270,13 +270,13 @@ O comprovante não deve apresentar a queixa informada pelo interessado nem infor
 
 _Critérios de aceitação:_
 
-- Dada uma solicitação de atendimento registrada com sucesso, quando o interessado concluir a inscrição, então o sistema deve disponibilizar um comprovante contendo o número da inscrição, a data e a hora do registro.
+- Ao concluir a inscrição, é disponibilizado um comprovante com o número da inscrição e a data e a hora do registro.
 
-- Dado um comprovante emitido, quando o interessado visualizar seu conteúdo, então deve encontrar uma mensagem informando que a inscrição foi recebida e que o atendimento está sujeito à triagem e à disponibilidade de vagas.
+- O comprovante informa que a inscrição foi recebida e que o atendimento está sujeito à triagem e à disponibilidade de vagas.
 
-- Dada uma tentativa de inscrição que não tenha sido concluída com sucesso, quando o interessado acessar a etapa de confirmação, então o sistema não deve emitir um comprovante correspondente a uma solicitação inexistente.
+- Nenhum comprovante é emitido para inscrição que não foi concluída.
 
-- Dado um comprovante de inscrição, quando seu conteúdo for apresentado ao interessado, então não deve conter a queixa informada no formulário nem dados clínicos desnecessários à confirmação do registro.
+- O comprovante não contém a queixa nem dados clínicos desnecessários à confirmação do registro.
 
 _Rastreabilidade:_ Feature "Emitir comprovante de inscrição" → CP1 — Inscrição on-line → OE1/OE4.
 
@@ -296,13 +296,13 @@ A utilização do canal assistido não deve atribuir prioridade clínica diferen
 
 _Critérios de aceitação:_
 
-- Dado um interessado atendido por um usuário institucional com perfil de secretaria, quando os dados obrigatórios forem preenchidos e a inscrição for confirmada, então o sistema deve registrar a solicitação, gerar um identificador único e encaminhá-la ao mesmo fluxo de triagem utilizado pelas inscrições on-line.
+- A inscrição assistida confirmada pela secretaria é registrada com identificador único e entra no mesmo fluxo de triagem das inscrições on-line.
 
-- Dado um usuário institucional com perfil diferente de secretaria, quando tentar acessar a funcionalidade de inscrição assistida, então o sistema deve impedir o registro da solicitação por esse usuário.
+- Usuários com perfil diferente de secretaria não conseguem registrar inscrição assistida.
 
-- Dada uma inscrição realizada por atendimento assistido, quando seu registro for consultado por um usuário autorizado, então o sistema deve identificar a modalidade de inscrição utilizada.
+- A consulta de uma inscrição por usuário autorizado mostra a modalidade utilizada (on-line ou assistida).
 
-- Dadas duas solicitações com a mesma classificação de prioridade validada, sendo uma on-line e outra assistida, quando forem incorporadas à fila de espera, então a modalidade de inscrição não deve constituir, isoladamente, critério para atribuição de prioridade diferenciada.
+- A modalidade de inscrição, sozinha, não altera a prioridade na fila entre solicitações com a mesma classificação validada.
 
 _Rastreabilidade:_ Feature "Registrar inscrição assistida" → CP1 — Inscrição on-line → OE1/OE4 → IS01 — Exclusão digital.
 
@@ -326,10 +326,10 @@ Como a sinalização automática de pontos de atenção (RF5) fica para uma entr
 
 _Critérios de aceitação:_
 
-- Dada uma inscrição registrada pelo canal on-line ou assistido, quando um supervisor ou integrante da coordenação abrir a triagem, então o sistema deve apresentar o número da inscrição, a queixa, a percepção de urgência e o histórico relevante informado.
-- Dado um campo de triagem sem resposta registrada, quando a inscrição for apresentada, então o sistema deve indicar a ausência da informação, sem atribuir conteúdo presumido.
-- Dado um usuário sem autorização para acessar dados de triagem, quando tentar consultar uma inscrição, então o sistema deve impedir a visualização das respostas.
-- Dada uma inscrição sem triagem concluída há mais tempo do que o prazo máximo configurado, quando o prazo for atingido, então o sistema deve sinalizar a inscrição à coordenação como pendente além do prazo.
+- A triagem apresenta a supervisores e coordenação o número da inscrição, a queixa, a percepção de urgência e o histórico relevante, para inscrições on-line ou assistidas.
+- Campo de triagem sem resposta aparece como ausente, sem conteúdo presumido.
+- Usuários sem autorização para dados de triagem não visualizam as respostas da inscrição.
+- Inscrição sem triagem concluída após o prazo máximo configurado é sinalizada à coordenação como pendente além do prazo.
 
 _Rastreabilidade:_ Feature "Organizar informações da inscrição para triagem" → CP2 — Triagem e sinalização de casos → OE2/OE1. Dependência: CP1; restrição transversal: CP12 — Segurança, sigilo e controle de acesso.
 
@@ -341,11 +341,11 @@ O sistema deve destacar, para supervisores e integrantes da coordenação, respo
 
 _Critérios de aceitação:_
 
-- Dada uma inscrição com resposta correspondente a uma regra de sinalização aprovada, quando a equipe clínica consultar a triagem, então o sistema deve destacar o ponto de atenção e a resposta que o originou.
-- Dada uma resposta que não corresponda a regra aprovada, quando a inscrição for consultada, então o sistema não deve produzir uma sinalização clínica baseada em regra presumida.
-- Dada uma inscrição com um ou mais pontos de atenção, quando estes forem apresentados, então a prioridade clínica deve continuar pendente até a decisão da equipe autorizada.
-- Dada a publicação de uma nova versão das regras pela coordenação, quando novas inscrições forem triadas, então o sistema deve aplicar apenas a versão vigente e preservar, nas sinalizações anteriores, a identificação da versão que as produziu.
-- Dada a ausência de regras aprovadas e vigentes, quando a inscrição for consultada, então o sistema deve apresentar as respostas sem gerar pontos de atenção por regra não documentada.
+- Resposta que corresponde a uma regra de sinalização aprovada gera um ponto de atenção destacado, junto com a resposta que o originou.
+- Resposta que não corresponde a regra aprovada não gera sinalização clínica.
+- Inscrição com pontos de atenção mantém a prioridade clínica pendente até a decisão da equipe autorizada.
+- Novas triagens usam apenas a versão vigente das regras, e cada sinalização anterior mantém a identificação da versão que a produziu.
+- Sem regras aprovadas e vigentes, a inscrição é apresentada sem pontos de atenção.
 
 _Rastreabilidade:_ Feature "Sinalizar pontos de atenção da inscrição" → CP2 — Triagem e sinalização de casos → OE2/OE1. Dependência: RF4; restrição transversal: CP12 — Segurança, sigilo e controle de acesso.
 
@@ -359,11 +359,11 @@ A classificação continua sendo um julgamento clínico da equipe, não uma regr
 
 _Critérios de aceitação:_
 
-- Dada uma inscrição com triagem pendente, quando um supervisor ou integrante da coordenação confirmar uma das três prioridades, então o sistema deve registrar a cor escolhida, o responsável e a data e hora da decisão.
-- Dado um usuário sem autorização clínica, quando tentar registrar ou alterar a prioridade, então o sistema deve recusar a ação e preservar a classificação vigente.
-- Dada uma inscrição ainda sem classificação confirmada, quando a fila consultar sua prioridade, então o sistema deve informar situação pendente, sem usar sinalizações como prioridade final.
-- Dada uma alteração autorizada de prioridade, quando a equipe confirmar a nova cor, então o sistema deve manter o histórico da decisão anterior e disponibilizar a classificação vigente para a fila da CP3.
-- Dada a tela de registro de prioridade, quando exibida a um supervisor ou integrante da coordenação, então o sistema deve apresentar a referência vermelha/amarela/verde definida pela Clínica Escola como apoio textual à decisão, sem preencher ou sugerir automaticamente a cor.
+- A confirmação de uma das três prioridades por supervisor ou coordenação registra a cor, o responsável e a data e a hora da decisão.
+- Usuário sem autorização clínica não consegue registrar nem alterar a prioridade, e a classificação vigente é preservada.
+- Inscrição sem classificação confirmada aparece na fila como pendente, sem usar sinalizações como prioridade final.
+- A alteração autorizada de prioridade mantém o histórico da decisão anterior e disponibiliza a nova classificação para a fila (CP3).
+- A tela de registro de prioridade exibe a referência vermelha/amarela/verde da Clínica Escola como apoio textual, sem preencher nem sugerir a cor automaticamente.
 
 _Rastreabilidade:_ Feature "Registrar prioridade clínica do inscrito" → CP2 — Triagem e sinalização de casos → OE2/OE1. Dependência: RF4/RF5; integração: RF7 (CP3); restrição transversal: CP12 — Segurança, sigilo e controle de acesso.
 
@@ -401,15 +401,15 @@ Os critérios de desempate entre inscritos com a mesma prioridade seguem a ordem
 
 _Critérios de aceitação:_
 
-- Dado um inscrito cuja classificação de prioridade tenha sido validada pela equipe responsável, quando sua solicitação for incorporada à fila de espera, então o sistema deve posicioná-lo conforme a prioridade atribuída e os critérios de ordenação aprovados pela Clínica Escola.
+- Inscrito com prioridade validada entra na fila na posição definida pela prioridade e pelos critérios de ordenação aprovados pela Clínica Escola.
 
-- Dado um inscrito com sinalizações de triagem e sem classificação clínica confirmada, quando o sistema organizar a fila, então não deve atribuir prioridade com base nessas sinalizações.
+- Sinalizações de triagem sem classificação clínica confirmada não definem prioridade na fila.
 
-- Dada uma alteração de prioridade realizada por um usuário autorizado, quando a nova classificação for confirmada, então o sistema deve atualizar a posição do inscrito de acordo com os critérios de ordenação estabelecidos.
+- A confirmação de uma nova prioridade por usuário autorizado atualiza a posição do inscrito conforme os critérios de ordenação.
 
-- Dada uma alteração na situação de um inscrito que afete sua participação na fila, quando a atualização for confirmada, então o sistema deve recalcular as posições dos demais inscritos afetados, preservando o histórico da decisão.
+- Mudança na situação de um inscrito que afete a fila recalcula as posições dos demais afetados e preserva o histórico da decisão.
 
-- Dados dois inscritos com a mesma prioridade confirmada, quando a fila for ordenada entre eles, então o sistema deve posicionar primeiro quem registrou a inscrição (RF1/RF3) em data e hora mais antiga.
+- Entre inscritos com a mesma prioridade confirmada, fica à frente quem registrou a inscrição (RF1/RF3) primeiro.
 
 _Rastreabilidade:_ Feature "Ordenar inscritos na fila de espera" → CP3 — Fila de espera e consulta de posição → OE4/OE7.
 
@@ -421,11 +421,11 @@ O sistema deve permitir que o inscrito consulte sua posição e situação atual
 
 _Critérios de aceitação:_
 
-- Dado um inscrito que localizou sua solicitação e concluiu a verificação de identidade do RF52, quando solicitar a consulta, então o sistema deve apresentar a posição e a situação atual da inscrição conforme os RNF6 e RNF7.
+- Após localizar a solicitação e concluir a verificação de identidade (RF52), o inscrito vê sua posição e a situação atual da inscrição, conforme os RNF6 e RNF7.
 
-- Dada uma tentativa sem verificação de identidade concluída, quando houver solicitação da posição, então o sistema deve negar a consulta conforme o RNF6.
+- Sem verificação de identidade concluída, a consulta de posição é negada, conforme o RNF6.
 
-- Dada uma alteração na prioridade ou na situação dos inscritos que modifique o posicionamento na fila, quando o interessado realizar uma nova consulta autorizada, então o sistema deve apresentar sua posição atualizada.
+- Após mudanças de prioridade ou de situação que alterem a fila, uma nova consulta autorizada mostra a posição atualizada.
 
 _Rastreabilidade:_ Feature "Consultar posição individual na fila" → CP3 — Fila de espera e consulta de posição → OE4/OE7 → IS03 — Expectativa sobre a fila. Dependência: RF52 — Verificar identidade do paciente ou responsável (CP12).
 
@@ -445,15 +445,15 @@ Quando não houver informação de capacidade aprovada e vigente, o sistema não
 
 _Critérios de aceitação:_
 
-- Dada uma nova versão preenchida pela coordenação, quando ela confirmar a publicação, então o sistema deve registrar o responsável e a data e hora, preservar a versão anterior no histórico administrativo e tornar pública somente a nova versão.
+- A publicação de uma nova versão pela coordenação registra o responsável e a data e a hora, guarda a versão anterior no histórico administrativo e torna pública apenas a nova.
 
-- Dado que a coordenação tenha publicado informações institucionais sobre a fila, quando o interessado acessar a página correspondente, então o sistema deve apresentar os critérios gerais de atendimento e a capacidade divulgada, acompanhados da data de atualização.
+- A página pública da fila mostra os critérios gerais de atendimento e a capacidade divulgada, com a data de atualização.
 
-- Dado que não exista informação de capacidade aprovada ou vigente, quando o interessado consultar as condições gerais da fila, então o sistema não deve apresentar uma quantidade estimada de vagas como disponibilidade confirmada.
+- Sem informação de capacidade aprovada e vigente, nenhuma quantidade de vagas é apresentada como disponibilidade confirmada.
 
-- Dado um interessado que consulte as informações gerais da fila, quando o conteúdo for apresentado, então não deve conter nomes, dados cadastrais, queixas ou classificações clínicas individualizadas dos inscritos.
+- As informações gerais da fila não exibem nomes, dados cadastrais, queixas nem classificações clínicas individuais.
 
-- Dada uma alteração nas informações institucionais aprovada pela coordenação, quando o conteúdo atualizado for publicado, então o sistema deve substituir a informação anterior e apresentar a nova data de atualização.
+- A publicação de uma alteração aprovada substitui a informação anterior e mostra a nova data de atualização.
 
 _Rastreabilidade:_ Feature "Manter e informar condições gerais da fila" → CP3 — Fila de espera e consulta de posição → OE4/OE7 → IS02 — Aumento da demanda.
 
@@ -488,10 +488,10 @@ O canal do lembrete (e-mail e SMS) e o limite de uma remarcação por paciente n
 
 _Critérios de aceitação:_
 
-- Dado um paciente já vinculado a um estagiário responsável, quando a secretaria ou o estagiário agendar uma sessão em um horário disponível informando apenas o início, então o sistema deve registrar a sessão com status "agendada", paciente, estagiário, data, horário de início e horário de término calculado pela duração padrão, e enviar ao paciente o link de confirmação de presença (RF14).
-- Dada uma sessão do estagiário das 14h00 às 14h50, quando houver tentativa de agendar outra sessão desse estagiário, ou do mesmo paciente, com início às 14h30, então o sistema deve impedir o agendamento e informar o conflito.
-- Dada uma sessão do estagiário das 14h00 às 14h50, quando houver tentativa de agendar outra sessão desse estagiário com início às 14h50, então o sistema deve permitir o agendamento.
-- Dado um paciente sem estagiário responsável vinculado, quando houver tentativa de agendar uma sessão para ele, então o sistema deve impedir o agendamento.
+- O agendamento, pela secretaria ou pelo estagiário, de paciente com estagiário vinculado, informando só o início, registra a sessão como "agendada" com paciente, estagiário, data, início e término calculado pela duração padrão, e envia ao paciente o link de confirmação de presença (RF14).
+- Com uma sessão do estagiário das 14h00 às 14h50, uma nova sessão desse estagiário ou do mesmo paciente iniciando às 14h30 é bloqueada e o conflito é informado.
+- Com uma sessão do estagiário das 14h00 às 14h50, uma nova sessão desse estagiário iniciando às 14h50 é permitida.
+- Paciente sem estagiário responsável vinculado não pode ter sessão agendada.
 
 _Rastreabilidade:_ Feature "Agendar sessão do paciente" → CP4 — Agendamento, confirmação e remarcação → OE3/OE4. Dependência: CP5 — Distribuição de casos entre supervisores e estagiários; restrição transversal: CP12 — Segurança, sigilo e controle de acesso.
 
@@ -503,9 +503,9 @@ O sistema deve permitir que o estagiário consulte suas sessões agendadas, conf
 
 _Critérios de aceitação:_
 
-- Dado um estagiário autenticado, quando ele consultar sua agenda, então o sistema deve exibir suas sessões agendadas, confirmadas e realizadas, filtráveis por período.
-- Dado um supervisor autenticado, quando ele consultar a agenda de um estagiário sob sua supervisão, então o sistema deve exibir as sessões desse estagiário.
-- Dado um usuário sem vínculo de supervisão com o estagiário, quando tentar consultar a agenda dele, então o sistema deve negar o acesso.
+- O estagiário vê na própria agenda suas sessões agendadas, confirmadas e realizadas, com filtro por período.
+- O supervisor vê a agenda dos estagiários sob sua supervisão.
+- Usuário sem vínculo de supervisão com o estagiário não acessa a agenda dele.
 
 _Rastreabilidade:_ Feature "Consultar agenda de sessões do estagiário" → CP4 — Agendamento, confirmação e remarcação → OE3/OE4. Dependência: RF10, CP5; restrição transversal: CP12.
 
@@ -521,11 +521,11 @@ Conforme confirmado pela Clínica Escola, o paciente pode pedir a remarcação d
 
 _Critérios de aceitação:_
 
-- Dada uma sessão agendada ainda não realizada, quando a secretaria ou o estagiário alterar a data ou o horário informando a justificativa, então o sistema deve atualizar a sessão e manter o registro da data/horário anterior e da justificativa vinculado à sessão.
-- Dada uma sessão já realizada ou cancelada pelo paciente (RF15), quando houver tentativa de reagendamento, então o sistema deve impedir a operação.
-- Dado um paciente que já remarcou uma sessão a pedido próprio dentro do ciclo de acompanhamento atual, quando a secretaria ou o estagiário tentar uma nova remarcação a pedido do paciente, então o sistema deve bloquear a operação e informar que ela depende de aprovação da coordenação.
-- Dada uma remarcação excedente bloqueada, quando a coordenação aprová-la informando a justificativa da exceção, então o sistema deve efetivar a remarcação e gerar o registro de auditoria do RNF10, com a justificativa da exceção e o usuário aprovador.
-- Dada uma sessão cancelada por ausência do estagiário (RF16), quando ela for reagendada pela opção oferecida ao paciente (RF17), então o sistema deve permitir o reagendamento e não deve contabilizá-lo no limite do paciente.
+- A alteração de data ou horário de sessão ainda não realizada, com justificativa, atualiza a sessão e mantém a data/horário anterior e a justificativa vinculados a ela.
+- Sessão já realizada ou cancelada pelo paciente (RF15) não pode ser reagendada.
+- Segunda remarcação a pedido do paciente no mesmo ciclo é bloqueada, com aviso de que depende de aprovação da coordenação.
+- A aprovação da remarcação excedente pela coordenação, com justificativa, efetiva a remarcação e gera o registro de auditoria do RNF10 com a justificativa e o aprovador.
+- O reagendamento de sessão cancelada por ausência do estagiário (RF16), feito pela opção oferecida ao paciente (RF17), é permitido e não conta no limite do paciente.
 
 _Rastreabilidade:_ Feature "Reagendar sessão do paciente" → CP4 — Agendamento, confirmação e remarcação → OE3/OE4. Dependência: RF10.
 
@@ -537,10 +537,10 @@ O sistema deve enviar automaticamente um lembrete ao paciente antes de uma sess�
 
 _Critérios de aceitação:_
 
-- Dada uma sessão agendada para as 14h00 de uma quinta-feira, com a antecedência do lembrete configurada em 24 horas, quando forem 14h00 da quarta-feira, então o sistema deve enviar o lembrete por e-mail e SMS e registrar o envio com data/hora.
-- Dada uma sessão agendada quando falta menos do que a antecedência configurada para o seu início, quando o agendamento for concluído, então o sistema deve enviar o lembrete imediatamente.
-- Dada uma alteração da antecedência feita pela coordenação, quando houver sessões futuras cujo lembrete ainda não foi enviado, então o sistema deve aplicar o novo valor a essas sessões.
-- Dada uma falha no envio do lembrete, quando ela ocorrer, então o sistema deve registrar a falha, sem apresentá-la como envio concluído.
+- Com sessão às 14h00 de quinta-feira e antecedência de 24 horas, o lembrete é enviado por e-mail e SMS às 14h00 de quarta-feira, com o envio registrado com data e hora.
+- Sessão agendada com menos tempo até o início do que a antecedência configurada recebe o lembrete no momento do agendamento.
+- Nova antecedência definida pela coordenação vale para as sessões futuras cujo lembrete ainda não foi enviado.
+- Falha no envio do lembrete é registrada como falha, e não como envio concluído.
 
 _Rastreabilidade:_ Feature "Enviar lembrete de sessão agendada" → CP4 — Agendamento, confirmação e remarcação → OE3. Dependência: RF10.
 
@@ -554,10 +554,10 @@ O link de confirmação de presença é enviado ao paciente no momento em que a 
 
 _Critérios de aceitação:_
 
-- Dada uma sessão agendada para as 14h00, com o prazo de confirmação configurado em 12 horas, quando o paciente confirmar presença até as 2h00 do mesmo dia, então o sistema deve atualizar o status para "confirmada" e gerar o registro de auditoria do RNF10.
-- Dada a mesma sessão, quando o paciente tentar confirmar após as 2h00, então o sistema deve recusar a confirmação e orientar o paciente a entrar em contato com a secretaria.
-- Dada uma sessão cujo prazo de confirmação expirou sem confirmação do paciente, quando o prazo for atingido, então o sistema deve sinalizar a sessão para a secretaria, sem registrar falta.
-- Dada uma sessão já cancelada, quando houver tentativa de confirmação, então o sistema deve impedir a operação.
+- Com sessão às 14h00 e prazo de confirmação de 12 horas, a confirmação do paciente até as 2h00 muda o status para "confirmada" e gera o registro de auditoria do RNF10.
+- Na mesma sessão, confirmação após as 2h00 é recusada e o paciente é orientado a procurar a secretaria.
+- Sessão sem confirmação ao fim do prazo é sinalizada para a secretaria, sem registro de falta.
+- Sessão já cancelada não pode ser confirmada.
 
 _Rastreabilidade:_ Feature "Confirmar presença em sessão agendada" → CP4 — Agendamento, confirmação e remarcação → OE3. Dependência: RF10; integração: RF13 (lembrete automático adicional, entrega posterior).
 
@@ -575,10 +575,10 @@ Depois do horário de início, a sessão não pode mais ser cancelada; o não co
 
 _Critérios de aceitação:_
 
-- Dada uma sessão agendada para as 14h00 de uma quinta-feira, com antecedência mínima de 24 horas, quando o paciente ou a secretaria registrar o cancelamento às 14h00 da quarta-feira ou antes, com um motivo, então o sistema deve atualizar o status da sessão para "cancelada", guardar o motivo, classificar o cancelamento como "no prazo" e gerar o registro de auditoria do RNF10.
-- Dada a mesma sessão, quando o cancelamento for registrado às 14h01 da quarta-feira ou depois, antes do início da sessão, então o sistema deve classificá-lo como "fora do prazo" e gerar o evento de falta para a CP9.
-- Dada uma sessão cujo horário de início já passou, ou já realizada, quando houver tentativa de cancelamento, então o sistema deve impedir a operação.
-- Dada uma sessão que a secretaria ou o estagiário cancele exclusivamente para remarcá-la em seguida, quando o cancelamento for registrado como administrativo para remarcação, então o sistema deve classificá-lo nessa categoria e não deve gerar evento de falta para a CP9, independentemente da antecedência.
+- Com sessão às 14h00 de quinta-feira e antecedência mínima de 24 horas, o cancelamento com motivo registrado até as 14h00 de quarta-feira muda o status para "cancelada", guarda o motivo, é classificado como "no prazo" e gera o registro de auditoria do RNF10.
+- Na mesma sessão, o cancelamento registrado a partir das 14h01 de quarta-feira, antes do início, é classificado como "fora do prazo" e gera o evento de falta para a CP9.
+- Sessão já iniciada ou realizada não pode ser cancelada.
+- O cancelamento registrado pela secretaria ou pelo estagiário como administrativo para remarcação é classificado nessa categoria e não gera evento de falta para a CP9, qualquer que seja a antecedência.
 
 _Rastreabilidade:_ Feature "Registrar cancelamento de sessão pelo paciente" → CP4 — Agendamento, confirmação e remarcação → OE3. Dependência: RF10. Integração: CP9 — Controle de assiduidade e alertas.
 
@@ -592,10 +592,10 @@ O registro deve distinguir duas situações: **ausência real do estagiário** (
 
 _Critérios de aceitação:_
 
-- Dada uma sessão agendada, quando o estagiário, o supervisor ou a secretaria registrar a ausência prevista do estagiário com motivo, então o sistema deve atualizar o status da sessão e disparar a notificação ao paciente.
-- Dado um usuário sem vínculo com a sessão (não é o estagiário, o supervisor dele ou a secretaria), quando tentar registrar essa ausência, então o sistema deve negar a operação.
-- Dado um cancelamento registrado como ausência real do estagiário, quando ele for consolidado pelo RF39/RF40, então o sistema deve contabilizá-lo nas faltas do estagiário.
-- Dado um cancelamento registrado como administrativo para remarcação, quando ele for consolidado pelo RF39/RF40, então o sistema não deve contabilizá-lo nas faltas do estagiário.
+- O registro, com motivo, da ausência prevista do estagiário pelo estagiário, supervisor ou secretaria atualiza o status da sessão e dispara a notificação ao paciente.
+- Usuário sem vínculo com a sessão (que não seja o estagiário, o supervisor dele ou a secretaria) não consegue registrar a ausência.
+- Cancelamento registrado como ausência real do estagiário é contabilizado nas faltas dele (RF39/RF40).
+- Cancelamento registrado como administrativo para remarcação não é contabilizado nas faltas do estagiário (RF39/RF40).
 
 _Rastreabilidade:_ Feature "Registrar cancelamento de sessão pelo estagiário" → CP4 — Agendamento, confirmação e remarcação → OE3/OE4. Dependência: RF10, CP5.
 
@@ -605,7 +605,7 @@ _Rastreabilidade:_ Feature "Registrar cancelamento de sessão pelo estagiário" 
 
 Quando uma sessão for cancelada por ausência do estagiário (RF16), o sistema deve notificar o paciente com a maior antecedência possível, oferecendo a opção de reagendamento (RF12).
 
-_Critério de aceitação:_ dada uma sessão cancelada por ausência do estagiário, quando o cancelamento for registrado, então o sistema deve notificar o paciente imediatamente, com a opção de reagendar a sessão.
+_Critério de aceitação:_ A sessão cancelada por ausência do estagiário gera notificação imediata ao paciente, com a opção de reagendar.
 
 _Rastreabilidade:_ Feature "Notificar paciente sobre ausência do estagiário" → CP4 — Agendamento, confirmação e remarcação → OE3. Dependência: RF16.
 
@@ -632,9 +632,9 @@ O sistema deve listar, para um usuário autenticado com perfil de coordenação 
 
 _Critérios de aceitação:_
 
-- Dado um conjunto de pacientes triados, quando a coordenação ou o supervisor abrir a lista de casos aguardando distribuição, então o sistema deve exibir somente os casos sem supervisor e estagiário responsáveis, ordenados por prioridade.
-- Dado um caso já distribuído a um supervisor, quando a lista de casos pendentes for exibida, então esse caso não deve aparecer nela.
-- Dado que todos os casos triados já foram distribuídos, quando um usuário autorizado abrir a lista de casos aguardando distribuição, então o sistema deve informar que não há casos pendentes.
+- A lista de casos aguardando distribuição mostra à coordenação ou ao supervisor somente casos triados sem supervisor e estagiário responsáveis, ordenados por prioridade.
+- Caso já distribuído a um supervisor não aparece na lista de pendentes.
+- Sem casos pendentes, a lista informa que não há casos aguardando distribuição.
 
 _Rastreabilidade:_ Feature "Listar casos aguardando distribuição" → CP5 — Distribuição de casos entre supervisores e estagiários → OE5/OE2.
 
@@ -646,8 +646,8 @@ O sistema deve permitir que a coordenação registre e mantenha as áreas de esp
 
 _Critérios de aceitação:_
 
-- Dado um supervisor cadastrado sem áreas de especialidade, quando a coordenação registrar uma ou mais áreas para ele, então o sistema deve associar as áreas informadas ao supervisor.
-- Dado um supervisor que já responde por casos distribuídos, quando a coordenação remover uma de suas áreas de especialidade, então os casos já distribuídos a ele devem permanecer sob sua responsabilidade.
+- A coordenação consegue associar uma ou mais áreas de especialidade a um supervisor.
+- A remoção de uma área de especialidade do supervisor não retira dele os casos já distribuídos.
 
 _Rastreabilidade:_ Feature "Registrar áreas de especialidade do supervisor" → CP5 — Distribuição de casos entre supervisores e estagiários → OE5.
 
@@ -659,10 +659,10 @@ O sistema deve permitir que a coordenação atribua cada caso pendente (RF18) a 
 
 _Critérios de aceitação:_
 
-- Dado um caso que exige determinada área de especialidade e um supervisor que atua nessa área, quando a coordenação distribuir o caso a esse supervisor, então o sistema deve registrar o supervisor como responsável pelo caso, com data e autor da atribuição.
-- Dado um caso sem supervisor compatível disponível, quando a coordenação tentar distribuí-lo, então o sistema deve informar a ausência de compatibilidade e permitir a atribuição manual, registrando a exceção.
-- Dado um caso que já possui supervisor responsável, quando um usuário tentar distribuí-lo novamente, então o sistema deve bloquear a ação e orientar o uso da transferência de caso (RF25).
-- Dado um caso sem área de especialidade registrada, quando a coordenação o distribuir, então o sistema deve permitir a atribuição a qualquer supervisor, sem exigir compatibilidade.
+- A distribuição, pela coordenação, de caso a supervisor da área exigida registra o supervisor como responsável, com data e autor da atribuição.
+- Sem supervisor compatível disponível, o sistema informa a falta de compatibilidade e permite a atribuição manual, registrando a exceção.
+- Caso que já tem supervisor responsável não pode ser distribuído de novo; o sistema orienta o uso da transferência (RF25).
+- Caso sem área de especialidade registrada pode ser distribuído a qualquer supervisor, sem exigência de compatibilidade.
 
 _Rastreabilidade:_ Feature "Distribuir caso a supervisor conforme área de especialidade" → CP5 — Distribuição de casos entre supervisores e estagiários → OE5. Dependência: RF18, RF19, RF6 (CP2).
 
@@ -674,9 +674,9 @@ O sistema deve permitir que o supervisor vincule cada paciente sob sua responsab
 
 _Critérios de aceitação:_
 
-- Dado um caso sob a responsabilidade de um supervisor, quando ele vincular um estagiário ao caso, então o sistema deve registrar o estagiário como responsável pelo caso e conceder a ele acesso ao caso.
-- Dado um caso sob a responsabilidade de um supervisor, quando outro supervisor tentar vincular um estagiário a esse caso, então o sistema deve negar a ação.
-- Dado um estagiário com conta desativada (RF54), quando o supervisor tentar vinculá-lo a um caso, então o sistema não deve oferecê-lo como opção de vinculação.
+- O vínculo de um estagiário ao caso pelo supervisor responsável registra o estagiário como responsável e lhe dá acesso ao caso.
+- Supervisor que não é responsável pelo caso não consegue vincular estagiário a ele.
+- Estagiário com conta desativada (RF54) não aparece entre as opções de vínculo.
 
 _Rastreabilidade:_ Feature "Vincular paciente a estagiário responsável" → CP5 — Distribuição de casos entre supervisores e estagiários → OE5. Dependência: RF20, RF53/RF54 (CP12). Integração: RF66 (CP6 — criação do prontuário a partir do vínculo).
 
@@ -686,7 +686,7 @@ _Rastreabilidade:_ Feature "Vincular paciente a estagiário responsável" → CP
 
 O sistema deve exibir, para cada caso, o estagiário e o supervisor responsáveis, para uso da secretaria no agendamento, do próprio estagiário e supervisor no acompanhamento do caso, e da coordenação no acompanhamento geral. A consulta deve exibir apenas o nome do estagiário e do supervisor responsáveis, sem expor dados clínicos a perfis que não têm acesso ao prontuário, e casos ainda sem responsáveis devem ser sinalizados como pendentes de distribuição.
 
-_Critério de aceitação:_ dado um caso com estagiário e supervisor já vinculados, quando a secretaria, o estagiário, o supervisor ou a coordenação consultarem o caso, então o sistema deve exibir os responsáveis sem exibir dados clínicos.
+_Critério de aceitação:_ A consulta do caso por secretaria, estagiário, supervisor ou coordenação mostra o estagiário e o supervisor responsáveis, sem dados clínicos.
 
 _Rastreabilidade:_ Feature "Consultar responsáveis pelo caso" → CP5 — Distribuição de casos entre supervisores e estagiários → OE5. Dependência: RF21.
 
@@ -698,9 +698,9 @@ O sistema deve permitir que o estagiário ou o supervisor consultem a lista de c
 
 _Critérios de aceitação:_
 
-- Dado um estagiário vinculado a um conjunto de casos, quando ele abrir a lista de seus casos, então o sistema deve exibir exclusivamente os casos vinculados a ele.
-- Dado um supervisor responsável por um conjunto de casos e pelos estagiários vinculados a eles, quando ele abrir a lista, então o sistema deve exibir tanto os casos sob sua responsabilidade direta quanto os dos seus estagiários.
-- Dado um estagiário ou supervisor sem vínculo com um determinado caso, quando ele tentar consultá-lo diretamente, então o sistema deve negar o acesso e não deve exibi-lo na lista.
+- O estagiário vê na lista somente os casos vinculados a ele.
+- O supervisor vê na lista os casos sob sua responsabilidade direta e os dos estagiários vinculados a eles.
+- Estagiário ou supervisor sem vínculo com um caso não o vê na lista e tem o acesso direto negado.
 
 _Rastreabilidade:_ Feature "Consultar casos sob responsabilidade do estagiário ou supervisor" → CP5 — Distribuição de casos entre supervisores e estagiários → OE5. Dependência: RF21.
 
@@ -710,7 +710,7 @@ _Rastreabilidade:_ Feature "Consultar casos sob responsabilidade do estagiário 
 
 O sistema deve mostrar à coordenação quantos casos ativos cada supervisor e cada estagiário têm sob sua responsabilidade, apoiando o equilíbrio da carga entre supervisores e alimentando o indicador "distribuição de casos por supervisor" da CP11.
 
-_Critério de aceitação:_ dado o conjunto de casos distribuídos, quando a coordenação consultar a visão de distribuição, então o sistema deve apresentar o número de casos ativos por supervisor e por estagiário, refletindo a situação atual.
+_Critério de aceitação:_ A visão de distribuição mostra à coordenação o número atual de casos ativos por supervisor e por estagiário.
 
 _Rastreabilidade:_ Feature "Visualizar distribuição de casos por supervisor" → CP5 — Distribuição de casos entre supervisores e estagiários → OE5; alimenta CP11 — Indicadores e relatórios institucionais. Dependência: RF20.
 
@@ -722,9 +722,9 @@ O sistema deve permitir a transferência de um caso ativo, preservando o histór
 
 _Critérios de aceitação:_
 
-- Dado um caso vinculado a um estagiário que concluiu o estágio, quando o supervisor responsável transferir o caso para outro estagiário sob sua supervisão, então o sistema deve registrar o novo estagiário como responsável, manter o histórico do paciente disponível a ele e revogar o acesso do estagiário anterior.
-- Dado um caso sob responsabilidade do supervisor A, quando A tentar transferi-lo para um estagiário do supervisor B, então o sistema deve negar a ação e orientar o uso da transferência pela coordenação.
-- Dado um caso ativo, quando a coordenação transferi-lo para outro supervisor, então o sistema deve registrar o novo supervisor e, quando indicado, o novo estagiário responsável, preservando o histórico e revogando o acesso dos responsáveis anteriores.
+- A transferência, pelo supervisor responsável, de caso para outro estagiário sob sua supervisão registra o novo responsável, mantém o histórico do paciente disponível a ele e revoga o acesso do estagiário anterior.
+- O supervisor A não consegue transferir seu caso para estagiário do supervisor B; o sistema orienta a transferência pela coordenação.
+- A transferência de caso ativo pela coordenação para outro supervisor registra o novo supervisor e, quando indicado, o novo estagiário, preserva o histórico e revoga o acesso dos responsáveis anteriores.
 
 _Rastreabilidade:_ Feature "Transferir caso para outro estagiário ou supervisor" → CP5 — Distribuição de casos entre supervisores e estagiários → OE5. Dependência: RF21; restrição transversal: RNF16.
 
@@ -736,9 +736,9 @@ O sistema deve permitir consultar a sequência de supervisores e estagiários qu
 
 _Critérios de aceitação:_
 
-- Dado um caso que já passou por uma ou mais transferências de responsável, quando o estagiário ou supervisor responsáveis vigentes, ou a coordenação, consultarem seu histórico, então o sistema deve listar, em ordem cronológica, cada vínculo com responsável, período e motivo do encerramento.
-- Dado um caso já transferido, quando um supervisor que respondeu por ele anteriormente consultar o histórico, então o sistema deve exibir apenas o próprio período de responsabilidade, sem os demais.
-- Dado um estagiário ou supervisor sem qualquer vínculo, atual ou passado, com o caso, quando tentar consultar seu histórico, então o sistema deve negar o acesso.
+- O histórico de caso transferido lista, em ordem cronológica, cada vínculo com responsável, período e motivo do encerramento, para os responsáveis vigentes e a coordenação.
+- Supervisor que respondeu pelo caso no passado vê no histórico apenas o próprio período de responsabilidade.
+- Estagiário ou supervisor sem vínculo atual ou passado com o caso não acessa o histórico.
 
 _Rastreabilidade:_ Feature "Consultar histórico de responsáveis do caso" → CP5 — Distribuição de casos entre supervisores e estagiários → OE5. Dependência: RF21, RF25.
 
@@ -756,10 +756,10 @@ O sistema deve criar o prontuário eletrônico do paciente automaticamente no mo
 
 _Critérios de aceitação:_
 
-- Dado um caso recém-vinculado a um estagiário responsável, quando a vinculação (RF21) for confirmada, então o sistema deve criar o prontuário eletrônico do ciclo, associado ao paciente e ao caso.
-- Dado um prontuário recém-criado, quando o estagiário responsável registrar a anamnese e o contrato terapêutico, então o sistema deve armazená-los como dados iniciais do prontuário, com autor e data/hora.
-- Dado um caso sem estagiário responsável vinculado, quando houver tentativa de criar um prontuário para ele, então o sistema deve impedir a operação.
-- Dado um caso que já possui prontuário no ciclo vigente, quando houver nova tentativa de criação, então o sistema não deve duplicar o prontuário existente.
+- A confirmação do vínculo do caso a um estagiário responsável (RF21) cria o prontuário eletrônico do ciclo, associado ao paciente e ao caso.
+- A anamnese e o contrato terapêutico registrados pelo estagiário ficam armazenados como dados iniciais do prontuário, com autor e data/hora.
+- Caso sem estagiário responsável vinculado não pode ter prontuário criado.
+- Caso que já tem prontuário no ciclo vigente não recebe um segundo prontuário.
 
 _Rastreabilidade:_ Feature "Criar e inicializar o prontuário do paciente" → CP6 — Prontuário eletrônico → OE5/OE6. Dependência: RF21 (CP5); restrição transversal: CP12 — Segurança, sigilo e controle de acesso.
 
@@ -771,10 +771,10 @@ O sistema deve apresentar ao estagiário responsável e ao seu supervisor o pron
 
 _Critérios de aceitação:_
 
-- Dado um caso vinculado a um estagiário e supervisor, quando um deles abrir o prontuário, então o sistema deve apresentar todos os elementos mínimos aplicáveis ao ciclo: identificação do paciente, caso e ciclo; dados iniciais; responsáveis; sessões; evoluções com correções, complementos e situação de validação; encerramento por alta e relatório final, quando existentes.
-- Dado que um dos elementos mínimos ainda não possua registro no ciclo, quando o prontuário for consultado, então o sistema deve indicar sua ausência, sem omitir a seção nem criar conteúdo clínico presumido.
-- Dado um caso transferido para novo responsável, quando o novo estagiário ou supervisor autorizado abrir o prontuário, então deve encontrar os registros anteriores preservados.
-- Dado um usuário sem vínculo clínico vigente com o caso, quando tentar abrir o prontuário, então o sistema deve negar acesso ao conteúdo clínico.
+- Ao abrir o prontuário, o estagiário ou o supervisor do caso vê todos os elementos mínimos do ciclo: identificação do paciente, do caso e do ciclo; dados iniciais; responsáveis; sessões; evoluções com correções, complementos e situação de validação; e encerramento por alta e relatório final, quando existentes.
+- Elemento mínimo ainda sem registro no ciclo aparece como ausente, sem omitir a seção e sem conteúdo clínico presumido.
+- Após transferência, o novo responsável autorizado encontra no prontuário os registros anteriores preservados.
+- Usuário sem vínculo clínico vigente com o caso não acessa o conteúdo clínico do prontuário.
 
 _Rastreabilidade:_ Feature "Consultar prontuário do paciente" → CP6 — Prontuário eletrônico → OE5/OE6. Dependência: RF66, CP5; restrição transversal: RF55 (CP12).
 
@@ -800,9 +800,9 @@ O sistema deve permitir que o estagiário responsável registre a evolução de 
 
 _Critérios de aceitação:_
 
-- Dada uma sessão realizada de um paciente sob responsabilidade do estagiário, quando ele registrar uma evolução válida, então o sistema deve associar o registro à sessão, ao paciente e ao ciclo, com autor e data/hora.
-- Dada uma sessão de outro paciente, ou um estagiário sem vínculo vigente com o caso, quando houver tentativa de registrar evolução, então o sistema deve recusar a operação.
-- Dada uma sessão ainda não realizada (agendada, confirmada, cancelada ou falta), quando houver tentativa de registrar evolução para ela, então o sistema deve impedir o registro.
+- Evolução válida registrada pelo estagiário responsável para sessão realizada fica associada à sessão, ao paciente e ao ciclo, com autor e data/hora.
+- Não é possível registrar evolução em sessão de outro paciente nem sem vínculo vigente com o caso.
+- Sessão não realizada (agendada, confirmada, cancelada ou com falta) não aceita registro de evolução.
 
 _Rastreabilidade:_ Feature "Registrar evolução da sessão realizada" → CP7 — Registro de evolução por sessão → OE5/OE2. Dependência: CP4 (sessão realizada), CP5 (vínculo estagiário-paciente); restrição transversal: CP12 — Segurança, sigilo e controle de acesso.
 
@@ -814,9 +814,9 @@ O sistema deve permitir que o estagiário responsável, ou o supervisor do caso,
 
 _Critérios de aceitação:_
 
-- Dado um registro de evolução já salvo pelo próprio estagiário, dentro do prazo permitido, quando ele corrigir o conteúdo, então o sistema deve preservar a versão original e registrar a nova versão com autor, data/hora e motivo.
-- Dado um registro de evolução fora do prazo permitido para correção, quando houver tentativa de alteração, então o sistema deve impedir a operação.
-- Dado um usuário diferente do autor original que não seja o supervisor do caso, quando tentar corrigir um registro, então o sistema deve negar a ação; o supervisor do caso pode corrigir diretamente um registro do estagiário, conforme confirmado pela Clínica Escola (motivo: cobrir períodos de fiscalização e férias do estagiário).
+- A correção feita pelo próprio estagiário dentro do prazo permitido preserva a versão original e registra a nova versão com autor, data/hora e motivo.
+- Evolução fora do prazo permitido para correção não pode ser alterada.
+- Só o autor e o supervisor do caso conseguem corrigir uma evolução; o supervisor pode corrigir diretamente o registro do estagiário, como confirmado pela Clínica Escola (para cobrir fiscalização e férias do estagiário).
 
 _Rastreabilidade:_ Feature "Corrigir evolução registrada" → CP7 — Registro de evolução por sessão → OE5. Dependência: RF28.
 
@@ -828,9 +828,9 @@ O sistema deve permitir que o estagiário responsável adicione um complemento a
 
 _Critérios de aceitação:_
 
-- Dada uma sessão com evolução já registrada, quando o estagiário responsável adicionar um complemento, então o sistema deve associar o complemento à evolução original, preservando o conteúdo já salvo, com autor e data/hora próprios.
-- Dada uma evolução com um ou mais complementos, quando ela for consultada (RF31/RF32), então o sistema deve apresentar o registro original e todos os complementos em ordem cronológica, distinguindo-os das correções (RF29).
-- Dado um usuário sem vínculo clínico vigente com o caso, quando tentar adicionar um complemento, então o sistema deve negar a operação.
+- O complemento adicionado pelo estagiário responsável fica associado à evolução original, sem alterar o conteúdo já salvo, com autor e data/hora próprios.
+- A consulta da evolução (RF31/RF32) mostra o registro original e todos os complementos em ordem cronológica, distinguindo-os das correções (RF29).
+- Usuário sem vínculo clínico vigente com o caso não consegue adicionar complemento.
 
 _Rastreabilidade:_ Feature "Registrar complemento de evolução da sessão" → CP7 — Registro de evolução por sessão → OE5. Dependência: RF28.
 
@@ -842,10 +842,10 @@ O sistema deve permitir que o supervisor do caso marque como validada uma evolu�
 
 _Critérios de aceitação:_
 
-- Dada uma evolução registrada pelo estagiário responsável, quando o supervisor do caso revisá-la e confirmar a validação, então o sistema deve marcar a evolução como validada, registrando o supervisor responsável e a data/hora.
-- Dado um usuário diferente do supervisor do caso, quando tentar validar uma evolução, então o sistema deve negar a ação.
-- Dada uma evolução já validada, quando ela receber uma nova correção (RF29) ou um novo complemento (RF30), então o sistema deve retornar a situação da evolução para "pendente de validação".
-- Dada uma evolução pendente de validação, quando for consultada (RF31/RF32), então o sistema deve exibir essa situação de forma distinta das evoluções validadas.
+- A validação pelo supervisor do caso marca a evolução como validada, com o supervisor e a data/hora.
+- Apenas o supervisor do caso consegue validar uma evolução.
+- Evolução validada que recebe nova correção (RF29) ou novo complemento (RF30) volta para "pendente de validação".
+- Na consulta (RF31/RF32), evoluções pendentes de validação aparecem de forma distinta das validadas.
 
 _Rastreabilidade:_ Feature "Validar evolução pelo supervisor" → CP7 — Registro de evolução por sessão → OE5/OE6. Dependência: RF28; integração: RF29, RF30.
 
@@ -857,10 +857,10 @@ O sistema deve permitir que o estagiário responsável, com confirmação do sup
 
 _Critérios de aceitação:_
 
-- Dado um caso ativo acompanhado pelo estagiário responsável, quando ele registrar o encerramento por alta com a confirmação do supervisor, informando data e motivo, então o sistema deve encerrar o caso, preservar seu histórico e liberar a vaga.
-- Dado um caso encerrado por alta, quando houver tentativa de agendar nova sessão ou registrar nova evolução para ele, então o sistema deve impedir a operação, salvo reabertura autorizada pela coordenação.
-- Dado um caso encerrado por alta, quando seu histórico for consultado, então o sistema deve identificar o motivo do encerramento como alta, distinguindo-o do desligamento por faltas (RF37).
-- Dado um estagiário responsável sem confirmação do supervisor, quando tentar concluir o registro do encerramento por alta, então o sistema deve impedir a conclusão até que a confirmação seja registrada.
+- O encerramento por alta registrado pelo estagiário, com data, motivo e confirmação do supervisor, encerra o caso, preserva o histórico e libera a vaga.
+- Caso encerrado por alta não aceita novo agendamento nem nova evolução, salvo reabertura autorizada pela coordenação.
+- O histórico do caso identifica o encerramento como alta, distinto do desligamento por faltas (RF37).
+- O encerramento por alta só é concluído após a confirmação do supervisor.
 
 _Rastreabilidade:_ Feature "Encerrar caso por alta" → CP7 — Registro de evolução por sessão → OE5/OE6. Dependência: RF28; integração: RF21 (CP5), RF37 (CP9).
 
@@ -872,8 +872,8 @@ O sistema deve permitir que o estagiário responsável e o seu supervisor consul
 
 _Critérios de aceitação:_
 
-- Dada uma sessão com evolução registrada, quando o estagiário responsável ou o supervisor consultarem essa sessão, então o sistema deve apresentar o original, as correções e os complementos, com autor e data/hora de cada item, diferenciando a revisão de conteúdo da informação adicional.
-- Dado um usuário sem vínculo clínico vigente com o caso, quando tentar consultar a evolução de uma sessão, então o sistema deve negar o acesso.
+- A consulta da evolução de uma sessão pelo estagiário responsável ou pelo supervisor mostra o original, as correções e os complementos, com autor e data/hora de cada item, distinguindo revisão de conteúdo de informação adicional.
+- Usuário sem vínculo clínico vigente com o caso não acessa a evolução da sessão.
 
 _Rastreabilidade:_ Feature "Consultar evolução de uma sessão específica" → CP7 — Registro de evolução por sessão → OE5. Dependência: RF28, RF29 e RF30; restrição transversal: CP12.
 
@@ -885,9 +885,9 @@ O sistema deve permitir que o estagiário responsável e seu supervisor consulte
 
 _Critérios de aceitação:_
 
-- Dado um ciclo com evoluções registradas, quando usuário clínico autorizado consultar o histórico, então o sistema deve apresentar, por sessão e em ordem cronológica, os registros originais, as correções e os complementos, distinguindo cada tipo e identificando seu autor e data/hora.
-- Dado um ciclo sem evoluções, quando o histórico for aberto, então o sistema deve informar que não há registros, sem exibir dados de outro ciclo.
-- Dado um usuário sem acesso ao prontuário, quando tentar consultar o histórico, então o sistema deve negar a consulta.
+- O histórico do ciclo mostra, por sessão e em ordem cronológica, os registros originais, as correções e os complementos, identificando o tipo, o autor e a data/hora de cada um.
+- Ciclo sem evoluções exibe o aviso de que não há registros, sem mostrar dados de outro ciclo.
+- Usuário sem acesso ao prontuário não consulta o histórico de evolução.
 
 _Rastreabilidade:_ Feature "Consultar histórico de evolução do paciente" → CP7 — Registro de evolução por sessão → OE5/OE2. Dependência: RF27 (CP6), RF28, RF29 e RF30; restrição transversal: RF55 (CP12).
 
@@ -918,15 +918,15 @@ Conforme confirmado pela Clínica Escola na reunião de 26/08/2026 ([ata](../../
 
 _Critérios de aceitação:_
 
-- Dado um ciclo com evoluções registradas, quando o estagiário responsável criar e submeter o relatório com todos os campos obrigatórios, então o sistema deve gerar uma versão vinculada ao ciclo e aos registros de origem, com estado `em revisão`, disponível ao supervisor do caso.
-- Dado um ciclo sem evoluções registradas, quando houver solicitação do relatório, então o sistema deve informar a ausência de registros de origem e não produzir conteúdo clínico presumido.
-- Dado um usuário sem vínculo clínico vigente com o caso, quando tentar gerar ou consultar o relatório, então o sistema deve negar o acesso.
-- Dada uma evolução ausente ou incompleta no período selecionado, quando o relatório for gerado, então a lacuna deve permanecer identificável para revisão humana, sem texto clínico criado pelo sistema.
-- Dado um relatório em revisão, quando o supervisor o devolver, então o sistema deve exigir observações, registrar a decisão e permitir que o estagiário produza nova versão sem apagar as anteriores.
-- Dado um relatório em revisão, quando o supervisor o aprovar, então o sistema deve registrar o supervisor e a data/hora, bloquear alterações na versão aprovada e permitir sua finalização em PDF com campo para assinatura manuscrita.
-- Dado um relatório sem aprovação, quando houver tentativa de finalização ou impressão pela secretaria, então o sistema deve impedir a operação.
-- Dado um relatório final aprovado, quando a secretaria solicitar a entrega, então o sistema deve permitir a impressão da versão aprovada e exigir a confirmação de que a via foi assinada antes de registrar quem a entregou e quando, sem disponibilizar download ou envio por e-mail ao destinatário.
-- Dado um ciclo encerrado com menos de 8 ou mais de 10 sessões, quando o relatório for submetido, então o sistema deve exigir uma justificativa para a exceção.
+- A submissão do relatório pelo estagiário, com todos os campos obrigatórios, gera uma versão vinculada ao ciclo e aos registros de origem, com estado `em revisão`, disponível ao supervisor do caso.
+- Ciclo sem evoluções não gera relatório; o sistema informa a ausência de registros de origem, sem conteúdo clínico presumido.
+- Usuário sem vínculo clínico vigente com o caso não gera nem consulta o relatório.
+- Evolução ausente ou incompleta no período fica identificável no relatório para revisão humana, sem texto clínico criado pelo sistema.
+- A devolução do relatório pelo supervisor exige observações, registra a decisão e permite ao estagiário produzir nova versão sem apagar as anteriores.
+- A aprovação do relatório registra o supervisor e a data/hora, bloqueia alterações na versão aprovada e permite finalizá-la em PDF com campo para assinatura manuscrita.
+- Relatório sem aprovação não pode ser finalizado nem impresso pela secretaria.
+- A secretaria imprime apenas a versão aprovada e, antes de registrar quem entregou e quando, confirma que a via foi assinada; não há download nem envio por e-mail ao destinatário.
+- Ciclo encerrado com menos de 8 ou mais de 10 sessões exige justificativa da exceção na submissão do relatório.
 
 _Rastreabilidade:_ Feature "Gerar relatório final de evolução" → CP8 — Geração do relatório final de evolução → OE5/OE6. Dependência: RF28, RF32 (CP7); restrição transversal: RF55 (CP12).
 
@@ -956,9 +956,9 @@ O sistema deve permitir que o estagiário responsável, ou a secretaria, registr
 
 _Critérios de aceitação:_
 
-- Dada uma sessão agendada e presencial cujo horário já passou sem registro de realização nem cancelamento, confirmada ou não pelo paciente (RF14), quando o estagiário responsável ou a secretaria registrar a falta, então o sistema deve atualizar o status da sessão para "falta do paciente", com data, horário e usuário responsável pelo registro.
-- Dada uma sessão já cancelada (RF15) ou já registrada como realizada, quando houver tentativa de registrar falta, então o sistema deve impedir a operação.
-- Dado o registro de uma falta, então o sistema deve gerar o evento consumido pela contagem cumulativa (RF35).
+- O registro da falta pelo estagiário responsável ou pela secretaria, em sessão presencial já passada sem realização nem cancelamento (confirmada ou não pelo paciente, RF14), muda o status para "falta do paciente", com data, horário e usuário responsável.
+- Sessão já cancelada (RF15) ou já registrada como realizada não aceita registro de falta.
+- Cada falta registrada gera o evento consumido pela contagem cumulativa (RF35).
 
 _Rastreabilidade:_ Feature "Registrar falta do paciente na sessão" → CP9 — Controle de assiduidade e alertas → OE3/OE4. Dependência: RF10, RF14, RF15 (CP4).
 
@@ -970,10 +970,10 @@ O sistema deve manter, por paciente, a contagem cumulativa de faltas no ciclo de
 
 _Critérios de aceitação:_
 
-- Dado um paciente com nenhuma falta registrada no ciclo de atendimento atual, quando uma falta for registrada (RF34) ou um cancelamento for classificado como fora do prazo (RF15), então o sistema deve incrementar a contagem de faltas do paciente em uma unidade e sinalizar à secretaria e ao estagiário responsável que uma nova falta resultará em desligamento.
-- Dado um paciente com uma falta no ciclo seguida de uma ou mais sessões realizadas, quando uma nova falta for registrada, então o sistema deve elevar a contagem para duas unidades e disparar o alerta de limite (RF36).
-- Dado um paciente cuja sessão não foi confirmada no prazo (RF14), mas que compareceu à sessão, então o sistema não deve incrementar a contagem de faltas.
-- Dado um paciente desligado (RF37) cujo desligamento tenha sido revertido por engano (RF38), então o sistema deve ajustar a contagem de faltas de acordo com a decisão registrada, preservando o histórico de cada evento para auditoria.
+- A primeira falta do ciclo (RF34) ou o primeiro cancelamento fora do prazo (RF15) eleva a contagem para uma unidade e avisa a secretaria e o estagiário responsável de que uma nova falta resultará em desligamento.
+- Uma nova falta, mesmo com sessões realizadas desde a anterior, eleva a contagem para duas unidades e dispara o alerta de limite (RF36).
+- Paciente que não confirmou a sessão no prazo (RF14), mas compareceu, não tem a contagem de faltas incrementada.
+- A reversão de desligamento feito por engano (RF38) ajusta a contagem de faltas conforme a decisão registrada, preservando o histórico de cada evento para auditoria.
 
 _Rastreabilidade:_ Feature "Contabilizar faltas do paciente no ciclo" → CP9 — Controle de assiduidade e alertas → OE3/OE4. Dependência: RF15 (CP4), RF34.
 
@@ -985,8 +985,8 @@ Quando a contagem de faltas do paciente no ciclo de atendimento atingir o limite
 
 _Critérios de aceitação:_
 
-- Dado um paciente cuja contagem de faltas no ciclo atinja duas faltas, consecutivas ou não, quando o limite for atingido, então o sistema deve exibir um alerta com destaque em vermelho, visível à secretaria, ao estagiário responsável e à coordenação.
-- Dado um alerta já emitido para um paciente, quando a decisão de desligamento for registrada (RF37), então o sistema deve remover o alerta pendente correspondente.
+- Ao atingir duas faltas no ciclo, consecutivas ou não, é exibido um alerta em destaque vermelho para a secretaria, o estagiário responsável e a coordenação.
+- O registro da decisão de desligamento (RF37) remove o alerta pendente do paciente.
 
 _Rastreabilidade:_ Feature "Emitir alerta de limite de faltas atingido" → CP9 — Controle de assiduidade e alertas → OE3/OE4. Dependência: RF35.
 
@@ -1003,10 +1003,10 @@ A **realocação** da vaga a outro inscrito não é automática nem faz parte de
 
 _Critérios de aceitação:_
 
-- Dado um paciente com alerta de limite de faltas pendente (RF36), quando a secretaria ou a coordenação confirmar o desligamento, então o sistema deve registrar a decisão com data e responsável, e atualizar o status do paciente para "desligado por faltas".
-- Dado um paciente desligado por faltas, então o sistema deve, na mesma operação, encerrar seu vínculo com o estagiário, cancelar suas sessões futuras e sinalizar a vaga como "vaga liberada aguardando realocação" à coordenação e ao supervisor, indicando o próximo inscrito elegível na fila de espera (RF7).
-- Dada uma vaga liberada aguardando realocação, quando nenhum usuário tiver vinculado um novo paciente, então o sistema não deve vincular nenhum inscrito automaticamente; a vaga só deixa de estar pendente quando o supervisor registrar o novo vínculo (RF21).
-- Dado um paciente sem alerta de limite de faltas pendente, quando houver tentativa de registrar o desligamento por faltas, então o sistema deve impedir a operação.
+- A confirmação do desligamento pela secretaria ou pela coordenação, para paciente com alerta de limite pendente (RF36), registra a decisão com data e responsável e muda o status para "desligado por faltas".
+- Na mesma operação do desligamento, o vínculo com o estagiário é encerrado, as sessões futuras são canceladas e a vaga é sinalizada à coordenação e ao supervisor como "vaga liberada aguardando realocação", com o próximo inscrito elegível da fila (RF7).
+- Nenhum inscrito é vinculado automaticamente à vaga liberada; ela só deixa de estar pendente quando o supervisor registra o novo vínculo (RF21).
+- Paciente sem alerta de limite de faltas pendente não pode ser desligado por faltas.
 
 _Rastreabilidade:_ Feature "Desligar paciente por faltas e liberar vaga" → CP9 — Controle de assiduidade e alertas → OE3/OE4. Dependência: RF36. Integração: CP3 — Fila de espera e consulta de posição (RF7); CP5 — Distribuição de casos (RF20, RF21), responsável pela realocação.
 
@@ -1018,10 +1018,10 @@ O sistema deve permitir que um usuário com perfil de coordenação reverta um d
 
 _Critérios de aceitação:_
 
-- Dado um paciente desligado por faltas (RF37) cuja vaga ainda não foi realocada, quando a coordenação reverter o desligamento, então o sistema deve restaurar o status ativo do paciente e seu vínculo com o mesmo estagiário, retirar a sinalização de vaga liberada e indicar que as sessões canceladas no desligamento precisam ser reagendadas (RF10).
-- Dado um paciente desligado por faltas cuja vaga já foi realocada a outro inscrito, quando a coordenação reverter o desligamento, então o sistema deve preservar o vínculo do novo paciente com a vaga e sinalizar a reversão como pendente de tratamento manual, sem revogar automaticamente a vaga do novo paciente.
-- Dado um usuário sem perfil de coordenação, quando tentar reverter um desligamento por faltas, então o sistema deve impedir a operação.
-- Dado um desligamento revertido, então o sistema deve manter disponível, para auditoria, tanto o registro original do desligamento quanto o registro da reversão, com autor, data/hora e motivo de cada um.
+- A reversão pela coordenação de desligamento cuja vaga ainda não foi realocada restaura o status ativo e o vínculo com o mesmo estagiário, retira a sinalização de vaga liberada e indica as sessões canceladas que precisam ser reagendadas (RF10).
+- A reversão pela coordenação de desligamento cuja vaga já foi realocada preserva o vínculo do novo paciente e sinaliza a reversão como pendente de tratamento manual, sem revogar a vaga do novo paciente.
+- Usuário sem perfil de coordenação não consegue reverter desligamento por faltas.
+- Após a reversão, o registro original do desligamento e o da reversão continuam disponíveis para auditoria, cada um com autor, data/hora e motivo.
 
 _Rastreabilidade:_ Feature "Reverter desligamento de paciente por faltas" → CP9 — Controle de assiduidade e alertas → OE3/OE4. Dependência: RF37.
 
@@ -1037,8 +1037,8 @@ O sistema deve permitir que o supervisor consulte, para os estagiários sob sua 
 
 _Critérios de aceitação:_
 
-- Dado um supervisor autenticado, quando ele consultar as faltas de um estagiário sob sua supervisão em um período selecionado, então o sistema deve listar as sessões canceladas por ausência real do estagiário (RF16) nesse período, sem incluir cancelamentos administrativos para remarcação.
-- Dado um usuário sem vínculo de supervisão com o estagiário, quando tentar consultar essa relação, então o sistema deve negar o acesso.
+- A consulta do supervisor às faltas de estagiário sob sua supervisão lista as sessões canceladas por ausência real (RF16) no período escolhido, sem os cancelamentos administrativos para remarcação.
+- Usuário sem vínculo de supervisão com o estagiário não acessa a relação de faltas.
 
 _Rastreabilidade:_ Feature "Consolidar faltas do estagiário para a supervisão" → CP9 — Controle de assiduidade e alertas → OE3/OE4. Dependência: RF16 (CP4). Restrição transversal: CP12 — Segurança, sigilo e controle de acesso.
 
@@ -1050,10 +1050,10 @@ O sistema deve manter, por estagiário e por semestre letivo, a contagem cumulat
 
 _Critérios de aceitação:_
 
-- Dado um estagiário sem faltas registradas no semestre, quando uma sessão for cancelada por ausência real dele (RF16), então o sistema deve incrementar sua contagem de faltas do semestre em uma unidade.
-- Dado um estagiário sem faltas registradas no semestre, quando uma sessão dele for cancelada como administrativa para remarcação (RF16), então o sistema não deve incrementar sua contagem de faltas do semestre.
-- Dado um estagiário com faltas no semestre anterior, quando um novo semestre letivo começar, então sua contagem no novo semestre deve iniciar em zero, preservando a contagem do semestre anterior no histórico.
-- Dado um usuário sem vínculo de supervisão ou sem perfil de coordenação, quando tentar consultar a contagem de faltas de um estagiário, então o sistema deve negar o acesso.
+- Cada sessão cancelada por ausência real do estagiário (RF16) aumenta em uma unidade a contagem de faltas dele no semestre.
+- Sessão cancelada como administrativa para remarcação (RF16) não altera a contagem de faltas do estagiário.
+- No início de cada semestre letivo, a contagem do estagiário volta a zero, e a do semestre anterior fica preservada no histórico.
+- Somente o supervisor do estagiário e a coordenação consultam a contagem de faltas dele.
 
 _Rastreabilidade:_ Feature "Contabilizar faltas do estagiário no semestre" → CP9 — Controle de assiduidade e alertas → OE3/OE4. Dependência: RF16 (CP4), RF39.
 
@@ -1065,10 +1065,10 @@ Quando a contagem de faltas do estagiário no semestre (RF40) atingir 3 faltas, 
 
 _Critérios de aceitação:_
 
-- Dado um estagiário com 2 faltas no semestre, quando a terceira falta for contabilizada (RF40), então o sistema deve exibir a sinalização de reprovação ao supervisor responsável e à coordenação.
-- Dada uma sinalização de reprovação sem decisão registrada, quando o supervisor ou a coordenação acessarem o sistema, então a sinalização deve continuar visível.
-- Dada uma sinalização de reprovação já emitida, quando uma quarta falta for contabilizada no mesmo semestre, então o sistema não deve criar uma nova sinalização.
-- Dado um usuário sem vínculo de supervisão ou sem perfil de coordenação, quando tentar visualizar a sinalização de um estagiário, então o sistema deve negar o acesso.
+- Quando a terceira falta do semestre é contabilizada (RF40), a sinalização de reprovação aparece para o supervisor responsável e para a coordenação.
+- A sinalização de reprovação continua visível ao supervisor e à coordenação enquanto não houver decisão registrada.
+- Faltas além da terceira no mesmo semestre não criam nova sinalização.
+- Somente o supervisor do estagiário e a coordenação visualizam a sinalização de reprovação.
 
 _Rastreabilidade:_ Feature "Sinalizar reprovação do estagiário por faltas" → CP9 — Controle de assiduidade e alertas → OE3/OE4. Dependência: RF40.
 
@@ -1080,10 +1080,10 @@ O sistema deve permitir que a coordenação registre a decisão institucional so
 
 _Critérios de aceitação:_
 
-- Dada uma sinalização de reprovação pendente, quando a coordenação registrar a decisão com justificativa, então o sistema deve guardar a decisão, a justificativa, o autor e a data/hora, e encerrar a sinalização.
-- Dada uma tentativa de registrar a decisão sem justificativa, então o sistema deve impedir o registro.
-- Dado um usuário sem perfil de coordenação, quando tentar registrar a decisão, então o sistema deve impedir a operação.
-- Dada uma decisão registrada, quando o supervisor ou a coordenação consultarem o histórico do estagiário, então a sinalização encerrada e a decisão devem continuar disponíveis.
+- O registro da decisão pela coordenação, com justificativa, guarda a decisão, a justificativa, o autor e a data/hora, e encerra a sinalização.
+- A decisão não pode ser registrada sem justificativa.
+- Usuário sem perfil de coordenação não consegue registrar a decisão.
+- A sinalização encerrada e a decisão continuam disponíveis no histórico do estagiário para o supervisor e a coordenação.
 
 _Rastreabilidade:_ Feature "Registrar decisão institucional sobre a reprovação do estagiário" → CP9 — Controle de assiduidade e alertas → OE3/OE4. Dependência: RF63.
 
@@ -1116,11 +1116,11 @@ O controle da taxa é feito hoje à mão ([ata de 26/08/2026](../../unidade-1/re
 
 _Critérios de aceitação:_
 
-- Dado um paciente com contribuição pendente, quando a secretaria registrar o pagamento com data e forma de pagamento, então o sistema deve marcar a contribuição do paciente como **efetivada** e guardar o valor vigente no parâmetro, a data, a forma de pagamento, o usuário que registrou e a data/hora do registro.
-- Dado um paciente que já possui contribuição efetivada no ciclo de atendimento atual, quando a secretaria tentar registrar um novo pagamento, então o sistema deve impedir o registro duplicado e informar a data do pagamento já registrado.
-- Dado um usuário sem perfil de secretaria, quando tentar registrar um pagamento, então o sistema deve impedir a operação.
-- Dado o parâmetro "valor da contribuição social" com o padrão de R$ 35,00, quando a coordenação alterá-lo, então o sistema deve registrar a mudança com valor anterior, novo valor, autor e data/hora, aplicando o novo valor apenas aos pagamentos registrados depois da alteração.
-- Dado um usuário sem perfil de coordenação, quando tentar alterar o parâmetro do valor, então o sistema deve impedir a operação.
+- O registro do pagamento pela secretaria, com data e forma de pagamento, marca a contribuição como **efetivada** e guarda o valor vigente no parâmetro, a data, a forma de pagamento, quem registrou e a data/hora do registro.
+- Um segundo pagamento no mesmo ciclo é bloqueado, informando a data do pagamento já registrado.
+- Usuário sem perfil de secretaria não consegue registrar pagamento.
+- A alteração do parâmetro "valor da contribuição social" (padrão de R$ 35,00) pela coordenação registra valor anterior, novo valor, autor e data/hora, e o novo valor vale só para pagamentos registrados depois dela.
+- Usuário sem perfil de coordenação não consegue alterar o valor da contribuição.
 
 _Rastreabilidade:_ Feature "Registrar pagamento da contribuição social do paciente" → CP10 — Registros administrativos do atendimento → OE6/OE4.
 
@@ -1132,10 +1132,10 @@ O sistema deve permitir que usuários com perfil de secretaria ou de coordenaç�
 
 _Critérios de aceitação:_
 
-- Dado que existem pacientes com contribuição efetivada e pendente, quando a secretaria filtrar por "pendente", então o sistema deve listar apenas os pacientes sem pagamento registrado no ciclo de atendimento atual.
-- Dado um paciente cuja contribuição foi registrada (RF41), quando a consulta for refeita, então o paciente deve aparecer com situação "efetivada" e com a data do pagamento.
-- Dado um paciente com primeira sessão agendada para hoje e contribuição pendente, quando a secretaria ou o estagiário responsável abrir a agenda do dia, então a sessão desse paciente deve exibir a indicação "contribuição pendente", que deixa de aparecer assim que o pagamento é registrado. Conforme confirmado pela Clínica Escola, essa indicação é apenas informativa na 1ª sessão do paciente; a partir da 2ª sessão, a pendência passa a bloquear o agendamento (RF43).
-- Dado um estagiário, quando consultar um paciente vinculado a ele, então o sistema deve exibir somente a situação da contribuição (efetivada ou pendente), sem a forma de pagamento e sem os dados dos demais pacientes.
+- O filtro "pendente" lista apenas os pacientes sem pagamento registrado no ciclo atual.
+- Após o registro do pagamento (RF41), o paciente aparece como "efetivada", com a data do pagamento.
+- Na agenda do dia, a 1ª sessão de paciente com contribuição pendente exibe a indicação "contribuição pendente", que some assim que o pagamento é registrado. Como confirmado pela Clínica Escola, na 1ª sessão a indicação é apenas informativa; a partir da 2ª, a pendência bloqueia o agendamento (RF43).
+- O estagiário vê, para seus pacientes, apenas a situação da contribuição (efetivada ou pendente), sem a forma de pagamento e sem dados de outros pacientes.
 
 _Rastreabilidade:_ Feature "Consultar situação da contribuição social dos pacientes" → CP10 — Registros administrativos do atendimento → OE6/OE4. A indicação na agenda depende do agendamento da CP4.
 
@@ -1147,9 +1147,9 @@ O sistema deve impedir o agendamento (RF10) da 2ª sessão em diante de um pacie
 
 _Critérios de aceitação:_
 
-- Dado um paciente com a 1ª sessão do ciclo, quando a secretaria ou o estagiário tentar agendá-la, então o sistema não deve bloquear o agendamento por causa da contribuição social, independentemente da situação de pagamento.
-- Dado um paciente com contribuição social pendente e ao menos uma sessão já realizada no ciclo, quando houver tentativa de agendar uma nova sessão, então o sistema deve impedir o agendamento e informar o motivo (contribuição pendente).
-- Dado um paciente cuja contribuição social seja registrada como efetivada (RF41), quando houver uma tentativa de agendamento bloqueada anteriormente, então o sistema deve permitir o agendamento normalmente.
+- O agendamento da 1ª sessão do ciclo nunca é bloqueado pela contribuição social.
+- Com contribuição pendente e ao menos uma sessão já realizada no ciclo, o agendamento de nova sessão é bloqueado, informando o motivo (contribuição pendente).
+- Após o registro da contribuição como efetivada (RF41), o agendamento antes bloqueado passa a ser permitido.
 
 _Rastreabilidade:_ Feature "Bloquear agendamento por contribuição social pendente" → CP10 — Registros administrativos do atendimento; restrição sobre a feature "Agendar sessão do paciente" (RF10, CP4). Dependência: RF41, RF42.
 
@@ -1165,9 +1165,9 @@ O sistema deve listar, para um usuário com perfil autorizado (secretaria) ou pa
 
 _Critérios de aceitação:_
 
-- Dado um paciente com sessões registradas, quando a lista de sessões elegíveis for exibida, então devem aparecer somente as sessões com presença registrada, com data, horário e nome do estagiário.
-- Dado um paciente ou responsável que teve a identidade verificada pelo RF52, quando ele acessar a lista de sessões, então deve visualizar somente as suas próprias sessões.
-- Dado um paciente sem nenhuma sessão com presença registrada, quando ele acessar a área de declarações, então o sistema deve informar que não há sessões disponíveis para declaração.
+- A lista de sessões elegíveis mostra somente sessões com presença registrada, com data, horário e nome do estagiário.
+- Paciente ou responsável com identidade verificada (RF52) vê somente as próprias sessões.
+- Paciente sem sessão com presença registrada recebe o aviso de que não há sessões disponíveis para declaração.
 
 _Rastreabilidade:_ Feature "Listar sessões com comparecimento registrado do paciente" → CP10 — Registros administrativos do atendimento → OE6/OE5. Dependência: RF52 (CP12).
 
@@ -1184,14 +1184,14 @@ _Rastreabilidade:_ Feature "Listar sessões com comparecimento registrado do pac
 
 _Critérios de aceitação:_
 
-- Dada uma sessão com presença registrada, quando a secretaria ou o paciente/responsável solicitar a emissão, então o sistema deve gerar o documento com a data, o horário e o nome do estagiário corretos, conforme o registro da sessão, e registrar a emissão para auditoria.
-- Dada uma sessão sem presença registrada (falta ou cancelamento), quando a emissão for solicitada, então o sistema deve bloquear a emissão e informar o motivo.
-- Dado um usuário sem permissão para a sessão solicitada, quando tentar emitir a declaração, então o sistema deve negar a emissão e registrar a tentativa.
-- Dado um paciente ou responsável com identidade verificada (RF52), quando ele tentar emitir a declaração de uma sessão de outro paciente, então o sistema deve negar o acesso.
-- Dado o documento gerado, quando exibido em pré-visualização ou impresso, então deve conter a assinatura e o carimbo do psicólogo responsável e o número de CRP, além da data, do horário e do nome do estagiário.
-- Dado um paciente menor de idade cujo responsável legal ainda não preencheu a Autorização para Acompanhamento Psicoterapêutico de Crianças e Adolescentes, quando o responsável solicitar a emissão, então o sistema deve bloquear a emissão e informar a pendência da autorização.
-- Dado um paciente menor de idade com a autorização já preenchida, quando o responsável legal solicitar a emissão, então o sistema deve gerar o documento normalmente.
-- Dado o documento gerado, quando inspecionado, então não deve conter download nem opção de envio por e-mail, apenas visualização em tela e impressão.
+- A emissão para sessão com presença registrada, solicitada pela secretaria ou pelo paciente/responsável, gera o documento com data, horário e nome do estagiário conforme o registro da sessão, e registra a emissão para auditoria.
+- Sessão sem presença registrada (falta ou cancelamento) não gera declaração; o motivo é informado.
+- Usuário sem permissão para a sessão não emite a declaração, e a tentativa é registrada.
+- Paciente ou responsável com identidade verificada (RF52) não emite declaração de sessão de outro paciente.
+- O documento, em pré-visualização ou impresso, contém a assinatura e o carimbo do psicólogo responsável e o número de CRP, além da data, do horário e do nome do estagiário.
+- Para paciente menor de idade sem a Autorização para Acompanhamento Psicoterapêutico de Crianças e Adolescentes preenchida, a emissão é bloqueada e a pendência é informada.
+- Para paciente menor de idade com a autorização preenchida, o responsável legal emite a declaração normalmente.
+- O documento só pode ser visualizado em tela e impresso, sem download nem envio por e-mail.
 
 _Rastreabilidade:_ Feature "Emitir declaração de comparecimento do paciente" → CP10 — Registros administrativos do atendimento → OE6/OE5. Dependência: RF52 (CP12).
 
@@ -1202,7 +1202,7 @@ _Rastreabilidade:_ Feature "Emitir declaração de comparecimento do paciente" �
 
 O sistema deve permitir gerar novamente uma declaração já emitida (por exemplo, em caso de perda do documento), mantendo o conteúdo consistente com o registro da sessão, a menos que esse registro tenha sido corrigido desde a emissão original. Cada reemissão deve ser registrada para auditoria, distinguindo-se da emissão original.
 
-_Critério de aceitação:_ dada uma declaração já emitida para uma sessão, quando o usuário solicitar a reemissão, então o sistema deve gerar o documento novamente com o mesmo conteúdo da emissão original (salvo correção do registro) e registrar a reemissão vinculada à emissão original.
+_Critério de aceitação:_ A reemissão gera o documento com o mesmo conteúdo da emissão original (salvo correção do registro) e fica registrada vinculada a ela.
 
 _Rastreabilidade:_ Feature "Reemitir declaração de comparecimento" → CP10 — Registros administrativos do atendimento → OE6/OE5.
 
@@ -1214,9 +1214,9 @@ O sistema deve permitir que um terceiro (por exemplo, empregador ou escola) conf
 
 _Critérios de aceitação:_
 
-- Dado um código de verificação válido e vigente, quando consultado, então o sistema deve retornar a confirmação de autenticidade, o nome do paciente, a data e o horário da sessão e o nome do estagiário, sem dado clínico.
-- Dado um código inexistente, quando consultado, então o sistema deve retornar apenas uma mensagem genérica de código inválido.
-- Dado um código de uma declaração cujo registro de origem foi corrigido após a emissão, quando consultado, então o sistema deve informar que o documento não corresponde mais ao registro vigente, sem exibir os dados anteriores.
+- Código de verificação válido e vigente retorna a confirmação de autenticidade, o nome do paciente, a data e o horário da sessão e o nome do estagiário, sem dado clínico.
+- Código inexistente retorna apenas uma mensagem genérica de código inválido.
+- Código de declaração cujo registro de origem foi corrigido após a emissão informa que o documento não corresponde mais ao registro vigente, sem exibir os dados anteriores.
 
 _Rastreabilidade:_ Feature "Validar autenticidade da declaração" → CP10 — Registros administrativos do atendimento → OE6/OE5.
 
@@ -1243,11 +1243,11 @@ Considera-se **paciente em atendimento ativo** em uma data aquele que, nessa dat
 
 _Critérios de aceitação:_
 
-- Dado um intervalo de 01/08 a 31/08 consultado em 15/09, quando os indicadores forem exibidos, então "vagas ocupadas" e "distribuição de casos por supervisor" devem refletir a situação ao fim do dia 31/08, e "tempo médio de espera" e "taxa de evasão" devem considerar os eventos de 01/08 a 31/08.
-- Dado um intervalo cuja data final é o dia da consulta, quando os indicadores forem exibidos, então os indicadores de posição devem refletir a situação no momento da consulta.
-- Dado um paciente desligado por faltas em 10/08 e com o desligamento revertido em 12/08, quando a taxa de evasão de agosto for consultada, então esse paciente não deve ser contado no numerador.
-- Dado um intervalo sem registros para um indicador, quando os indicadores forem consultados, então esse indicador deve ser exibido como zero, nunca omitido ou em branco; o mesmo vale para uma divisão cujo denominador seja zero.
-- Dada uma data final posterior à data da consulta, ou uma data inicial posterior à data final, quando a coordenação solicitar a consulta, então o sistema deve recusar o intervalo e informar o motivo.
+- Na consulta de 01/08 a 31/08 feita em 15/09, "vagas ocupadas" e "distribuição de casos por supervisor" refletem a situação ao fim de 31/08, e "tempo médio de espera" e "taxa de evasão" consideram os eventos de 01/08 a 31/08.
+- Com data final igual ao dia da consulta, os indicadores de posição refletem a situação no momento da consulta.
+- Paciente desligado por faltas em 10/08 e com desligamento revertido em 12/08 não entra no numerador da taxa de evasão de agosto.
+- Indicador sem registros no intervalo, ou com divisão de denominador zero, é exibido como zero, nunca omitido ou em branco.
+- Intervalo com data final posterior à data da consulta, ou com data inicial posterior à final, é recusado e o motivo é informado.
 
 _Rastreabilidade:_ Feature "Consultar indicadores operacionais" → CP11 — Indicadores e relatórios institucionais. Dependência: RF9 (CP3), RF37 e RF38 (CP9), CP5.
 
@@ -1259,9 +1259,9 @@ A apresentação em tela dos indicadores é responsabilidade exclusiva do RF48; 
 
 _Critérios de aceitação:_
 
-- Dada uma consulta de indicadores exibida em tela para um intervalo, quando a coordenação solicitar a exportação, então o sistema deve produzir um arquivo PDF, disponível para download imediato, com os mesmos valores exibidos em tela, o intervalo, a data de referência, a data/hora da exportação e o usuário responsável.
-- Dada uma consulta em que o total de vagas ofertadas não foi registrado (RF48), quando o relatório for exportado, então o PDF deve reproduzir o mesmo aviso exibido em tela.
-- Dado um usuário sem perfil de coordenação, quando tentar exportar o relatório, então o sistema deve impedir a operação.
+- A exportação de uma consulta de indicadores gera um PDF para download imediato com os mesmos valores da tela, o intervalo, a data de referência, a data/hora da exportação e o usuário responsável.
+- Se o total de vagas ofertadas não foi registrado (RF48), o PDF reproduz o mesmo aviso exibido em tela.
+- Usuário sem perfil de coordenação não consegue exportar o relatório.
 
 _Rastreabilidade:_ Feature "Exportar relatório institucional em PDF" → CP11 — Indicadores e relatórios institucionais. Dependência: RF48.
 
@@ -1279,9 +1279,9 @@ O sistema deve permitir que usuários institucionais (secretaria, estagiário, s
 
 _Critérios de aceitação:_
 
-- Dado um usuário ativo, quando informar e-mail e senha corretos, então o sistema deve autenticá-lo e exibir apenas as funcionalidades do seu perfil.
-- Dado um e-mail ou uma senha incorretos, quando o usuário tentar entrar, então o sistema deve negar o acesso com uma mensagem genérica, sem indicar qual dos dois campos está errado.
-- Dado um usuário desativado (RF54), quando tentar entrar com as credenciais antigas, então o sistema deve negar o acesso.
+- Usuário ativo com e-mail e senha corretos é autenticado e vê apenas as funcionalidades do seu perfil.
+- E-mail ou senha incorretos negam o acesso com mensagem genérica, sem indicar qual campo está errado.
+- Usuário desativado (RF54) não consegue entrar com as credenciais antigas.
 
 _Rastreabilidade:_ Feature "Autenticar usuário institucional" → CP12 — Segurança, sigilo e controle de acesso → OE7/OE5.
 
@@ -1291,7 +1291,7 @@ _Rastreabilidade:_ Feature "Autenticar usuário institucional" → CP12 — Segu
 
 O sistema deve permitir que o usuário autenticado encerre a própria sessão a qualquer momento, exigindo nova autenticação para voltar a acessar as funcionalidades internas. O encerramento automático por inatividade é tratado no RNF50.
 
-_Critério de aceitação:_ dado um usuário autenticado, quando ele escolher sair, então o sistema deve encerrar a sessão e, ao voltar a qualquer página interna (inclusive pelo botão "voltar" do navegador), exigir nova autenticação.
+_Critério de aceitação:_ Ao sair, a sessão é encerrada e qualquer página interna, inclusive pelo botão "voltar" do navegador, exige nova autenticação.
 
 _Rastreabilidade:_ Feature "Encerrar sessão do usuário" → CP12 — Segurança, sigilo e controle de acesso → OE7.
 
@@ -1311,12 +1311,12 @@ O código segue as regras abaixo:
 
 _Critérios de aceitação:_
 
-- Dado um paciente com inscrição registrada, quando informar o CPF ou o número de inscrição e o código recebido no contato cadastrado dentro de 10 minutos, então o sistema deve liberar o acesso apenas às informações desse paciente.
-- Dado alguém que informou um CPF ou número de inscrição válido, quando não informar o código ou informar um código incorreto ou expirado, então o sistema não deve exibir nenhuma informação da inscrição, nem confirmar se ela existe.
-- Dado um código já utilizado, quando for informado novamente, então o sistema deve recusá-lo.
-- Dado um código com 4 tentativas incorretas, quando a quinta tentativa incorreta for feita, então o sistema deve invalidar o código, e o código correto não deve mais ser aceito.
-- Dado um código enviado há menos de 60 segundos, quando for solicitado um novo código, então o sistema deve recusar o reenvio e informar quanto tempo falta.
-- Dados 3 códigos enviados para o mesmo CPF nos últimos 60 minutos, quando for solicitado um quarto código, então o sistema deve recusar o envio e manter o bloqueio por 60 minutos.
+- O CPF ou o número de inscrição, junto com o código recebido no contato cadastrado e informado em até 10 minutos, libera acesso apenas às informações desse paciente.
+- Sem código, ou com código incorreto ou expirado, nenhuma informação da inscrição é exibida, nem a existência dela é confirmada.
+- Código já utilizado é recusado.
+- Na quinta tentativa incorreta, o código é invalidado e nem o código correto passa a ser aceito.
+- Novo código pedido menos de 60 segundos após o anterior é recusado, informando o tempo restante.
+- Depois de 3 códigos enviados ao mesmo CPF em 60 minutos, um quarto pedido é recusado e o bloqueio dura 60 minutos.
 
 _Rastreabilidade:_ Feature "Verificar identidade do paciente ou responsável" → CP12 — Segurança, sigilo e controle de acesso → OE7/OE1. Atende à verificação de acesso exigida pela feature "Consultar posição individual na fila" (CP3) e pelas features de declaração da CP10.
 
@@ -1334,12 +1334,12 @@ Um usuário pendente de ativação não consegue se autenticar (RF50).
 
 _Critérios de aceitação:_
 
-- Dado um usuário com perfil de coordenação, quando cadastrar um novo usuário com nome, e-mail e perfil, então o sistema deve criar o usuário como "pendente de ativação" e enviar o convite ao e-mail informado.
-- Dado um convite válido, quando o novo usuário abrir o link e definir uma senha que atenda ao RNF49, então a conta deve passar a "ativa" e o usuário deve conseguir entrar pelo RF50.
-- Dado um link de ativação já utilizado ou com mais de 72 horas, quando for aberto, então o sistema deve recusá-lo e orientar o usuário a pedir um novo convite à coordenação.
-- Dado um usuário pendente, quando a coordenação reenviar o convite, então o link anterior deve deixar de funcionar.
-- Dado um e-mail já cadastrado, quando a coordenação tentar cadastrá-lo novamente, então o sistema deve impedir o cadastro duplicado.
-- Dado um usuário sem perfil de coordenação, quando tentar cadastrar usuários, então o sistema deve impedir a operação.
+- O cadastro de usuário pela coordenação, com nome, e-mail e perfil, cria a conta como "pendente de ativação" e envia o convite ao e-mail informado.
+- Ao abrir o convite válido e definir senha conforme o RNF49, a conta passa a "ativa" e o usuário consegue entrar pelo RF50.
+- Link de ativação já usado ou com mais de 72 horas é recusado, com orientação para pedir novo convite à coordenação.
+- O reenvio do convite a usuário pendente invalida o link anterior.
+- E-mail já cadastrado não pode ser cadastrado de novo.
+- Usuário sem perfil de coordenação não consegue cadastrar usuários.
 
 _Rastreabilidade:_ Feature "Cadastrar usuário institucional com perfil de acesso" → CP12 — Segurança, sigilo e controle de acesso → OE7/OE5.
 
@@ -1351,9 +1351,9 @@ O sistema deve permitir que um usuário com perfil de coordenação desative um 
 
 _Critérios de aceitação:_
 
-- Dado um estagiário que concluiu o estágio, quando a coordenação desativá-lo, então ele deve perder o acesso imediatamente, inclusive se estiver com uma sessão aberta.
-- Dado um usuário desativado, quando seus registros anteriores forem consultados por um usuário autorizado, então esses registros devem continuar disponíveis e identificados com o nome de quem os fez.
-- Dado um usuário sem perfil de coordenação, quando tentar desativar usuários, então o sistema deve impedir a operação.
+- A desativação de um estagiário pela coordenação corta o acesso imediatamente, inclusive com sessão aberta.
+- Os registros anteriores de usuário desativado continuam disponíveis a usuários autorizados, identificados com o nome de quem os fez.
+- Usuário sem perfil de coordenação não consegue desativar usuários.
 
 _Rastreabilidade:_ Feature "Desativar usuário institucional" → CP12 — Segurança, sigilo e controle de acesso → OE7/OE5.
 
@@ -1365,10 +1365,10 @@ O sistema deve permitir o acesso ao prontuário de um paciente (CP6), que reúne
 
 _Critérios de aceitação:_
 
-- Dado um paciente vinculado ao estagiário A, supervisionado pelo supervisor S, quando A ou S abrirem o prontuário, então o sistema deve exibir o conteúdo clínico.
-- Dado um estagiário B, que não é o responsável pelo paciente, quando tentar abrir o prontuário desse paciente, então o sistema deve negar o acesso, inclusive quando a requisição for feita diretamente ao servidor, sem passar pela interface.
-- Dado um usuário com perfil de secretaria ou de coordenação, quando consultar um paciente, então o sistema deve exibir os dados cadastrais e administrativos, mas não os registros de evolução nem o relatório final.
-- Dado um caso transferido do estagiário A para o estagiário C, quando a transferência for concluída, então C deve passar a ter acesso ao prontuário e A deve perdê-lo.
+- O estagiário responsável pelo paciente e seu supervisor veem o conteúdo clínico do prontuário.
+- Estagiário que não é responsável pelo paciente tem o acesso ao prontuário negado, inclusive em requisição feita direto ao servidor, sem passar pela interface.
+- Secretaria e coordenação veem os dados cadastrais e administrativos do paciente, mas não os registros de evolução nem o relatório final.
+- Concluída a transferência do estagiário A para o estagiário C, C passa a acessar o prontuário e A perde o acesso.
 
 _Rastreabilidade:_ Feature "Restringir acesso ao prontuário do paciente" → CP12 — Segurança, sigilo e controle de acesso → OE7/OE5. Depende do vínculo entre paciente, estagiário e supervisor (CP5), do prontuário (CP6), dos registros de evolução (CP7) e do relatório final (CP8).
 
@@ -1380,9 +1380,9 @@ O sistema deve permitir que um usuário com perfil de coordenação consulte o r
 
 _Critérios de aceitação:_
 
-- Dado que o estagiário A visualizou o prontuário de um paciente, quando a coordenação consultar o registro de acessos desse paciente, então deve aparecer uma entrada com o nome de A, o perfil, a data/hora e a operação "visualização".
-- Dada uma tentativa de acesso negada pelo RF55, quando a coordenação consultar o registro, então a tentativa deve aparecer identificada como "acesso negado".
-- Dado um usuário sem perfil de coordenação, quando tentar consultar o registro de acessos, então o sistema deve impedir a operação.
+- Cada visualização do prontuário gera uma entrada no registro de acessos com nome, perfil, data/hora e a operação "visualização", consultável pela coordenação.
+- Tentativas negadas pelo RF55 aparecem no registro identificadas como "acesso negado".
+- Usuário sem perfil de coordenação não consulta o registro de acessos.
 
 _Rastreabilidade:_ Feature "Consultar registro de acessos ao prontuário" → CP12 — Segurança, sigilo e controle de acesso → OE7.
 
@@ -1396,10 +1396,10 @@ O sistema deve apresentar, antes da conclusão da inscrição (CP1), um termo qu
 
 _Critérios de aceitação:_
 
-- Dado um interessado no formulário de inscrição, quando tentar concluir sem aceitar o termo, então o sistema deve impedir a conclusão e indicar que o aceite é necessário.
-- Dado um interessado que aceitou o termo, quando a inscrição for concluída, então o sistema deve guardar a versão do termo e a data/hora do aceite junto à inscrição.
-- Dada a inscrição de um menor de idade, quando o termo for apresentado, então ele deve pedir a identificação e a concordância do responsável legal.
-- Dado o termo apresentado na inscrição, quando o interessado o ler, então o texto deve informar o prazo de guarda dos dados e como solicitar a revogação do consentimento.
+- A inscrição não pode ser concluída sem o aceite do termo, e o sistema indica que o aceite é necessário.
+- A inscrição concluída guarda a versão do termo aceito e a data/hora do aceite.
+- Na inscrição de menor de idade, o termo pede a identificação e a concordância do responsável legal.
+- O termo informa o prazo de guarda dos dados e como solicitar a revogação do consentimento.
 
 O aceite on-line não substitui a autorização e o termo de responsabilidade assinados presencialmente pelo responsável legal, que continuam exigidos pela clínica para o atendimento de crianças e adolescentes ([ata de 26/08/2026](../../unidade-1/reunioes.md)).
 
@@ -1422,11 +1422,11 @@ Uma nova inscrição do mesmo titular exige um novo aceite (RF57).
 
 _Critérios de aceitação:_
 
-- Dado um inscrito na fila de espera, quando a secretaria registrar a revogação após verificar a identidade, então a inscrição deve sair da fila com a situação "cancelada por revogação do consentimento", e o registro deve guardar data/hora, versão do termo, autor e forma de verificação.
-- Dado um paciente em atendimento, quando a revogação for registrada, então o sistema deve impedir novos agendamentos para ele, suspender os lembretes e sinalizar a revogação ao supervisor e à coordenação.
-- Dado um consentimento revogado, quando um usuário autorizado consultar o histórico do paciente, então o aceite original, a revogação e os registros clínicos já produzidos devem continuar disponíveis, respeitando o RF55.
-- Dada uma pessoa cuja identidade não foi verificada, quando pedir a revogação, então a secretaria não deve conseguir concluir o registro.
-- Dado um usuário sem perfil de secretaria, quando tentar registrar a revogação, então o sistema deve impedir a operação.
+- A revogação registrada pela secretaria, após verificar a identidade de um inscrito na fila, retira a inscrição da fila com a situação "cancelada por revogação do consentimento", guardando data/hora, versão do termo, autor e forma de verificação.
+- Para paciente em atendimento, a revogação bloqueia novos agendamentos, suspende os lembretes e é sinalizada ao supervisor e à coordenação.
+- Após a revogação, o aceite original, a revogação e os registros clínicos já produzidos continuam disponíveis no histórico a usuários autorizados, respeitando o RF55.
+- A revogação não pode ser concluída sem a verificação de identidade da pessoa.
+- Usuário sem perfil de secretaria não consegue registrar a revogação.
 
 _Rastreabilidade:_ Feature "Registrar revogação do consentimento" → CP12 — Segurança, sigilo e controle de acesso → OE7. Dependência: RF57, RF52; integração: RF7 (CP3), RF10 e RF13 (CP4), RF55.
 
@@ -1444,11 +1444,11 @@ O sistema deve permitir que a coordenação configure, para cada semestre, a dat
 
 _Critérios de aceitação:_
 
-- Dado um semestre com datas configuradas e um estagiário marcado para encerramento de vínculo, quando a data de início do planejamento for alcançada e a coordenação abrir a lista, então o sistema deve exibir todos os casos ativos sob responsabilidade desse estagiário.
-- Dada uma data anterior ao início do planejamento configurado, quando a coordenação consultar a continuidade daquele semestre, então o sistema deve informar que o período ainda não foi iniciado e não deve tratar os casos como pendentes.
-- Dado um estagiário marcado para encerramento futuro, quando a marcação for registrada, então o sistema deve preservar seu acesso vigente até que a desativação do RF54 seja efetivada.
-- Dado um caso já com decisão de continuidade registrada (RF59), quando a lista for consultada, então esse caso não deve aparecer como pendente.
-- Dado que nenhum estagiário sob responsabilidade de casos ativos está marcado para desligamento, quando a coordenação abrir a lista, então o sistema deve informar que não há casos pendentes de decisão de continuidade.
+- A partir da data de início do planejamento, a lista da coordenação mostra todos os casos ativos dos estagiários marcados para encerramento de vínculo.
+- Antes da data de início do planejamento, a consulta informa que o período ainda não começou e não trata os casos como pendentes.
+- A marcação de encerramento futuro preserva o acesso vigente do estagiário até a desativação (RF54) ser efetivada.
+- Caso com decisão de continuidade registrada (RF59) não aparece como pendente.
+- Sem estagiários com casos ativos marcados para desligamento, a lista informa que não há casos pendentes de decisão.
 
 _Rastreabilidade:_ Feature "Listar casos elegíveis para continuidade entre semestres" → CP13 — Continuidade de casos entre semestres → OE5/OE6. Dependência: RF54 (CP12), CP5.
 
@@ -1462,11 +1462,11 @@ Somente a coordenação pode corrigir uma decisão já registrada. A correção 
 
 _Critérios de aceitação:_
 
-- Dado um caso pendente de decisão, quando a coordenação ou o supervisor registrar a continuidade indicando um novo estagiário, então o sistema deve associar a decisão ao caso, com o novo responsável indicado, o autor e a data.
-- Dado um caso pendente de decisão, quando a coordenação ou o supervisor registrar o encerramento do acompanhamento com motivo, então o sistema deve marcar o caso como encerrado por continuidade não efetivada, sem vinculá-lo a um novo estagiário.
-- Dado um caso já com decisão registrada, quando um supervisor ou outro perfil tentar corrigi-la, então o sistema deve negar a ação; somente a coordenação pode efetuar a correção.
-- Dada uma decisão ainda não efetivada, quando a coordenação corrigi-la com motivo, então o sistema deve preservar a versão anterior e considerar a nova versão como instrução vigente para a continuidade.
-- Dada uma decisão cuja transferência já foi efetivada, quando a coordenação registrar uma correção, então o sistema deve preservar a transferência realizada e exigir reversão ou nova transferência explícita, vinculada à correção, sem alterar silenciosamente o responsável atual.
+- A decisão de continuidade registrada pela coordenação ou pelo supervisor, com novo estagiário indicado, fica associada ao caso com o novo responsável, o autor e a data.
+- O registro de encerramento do acompanhamento com motivo marca o caso como encerrado por continuidade não efetivada, sem vínculo com novo estagiário.
+- Somente a coordenação pode corrigir uma decisão de continuidade já registrada.
+- A correção, com motivo, de decisão ainda não efetivada preserva a versão anterior e passa a valer como instrução vigente.
+- A correção de decisão cuja transferência já foi efetivada preserva a transferência realizada e exige reversão ou nova transferência explícita, vinculada à correção, sem trocar o responsável atual silenciosamente.
 
 _Rastreabilidade:_ Feature "Registrar decisão de continuidade do caso" → CP13 — Continuidade de casos entre semestres → OE5/OE6. Dependência: RF58.
 
@@ -1478,9 +1478,9 @@ Quando a decisão de continuidade vigente (RF59) indicar um novo estagiário res
 
 _Critérios de aceitação:_
 
-- Dada uma decisão vigente com novo estagiário indicado e alcançada a data de encerramento do semestre, quando a coordenação confirmar a transferência, então o sistema deve registrar o novo estagiário como responsável, manter todo o histórico do paciente disponível a ele, revogar o acesso do estagiário anterior e vincular a transferência à versão vigente da decisão de origem (RF59).
-- Dada uma decisão com novo estagiário indicado, quando a data de encerramento for alcançada sem confirmação da coordenação, então o sistema deve manter a transferência pendente e não alterar automaticamente o responsável.
-- Dado um caso cuja decisão de continuidade vigente seja de encerramento, quando a coordenação consultar as ações da virada de semestre, então o sistema não deve oferecer nem efetivar transferência para esse caso.
+- Na data de encerramento do semestre, a confirmação da transferência pela coordenação registra o novo estagiário como responsável, mantém todo o histórico do paciente disponível a ele, revoga o acesso do anterior e vincula a transferência à versão vigente da decisão (RF59).
+- Sem confirmação da coordenação na data de encerramento, a transferência fica pendente e o responsável não muda automaticamente.
+- Caso com decisão vigente de encerramento não recebe oferta nem efetivação de transferência na virada de semestre.
 
 _Rastreabilidade:_ Feature "Vincular caso a novo estagiário na continuidade" → CP13 — Continuidade de casos entre semestres → OE5/OE6. Dependência: RF59, RF25 (CP5).
 
@@ -1499,7 +1499,7 @@ A CP14 foi decomposta em duas features de personalização da exibição, voltad
 
 O sistema deve permitir que o paciente ative um modo de alto contraste em todas as páginas voltadas ao público externo, alterando a combinação de cores de texto e plano de fundo para atender, no mínimo, à razão de contraste exigida pelo nível AA da WCAG 2.2 (ver RNF56).
 
-_Critério de aceitação:_ dado que o paciente ativou o modo de alto contraste, quando ele navegar entre as páginas voltadas ao público externo dentro da mesma sessão do navegador, então a preferência deve permanecer ativa em todas elas, sem precisar ser reativada a cada página; a preferência não precisa ser mantida após o encerramento da sessão do navegador, já que essas páginas não exigem login do paciente.
+_Critério de aceitação:_ O modo de alto contraste ativado permanece em todas as páginas públicas durante a mesma sessão do navegador, sem precisar ser reativado; a preferência não precisa ser mantida após o fim da sessão, já que essas páginas não exigem login do paciente.
 _Rastreabilidade:_ Feature "Ativar modo de alto contraste" → CP14 — Acessibilidade e usabilidade.
 
 #### Feature — Ajustar tamanho do texto [#25](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/issues/25)
@@ -1508,5 +1508,5 @@ _Rastreabilidade:_ Feature "Ativar modo de alto contraste" → CP14 — Acessibi
 
 O sistema deve permitir que o paciente aumente ou diminua o tamanho do texto exibido nas páginas voltadas ao público externo, em pelo menos 3 níveis (padrão — 100%, grande — 150% e extra grande — 200% do tamanho base do texto), sem cortar texto, sobrepor elementos ou impedir o acesso a qualquer funcionalidade dessas páginas.
 
-_Critério de aceitação:_ dado que o paciente selecionou um dos três níveis de tamanho de texto, quando navegar pelas páginas voltadas ao público externo, então o nível selecionado deve ser aplicado de forma consistente em todas elas, seguindo a mesma regra de persistência por sessão de navegador do RF61.
+_Critério de aceitação:_ O nível de tamanho de texto escolhido vale para todas as páginas públicas, com a mesma regra de persistência por sessão do navegador do RF61.
 _Rastreabilidade:_ Feature "Ajustar tamanho do texto" → CP14 — Acessibilidade e usabilidade.
