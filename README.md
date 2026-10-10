@@ -74,7 +74,7 @@ O sistema em desenvolvimento (`src/`) será uma **aplicação web responsiva** v
 - **Supervisores**: acompanhamento dos casos e supervisão
 - **Coordenação**: indicadores, relatórios e gestão geral da clínica
 
-> O MVP prioriza: inscrição, triagem, fila de espera, agendamento, confirmação de presença, controle de faltas, segurança e acessibilidade.
+> O MVP prioriza: inscrição, triagem, fila de espera, agendamento, confirmação de presença, distribuição de casos, prontuário e evolução por sessão, controle de faltas, registros administrativos, indicadores institucionais, segurança e acessibilidade (53 dos 68 RFs — ver a seção 10.2.3 do Backlog de Produto).
 
 ---
 

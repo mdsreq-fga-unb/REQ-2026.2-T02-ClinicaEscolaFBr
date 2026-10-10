@@ -2,7 +2,6 @@
    Clínica Escola FBr — camada de leitura (par do reading.js)
    Organiza as páginas longas sem alterar o texto. Usa os tokens do extra.css.
 
-   A. Critérios Dado / Quando / Então
    B. Cabeçalho e contexto das CPs
    C. Requisito em níveis
    D. Etiquetas de referência
@@ -13,55 +12,6 @@
    I. Cards de comparação
    J. Reuniões recolhíveis
    ========================================================================== */
-
-/* ---- A. Critérios Dado / Quando / Então ---------------------------------- */
-
-.gwt {
-  display: inline-block;
-  margin-right: 0.15em;
-  padding: 0 0.4em;
-  border-radius: 0.3em;
-  font-size: 0.78em;
-  font-weight: 750;
-  letter-spacing: 0.04em;
-  line-height: 1.6;
-  text-transform: uppercase;
-}
-
-.gwt--given {
-  background: var(--fbr-blue-100);
-  color: var(--fbr-blue-800);
-}
-
-.gwt--when {
-  background: var(--fbr-orange-100);
-  color: #7a3e00;
-}
-
-.gwt--then {
-  background: #e3f4ea;
-  color: #1d5e37;
-}
-
-[data-md-color-scheme="slate"] .gwt--given {
-  background: rgba(95, 193, 230, 0.16);
-  color: #9fdcf3;
-}
-
-[data-md-color-scheme="slate"] .gwt--when {
-  background: rgba(255, 178, 74, 0.16);
-  color: #ffc977;
-}
-
-[data-md-color-scheme="slate"] .gwt--then {
-  background: rgba(98, 200, 140, 0.16);
-  color: #9be0b5;
-}
-
-/* Cada parte começa em uma linha própria (<br class="gwt-break"> inserido pelo JS) */
-.gwt-item {
-  line-height: 1.75;
-}
 
 /* ---- B. Cabeçalho e contexto das CPs ------------------------------------- */
 

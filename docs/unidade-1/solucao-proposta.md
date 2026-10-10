@@ -44,31 +44,33 @@ A solução proposta para a Clínica Escola da FBr deverá contemplar, de forma 
 
 ### Escopo do MVP
 
-O recorte atual do MVP é feito **por requisito**: **51 dos 65 RFs** declarados, definidos na priorização da Unidade 2 ([seção 10.2.3 do Backlog de Produto](../unidade-2/requisitos/backlog.md#1023-definicao-do-mvp)), que cruzou o valor de negócio avaliado pela Clínica Escola FBr com o esforço técnico de cada RF. A tabela resume o recorte por característica; o detalhamento requisito a requisito está na seção 10.2.3.
+O recorte atual do MVP é feito **por requisito**: **53 dos 68 RFs** declarados, definidos na priorização da Unidade 2 e validados com a Clínica Escola FBr ([seções 10.2.3 e 10.2.4 do Backlog de Produto](../unidade-2/requisitos/backlog.md#1023-definicao-do-mvp)), que cruzaram o valor de negócio avaliado pela FBr com o esforço técnico de cada RF. A tabela resume o recorte por característica; o detalhamento requisito a requisito está na seção 10.2.3.
 
 | CP | Característica | RFs no MVP | Situação | RFs fora do MVP |
 | --- | --- | --- | --- | --- |
-| CP1 | Inscrição on-line | 3 de 3 | Completa no MVP | — |
+| CP1 | Inscrição on-line | 2 de 3 | Parcial no MVP | RF3 |
 | CP2 | Triagem e sinalização de casos | 2 de 3 | Parcial no MVP | RF5 |
 | CP3 | Fila de espera e consulta de posição | 2 de 3 | Parcial no MVP | RF9 |
-| CP4 | Agendamento, confirmação e remarcação | 7 de 8 | Parcial no MVP | RF15 |
-| CP5 | Distribuição de casos entre supervisores e estagiários | 7 de 9 | Parcial no MVP | RF25, RF26 |
-| CP6 | Prontuário eletrônico | 1 de 1 | Completa no MVP | — |
-| CP7 | Registro de evolução por sessão | 4 de 5 | Parcial no MVP | RF29 |
-| CP8 | Geração do relatório final de evolução | 1 de 1 | Completa no MVP | — |
+| CP4 | Agendamento, confirmação e remarcação | 6 de 8 | Parcial no MVP | RF12, RF13 |
+| CP5 | Distribuição de casos entre supervisores e estagiários | 7 de 9 | Parcial no MVP | RF24, RF26 |
+| CP6 | Prontuário eletrônico | 2 de 2 | Completa no MVP | — |
+| CP7 | Registro de evolução por sessão | 7 de 7 | Completa no MVP | — |
+| CP8 | Geração do relatório final de evolução | 0 de 1 | Fora do MVP | RF33 |
 | CP9 | Controle de assiduidade e alertas | 9 de 9 | Completa no MVP | — |
-| CP10 | Registros administrativos do atendimento | 6 de 7 | Parcial no MVP | RF47 |
-| CP11 | Indicadores e relatórios institucionais | 0 de 2 | Fora do MVP | RF48, RF49 |
+| CP10 | Registros administrativos do atendimento | 5 de 7 | Parcial no MVP | RF46, RF47 |
+| CP11 | Indicadores e relatórios institucionais | 2 de 2 | Completa no MVP | — |
 | CP12 | Segurança, sigilo e controle de acesso | 9 de 9 | Completa no MVP | — |
 | CP13 | Continuidade de casos entre semestres | 0 de 3 | Fora do MVP | RF58, RF59, RF60 |
 | CP14 | Acessibilidade e usabilidade | 0 de 2 | Fora do MVP | RF61, RF62 |
+
+A CP6 inclui o RF66 (criação do prontuário) e a CP7 inclui os RF67 e RF68 (validação da evolução pelo supervisor e encerramento do caso por alta), declarados a partir das dúvidas levantadas pela FBr na validação do MVP (ver [10.2.4](../unidade-2/requisitos/backlog.md#1024-validacao-do-mvp-com-o-cliente)). Na CP9, a reprovação do estagiário (RF63/RF64) faz parte do MVP, com implementação prevista para mais perto do fim do semestre.
 
 Na CP14, embora os dois RFs específicos (RF61 e RF62 — alto contraste e ajuste de tamanho de texto) fiquem para depois, o piso de conformidade WCAG 2.2 nível AA (RNF56) permanece obrigatório desde o MVP, por exigência confirmada da FBr/MEC.
 
 <details class="revision-note" markdown>
 <summary>Histórico: recorte inicial por característica (Unidade 1)</summary>
 
-Na Unidade 1, antes da priorização formal, o MVP foi definido por característica. Esse recorte foi refinado pela priorização da Unidade 2, resumida na tabela acima: CP6, CP7, CP8 e CP10, antes no escopo desejável, entraram substancialmente no MVP técnico; CP14 teve seus dois RFs específicos adiados; CP11 e CP13 permanecem fora do MVP. O texto original da Unidade 1 está preservado abaixo.
+Na Unidade 1, antes da priorização formal, o MVP foi definido por característica. Esse recorte foi refinado pela priorização da Unidade 2, resumida na tabela acima: CP6, CP7, CP10 e CP11, antes no escopo desejável, entraram no MVP (a CP10 parcialmente); a CP8 ficou para uma versão posterior; CP14 teve seus dois RFs específicos adiados; e CP13 permanece fora do MVP. O texto original da Unidade 1 está preservado abaixo.
 
 Considerando o prazo de um semestre letivo e a priorização acordada com o cliente, o **Produto Mínimo Viável (MVP)** será composto pelas características:
 
@@ -137,7 +139,7 @@ A literatura acadêmica registra iniciativas de sistemas de triagem e atendiment
 | Solicitação de atendimento e triagem             | Parcial: foco no prontuário e na supervisão                            | Não: agenda voltada ao paciente já cadastrado    | Não                                                        | Não                                                | **Sim**: solicitação online, triagem e fila de espera priorizada     |
 | Hierarquia estagiário–supervisor                 | Sim                                                                      | Não: presume profissional autônomo               | Parcial: gestão de clínica, sem papel de estagiário       | Não                                                | **Sim**: perfis de estagiário, supervisor e coordenação              |
 | Continuidade de casos entre semestres            | Não previsto explicitamente                                            | Não                                                | Não                                                        | Não                                                | **Sim** *(visão de produto — ver escopo do MVP)*                     |
-| Indicadores de gestão e responsabilidade social  | Sim, com viés financeiro e assistencial                                | Sim, com viés financeiro                          | Sim, com viés financeiro                                   | Não                                                | **Sim** *(escopo desejável)*                                         |
+| Indicadores de gestão e responsabilidade social  | Sim, com viés financeiro e assistencial                                | Sim, com viés financeiro                          | Sim, com viés financeiro                                   | Não                                                | **Sim** *(MVP)*                                                      |
 | Sigilo, LGPD e trilha de auditoria               | Sim                                                                      | Sim                                                | Sim                                                        | Não: sem controle de acesso nem rastreabilidade    | **Sim**: acesso por perfil e registro de auditoria *(MVP)*           |
 
 > **Nota:** as marcações "Sim" referem-se à solução completa, conforme concebida para a Clínica Escola FBr. Nem todas as capacidades estarão disponíveis já na primeira entrega — a seção "Escopo do MVP" especifica quais capacidades compõem o MVP, o escopo desejável e a visão de produto de mais longo prazo.
@@ -146,10 +148,10 @@ A literatura acadêmica registra iniciativas de sistemas de triagem e atendiment
 
 A solução da Clínica Escola FBr irá se diferenciar pelos seguintes aspectos:
 
-- **Fluxo desenhado para a clínica escola** *(no MVP até o relatório final, conforme a atualização em "Escopo do MVP")*: no recorte técnico final ([10.2.3](../unidade-2/requisitos/backlog.md#1023-definicao-do-mvp)), o MVP cobre o processo da solicitação online de atendimento pelo cidadão até o agendamento, a confirmação de presença, a alocação do caso a um estagiário e seu supervisor, o registro do prontuário e da evolução por sessão (CP6, CP7) e a geração do relatório final ao término do ciclo (CP8). Ficam para depois apenas refinamentos pontuais desse fluxo, como a correção de uma evolução já registrada (RF29); o encerramento/encaminhamento de casos entre semestres (CP13) permanece como visão de produto de mais longo prazo.
+- **Fluxo desenhado para a clínica escola** *(no MVP, conforme a atualização em "Escopo do MVP")*: no recorte final ([10.2.3](../unidade-2/requisitos/backlog.md#1023-definicao-do-mvp)), o MVP cobre o processo da solicitação online de atendimento pelo cidadão até o agendamento, a confirmação de presença, a alocação do caso a um estagiário e seu supervisor, a criação e o registro do prontuário e da evolução por sessão, com validação pelo supervisor (CP6, CP7), e o encerramento do caso por alta. Ficam para depois refinamentos desse fluxo, como a remarcação em uma única operação (RF12), o lembrete automático (RF13) e a geração do relatório final ao término do ciclo (CP8); o encerramento/encaminhamento de casos entre semestres (CP13) permanece como visão de produto de mais longo prazo, tratado caso a caso pela transferência de caso (RF25) nesta primeira versão.
 - **Papéis alinhados à estrutura acadêmica** *(no MVP)*: os perfis de solicitante, secretaria, estagiário, supervisor e coordenação, com controle de acesso (CP12), fazem parte do MVP. Como o prontuário eletrônico (CP6) também está no MVP, a restrição de acesso ao prontuário ao estagiário responsável e ao seu supervisor já se aplica desde esta primeira entrega, sem depender de uma fase posterior.
 - **Continuidade dos casos entre semestres** *(visão de produto)*: corresponde à CP13, ainda sem definição institucional fechada com o cliente; permanece como direção de evolução do produto, e não como entrega prevista no curto prazo.
-- **Indicadores sociais e acadêmicos em lugar de gestão financeira** *(escopo desejável)*: corresponde à CP11; o foco dos relatórios será deslocado da cobrança para indicadores de valor institucional (volume de atendimentos, tempo médio de espera, taxa de absenteísmo e distribuição de casos por supervisor).
+- **Indicadores sociais e acadêmicos em lugar de gestão financeira** *(no MVP)*: corresponde à CP11, incluída no MVP por atender aos relatórios institucionais que a FBr presta ao MEC; o foco dos relatórios será deslocado da cobrança para indicadores de valor institucional (volume de atendimentos, tempo médio de espera, taxa de absenteísmo e distribuição de casos por supervisor).
 - **Custo total compatível com um projeto social** *(válido para toda a solução, independentemente da fase)*: como solução própria da instituição, o produto não implica assinatura por profissional, permitindo que o número de estagiários atendidos cresça a cada semestre sem custo marginal por usuário.
 
 ## 2.6 Viabilidade da Proposta
@@ -164,7 +166,7 @@ Diante desse cenário, a viabilidade do projeto passa a depender de três condi�
 
 - Manter o escopo do MVP fechado no conjunto de funcionalidades já priorizado com o cliente, resistindo à antecipação de itens do escopo desejável;
 - Sustentar uma cadência regular de validações com a Faculdade Brasília, aproveitando a disponibilidade e a agilidade de resposta já observadas durante o levantamento;
-- Monitorar, ao longo do semestre, a complexidade acumulada do MVP — que, no recorte técnico final ([10.2.3](../unidade-2/requisitos/backlog.md#1023-definicao-do-mvp)), passou a tocar a maior parte das características de produto (11 das 14 CPs, cada uma com no máximo duas exclusões pontuais), incluindo triagem, fila priorizada, agendamento, prontuário, evolução, relatório final, notificações, distribuição de casos, registros administrativos, segurança de dados sensíveis e o piso de acessibilidade — para que a entrega das funcionalidades não comprometa o tratamento adequado da segurança e do sigilo (CP12).
+- Monitorar, ao longo do semestre, a complexidade acumulada do MVP — que, no recorte final ([10.2.3](../unidade-2/requisitos/backlog.md#1023-definicao-do-mvp)), passou a tocar a maior parte das características de produto (11 das 14 CPs, cada uma com no máximo duas exclusões pontuais), incluindo triagem, fila priorizada, agendamento, prontuário, evolução, indicadores institucionais, notificações, distribuição de casos, registros administrativos, segurança de dados sensíveis e o piso de acessibilidade — para que a entrega das funcionalidades não comprometa o tratamento adequado da segurança e do sigilo (CP12).
 
 ## 2.7 Benefícios Esperados
 
