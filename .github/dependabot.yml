@@ -1,0 +1,16 @@
+version: 2
+updates:
+  - package-ecosystem: npm
+    directory: /
+    schedule: { interval: weekly }
+    # Mensagens de commit no padrão do projeto (ex.: "build: bump zod from 4.1.0 to 4.2.0")
+    commit-message:
+      prefix: build
+    groups:
+      dependencias:
+        patterns: ["*"]
+  - package-ecosystem: github-actions
+    directory: /
+    schedule: { interval: weekly }
+    commit-message:
+      prefix: ci

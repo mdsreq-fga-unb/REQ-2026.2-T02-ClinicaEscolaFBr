@@ -1,0 +1,22 @@
+# Bloqueia PRs que adicionam bibliotecas com vulnerabilidades conhecidas (gravidade alta
+# ou crítica) e comenta na PR o motivo quando isso acontece.
+name: Dependency Review
+
+on:
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: read
+  pull-requests: write
+
+jobs:
+  revisar:
+    name: Revisar dependências
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/dependency-review-action@v4
+        with:
+          fail-on-severity: high
+          comment-summary-in-pr: on-failure

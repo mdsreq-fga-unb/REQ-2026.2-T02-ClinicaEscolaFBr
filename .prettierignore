@@ -1,0 +1,5 @@
+documentacao/
+pnpm-lock.yaml
+dist/
+.next/
+.turbo/
