@@ -392,6 +392,11 @@
   text-transform: uppercase;
 }
 
+/* Título logo após uma tabela retrátil: aproxima do bloco anterior, que fechado é só uma barra */
+.md-typeset details.table-toggle + :is(h3, h4) {
+  margin-top: 1.4em;
+}
+
 /* 5. Notas de revisão e históricos recolhidos -------------------------------- */
 
 .md-typeset details.revision-note {
