@@ -1,0 +1,28 @@
+# Regras do workflow Labeler: etiqueta -> pastas que a ativam.
+documentation:
+  - changed-files:
+      - any-glob-to-any-file: ["documentacao/**", "README.md"]
+
+"area:web":
+  - changed-files:
+      - any-glob-to-any-file: ["apps/web/**"]
+
+"area:api":
+  - changed-files:
+      - any-glob-to-any-file: ["apps/api/**"]
+
+"area:banco-de-dados":
+  - changed-files:
+      - any-glob-to-any-file: ["packages/database/**", "docker-compose.yml"]
+
+"area:pacotes":
+  - changed-files:
+      - any-glob-to-any-file: ["packages/shared/**", "packages/eslint-config/**", "packages/typescript-config/**"]
+
+"area:ci-cd":
+  - changed-files:
+      - any-glob-to-any-file: [".github/**", ".githooks/**", "turbo.json"]
+
+"area:dependencias":
+  - changed-files:
+      - any-glob-to-any-file: ["**/package.json", "pnpm-lock.yaml", "pnpm-workspace.yaml"]

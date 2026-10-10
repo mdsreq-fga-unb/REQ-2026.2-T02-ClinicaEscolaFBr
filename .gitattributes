@@ -1,0 +1,17 @@
+# Fim de linha LF em todos os arquivos de texto, em qualquer sistema operacional.
+# Evita que os scripts de .githooks/ quebrem no Windows ("/bin/sh^M: bad interpreter")
+# e que arquivos apareçam como alterados só por causa da conversão LF/CRLF.
+* text=auto eol=lf
+
+# Arquivos binários: o Git não converte nem tenta mostrar diferenças de conteúdo.
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.webp binary
+*.ico binary
+*.pdf binary
+*.xlsx binary
+*.docx binary
+*.woff binary
+*.woff2 binary
