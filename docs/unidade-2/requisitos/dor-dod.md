@@ -158,3 +158,101 @@ Com base na Seção 8.1 consultada em 08/10/2026, os pontos abaixo afetam a aval
 ## 9.1.8 Revisão deste documento
 
 O DoR é revisado ao fim de cada iteração, na retrospectiva, e atualizado quando um retrabalho causado por requisito mal definido revelar um critério que faltava.
+
+# 9.2 Definition of Done (DoD)
+
+## 9.2.1 Regra de fluxo
+
+O DoR e o DoD marcam as duas pontas da construção de uma feature:
+
+- uma feature só **entra em desenvolvimento** quando atende ao **DoR** (seção 9.1);
+- uma feature só é **considerada concluída** quando atende ao **DoD** (esta seção).
+
+Uma feature que não passou pelo DoR não é avaliada pelo DoD. A validação ocorre de forma incremental, acompanhando os marcos do FDD e combinando inspeções internas, testes e demonstrações com o cliente.
+
+## 9.2.2 Checklist por marco do FDD
+
+Uma feature só é considerada **pronta** quando cumprir todos os critérios abaixo, na ordem. Cada critério indica a **evidência** que comprova o seu cumprimento: sem a evidência registrada, o critério não é marcado como atendido. Todas as evidências ficam na issue da feature no GitHub (seção 9.2.3), por anexo ou link.
+
+### 1. Design inspecionado
+
+| # | Critério | Evidência |
+| ---- | -------- | --------- |
+| D1.1 | Modelo detalhado, diagramas de sequência, protótipos, regras de negócio e critérios de aceitação revisados pela equipe. | Links para os artefatos revisados e nome de quem revisou. |
+| D1.2 | Consistência com o modelo de domínio verificada. | Classes e relacionamentos do modelo de domínio usados pela feature, citados no registro da inspeção. |
+| D1.3 | Viabilidade técnica confirmada. | Registro de quem confirmou, com as tecnologias, integrações e dados de teste necessários e os riscos técnicos identificados (ou "nenhum"). |
+| D1.4 | Requisitos de acessibilidade verificados. | RNFs de acessibilidade aplicáveis (CP14) listados, com o resultado da verificação de cada um. |
+| D1.5 | Requisitos de segurança e de LGPD verificados. | RNFs de segurança e privacidade aplicáveis (CP12) listados, com o resultado da verificação de cada um. |
+| D1.6 | Conformidade com as normas do CRP verificada. | Normas consideradas e conclusão da verificação. |
+| D1.7 | Restrições da modalidade presencial da Clínica Escola consideradas. | Restrições aplicáveis citadas no registro da inspeção. |
+| D1.8 | Resultado da inspeção registrado. | Comentário na issue com data, participantes, resultado (aprovado ou com ajustes) e apontamentos feitos. |
+
+### 2. Código concluído
+
+| # | Critério | Evidência |
+| ---- | -------- | --------- |
+| D2.1 | Todos os cenários previstos nos critérios de aceitação implementados. | Lista dos critérios de aceitação com o commit ou PR que implementa cada um. |
+| D2.2 | Feature integrada aos componentes necessários. | Componentes e integrações afetados descritos no PR. |
+| D2.3 | Nenhuma regra aprovada alterada sem registro e validação. | Ausência de alteração de regra, ou link para o registro da alteração e da sua validação. |
+| D2.4 | Testes unitários escritos e passando. | Execução dos testes no PR (CI ou saída anexada) sem falhas. |
+
+### 3. Código inspecionado
+
+| # | Critério | Evidência |
+| ---- | -------- | --------- |
+| D3.1 | Código revisado por outro integrante da equipe (nunca pelo próprio autor). | Aprovação no PR feita por integrante diferente do autor. |
+| D3.2 | Legibilidade e padrões definidos pela equipe respeitados. | Revisão aprovada sem apontamentos de padrão em aberto. |
+| D3.3 | Tratamento de erros adequado. | Fluxos de exceção dos critérios de aceitação cobertos por testes ou verificados na revisão. |
+| D3.4 | Segurança e controle de acesso verificados. | Negações de acesso por perfil testadas ou verificadas na revisão. |
+| D3.5 | Proteção de dados sensíveis verificada (LGPD). | Verificação registrada na revisão para os dados pessoais e de saúde tratados pela feature. |
+| D3.6 | Aderência aos critérios de aceitação confirmada. | Critérios de aceitação marcados como verificados pelo revisor. |
+| D3.7 | Apontamentos da revisão corrigidos ou registrados como pendência. | Comentários da revisão resolvidos, ou pendência aberta como issue vinculada. |
+
+### 4. Promovido para a versão integrada (Promote to Build)
+
+| # | Critério | Evidência |
+| ---- | -------- | --------- |
+| D4.1 | Feature aprovada nas inspeções de design e de código. | Registros D1.8 e D3.1 presentes na issue. |
+| D4.2 | Testes unitários e de integração passando. | Execução dos testes na versão integrada sem falhas. |
+| D4.3 | Código integrado à base compartilhada sem quebrar a build. | PR mesclado e build da branch principal concluída com sucesso. |
+| D4.4 | Resultado registrado no GitHub, com evidências dos testes e pendências conhecidas. | Comentário na issue com o link do PR, o resultado dos testes e as pendências conhecidas. |
+
+### 5. Demonstrada
+
+| # | Critério | Evidência |
+| ---- | -------- | --------- |
+| D5.1 | Feature apresentada a Robson e à equipe da FBr, junto ao seu conjunto de features. | Ata da reunião de demonstração vinculada à issue. |
+| D5.2 | Demonstração feita com cenários próximos da operação real da clínica (inscrição, triagem, consulta da fila, agendamento, confirmação de presença). | Cenários demonstrados listados na ata. |
+
+### 6. Aceita
+
+| # | Critério | Evidência |
+| ---- | -------- | --------- |
+| D6.1 | Aceite formal da FBr registrado e vinculado à feature. | Aceite registrado na issue da feature (seção 9.2.3), com link para a ata ou a mensagem da FBr. |
+| D6.2 | Observações, pendências e correções solicitadas pela FBr registradas e vinculadas à feature. | Itens listados no mesmo registro do aceite, cada correção com issue própria vinculada. |
+| D6.3 | Caso não seja aceita, a feature **não está pronta**: retorna ao planejamento com prioridade e critérios revisados. | Motivo da recusa registrado na issue e a feature devolvida ao backlog. |
+
+> **Regra de conformidade:** o aceite da FBr avalia comportamento, valor e adequação às necessidades da clínica. Ele **não substitui** a verificação de conformidade com o CRP, a LGPD e os requisitos de acessibilidade, que é responsabilidade da equipe técnica e é feita nas etapas 1 (Design inspecionado) e 3 (Código inspecionado).
+
+## 9.2.3 Registro
+
+O aceite da FBr fica no **mesmo registro** da feature (a sua issue no GitHub), junto com as evidências das etapas anteriores, as pendências e as correções solicitadas. Assim, é possível rastrear, a partir da feature, quem aceitou, quando e com quais ressalvas.
+
+```text
+Feature: <nome> (CP<n>)
+RFs: <códigos>    RNFs: <códigos>
+Inspeção de design: <data> | <participantes> | <resultado>
+Inspeção de código: <link do PR> | <revisor> | <resultado>
+Promote to Build: <link do PR mesclado> | <resultado dos testes>
+Demonstração: <data> | <link da ata>
+Aceite da FBr: Aceita | Não aceita | <data> | <quem aceitou> | <link da ata ou mensagem>
+Pendências: <descrição, responsável, prazo>
+Correções solicitadas: <descrição e issue vinculada>
+```
+
+## 9.2.4 DoD da entrega final (MVP)
+
+- [ ] Todas as features do MVP cumprem a DoD acima
+- [ ] Demonstração integrada do fluxo completo do MVP apresentada à FBr
+- [ ] Limites conhecidos registrados
+- [ ] Evoluções previstas registradas
