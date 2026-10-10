@@ -1,5 +1,127 @@
 # 10. Backlog de Produto
 
+## 10.1 Backlog do Produto
+
+O backlog reúne os **itens de trabalho** do produto. Cada item corresponde a uma **feature** da [Lista de features (FDD)](funcionais.md#lista-de-features-fdd), que declara um requisito funcional (RF) e é restringida pelos RNFs da classificação da seção [10.2.3.1](#10231-classificacao-dos-requisitos-nao-funcionais-para-o-mvp). O pertencimento ao MVP vem da priorização da seção [10.2](#102-priorizacao-e-recorte-do-mvp), validada com a Clínica Escola FBr.
+
+A organização segue o processo **Planejar por Feature** do FDD:
+
+- **Responsável:** Líder de Feature que conduz o projeto, a construção e a demonstração do conjunto de features, conforme a [composição da equipe](../../unidade-1/gestao/equipe-comunicacao.md#71-composicao-da-equipe); cada feature conta ainda com a revisão cruzada de outro integrante nas inspeções de design e de código.
+- **Ciclo:** ciclo de construção em que a feature passa pelos processos **Projetar por Feature** e **Construir por Feature** — Ciclo 3 (14/10 a 27/10), Ciclo 4 (28/10 a 10/11), Ciclo 5 (11/11 a 17/11) ou Ciclo 6 (18/11 a 01/12) —, conforme o [planejamento macro das Unidades 2, 3 e 4](../../unidade-1/gestao/cronograma.md#62-visao-macro-das-unidades-2-3-e-4). No início do Ciclo 3, Gabriel prepara a base técnica do projeto (repositório, banco de dados, autenticação, integração contínua e provedores de e-mail, SMS e PDF), da qual dependem todas as features. Os itens que servem de base para os demais (acesso, inscrição, triagem, distribuição de casos e agendamento) vêm primeiro, a carga de cada responsável é distribuída pelas horas estimadas na escala de esforço (seção [10.2.1.2](#10212-escalas-adotadas)), e cada CP do MVP tem ao menos um incremento construído até a entrega da Unidade 3, em 17/11. A construção do MVP termina no Ciclo 6, no início de dezembro, como combinado com a FBr; o Ciclo 7 (02/12 a 10/12) fica reservado à demonstração integrada, ao aceite da FBr e à entrega da Unidade 4, em 10/12.
+- **Ordem:** os itens aparecem na ordem de construção, ciclo a ciclo, respeitando as dependências declaradas na rastreabilidade de cada RF.
+- **Estado:** estado da feature no FDD, conforme o [estudo do FDD (§3.3)](../../unidade-1/estudos/fdd.md#33-planejar-por-feature). Os itens do MVP estão **Planejados** e passam a **Em design** depois de avaliados pelo [Definition of Ready](dor-dod.md); os itens fora do MVP permanecem **Identificados**.
+- **Issue:** issue do GitHub em que o item é acompanhado e em que a avaliação do DoR é registrada, quando já criada.
+
+### 10.1.1 Mapa do escopo
+
+O mapa distribui as features pelas Áreas e pelos conjuntos de features do FDD, com o Líder de Feature responsável e o ciclo em que cada conjunto fica concluído no MVP.
+
+| Área (FDD) | Conjunto de features | No MVP | Versão posterior | Responsável | Conclusão prevista |
+| --- | --- | --- | --- | --- | --- |
+| Inscrição no atendimento | Inscrição on-line | 2 | 1 | Jônatas | Ciclo 3 |
+| Triagem clínica | Triagem e sinalização de casos | 2 | 1 | Luís Henrique | Ciclo 3 |
+| Gestão da fila de espera | Fila de espera e consulta de posição | 2 | 1 | Jônatas | Ciclo 4 |
+| Agendamento e acompanhamento de sessões | Agendamento | 2 | 1 | Nicolas | Ciclo 4 |
+| Agendamento e acompanhamento de sessões | Confirmação e lembrete | 1 | 1 | Nicolas | Ciclo 4 |
+| Agendamento e acompanhamento de sessões | Cancelamento | 3 | 0 | Nicolas | Ciclo 5 |
+| Gestão de casos | Distribuição entre supervisores | 3 | 0 | Maria Clara | Ciclo 3 |
+| Gestão de casos | Vinculação a estagiário | 3 | 0 | Maria Clara | Ciclo 4 |
+| Gestão de casos | Acompanhamento e reorganização | 1 | 2 | Maria Clara | Ciclo 4 |
+| Acompanhamento clínico | Prontuário | 2 | 0 | Luís Henrique | Ciclo 4 |
+| Acompanhamento clínico | Registro de evolução por sessão | 6 | 0 | Luís Henrique | Ciclo 6 |
+| Acompanhamento clínico | Encerramento do ciclo | 1 | 1 | Luís Henrique | Ciclo 6 |
+| Assiduidade e alertas | Controle de faltas do paciente | 5 | 0 | Gabriel | Ciclo 4 |
+| Assiduidade e alertas | Controle de faltas do estagiário | 4 | 0 | Nicolas | Ciclo 6 |
+| Registros administrativos do atendimento | Contribuição social | 3 | 0 | Joaquim | Ciclo 6 |
+| Registros administrativos do atendimento | Declaração de comparecimento | 2 | 2 | Maria Clara | Ciclo 6 |
+| Gestão institucional | Indicadores e relatórios institucionais | 2 | 0 | Gabriel | Ciclo 6 |
+| Acesso e segurança | Autenticação | 3 | 0 | Joaquim | Ciclo 4 |
+| Acesso e segurança | Controle de acesso por perfil | 3 | 0 | Gabriel | Ciclo 3 |
+| Acesso e segurança | Proteção de dados | 3 | 0 | Jônatas | Ciclo 6 |
+| Continuidade do atendimento | Continuidade de casos entre semestres | 0 | 3 | Gabriel | — |
+| Acessibilidade e usabilidade | Personalização de exibição | 0 | 2 | Gabriel | — |
+| **Total** | | **53** | **15** | | |
+
+### 10.1.2 Itens de trabalho do MVP
+
+| Ordem | Item de trabalho | CP | Depende de | Responsável | Ciclo | Estado | Issue |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| 1 | [RF1](funcionais.md#rf1) — Registrar solicitação de atendimento on-line | CP1 | — | Jônatas | Ciclo 3 | Planejada | — |
+| 2 | [RF2](funcionais.md#rf2) — Emitir comprovante de inscrição | CP1 | — | Jônatas | Ciclo 3 | Planejada | — |
+| 3 | [RF4](funcionais.md#rf4) — Organizar informações da inscrição para triagem | CP2 | CP1 | Luís Henrique | Ciclo 3 | Planejada | — |
+| 4 | [RF6](funcionais.md#rf6) — Registrar prioridade clínica do inscrito | CP2 | [RF4](funcionais.md#rf4), [RF5](funcionais.md#rf5) (fora do MVP) | Luís Henrique | Ciclo 3 | Planejada | — |
+| 5 | [RF18](funcionais.md#rf18) — Listar casos aguardando distribuição | CP5 | — | Maria Clara | Ciclo 3 | Planejada | — |
+| 6 | [RF19](funcionais.md#rf19) — Registrar áreas de especialidade do supervisor | CP5 | — | Maria Clara | Ciclo 3 | Planejada | — |
+| 7 | [RF20](funcionais.md#rf20) — Distribuir caso a supervisor conforme área de especialidade | CP5 | [RF18](funcionais.md#rf18), [RF19](funcionais.md#rf19), [RF6](funcionais.md#rf6) | Maria Clara | Ciclo 3 | Planejada | — |
+| 8 | [RF50](funcionais.md#rf50) — Autenticar usuário institucional | CP12 | — | Joaquim | Ciclo 3 | Planejada | [#45](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/issues/45) |
+| 9 | [RF53](funcionais.md#rf53) — Cadastrar usuário institucional com perfil de acesso | CP12 | — | Gabriel | Ciclo 3 | Planejada | [#48](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/issues/48) |
+| 10 | [RF54](funcionais.md#rf54) — Desativar usuário institucional | CP12 | — | Gabriel | Ciclo 3 | Planejada | [#49](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/issues/49) |
+| 11 | [RF21](funcionais.md#rf21) — Vincular paciente a estagiário responsável | CP5 | [RF20](funcionais.md#rf20), [RF53](funcionais.md#rf53), [RF54](funcionais.md#rf54) | Maria Clara | Ciclo 3 | Planejada | — |
+| 12 | [RF10](funcionais.md#rf10) — Agendar sessão do paciente | CP4 | CP5 | Nicolas | Ciclo 3 | Planejada | — |
+| 13 | [RF66](funcionais.md#rf66) — Criar e inicializar o prontuário do paciente | CP6 | [RF21](funcionais.md#rf21) | Luís Henrique | Ciclo 3 | Planejada | — |
+| 14 | [RF55](funcionais.md#rf55) — Restringir acesso ao prontuário do paciente | CP12 | — | Gabriel | Ciclo 3 | Planejada | [#50](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/issues/50) |
+| 15 | [RF7](funcionais.md#rf7) — Ordenar inscritos na fila de espera | CP3 | — | Jônatas | Ciclo 4 | Planejada | — |
+| 16 | [RF11](funcionais.md#rf11) — Consultar agenda de sessões do estagiário | CP4 | [RF10](funcionais.md#rf10), CP5 | Nicolas | Ciclo 4 | Planejada | — |
+| 17 | [RF14](funcionais.md#rf14) — Confirmar presença em sessão agendada | CP4 | [RF10](funcionais.md#rf10) | Nicolas | Ciclo 4 | Planejada | — |
+| 18 | [RF15](funcionais.md#rf15) — Registrar cancelamento de sessão pelo paciente | CP4 | [RF10](funcionais.md#rf10) | Nicolas | Ciclo 4 | Planejada | — |
+| 19 | [RF16](funcionais.md#rf16) — Registrar cancelamento de sessão pelo estagiário | CP4 | [RF10](funcionais.md#rf10), CP5 | Nicolas | Ciclo 4 | Planejada | — |
+| 20 | [RF22](funcionais.md#rf22) — Consultar responsáveis pelo caso | CP5 | [RF21](funcionais.md#rf21) | Maria Clara | Ciclo 4 | Planejada | — |
+| 21 | [RF23](funcionais.md#rf23) — Consultar casos sob responsabilidade do estagiário ou supervisor | CP5 | [RF21](funcionais.md#rf21) | Maria Clara | Ciclo 4 | Planejada | — |
+| 22 | [RF25](funcionais.md#rf25) — Transferir caso para outro estagiário ou supervisor | CP5 | [RF21](funcionais.md#rf21) | Maria Clara | Ciclo 4 | Planejada | — |
+| 23 | [RF27](funcionais.md#rf27) — Consultar prontuário do paciente | CP6 | [RF66](funcionais.md#rf66), CP5 | Luís Henrique | Ciclo 4 | Planejada | — |
+| 24 | [RF28](funcionais.md#rf28) — Registrar evolução da sessão realizada | CP7 | CP4, CP5 | Luís Henrique | Ciclo 4 | Planejada | — |
+| 25 | [RF34](funcionais.md#rf34) — Registrar falta do paciente na sessão | CP9 | [RF10](funcionais.md#rf10), [RF14](funcionais.md#rf14), [RF15](funcionais.md#rf15) | Gabriel | Ciclo 4 | Planejada | — |
+| 26 | [RF35](funcionais.md#rf35) — Contabilizar faltas do paciente no ciclo | CP9 | [RF15](funcionais.md#rf15), [RF34](funcionais.md#rf34) | Gabriel | Ciclo 4 | Planejada | — |
+| 27 | [RF36](funcionais.md#rf36) — Emitir alerta de limite de faltas atingido | CP9 | [RF35](funcionais.md#rf35) | Gabriel | Ciclo 4 | Planejada | — |
+| 28 | [RF37](funcionais.md#rf37) — Desligar paciente por faltas e liberar vaga | CP9 | [RF36](funcionais.md#rf36) | Gabriel | Ciclo 4 | Planejada | — |
+| 29 | [RF38](funcionais.md#rf38) — Reverter desligamento de paciente por faltas | CP9 | [RF37](funcionais.md#rf37) | Gabriel | Ciclo 4 | Planejada | — |
+| 30 | [RF51](funcionais.md#rf51) — Encerrar sessão do usuário | CP12 | — | Joaquim | Ciclo 4 | Planejada | [#46](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/issues/46) |
+| 31 | [RF52](funcionais.md#rf52) — Verificar identidade do paciente ou responsável | CP12 | — | Joaquim | Ciclo 4 | Planejada | [#47](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/issues/47) |
+| 32 | [RF8](funcionais.md#rf8) — Consultar posição individual na fila | CP3 | [RF52](funcionais.md#rf52) | Jônatas | Ciclo 4 | Planejada | — |
+| 33 | [RF57](funcionais.md#rf57) — Registrar consentimento para tratamento de dados | CP12 | — | Jônatas | Ciclo 4 | Planejada | [#52](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/issues/52) |
+| 34 | [RF17](funcionais.md#rf17) — Notificar paciente sobre ausência do estagiário | CP4 | [RF16](funcionais.md#rf16) | Nicolas | Ciclo 5 | Planejada | — |
+| 35 | [RF29](funcionais.md#rf29) — Corrigir evolução registrada | CP7 | [RF28](funcionais.md#rf28) | Luís Henrique | Ciclo 5 | Planejada | — |
+| 36 | [RF39](funcionais.md#rf39) — Consolidar faltas do estagiário para a supervisão | CP9 | [RF16](funcionais.md#rf16) | Nicolas | Ciclo 5 | Planejada | — |
+| 37 | [RF41](funcionais.md#rf41) — Registrar pagamento da contribuição social do paciente | CP10 | — | Joaquim | Ciclo 5 | Planejada | [#43](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/issues/43) |
+| 38 | [RF44](funcionais.md#rf44) — Listar sessões com comparecimento registrado do paciente | CP10 | [RF52](funcionais.md#rf52) | Maria Clara | Ciclo 5 | Planejada | — |
+| 39 | [RF48](funcionais.md#rf48) — Consultar indicadores operacionais | CP11 | [RF9](funcionais.md#rf9) (fora do MVP), [RF37](funcionais.md#rf37), [RF38](funcionais.md#rf38), CP5 | Gabriel | Ciclo 5 | Planejada | [#22](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/issues/22) |
+| 40 | [RF56](funcionais.md#rf56) — Consultar registro de acessos ao prontuário | CP12 | — | Jônatas | Ciclo 5 | Planejada | [#51](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/issues/51) |
+| 41 | [RF30](funcionais.md#rf30) — Registrar complemento de evolução da sessão | CP7 | [RF28](funcionais.md#rf28) | Luís Henrique | Ciclo 6 | Planejada | — |
+| 42 | [RF31](funcionais.md#rf31) — Consultar evolução de uma sessão específica | CP7 | [RF28](funcionais.md#rf28), [RF29](funcionais.md#rf29), [RF30](funcionais.md#rf30) | Luís Henrique | Ciclo 6 | Planejada | — |
+| 43 | [RF32](funcionais.md#rf32) — Consultar histórico de evolução do paciente | CP7 | [RF27](funcionais.md#rf27), [RF28](funcionais.md#rf28), [RF29](funcionais.md#rf29), [RF30](funcionais.md#rf30) | Luís Henrique | Ciclo 6 | Planejada | — |
+| 44 | [RF67](funcionais.md#rf67) — Validar evolução pelo supervisor | CP7 | [RF28](funcionais.md#rf28) | Luís Henrique | Ciclo 6 | Planejada | — |
+| 45 | [RF68](funcionais.md#rf68) — Encerrar caso por alta | CP7 | [RF28](funcionais.md#rf28) | Luís Henrique | Ciclo 6 | Planejada | — |
+| 46 | [RF40](funcionais.md#rf40) — Contabilizar faltas do estagiário no semestre | CP9 | [RF16](funcionais.md#rf16), [RF39](funcionais.md#rf39) | Nicolas | Ciclo 6 | Planejada | — |
+| 47 | [RF63](funcionais.md#rf63) — Sinalizar reprovação do estagiário por faltas | CP9 | [RF40](funcionais.md#rf40) | Nicolas | Ciclo 6 | Planejada | — |
+| 48 | [RF64](funcionais.md#rf64) — Registrar decisão institucional sobre a reprovação do estagiário | CP9 | [RF63](funcionais.md#rf63) | Nicolas | Ciclo 6 | Planejada | — |
+| 49 | [RF42](funcionais.md#rf42) — Consultar situação da contribuição social dos pacientes | CP10 | — | Joaquim | Ciclo 6 | Planejada | [#44](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/issues/44) |
+| 50 | [RF43](funcionais.md#rf43) — Bloquear agendamento por contribuição social pendente | CP10 | [RF41](funcionais.md#rf41), [RF42](funcionais.md#rf42) | Joaquim | Ciclo 6 | Planejada | — |
+| 51 | [RF45](funcionais.md#rf45) — Emitir declaração de comparecimento do paciente | CP10 | [RF52](funcionais.md#rf52) | Maria Clara | Ciclo 6 | Planejada | — |
+| 52 | [RF49](funcionais.md#rf49) — Exportar relatório institucional em PDF | CP11 | [RF48](funcionais.md#rf48) | Gabriel | Ciclo 6 | Planejada | [#23](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/issues/23) |
+| 53 | [RF65](funcionais.md#rf65) — Registrar revogação do consentimento | CP12 | [RF57](funcionais.md#rf57), [RF52](funcionais.md#rf52) | Jônatas | Ciclo 6 | Planejada | — |
+
+### 10.1.3 Itens para versões posteriores
+
+Os itens abaixo ficam fora do recorte do MVP e voltam a ser avaliados ao fim da Unidade 4. O motivo de cada um está na [definição do MVP](#1023-definicao-do-mvp), e as condições combinadas com a FBr para o período em que não estão construídos, na [validação do MVP com o cliente](#1024-validacao-do-mvp-com-o-cliente) e no próprio RF.
+
+| Item de trabalho | CP | Responsável | Estado | Issue |
+| --- | --- | --- | --- | --- |
+| [RF3](funcionais.md#rf3) — Registrar inscrição assistida | CP1 | Jônatas | Identificada | — |
+| [RF5](funcionais.md#rf5) — Sinalizar pontos de atenção da inscrição | CP2 | Luís Henrique | Identificada | — |
+| [RF9](funcionais.md#rf9) — Manter e informar condições gerais da fila | CP3 | Jônatas | Identificada | — |
+| [RF12](funcionais.md#rf12) — Reagendar sessão do paciente | CP4 | Nicolas | Identificada | — |
+| [RF13](funcionais.md#rf13) — Enviar lembrete de sessão agendada | CP4 | Nicolas | Identificada | — |
+| [RF24](funcionais.md#rf24) — Visualizar distribuição de casos por supervisor | CP5 | Maria Clara | Identificada | — |
+| [RF26](funcionais.md#rf26) — Consultar histórico de responsáveis do caso | CP5 | Maria Clara | Identificada | — |
+| [RF33](funcionais.md#rf33) — Gerar relatório final de evolução | CP8 | Luís Henrique | Identificada | — |
+| [RF46](funcionais.md#rf46) — Reemitir declaração de comparecimento | CP10 | Maria Clara | Identificada | — |
+| [RF47](funcionais.md#rf47) — Validar autenticidade da declaração | CP10 | Maria Clara | Identificada | — |
+| [RF58](funcionais.md#rf58) — Listar casos elegíveis para continuidade entre semestres | CP13 | Gabriel | Identificada | — |
+| [RF59](funcionais.md#rf59) — Registrar decisão de continuidade do caso | CP13 | Gabriel | Identificada | — |
+| [RF60](funcionais.md#rf60) — Vincular caso a novo estagiário na continuidade | CP13 | Gabriel | Identificada | — |
+| [RF61](funcionais.md#rf61) — Ativar modo de alto contraste | CP14 | Gabriel | Identificada | [#24](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/issues/24) |
+| [RF62](funcionais.md#rf62) — Ajustar tamanho do texto | CP14 | Gabriel | Identificada | [#25](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/issues/25) |
+
 ## 10.2 Priorização e Recorte do MVP
 
 ### 10.2.1 Avaliação de Valor de Negócio e de Esforço Técnico
@@ -114,8 +236,8 @@ Regras definidas previamente e aplicadas de forma uniforme a todos os requisitos
 | [RF40](funcionais.md#rf40) | Contabilizar faltas do estagiário no semestre | CP9 | 4 | Base para a regra institucional de reprovação por três faltas | 2 | 2 | 2 | **2,0** |
 | [RF63](funcionais.md#rf63) | Sinalizar reprovação do estagiário por faltas | CP9 | 4 | Novo requisito derivado da regra confirmada de três faltas; valor de negócio alinhado ao RF40 conforme orientação da equipe | 3 | 2 | 2 | **2,3** |
 | [RF64](funcionais.md#rf64) | Registrar decisão institucional sobre a reprovação do estagiário | CP9 | 4 | Completa o fluxo da reprovação do estagiário; valor de negócio alinhado ao RF40 conforme orientação da equipe | 3 | 2 | 2 | **2,3** |
-| [RF41](funcionais.md#rf41) | Registrar pagamento da contribuição social | CP10 | 4 | Controle administrativo necessário para a regra institucional da contribuição | 3 | 2 | 2 | **2,3** |
-| [RF42](funcionais.md#rf42) | Consultar situação da contribuição social | CP10 | 4 | Dá visibilidade da situação da contribuição aos perfis autorizados | 3 | 2 | 2 | **2,3** |
+| [RF41](funcionais.md#rf41) | Registrar pagamento da contribuição social do paciente | CP10 | 4 | Controle administrativo necessário para a regra institucional da contribuição | 3 | 2 | 2 | **2,3** |
+| [RF42](funcionais.md#rf42) | Consultar situação da contribuição social dos pacientes | CP10 | 4 | Dá visibilidade da situação da contribuição aos perfis autorizados | 3 | 2 | 2 | **2,3** |
 | [RF43](funcionais.md#rf43) | Bloquear agendamento por contribuição social pendente | CP10 | 4 | Regra de negócio dependente do registro e consulta da contribuição; exige integração com agendamento | 3 | 3 | 2 | **2,7** |
 | [RF44](funcionais.md#rf44) | Listar sessões com comparecimento registrado do paciente | CP10 | 3 | Apoia a emissão da declaração de comparecimento | 2 | 2 | 2 | **2,0** |
 | [RF45](funcionais.md#rf45) | Emitir declaração de comparecimento do paciente | CP10 | 4 | Entregável externo recorrente e concreto para o paciente | 4 | 3 | 2 | **3,0** |
@@ -126,9 +248,9 @@ Regras definidas previamente e aplicadas de forma uniforme a todos os requisitos
 | [RF50](funcionais.md#rf50) | Autenticar usuário institucional | CP12 | 4 | Base de segurança para todas as funcionalidades internas | 3 | 2 | 2 | **2,3** |
 | [RF51](funcionais.md#rf51) | Encerrar sessão do usuário | CP12 | 4 | Controle básico de segurança e sessão | 1 | 1 | 1 | **1,0** |
 | [RF52](funcionais.md#rf52) | Verificar identidade do paciente ou responsável | CP12 | 4 | Necessário para acesso seguro a informações pessoais sem login institucional | 4 | 4 | 3 | **3,7** |
-| [RF53](funcionais.md#rf53) | Cadastrar usuário institucional | CP12 | 4 | Necessário para provisionar contas e perfis institucionais | 4 | 3 | 3 | **3,3** |
+| [RF53](funcionais.md#rf53) | Cadastrar usuário institucional com perfil de acesso | CP12 | 4 | Necessário para provisionar contas e perfis institucionais | 4 | 3 | 3 | **3,3** |
 | [RF54](funcionais.md#rf54) | Desativar usuário institucional | CP12 | 4 | Necessário para revogar acesso de usuários que deixam a clínica/estágio | 2 | 2 | 2 | **2,0** |
-| [RF55](funcionais.md#rf55) | Restringir acesso ao prontuário | CP12 | 4 | Obrigação de sigilo e proteção de dados de saúde | 4 | 4 | 3 | **3,7** |
+| [RF55](funcionais.md#rf55) | Restringir acesso ao prontuário do paciente | CP12 | 4 | Obrigação de sigilo e proteção de dados de saúde | 4 | 4 | 3 | **3,7** |
 | [RF56](funcionais.md#rf56) | Consultar registro de acessos ao prontuário | CP12 | 4 | Trilha de auditoria importante para segurança e conformidade | 3 | 3 | 2 | **2,7** |
 | [RF57](funcionais.md#rf57) | Registrar consentimento para tratamento de dados | CP12 | 4 | Base de privacidade/compliance para tratamento de dados no cenário adotado pelo projeto | 3 | 3 | 3 | **3,0** |
 | [RF65](funcionais.md#rf65) | Registrar revogação do consentimento | CP12 | 4 | Complementa o fluxo de consentimento e privacidade; valor de negócio alinhado ao RF57 conforme orientação da equipe | 4 | 4 | 3 | **3,7** |
