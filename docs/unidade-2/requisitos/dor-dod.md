@@ -1,6 +1,8 @@
-﻿# 9.1 Definition of Ready (DoR)
+# 9. DoR e DoD
 
-## 9.1.1 Objetivo
+## 9.1 Definition of Ready (DoR)
+
+### 9.1.1 Objetivo
 
 Este documento define os **critérios de entrada** para que uma feature, com os requisitos funcionais (RFs) que ela declara e os requisitos não funcionais (RNFs) que a restringem, possa ser **iniciada na construção**. Evita-se, assim, desenvolver requisitos incompletos, ambíguos ou ainda dependentes de validação com a Clínica Escola FBr, o que gera retrabalho e impede o teste objetivo.
 
@@ -8,18 +10,18 @@ O DoR trata apenas da **entrada**. Os critérios de saída (quando uma feature p
 
 Os critérios foram derivados da estrutura que os requisitos já seguem na [Seção 8.1](./funcionais.md) e na [Seção 8.2](./nao-funcionais.md) e dos tipos de problema apontados na verificação cruzada ([Seção 8.3](./analise-feedback.md)). O DoR **avalia** os requisitos existentes; não cria nem renumera requisitos. Quando a avaliação encontra uma lacuna, a feature volta ao seu Líder de Feature ([seção 9.1.5](#915-resultado-da-avaliacao)).
 
-## 9.1.2 Escopo e unidade de avaliação
+### 9.1.2 Escopo e unidade de avaliação
 
 - **Unidade de avaliação:** a **feature** (FDD), com seus RFs e os RNFs que a restringem. Um RF só entra na construção se a feature a que pertence também estiver pronta.
 - **Quando aplicar:** antes de a feature ser puxada para uma iteração de construção.
 - **Quem avalia:** o Líder de Feature responsável pela feature (ver a [composição da equipe](../../unidade-1/gestao/equipe-comunicacao.md#71-composicao-da-equipe) e o [Backlog de Produto](backlog.md#1012-itens-de-trabalho-do-mvp)) faz a autoavaliação pelo checklist, e outro integrante, na revisão cruzada, confirma antes da entrada.
 - **Resultado:** **Pronta**, **Pronta com ressalvas** ou **Não pronta** ([seção 9.1.5](#915-resultado-da-avaliacao)).
 
-## 9.1.3 Checklist de critérios
+### 9.1.3 Checklist de critérios
 
 Os critérios **[B]** são **bloqueantes**: sem eles, a feature não entra na construção. Os critérios **[R]** são **recomendáveis**: podem ficar pendentes se a pendência for registrada.
 
-### Estrutura e rastreabilidade
+#### Estrutura e rastreabilidade
 
 | # | Critério | Tipo |
 | ---- | -------- | ---- |
@@ -30,7 +32,7 @@ Os critérios **[B]** são **bloqueantes**: sem eles, a feature não entra na co
 | R1.5 | A feature consta no Backlog de Produto (Seção 10) e está dentro do escopo do MVP, ou foi explicitamente decidida como fora dele. | B |
 | R1.6 | A issue da feature está vinculada ao título (`#NN`), quando o repositório já tiver a issue criada. | R |
 
-### Clareza e completude da descrição
+#### Clareza e completude da descrição
 
 | # | Critério | Tipo |
 | ---- | -------- | ---- |
@@ -43,7 +45,7 @@ Os critérios **[B]** são **bloqueantes**: sem eles, a feature não entra na co
 | R2.7 | A descrição não contradiz outro RF, RNF, critério de aceitação, título ou modelo de domínio da CP. | B |
 | R2.8 | O requisito respeita o que está **fora do escopo** na documentação (por exemplo, atendimento remoto, gestão de semestres letivos e sugestão automática de cor na triagem). | B |
 
-### Critérios de aceitação
+#### Critérios de aceitação
 
 | # | Critério | Tipo |
 | ---- | -------- | ---- |
@@ -53,7 +55,7 @@ Os critérios **[B]** são **bloqueantes**: sem eles, a feature não entra na co
 | R3.4 | Nenhuma regra da descrição fica sem critério, e nenhum critério exige algo que a descrição não declara. | B |
 | R3.5 | Os critérios de acesso e de sigilo usam os perfis e restrições definidos na CP12, sem expor dados clínicos a perfis sem acesso ao prontuário. | B |
 
-### Dependências e validação com a FBr
+#### Dependências e validação com a FBr
 
 | # | Critério | Tipo |
 | ---- | -------- | ---- |
@@ -62,7 +64,7 @@ Os critérios **[B]** são **bloqueantes**: sem eles, a feature não entra na co
 | R4.3 | Nenhuma decisão em aberto altera o **comportamento central** da feature. Se alterar, a feature é **Não pronta**. | B |
 | R4.4 | Regras, termos e modelos que dependem de aprovação da FBr (regras de sinalização, texto do termo de consentimento, modelo da declaração) estão aprovados e versionados. | R |
 
-### Requisitos não funcionais associados
+#### Requisitos não funcionais associados
 
 | # | Critério | Tipo |
 | ---- | -------- | ---- |
@@ -72,7 +74,7 @@ Os critérios **[B]** são **bloqueantes**: sem eles, a feature não entra na co
 | R5.4 | Regras transversais são **referenciadas**, e não repetidas: auditoria das operações sobre a sessão no RNF10, acessibilidade no RNF56, e acesso e sigilo na CP12. | R |
 | R5.5 | Se a feature trata dados pessoais ou de saúde, os RNFs de criptografia, restrição de acesso, trilha de auditoria e retenção da CP12 foram considerados. | B |
 
-### Segurança, privacidade e conformidade
+#### Segurança, privacidade e conformidade
 
 | # | Critério | Tipo |
 | ---- | -------- | ---- |
@@ -81,7 +83,7 @@ Os critérios **[B]** são **bloqueantes**: sem eles, a feature não entra na co
 | R6.3 | Operações que alteram dados relevantes têm auditoria definida, com autor, data/hora e estado anterior e novo. | B |
 | R6.4 | O tratamento de dados pessoais e de saúde tem finalidade clara. Pontos ainda não validados (por exemplo, a base legal do RF57) estão registrados como pendência. | B |
 
-### Interface e acessibilidade
+#### Interface e acessibilidade
 
 | # | Critério | Tipo |
 | ---- | -------- | ---- |
@@ -89,7 +91,7 @@ Os critérios **[B]** são **bloqueantes**: sem eles, a feature não entra na co
 | R7.2 | Estados vazios e mensagens esperadas estão descritos ("não há casos pendentes", "link inválido", "não há sessões disponíveis"). | R |
 | R7.3 | Existe esboço ou protótipo validado para as features de maior interação, quando houver. | R |
 
-### Viabilidade técnica e tamanho
+#### Viabilidade técnica e tamanho
 
 | # | Critério | Tipo |
 | ---- | -------- | ---- |
@@ -97,7 +99,7 @@ Os critérios **[B]** são **bloqueantes**: sem eles, a feature não entra na co
 | R8.2 | A feature cabe em uma iteração. Se não couber, foi dividida em partes menores sem perder a rastreabilidade. | B |
 | R8.3 | Integrações externas (envio de e-mail e SMS, geração de PDF) e a massa de dados necessária para teste estão identificadas. | R |
 
-## 9.1.4 Verificação rápida da redação
+### 9.1.4 Verificação rápida da redação
 
 Antes de marcar os grupos de descrição e critérios como atendidos, confere-se se o requisito evita os problemas mais recorrentes na verificação cruzada:
 
@@ -109,7 +111,7 @@ Antes de marcar os grupos de descrição e critérios como atendidos, confere-se
 - **Incompletude:** partes obrigatórias da descrição sem critério de aceitação.
 - **Redundância:** a regra já está declarada em outro requisito.
 
-## 9.1.5 Resultado da avaliação
+### 9.1.5 Resultado da avaliação
 
 | Resultado | Condição | Consequência |
 | --------- | -------- | ------------ |
@@ -119,7 +121,7 @@ Antes de marcar os grupos de descrição e critérios como atendidos, confere-se
 
 Uma pendência de validação com a FBr não bloqueia a entrada quando o requisito adota **parâmetro configurável com valor padrão** (R2.4) e a pendência está registrada (R4.2). Ela bloqueia quando a decisão em aberto muda o comportamento central da feature (R4.3).
 
-### Registro
+#### Registro
 
 Cada avaliação é registrada na issue da feature:
 
@@ -132,7 +134,7 @@ Critérios [B] não atendidos: <códigos e motivo>
 Pendências [R] e/ou com a FBr: <descrição, responsável, prazo>
 ```
 
-## 9.1.6 Situação conhecida na documentação
+### 9.1.6 Situação conhecida na documentação
 
 Com base na Seção 8.1 consultada em 08/10/2026, os pontos abaixo afetam a avaliação e devem ser conferidos antes de cada feature entrar na construção.
 
@@ -148,20 +150,20 @@ Com base na Seção 8.1 consultada em 08/10/2026, os pontos abaixo afetam a aval
 | Parâmetros de agendamento | Duração da sessão (50 min), antecedência do lembrete (24 h), prazo de confirmação (12 h) e antecedência mínima de cancelamento (24 h) são propostas a validar. | R2.4: atendido pelo parâmetro configurável. |
 | RNF12 | Carga de referência de 30 usuários simultâneos é estimativa a validar. | R5.3: atendido, com validação pendente. |
 
-## 9.1.7 Relação com os demais documentos
+### 9.1.7 Relação com os demais documentos
 
 - **DoD:** uma feature só é avaliada pelo DoD depois de passar pelo DoR. Os critérios de teste, qualidade e documentação de saída estão no DoD.
 - **Requisitos (8.1 e 8.2):** o DoR verifica a qualidade desses documentos. As correções decorrentes da verificação cruzada devem estar aplicadas antes da avaliação.
 - **Análise do Feedback (8.3):** concentra as pendências de validação com a FBr citadas no R4.2.
 - **Backlog de Produto (10):** fonte para o R1.5, sobre o pertencimento ao MVP e a ordem de entrega.
 
-## 9.1.8 Revisão deste documento
+### 9.1.8 Revisão deste documento
 
 O DoR é revisado ao fim de cada iteração, na retrospectiva, e atualizado quando um retrabalho causado por requisito mal definido revelar um critério que faltava.
 
-# 9.2 Definition of Done (DoD)
+## 9.2 Definition of Done (DoD)
 
-## 9.2.1 Regra de fluxo
+### 9.2.1 Regra de fluxo
 
 O DoR e o DoD marcam as duas pontas da construção de uma feature:
 
@@ -170,11 +172,11 @@ O DoR e o DoD marcam as duas pontas da construção de uma feature:
 
 Uma feature que não passou pelo DoR não é avaliada pelo DoD. A validação ocorre de forma incremental, acompanhando os marcos do FDD e combinando inspeções internas, testes e demonstrações com o cliente.
 
-## 9.2.2 Checklist por marco do FDD
+### 9.2.2 Checklist por marco do FDD
 
 Uma feature só é considerada **pronta** quando cumprir todos os critérios abaixo, na ordem. Cada critério indica a **evidência** que comprova o seu cumprimento: sem a evidência registrada, o critério não é marcado como atendido. Todas as evidências ficam na issue da feature no GitHub (seção 9.2.3), por anexo ou link.
 
-### 1. Design inspecionado
+#### 1. Design inspecionado
 
 | # | Critério | Evidência |
 | ---- | -------- | --------- |
@@ -187,7 +189,7 @@ Uma feature só é considerada **pronta** quando cumprir todos os critérios aba
 | D1.7 | Restrições da modalidade presencial da Clínica Escola consideradas. | Restrições aplicáveis citadas no registro da inspeção. |
 | D1.8 | Resultado da inspeção registrado. | Comentário na issue com data, participantes, resultado (aprovado ou com ajustes) e apontamentos feitos. |
 
-### 2. Código concluído
+#### 2. Código concluído
 
 | # | Critério | Evidência |
 | ---- | -------- | --------- |
@@ -196,7 +198,7 @@ Uma feature só é considerada **pronta** quando cumprir todos os critérios aba
 | D2.3 | Nenhuma regra aprovada alterada sem registro e validação. | Ausência de alteração de regra, ou link para o registro da alteração e da sua validação. |
 | D2.4 | Testes unitários escritos e passando. | Execução dos testes no PR (CI ou saída anexada) sem falhas. |
 
-### 3. Código inspecionado
+#### 3. Código inspecionado
 
 | # | Critério | Evidência |
 | ---- | -------- | --------- |
@@ -208,7 +210,7 @@ Uma feature só é considerada **pronta** quando cumprir todos os critérios aba
 | D3.6 | Aderência aos critérios de aceitação confirmada. | Critérios de aceitação marcados como verificados pelo revisor. |
 | D3.7 | Apontamentos da revisão corrigidos ou registrados como pendência. | Comentários da revisão resolvidos, ou pendência aberta como issue vinculada. |
 
-### 4. Promovido para a versão integrada (Promote to Build)
+#### 4. Promovido para a versão integrada (Promote to Build)
 
 | # | Critério | Evidência |
 | ---- | -------- | --------- |
@@ -217,14 +219,14 @@ Uma feature só é considerada **pronta** quando cumprir todos os critérios aba
 | D4.3 | Código integrado à base compartilhada sem quebrar a build. | PR mesclado e build da branch principal concluída com sucesso. |
 | D4.4 | Resultado registrado no GitHub, com evidências dos testes e pendências conhecidas. | Comentário na issue com o link do PR, o resultado dos testes e as pendências conhecidas. |
 
-### 5. Demonstrada
+#### 5. Demonstrada
 
 | # | Critério | Evidência |
 | ---- | -------- | --------- |
 | D5.1 | Feature apresentada a Robson e à equipe da FBr, junto ao seu conjunto de features. | Ata da reunião de demonstração vinculada à issue. |
 | D5.2 | Demonstração feita com cenários próximos da operação real da clínica (inscrição, triagem, consulta da fila, agendamento, confirmação de presença). | Cenários demonstrados listados na ata. |
 
-### 6. Aceita
+#### 6. Aceita
 
 | # | Critério | Evidência |
 | ---- | -------- | --------- |
@@ -234,7 +236,7 @@ Uma feature só é considerada **pronta** quando cumprir todos os critérios aba
 
 > **Regra de conformidade:** o aceite da FBr avalia comportamento, valor e adequação às necessidades da clínica. Ele **não substitui** a verificação de conformidade com o CRP, a LGPD e os requisitos de acessibilidade, que é responsabilidade da equipe técnica e é feita nas etapas 1 (Design inspecionado) e 3 (Código inspecionado).
 
-## 9.2.3 Registro
+### 9.2.3 Registro
 
 O aceite da FBr fica no **mesmo registro** da feature (a sua issue no GitHub), junto com as evidências das etapas anteriores, as pendências e as correções solicitadas. Assim, é possível rastrear, a partir da feature, quem aceitou, quando e com quais ressalvas.
 
@@ -250,7 +252,7 @@ Pendências: <descrição, responsável, prazo>
 Correções solicitadas: <descrição e issue vinculada>
 ```
 
-## 9.2.4 DoD da entrega final (MVP)
+### 9.2.4 DoD da entrega final (MVP)
 
 - [ ] Todas as features do MVP cumprem a DoD acima
 - [ ] Demonstração integrada do fluxo completo do MVP apresentada à FBr
