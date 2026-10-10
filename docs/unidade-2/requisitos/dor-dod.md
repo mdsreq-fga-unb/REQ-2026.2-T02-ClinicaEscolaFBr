@@ -1,14 +1,14 @@
 ﻿# 9.1 Definition of Ready (DoR)
 
-## 9.1.2 Objetivo
+## 9.1.1 Objetivo
 
 Este documento define os **critérios de entrada** para que uma feature, com os requisitos funcionais (RFs) que ela declara e os requisitos não funcionais (RNFs) que a restringem, possa ser **iniciada na construção**. Evita-se, assim, desenvolver requisitos incompletos, ambíguos ou ainda dependentes de validação com a Clínica Escola FBr, o que gera retrabalho e impede o teste objetivo.
 
 O DoR trata apenas da **entrada**. Os critérios de saída (quando uma feature pode ser considerada pronta) estão no Definition of Done (DoD), mantido em documento separado.
 
-Os critérios foram derivados da estrutura que os requisitos já seguem na [Seção 8.1](requisitos/funcionais.md) e na [Seção 8.2](requisitos/nao-funcionais.md) e dos tipos de problema apontados na verificação cruzada ([Seção 8.3](requisitos/analise-feedback.md)). O DoR **avalia** os requisitos existentes; não cria nem renumera requisitos. Quando a avaliação encontra uma lacuna, a feature volta ao responsável pela CP (seção 9.5).
+Os critérios foram derivados da estrutura que os requisitos já seguem na [Seção 8.1](./funcionais.md) e na [Seção 8.2](./nao-funcionais.md) e dos tipos de problema apontados na verificação cruzada ([Seção 8.3](./analise-feedback.md)). O DoR **avalia** os requisitos existentes; não cria nem renumera requisitos. Quando a avaliação encontra uma lacuna, a feature volta ao responsável pela CP (seção 9.5).
 
-## 9.2 Escopo e unidade de avaliação
+## 9.1.2 Escopo e unidade de avaliação
 
 - **Unidade de avaliação:** a **feature** (FDD), com seus RFs e os RNFs que a restringem. Um RF só entra na construção se a feature a que pertence também estiver pronta.
 - **Quando aplicar:** antes de a feature ser puxada para uma iteração de construção.
