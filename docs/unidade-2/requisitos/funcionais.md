@@ -28,14 +28,14 @@ Os requisitos funcionais (RFs) são declarados a partir da decomposição das Ca
 | [RF37 — Desligar paciente por faltas e liberar vaga](#rf37) | [RF38 — Reverter desligamento de paciente por faltas](#rf38) |
 | [RF39 — Consolidar faltas do estagiário para a supervisão](#rf39) | [RF40 — Contabilizar faltas do estagiário no semestre](#rf40) |
 | [RF63 — Sinalizar reprovação do estagiário por faltas](#rf63) | [RF64 — Registrar decisão institucional sobre a reprovação do estagiário](#rf64) |
-| [RF41 — Registrar pagamento da contribuição social](#rf41) | [RF42 — Consultar situação da contribuição social](#rf42) |
+| [RF41 — Registrar pagamento da contribuição social do paciente](#rf41) | [RF42 — Consultar situação da contribuição social dos pacientes](#rf42) |
 | [RF43 — Bloquear agendamento por contribuição social pendente](#rf43) | [RF44 — Listar sessões com comparecimento registrado do paciente](#rf44) |
 | [RF45 — Emitir declaração de comparecimento do paciente](#rf45) | [RF46 — Reemitir declaração de comparecimento](#rf46) |
 | [RF47 — Validar autenticidade da declaração](#rf47) | [RF48 — Consultar indicadores operacionais](#rf48) |
 | [RF49 — Exportar relatório institucional em PDF](#rf49) | [RF50 — Autenticar usuário institucional](#rf50) |
 | [RF51 — Encerrar sessão do usuário](#rf51) | [RF52 — Verificar identidade do paciente ou responsável](#rf52) |
-| [RF53 — Cadastrar usuário institucional](#rf53) | [RF54 — Desativar usuário institucional](#rf54) |
-| [RF55 — Restringir acesso ao prontuário](#rf55) | [RF56 — Consultar registro de acessos ao prontuário](#rf56) |
+| [RF53 — Cadastrar usuário institucional com perfil de acesso](#rf53) | [RF54 — Desativar usuário institucional](#rf54) |
+| [RF55 — Restringir acesso ao prontuário do paciente](#rf55) | [RF56 — Consultar registro de acessos ao prontuário](#rf56) |
 | [RF57 — Registrar consentimento para tratamento de dados](#rf57) | [RF65 — Registrar revogação do consentimento](#rf65) |
 | [RF58 — Listar casos elegíveis para continuidade entre semestres](#rf58) | [RF59 — Registrar decisão de continuidade do caso](#rf59) |
 | [RF60 — Vincular caso a novo estagiário na continuidade](#rf60) | [RF61 — Ativar modo de alto contraste](#rf61) |
@@ -746,7 +746,7 @@ _Rastreabilidade:_ Feature "Consultar histórico de responsáveis do caso" → C
 
 A CP6 foi decomposta em duas features: a criação e inicialização do prontuário eletrônico no início do acompanhamento e a consulta ao prontuário pelo estagiário responsável e por seu supervisor. O registro da evolução de cada sessão passa a ser tratado como capacidade própria na CP7 — Registro de evolução por sessão, e a consolidação do relatório final do ciclo de atendimento passa a ser tratada na CP8 — Geração do relatório final de evolução, conforme a decomposição em três características já registrada na [Solução Proposta, §2.3](../../unidade-1/solucao-proposta.md#23-caracteristicas-de-produto-mapeadas-com-os-objetivos-especificos). Esta seção substitui a decomposição consolidada anteriormente declarada sob o rótulo único "CP6" (issue #34), que reunia prontuário, evolução e relatório final antes da separação em CP6/CP7/CP8.
 
-O acesso ao prontuário depende do vínculo de responsabilidade definido na CP5 e está sujeito à restrição de acesso do RF55 — Restringir acesso ao prontuário (CP12). Para tornar a completude verificável sem presumir conteúdo diagnóstico, o prontuário possui o conjunto mínimo de dados estruturais definido no RF27; campos clínicos adicionais somente podem ser acrescentados após validação institucional.
+O acesso ao prontuário depende do vínculo de responsabilidade definido na CP5 e está sujeito à restrição de acesso do RF55 — Restringir acesso ao prontuário do paciente (CP12). Para tornar a completude verificável sem presumir conteúdo diagnóstico, o prontuário possui o conjunto mínimo de dados estruturais definido no RF27; campos clínicos adicionais somente podem ser acrescentados após validação institucional.
 
 #### Feature — Criar e inicializar o prontuário do paciente
 
@@ -1105,7 +1105,7 @@ O controle da taxa é feito hoje à mão ([ata de 26/08/2026](../../unidade-1/re
 
 #### Feature — Registrar pagamento da contribuição social do paciente [#43](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/issues/43)
 
-**RF41 — Registrar pagamento da contribuição social**{ #rf41 }
+**RF41 — Registrar pagamento da contribuição social do paciente**{ #rf41 }
 
 - O sistema deve permitir que um usuário com perfil de secretaria registre o pagamento da contribuição social de um paciente, informando a data do pagamento e a forma de pagamento (dinheiro, Pix ou cartão, conforme confirmado pela Clínica Escola — a cobrança em si é feita pela secretaria por fora do sistema; o sistema apenas registra o pagamento já efetivado, sem processar ou transitar valores).
 - O valor é um parâmetro institucional "valor da contribuição social", configurável exclusivamente pela coordenação, com padrão de R$ 35,00; a secretaria não altera o valor no momento do registro, apenas confirma o pagamento do valor vigente no parâmetro.
@@ -1126,7 +1126,7 @@ _Rastreabilidade:_ Feature "Registrar pagamento da contribuição social do paci
 
 #### Feature — Consultar situação da contribuição social dos pacientes [#44](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/issues/44)
 
-**RF42 — Consultar situação da contribuição social**{ #rf42 }
+**RF42 — Consultar situação da contribuição social dos pacientes**{ #rf42 }
 
 O sistema deve permitir que usuários com perfil de secretaria ou de coordenação consultem a situação da contribuição social dos pacientes em atendimento, com filtro por situação (**efetivada** ou **pendente**). Para cada paciente, a consulta deve mostrar o nome, a situação, a data da primeira sessão e, quando efetivada, a data do pagamento. O estagiário também pode consultar a contribuição social, mas apenas dos pacientes vinculados a ele (RF21) e apenas a situação (efetivada ou pendente), sem a forma de pagamento nem os dados de outros pacientes. A situação também deve ser indicada na agenda do dia, junto à primeira sessão do paciente, para que a pendência seja percebida no momento em que a taxa é exigida. A partir da 2ª sessão do paciente, a pendência deixa de ser apenas informativa e passa a bloquear o agendamento, conforme o RF43.
 
@@ -1322,7 +1322,7 @@ _Rastreabilidade:_ Feature "Verificar identidade do paciente ou responsável" �
 
 #### Feature — Cadastrar usuário institucional com perfil de acesso [#48](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/issues/48)
 
-**RF53 — Cadastrar usuário institucional**{ #rf53 }
+**RF53 — Cadastrar usuário institucional com perfil de acesso**{ #rf53 }
 
 O sistema deve permitir que um usuário com perfil de coordenação cadastre usuários institucionais, informando nome, e-mail e exatamente um perfil de acesso (secretaria, estagiário, supervisor ou coordenação). A coordenação não define nem visualiza a senha do novo usuário. O acesso é ativado por convite:
 
@@ -1359,7 +1359,7 @@ _Rastreabilidade:_ Feature "Desativar usuário institucional" → CP12 — Segur
 
 #### Feature — Restringir acesso ao prontuário do paciente [#50](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/issues/50)
 
-**RF55 — Restringir acesso ao prontuário**{ #rf55 }
+**RF55 — Restringir acesso ao prontuário do paciente**{ #rf55 }
 
 O sistema deve permitir o acesso ao prontuário de um paciente (CP6), que reúne os registros de evolução (CP7) e o relatório final (CP8), somente ao estagiário responsável pelo paciente e ao supervisor desse estagiário, conforme o vínculo definido na CP5. Os perfis de secretaria e de coordenação não devem ter acesso ao conteúdo clínico do prontuário, apenas aos dados cadastrais e administrativos do paciente. A regra não prevê exceções por perfil, conforme a definição da CP12 aprovada na [Seção 2.3](../../unidade-1/solucao-proposta.md#23-caracteristicas-de-produto-mapeadas-com-os-objetivos-especificos), que restringe o prontuário ao estagiário responsável e ao seu supervisor.
 
