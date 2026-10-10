@@ -4,16 +4,16 @@
 
 Este documento define os **critérios de entrada** para que uma feature, com os requisitos funcionais (RFs) que ela declara e os requisitos não funcionais (RNFs) que a restringem, possa ser **iniciada na construção**. Evita-se, assim, desenvolver requisitos incompletos, ambíguos ou ainda dependentes de validação com a Clínica Escola FBr, o que gera retrabalho e impede o teste objetivo.
 
-O DoR trata apenas da **entrada**. Os critérios de saída (quando uma feature pode ser considerada pronta) estão no Definition of Done (DoD), mantido em documento separado.
+O DoR trata apenas da **entrada**. Os critérios de saída (quando uma feature pode ser considerada pronta) estão no Definition of Done (DoD), na [seção 9.2](#92-definition-of-done-dod).
 
-Os critérios foram derivados da estrutura que os requisitos já seguem na [Seção 8.1](./funcionais.md) e na [Seção 8.2](./nao-funcionais.md) e dos tipos de problema apontados na verificação cruzada ([Seção 8.3](./analise-feedback.md)). O DoR **avalia** os requisitos existentes; não cria nem renumera requisitos. Quando a avaliação encontra uma lacuna, a feature volta ao responsável pela CP (seção 9.5).
+Os critérios foram derivados da estrutura que os requisitos já seguem na [Seção 8.1](./funcionais.md) e na [Seção 8.2](./nao-funcionais.md) e dos tipos de problema apontados na verificação cruzada ([Seção 8.3](./analise-feedback.md)). O DoR **avalia** os requisitos existentes; não cria nem renumera requisitos. Quando a avaliação encontra uma lacuna, a feature volta ao seu Líder de Feature ([seção 9.1.5](#915-resultado-da-avaliacao)).
 
 ## 9.1.2 Escopo e unidade de avaliação
 
 - **Unidade de avaliação:** a **feature** (FDD), com seus RFs e os RNFs que a restringem. Um RF só entra na construção se a feature a que pertence também estiver pronta.
 - **Quando aplicar:** antes de a feature ser puxada para uma iteração de construção.
-- **Quem avalia:** o integrante responsável pela CP de origem faz a autoavaliação pelo checklist, e o responsável pela revisão do conjunto confirma antes da entrada.
-- **Resultado:** **Pronta**, **Pronta com ressalvas** ou **Não pronta** (seção 9.5).
+- **Quem avalia:** o Líder de Feature responsável pela feature (ver a [composição da equipe](../../unidade-1/gestao/equipe-comunicacao.md#71-composicao-da-equipe) e o [Backlog de Produto](backlog.md#1012-itens-de-trabalho-do-mvp)) faz a autoavaliação pelo checklist, e outro integrante, na revisão cruzada, confirma antes da entrada.
+- **Resultado:** **Pronta**, **Pronta com ressalvas** ou **Não pronta** ([seção 9.1.5](#915-resultado-da-avaliacao)).
 
 ## 9.1.3 Checklist de critérios
 
@@ -26,7 +26,7 @@ Os critérios **[B]** são **bloqueantes**: sem eles, a feature não entra na co
 | R1.1 | A feature segue o formato `<ação> <resultado> <objeto>` e está na lista de features (FDD), dentro de uma Área e de um Conjunto. | B |
 | R1.2 | Cada RF tem o cabeçalho "RFn — título" igual ao da feature e uma linha de **Rastreabilidade** com a cadeia Feature → CP → OE. | B |
 | R1.3 | As **dependências**, **integrações** e **restrições transversais** (por exemplo, CP12) estão declaradas na rastreabilidade, e os requisitos dos quais a feature depende já estão prontos ou em construção. | B |
-| R1.4 | A feature não está marcada na documentação como **entrega posterior** ou **adiada**. Se estiver, só entra depois que a condição registrada for resolvida (seção 9.6). | B |
+| R1.4 | A feature não está marcada na documentação como **entrega posterior** ou **adiada**. Se estiver, só entra depois que a condição registrada for resolvida ([seção 9.1.6](#916-situacao-conhecida-na-documentacao)). | B |
 | R1.5 | A feature consta no Backlog de Produto (Seção 10) e está dentro do escopo do MVP, ou foi explicitamente decidida como fora dele. | B |
 | R1.6 | A issue da feature está vinculada ao título (`#NN`), quando o repositório já tiver a issue criada. | R |
 
@@ -47,7 +47,7 @@ Os critérios **[B]** são **bloqueantes**: sem eles, a feature não entra na co
 
 | # | Critério | Tipo |
 | ---- | -------- | ---- |
-| R3.1 | Há critérios de aceitação no formato **Dado / Quando / Então** para cada comportamento descrito. | B |
+| R3.1 | Há critérios de aceitação em **lista de verificação**, com uma afirmação curta e verificável para cada comportamento descrito. | B |
 | R3.2 | Os critérios cobrem o **fluxo principal**, os **fluxos de exceção** (dado inválido, lista vazia, conflito) e as **negações de acesso** por perfil. | B |
 | R3.3 | Cada critério é verificável: tem resultado observável e valores concretos quando há prazo, limite ou contagem. | B |
 | R3.4 | Nenhuma regra da descrição fica sem critério, e nenhum critério exige algo que a descrição não declara. | B |
@@ -58,7 +58,7 @@ Os critérios **[B]** são **bloqueantes**: sem eles, a feature não entra na co
 | # | Critério | Tipo |
 | ---- | -------- | ---- |
 | R4.1 | As regras de negócio usadas pelo requisito foram confirmadas pela FBr (ata ou resposta registrada) ou estão registradas como **pendência de validação**. | B |
-| R4.2 | Toda pendência com a FBr está listada na seção "Pendências de validação com a FBr" da [Análise do Feedback](requisitos/analise-feedback.md), com o valor padrão adotado até a validação. | B |
+| R4.2 | Toda pendência com a FBr está listada na seção "Pendências de validação com a FBr" da [Análise do Feedback](./analise-feedback.md#pendencias-de-validacao-com-a-fbr), com o valor padrão adotado até a validação. | B |
 | R4.3 | Nenhuma decisão em aberto altera o **comportamento central** da feature. Se alterar, a feature é **Não pronta**. | B |
 | R4.4 | Regras, termos e modelos que dependem de aprovação da FBr (regras de sinalização, texto do termo de consentimento, modelo da declaração) estão aprovados e versionados. | R |
 
@@ -115,7 +115,7 @@ Antes de marcar os grupos de descrição e critérios como atendidos, confere-se
 | --------- | -------- | ------------ |
 | **Pronta** | Todos os critérios [B] atendidos e nenhum [R] pendente sem justificativa. | Pode entrar na construção. |
 | **Pronta com ressalvas** | Todos os [B] atendidos; um ou mais [R] pendentes, registrados com responsável e prazo. | Pode entrar na construção; as pendências são acompanhadas. |
-| **Não pronta** | Algum critério [B] não atendido. | Volta ao responsável pela CP com a lista dos critérios que falharam. |
+| **Não pronta** | Algum critério [B] não atendido. | Volta ao Líder de Feature com a lista dos critérios que falharam. |
 
 Uma pendência de validação com a FBr não bloqueia a entrada quando o requisito adota **parâmetro configurável com valor padrão** (R2.4) e a pendência está registrada (R4.2). Ela bloqueia quando a decisão em aberto muda o comportamento central da feature (R4.3).
 
@@ -191,7 +191,7 @@ Uma feature só é considerada **pronta** quando cumprir todos os critérios aba
 
 | # | Critério | Evidência |
 | ---- | -------- | --------- |
-| D2.1 | Todos os cenários previstos nos critérios de aceitação implementados. | Lista dos critérios de aceitação com o commit ou PR que implementa cada um. |
+| D2.1 | Todos os critérios de aceitação implementados. | Lista dos critérios de aceitação com o commit ou PR que implementa cada um. |
 | D2.2 | Feature integrada aos componentes necessários. | Componentes e integrações afetados descritos no PR. |
 | D2.3 | Nenhuma regra aprovada alterada sem registro e validação. | Ausência de alteração de regra, ou link para o registro da alteração e da sua validação. |
 | D2.4 | Testes unitários escritos e passando. | Execução dos testes no PR (CI ou saída anexada) sem falhas. |
