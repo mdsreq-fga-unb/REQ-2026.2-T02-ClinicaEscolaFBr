@@ -1,0 +1,3045 @@
+
+<!doctype html>
+<html lang="pt" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Documentação do projeto Clínica Escola FBr para as entregas das Unidades 1 a 4.">
+      
+      
+      
+        <link rel="canonical" href="https://mdsreq-fga-unb.github.io/REQ-2026.2-T02-ClinicaEscolaFBr/unidade-2/requisitos/dor-dod/">
+      
+      
+        <link rel="prev" href="../analise-feedback/">
+      
+      
+        <link rel="next" href="../backlog/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../../assets/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
+    
+    
+      
+        <title>9. DoR e DoD - Clínica Escola FBr - Documentação</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../../assets/stylesheets/main.ec1eaa64.min.css">
+      
+        
+        <link rel="stylesheet" href="../../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,300..800;1,14..32,300..800&family=JetBrains+Mono:wght@400;500;600&display=swap">
+  <style>:root{--md-text-font:"Inter";--md-code-font:"JetBrains Mono"}</style>
+
+    
+      <link rel="stylesheet" href="../../../assets/stylesheets/extra.css">
+    
+      <link rel="stylesheet" href="../../../assets/stylesheets/reading.css">
+    
+      <link rel="stylesheet" href="../../../assets/stylesheets/melhorias.css">
+    
+    <script>__md_scope=new URL("../../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="custom" data-md-color-accent="custom">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#9-dor-e-dod" class="md-skip">
+          Pular para conteúdo
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow md-header--lifted" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Cabeçalho">
+    <a href="../../.." title="Clínica Escola FBr - Documentação" class="md-header__button md-logo" aria-label="Clínica Escola FBr - Documentação" data-md-component="logo">
+      <img class="fbr-logo fbr-logo--light" src="../../../assets/images/logo-fbr.png" alt="" width="131" height="144">
+<img class="fbr-logo fbr-logo--dark" src="../../../assets/images/logo-fbr-dark.png" alt="" width="131" height="144">
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Clínica Escola FBr - Documentação
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              9. DoR e DoD
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="custom" data-md-color-accent="custom"  aria-label="Alternar para modo escuro"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Alternar para modo escuro" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m17.75 4.09-2.53 1.94.91 3.06-2.63-1.81-2.63 1.81.91-3.06-2.53-1.94L12.44 4l1.06-3 1.06 3zm3.5 6.91-1.64 1.25.59 1.98-1.7-1.17-1.7 1.17.59-1.98L15.75 11l2.06-.05L18.5 9l.69 1.95zm-2.28 4.95c.83-.08 1.72 1.1 1.19 1.85-.32.45-.66.87-1.08 1.27C15.17 23 8.84 23 4.94 19.07c-3.91-3.9-3.91-10.24 0-14.14.4-.4.82-.76 1.27-1.08.75-.53 1.93.36 1.85 1.19-.27 2.86.69 5.83 2.89 8.02a9.96 9.96 0 0 0 8.02 2.89m-1.64 2.02a12.08 12.08 0 0 1-7.8-3.47c-2.17-2.19-3.33-5-3.49-7.82-2.81 3.14-2.7 7.96.31 10.98 3.02 3.01 7.84 3.12 10.98.31"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="custom" data-md-color-accent="custom"  aria-label="Alternar para modo claro"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Alternar para modo claro" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 7a5 5 0 0 1 5 5 5 5 0 0 1-5 5 5 5 0 0 1-5-5 5 5 0 0 1 5-5m0 2a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3m0-7 2.39 3.42C13.65 5.15 12.84 5 12 5s-1.65.15-2.39.42zM3.34 7l4.16-.35A7.2 7.2 0 0 0 5.94 8.5c-.44.74-.69 1.5-.83 2.29zm.02 10 1.76-3.77a7.131 7.131 0 0 0 2.38 4.14zM20.65 7l-1.77 3.79a7.02 7.02 0 0 0-2.38-4.15zm-.01 10-4.14.36c.59-.51 1.12-1.14 1.54-1.86.42-.73.69-1.5.83-2.29zM12 22l-2.41-3.44c.74.27 1.55.44 2.41.44.82 0 1.63-.17 2.37-.44z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Buscar" placeholder="Buscar" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Pesquisar">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Limpar" aria-label="Limpar" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Inicializando busca
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr" title="Ir para repositório" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 2A10 10 0 0 0 2 12c0 4.42 2.87 8.17 6.84 9.5.5.08.66-.23.66-.5v-1.69c-2.77.6-3.36-1.34-3.36-1.34-.46-1.16-1.11-1.47-1.11-1.47-.91-.62.07-.6.07-.6 1 .07 1.53 1.03 1.53 1.03.87 1.52 2.34 1.07 2.91.83.09-.65.35-1.09.63-1.34-2.22-.25-4.55-1.11-4.55-4.92 0-1.11.38-2 1.03-2.71-.1-.25-.45-1.29.1-2.64 0 0 .84-.27 2.75 1.02.79-.22 1.65-.33 2.5-.33s1.71.11 2.5.33c1.91-1.29 2.75-1.02 2.75-1.02.55 1.35.2 2.39.1 2.64.65.71 1.03 1.6 1.03 2.71 0 3.82-2.34 4.66-4.57 4.91.36.31.69.92.69 1.85V21c0 .27.16.59.67.5C19.14 20.16 22 16.42 22 12A10 10 0 0 0 12 2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    REQ-2026.2-T02-ClinicaEscolaFBr
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+    
+      
+<nav class="md-tabs" aria-label="Abas" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../.." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Início
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../unidade-1/" class="md-tabs__link">
+          
+  
+  
+  Unidade 1 — Visão e planejamento
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../../" class="md-tabs__link">
+          
+  
+  
+  Unidade 2 — Requisitos e priorização
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+    
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navegação" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../../.." title="Clínica Escola FBr - Documentação" class="md-nav__button md-logo" aria-label="Clínica Escola FBr - Documentação" data-md-component="logo">
+      <img class="fbr-logo fbr-logo--light" src="../../../assets/images/logo-fbr.png" alt="" width="131" height="144">
+<img class="fbr-logo fbr-logo--dark" src="../../../assets/images/logo-fbr-dark.png" alt="" width="131" height="144">
+    </a>
+    Clínica Escola FBr - Documentação
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr" title="Ir para repositório" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 2A10 10 0 0 0 2 12c0 4.42 2.87 8.17 6.84 9.5.5.08.66-.23.66-.5v-1.69c-2.77.6-3.36-1.34-3.36-1.34-.46-1.16-1.11-1.47-1.11-1.47-.91-.62.07-.6.07-.6 1 .07 1.53 1.03 1.53 1.03.87 1.52 2.34 1.07 2.91.83.09-.65.35-1.09.63-1.34-2.22-.25-4.55-1.11-4.55-4.92 0-1.11.38-2 1.03-2.71-.1-.25-.45-1.29.1-2.64 0 0 .84-.27 2.75 1.02.79-.22 1.65-.33 2.5-.33s1.71.11 2.5.33c1.91-1.29 2.75-1.02 2.75-1.02.55 1.35.2 2.39.1 2.64.65.71 1.03 1.6 1.03 2.71 0 3.82-2.34 4.66-4.57 4.91.36.31.69.92.69 1.85V21c0 .27.16.59.67.5C19.14 20.16 22 16.42 22 12A10 10 0 0 0 12 2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    REQ-2026.2-T02-ClinicaEscolaFBr
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Início
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Unidade 1 — Visão e planejamento
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Unidade 1 — Visão e planejamento
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../unidade-1/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Início da unidade
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../unidade-1/cenario-atual/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    1. Cenário Atual
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../unidade-1/solucao-proposta/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    2. Solução Proposta
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../unidade-1/intervencao-social/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    3. Intervenção Social
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../unidade-1/estrategia-esw/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    4. Estratégia de ESW
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../unidade-1/engenharia-requisitos/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    5. Engenharia de Requisitos
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_7" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_7" id="__nav_2_7_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Gestão do Projeto
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_7">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Gestão do Projeto
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../unidade-1/gestao/cronograma/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    6. Cronograma e Entregas
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../unidade-1/gestao/equipe-comunicacao/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    7. Equipe e Comunicação
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../unidade-1/gestao/boas-praticas-github/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Boas práticas no GitHub
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../unidade-1/reunioes/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Reuniões
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_8" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_8" id="__nav_2_8_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Estudos e referências
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_8_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_8">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Estudos e referências
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../unidade-1/estudos/fdd/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Estudo de FDD
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../unidade-1/licoes-aprendidas/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Lições Aprendidas
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../unidade-1/referencias/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Referências
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Unidade 2 — Requisitos e priorização
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Unidade 2 — Requisitos e priorização
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Início da unidade
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+          
+          
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_2" id="__nav_3_2_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    8. Requisitos de Software
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    8. Requisitos de Software
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../funcionais/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    8.1 Requisitos Funcionais
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../nao-funcionais/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    8.2 Requisitos Não Funcionais
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../analise-feedback/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    8.3 Análise do Feedback
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    9. DoR e DoD
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    9. DoR e DoD
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Índice">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Índice
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#91-definition-of-ready-dor" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        9.1 Definition of Ready (DoR)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="9.1 Definition of Ready (DoR)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#911-objetivo" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        9.1.1 Objetivo
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#912-escopo-e-unidade-de-avaliacao" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        9.1.2 Escopo e unidade de avaliação
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#913-checklist-de-criterios" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        9.1.3 Checklist de critérios
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="9.1.3 Checklist de critérios">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#estrutura-e-rastreabilidade" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Estrutura e rastreabilidade
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#clareza-e-completude-da-descricao" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Clareza e completude da descrição
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#criterios-de-aceitacao" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Critérios de aceitação
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#dependencias-e-validacao-com-a-fbr" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Dependências e validação com a FBr
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#requisitos-nao-funcionais-associados" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Requisitos não funcionais associados
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#seguranca-privacidade-e-conformidade" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Segurança, privacidade e conformidade
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#interface-e-acessibilidade" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Interface e acessibilidade
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#viabilidade-tecnica-e-tamanho" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Viabilidade técnica e tamanho
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#914-verificacao-rapida-da-redacao" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        9.1.4 Verificação rápida da redação
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#915-resultado-da-avaliacao" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        9.1.5 Resultado da avaliação
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="9.1.5 Resultado da avaliação">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#registro" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Registro
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#916-situacao-conhecida-na-documentacao" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        9.1.6 Situação conhecida na documentação
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#917-relacao-com-os-demais-documentos" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        9.1.7 Relação com os demais documentos
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#918-revisao-deste-documento" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        9.1.8 Revisão deste documento
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#92-definition-of-done-dod" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        9.2 Definition of Done (DoD)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="9.2 Definition of Done (DoD)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#921-regra-de-fluxo" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        9.2.1 Regra de fluxo
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#922-checklist-por-marco-do-fdd" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        9.2.2 Checklist por marco do FDD
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="9.2.2 Checklist por marco do FDD">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-design-inspecionado" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Design inspecionado
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-codigo-concluido" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Código concluído
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-codigo-inspecionado" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Código inspecionado
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#4-promovido-para-a-versao-integrada-promote-to-build" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Promovido para a versão integrada (Promote to Build)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#5-demonstrada" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. Demonstrada
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#6-aceita" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6. Aceita
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#923-registro" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        9.2.3 Registro
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#924-dod-da-entrega-final-mvp" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        9.2.4 DoD da entrega final (MVP)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../backlog/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    10. Backlog de Produto
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+          
+          
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_5" id="__nav_3_5_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Gestão do Projeto
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Gestão do Projeto
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../gestao/cronograma/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Cronograma e Entregas
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reunioes/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Reuniões
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+          
+          
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_6" id="__nav_3_6_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Aprendizados e documentação
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Aprendizados e documentação
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../licoes-aprendidas/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Lições Aprendidas
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../analise-ux-capitulo-10/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Melhorias de UX — Capítulo 10
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Índice">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Índice
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#91-definition-of-ready-dor" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        9.1 Definition of Ready (DoR)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="9.1 Definition of Ready (DoR)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#911-objetivo" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        9.1.1 Objetivo
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#912-escopo-e-unidade-de-avaliacao" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        9.1.2 Escopo e unidade de avaliação
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#913-checklist-de-criterios" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        9.1.3 Checklist de critérios
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="9.1.3 Checklist de critérios">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#estrutura-e-rastreabilidade" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Estrutura e rastreabilidade
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#clareza-e-completude-da-descricao" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Clareza e completude da descrição
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#criterios-de-aceitacao" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Critérios de aceitação
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#dependencias-e-validacao-com-a-fbr" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Dependências e validação com a FBr
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#requisitos-nao-funcionais-associados" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Requisitos não funcionais associados
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#seguranca-privacidade-e-conformidade" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Segurança, privacidade e conformidade
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#interface-e-acessibilidade" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Interface e acessibilidade
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#viabilidade-tecnica-e-tamanho" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Viabilidade técnica e tamanho
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#914-verificacao-rapida-da-redacao" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        9.1.4 Verificação rápida da redação
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#915-resultado-da-avaliacao" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        9.1.5 Resultado da avaliação
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="9.1.5 Resultado da avaliação">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#registro" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Registro
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#916-situacao-conhecida-na-documentacao" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        9.1.6 Situação conhecida na documentação
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#917-relacao-com-os-demais-documentos" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        9.1.7 Relação com os demais documentos
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#918-revisao-deste-documento" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        9.1.8 Revisão deste documento
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#92-definition-of-done-dod" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        9.2 Definition of Done (DoD)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="9.2 Definition of Done (DoD)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#921-regra-de-fluxo" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        9.2.1 Regra de fluxo
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#922-checklist-por-marco-do-fdd" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        9.2.2 Checklist por marco do FDD
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="9.2.2 Checklist por marco do FDD">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-design-inspecionado" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Design inspecionado
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-codigo-concluido" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Código concluído
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-codigo-inspecionado" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Código inspecionado
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#4-promovido-para-a-versao-integrada-promote-to-build" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Promovido para a versão integrada (Promote to Build)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#5-demonstrada" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. Demonstrada
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#6-aceita" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6. Aceita
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#923-registro" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        9.2.3 Registro
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#924-dod-da-entrega-final-mvp" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        9.2.4 DoD da entrega final (MVP)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+                
+
+
+
+  
+
+
+  <nav class="md-path" aria-label="Navegação" >
+    <ol class="md-path__list">
+      
+        
+  
+  
+    <li class="md-path__item">
+      <a href="../../.." class="md-path__link">
+        
+  <span class="md-ellipsis">
+    Início
+  </span>
+
+      </a>
+    </li>
+  
+
+      
+      
+        
+  
+  
+    
+    
+      <li class="md-path__item">
+        <a href="../../" class="md-path__link">
+          
+  <span class="md-ellipsis">
+    Unidade 2 — Requisitos e priorização
+  </span>
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ol>
+  </nav>
+
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="9-dor-e-dod">9. DoR e DoD<a class="headerlink" href="#9-dor-e-dod" title="Link para esta seção">#</a></h1>
+<h2 id="91-definition-of-ready-dor">9.1 Definition of Ready (DoR)<a class="headerlink" href="#91-definition-of-ready-dor" title="Link para esta seção">#</a></h2>
+<h3 id="911-objetivo">9.1.1 Objetivo<a class="headerlink" href="#911-objetivo" title="Link para esta seção">#</a></h3>
+<p>Este documento define os <strong>critérios de entrada</strong> para que uma feature, com os requisitos funcionais (RFs) que ela declara e os requisitos não funcionais (RNFs) que a restringem, possa ser <strong>iniciada na construção</strong>. Evita-se, assim, desenvolver requisitos incompletos, ambíguos ou ainda dependentes de validação com a Clínica Escola FBr, o que gera retrabalho e impede o teste objetivo.</p>
+<p>O DoR trata apenas da <strong>entrada</strong>. Os critérios de saída (quando uma feature pode ser considerada pronta) estão no Definition of Done (DoD), na <a href="#92-definition-of-done-dod">seção 9.2</a>.</p>
+<p>Os critérios foram derivados da estrutura que os requisitos já seguem na <a href="../funcionais/">Seção 8.1</a> e na <a href="../nao-funcionais/">Seção 8.2</a> e dos tipos de problema apontados na verificação cruzada (<a href="../analise-feedback/">Seção 8.3</a>). O DoR <strong>avalia</strong> os requisitos existentes; não cria nem renumera requisitos. Quando a avaliação encontra uma lacuna, a feature volta ao seu Líder de Feature (<a href="#915-resultado-da-avaliacao">seção 9.1.5</a>).</p>
+<h3 id="912-escopo-e-unidade-de-avaliacao">9.1.2 Escopo e unidade de avaliação<a class="headerlink" href="#912-escopo-e-unidade-de-avaliacao" title="Link para esta seção">#</a></h3>
+<ul>
+<li><strong>Unidade de avaliação:</strong> a <strong>feature</strong> (FDD), com seus RFs e os RNFs que a restringem. Um RF só entra na construção se a feature a que pertence também estiver pronta.</li>
+<li><strong>Quando aplicar:</strong> antes de a feature ser puxada para uma iteração de construção.</li>
+<li><strong>Quem avalia:</strong> o Líder de Feature responsável pela feature (ver a <a href="../../../unidade-1/gestao/equipe-comunicacao/#71-composicao-da-equipe">composição da equipe</a> e o <a href="../backlog/#1012-itens-de-trabalho-do-mvp">Backlog de Produto</a>) faz a autoavaliação pelo checklist, e outro integrante, na revisão cruzada, confirma antes da entrada.</li>
+<li><strong>Resultado:</strong> <strong>Pronta</strong>, <strong>Pronta com ressalvas</strong> ou <strong>Não pronta</strong> (<a href="#915-resultado-da-avaliacao">seção 9.1.5</a>).</li>
+</ul>
+<h3 id="913-checklist-de-criterios">9.1.3 Checklist de critérios<a class="headerlink" href="#913-checklist-de-criterios" title="Link para esta seção">#</a></h3>
+<p>Os critérios <strong>[B]</strong> são <strong>bloqueantes</strong>: sem eles, a feature não entra na construção. Os critérios <strong>[R]</strong> são <strong>recomendáveis</strong>: podem ficar pendentes se a pendência for registrada.</p>
+<h4 id="estrutura-e-rastreabilidade">Estrutura e rastreabilidade<a class="headerlink" href="#estrutura-e-rastreabilidade" title="Link para esta seção">#</a></h4>
+<table>
+<thead>
+<tr>
+<th>#</th>
+<th>Critério</th>
+<th>Tipo</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>R1.1</td>
+<td>A feature segue o formato <code>&lt;ação&gt; &lt;resultado&gt; &lt;objeto&gt;</code> e está na lista de features (FDD), dentro de uma Área e de um Conjunto.</td>
+<td>B</td>
+</tr>
+<tr>
+<td>R1.2</td>
+<td>Cada RF tem o cabeçalho "RFn — título" igual ao da feature e uma linha de <strong>Rastreabilidade</strong> com a cadeia Feature → CP → OE.</td>
+<td>B</td>
+</tr>
+<tr>
+<td>R1.3</td>
+<td>As <strong>dependências</strong>, <strong>integrações</strong> e <strong>restrições transversais</strong> (por exemplo, CP12) estão declaradas na rastreabilidade, e os requisitos dos quais a feature depende já estão prontos ou em construção.</td>
+<td>B</td>
+</tr>
+<tr>
+<td>R1.4</td>
+<td>A feature não está marcada na documentação como <strong>entrega posterior</strong> ou <strong>adiada</strong>. Se estiver, só entra depois que a condição registrada for resolvida (<a href="#916-situacao-conhecida-na-documentacao">seção 9.1.6</a>).</td>
+<td>B</td>
+</tr>
+<tr>
+<td>R1.5</td>
+<td>A feature consta no Backlog de Produto (Seção 10) e está dentro do escopo do MVP, ou foi explicitamente decidida como fora dele.</td>
+<td>B</td>
+</tr>
+<tr>
+<td>R1.6</td>
+<td>A issue da feature está vinculada ao título (<code>#NN</code>), quando o repositório já tiver a issue criada.</td>
+<td>R</td>
+</tr>
+</tbody>
+</table>
+<h4 id="clareza-e-completude-da-descricao">Clareza e completude da descrição<a class="headerlink" href="#clareza-e-completude-da-descricao" title="Link para esta seção">#</a></h4>
+<table>
+<thead>
+<tr>
+<th>#</th>
+<th>Critério</th>
+<th>Tipo</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>R2.1</td>
+<td>O requisito expressa uma única funcionalidade. Ações com regras distintas não estão reunidas no mesmo RF.</td>
+<td>B</td>
+</tr>
+<tr>
+<td>R2.2</td>
+<td>O <strong>ator</strong> está identificado por perfil (paciente/responsável, secretaria, estagiário, supervisor, coordenação). Não há termos genéricos como "usuário" ou "usuário autorizado".</td>
+<td>B</td>
+</tr>
+<tr>
+<td>R2.3</td>
+<td>Não há termos vagos ou opcionais ("pode", "quando aplicável", "rapidamente", "imediatamente", "a definir") em regras que precisam ser implementadas.</td>
+<td>B</td>
+</tr>
+<tr>
+<td>R2.4</td>
+<td>Prazos, limites e valores estão definidos ou foram declarados como <strong>parâmetro configurável</strong>, com valor padrão e perfil que pode alterá-lo (por exemplo, duração da sessão, antecedência do lembrete, prazo de confirmação, antecedência mínima de cancelamento).</td>
+<td>B</td>
+</tr>
+<tr>
+<td>R2.5</td>
+<td>Os dados de entrada e de saída estão enumerados, incluindo os dados mínimos exibidos a cada perfil.</td>
+<td>B</td>
+</tr>
+<tr>
+<td>R2.6</td>
+<td>Os termos de domínio usados estão definidos no requisito ou no glossário. Em particular, <strong>prioridade clínica</strong> (vermelha, amarela, verde) é distinta de <strong>prioridade no backlog</strong>, e o texto deixa claro qual dos dois está em uso.</td>
+<td>B</td>
+</tr>
+<tr>
+<td>R2.7</td>
+<td>A descrição não contradiz outro RF, RNF, critério de aceitação, título ou modelo de domínio da CP.</td>
+<td>B</td>
+</tr>
+<tr>
+<td>R2.8</td>
+<td>O requisito respeita o que está <strong>fora do escopo</strong> na documentação (por exemplo, atendimento remoto, gestão de semestres letivos e sugestão automática de cor na triagem).</td>
+<td>B</td>
+</tr>
+</tbody>
+</table>
+<h4 id="criterios-de-aceitacao">Critérios de aceitação<a class="headerlink" href="#criterios-de-aceitacao" title="Link para esta seção">#</a></h4>
+<table>
+<thead>
+<tr>
+<th>#</th>
+<th>Critério</th>
+<th>Tipo</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>R3.1</td>
+<td>Há critérios de aceitação em <strong>lista de verificação</strong>, com uma afirmação curta e verificável para cada comportamento descrito.</td>
+<td>B</td>
+</tr>
+<tr>
+<td>R3.2</td>
+<td>Os critérios cobrem o <strong>fluxo principal</strong>, os <strong>fluxos de exceção</strong> (dado inválido, lista vazia, conflito) e as <strong>negações de acesso</strong> por perfil.</td>
+<td>B</td>
+</tr>
+<tr>
+<td>R3.3</td>
+<td>Cada critério é verificável: tem resultado observável e valores concretos quando há prazo, limite ou contagem.</td>
+<td>B</td>
+</tr>
+<tr>
+<td>R3.4</td>
+<td>Nenhuma regra da descrição fica sem critério, e nenhum critério exige algo que a descrição não declara.</td>
+<td>B</td>
+</tr>
+<tr>
+<td>R3.5</td>
+<td>Os critérios de acesso e de sigilo usam os perfis e restrições definidos na CP12, sem expor dados clínicos a perfis sem acesso ao prontuário.</td>
+<td>B</td>
+</tr>
+</tbody>
+</table>
+<h4 id="dependencias-e-validacao-com-a-fbr">Dependências e validação com a FBr<a class="headerlink" href="#dependencias-e-validacao-com-a-fbr" title="Link para esta seção">#</a></h4>
+<table>
+<thead>
+<tr>
+<th>#</th>
+<th>Critério</th>
+<th>Tipo</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>R4.1</td>
+<td>As regras de negócio usadas pelo requisito foram confirmadas pela FBr (ata ou resposta registrada) ou estão registradas como <strong>pendência de validação</strong>.</td>
+<td>B</td>
+</tr>
+<tr>
+<td>R4.2</td>
+<td>Toda pendência com a FBr está listada na seção "Pendências de validação com a FBr" da <a href="../analise-feedback/#pendencias-de-validacao-com-a-fbr">Análise do Feedback</a>, com o valor padrão adotado até a validação.</td>
+<td>B</td>
+</tr>
+<tr>
+<td>R4.3</td>
+<td>Nenhuma decisão em aberto altera o <strong>comportamento central</strong> da feature. Se alterar, a feature é <strong>Não pronta</strong>.</td>
+<td>B</td>
+</tr>
+<tr>
+<td>R4.4</td>
+<td>Regras, termos e modelos que dependem de aprovação da FBr (regras de sinalização, texto do termo de consentimento, modelo da declaração) estão aprovados e versionados.</td>
+<td>R</td>
+</tr>
+</tbody>
+</table>
+<h4 id="requisitos-nao-funcionais-associados">Requisitos não funcionais associados<a class="headerlink" href="#requisitos-nao-funcionais-associados" title="Link para esta seção">#</a></h4>
+<table>
+<thead>
+<tr>
+<th>#</th>
+<th>Critério</th>
+<th>Tipo</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>R5.1</td>
+<td>Os RNFs que restringem a feature estão identificados na rastreabilidade do RNF ("transversal às features …"), cobrindo as categorias URPS+ aplicáveis.</td>
+<td>B</td>
+</tr>
+<tr>
+<td>R5.2</td>
+<td>Cada RNF tem <strong>meta mensurável</strong>, <strong>método de verificação</strong> ("A conformidade deve ser verificada por …"), <strong>classificação URPS+</strong> e <strong>rastreabilidade</strong>.</td>
+<td>B</td>
+</tr>
+<tr>
+<td>R5.3</td>
+<td>Metas de desempenho e disponibilidade indicam o cenário de referência (carga, massa de dados, janela de apuração), não apenas "condições normais de uso".</td>
+<td>B</td>
+</tr>
+<tr>
+<td>R5.4</td>
+<td>Regras transversais são <strong>referenciadas</strong>, e não repetidas: auditoria das operações sobre a sessão no RNF10, acessibilidade no RNF56, e acesso e sigilo na CP12.</td>
+<td>R</td>
+</tr>
+<tr>
+<td>R5.5</td>
+<td>Se a feature trata dados pessoais ou de saúde, os RNFs de criptografia, restrição de acesso, trilha de auditoria e retenção da CP12 foram considerados.</td>
+<td>B</td>
+</tr>
+</tbody>
+</table>
+<h4 id="seguranca-privacidade-e-conformidade">Segurança, privacidade e conformidade<a class="headerlink" href="#seguranca-privacidade-e-conformidade" title="Link para esta seção">#</a></h4>
+<table>
+<thead>
+<tr>
+<th>#</th>
+<th>Critério</th>
+<th>Tipo</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>R6.1</td>
+<td>A matriz de acesso por perfil está definida: quem executa, quem consulta e o que cada perfil vê.</td>
+<td>B</td>
+</tr>
+<tr>
+<td>R6.2</td>
+<td>Para o paciente ou responsável, o requisito usa a <strong>verificação de identidade</strong> (RF52) e não "usuário autenticado", já que esse público não possui conta.</td>
+<td>B</td>
+</tr>
+<tr>
+<td>R6.3</td>
+<td>Operações que alteram dados relevantes têm auditoria definida, com autor, data/hora e estado anterior e novo.</td>
+<td>B</td>
+</tr>
+<tr>
+<td>R6.4</td>
+<td>O tratamento de dados pessoais e de saúde tem finalidade clara. Pontos ainda não validados (por exemplo, a base legal do RF57) estão registrados como pendência.</td>
+<td>B</td>
+</tr>
+</tbody>
+</table>
+<h4 id="interface-e-acessibilidade">Interface e acessibilidade<a class="headerlink" href="#interface-e-acessibilidade" title="Link para esta seção">#</a></h4>
+<table>
+<thead>
+<tr>
+<th>#</th>
+<th>Critério</th>
+<th>Tipo</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>R7.1</td>
+<td>Para páginas voltadas ao público externo (inscrição, consulta de posição, agendamento e confirmação de presença), os requisitos da CP14 (RNF56, RNF57 e RNF58) estão considerados.</td>
+<td>B</td>
+</tr>
+<tr>
+<td>R7.2</td>
+<td>Estados vazios e mensagens esperadas estão descritos ("não há casos pendentes", "link inválido", "não há sessões disponíveis").</td>
+<td>R</td>
+</tr>
+<tr>
+<td>R7.3</td>
+<td>Existe esboço ou protótipo validado para as features de maior interação, quando houver.</td>
+<td>R</td>
+</tr>
+</tbody>
+</table>
+<h4 id="viabilidade-tecnica-e-tamanho">Viabilidade técnica e tamanho<a class="headerlink" href="#viabilidade-tecnica-e-tamanho" title="Link para esta seção">#</a></h4>
+<table>
+<thead>
+<tr>
+<th>#</th>
+<th>Critério</th>
+<th>Tipo</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>R8.1</td>
+<td>A equipe de desenvolvimento entende o requisito e consegue estimá-lo sem esclarecimentos pendentes.</td>
+<td>B</td>
+</tr>
+<tr>
+<td>R8.2</td>
+<td>A feature cabe em uma iteração. Se não couber, foi dividida em partes menores sem perder a rastreabilidade.</td>
+<td>B</td>
+</tr>
+<tr>
+<td>R8.3</td>
+<td>Integrações externas (envio de e-mail e SMS, geração de PDF) e a massa de dados necessária para teste estão identificadas.</td>
+<td>R</td>
+</tr>
+</tbody>
+</table>
+<h3 id="914-verificacao-rapida-da-redacao">9.1.4 Verificação rápida da redação<a class="headerlink" href="#914-verificacao-rapida-da-redacao" title="Link para esta seção">#</a></h3>
+<p>Antes de marcar os grupos de descrição e critérios como atendidos, confere-se se o requisito evita os problemas mais recorrentes na verificação cruzada:</p>
+<ul>
+<li><strong>Lacuna:</strong> a descrição pressupõe algo que nenhum requisito declara.</li>
+<li><strong>Inconsistência:</strong> descrição, critérios, título ou modelo de domínio divergem.</li>
+<li><strong>Ambiguidade e clareza:</strong> perfis não identificados, "pode", "quando aplicável".</li>
+<li><strong>Verificabilidade:</strong> prazo ou valor sem definição, ou critério sem resultado observável.</li>
+<li><strong>Escopo amplo:</strong> o requisito reúne ações com regras diferentes.</li>
+<li><strong>Incompletude:</strong> partes obrigatórias da descrição sem critério de aceitação.</li>
+<li><strong>Redundância:</strong> a regra já está declarada em outro requisito.</li>
+</ul>
+<h3 id="915-resultado-da-avaliacao">9.1.5 Resultado da avaliação<a class="headerlink" href="#915-resultado-da-avaliacao" title="Link para esta seção">#</a></h3>
+<table>
+<thead>
+<tr>
+<th>Resultado</th>
+<th>Condição</th>
+<th>Consequência</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Pronta</strong></td>
+<td>Todos os critérios [B] atendidos e nenhum [R] pendente sem justificativa.</td>
+<td>Pode entrar na construção.</td>
+</tr>
+<tr>
+<td><strong>Pronta com ressalvas</strong></td>
+<td>Todos os [B] atendidos; um ou mais [R] pendentes, registrados com responsável e prazo.</td>
+<td>Pode entrar na construção; as pendências são acompanhadas.</td>
+</tr>
+<tr>
+<td><strong>Não pronta</strong></td>
+<td>Algum critério [B] não atendido.</td>
+<td>Volta ao Líder de Feature com a lista dos critérios que falharam.</td>
+</tr>
+</tbody>
+</table>
+<p>Uma pendência de validação com a FBr não bloqueia a entrada quando o requisito adota <strong>parâmetro configurável com valor padrão</strong> (R2.4) e a pendência está registrada (R4.2). Ela bloqueia quando a decisão em aberto muda o comportamento central da feature (R4.3).</p>
+<h4 id="registro">Registro<a class="headerlink" href="#registro" title="Link para esta seção">#</a></h4>
+<p>Cada avaliação é registrada na issue da feature:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>Feature: &lt;nome&gt; (CP&lt;n&gt;)
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>RFs: &lt;códigos&gt;    RNFs: &lt;códigos&gt;
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>Data: &lt;dd/mm/aaaa&gt;    Avaliador: &lt;nome&gt;    Revisor: &lt;nome&gt;
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>Resultado: Pronta | Pronta com ressalvas | Não pronta
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>Critérios [B] não atendidos: &lt;códigos e motivo&gt;
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>Pendências [R] e/ou com a FBr: &lt;descrição, responsável, prazo&gt;
+</code></pre></div>
+<h3 id="916-situacao-conhecida-na-documentacao">9.1.6 Situação conhecida na documentação<a class="headerlink" href="#916-situacao-conhecida-na-documentacao" title="Link para esta seção">#</a></h3>
+<p>Com base na Seção 8.1 consultada em 08/10/2026, os pontos abaixo afetam a avaliação e devem ser conferidos antes de cada feature entrar na construção.</p>
+<table>
+<thead>
+<tr>
+<th>Requisito ou CP</th>
+<th>Situação registrada</th>
+<th>Efeito no DoR</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>RF3 (inscrição assistida)</td>
+<td>Entrega posterior; a recepção usa o RF1 em nome do interessado.</td>
+<td>R1.4: não entra até a condição ser resolvida.</td>
+</tr>
+<tr>
+<td>RF5 (pontos de atenção)</td>
+<td>Adiado; depende de regras aprovadas e vigentes pela coordenação.</td>
+<td>R1.4 e R4.4: precisa das regras versionadas.</td>
+</tr>
+<tr>
+<td>RF12 (reagendamento)</td>
+<td>Entrega posterior; hoje é feito por cancelamento (RF15/RF16) e nova sessão (RF10).</td>
+<td>R1.4.</td>
+</tr>
+<tr>
+<td>RF13 (lembrete automático)</td>
+<td>Entrega posterior; o RF14 funciona sem ele.</td>
+<td>R1.4.</td>
+</tr>
+<tr>
+<td>RF4 (triagem)</td>
+<td>Prazo máximo para triagem a confirmar com a FBr.</td>
+<td>R2.4 e R4.2: registrar como parâmetro com valor padrão.</td>
+</tr>
+<tr>
+<td>CP5 (distribuição)</td>
+<td>Ordem de prioridade (RN5.4), limite de casos simultâneos (RN5.8) e atendimento em dupla (RN5.9) dependem da FBr.</td>
+<td>R4.1 e R4.2: registrar a pendência e o padrão adotado.</td>
+</tr>
+<tr>
+<td>RF57 (consentimento)</td>
+<td>Base legal depende da FBr, como controladora dos dados.</td>
+<td>R6.4: pendência registrada.</td>
+</tr>
+<tr>
+<td>Parâmetros de agendamento</td>
+<td>Duração da sessão (50 min), antecedência do lembrete (24 h), prazo de confirmação (12 h) e antecedência mínima de cancelamento (24 h) são propostas a validar.</td>
+<td>R2.4: atendido pelo parâmetro configurável.</td>
+</tr>
+<tr>
+<td>RNF12</td>
+<td>Carga de referência de 30 usuários simultâneos é estimativa a validar.</td>
+<td>R5.3: atendido, com validação pendente.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="917-relacao-com-os-demais-documentos">9.1.7 Relação com os demais documentos<a class="headerlink" href="#917-relacao-com-os-demais-documentos" title="Link para esta seção">#</a></h3>
+<ul>
+<li><strong>DoD:</strong> uma feature só é avaliada pelo DoD depois de passar pelo DoR. Os critérios de teste, qualidade e documentação de saída estão no DoD.</li>
+<li><strong>Requisitos (8.1 e 8.2):</strong> o DoR verifica a qualidade desses documentos. As correções decorrentes da verificação cruzada devem estar aplicadas antes da avaliação.</li>
+<li><strong>Análise do Feedback (8.3):</strong> concentra as pendências de validação com a FBr citadas no R4.2.</li>
+<li><strong>Backlog de Produto (10):</strong> fonte para o R1.5, sobre o pertencimento ao MVP e a ordem de entrega.</li>
+</ul>
+<h3 id="918-revisao-deste-documento">9.1.8 Revisão deste documento<a class="headerlink" href="#918-revisao-deste-documento" title="Link para esta seção">#</a></h3>
+<p>O DoR é revisado ao fim de cada iteração, na retrospectiva, e atualizado quando um retrabalho causado por requisito mal definido revelar um critério que faltava.</p>
+<h2 id="92-definition-of-done-dod">9.2 Definition of Done (DoD)<a class="headerlink" href="#92-definition-of-done-dod" title="Link para esta seção">#</a></h2>
+<h3 id="921-regra-de-fluxo">9.2.1 Regra de fluxo<a class="headerlink" href="#921-regra-de-fluxo" title="Link para esta seção">#</a></h3>
+<p>O DoR e o DoD marcam as duas pontas da construção de uma feature:</p>
+<ul>
+<li>uma feature só <strong>entra em desenvolvimento</strong> quando atende ao <strong>DoR</strong> (seção 9.1);</li>
+<li>uma feature só é <strong>considerada concluída</strong> quando atende ao <strong>DoD</strong> (esta seção).</li>
+</ul>
+<p>Uma feature que não passou pelo DoR não é avaliada pelo DoD. A validação ocorre de forma incremental, acompanhando os marcos do FDD e combinando inspeções internas, testes e demonstrações com o cliente.</p>
+<h3 id="922-checklist-por-marco-do-fdd">9.2.2 Checklist por marco do FDD<a class="headerlink" href="#922-checklist-por-marco-do-fdd" title="Link para esta seção">#</a></h3>
+<p>Uma feature só é considerada <strong>pronta</strong> quando cumprir todos os critérios abaixo, na ordem. Cada critério indica a <strong>evidência</strong> que comprova o seu cumprimento: sem a evidência registrada, o critério não é marcado como atendido. Todas as evidências ficam na issue da feature no GitHub (seção 9.2.3), por anexo ou link.</p>
+<h4 id="1-design-inspecionado">1. Design inspecionado<a class="headerlink" href="#1-design-inspecionado" title="Link para esta seção">#</a></h4>
+<table>
+<thead>
+<tr>
+<th>#</th>
+<th>Critério</th>
+<th>Evidência</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>D1.1</td>
+<td>Modelo detalhado, diagramas de sequência, protótipos, regras de negócio e critérios de aceitação revisados pela equipe.</td>
+<td>Links para os artefatos revisados e nome de quem revisou.</td>
+</tr>
+<tr>
+<td>D1.2</td>
+<td>Consistência com o modelo de domínio verificada.</td>
+<td>Classes e relacionamentos do modelo de domínio usados pela feature, citados no registro da inspeção.</td>
+</tr>
+<tr>
+<td>D1.3</td>
+<td>Viabilidade técnica confirmada.</td>
+<td>Registro de quem confirmou, com as tecnologias, integrações e dados de teste necessários e os riscos técnicos identificados (ou "nenhum").</td>
+</tr>
+<tr>
+<td>D1.4</td>
+<td>Requisitos de acessibilidade verificados.</td>
+<td>RNFs de acessibilidade aplicáveis (CP14) listados, com o resultado da verificação de cada um.</td>
+</tr>
+<tr>
+<td>D1.5</td>
+<td>Requisitos de segurança e de LGPD verificados.</td>
+<td>RNFs de segurança e privacidade aplicáveis (CP12) listados, com o resultado da verificação de cada um.</td>
+</tr>
+<tr>
+<td>D1.6</td>
+<td>Conformidade com as normas do CRP verificada.</td>
+<td>Normas consideradas e conclusão da verificação.</td>
+</tr>
+<tr>
+<td>D1.7</td>
+<td>Restrições da modalidade presencial da Clínica Escola consideradas.</td>
+<td>Restrições aplicáveis citadas no registro da inspeção.</td>
+</tr>
+<tr>
+<td>D1.8</td>
+<td>Resultado da inspeção registrado.</td>
+<td>Comentário na issue com data, participantes, resultado (aprovado ou com ajustes) e apontamentos feitos.</td>
+</tr>
+</tbody>
+</table>
+<h4 id="2-codigo-concluido">2. Código concluído<a class="headerlink" href="#2-codigo-concluido" title="Link para esta seção">#</a></h4>
+<table>
+<thead>
+<tr>
+<th>#</th>
+<th>Critério</th>
+<th>Evidência</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>D2.1</td>
+<td>Todos os critérios de aceitação implementados.</td>
+<td>Lista dos critérios de aceitação com o commit ou PR que implementa cada um.</td>
+</tr>
+<tr>
+<td>D2.2</td>
+<td>Feature integrada aos componentes necessários.</td>
+<td>Componentes e integrações afetados descritos no PR.</td>
+</tr>
+<tr>
+<td>D2.3</td>
+<td>Nenhuma regra aprovada alterada sem registro e validação.</td>
+<td>Ausência de alteração de regra, ou link para o registro da alteração e da sua validação.</td>
+</tr>
+<tr>
+<td>D2.4</td>
+<td>Testes unitários escritos e passando.</td>
+<td>Execução dos testes no PR (CI ou saída anexada) sem falhas.</td>
+</tr>
+</tbody>
+</table>
+<h4 id="3-codigo-inspecionado">3. Código inspecionado<a class="headerlink" href="#3-codigo-inspecionado" title="Link para esta seção">#</a></h4>
+<table>
+<thead>
+<tr>
+<th>#</th>
+<th>Critério</th>
+<th>Evidência</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>D3.1</td>
+<td>Código revisado por outro integrante da equipe (nunca pelo próprio autor).</td>
+<td>Aprovação no PR feita por integrante diferente do autor.</td>
+</tr>
+<tr>
+<td>D3.2</td>
+<td>Legibilidade e padrões definidos pela equipe respeitados.</td>
+<td>Revisão aprovada sem apontamentos de padrão em aberto.</td>
+</tr>
+<tr>
+<td>D3.3</td>
+<td>Tratamento de erros adequado.</td>
+<td>Fluxos de exceção dos critérios de aceitação cobertos por testes ou verificados na revisão.</td>
+</tr>
+<tr>
+<td>D3.4</td>
+<td>Segurança e controle de acesso verificados.</td>
+<td>Negações de acesso por perfil testadas ou verificadas na revisão.</td>
+</tr>
+<tr>
+<td>D3.5</td>
+<td>Proteção de dados sensíveis verificada (LGPD).</td>
+<td>Verificação registrada na revisão para os dados pessoais e de saúde tratados pela feature.</td>
+</tr>
+<tr>
+<td>D3.6</td>
+<td>Aderência aos critérios de aceitação confirmada.</td>
+<td>Critérios de aceitação marcados como verificados pelo revisor.</td>
+</tr>
+<tr>
+<td>D3.7</td>
+<td>Apontamentos da revisão corrigidos ou registrados como pendência.</td>
+<td>Comentários da revisão resolvidos, ou pendência aberta como issue vinculada.</td>
+</tr>
+</tbody>
+</table>
+<h4 id="4-promovido-para-a-versao-integrada-promote-to-build">4. Promovido para a versão integrada (Promote to Build)<a class="headerlink" href="#4-promovido-para-a-versao-integrada-promote-to-build" title="Link para esta seção">#</a></h4>
+<table>
+<thead>
+<tr>
+<th>#</th>
+<th>Critério</th>
+<th>Evidência</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>D4.1</td>
+<td>Feature aprovada nas inspeções de design e de código.</td>
+<td>Registros D1.8 e D3.1 presentes na issue.</td>
+</tr>
+<tr>
+<td>D4.2</td>
+<td>Testes unitários e de integração passando.</td>
+<td>Execução dos testes na versão integrada sem falhas.</td>
+</tr>
+<tr>
+<td>D4.3</td>
+<td>Código integrado à base compartilhada sem quebrar a build.</td>
+<td>PR mesclado e build da branch principal concluída com sucesso.</td>
+</tr>
+<tr>
+<td>D4.4</td>
+<td>Resultado registrado no GitHub, com evidências dos testes e pendências conhecidas.</td>
+<td>Comentário na issue com o link do PR, o resultado dos testes e as pendências conhecidas.</td>
+</tr>
+</tbody>
+</table>
+<h4 id="5-demonstrada">5. Demonstrada<a class="headerlink" href="#5-demonstrada" title="Link para esta seção">#</a></h4>
+<table>
+<thead>
+<tr>
+<th>#</th>
+<th>Critério</th>
+<th>Evidência</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>D5.1</td>
+<td>Feature apresentada a Robson e à equipe da FBr, junto ao seu conjunto de features.</td>
+<td>Ata da reunião de demonstração vinculada à issue.</td>
+</tr>
+<tr>
+<td>D5.2</td>
+<td>Demonstração feita com cenários próximos da operação real da clínica (inscrição, triagem, consulta da fila, agendamento, confirmação de presença).</td>
+<td>Cenários demonstrados listados na ata.</td>
+</tr>
+</tbody>
+</table>
+<h4 id="6-aceita">6. Aceita<a class="headerlink" href="#6-aceita" title="Link para esta seção">#</a></h4>
+<table>
+<thead>
+<tr>
+<th>#</th>
+<th>Critério</th>
+<th>Evidência</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>D6.1</td>
+<td>Aceite formal da FBr registrado e vinculado à feature.</td>
+<td>Aceite registrado na issue da feature (seção 9.2.3), com link para a ata ou a mensagem da FBr.</td>
+</tr>
+<tr>
+<td>D6.2</td>
+<td>Observações, pendências e correções solicitadas pela FBr registradas e vinculadas à feature.</td>
+<td>Itens listados no mesmo registro do aceite, cada correção com issue própria vinculada.</td>
+</tr>
+<tr>
+<td>D6.3</td>
+<td>Caso não seja aceita, a feature <strong>não está pronta</strong>: retorna ao planejamento com prioridade e critérios revisados.</td>
+<td>Motivo da recusa registrado na issue e a feature devolvida ao backlog.</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p><strong>Regra de conformidade:</strong> o aceite da FBr avalia comportamento, valor e adequação às necessidades da clínica. Ele <strong>não substitui</strong> a verificação de conformidade com o CRP, a LGPD e os requisitos de acessibilidade, que é responsabilidade da equipe técnica e é feita nas etapas 1 (Design inspecionado) e 3 (Código inspecionado).</p>
+</blockquote>
+<h3 id="923-registro">9.2.3 Registro<a class="headerlink" href="#923-registro" title="Link para esta seção">#</a></h3>
+<p>O aceite da FBr fica no <strong>mesmo registro</strong> da feature (a sua issue no GitHub), junto com as evidências das etapas anteriores, as pendências e as correções solicitadas. Assim, é possível rastrear, a partir da feature, quem aceitou, quando e com quais ressalvas.</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>Feature: &lt;nome&gt; (CP&lt;n&gt;)
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>RFs: &lt;códigos&gt;    RNFs: &lt;códigos&gt;
+<a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>Inspeção de design: &lt;data&gt; | &lt;participantes&gt; | &lt;resultado&gt;
+<a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>Inspeção de código: &lt;link do PR&gt; | &lt;revisor&gt; | &lt;resultado&gt;
+<a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>Promote to Build: &lt;link do PR mesclado&gt; | &lt;resultado dos testes&gt;
+<a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>Demonstração: &lt;data&gt; | &lt;link da ata&gt;
+<a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>Aceite da FBr: Aceita | Não aceita | &lt;data&gt; | &lt;quem aceitou&gt; | &lt;link da ata ou mensagem&gt;
+<a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>Pendências: &lt;descrição, responsável, prazo&gt;
+<a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>Correções solicitadas: &lt;descrição e issue vinculada&gt;
+</code></pre></div>
+<h3 id="924-dod-da-entrega-final-mvp">9.2.4 DoD da entrega final (MVP)<a class="headerlink" href="#924-dod-da-entrega-final-mvp" title="Link para esta seção">#</a></h3>
+<ul>
+<li>[ ] Todas as features do MVP cumprem a DoD acima</li>
+<li>[ ] Demonstração integrada do fluxo completo do MVP apresentada à FBr</li>
+<li>[ ] Limites conhecidos registrados</li>
+<li>[ ] Evoluções previstas registradas</li>
+</ul>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Voltar para o topo
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    
+      
+      <nav class="md-footer__inner md-grid" aria-label="Rodapé" >
+        
+          
+          <a href="../analise-feedback/" class="md-footer__link md-footer__link--prev" aria-label="Anterior: 8.3 Análise do Feedback">
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+            </div>
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Anterior
+              </span>
+              <div class="md-ellipsis">
+                8.3 Análise do Feedback
+              </div>
+            </div>
+          </a>
+        
+        
+          
+          <a href="../backlog/" class="md-footer__link md-footer__link--next" aria-label="Próximo: 10. Backlog de Produto">
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Próximo
+              </span>
+              <div class="md-ellipsis">
+                10. Backlog de Produto
+              </div>
+            </div>
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11z"/></svg>
+            </div>
+          </a>
+        
+      </nav>
+    
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      Clínica Escola FBr · Documentação acadêmica do projeto · 2026
+    </div>
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../../..", "features": ["navigation.tabs", "navigation.tabs.sticky", "navigation.sections", "navigation.path", "navigation.top", "navigation.footer", "navigation.tracking", "toc.follow", "search.suggest", "search.highlight", "content.code.copy"], "search": "../../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copiado para \u00e1rea de transfer\u00eancia", "clipboard.copy": "Copiar para \u00e1rea de transfer\u00eancia", "search.result.more.one": "mais 1 nesta p\u00e1gina", "search.result.more.other": "# mais nesta p\u00e1gina", "search.result.none": "Nenhum documento encontrado", "search.result.one": "1 documento encontrado", "search.result.other": "# documentos encontrados", "search.result.placeholder": "Digite para iniciar a busca", "search.result.term.missing": "Ausente", "select.version": "Selecione a vers\u00e3o"}, "version": null}</script>
+    
+    
+      <script src="../../../assets/javascripts/bundle.d7400e89.min.js"></script>
+      
+        <script src="../../../assets/javascripts/extra.js"></script>
+      
+        <script src="../../../assets/javascripts/reading.js"></script>
+      
+        <script src="../../../assets/javascripts/matriz.js"></script>
+      
+        <script src="../../../assets/javascripts/melhorias.js"></script>
+      
+    
+  </body>
+</html>

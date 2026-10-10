@@ -1,0 +1,463 @@
+/* ==========================================================================
+   Clínica Escola FBr — camada de leitura (par do reading.js)
+   Organiza as páginas longas sem alterar o texto. Usa os tokens do extra.css.
+
+   B. Cabeçalho e contexto das CPs
+   C. Requisito em níveis
+   D. Etiquetas de referência
+   E. Barra de contexto fixa
+   F. Índice enxuto
+   G. Decisões da análise do feedback
+   H. Tempo de leitura
+   I. Cards de comparação
+   J. Reuniões recolhíveis
+   ========================================================================== */
+
+/* ---- B. Cabeçalho e contexto das CPs ------------------------------------- */
+
+.md-typeset h3.cp-heading {
+  margin-top: 2.6em;
+  padding-top: 1.1em;
+  border-top: 2px solid var(--fbr-line);
+}
+
+.md-typeset .cp-meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.4rem;
+  margin: -0.3em 0 1em;
+}
+
+.cp-meta__code {
+  padding: 0.12rem 0.55rem;
+  border-radius: 999px;
+  background: var(--fbr-blue-700);
+  color: #ffffff;
+  font-size: 0.68rem;
+  font-weight: 750;
+  letter-spacing: 0.03em;
+}
+
+.cp-meta__count {
+  padding: 0.12rem 0.55rem;
+  border: 1px solid var(--fbr-line-strong);
+  border-radius: 999px;
+  color: var(--fbr-ink-muted);
+  font-size: 0.68rem;
+  font-weight: 600;
+}
+
+.md-typeset p.cp-lead {
+  color: var(--fbr-ink-strong);
+}
+
+.md-typeset details.cp-context {
+  margin: -0.2em 0 1.4em;
+  border: 0;
+  border-left: 3px solid var(--fbr-line-strong);
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+  font-size: inherit;
+}
+
+.md-typeset details.cp-context > summary {
+  display: inline-flex;
+  padding: 0.2rem 1.6rem 0.2rem 0.8rem;
+  background: transparent;
+  color: var(--fbr-link);
+  font-size: 0.78em;
+  font-weight: 650;
+}
+
+.md-typeset details.cp-context > summary::before {
+  display: none;
+}
+
+.md-typeset details.cp-context > summary::after {
+  top: 0.25rem;
+  right: 0.2rem;
+}
+
+.md-typeset details.cp-context > :not(summary) {
+  margin-left: 0.8rem;
+  color: var(--fbr-ink-muted);
+}
+
+/* ---- C. Requisito em níveis ---------------------------------------------- */
+
+.md-typeset .req p.req__lead {
+  color: var(--fbr-ink-strong);
+  font-size: 1.04em;
+  font-weight: 500;
+}
+
+.md-typeset .req .req__body {
+  margin-left: 0.15em;
+  padding-left: 0.9em;
+  border-left: 2px solid var(--fbr-line);
+  color: var(--fbr-ink);
+}
+
+.md-typeset .req ul.req__body,
+.md-typeset .req ol.req__body {
+  padding-left: 2em;
+}
+
+.md-typeset .req ul.req__body > li,
+.md-typeset .req ol.req__body > li {
+  margin-bottom: 0.45em;
+}
+
+/* ---- D. Etiquetas de referência ------------------------------------------ */
+
+.md-typeset .ref-chip {
+  display: inline-block;
+  padding: 0 0.38em;
+  border-radius: 0.3em;
+  font-family: var(--md-code-font-family);
+  font-size: 0.8em;
+  font-weight: 600;
+  line-height: 1.55;
+  text-decoration: none;
+  white-space: nowrap;
+  vertical-align: 0.05em;
+}
+
+.md-typeset .ref-chip--rf {
+  background: var(--fbr-req-rf-bg);
+  color: var(--fbr-req-rf-ink);
+}
+
+.md-typeset .ref-chip--rnf {
+  background: var(--fbr-req-rnf-bg);
+  color: var(--fbr-req-rnf-ink);
+}
+
+.md-typeset .ref-chip--cp,
+.md-typeset .ref-chip--oe {
+  background: var(--fbr-surface-2);
+  color: var(--fbr-ink-muted);
+  box-shadow: inset 0 0 0 1px var(--fbr-line);
+}
+
+.md-typeset a.ref-chip:hover,
+.md-typeset a.ref-chip:focus-visible {
+  box-shadow: inset 0 0 0 1px currentColor;
+}
+
+.md-typeset .req p.req__refs {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.35rem;
+  margin: 1em 0 0.9em;
+  padding-top: 0.75em;
+  border-top: 1px dashed var(--fbr-line-strong);
+}
+
+.req__refs-label {
+  margin-right: 0.2rem;
+  color: var(--fbr-ink-subtle);
+  font-size: 0.72em;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+/* ---- E. Barra de contexto fixa ------------------------------------------- */
+
+.cp-context-bar {
+  position: fixed;
+  z-index: 3;
+  left: 0;
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  box-sizing: border-box;
+  min-height: 2rem;
+  padding: 0.3rem 0.9rem;
+  border: 1px solid var(--fbr-line);
+  border-top: 0;
+  border-radius: 0 0 var(--fbr-radius) var(--fbr-radius);
+  box-shadow: var(--fbr-shadow-sm);
+  background: var(--fbr-surface-glass);
+  color: var(--fbr-ink-strong);
+  font-size: 0.68rem;
+  font-weight: 650;
+  opacity: 0;
+  transform: translateY(-0.5rem);
+  pointer-events: none;
+  transition: opacity var(--fbr-base) ease, transform var(--fbr-base) var(--fbr-ease);
+  -webkit-backdrop-filter: blur(12px);
+          backdrop-filter: blur(12px);
+}
+
+/* O botão "Voltar para o topo" desce para não ficar sob a barra */
+.has-context-bar .md-top {
+  margin-top: 2.4rem;
+}
+
+.cp-context-bar.is-visible {
+  opacity: 1;
+  transform: none;
+}
+
+.cp-context-bar__cp {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.cp-context-bar__feature {
+  overflow: hidden;
+  color: var(--fbr-ink-muted);
+  font-weight: 500;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.cp-context-bar.has-feature .cp-context-bar__feature::before {
+  content: "›";
+  margin-right: 0.6rem;
+  color: var(--fbr-ink-subtle);
+}
+
+/* ---- F. Índice enxuto: nas páginas de requisitos, só até o nível da CP --- */
+
+.toc-compact .md-nav--secondary > .md-nav__list > .md-nav__item > .md-nav > .md-nav__list > .md-nav__item > .md-nav {
+  display: none;
+}
+
+/* ---- G. Decisões da análise do feedback ---------------------------------- */
+
+.decision,
+.decision-count {
+  display: inline-block;
+  padding: 0.05rem 0.5rem;
+  border-radius: 999px;
+  font-size: 0.85em;
+  font-weight: 650;
+  white-space: nowrap;
+}
+
+.decision-count {
+  font-size: 0.66rem;
+}
+
+.decision--accepted {
+  background: #e3f4ea;
+  color: #1d5e37;
+}
+
+.decision--partial {
+  background: var(--fbr-orange-100);
+  color: #7a3e00;
+}
+
+.decision--rejected {
+  background: #fde8e8;
+  color: #9b1c1c;
+}
+
+.decision--na {
+  background: var(--fbr-surface-2);
+  color: var(--fbr-ink-muted);
+}
+
+[data-md-color-scheme="slate"] .decision--accepted {
+  background: rgba(98, 200, 140, 0.16);
+  color: #9be0b5;
+}
+
+[data-md-color-scheme="slate"] .decision--partial {
+  background: rgba(255, 178, 74, 0.16);
+  color: #ffc977;
+}
+
+[data-md-color-scheme="slate"] .decision--rejected {
+  background: rgba(248, 113, 113, 0.16);
+  color: #fca5a5;
+}
+
+.md-typeset tr.row--na td {
+  color: var(--fbr-ink-subtle);
+}
+
+.hide-na tr.row--na {
+  display: none;
+}
+
+.decision-filter {
+  display: flex;
+  justify-content: flex-end;
+  margin: 1.2em 0 0.4em;
+}
+
+.decision-filter__button {
+  padding: 0.4rem 0.9rem;
+  border: 1px solid var(--fbr-line-strong);
+  border-radius: 999px;
+  background: var(--fbr-surface);
+  color: var(--fbr-ink-strong);
+  cursor: pointer;
+  font: inherit;
+  font-size: 0.72rem;
+  font-weight: 650;
+}
+
+.decision-filter__button:hover,
+.decision-filter__button[aria-pressed="true"] {
+  border-color: var(--fbr-blue-600);
+  color: var(--fbr-blue-800);
+}
+
+[data-md-color-scheme="slate"] .decision-filter__button:hover,
+[data-md-color-scheme="slate"] .decision-filter__button[aria-pressed="true"] {
+  color: var(--fbr-link-hover);
+}
+
+/* ---- H. Tempo de leitura ------------------------------------------------- */
+
+.md-typeset .reading-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  margin: -0.4em 0 1.4em;
+}
+
+.md-typeset .reading-meta span {
+  padding: 0.12rem 0.6rem;
+  border: 1px solid var(--fbr-line);
+  border-radius: 999px;
+  background: var(--fbr-surface);
+  color: var(--fbr-ink-muted);
+  font-size: 0.7rem;
+  font-weight: 600;
+}
+
+.md-typeset .reading-meta .reading-meta__time {
+  border-color: transparent;
+  background: var(--fbr-blue-100);
+  color: var(--fbr-blue-800);
+}
+
+[data-md-color-scheme="slate"] .md-typeset .reading-meta .reading-meta__time {
+  background: rgba(95, 193, 230, 0.14);
+  color: #9fdcf3;
+}
+
+/* ---- I. Cards de comparação ---------------------------------------------- */
+
+.md-typeset .lead-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 17rem), 1fr));
+  gap: 0.8rem;
+  margin: 1em 0 1.4em;
+}
+
+.md-typeset .lead-cards > p.lead-card {
+  margin: 0;
+  padding: 0.95rem 1.05rem;
+  border: 1px solid var(--fbr-line);
+  border-radius: var(--fbr-radius-lg);
+  background: var(--fbr-surface);
+  box-shadow: var(--fbr-shadow-sm);
+  color: var(--fbr-ink-muted);
+  font-size: 0.86em;
+  line-height: 1.6;
+}
+
+.md-typeset .lead-card__name {
+  display: block;
+  margin-bottom: 0.35rem;
+  color: var(--fbr-ink-strong);
+  font-size: 1.08em;
+}
+
+/* ---- J. Reuniões recolhíveis --------------------------------------------- */
+
+.md-typeset details.meeting {
+  margin: 1rem 0;
+  border: 1px solid var(--fbr-line);
+  border-radius: var(--fbr-radius-lg);
+  background: var(--fbr-surface);
+  box-shadow: var(--fbr-shadow-sm);
+  font-size: inherit;
+}
+
+.md-typeset details.meeting > summary {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.3rem 0.8rem;
+  padding: 0.8rem 2.8rem 0.8rem 1.1rem;
+  border-radius: var(--fbr-radius-lg);
+  background: transparent;
+}
+
+.md-typeset details.meeting > summary::before {
+  display: none;
+}
+
+.md-typeset details.meeting > summary::after {
+  top: 50%;
+  margin-top: -0.5rem;
+}
+
+.md-typeset details.meeting > summary > h2 {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  font-size: 1.05rem;
+}
+
+.md-typeset details.meeting > summary > h2::before,
+.md-typeset details.meeting > summary > h2::after {
+  display: none;
+}
+
+.meeting__date {
+  padding: 0.12rem 0.6rem;
+  border-radius: 999px;
+  background: var(--fbr-blue-100);
+  color: var(--fbr-blue-800);
+  font-size: 0.7rem;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+
+[data-md-color-scheme="slate"] .meeting__date {
+  background: rgba(95, 193, 230, 0.14);
+  color: #9fdcf3;
+}
+
+.md-typeset details.meeting[open] > summary {
+  border-bottom: 1px solid var(--fbr-line);
+  border-radius: var(--fbr-radius-lg) var(--fbr-radius-lg) 0 0;
+}
+
+.md-typeset details.meeting > :not(summary) {
+  margin-inline: 1.1rem;
+}
+
+/* ---- Movimento reduzido e impressão -------------------------------------- */
+
+@media (prefers-reduced-motion: reduce) {
+  .cp-context-bar {
+    transform: none;
+    transition: none;
+  }
+}
+
+@media print {
+  .cp-context-bar,
+  .decision-filter {
+    display: none !important;
+  }
+
+  .hide-na tr.row--na {
+    display: table-row;
+  }
+}

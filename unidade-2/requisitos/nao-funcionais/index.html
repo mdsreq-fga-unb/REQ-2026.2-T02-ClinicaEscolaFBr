@@ -1,0 +1,3131 @@
+
+<!doctype html>
+<html lang="pt" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Documentação do projeto Clínica Escola FBr para as entregas das Unidades 1 a 4.">
+      
+      
+      
+        <link rel="canonical" href="https://mdsreq-fga-unb.github.io/REQ-2026.2-T02-ClinicaEscolaFBr/unidade-2/requisitos/nao-funcionais/">
+      
+      
+        <link rel="prev" href="../funcionais/">
+      
+      
+        <link rel="next" href="../analise-feedback/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../../assets/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
+    
+    
+      
+        <title>8.2 Requisitos Não Funcionais - Clínica Escola FBr - Documentação</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../../assets/stylesheets/main.ec1eaa64.min.css">
+      
+        
+        <link rel="stylesheet" href="../../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,300..800;1,14..32,300..800&family=JetBrains+Mono:wght@400;500;600&display=swap">
+  <style>:root{--md-text-font:"Inter";--md-code-font:"JetBrains Mono"}</style>
+
+    
+      <link rel="stylesheet" href="../../../assets/stylesheets/extra.css">
+    
+      <link rel="stylesheet" href="../../../assets/stylesheets/reading.css">
+    
+      <link rel="stylesheet" href="../../../assets/stylesheets/melhorias.css">
+    
+    <script>__md_scope=new URL("../../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="custom" data-md-color-accent="custom">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#82-lista-de-requisitos-nao-funcionais" class="md-skip">
+          Pular para conteúdo
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow md-header--lifted" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Cabeçalho">
+    <a href="../../.." title="Clínica Escola FBr - Documentação" class="md-header__button md-logo" aria-label="Clínica Escola FBr - Documentação" data-md-component="logo">
+      <img class="fbr-logo fbr-logo--light" src="../../../assets/images/logo-fbr.png" alt="" width="131" height="144">
+<img class="fbr-logo fbr-logo--dark" src="../../../assets/images/logo-fbr-dark.png" alt="" width="131" height="144">
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Clínica Escola FBr - Documentação
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              8.2 Requisitos Não Funcionais
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="custom" data-md-color-accent="custom"  aria-label="Alternar para modo escuro"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Alternar para modo escuro" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m17.75 4.09-2.53 1.94.91 3.06-2.63-1.81-2.63 1.81.91-3.06-2.53-1.94L12.44 4l1.06-3 1.06 3zm3.5 6.91-1.64 1.25.59 1.98-1.7-1.17-1.7 1.17.59-1.98L15.75 11l2.06-.05L18.5 9l.69 1.95zm-2.28 4.95c.83-.08 1.72 1.1 1.19 1.85-.32.45-.66.87-1.08 1.27C15.17 23 8.84 23 4.94 19.07c-3.91-3.9-3.91-10.24 0-14.14.4-.4.82-.76 1.27-1.08.75-.53 1.93.36 1.85 1.19-.27 2.86.69 5.83 2.89 8.02a9.96 9.96 0 0 0 8.02 2.89m-1.64 2.02a12.08 12.08 0 0 1-7.8-3.47c-2.17-2.19-3.33-5-3.49-7.82-2.81 3.14-2.7 7.96.31 10.98 3.02 3.01 7.84 3.12 10.98.31"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="custom" data-md-color-accent="custom"  aria-label="Alternar para modo claro"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Alternar para modo claro" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 7a5 5 0 0 1 5 5 5 5 0 0 1-5 5 5 5 0 0 1-5-5 5 5 0 0 1 5-5m0 2a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3m0-7 2.39 3.42C13.65 5.15 12.84 5 12 5s-1.65.15-2.39.42zM3.34 7l4.16-.35A7.2 7.2 0 0 0 5.94 8.5c-.44.74-.69 1.5-.83 2.29zm.02 10 1.76-3.77a7.131 7.131 0 0 0 2.38 4.14zM20.65 7l-1.77 3.79a7.02 7.02 0 0 0-2.38-4.15zm-.01 10-4.14.36c.59-.51 1.12-1.14 1.54-1.86.42-.73.69-1.5.83-2.29zM12 22l-2.41-3.44c.74.27 1.55.44 2.41.44.82 0 1.63-.17 2.37-.44z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Buscar" placeholder="Buscar" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Pesquisar">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Limpar" aria-label="Limpar" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Inicializando busca
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr" title="Ir para repositório" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 2A10 10 0 0 0 2 12c0 4.42 2.87 8.17 6.84 9.5.5.08.66-.23.66-.5v-1.69c-2.77.6-3.36-1.34-3.36-1.34-.46-1.16-1.11-1.47-1.11-1.47-.91-.62.07-.6.07-.6 1 .07 1.53 1.03 1.53 1.03.87 1.52 2.34 1.07 2.91.83.09-.65.35-1.09.63-1.34-2.22-.25-4.55-1.11-4.55-4.92 0-1.11.38-2 1.03-2.71-.1-.25-.45-1.29.1-2.64 0 0 .84-.27 2.75 1.02.79-.22 1.65-.33 2.5-.33s1.71.11 2.5.33c1.91-1.29 2.75-1.02 2.75-1.02.55 1.35.2 2.39.1 2.64.65.71 1.03 1.6 1.03 2.71 0 3.82-2.34 4.66-4.57 4.91.36.31.69.92.69 1.85V21c0 .27.16.59.67.5C19.14 20.16 22 16.42 22 12A10 10 0 0 0 12 2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    REQ-2026.2-T02-ClinicaEscolaFBr
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+    
+      
+<nav class="md-tabs" aria-label="Abas" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../.." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Início
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../unidade-1/" class="md-tabs__link">
+          
+  
+  
+  Unidade 1 — Visão e planejamento
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../../" class="md-tabs__link">
+          
+  
+  
+  Unidade 2 — Requisitos e priorização
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+    
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navegação" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../../.." title="Clínica Escola FBr - Documentação" class="md-nav__button md-logo" aria-label="Clínica Escola FBr - Documentação" data-md-component="logo">
+      <img class="fbr-logo fbr-logo--light" src="../../../assets/images/logo-fbr.png" alt="" width="131" height="144">
+<img class="fbr-logo fbr-logo--dark" src="../../../assets/images/logo-fbr-dark.png" alt="" width="131" height="144">
+    </a>
+    Clínica Escola FBr - Documentação
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr" title="Ir para repositório" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 2A10 10 0 0 0 2 12c0 4.42 2.87 8.17 6.84 9.5.5.08.66-.23.66-.5v-1.69c-2.77.6-3.36-1.34-3.36-1.34-.46-1.16-1.11-1.47-1.11-1.47-.91-.62.07-.6.07-.6 1 .07 1.53 1.03 1.53 1.03.87 1.52 2.34 1.07 2.91.83.09-.65.35-1.09.63-1.34-2.22-.25-4.55-1.11-4.55-4.92 0-1.11.38-2 1.03-2.71-.1-.25-.45-1.29.1-2.64 0 0 .84-.27 2.75 1.02.79-.22 1.65-.33 2.5-.33s1.71.11 2.5.33c1.91-1.29 2.75-1.02 2.75-1.02.55 1.35.2 2.39.1 2.64.65.71 1.03 1.6 1.03 2.71 0 3.82-2.34 4.66-4.57 4.91.36.31.69.92.69 1.85V21c0 .27.16.59.67.5C19.14 20.16 22 16.42 22 12A10 10 0 0 0 12 2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    REQ-2026.2-T02-ClinicaEscolaFBr
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Início
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Unidade 1 — Visão e planejamento
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Unidade 1 — Visão e planejamento
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../unidade-1/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Início da unidade
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../unidade-1/cenario-atual/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    1. Cenário Atual
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../unidade-1/solucao-proposta/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    2. Solução Proposta
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../unidade-1/intervencao-social/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    3. Intervenção Social
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../unidade-1/estrategia-esw/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    4. Estratégia de ESW
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../unidade-1/engenharia-requisitos/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    5. Engenharia de Requisitos
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_7" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_7" id="__nav_2_7_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Gestão do Projeto
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_7">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Gestão do Projeto
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../unidade-1/gestao/cronograma/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    6. Cronograma e Entregas
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../unidade-1/gestao/equipe-comunicacao/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    7. Equipe e Comunicação
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../unidade-1/gestao/boas-praticas-github/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Boas práticas no GitHub
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../unidade-1/reunioes/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Reuniões
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_8" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_8" id="__nav_2_8_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Estudos e referências
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_8_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_8">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Estudos e referências
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../unidade-1/estudos/fdd/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Estudo de FDD
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../unidade-1/licoes-aprendidas/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Lições Aprendidas
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../unidade-1/referencias/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Referências
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Unidade 2 — Requisitos e priorização
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Unidade 2 — Requisitos e priorização
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Início da unidade
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+          
+          
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_2" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_3_2" id="__nav_3_2_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    8. Requisitos de Software
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_2_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_3_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    8. Requisitos de Software
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../funcionais/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    8.1 Requisitos Funcionais
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    8.2 Requisitos Não Funcionais
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    8.2 Requisitos Não Funcionais
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Índice">
+  
+  
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Índice
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#82-lista-de-requisitos-nao-funcionais" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8.2 Lista de Requisitos Não Funcionais
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="8.2 Lista de Requisitos Não Funcionais">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#inscricao-on-line-cp1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Inscrição on-line (CP1)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Inscrição on-line (CP1)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#feature-registrar-solicitacao-de-atendimento-on-line" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Feature — Registrar solicitação de atendimento on-line
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#feature-emitir-comprovante-de-inscricao" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Feature — Emitir comprovante de inscrição
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#triagem-e-sinalizacao-de-casos-cp2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Triagem e sinalização de casos (CP2)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Triagem e sinalização de casos (CP2)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#feature-organizar-informacoes-da-inscricao-para-triagem" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Feature — Organizar informações da inscrição para triagem
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#feature-sinalizar-pontos-de-atencao-da-inscricao" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Feature — Sinalizar pontos de atenção da inscrição
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#feature-registrar-prioridade-clinica-do-inscrito" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Feature — Registrar prioridade clínica do inscrito
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#fila-de-espera-e-consulta-de-posicao-cp3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Fila de espera e consulta de posição (CP3)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Fila de espera e consulta de posição (CP3)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#feature-consultar-posicao-individual-na-fila" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Feature — Consultar posição individual na fila
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#feature-manter-e-informar-condicoes-gerais-da-fila" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Feature — Manter e informar condições gerais da fila
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#agendamento-confirmacao-e-remarcacao-cp4" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Agendamento, Confirmação e Remarcação (CP4)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#distribuicao-de-casos-entre-supervisores-e-estagiarios-cp5" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Distribuição de casos entre supervisores e estagiários (CP5)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#prontuario-eletronico-cp6" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Prontuário eletrônico (CP6)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#registro-de-evolucao-por-sessao-cp7" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Registro de evolução por sessão (CP7)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#geracao-do-relatorio-final-de-evolucao-cp8" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Geração do relatório final de evolução (CP8)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#controle-de-assiduidade-e-alertas-cp9" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Controle de assiduidade e alertas (CP9)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Controle de assiduidade e alertas (CP9)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#controle-de-faltas-do-paciente" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Controle de faltas do paciente
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#controle-de-faltas-do-estagiario" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Controle de faltas do estagiário
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#registros-administrativos-do-atendimento-cp10" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Registros administrativos do atendimento (CP10)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Registros administrativos do atendimento (CP10)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#contribuicao-social" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Contribuição social
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#feature-registrar-pagamento-da-contribuicao-social-do-paciente-43" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Feature — Registrar pagamento da contribuição social do paciente #43
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#declaracao-de-comparecimento" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Declaração de comparecimento
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#indicadores-e-relatorios-institucionais-cp11" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Indicadores e Relatórios Institucionais (CP11)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Indicadores e Relatórios Institucionais (CP11)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#feature-consultar-indicadores-operacionais-22" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Feature — Consultar indicadores operacionais #22
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#feature-exportar-relatorio-institucional-em-pdf-23" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Feature — Exportar relatório institucional em PDF #23
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#seguranca-sigilo-e-controle-de-acesso-cp12" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Segurança, Sigilo e Controle de Acesso (CP12)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Segurança, Sigilo e Controle de Acesso (CP12)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#feature-autenticar-usuario-institucional-45" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Feature — Autenticar usuário institucional #45
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#feature-encerrar-sessao-do-usuario-46" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Feature — Encerrar sessão do usuário #46
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#feature-restringir-acesso-ao-prontuario-do-paciente-50" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Feature — Restringir acesso ao prontuário do paciente #50
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#feature-consultar-registro-de-acessos-ao-prontuario-51" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Feature — Consultar registro de acessos ao prontuário #51
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#transversal-as-features-da-cp12" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Transversal às features da CP12
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#continuidade-de-casos-entre-semestres-cp13" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Continuidade de casos entre semestres (CP13)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#acessibilidade-e-usabilidade-cp14" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Acessibilidade e Usabilidade (CP14)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../analise-feedback/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    8.3 Análise do Feedback
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dor-dod/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    9. DoR e DoD
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../backlog/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    10. Backlog de Produto
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+          
+          
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_5" id="__nav_3_5_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Gestão do Projeto
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Gestão do Projeto
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../gestao/cronograma/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Cronograma e Entregas
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reunioes/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Reuniões
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+          
+          
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_6" id="__nav_3_6_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Aprendizados e documentação
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Aprendizados e documentação
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../licoes-aprendidas/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Lições Aprendidas
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../analise-ux-capitulo-10/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Melhorias de UX — Capítulo 10
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Índice">
+  
+  
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Índice
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#82-lista-de-requisitos-nao-funcionais" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8.2 Lista de Requisitos Não Funcionais
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="8.2 Lista de Requisitos Não Funcionais">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#inscricao-on-line-cp1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Inscrição on-line (CP1)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Inscrição on-line (CP1)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#feature-registrar-solicitacao-de-atendimento-on-line" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Feature — Registrar solicitação de atendimento on-line
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#feature-emitir-comprovante-de-inscricao" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Feature — Emitir comprovante de inscrição
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#triagem-e-sinalizacao-de-casos-cp2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Triagem e sinalização de casos (CP2)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Triagem e sinalização de casos (CP2)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#feature-organizar-informacoes-da-inscricao-para-triagem" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Feature — Organizar informações da inscrição para triagem
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#feature-sinalizar-pontos-de-atencao-da-inscricao" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Feature — Sinalizar pontos de atenção da inscrição
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#feature-registrar-prioridade-clinica-do-inscrito" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Feature — Registrar prioridade clínica do inscrito
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#fila-de-espera-e-consulta-de-posicao-cp3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Fila de espera e consulta de posição (CP3)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Fila de espera e consulta de posição (CP3)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#feature-consultar-posicao-individual-na-fila" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Feature — Consultar posição individual na fila
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#feature-manter-e-informar-condicoes-gerais-da-fila" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Feature — Manter e informar condições gerais da fila
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#agendamento-confirmacao-e-remarcacao-cp4" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Agendamento, Confirmação e Remarcação (CP4)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#distribuicao-de-casos-entre-supervisores-e-estagiarios-cp5" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Distribuição de casos entre supervisores e estagiários (CP5)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#prontuario-eletronico-cp6" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Prontuário eletrônico (CP6)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#registro-de-evolucao-por-sessao-cp7" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Registro de evolução por sessão (CP7)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#geracao-do-relatorio-final-de-evolucao-cp8" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Geração do relatório final de evolução (CP8)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#controle-de-assiduidade-e-alertas-cp9" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Controle de assiduidade e alertas (CP9)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Controle de assiduidade e alertas (CP9)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#controle-de-faltas-do-paciente" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Controle de faltas do paciente
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#controle-de-faltas-do-estagiario" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Controle de faltas do estagiário
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#registros-administrativos-do-atendimento-cp10" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Registros administrativos do atendimento (CP10)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Registros administrativos do atendimento (CP10)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#contribuicao-social" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Contribuição social
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#feature-registrar-pagamento-da-contribuicao-social-do-paciente-43" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Feature — Registrar pagamento da contribuição social do paciente #43
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#declaracao-de-comparecimento" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Declaração de comparecimento
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#indicadores-e-relatorios-institucionais-cp11" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Indicadores e Relatórios Institucionais (CP11)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Indicadores e Relatórios Institucionais (CP11)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#feature-consultar-indicadores-operacionais-22" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Feature — Consultar indicadores operacionais #22
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#feature-exportar-relatorio-institucional-em-pdf-23" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Feature — Exportar relatório institucional em PDF #23
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#seguranca-sigilo-e-controle-de-acesso-cp12" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Segurança, Sigilo e Controle de Acesso (CP12)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Segurança, Sigilo e Controle de Acesso (CP12)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#feature-autenticar-usuario-institucional-45" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Feature — Autenticar usuário institucional #45
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#feature-encerrar-sessao-do-usuario-46" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Feature — Encerrar sessão do usuário #46
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#feature-restringir-acesso-ao-prontuario-do-paciente-50" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Feature — Restringir acesso ao prontuário do paciente #50
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#feature-consultar-registro-de-acessos-ao-prontuario-51" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Feature — Consultar registro de acessos ao prontuário #51
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#transversal-as-features-da-cp12" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Transversal às features da CP12
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#continuidade-de-casos-entre-semestres-cp13" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Continuidade de casos entre semestres (CP13)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#acessibilidade-e-usabilidade-cp14" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Acessibilidade e Usabilidade (CP14)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+                
+
+
+
+  
+
+
+  <nav class="md-path" aria-label="Navegação" >
+    <ol class="md-path__list">
+      
+        
+  
+  
+    <li class="md-path__item">
+      <a href="../../.." class="md-path__link">
+        
+  <span class="md-ellipsis">
+    Início
+  </span>
+
+      </a>
+    </li>
+  
+
+      
+      
+        
+  
+  
+    
+    
+      <li class="md-path__item">
+        <a href="../../" class="md-path__link">
+          
+  <span class="md-ellipsis">
+    Unidade 2 — Requisitos e priorização
+  </span>
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+    
+    
+      <li class="md-path__item">
+        <a href="../funcionais/" class="md-path__link">
+          
+  <span class="md-ellipsis">
+    8. Requisitos de Software
+  </span>
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ol>
+  </nav>
+
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+  <h1>8.2 Requisitos Não Funcionais</h1>
+
+<h2 id="82-lista-de-requisitos-nao-funcionais">8.2 Lista de Requisitos Não Funcionais<a class="headerlink" href="#82-lista-de-requisitos-nao-funcionais" title="Link para esta seção">#</a></h2>
+<p>Os requisitos não funcionais (RNFs) descrevem propriedades e restrições mensuráveis do sistema, classificadas conforme o modelo <strong>URPS+</strong> (Usabilidade, Confiabilidade, Desempenho, Suportabilidade e demais categorias, como Segurança e Auditoria). Cada RNF mantém rastreabilidade com a <strong>Feature</strong> que ele restringe e, por meio dela, com a Característica de Produto (CP) de origem — mesma cadeia usada nos <a href="../funcionais/">Requisitos Funcionais</a>.</p>
+<details class="requirement-index">
+<summary>Índice de requisitos não funcionais por código (58)</summary>
+<table>
+<thead>
+<tr>
+<th>Requisito</th>
+<th>Requisito</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="#rnf1">RNF1 — Identificação e recuperação de erros no formulário</a></td>
+<td><a href="#rnf2">RNF2 — Proteção das informações no comprovante de inscrição</a></td>
+</tr>
+<tr>
+<td><a href="#rnf3">RNF3 — Sigilo das informações de triagem</a></td>
+<td><a href="#rnf4">RNF4 — Rastreabilidade das regras de sinalização</a></td>
+</tr>
+<tr>
+<td><a href="#rnf5">RNF5 — Integridade e auditoria das decisões de prioridade</a></td>
+<td><a href="#rnf6">RNF6 — Privacidade e controle de acesso à consulta da fila</a></td>
+</tr>
+<tr>
+<td><a href="#rnf7">RNF7 — Compreensibilidade das informações sobre a posição na fila</a></td>
+<td><a href="#rnf8">RNF8 — Confiabilidade das informações institucionais da fila</a></td>
+</tr>
+<tr>
+<td><a href="#rnf9">RNF9 — Integridade do agendamento</a></td>
+<td><a href="#rnf10">RNF10 — Auditoria das operações sobre a sessão</a></td>
+</tr>
+<tr>
+<td><a href="#rnf11">RNF11 — Confiabilidade do envio de lembretes</a></td>
+<td><a href="#rnf12">RNF12 — Tempo de resposta nas operações de agendamento</a></td>
+</tr>
+<tr>
+<td><a href="#rnf13">RNF13 — Minimização de dados na agenda</a></td>
+<td><a href="#rnf14">RNF14 — Disponibilidade do módulo de agendamento</a></td>
+</tr>
+<tr>
+<td><a href="#rnf15">RNF15 — Usabilidade da confirmação de presença pelo paciente</a></td>
+<td><a href="#rnf16">RNF16 — Autorização para distribuição, vínculo e transferência de casos</a></td>
+</tr>
+<tr>
+<td><a href="#rnf17">RNF17 — Privacidade dos dados nas telas de distribuição e consulta</a></td>
+<td><a href="#rnf18">RNF18 — Auditoria de atribuições, vínculos e transferências</a></td>
+</tr>
+<tr>
+<td><a href="#rnf19">RNF19 — Integridade dos vínculos de responsabilidade</a></td>
+<td><a href="#rnf20">RNF20 — Continuidade do histórico na troca de responsável</a></td>
+</tr>
+<tr>
+<td><a href="#rnf21">RNF21 — Desempenho das listagens e operações de vínculo</a></td>
+<td><a href="#rnf22">RNF22 — Usabilidade da distribuição e do vínculo de casos</a></td>
+</tr>
+<tr>
+<td><a href="#rnf23">RNF23 — Manutenibilidade das áreas de especialidade</a></td>
+<td><a href="#rnf24">RNF24 — Acessibilidade das telas de distribuição e consulta</a></td>
+</tr>
+<tr>
+<td><a href="#rnf25">RNF25 — Sigilo do conteúdo do prontuário</a></td>
+<td><a href="#rnf26">RNF26 — Sigilo do conteúdo da evolução</a></td>
+</tr>
+<tr>
+<td><a href="#rnf27">RNF27 — Integridade e proveniência dos registros de evolução</a></td>
+<td><a href="#rnf28">RNF28 — Auditoria das correções de evolução</a></td>
+</tr>
+<tr>
+<td><a href="#rnf29">RNF29 — Desempenho do registro e da consulta de evolução</a></td>
+<td><a href="#rnf30">RNF30 — Usabilidade do registro de evolução</a></td>
+</tr>
+<tr>
+<td><a href="#rnf31">RNF31 — Fidelidade e rastreabilidade do relatório final</a></td>
+<td><a href="#rnf32">RNF32 — Integridade e auditoria da contagem de faltas</a></td>
+</tr>
+<tr>
+<td><a href="#rnf33">RNF33 — Visibilidade do alerta de limite de faltas</a></td>
+<td><a href="#rnf34">RNF34 — Tempo de liberação da vaga após desligamento</a></td>
+</tr>
+<tr>
+<td><a href="#rnf35">RNF35 — Privacidade dos dados de faltas do estagiário</a></td>
+<td><a href="#rnf36">RNF36 — Auditoria dos registros de contribuição social</a></td>
+</tr>
+<tr>
+<td><a href="#rnf37">RNF37 — Privacidade dos dados na declaração</a></td>
+<td><a href="#rnf38">RNF38 — Autorização para emissão e consulta</a></td>
+</tr>
+<tr>
+<td><a href="#rnf39">RNF39 — Auditoria de emissões e reemissões</a></td>
+<td><a href="#rnf40">RNF40 — Tempo de geração da declaração</a></td>
+</tr>
+<tr>
+<td><a href="#rnf41">RNF41 — Usabilidade da emissão</a></td>
+<td><a href="#rnf42">RNF42 — Portabilidade do documento</a></td>
+</tr>
+<tr>
+<td><a href="#rnf43">RNF43 — Acessibilidade da tela de emissão</a></td>
+<td><a href="#rnf44">RNF44 — Integridade do conteúdo da declaração</a></td>
+</tr>
+<tr>
+<td><a href="#rnf45">RNF45 — Segurança da consulta pública de autenticidade</a></td>
+<td><a href="#rnf46">RNF46 — Atualização dos indicadores operacionais</a></td>
+</tr>
+<tr>
+<td><a href="#rnf47">RNF47 — Tempo de geração do relatório institucional</a></td>
+<td><a href="#rnf48">RNF48 — Auditoria de relatórios institucionais</a></td>
+</tr>
+<tr>
+<td><a href="#rnf49">RNF49 — Proteção das credenciais de acesso</a></td>
+<td><a href="#rnf50">RNF50 — Expiração da sessão por inatividade</a></td>
+</tr>
+<tr>
+<td><a href="#rnf51">RNF51 — Criptografia dos dados</a></td>
+<td><a href="#rnf52">RNF52 — Trilha de auditoria de acessos ao prontuário</a></td>
+</tr>
+<tr>
+<td><a href="#rnf53">RNF53 — Cópia de segurança e recuperação dos dados</a></td>
+<td><a href="#rnf54">RNF54 — Auditoria das decisões de continuidade</a></td>
+</tr>
+<tr>
+<td><a href="#rnf55">RNF55 — Integridade do histórico na continuidade</a></td>
+<td><a href="#rnf56">RNF56 — Conformidade com WCAG 2.2 nível AA</a></td>
+</tr>
+<tr>
+<td><a href="#rnf57">RNF57 — Aparência reforçada do indicador de foco</a></td>
+<td><a href="#rnf58">RNF58 — Responsividade da interface</a></td>
+</tr>
+</tbody>
+</table>
+</details>
+<h3 id="inscricao-on-line-cp1">Inscrição on-line (CP1)<a class="headerlink" href="#inscricao-on-line-cp1" title="Link para esta seção">#</a></h3>
+<p>A CP1 possui três features: <strong>Registrar solicitação de atendimento on-line</strong>, <strong>Emitir comprovante de inscrição</strong> e <strong>Registrar inscrição assistida</strong>.</p>
+<p>Os requisitos não funcionais abaixo estabelecem condições de qualidade específicas para o preenchimento do formulário e a proteção das informações registradas durante a inscrição.</p>
+<p>As páginas de inscrição também devem atender aos requisitos transversais de acessibilidade e usabilidade definidos na CP14 (RNF56, RNF57 e RNF58).</p>
+<h4 id="feature-registrar-solicitacao-de-atendimento-on-line">Feature — Registrar solicitação de atendimento on-line<a class="headerlink" href="#feature-registrar-solicitacao-de-atendimento-on-line" title="Link para esta seção">#</a></h4>
+<p><strong id="rnf1">RNF1 — Identificação e recuperação de erros no formulário</strong></p>
+<p>O formulário de inscrição on-line (RF1) deve apresentar mensagens textuais de erro associadas aos respectivos campos quando houver ausência ou preenchimento inválido de informações obrigatórias.</p>
+<p>As mensagens devem identificar o campo que precisa ser corrigido e descrever a correção necessária, sem depender exclusivamente de alterações de cor para comunicar o erro.</p>
+<p>Após a identificação de um erro de preenchimento, o sistema deve preservar os valores válidos informados nos demais campos do formulário, permitindo que o interessado conclua a inscrição sem precisar repetir todo o preenchimento.</p>
+<p>A conformidade deve ser verificada por meio de testes com campos obrigatórios vazios e entradas inválidas, incluindo telefone celular, e-mail e canal preferencial (RF1), confirmando a identificação textual dos erros e a preservação das informações válidas previamente inseridas.</p>
+<p>Classificação: usabilidade e acessibilidade (URPS+).
+Rastreabilidade: Feature "Registrar solicitação de atendimento on-line" → CP1 — Inscrição on-line; complementa os requisitos transversais de acessibilidade da CP14.</p>
+<h4 id="feature-emitir-comprovante-de-inscricao">Feature — Emitir comprovante de inscrição<a class="headerlink" href="#feature-emitir-comprovante-de-inscricao" title="Link para esta seção">#</a></h4>
+<p><strong id="rnf2">RNF2 — Proteção das informações no comprovante de inscrição</strong></p>
+<p>As informações clínicas não devem ser incluídas no endereço eletrônico utilizado para acessar a confirmação nem em mensagens públicas de sucesso ou erro relacionadas à emissão do comprovante.</p>
+<p>A conformidade deve ser verificada com inscrições fictícias contendo queixa e outros dados clínicos, confirmando que essas informações não aparecem no endereço eletrônico nem nas mensagens públicas de sucesso ou erro. O conteúdo permitido no comprovante é definido pelo RF2 e não é repetido neste RNF.</p>
+<p>Classificação: segurança e privacidade (URPS+).
+Rastreabilidade: Feature "Emitir comprovante de inscrição" → CP1 — Inscrição on-line; relacionada à CP12 — Segurança, sigilo e controle de acesso.</p>
+<h3 id="triagem-e-sinalizacao-de-casos-cp2">Triagem e sinalização de casos (CP2)<a class="headerlink" href="#triagem-e-sinalizacao-de-casos-cp2" title="Link para esta seção">#</a></h3>
+<p>As features da CP2 tratam respostas potencialmente sensíveis da inscrição e decisões que afetam a ordem de atendimento. Aplicam-se também os controles transversais de segurança e acesso da CP12, conforme a numeração da Solução Proposta.</p>
+<h4 id="feature-organizar-informacoes-da-inscricao-para-triagem">Feature — Organizar informações da inscrição para triagem<a class="headerlink" href="#feature-organizar-informacoes-da-inscricao-para-triagem" title="Link para esta seção">#</a></h4>
+<p><strong id="rnf3">RNF3 — Sigilo das informações de triagem</strong></p>
+<p>As respostas de triagem e as sinalizações vinculadas à inscrição devem ser exibidas somente aos perfis de supervisor e coordenação. A interface e as respostas a tentativas de acesso negadas não devem revelar queixa, histórico informado, urgência percebida ou sinalizações clínicas. A conformidade deve ser verificada com inscrições fictícias, comparando consultas por supervisor e coordenação com tentativas de acesso por secretaria, estagiário e usuário externo.</p>
+<p>Classificação: segurança e privacidade (URPS+).
+Rastreabilidade: Feature "Organizar informações da inscrição para triagem" → CP2 — Triagem e sinalização de casos; relacionada às features "Sinalizar pontos de atenção da inscrição" e "Registrar prioridade clínica do inscrito" e à CP12 — Segurança, sigilo e controle de acesso.</p>
+<h4 id="feature-sinalizar-pontos-de-atencao-da-inscricao">Feature — Sinalizar pontos de atenção da inscrição<a class="headerlink" href="#feature-sinalizar-pontos-de-atencao-da-inscricao" title="Link para esta seção">#</a></h4>
+<p><strong id="rnf4">RNF4 — Rastreabilidade das regras de sinalização</strong></p>
+<p>Cada ponto de atenção apresentado deve manter vínculo verificável com a resposta original e com a versão da regra institucional aprovada que o produziu. As versões das regras devem preservar identificador, data de vigência, responsável pela aprovação e histórico de publicação; uma nova versão não pode reprocessar silenciosamente sinalizações anteriores. A conformidade deve ser verificada com dados fictícios, incluindo troca de versão e ausência de regra vigente, confirmando a origem de cada sinalização, a preservação da versão aplicada e a ausência de cor de prioridade atribuída automaticamente.</p>
+<p>Classificação: confiabilidade e auditoria (URPS+).
+Rastreabilidade: Feature "Sinalizar pontos de atenção da inscrição" → CP2 — Triagem e sinalização de casos; relacionada a RF5.</p>
+<h4 id="feature-registrar-prioridade-clinica-do-inscrito">Feature — Registrar prioridade clínica do inscrito<a class="headerlink" href="#feature-registrar-prioridade-clinica-do-inscrito" title="Link para esta seção">#</a></h4>
+<p><strong id="rnf5">RNF5 — Integridade e auditoria das decisões de prioridade</strong></p>
+<p>O histórico das decisões de prioridade do RF6 deve ser imutável e acrescentado cronologicamente: uma reclassificação deve criar um novo evento de auditoria vinculado à decisão anterior, sem sobrescrever, alterar ou apagar eventos já registrados. A conformidade deve ser verificada classificando e reclassificando uma inscrição fictícia e, em seguida, tentando alterar e excluir eventos anteriores pela interface; a trilha deve permanecer íntegra e permitir reconstruir a sequência das decisões. Os perfis autorizados e os dados funcionais de cada decisão permanecem definidos exclusivamente no RF6.</p>
+<p>Classificação: confiabilidade e auditoria (URPS+).
+Rastreabilidade: Feature "Registrar prioridade clínica do inscrito" → CP2 — Triagem e sinalização de casos; integração com RF7 (CP3).</p>
+<h3 id="fila-de-espera-e-consulta-de-posicao-cp3">Fila de espera e consulta de posição (CP3)<a class="headerlink" href="#fila-de-espera-e-consulta-de-posicao-cp3" title="Link para esta seção">#</a></h3>
+<p>A CP3 possui três features: <strong>Ordenar inscritos na fila de espera</strong>, <strong>Consultar posição individual na fila</strong> e <strong>Informar condições gerais da fila</strong>.</p>
+<p>Os RNFs abaixo estabelecem condições de segurança, privacidade, compreensibilidade e confiabilidade das informações apresentadas ao interessado.</p>
+<p>Os requisitos de acessibilidade e responsividade da CP14 também se aplicam às páginas públicas de consulta da fila de espera.</p>
+<h4 id="feature-consultar-posicao-individual-na-fila">Feature — Consultar posição individual na fila<a class="headerlink" href="#feature-consultar-posicao-individual-na-fila" title="Link para esta seção">#</a></h4>
+<p><strong id="rnf6">RNF6 — Privacidade e controle de acesso à consulta da fila</strong></p>
+<p>A consulta individual da fila de espera (RF8) deve impedir que o conhecimento isolado do CPF ou do número de inscrição permita a um usuário não autorizado acessar informações individuais de outro inscrito.</p>
+<p>O sistema deve exigir a verificação da identidade do solicitante conforme o RF52 da CP12, mediante CPF ou número de inscrição e código de uso único enviado ao contato cadastrado. O código deve possuir 6 dígitos numéricos, validade de 10 minutos e uso único, com no máximo 5 tentativas incorretas. Um reenvio somente pode ocorrer após 60 segundos e deve invalidar o código anterior. Devem ser permitidos, no máximo, 3 códigos por CPF ou número de inscrição em uma janela de 60 minutos; atingido o limite, novas solicitações para o identificador ficam bloqueadas por 60 minutos. A posição e a situação individual na fila somente devem ser apresentadas após a confirmação bem-sucedida da identidade.</p>
+<p>As respostas de consultas não autorizadas não devem revelar a posição, a classificação de prioridade, a queixa ou outros dados individuais da solicitação consultada.</p>
+<p>A conformidade deve ser verificada por meio de testes automatizados com inscrições fictícias, contemplando: código válido dentro de 10 minutos; código expirado; reutilização; 5 tentativas incorretas; reenvio antes e depois de 60 segundos; invalidação do código anterior; envio de 3 códigos em 60 minutos; bloqueio da quarta solicitação; e tentativas de acesso a registros de terceiros mediante o conhecimento de seus identificadores.</p>
+<p>Em todos os casos de acesso não autorizado, nenhuma informação individual da inscrição consultada deve ser divulgada.</p>
+<p>Classificação: segurança e privacidade (URPS+).
+Rastreabilidade: Feature "Consultar posição individual na fila" → CP3 — Fila de espera e consulta de posição; relacionada à CP12 — Segurança, sigilo e controle de acesso. Dependência: RF52 — Verificar identidade do paciente ou responsável (CP12).</p>
+<p><strong id="rnf7">RNF7 — Compreensibilidade das informações sobre a posição na fila</strong></p>
+<p>A interface de consulta da fila de espera (RF8) deve apresentar de forma clara e legível a posição e a situação atual do inscrito, acompanhadas de informação explícita de que a posição pode variar e não representa garantia de prazo ou data de atendimento.</p>
+<p>O aviso deve ser exibido junto ao resultado da consulta, sem exigir que o interessado acesse outra página, abra um documento adicional ou realize uma operação específica para visualizar essa informação.</p>
+<p>A conformidade deve ser verificada por teste de compreensão com, no mínimo, 10 participantes representativos do público externo da Clínica Escola — interessados inscritos, pacientes ou responsáveis legais, incluindo participantes com baixa familiaridade digital. Após concluir a consulta sem explicação adicional do avaliador, cada participante deve responder, com suas próprias palavras, se a posição pode mudar e se ela garante uma data de atendimento. O requisito é atendido quando pelo menos 90% dos participantes responderem corretamente às duas questões e todas as consultas apresentarem o aviso junto ao resultado.</p>
+<p>Classificação: usabilidade (URPS+).
+Rastreabilidade: Feature "Consultar posição individual na fila" → CP3 — Fila de espera e consulta de posição → IS03 — Expectativa sobre a fila.</p>
+<h4 id="feature-manter-e-informar-condicoes-gerais-da-fila">Feature — Manter e informar condições gerais da fila<a class="headerlink" href="#feature-manter-e-informar-condicoes-gerais-da-fila" title="Link para esta seção">#</a></h4>
+<p><strong id="rnf8">RNF8 — Confiabilidade das informações institucionais da fila</strong></p>
+<p>As informações institucionais sobre capacidade e critérios gerais de atendimento apresentadas pelo sistema (RF9) devem corresponder à versão vigente do conteúdo publicado pela coordenação da Clínica Escola FBr. Cada versão deve preservar conteúdo, responsável e data/hora de publicação, e somente a coordenação pode publicar ou substituir a versão pública.</p>
+<p>O sistema deve apresentar a data da última atualização das informações divulgadas e substituir a versão anterior quando uma nova publicação autorizada for realizada.</p>
+<p>Informações de capacidade que não estejam aprovadas ou vigentes não devem ser apresentadas como disponibilidade confirmada de vagas.</p>
+<p>A conformidade deve ser verificada mediante a publicação de informações institucionais fictícias, uma tentativa de publicação por perfil não autorizado, a atualização autorizada do conteúdo e a conferência da versão, do responsável e da data exibidas no histórico administrativo.</p>
+<p>Após a publicação da atualização, a consulta deve apresentar exclusivamente a versão vigente das informações institucionais.</p>
+<p>Classificação: confiabilidade (URPS+).
+Rastreabilidade: Feature "Manter e informar condições gerais da fila" → CP3 — Fila de espera e consulta de posição → IS02 — Aumento da demanda.</p>
+<h3 id="agendamento-confirmacao-e-remarcacao-cp4">Agendamento, Confirmação e Remarcação (CP4)<a class="headerlink" href="#agendamento-confirmacao-e-remarcacao-cp4" title="Link para esta seção">#</a></h3>
+<p>A CP4 tem oito features (ver <a href="../funcionais/">Requisitos Funcionais</a>); os RNFs abaixo estabelecem condições de qualidade para o agendamento, a confirmação, o lembrete e o cancelamento de sessões, aplicando-se de forma transversal ao conjunto das features, conforme indicado na rastreabilidade de cada um. Os RNFs de segurança e privacidade devem ser alinhados com os requisitos gerais de acesso e sigilo da CP12, evitando duplicidade, e a acessibilidade das páginas voltadas ao paciente (confirmação de presença) segue a mesma meta definida para a CP14 (RNF56).</p>
+<p><strong id="rnf9">RNF9 — Integridade do agendamento</strong></p>
+<p>Duas sessões não podem ser agendadas para o mesmo horário do mesmo estagiário, nem para o mesmo horário do mesmo paciente, mesmo em caso de duas requisições simultâneas de agendamento ou remarcação.</p>
+<p>A conformidade deve ser verificada por teste de concorrência, com duas tentativas simultâneas de agendar ou remarcar uma sessão para o mesmo horário do mesmo estagiário, confirmando que apenas uma é aceita.</p>
+<p>Classificação: confiabilidade (URPS+).
+Rastreabilidade: CP4 — Agendamento, confirmação e remarcação (transversal às features "Agendar sessão do paciente" e "Reagendar sessão do paciente").</p>
+<p><strong id="rnf10">RNF10 — Auditoria das operações sobre a sessão</strong></p>
+<p>Este RNF concentra a regra de auditoria de todas as operações sobre a sessão; os RFs da CP4 apenas o referenciam. Cada uma das operações abaixo deve gerar um registro de auditoria com o usuário responsável (ou a indicação "paciente", quando feita pelo link do RF14), a data/hora, o estado anterior e o novo estado da sessão e os dados específicos da operação:</p>
+<table>
+<thead>
+<tr>
+<th>Operação</th>
+<th>Dados específicos registrados</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Agendamento (RF10)</td>
+<td>data, horário de início e de término</td>
+</tr>
+<tr>
+<td>Remarcação (RF12)</td>
+<td>data/horário anterior e novo, justificativa e origem do pedido</td>
+</tr>
+<tr>
+<td>Aprovação de remarcação excedente (RF12)</td>
+<td>justificativa da exceção e usuário aprovador</td>
+</tr>
+<tr>
+<td>Confirmação de presença (RF14)</td>
+<td>canal da confirmação (link enviado no agendamento ou no lembrete, ou secretaria)</td>
+</tr>
+<tr>
+<td>Cancelamento pelo paciente (RF15)</td>
+<td>motivo e classificação ("no prazo", "fora do prazo" ou "administrativo para remarcação")</td>
+</tr>
+<tr>
+<td>Registro de ausência do estagiário (RF16)</td>
+<td>motivo e tipo ("ausência real" ou "administrativo para remarcação")</td>
+</tr>
+</tbody>
+</table>
+<p>Esses registros não podem ser apagados nem sobrescritos por nenhum perfil, e devem ser mantidos enquanto os dados da sessão forem mantidos.</p>
+<p>A conformidade deve ser verificada por teste de integração que execute cada operação da tabela e confirme o registro de auditoria correspondente, com todos os dados listados, e por inspeção, confirmando que a interface não oferece meio de alterar ou apagar esses registros.</p>
+<p>Classificação: auditoria (URPS+).
+Rastreabilidade: CP4 — Agendamento, confirmação e remarcação (transversal às features "Agendar sessão do paciente", "Reagendar sessão do paciente", "Confirmar presença em sessão agendada", "Registrar cancelamento de sessão pelo paciente" e "Registrar cancelamento de sessão pelo estagiário").</p>
+<p><strong id="rnf11">RNF11 — Confiabilidade do envio de lembretes</strong></p>
+<p>O sistema deve entregar ao provedor de envio pelo menos 98% dos lembretes de sessão (RF13), medidos separadamente para cada canal (e-mail e SMS). Como o sistema não controla a chegada da mensagem ao aparelho do paciente, considera-se <strong>entregue</strong> o lembrete aceito pelo provedor de e-mail ou de SMS.</p>
+<ul>
+<li><strong>Fórmula e janela:</strong> taxa de cada canal = lembretes aceitos pelo provedor ÷ lembretes programados no canal × 100, apurada por mês civil, sobre todos os lembretes programados no mês.</li>
+<li><strong>Nova tentativa:</strong> um lembrete recusado ou sem resposta do provedor deve ser reenviado automaticamente até 3 vezes, dentro de 1 hora após a primeira tentativa.</li>
+<li><strong>Falhas externas:</strong> saem do denominador, mas continuam registradas, os lembretes que falharam por contato inválido informado na inscrição e os que falharam durante indisponibilidade do provedor registrada no seu painel de status. A qualidade do cadastro é responsabilidade da secretaria, e a indisponibilidade do provedor é acompanhada pela equipe técnica.</li>
+<li><strong>Tratamento da falha:</strong> quando as tentativas se esgotarem nos dois canais, a sessão deve ser sinalizada à secretaria para contato por telefone.</li>
+</ul>
+<p>O envio e cada falha de cada lembrete devem ser registrados para consulta posterior.</p>
+<p>A conformidade deve ser verificada por teste com provedor simulado, sobre uma amostra de pelo menos 200 lembretes por canal, com falhas injetadas em 10% deles, conferindo as novas tentativas, a taxa de entrega calculada, a exclusão das falhas externas e a sinalização à secretaria; em produção, pelo relatório mensal da taxa de cada canal.</p>
+<p>Classificação: confiabilidade (URPS+).
+Rastreabilidade: Feature "Enviar lembrete de sessão agendada" → CP4 — Agendamento, confirmação e remarcação.</p>
+<p><strong id="rnf12">RNF12 — Tempo de resposta nas operações de agendamento</strong></p>
+<p>As operações de agendar, reagendar, confirmar presença e registrar cancelamento devem apresentar retorno em até 2 segundos para 95% das requisições no cenário de referência abaixo. O tempo é medido no servidor, do recebimento da requisição ao envio da resposta, sem incluir a rede do usuário.</p>
+<ul>
+<li><strong>Carga:</strong> 30 usuários simultâneos executando essas operações de forma contínua por 10 minutos, estimativa da equipe para o pico de uso de secretaria, estagiários e supervisores, a validar com a FBr.</li>
+<li><strong>Massa de dados:</strong> dois semestres de operação, com cerca de 360 inscrições, 200 pacientes atendidos e 4.000 sessões registradas, a partir do volume da clínica de 100 vagas e 160 a 180 inscrições por semestre.</li>
+<li><strong>Infraestrutura:</strong> ambiente de homologação com a mesma configuração do servidor de produção (VPS da FBr).</li>
+</ul>
+<p>A conformidade deve ser verificada por teste de carga automatizado (por exemplo, k6 ou JMeter) nesse cenário, conferindo o percentil 95 do tempo de resposta de cada operação.</p>
+<p>Classificação: desempenho (URPS+).
+Rastreabilidade: CP4 — Agendamento, confirmação e remarcação (transversal às features "Agendar sessão do paciente", "Reagendar sessão do paciente", "Confirmar presença em sessão agendada", "Registrar cancelamento de sessão pelo paciente" e "Registrar cancelamento de sessão pelo estagiário").</p>
+<p><strong id="rnf13">RNF13 — Minimização de dados na agenda</strong></p>
+<p>Quem pode consultar cada agenda é definido no RF11. Este RNF restringe <strong>o que</strong> a agenda expõe: cada sessão da agenda deve apresentar apenas o nome do paciente, a data, o horário de início e de término e o status. Dados de contato, CPF, queixa, prioridade clínica e qualquer conteúdo de evolução não devem constar da agenda, nem na tela nem nas respostas do servidor que a alimentam. A restrição de acesso do RF11 deve ser aplicada também no servidor, de modo que uma requisição feita diretamente, sem passar pela interface, não retorne a agenda de um estagiário sem vínculo.</p>
+<p>A conformidade deve ser verificada por inspeção das respostas do servidor à consulta da agenda, confirmando a ausência dos campos não permitidos, e por teste de requisição direta ao servidor com um usuário sem vínculo de supervisão, confirmando a negação.</p>
+<p>Classificação: privacidade (URPS+).
+Rastreabilidade: Feature "Consultar agenda de sessões do estagiário" → CP4 — Agendamento, confirmação e remarcação; relacionada à CP12 — Segurança, sigilo e controle de acesso.</p>
+<p><strong id="rnf14">RNF14 — Disponibilidade do módulo de agendamento</strong></p>
+<p>O módulo de agendamento e confirmação deve estar disponível em pelo menos 99% do horário comercial, dado que indisponibilidades nesse módulo impactam diretamente a operação da clínica.</p>
+<ul>
+<li><strong>Horário comercial:</strong> das 8h às 18h, de segunda a sexta-feira, exceto os feriados do calendário acadêmico da FBr.</li>
+<li><strong>Janela de apuração:</strong> mês civil.</li>
+<li><strong>Fórmula:</strong> disponibilidade = (minutos de horário comercial no mês − minutos indisponíveis) ÷ minutos de horário comercial no mês × 100. Em um mês com 22 dias úteis (13.200 minutos), o limite é de 132 minutos indisponíveis.</li>
+<li><strong>Minuto indisponível:</strong> minuto em que a verificação automática de disponibilidade falha, isto é, a página de agendamento não responde em até 10 segundos ou responde com erro do servidor.</li>
+<li><strong>Indisponibilidades excluídas:</strong> manutenções programadas fora do horário comercial e manutenções dentro do horário comercial comunicadas à secretaria com pelo menos 48 horas de antecedência, limitadas a 4 horas por mês; o que exceder esse limite conta como indisponibilidade.</li>
+</ul>
+<p>A conformidade deve ser verificada por monitor externo que consulte a página de agendamento a cada minuto durante o horário comercial, com relatório mensal da disponibilidade calculada pela fórmula acima.</p>
+<p>Classificação: confiabilidade (URPS+).
+Rastreabilidade: CP4 — Agendamento, confirmação e remarcação (transversal a todas as features).</p>
+<p><strong id="rnf15">RNF15 — Usabilidade da confirmação de presença pelo paciente</strong></p>
+<p>A confirmação de presença deve ser possível a partir do link enviado no agendamento (RF10), e reforçado pelo lembrete automático quando este estiver disponível (RF13), sem exigir login ou cadastro de senha, em no máximo 2 interações, considerando o público com pouca familiaridade com tecnologia atendido pela clínica.</p>
+<p>Como o link dispensa login, ele deve ser protegido contra uso por terceiros:</p>
+<ul>
+<li><strong>Token imprevisível:</strong> o link deve conter um token gerado aleatoriamente, com pelo menos 128 bits de entropia, vinculado a uma única sessão e sem nenhum dado do paciente (nome, CPF ou número de inscrição) no endereço.</li>
+<li><strong>Validade:</strong> o token vale até o fim do prazo de confirmação da sessão (RF14); uma remarcação (RF12) ou um cancelamento (RF15/RF16) invalida o token anterior, e uma remarcação gera um novo.</li>
+<li><strong>Uso único:</strong> após a confirmação, o token não permite nenhuma nova operação; ao ser aberto de novo, o link apenas informa que a presença já foi confirmada.</li>
+<li><strong>Expiração ou token inválido:</strong> o sistema deve informar que o link não é mais válido e orientar o contato com a secretaria, sem exibir dados da sessão.</li>
+<li><strong>Dados exibidos:</strong> a página de confirmação mostra apenas a data e o horário da sessão e o primeiro nome do paciente, e não permite nenhuma outra operação, como cancelar ou remarcar.</li>
+</ul>
+<p>A conformidade deve ser verificada por teste de usabilidade com usuários representativos, incluindo pessoas com baixo letramento digital, e por testes de segurança que abram o link após o uso, após o fim do prazo, após uma remarcação e com um token alterado, confirmando em todos os casos a recusa sem exposição de dados.</p>
+<p>Classificação: usabilidade e segurança (URPS+).
+Rastreabilidade: Feature "Confirmar presença em sessão agendada" → CP4 — Agendamento, confirmação e remarcação; relacionada à CP14 — Acessibilidade e usabilidade.</p>
+<h3 id="distribuicao-de-casos-entre-supervisores-e-estagiarios-cp5">Distribuição de casos entre supervisores e estagiários (CP5)<a class="headerlink" href="#distribuicao-de-casos-entre-supervisores-e-estagiarios-cp5" title="Link para esta seção">#</a></h3>
+<p>A CP5 tem nove features (ver <a href="../funcionais/">Requisitos Funcionais</a>); os RNFs abaixo estabelecem condições de qualidade para a distribuição de casos, a vinculação de pacientes a estagiários e o acompanhamento dos vínculos, aplicando-se de forma transversal ao conjunto das features, conforme indicado na rastreabilidade de cada um. Os RNFs de segurança e privacidade (RNF16 e RNF17) devem ser alinhados com os requisitos gerais de acesso e sigilo da CP12, evitando duplicidade, e o RNF24 segue a mesma meta de acessibilidade definida para a CP14 (RNF56).</p>
+<p><strong id="rnf16">RNF16 — Autorização para distribuição, vínculo e transferência de casos</strong></p>
+<p>A distribuição de casos a supervisores é exclusiva da coordenação (RF20); a vinculação de um estagiário a um caso é exclusiva do supervisor responsável por esse caso (RF21); e a transferência de responsável segue a mesma restrição por perfil do RF25 — o supervisor responsável só pode transferir o caso para outro estagiário sob sua própria supervisão, enquanto a transferência para outro supervisor é exclusiva da coordenação. Fora dessas operações, o estagiário e o supervisor só podem acessar os casos sob sua própria responsabilidade.</p>
+<p>A conformidade deve ser verificada por testes de autorização, com cenários positivos e negativos, para os perfis paciente, secretaria, estagiário, supervisor e coordenação, incluindo a tentativa de um supervisor distribuir um caso ou transferi-lo para outro supervisor, sem nenhum acesso indevido.</p>
+<p>Classificação: segurança (URPS+).
+Rastreabilidade: CP5 — Distribuição de casos entre supervisores e estagiários (transversal a todas as features da CP5).</p>
+<p><strong id="rnf17">RNF17 — Privacidade dos dados nas telas de distribuição e consulta</strong></p>
+<p>As telas de distribuição de casos e de consulta de responsáveis devem exibir, para cada perfil, exatamente os campos abaixo, e nenhum outro:</p>
+<table>
+<thead>
+<tr>
+<th>Perfil</th>
+<th>Campos exibidos</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Secretaria</td>
+<td>Paciente, estagiário responsável, supervisor responsável, situação de distribuição (pendente/distribuído)</td>
+</tr>
+<tr>
+<td>Estagiário</td>
+<td>Os mesmos campos da secretaria, restritos aos próprios casos (RF23)</td>
+</tr>
+<tr>
+<td>Supervisor</td>
+<td>Os mesmos campos da secretaria, para os próprios casos e os dos seus estagiários (RF23), mais as áreas de especialidade dos supervisores (RF19) na tela de distribuição</td>
+</tr>
+<tr>
+<td>Coordenação</td>
+<td>Todos os campos acima, sem restrição de caso</td>
+</tr>
+</tbody>
+</table>
+<p>Nenhum perfil sem acesso ao prontuário (RF55, CP12) deve visualizar dado clínico (queixa, prioridade, evolução) nessas telas.</p>
+<p>A conformidade deve ser verificada por revisão das telas por perfil, comparando o conteúdo exibido com a matriz acima, e por teste do conteúdo efetivamente exibido, confirmando a ausência de campos clínicos para perfis sem acesso ao prontuário.</p>
+<p>Classificação: privacidade (URPS+).
+Rastreabilidade: CP5 — Distribuição de casos entre supervisores e estagiários (transversal às features "Listar casos aguardando distribuição", "Consultar responsáveis pelo caso" e "Consultar casos sob responsabilidade do estagiário ou supervisor").</p>
+<p><strong id="rnf18">RNF18 — Auditoria de atribuições, vínculos e transferências</strong></p>
+<p>Toda atribuição, vínculo, alteração e transferência de responsável por um caso deve ser registrada com data/hora, autor da ação, caso envolvido e responsáveis anterior e novo.</p>
+<p>A conformidade deve ser verificada por teste de integração, confirmando o registro de auditoria após cada operação de distribuição, vínculo ou transferência.</p>
+<p>Classificação: auditoria (URPS+).
+Rastreabilidade: CP5 — Distribuição de casos entre supervisores e estagiários (transversal às features "Distribuir caso a supervisor conforme área de especialidade", "Vincular paciente a estagiário responsável", "Transferir caso para outro estagiário ou supervisor" e "Consultar histórico de responsáveis do caso").</p>
+<p><strong id="rnf19">RNF19 — Integridade dos vínculos de responsabilidade</strong></p>
+<p>Após a distribuição (RF20), todo caso ativo deve ter um supervisor responsável vigente, admitindo-se o estado transitório "aguardando vínculo de estagiário" até que o RF21 seja concluído. Nenhum caso pode ter dois supervisores ou dois estagiários principais vigentes ao mesmo tempo, salvo confirmação futura do atendimento em dupla (RN5.9).</p>
+<p>A conformidade deve ser garantida por restrições de integridade no banco de dados, além de testes de regra de negócio, confirmando que um caso distribuído sem estagiário vinculado permanece válido no estado "aguardando vínculo", e sem nenhuma inconsistência de vínculo identificada nos demais casos.</p>
+<p>Classificação: confiabilidade (URPS+).
+Rastreabilidade: CP5 — Distribuição de casos entre supervisores e estagiários (transversal às features "Distribuir caso a supervisor conforme área de especialidade", "Vincular paciente a estagiário responsável" e "Transferir caso para outro estagiário ou supervisor").</p>
+<p><strong id="rnf20">RNF20 — Continuidade do histórico na troca de responsável</strong></p>
+<p>A troca de responsável por um caso não deve causar perda de informação: as sessões, a evolução e os vínculos anteriores devem permanecer disponíveis ao novo responsável autorizado após a transferência.</p>
+<p>A conformidade deve ser verificada por teste comparando o histórico do caso antes e depois da transferência, confirmando que a totalidade dos registros anteriores permanece acessível.</p>
+<p>Classificação: confiabilidade (URPS+).
+Rastreabilidade: Feature "Transferir caso para outro estagiário ou supervisor" → CP5 — Distribuição de casos entre supervisores e estagiários; relacionada à feature "Consultar histórico de responsáveis do caso".</p>
+<p><strong id="rnf21">RNF21 — Desempenho das listagens e operações de vínculo</strong></p>
+<p>As listagens de casos e as operações de distribuição, vínculo e consulta de responsáveis devem responder em até 3 segundos em 95% das requisições, no cenário de referência do RNF12 (30 usuários simultâneos por 10 minutos, massa de dados de dois semestres — cerca de 360 inscrições, 200 pacientes e 4.000 sessões —, ambiente de homologação igual ao servidor de produção, medição no servidor).</p>
+<p>A conformidade deve ser verificada por teste de desempenho reproduzindo o cenário de referência acima, confirmando que 95% das requisições atendem ao limite de 3 segundos.</p>
+<p>Classificação: desempenho (URPS+).
+Rastreabilidade: CP5 — Distribuição de casos entre supervisores e estagiários (transversal às features "Listar casos aguardando distribuição", "Consultar responsáveis pelo caso", "Consultar casos sob responsabilidade do estagiário ou supervisor" e "Visualizar distribuição de casos por supervisor").</p>
+<p><strong id="rnf22">RNF22 — Usabilidade da distribuição e do vínculo de casos</strong></p>
+<p>O supervisor e a coordenação devem conseguir distribuir e vincular casos sem treinamento prévio, inclusive a partir do celular, concluindo a distribuição de um caso em até 3 interações a partir da lista de pendentes.</p>
+<p>A conformidade deve ser verificada por teste de usabilidade com uma amostra mínima de 5 participantes representativos por perfil (supervisor e coordenação), em telas responsivas, com pelo menos 90% dos participantes concluindo a tarefa sem auxílio externo.</p>
+<p>Classificação: usabilidade (URPS+).
+Rastreabilidade: CP5 — Distribuição de casos entre supervisores e estagiários (transversal às features "Listar casos aguardando distribuição", "Distribuir caso a supervisor conforme área de especialidade" e "Vincular paciente a estagiário responsável").</p>
+<p><strong id="rnf23">RNF23 — Manutenibilidade das áreas de especialidade</strong></p>
+<p>As áreas de especialidade e sua associação aos supervisores (RF19) devem ser armazenadas como dado configurável, e não como valor fixo no código-fonte, de modo que a inclusão, edição ou remoção de uma área pela interface (RF19) fique disponível para uso na distribuição (RF20) imediatamente, sem exigir alteração de código, recompilação ou novo deploy da aplicação.</p>
+<p>A conformidade deve ser verificada por inspeção técnica do modelo de dados, confirmando que as áreas de especialidade não estão fixadas no código, e por teste de aceitação: a coordenação inclui uma nova área pela interface e confirma sua disponibilidade imediata na tela de distribuição (RF20), sem reinício ou nova implantação da aplicação.</p>
+<p>Classificação: modificabilidade (URPS+).
+Rastreabilidade: Feature "Registrar áreas de especialidade do supervisor" → CP5 — Distribuição de casos entre supervisores e estagiários. Dependência: RF19, RF20.</p>
+<p><strong id="rnf24">RNF24 — Acessibilidade das telas de distribuição e consulta</strong></p>
+<p>As telas de distribuição de casos, vínculo e consulta de responsáveis devem ser acessíveis, seguindo a mesma meta de conformidade definida para a CP14 (RNF56): navegação por teclado, contraste adequado e compatibilidade com leitor de tela.</p>
+<p>A conformidade deve ser verificada com leitor de tela e checklist de acessibilidade.</p>
+<p>Classificação: acessibilidade (URPS+).
+Rastreabilidade: CP5 — Distribuição de casos entre supervisores e estagiários (transversal às features "Listar casos aguardando distribuição", "Registrar áreas de especialidade do supervisor", "Distribuir caso a supervisor conforme área de especialidade", "Vincular paciente a estagiário responsável", "Consultar responsáveis pelo caso", "Consultar casos sob responsabilidade do estagiário ou supervisor" e "Visualizar distribuição de casos por supervisor"); relacionada à CP14 — Acessibilidade e usabilidade.</p>
+<h3 id="prontuario-eletronico-cp6">Prontuário eletrônico (CP6)<a class="headerlink" href="#prontuario-eletronico-cp6" title="Link para esta seção">#</a></h3>
+<p>A CP6 tem uma feature (ver <a href="../funcionais/">Requisitos Funcionais</a>); o RNF abaixo estabelece a condição de qualidade para a consulta ao prontuário. As condições de integridade, auditoria e desempenho relativas ao registro da evolução em si estão declaradas na CP7, e as relativas ao relatório final, na CP8.</p>
+<p><strong id="rnf25">RNF25 — Sigilo do conteúdo do prontuário</strong></p>
+<p>Listagens, resultados de busca, endereços eletrônicos, notificações, mensagens de erro e respostas do servidor não devem expor conteúdo do prontuário quando o acesso for negado pelo RF55. A resposta negada também não deve revelar quais seções clínicas possuem ou não registros. Os perfis e vínculos autorizados permanecem definidos exclusivamente no RF55.</p>
+<p>A conformidade deve ser verificada com prontuários fictícios completos e incompletos, inspecionando a interface e as respostas do servidor em tentativas negadas antes e depois de uma transferência de responsável e confirmando que nenhum conteúdo ou indicador de existência das seções clínicas é exposto.</p>
+<p>Classificação: segurança e privacidade (URPS+).
+Rastreabilidade: Features "Criar e inicializar o prontuário do paciente" e "Consultar prontuário do paciente" → CP6 — Prontuário eletrônico; relacionada ao RF55 (CP12).</p>
+<h3 id="registro-de-evolucao-por-sessao-cp7">Registro de evolução por sessão (CP7)<a class="headerlink" href="#registro-de-evolucao-por-sessao-cp7" title="Link para esta seção">#</a></h3>
+<p>A CP7 tem cinco features (ver <a href="../funcionais/">Requisitos Funcionais</a>); os RNFs abaixo estabelecem condições de qualidade para o registro, a correção, a complementação e a consulta da evolução clínica de cada sessão.</p>
+<p><strong id="rnf26">RNF26 — Sigilo do conteúdo da evolução</strong></p>
+<p>Listagens, resultados de busca, endereços eletrônicos, notificações, mensagens de erro e respostas do servidor não devem expor o conteúdo original, as correções ou os complementos de uma evolução quando o acesso for negado pelo RF55. A resposta negada também não deve revelar a existência ou a quantidade desses registros. Os perfis e vínculos autorizados permanecem definidos exclusivamente no RF55.</p>
+<p>A conformidade deve ser verificada com evoluções fictícias contendo correções e complementos, inspecionando a interface e as respostas do servidor em tentativas negadas antes e depois de uma transferência de responsável e confirmando que nenhum conteúdo ou indicador de existência dos registros é exposto.</p>
+<p>Classificação: segurança e privacidade (URPS+).
+Rastreabilidade: CP7 — Registro de evolução por sessão (transversal às features "Registrar evolução da sessão realizada", "Corrigir evolução registrada", "Registrar complemento de evolução da sessão", "Consultar evolução de uma sessão específica" e "Consultar histórico de evolução do paciente"); relacionada à CP12 — Segurança, sigilo e controle de acesso.</p>
+<p><strong id="rnf27">RNF27 — Integridade e proveniência dos registros de evolução</strong></p>
+<p>Cada evolução persistida deve conservar sua associação à sessão, ao paciente, ao ciclo, ao autor e ao momento de registro. Correções e complementos devem conservar seu tipo, autor, data/hora, vínculo com o registro original e ordem cronológica. O histórico não deve ser perdido nem associado a outro caso após troca de responsável (RF25). A validação pelo supervisor (RF67) deve conservar o supervisor, a data/hora e a versão da evolução validada, e o encerramento por alta (RF68) deve conservar autor, confirmação do supervisor, data e motivo; nenhum desses registros pode ser apagado ou sobrescrito.</p>
+<p>A conformidade deve ser verificada por comparação entre sessão, evolução, correções, complementos, validações, encerramento e histórico antes e depois de uma transferência de caso.</p>
+<p>Classificação: confiabilidade e auditoria (URPS+).
+Rastreabilidade: Features "Registrar evolução da sessão realizada", "Validar evolução pelo supervisor" e "Encerrar caso por alta" → CP7 — Registro de evolução por sessão; relacionada a RF25 e RNF20.</p>
+<p><strong id="rnf28">RNF28 — Auditoria das correções de evolução</strong></p>
+<p>Toda correção de um registro de evolução (RF29 — Corrigir evolução registrada) deve preservar o conteúdo original, sem sobrescrita silenciosa, e deve registrar o autor, a data/hora e o motivo de cada correção, de forma que o histórico completo de versões de uma evolução fique disponível para consulta.</p>
+<p>A conformidade deve ser verificada corrigindo um registro de evolução fictício e conferindo que a versão original permanece acessível junto com a nova versão, o autor e o motivo da correção.</p>
+<p>Classificação: auditoria e confiabilidade (URPS+).
+Rastreabilidade: Feature "Corrigir evolução registrada" → CP7 — Registro de evolução por sessão.</p>
+<p><strong id="rnf29">RNF29 — Desempenho do registro e da consulta de evolução</strong></p>
+<p>O registro de uma nova evolução e a consulta de uma evolução já registrada, incluindo correções e complementos, devem apresentar retorno de ponta a ponta em até 2 segundos para 95% das requisições no cenário de referência abaixo:</p>
+<ul>
+<li><strong>Carga:</strong> 30 usuários simultâneos, distribuídos igualmente entre registro e consulta, executando as operações continuamente por 10 minutos.</li>
+<li><strong>Massa de dados:</strong> dois semestres de operação, com cerca de 200 pacientes atendidos, 4.000 sessões e 4.000 evoluções; pelo menos 20% das evoluções devem possuir uma correção e 20% devem possuir um complemento.</li>
+<li><strong>Rede:</strong> conexão do cliente com pelo menos 20 Mbps, latência de ida e volta de até 50 ms e sem perda de pacotes durante o teste.</li>
+<li><strong>Infraestrutura:</strong> ambiente de homologação com a mesma configuração do servidor de produção da FBr; a quantidade de vCPUs, memória, versão do banco de dados e versão da aplicação deve ser registrada no relatório do teste.</li>
+</ul>
+<p>A conformidade deve ser verificada por teste de carga automatizado, por exemplo com k6 ou JMeter, calculando separadamente o percentil 95 do tempo de resposta de ponta a ponta para registro e consulta. A carga de 30 usuários é uma estimativa técnica da equipe e deve ser validada com a FBr antes do aceite definitivo.</p>
+<p>Classificação: desempenho (URPS+).
+Rastreabilidade: CP7 — Registro de evolução por sessão (transversal às features "Registrar evolução da sessão realizada" e "Consultar evolução de uma sessão específica").</p>
+<p><strong id="rnf30">RNF30 — Usabilidade do registro de evolução</strong></p>
+<p>Um estagiário deve conseguir localizar uma sessão realizada, preencher a evolução e concluir o salvamento em até 3 minutos e com, no máximo, 6 interações com componentes da interface, desconsiderando a digitação do conteúdo clínico. Consideram-se interações os cliques, toques ou comandos de teclado usados para selecionar a sessão, abrir o formulário, acionar controles e confirmar o salvamento.</p>
+<p>A conformidade deve ser verificada por teste de tarefa com, no mínimo, 10 estagiários representativos, após uma orientação inicial de até 15 minutos e sem ajuda durante a execução. O requisito é atendido quando pelo menos 90% dos participantes concluírem corretamente o registro na primeira tentativa, dentro dos limites de 3 minutos e 6 interações, sem associar a evolução à sessão ou ao paciente incorreto.</p>
+<p>Classificação: usabilidade (URPS+).
+Rastreabilidade: Feature "Registrar evolução da sessão realizada" → CP7 — Registro de evolução por sessão.</p>
+<h3 id="geracao-do-relatorio-final-de-evolucao-cp8">Geração do relatório final de evolução (CP8)<a class="headerlink" href="#geracao-do-relatorio-final-de-evolucao-cp8" title="Link para esta seção">#</a></h3>
+<p>A CP8 tem uma feature (ver <a href="../funcionais/">Requisitos Funcionais</a>); o RNF abaixo estabelece a condição de qualidade para a geração do relatório final.</p>
+<p><strong id="rnf31">RNF31 — Fidelidade e rastreabilidade do relatório final</strong></p>
+<p>Cada versão gerada do relatório deve identificar o ciclo e os registros de evolução usados como origem. O conteúdo consolidado deve ser verificável contra esses registros, sem substituir, omitir silenciosamente ou inventar informação clínica. Nova submissão, devolução, aprovação ou geração após correção de evolução deve produzir evento ou versão distinguível, preservando autor, data/hora, estado e observações do supervisor.</p>
+<p>Como o relatório final é entregue de forma impressa pela secretaria ao paciente ou ao responsável legal, conforme o RF33 e a reunião de 26/08/2026 (<a href="../../../unidade-1/reunioes/">ata</a>), o sistema não deve disponibilizar ao destinatário endereço de download nem envio por e-mail. A finalização e a impressão devem exigir versão aprovada, registrar o usuário da secretaria e a data/hora e impedir que um relatório seja associado ou impresso a partir do prontuário de outro paciente. O registro de entrega deve exigir confirmação de que a via impressa contém a assinatura manuscrita do supervisor.</p>
+<p>A conformidade deve ser verificada com ciclo fictício contendo registros completos e lacunas, comparando versões, estados e decisões com os registros de origem, tentando imprimir uma versão não aprovada e conferindo a ausência de download ou envio por e-mail ao paciente.</p>
+<p>Classificação: confiabilidade, auditoria, segurança e privacidade (URPS+).
+Rastreabilidade: Feature "Gerar relatório final de evolução" → CP8 — Geração do relatório final de evolução → OE5/OE6; relacionada ao RF33 e aos controles da CP12.</p>
+<h3 id="controle-de-assiduidade-e-alertas-cp9">Controle de assiduidade e alertas (CP9)<a class="headerlink" href="#controle-de-assiduidade-e-alertas-cp9" title="Link para esta seção">#</a></h3>
+<p>A CP9 tem nove features (ver <a href="../funcionais/">Requisitos Funcionais</a>); os RNFs abaixo estabelecem condições de qualidade para a contagem de faltas, o alerta de limite e a liberação da vaga, complementando a declaração tardia desta CP (ver a nota de contexto na seção correspondente de <a href="../funcionais/#controle-de-assiduidade-e-alertas-cp9">Requisitos Funcionais</a>).</p>
+<h4 id="controle-de-faltas-do-paciente">Controle de faltas do paciente<a class="headerlink" href="#controle-de-faltas-do-paciente" title="Link para esta seção">#</a></h4>
+<p><strong id="rnf32">RNF32 — Integridade e auditoria da contagem de faltas</strong></p>
+<p>A contagem de faltas do paciente no ciclo (RF35) e os eventos que a originam (RF34 e RF15) devem ser registrados de forma íntegra e não podem ser apagados ou alterados sem registro de quem alterou, quando e por quê. Toda decisão de desligamento por faltas (RF37) deve preservar o histórico de faltas que a fundamentou, mesmo após a liberação da vaga.</p>
+<p>A conformidade deve ser verificada registrando faltas com dados fictícios e confirmando, por inspeção do histórico, que nenhum perfil consegue apagar ou alterar os registros de falta sem deixar rastro da alteração.</p>
+<p>Classificação: auditoria (URPS+).
+Rastreabilidade: Feature "Contabilizar faltas do paciente no ciclo" → CP9 — Controle de assiduidade e alertas; relacionada às features "Registrar falta do paciente na sessão" e "Desligar paciente por faltas e liberar vaga".</p>
+<p><strong id="rnf33">RNF33 — Visibilidade do alerta de limite de faltas</strong></p>
+<p>O alerta de limite de faltas (RF36) deve ser exibido com destaque visual (cor vermelha) e permanecer visível à secretaria, ao estagiário responsável e à coordenação em toda sessão de uso, sem exigir navegação adicional para localizá-lo, até que a decisão de desligamento seja registrada. A cor não pode ser o único meio de transmitir o alerta: ele deve trazer também um ícone de alerta e o texto "Limite de faltas atingido", com o nome do paciente, e ser anunciado por leitores de tela, atendendo ao critério 1.4.1 (Uso de cor) da WCAG 2.2 e à meta do RNF56.</p>
+<p>A conformidade deve ser verificada demonstrando, para um paciente com o limite de faltas atingido, que o alerta aparece de forma destacada aos três perfis mencionados ao acessarem o sistema, sem etapas de navegação adicionais; exibindo a tela em escala de cinza, para confirmar que o alerta continua identificável pelo ícone e pelo texto; e por inspeção com leitor de tela e ferramenta automatizada de acessibilidade (ex.: axe), sem falhas de nível A ou AA no componente.</p>
+<p>Classificação: usabilidade (URPS+).
+Rastreabilidade: Feature "Emitir alerta de limite de faltas atingido" → CP9 — Controle de assiduidade e alertas.</p>
+<p><strong id="rnf34">RNF34 — Tempo de liberação da vaga após desligamento</strong></p>
+<p>A liberação da vaga e a sinalização "vaga liberada aguardando realocação" (RF37) devem ser concluídas em até 5 segundos após a confirmação do desligamento, sem intervenção manual adicional, e estar visíveis à coordenação e ao supervisor do estagiário a partir desse momento, para evitar que a vaga permaneça ociosa — o problema que motivou a criação desta CP. O prazo vale no cenário de carga de referência do RNF12.</p>
+<p>A conformidade deve ser verificada por teste automatizado que registre o desligamento de um paciente fictício e meça o tempo até a vaga aparecer como liberada, com o próximo inscrito elegível indicado (RF7), na tela da coordenação e do supervisor, repetido 20 vezes, com todas as medições em até 5 segundos.</p>
+<p>Classificação: desempenho (URPS+).
+Rastreabilidade: Feature "Desligar paciente por faltas e liberar vaga" → CP9 — Controle de assiduidade e alertas; relacionada à CP3 — Fila de espera e consulta de posição.</p>
+<h4 id="controle-de-faltas-do-estagiario">Controle de faltas do estagiário<a class="headerlink" href="#controle-de-faltas-do-estagiario" title="Link para esta seção">#</a></h4>
+<p><strong id="rnf35">RNF35 — Privacidade dos dados de faltas do estagiário</strong></p>
+<p>A relação de faltas do estagiário (RF39), a contagem de faltas no semestre (RF40), a sinalização de reprovação (RF63) e a decisão institucional sobre ela (RF64) devem ser visíveis apenas ao supervisor responsável e à coordenação, conforme os perfis definidos na CP12, e não deve ser exposta a outros estagiários nem a pacientes.</p>
+<p>A conformidade deve ser verificada testando o acesso de um usuário sem vínculo de supervisão à relação de faltas de um estagiário e confirmando a negação do acesso.</p>
+<p>Classificação: segurança e privacidade (URPS+).
+Rastreabilidade: Features "Consolidar faltas do estagiário para a supervisão", "Contabilizar faltas do estagiário no semestre", "Sinalizar reprovação do estagiário por faltas" e "Registrar decisão institucional sobre a reprovação do estagiário" → CP9 — Controle de assiduidade e alertas; relacionada à CP12 — Segurança, sigilo e controle de acesso.</p>
+<h3 id="registros-administrativos-do-atendimento-cp10">Registros administrativos do atendimento (CP10)<a class="headerlink" href="#registros-administrativos-do-atendimento-cp10" title="Link para esta seção">#</a></h3>
+<p>A CP10 reúne as condições de qualidade das antigas características "Registro da Contribuição Social" e "Emissão de Declaração de Comparecimento", agrupadas em uma única CP10 conforme a <a href="../../../unidade-1/solucao-proposta/#23-caracteristicas-de-produto-mapeadas-com-os-objetivos-especificos">Solução Proposta, §2.3</a>.</p>
+<h4 id="contribuicao-social">Contribuição social<a class="headerlink" href="#contribuicao-social" title="Link para esta seção">#</a></h4>
+<h4 id="feature-registrar-pagamento-da-contribuicao-social-do-paciente-43">Feature — Registrar pagamento da contribuição social do paciente <a href="https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/issues/43">#43</a><a class="headerlink" href="#feature-registrar-pagamento-da-contribuicao-social-do-paciente-43" title="Link para esta seção">#</a></h4>
+<p><strong id="rnf36">RNF36 — Auditoria dos registros de contribuição social</strong></p>
+<p>Todo registro de pagamento da contribuição social (RF41) deve guardar o usuário responsável, a data/hora da operação, o paciente, o valor, a data e a forma de pagamento. Toda alteração do parâmetro institucional "valor da contribuição social" (RF41) deve guardar o valor anterior, o novo valor, o autor da alteração e a data/hora. Esses dados não podem ser apagados nem sobrescritos. Um registro de pagamento incorreto só pode ser alterado por uma correção versionada, registrada pela secretaria, que deve guardar o motivo da correção, o autor, a data/hora e preservar o registro anterior, íntegro e consultável. Todos esses dados devem ficar disponíveis para consulta pela coordenação por, no mínimo, 24 meses, prazo compatível com o ciclo de fiscalização do CRP (mesmo prazo do RNF48).</p>
+<p>A conformidade deve ser verificada por inspeção: registrar pagamentos, alterar o parâmetro de valor e corrigir um pagamento com dados fictícios, conferir se todos os campos acima foram guardados (inclusive o registro anterior preservado após a correção) e confirmar que nenhum perfil consegue apagá-los ou sobrescrevê-los diretamente pela interface.</p>
+<p>Classificação: auditoria (URPS+).
+Rastreabilidade: Feature "Registrar pagamento da contribuição social do paciente" → CP10 — Registros administrativos do atendimento.</p>
+<h4 id="declaracao-de-comparecimento">Declaração de comparecimento<a class="headerlink" href="#declaracao-de-comparecimento" title="Link para esta seção">#</a></h4>
+<p>Este conjunto reúne cinco features (ver <a href="../funcionais/">Requisitos Funcionais</a>); os RNFs abaixo estabelecem condições de qualidade para a emissão, reemissão e verificação da declaração de comparecimento, aplicando-se de forma transversal ao conjunto das features, conforme indicado na rastreabilidade de cada um. A rastreabilidade de cada RNF identifica explicitamente as features afetadas, preservando a relação CP10 → feature → RNF. Os RNFs de segurança e privacidade (RNF37 a RNF39) devem ser alinhados com os requisitos gerais de acesso e sigilo da CP12, evitando duplicidade, e o RNF43 segue a mesma meta de acessibilidade definida para a CP14 (RNF56).</p>
+<p><strong id="rnf37">RNF37 — Privacidade dos dados na declaração</strong></p>
+<p>A declaração de comparecimento deve conter exatamente os seguintes campos, e nenhum outro: nome do paciente, data e horário da sessão, nome do estagiário que realizou o atendimento, assinatura e carimbo do psicólogo responsável e o número de CRP (RF45). Nenhum dado clínico (queixa, prioridade, diagnóstico, evolução) pode constar do documento. O modelo institucional do documento é mantido pela coordenação como versão vigente, aprovada pela Clínica Escola; qualquer alteração do modelo gera uma nova versão, sem afetar declarações já emitidas sob a versão anterior.</p>
+<p>A conformidade deve ser verificada por revisão do modelo do documento vigente, confirmando que contém exatamente os campos listados, e por teste do conteúdo efetivamente gerado, confirmando a ausência de campos clínicos ou adicionais.</p>
+<p>Classificação: privacidade (URPS+).
+Rastreabilidade: CP10 — Registros administrativos do atendimento (transversal às features "Emitir declaração de comparecimento do paciente" e "Reemitir declaração de comparecimento").</p>
+<p><strong id="rnf38">RNF38 — Autorização para emissão e consulta</strong></p>
+<p>Podem listar, emitir e reemitir declarações: a secretaria, autenticada institucionalmente (RF50), para qualquer paciente; e o paciente ou responsável legal, com identidade verificada pelo RF52 (CP12) — não por autenticação institucional, já que esse público não possui conta —, exclusivamente para as próprias sessões. Estagiário e supervisor não têm acesso a essas funcionalidades.</p>
+<p>A conformidade deve ser verificada por testes de autorização, com cenários positivos e negativos, para os perfis secretaria, paciente/responsável (com e sem identidade verificada), estagiário e supervisor, sem nenhum acesso indevido.</p>
+<p>Classificação: segurança (URPS+).
+Rastreabilidade: CP10 — Registros administrativos do atendimento (transversal às features "Listar sessões com comparecimento registrado do paciente", "Emitir declaração de comparecimento do paciente" e "Reemitir declaração de comparecimento").</p>
+<p><strong id="rnf39">RNF39 — Auditoria de emissões e reemissões</strong></p>
+<p>Toda emissão e reemissão de declaração (RF45, RF46) deve ser registrada com: o usuário que a solicitou (secretaria ou paciente/responsável com identidade verificada, RF52), a data/hora, a sessão de origem, o paciente e o tipo de operação (emissão original ou reemissão), distinguindo-se claramente uma da outra. Tentativas negadas por falta de permissão (RNF38) também devem ser registradas.</p>
+<p>A conformidade deve ser verificada por teste de integração, confirmando o registro de auditoria após cada emissão, reemissão e tentativa negada, com todos os campos acima presentes.</p>
+<p>Classificação: auditoria (URPS+).
+Rastreabilidade: Features "Emitir declaração de comparecimento do paciente" e "Reemitir declaração de comparecimento" → CP10 — Registros administrativos do atendimento.</p>
+<p><strong id="rnf40">RNF40 — Tempo de geração da declaração</strong></p>
+<p>A geração da declaração deve ser rápida o suficiente para o atendimento presencial na secretaria: o documento deve ficar disponível em até 5 segundos em 95% das solicitações, no cenário de referência do RNF12 (30 usuários simultâneos por 10 minutos, massa de dados de dois semestres, ambiente de homologação igual ao servidor de produção, medição no servidor).</p>
+<p>A conformidade deve ser verificada por teste de desempenho reproduzindo o cenário de referência acima.</p>
+<p>Classificação: desempenho (URPS+).
+Rastreabilidade: CP10 — Registros administrativos do atendimento (transversal às features "Emitir declaração de comparecimento do paciente" e "Reemitir declaração de comparecimento").</p>
+<p><strong id="rnf41">RNF41 — Usabilidade da emissão</strong></p>
+<p>A emissão da declaração deve ser simples tanto para a secretaria quanto para pacientes com pouca familiaridade com tecnologia, concluída em até 3 interações a partir da tela do paciente, sem necessidade de treinamento prévio.</p>
+<p>A conformidade deve ser verificada por teste de usabilidade com uma amostra mínima de 5 participantes representativos por público (secretaria e pacientes/responsáveis), com pelo menos 90% concluindo a emissão sem auxílio externo.</p>
+<p>Classificação: usabilidade (URPS+).
+Rastreabilidade: Feature "Listar sessões com comparecimento registrado do paciente" → CP10 — Registros administrativos do atendimento; relacionada à feature "Emitir declaração de comparecimento do paciente".</p>
+<p><strong id="rnf42">RNF42 — Portabilidade do documento</strong></p>
+<p>O documento gerado deve ser entregue ao paciente em formato impresso (papel), conforme confirmado pela Clínica Escola. Internamente, o sistema pode gerar e pré-visualizar o documento em tela — inclusive em celular, para conferência antes da impressão —, em formato PDF tamanho A4, legível tanto em impressão preto e branco quanto em tela.</p>
+<p>A conformidade deve ser verificada por inspeção do documento em impressão e em dispositivo móvel.</p>
+<p>Classificação: compatibilidade e restrição de produto (URPS+).
+Rastreabilidade: CP10 — Registros administrativos do atendimento (transversal às features "Emitir declaração de comparecimento do paciente" e "Reemitir declaração de comparecimento").</p>
+<p><strong id="rnf43">RNF43 — Acessibilidade da tela de emissão</strong></p>
+<p>A tela de emissão e a de listagem de sessões (RF44) devem ser acessíveis a pessoas com limitações visuais, seguindo a mesma meta de conformidade definida para a CP14 (RNF56): navegação por teclado, contraste adequado e compatibilidade com leitor de tela.</p>
+<p>A conformidade deve ser verificada com leitor de tela e checklist de acessibilidade nas telas envolvidas.</p>
+<p>Classificação: acessibilidade (URPS+).
+Rastreabilidade: Feature "Listar sessões com comparecimento registrado do paciente" → CP10 — Registros administrativos do atendimento; relacionada à feature "Emitir declaração de comparecimento do paciente" e à CP14 — Acessibilidade e usabilidade.</p>
+<p><strong id="rnf44">RNF44 — Integridade do conteúdo da declaração</strong></p>
+<p>O conteúdo da declaração deve refletir fielmente o registro da sessão no momento da emissão, e a reemissão deve manter consistência com o conteúdo original, salvo correção do registro. Quando o registro de origem for corrigido depois da emissão, a reemissão (RF46) deve refletir a versão corrigida, e a verificação pública de autenticidade (RF47) deve sinalizar que o documento originalmente emitido não corresponde mais ao registro vigente, sem exibir os dados desatualizados.</p>
+<p>A conformidade deve ser verificada por teste comparando o documento gerado com os dados de origem, confirmando que 100% dos campos coincidem com o registro da sessão, e por teste corrigindo o registro de uma sessão já declarada, confirmando a reemissão com o conteúdo corrigido e o aviso de desatualização na verificação pública do código original.</p>
+<p>Classificação: confiabilidade (URPS+).
+Rastreabilidade: Feature "Emitir declaração de comparecimento do paciente" → CP10 — Registros administrativos do atendimento; relacionada à feature "Reemitir declaração de comparecimento".</p>
+<p><strong id="rnf45">RNF45 — Segurança da consulta pública de autenticidade</strong></p>
+<p>A verificação de autenticidade por terceiros não deve expor dados pessoais além do necessário. Para um código <strong>válido</strong> (declaração vigente, sem correção posterior do registro de origem), a consulta pública deve retornar apenas a confirmação de autenticidade, o nome do paciente, a data e o horário da sessão e o nome do estagiário, sem informação clínica (RF47). Para um código <strong>inválido</strong> (inexistente ou digitado incorretamente), deve retornar apenas uma mensagem genérica de código inválido, sem indicar o motivo. Para um código <strong>revogado</strong> (declaração cujo registro de origem foi corrigido após a emissão, tornando-a substituída por uma reemissão), deve informar que o documento não corresponde mais ao registro vigente, sem exibir os dados anteriores.</p>
+<p>A conformidade deve ser verificada por teste da consulta pública nos três estados (válido, inválido e revogado) e revisão dos dados retornados em cada um.</p>
+<p>Classificação: segurança (URPS+).
+Rastreabilidade: Feature "Validar autenticidade da declaração" → CP10 — Registros administrativos do atendimento.</p>
+<h3 id="indicadores-e-relatorios-institucionais-cp11">Indicadores e Relatórios Institucionais (CP11)<a class="headerlink" href="#indicadores-e-relatorios-institucionais-cp11" title="Link para esta seção">#</a></h3>
+<h4 id="feature-consultar-indicadores-operacionais-22">Feature — Consultar indicadores operacionais <a href="https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/issues/22">#22</a><a class="headerlink" href="#feature-consultar-indicadores-operacionais-22" title="Link para esta seção">#</a></h4>
+<p><strong id="rnf46">RNF46 — Atualização dos indicadores operacionais</strong></p>
+<p>Os quatro indicadores exibidos pelo RF48 (vagas ocupadas, tempo médio de espera, taxa de evasão e distribuição de casos por supervisor) devem refletir todos os registros incluídos ou alterados no sistema até, no máximo, 15 minutos antes do momento em que a consulta é feita (ex.: um paciente desligado às 10h00 deve estar refletido na taxa de evasão a partir, no mais tardar, das 10h15).</p>
+<p>Classificação: confiabilidade (URPS+).
+Rastreabilidade: Feature "Consultar indicadores operacionais" → CP11 — Indicadores e relatórios institucionais.</p>
+<h4 id="feature-exportar-relatorio-institucional-em-pdf-23">Feature — Exportar relatório institucional em PDF <a href="https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/issues/23">#23</a><a class="headerlink" href="#feature-exportar-relatorio-institucional-em-pdf-23" title="Link para esta seção">#</a></h4>
+<p><strong id="rnf47">RNF47 — Tempo de geração do relatório institucional</strong></p>
+<p>O sistema deve exibir em tela os indicadores operacionais (RF48) e gerar o arquivo PDF do relatório institucional (RF49) em até 5 segundos cada, contados, respectivamente, do acionamento da consulta até a exibição completa dos indicadores e do acionamento da exportação até o arquivo ficar disponível para download, para qualquer período de referência de até 12 meses e com até 10 usuários realizando consultas ou exportações simultaneamente.</p>
+<p>Classificação: desempenho (URPS+).
+Rastreabilidade: Features "Consultar indicadores operacionais" e "Exportar relatório institucional em PDF" → CP11 — Indicadores e relatórios institucionais.</p>
+<p><strong id="rnf48">RNF48 — Auditoria de relatórios institucionais</strong></p>
+<p>Para cada exportação do relatório institucional (RF49), o sistema deve registrar o usuário responsável, a data e a hora da operação e o período consultado, mantendo esse registro acessível para consulta por qualquer usuário com perfil de coordenação por, no mínimo, 24 meses a partir do registro, compatível com o ciclo de fiscalização do CRP.</p>
+<p>Classificação: auditoria (URPS+).
+Rastreabilidade: Feature "Exportar relatório institucional em PDF" → CP11 — Indicadores e relatórios institucionais.</p>
+<h3 id="seguranca-sigilo-e-controle-de-acesso-cp12">Segurança, Sigilo e Controle de Acesso (CP12)<a class="headerlink" href="#seguranca-sigilo-e-controle-de-acesso-cp12" title="Link para esta seção">#</a></h3>
+<p>Os RNFs abaixo restringem as features da CP12 e valem para todas as funcionalidades internas do sistema que tratam dados pessoais ou de saúde.</p>
+<h4 id="feature-autenticar-usuario-institucional-45">Feature — Autenticar usuário institucional <a href="https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/issues/45">#45</a><a class="headerlink" href="#feature-autenticar-usuario-institucional-45" title="Link para esta seção">#</a></h4>
+<p><strong id="rnf49">RNF49 — Proteção das credenciais de acesso</strong></p>
+<p>As senhas dos usuários institucionais devem ter, no mínimo, 8 caracteres, com pelo menos uma letra e um número, e devem ser armazenadas apenas na forma de hash com algoritmo próprio para senhas (bcrypt ou Argon2), nunca em texto legível. Após 5 tentativas de login seguidas com erro para o mesmo usuário, o sistema deve bloquear novas tentativas desse usuário por 15 minutos.</p>
+<p>A conformidade deve ser verificada por inspeção do banco de dados (nenhuma senha legível armazenada) e por teste de 5 tentativas de login com erro, confirmando o bloqueio e sua liberação após 15 minutos.</p>
+<p>Classificação: segurança (URPS+).
+Rastreabilidade: Feature "Autenticar usuário institucional" → CP12 — Segurança, sigilo e controle de acesso.</p>
+<h4 id="feature-encerrar-sessao-do-usuario-46">Feature — Encerrar sessão do usuário <a href="https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/issues/46">#46</a><a class="headerlink" href="#feature-encerrar-sessao-do-usuario-46" title="Link para esta seção">#</a></h4>
+<p><strong id="rnf50">RNF50 — Expiração da sessão por inatividade</strong></p>
+<p>A sessão de um usuário institucional deve ser encerrada automaticamente após 30 minutos sem nenhuma interação com o sistema, para reduzir o risco de exposição de dados em computadores compartilhados da clínica.</p>
+<p>A conformidade deve ser verificada por teste: deixar uma sessão parada por 30 minutos e confirmar que a próxima ação exige nova autenticação.</p>
+<p>Classificação: segurança (URPS+).
+Rastreabilidade: Feature "Encerrar sessão do usuário" → CP12 — Segurança, sigilo e controle de acesso.</p>
+<h4 id="feature-restringir-acesso-ao-prontuario-do-paciente-50">Feature — Restringir acesso ao prontuário do paciente <a href="https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/issues/50">#50</a><a class="headerlink" href="#feature-restringir-acesso-ao-prontuario-do-paciente-50" title="Link para esta seção">#</a></h4>
+<p><strong id="rnf51">RNF51 — Criptografia dos dados</strong></p>
+<p>Toda comunicação entre o navegador e o sistema deve usar HTTPS com TLS 1.2 ou superior, e requisições feitas por HTTP devem ser redirecionadas para HTTPS.</p>
+<p><strong>Criptografia em repouso.</strong> Todos os dados pessoais sensíveis (LGPD, art. 5º, II), que neste sistema são os dados de saúde, devem ser armazenados criptografados no banco de dados. Isso inclui a queixa, o histórico relevante e a percepção de urgência informados na inscrição (RF1/RF3), as sinalizações e a prioridade clínica da triagem (RF5/RF6), os registros de evolução, correções e complementos (CP7) e o relatório final (CP8). As cópias de segurança seguem o RNF53.</p>
+<p><strong>Gestão das chaves:</strong></p>
+<ul>
+<li><strong>Armazenamento:</strong> as chaves de criptografia ficam fora do banco de dados e do repositório de código, em variável de ambiente ou cofre de segredos do servidor.</li>
+<li><strong>Acesso:</strong> somente o responsável técnico designado pela FBr para o servidor tem acesso às chaves; a aplicação as lê em tempo de execução, e nenhum perfil de usuário do sistema consegue visualizá-las.</li>
+<li><strong>Rotação:</strong> as chaves são trocadas pelo menos uma vez por ano e imediatamente em caso de suspeita de comprometimento, com a recriptografia dos dados existentes; cada troca é registrada com data e responsável.</li>
+</ul>
+<p>A conformidade deve ser verificada por ferramenta de análise de configuração TLS (ex.: SSL Labs), por teste de acesso via HTTP, por inspeção do banco de dados, confirmando que nenhum dos campos listados aparece em texto legível, por inspeção do repositório de código, confirmando a ausência de chaves, e por um teste de rotação em ambiente de homologação, confirmando que os dados continuam legíveis pela aplicação após a troca.</p>
+<p>Classificação: segurança (URPS+).
+Rastreabilidade: Feature "Restringir acesso ao prontuário do paciente" → CP12 — Segurança, sigilo e controle de acesso; transversal aos dados de saúde tratados na CP1, CP2, CP7 e CP8.</p>
+<h4 id="feature-consultar-registro-de-acessos-ao-prontuario-51">Feature — Consultar registro de acessos ao prontuário <a href="https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/issues/51">#51</a><a class="headerlink" href="#feature-consultar-registro-de-acessos-ao-prontuario-51" title="Link para esta seção">#</a></h4>
+<p><strong id="rnf52">RNF52 — Trilha de auditoria de acessos ao prontuário</strong></p>
+<p>O sistema deve registrar automaticamente todo acesso ao prontuário, permitido ou negado, com o usuário, o perfil, a data/hora, o paciente e a operação realizada. Nenhum perfil pode alterar ou apagar esses registros, que devem ser mantidos por, no mínimo, 5 anos a partir do acesso. Esse é o prazo mínimo de guarda do registro documental do serviço psicológico fixado pela Resolução CFP nº 1/2009 (art. 4º, § 1º); por ser um mínimo normativo, não depende de confirmação da FBr, que pode apenas ampliá-lo por política institucional.</p>
+<p>A conformidade deve ser verificada por teste: realizar acessos permitidos e negados com usuários de teste e conferir se todos aparecem na consulta do RF56, e por inspeção, confirmando que a interface não oferece meio de alterar ou apagar os registros.</p>
+<p>Classificação: auditoria (URPS+).
+Rastreabilidade: Feature "Consultar registro de acessos ao prontuário" → CP12 — Segurança, sigilo e controle de acesso.</p>
+<h4 id="transversal-as-features-da-cp12">Transversal às features da CP12<a class="headerlink" href="#transversal-as-features-da-cp12" title="Link para esta seção">#</a></h4>
+<p><strong id="rnf53">RNF53 — Cópia de segurança e recuperação dos dados</strong></p>
+<p>O sistema deve fazer cópia de segurança completa dos dados pelo menos uma vez por dia, de forma que uma falha cause a perda de, no máximo, 24 horas de registros (ponto de recuperação). Após uma falha que torne o sistema ou os dados indisponíveis, o serviço deve voltar a operar com os dados da última cópia em até 8 horas contadas da detecção da falha (tempo de recuperação), o que corresponde, no pior caso, a um dia de atendimento em que a clínica recorre ao registro manual. As cópias devem ser armazenadas criptografadas, fora do servidor principal, e a restauração deve ser testada pelo menos uma vez por semestre, seguindo um procedimento de restauração documentado.</p>
+<p>A conformidade deve ser verificada por inspeção do histórico de cópias (uma cópia por dia) e por um teste de restauração em ambiente separado, cronometrado do início do procedimento até o sistema voltar a atender, confirmando que o tempo total fica em até 8 horas e que os dados restaurados correspondem aos da última cópia.</p>
+<p>Classificação: confiabilidade (URPS+).
+Rastreabilidade: CP12 — Segurança, sigilo e controle de acesso (transversal às features); responde ao risco IS05 — Dependência tecnológica da intervenção social (Seção 3).</p>
+<h3 id="continuidade-de-casos-entre-semestres-cp13">Continuidade de casos entre semestres (CP13)<a class="headerlink" href="#continuidade-de-casos-entre-semestres-cp13" title="Link para esta seção">#</a></h3>
+<p>A CP13 tem três features (ver <a href="../funcionais/">Requisitos Funcionais</a>); os RNFs abaixo estabelecem condições de qualidade para a decisão de continuidade e a preservação do histórico clínico na virada de semestre.</p>
+<p><strong id="rnf54">RNF54 — Auditoria das decisões de continuidade</strong></p>
+<p>Toda decisão de continuidade (RF59) deve ser registrada com o caso, o estagiário que está concluindo o estágio, o novo estagiário indicado ou o motivo do encerramento, o autor da decisão e a data. Cada correção deve preservar a versão anterior e registrar a nova decisão, o motivo, o integrante da coordenação responsável, a data/hora e o efeito sobre uma transferência pendente ou já efetivada. Esses registros não podem ser apagados nem sobrescritos e devem ser mantidos por, no mínimo, 5 anos contados do encerramento do caso ou da última decisão de continuidade, prevalecendo a data mais recente, conforme o período mínimo de guarda estabelecido pela Resolução CFP nº 5/2025 para documentos decorrentes da prestação de serviços psicológicos.</p>
+<p>Após o prazo mínimo, a eliminação ou anonimização somente pode ocorrer mediante autorização registrada da pessoa psicóloga responsável técnica e conforme a política institucional da FBr. O sistema deve impedir a destinação enquanto houver prazo adicional previsto em lei, determinação judicial, fiscalização, investigação ou outra necessidade formal de manutenção, e deve registrar o responsável, a data/hora, o método e o fundamento da destinação realizada.</p>
+<p>A conformidade deve ser verificada registrando decisões de continuidade e de encerramento com dados fictícios, corrigindo-as antes e depois de uma transferência e confirmando que somente a coordenação pode corrigir, sempre com motivo e sem apagar versões ou desfazer transferências silenciosamente. Devem ser testados também: tentativa de destinação antes de 5 anos; bloqueio por obrigação de guarda adicional; e destinação autorizada após o prazo, com geração do respectivo registro de auditoria.</p>
+<p>Classificação: auditoria (URPS+).
+Rastreabilidade: Feature "Registrar decisão de continuidade do caso" → CP13 — Continuidade de casos entre semestres.</p>
+<p><strong id="rnf55">RNF55 — Integridade do histórico na continuidade</strong></p>
+<p>A transferência de um caso na virada de semestre (RF60) não deve causar perda de informação: sessões, evoluções originais, correções, complementos, relatórios finais, decisões de continuidade, transferências e vínculos anteriores devem permanecer disponíveis ao novo estagiário responsável após a continuidade, com as mesmas garantias já estabelecidas para a transferência de caso da CP5 (RNF20).</p>
+<p>A conformidade deve ser verificada por teste comparando o histórico completo do caso antes e depois da continuidade, confirmando que todos os tipos de registro permanecem acessíveis ao novo responsável e que a simples chegada da data de encerramento, sem confirmação da coordenação, não altera o responsável.</p>
+<p>Classificação: confiabilidade (URPS+).
+Rastreabilidade: Feature "Vincular caso a novo estagiário na continuidade" → CP13 — Continuidade de casos entre semestres; relacionada ao RNF20 (CP5).</p>
+<h3 id="acessibilidade-e-usabilidade-cp14">Acessibilidade e Usabilidade (CP14)<a class="headerlink" href="#acessibilidade-e-usabilidade-cp14" title="Link para esta seção">#</a></h3>
+<p>CP14 tem duas features (<strong>Ativar modo de alto contraste</strong> e <strong>Ajustar tamanho do texto</strong>), mas os RNFs abaixo são requisitos de qualidade transversais às páginas voltadas ao público externo (inscrição, consulta de posição na fila, agendamento e confirmação de presença) como um todo — não restringem uma única feature isoladamente, e por isso não foram forçados em uma das duas.</p>
+<p>A exigência de acessibilidade não é apenas uma boa prática do projeto: a Clínica Escola FBr confirmou, na reunião de 26/08/2026 (<a href="../../../unidade-1/reunioes/">ata</a>), que a acessibilidade é mandatória por exigência do MEC sobre o curso de Psicologia, e que a clínica já atende ao menos um paciente com baixa visão. O suporte a Libras foi discutido na mesma reunião e explicitamente adiado pela FBr para uma iteração futura do projeto, não fazendo parte do escopo atual.</p>
+<p><strong id="rnf56">RNF56 — Conformidade com WCAG 2.2 nível AA</strong></p>
+<p>As páginas voltadas ao público externo devem atender a todos os critérios de sucesso de nível A e AA da WCAG 2.2 aplicáveis a conteúdo web, verificável pela combinação de ferramenta automatizada de auditoria de acessibilidade (ex.: Lighthouse ou axe) e inspeção/teste manual (incluindo navegação por teclado e leitor de tela), sem nenhuma ocorrência de falha de nível A ou AA apontada pela ferramenta ou identificada na inspeção manual.</p>
+<p>Classificação: acessibilidade (URPS+).
+Rastreabilidade: CP14 — Acessibilidade e usabilidade (transversal às features "Ativar modo de alto contraste" e "Ajustar tamanho do texto").</p>
+<p><strong id="rnf57">RNF57 — Aparência reforçada do indicador de foco</strong></p>
+<p>A operação por teclado e a existência de um indicador de foco visível já fazem parte da conformidade exigida pelo RNF56 (critérios 2.1.1 e 2.4.7 da WCAG 2.2). Este RNF acrescenta uma exigência além do nível AA, motivada pelo atendimento de pacientes com baixa visão confirmado pela Clínica Escola: o indicador de foco das páginas voltadas ao público externo deve seguir o critério 2.4.13 (Aparência do foco, nível AAA) da WCAG 2.2. Em todo elemento interativo (campo, botão ou link) em foco, o indicador deve:</p>
+<ul>
+<li>ter área pelo menos igual à de um contorno de 2 pixels de espessura ao redor do elemento;</li>
+<li>ter razão de contraste de pelo menos 3:1 entre os pixels do estado com foco e os do estado sem foco;</li>
+<li>manter essas duas condições também no modo de alto contraste (RF61) e nos três níveis de tamanho de texto (RF62).</li>
+</ul>
+<p>A conformidade deve ser verificada navegando por teclado por todas as páginas voltadas ao público externo, nas combinações de contraste e tamanho de texto, e medindo, com ferramenta de verificação de contraste, a espessura e o contraste do indicador de cada tipo de elemento interativo.</p>
+<p>Classificação: acessibilidade (URPS+).
+Rastreabilidade: CP14 — Acessibilidade e usabilidade (transversal às features "Ativar modo de alto contraste" e "Ajustar tamanho do texto").</p>
+<p><strong id="rnf58">RNF58 — Responsividade da interface</strong></p>
+<p>A adaptação à largura de 320 pixels já é exigida pelo RNF56 (critério 1.4.10 — Refluxo da WCAG 2.2). Este RNF estende a exigência às telas maiores: as páginas voltadas ao público externo devem se adaptar a qualquer largura de tela entre 320 e 1920 pixels, cobrindo celulares, tablets e computadores, sem perda de funcionalidade, sem sobreposição ou corte de elementos e sem exigir rolagem horizontal.</p>
+<p>A conformidade deve ser verificada exibindo cada página voltada ao público externo nas larguras de 360, 768, 1024, 1366 e 1920 pixels, com a ferramenta de simulação de dispositivos do navegador, e confirmando em cada uma a ausência de rolagem horizontal, sobreposição, corte ou funcionalidade inacessível.</p>
+<p>Classificação: usabilidade (URPS+).
+Rastreabilidade: CP14 — Acessibilidade e usabilidade (transversal às features "Ativar modo de alto contraste" e "Ajustar tamanho do texto").</p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Voltar para o topo
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    
+      
+      <nav class="md-footer__inner md-grid" aria-label="Rodapé" >
+        
+          
+          <a href="../funcionais/" class="md-footer__link md-footer__link--prev" aria-label="Anterior: 8.1 Requisitos Funcionais">
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+            </div>
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Anterior
+              </span>
+              <div class="md-ellipsis">
+                8.1 Requisitos Funcionais
+              </div>
+            </div>
+          </a>
+        
+        
+          
+          <a href="../analise-feedback/" class="md-footer__link md-footer__link--next" aria-label="Próximo: 8.3 Análise do Feedback">
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Próximo
+              </span>
+              <div class="md-ellipsis">
+                8.3 Análise do Feedback
+              </div>
+            </div>
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11z"/></svg>
+            </div>
+          </a>
+        
+      </nav>
+    
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      Clínica Escola FBr · Documentação acadêmica do projeto · 2026
+    </div>
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../../..", "features": ["navigation.tabs", "navigation.tabs.sticky", "navigation.sections", "navigation.path", "navigation.top", "navigation.footer", "navigation.tracking", "toc.follow", "search.suggest", "search.highlight", "content.code.copy"], "search": "../../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copiado para \u00e1rea de transfer\u00eancia", "clipboard.copy": "Copiar para \u00e1rea de transfer\u00eancia", "search.result.more.one": "mais 1 nesta p\u00e1gina", "search.result.more.other": "# mais nesta p\u00e1gina", "search.result.none": "Nenhum documento encontrado", "search.result.one": "1 documento encontrado", "search.result.other": "# documentos encontrados", "search.result.placeholder": "Digite para iniciar a busca", "search.result.term.missing": "Ausente", "select.version": "Selecione a vers\u00e3o"}, "version": null}</script>
+    
+    
+      <script src="../../../assets/javascripts/bundle.d7400e89.min.js"></script>
+      
+        <script src="../../../assets/javascripts/extra.js"></script>
+      
+        <script src="../../../assets/javascripts/reading.js"></script>
+      
+        <script src="../../../assets/javascripts/matriz.js"></script>
+      
+        <script src="../../../assets/javascripts/melhorias.js"></script>
+      
+    
+  </body>
+</html>

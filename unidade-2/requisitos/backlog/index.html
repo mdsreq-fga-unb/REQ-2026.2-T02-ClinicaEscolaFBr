@@ -1,0 +1,4867 @@
+
+<!doctype html>
+<html lang="pt" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Documentação do projeto Clínica Escola FBr para as entregas das Unidades 1 a 4.">
+      
+      
+      
+        <link rel="canonical" href="https://mdsreq-fga-unb.github.io/REQ-2026.2-T02-ClinicaEscolaFBr/unidade-2/requisitos/backlog/">
+      
+      
+        <link rel="prev" href="../dor-dod/">
+      
+      
+        <link rel="next" href="../../gestao/cronograma/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../../assets/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
+    
+    
+      
+        <title>10. Backlog de Produto - Clínica Escola FBr - Documentação</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../../assets/stylesheets/main.ec1eaa64.min.css">
+      
+        
+        <link rel="stylesheet" href="../../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,300..800;1,14..32,300..800&family=JetBrains+Mono:wght@400;500;600&display=swap">
+  <style>:root{--md-text-font:"Inter";--md-code-font:"JetBrains Mono"}</style>
+
+    
+      <link rel="stylesheet" href="../../../assets/stylesheets/extra.css">
+    
+      <link rel="stylesheet" href="../../../assets/stylesheets/reading.css">
+    
+      <link rel="stylesheet" href="../../../assets/stylesheets/melhorias.css">
+    
+    <script>__md_scope=new URL("../../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="custom" data-md-color-accent="custom">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#10-backlog-de-produto" class="md-skip">
+          Pular para conteúdo
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow md-header--lifted" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Cabeçalho">
+    <a href="../../.." title="Clínica Escola FBr - Documentação" class="md-header__button md-logo" aria-label="Clínica Escola FBr - Documentação" data-md-component="logo">
+      <img class="fbr-logo fbr-logo--light" src="../../../assets/images/logo-fbr.png" alt="" width="131" height="144">
+<img class="fbr-logo fbr-logo--dark" src="../../../assets/images/logo-fbr-dark.png" alt="" width="131" height="144">
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Clínica Escola FBr - Documentação
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              10. Backlog de Produto
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="custom" data-md-color-accent="custom"  aria-label="Alternar para modo escuro"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Alternar para modo escuro" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m17.75 4.09-2.53 1.94.91 3.06-2.63-1.81-2.63 1.81.91-3.06-2.53-1.94L12.44 4l1.06-3 1.06 3zm3.5 6.91-1.64 1.25.59 1.98-1.7-1.17-1.7 1.17.59-1.98L15.75 11l2.06-.05L18.5 9l.69 1.95zm-2.28 4.95c.83-.08 1.72 1.1 1.19 1.85-.32.45-.66.87-1.08 1.27C15.17 23 8.84 23 4.94 19.07c-3.91-3.9-3.91-10.24 0-14.14.4-.4.82-.76 1.27-1.08.75-.53 1.93.36 1.85 1.19-.27 2.86.69 5.83 2.89 8.02a9.96 9.96 0 0 0 8.02 2.89m-1.64 2.02a12.08 12.08 0 0 1-7.8-3.47c-2.17-2.19-3.33-5-3.49-7.82-2.81 3.14-2.7 7.96.31 10.98 3.02 3.01 7.84 3.12 10.98.31"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="custom" data-md-color-accent="custom"  aria-label="Alternar para modo claro"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Alternar para modo claro" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 7a5 5 0 0 1 5 5 5 5 0 0 1-5 5 5 5 0 0 1-5-5 5 5 0 0 1 5-5m0 2a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3m0-7 2.39 3.42C13.65 5.15 12.84 5 12 5s-1.65.15-2.39.42zM3.34 7l4.16-.35A7.2 7.2 0 0 0 5.94 8.5c-.44.74-.69 1.5-.83 2.29zm.02 10 1.76-3.77a7.131 7.131 0 0 0 2.38 4.14zM20.65 7l-1.77 3.79a7.02 7.02 0 0 0-2.38-4.15zm-.01 10-4.14.36c.59-.51 1.12-1.14 1.54-1.86.42-.73.69-1.5.83-2.29zM12 22l-2.41-3.44c.74.27 1.55.44 2.41.44.82 0 1.63-.17 2.37-.44z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Buscar" placeholder="Buscar" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Pesquisar">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Limpar" aria-label="Limpar" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Inicializando busca
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr" title="Ir para repositório" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 2A10 10 0 0 0 2 12c0 4.42 2.87 8.17 6.84 9.5.5.08.66-.23.66-.5v-1.69c-2.77.6-3.36-1.34-3.36-1.34-.46-1.16-1.11-1.47-1.11-1.47-.91-.62.07-.6.07-.6 1 .07 1.53 1.03 1.53 1.03.87 1.52 2.34 1.07 2.91.83.09-.65.35-1.09.63-1.34-2.22-.25-4.55-1.11-4.55-4.92 0-1.11.38-2 1.03-2.71-.1-.25-.45-1.29.1-2.64 0 0 .84-.27 2.75 1.02.79-.22 1.65-.33 2.5-.33s1.71.11 2.5.33c1.91-1.29 2.75-1.02 2.75-1.02.55 1.35.2 2.39.1 2.64.65.71 1.03 1.6 1.03 2.71 0 3.82-2.34 4.66-4.57 4.91.36.31.69.92.69 1.85V21c0 .27.16.59.67.5C19.14 20.16 22 16.42 22 12A10 10 0 0 0 12 2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    REQ-2026.2-T02-ClinicaEscolaFBr
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+    
+      
+<nav class="md-tabs" aria-label="Abas" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../.." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Início
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../unidade-1/" class="md-tabs__link">
+          
+  
+  
+  Unidade 1 — Visão e planejamento
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../../" class="md-tabs__link">
+          
+  
+  
+  Unidade 2 — Requisitos e priorização
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+    
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navegação" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../../.." title="Clínica Escola FBr - Documentação" class="md-nav__button md-logo" aria-label="Clínica Escola FBr - Documentação" data-md-component="logo">
+      <img class="fbr-logo fbr-logo--light" src="../../../assets/images/logo-fbr.png" alt="" width="131" height="144">
+<img class="fbr-logo fbr-logo--dark" src="../../../assets/images/logo-fbr-dark.png" alt="" width="131" height="144">
+    </a>
+    Clínica Escola FBr - Documentação
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr" title="Ir para repositório" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 2A10 10 0 0 0 2 12c0 4.42 2.87 8.17 6.84 9.5.5.08.66-.23.66-.5v-1.69c-2.77.6-3.36-1.34-3.36-1.34-.46-1.16-1.11-1.47-1.11-1.47-.91-.62.07-.6.07-.6 1 .07 1.53 1.03 1.53 1.03.87 1.52 2.34 1.07 2.91.83.09-.65.35-1.09.63-1.34-2.22-.25-4.55-1.11-4.55-4.92 0-1.11.38-2 1.03-2.71-.1-.25-.45-1.29.1-2.64 0 0 .84-.27 2.75 1.02.79-.22 1.65-.33 2.5-.33s1.71.11 2.5.33c1.91-1.29 2.75-1.02 2.75-1.02.55 1.35.2 2.39.1 2.64.65.71 1.03 1.6 1.03 2.71 0 3.82-2.34 4.66-4.57 4.91.36.31.69.92.69 1.85V21c0 .27.16.59.67.5C19.14 20.16 22 16.42 22 12A10 10 0 0 0 12 2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    REQ-2026.2-T02-ClinicaEscolaFBr
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Início
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Unidade 1 — Visão e planejamento
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Unidade 1 — Visão e planejamento
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../unidade-1/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Início da unidade
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../unidade-1/cenario-atual/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    1. Cenário Atual
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../unidade-1/solucao-proposta/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    2. Solução Proposta
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../unidade-1/intervencao-social/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    3. Intervenção Social
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../unidade-1/estrategia-esw/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    4. Estratégia de ESW
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../unidade-1/engenharia-requisitos/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    5. Engenharia de Requisitos
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_7" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_7" id="__nav_2_7_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Gestão do Projeto
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_7">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Gestão do Projeto
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../unidade-1/gestao/cronograma/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    6. Cronograma e Entregas
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../unidade-1/gestao/equipe-comunicacao/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    7. Equipe e Comunicação
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../unidade-1/gestao/boas-praticas-github/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Boas práticas no GitHub
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../unidade-1/reunioes/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Reuniões
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_8" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_8" id="__nav_2_8_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Estudos e referências
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_8_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_8">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Estudos e referências
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../unidade-1/estudos/fdd/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Estudo de FDD
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../unidade-1/licoes-aprendidas/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Lições Aprendidas
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../unidade-1/referencias/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Referências
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Unidade 2 — Requisitos e priorização
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Unidade 2 — Requisitos e priorização
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Início da unidade
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+          
+          
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_2" id="__nav_3_2_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    8. Requisitos de Software
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    8. Requisitos de Software
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../funcionais/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    8.1 Requisitos Funcionais
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../nao-funcionais/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    8.2 Requisitos Não Funcionais
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../analise-feedback/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    8.3 Análise do Feedback
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dor-dod/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    9. DoR e DoD
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    10. Backlog de Produto
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    10. Backlog de Produto
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Índice">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Índice
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#101-backlog-do-produto" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        10.1 Backlog do Produto
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="10.1 Backlog do Produto">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1011-mapa-do-escopo" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        10.1.1 Mapa do escopo
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#1012-itens-de-trabalho-do-mvp" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        10.1.2 Itens de trabalho do MVP
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#1013-itens-para-versoes-posteriores" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        10.1.3 Itens para versões posteriores
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#102-priorizacao-e-recorte-do-mvp" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        10.2 Priorização e Recorte do MVP
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="10.2 Priorização e Recorte do MVP">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1021-avaliacao-de-valor-de-negocio-e-de-esforco-tecnico" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        10.2.1 Avaliação de Valor de Negócio e de Esforço Técnico
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="10.2.1 Avaliação de Valor de Negócio e de Esforço Técnico">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#10211-escala-e-criterios-de-valor-de-negocio" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        10.2.1.1 Escala e critérios de valor de negócio
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#10212-escalas-adotadas" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        10.2.1.2 Escalas adotadas
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#10213-regra-de-consolidacao" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        10.2.1.3 Regra de consolidação
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#10214-tabela-consolidada" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        10.2.1.4 Tabela consolidada
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#1022-matriz-de-priorizacao-valor-de-negocio-esforco-tecnico" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        10.2.2 Matriz de Priorização (Valor de Negócio × Esforço Técnico)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#1023-definicao-do-mvp" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        10.2.3 Definição do MVP
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="10.2.3 Definição do MVP">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#10231-classificacao-dos-requisitos-nao-funcionais-para-o-mvp" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        10.2.3.1 Classificação dos Requisitos Não Funcionais para o MVP
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#1024-validacao-do-mvp-com-o-cliente" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        10.2.4 Validação do MVP com o Cliente
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+          
+          
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_5" id="__nav_3_5_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Gestão do Projeto
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Gestão do Projeto
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../gestao/cronograma/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Cronograma e Entregas
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reunioes/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Reuniões
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+          
+          
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_6" id="__nav_3_6_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Aprendizados e documentação
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Aprendizados e documentação
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../licoes-aprendidas/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Lições Aprendidas
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../analise-ux-capitulo-10/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Melhorias de UX — Capítulo 10
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Índice">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Índice
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#101-backlog-do-produto" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        10.1 Backlog do Produto
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="10.1 Backlog do Produto">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1011-mapa-do-escopo" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        10.1.1 Mapa do escopo
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#1012-itens-de-trabalho-do-mvp" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        10.1.2 Itens de trabalho do MVP
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#1013-itens-para-versoes-posteriores" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        10.1.3 Itens para versões posteriores
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#102-priorizacao-e-recorte-do-mvp" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        10.2 Priorização e Recorte do MVP
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="10.2 Priorização e Recorte do MVP">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1021-avaliacao-de-valor-de-negocio-e-de-esforco-tecnico" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        10.2.1 Avaliação de Valor de Negócio e de Esforço Técnico
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="10.2.1 Avaliação de Valor de Negócio e de Esforço Técnico">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#10211-escala-e-criterios-de-valor-de-negocio" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        10.2.1.1 Escala e critérios de valor de negócio
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#10212-escalas-adotadas" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        10.2.1.2 Escalas adotadas
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#10213-regra-de-consolidacao" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        10.2.1.3 Regra de consolidação
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#10214-tabela-consolidada" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        10.2.1.4 Tabela consolidada
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#1022-matriz-de-priorizacao-valor-de-negocio-esforco-tecnico" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        10.2.2 Matriz de Priorização (Valor de Negócio × Esforço Técnico)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#1023-definicao-do-mvp" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        10.2.3 Definição do MVP
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="10.2.3 Definição do MVP">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#10231-classificacao-dos-requisitos-nao-funcionais-para-o-mvp" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        10.2.3.1 Classificação dos Requisitos Não Funcionais para o MVP
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#1024-validacao-do-mvp-com-o-cliente" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        10.2.4 Validação do MVP com o Cliente
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+                
+
+
+
+  
+
+
+  <nav class="md-path" aria-label="Navegação" >
+    <ol class="md-path__list">
+      
+        
+  
+  
+    <li class="md-path__item">
+      <a href="../../.." class="md-path__link">
+        
+  <span class="md-ellipsis">
+    Início
+  </span>
+
+      </a>
+    </li>
+  
+
+      
+      
+        
+  
+  
+    
+    
+      <li class="md-path__item">
+        <a href="../../" class="md-path__link">
+          
+  <span class="md-ellipsis">
+    Unidade 2 — Requisitos e priorização
+  </span>
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ol>
+  </nav>
+
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="10-backlog-de-produto">10. Backlog de Produto<a class="headerlink" href="#10-backlog-de-produto" title="Link para esta seção">#</a></h1>
+<h2 id="101-backlog-do-produto">10.1 Backlog do Produto<a class="headerlink" href="#101-backlog-do-produto" title="Link para esta seção">#</a></h2>
+<p>O backlog reúne os <strong>itens de trabalho</strong> do produto. Cada item corresponde a uma <strong>feature</strong> da <a href="../funcionais/#lista-de-features-fdd">Lista de features (FDD)</a>, que declara um requisito funcional (RF) e é restringida pelos RNFs da classificação da seção <a href="#10231-classificacao-dos-requisitos-nao-funcionais-para-o-mvp">10.2.3.1</a>. O pertencimento ao MVP vem da priorização da seção <a href="#102-priorizacao-e-recorte-do-mvp">10.2</a>, validada com a Clínica Escola FBr.</p>
+<p>A organização segue o processo <strong>Planejar por Feature</strong> do FDD:</p>
+<ul>
+<li><strong>Responsável:</strong> Líder de Feature que conduz o projeto, a construção e a demonstração do conjunto de features, conforme a <a href="../../../unidade-1/gestao/equipe-comunicacao/#71-composicao-da-equipe">composição da equipe</a>; cada feature conta ainda com a revisão cruzada de outro integrante nas inspeções de design e de código.</li>
+<li><strong>Ciclo:</strong> ciclo de construção em que a feature passa pelos processos <strong>Projetar por Feature</strong> e <strong>Construir por Feature</strong> — Ciclo 3 (14/10 a 27/10), Ciclo 4 (28/10 a 10/11), Ciclo 5 (11/11 a 17/11) ou Ciclo 6 (18/11 a 01/12) —, conforme o <a href="../../../unidade-1/gestao/cronograma/#62-visao-macro-das-unidades-2-3-e-4">planejamento macro das Unidades 2, 3 e 4</a>. No início do Ciclo 3, Gabriel prepara a base técnica do projeto (repositório, banco de dados, autenticação, integração contínua e provedores de e-mail, SMS e PDF), da qual dependem todas as features. Os itens que servem de base para os demais (acesso, inscrição, triagem, distribuição de casos e agendamento) vêm primeiro, a carga de cada responsável é distribuída pelas horas estimadas na escala de esforço (seção <a href="#10212-escalas-adotadas">10.2.1.2</a>), e cada CP do MVP tem ao menos um incremento construído até a entrega da Unidade 3, em 17/11. A construção do MVP termina no Ciclo 6, no início de dezembro, como combinado com a FBr; o Ciclo 7 (02/12 a 10/12) fica reservado à demonstração integrada, ao aceite da FBr e à entrega da Unidade 4, em 10/12.</li>
+<li><strong>Ordem:</strong> os itens aparecem na ordem de construção, ciclo a ciclo, respeitando as dependências declaradas na rastreabilidade de cada RF.</li>
+<li><strong>Estado:</strong> estado da feature no FDD, conforme o <a href="../../../unidade-1/estudos/fdd/#33-planejar-por-feature">estudo do FDD (§3.3)</a>. Os itens do MVP estão <strong>Planejados</strong> e passam a <strong>Em design</strong> depois de avaliados pelo <a href="../dor-dod/">Definition of Ready</a>; os itens fora do MVP permanecem <strong>Identificados</strong>.</li>
+<li><strong>Issue:</strong> issue do GitHub em que o item é acompanhado e em que a avaliação do DoR é registrada, quando já criada.</li>
+</ul>
+<h3 id="1011-mapa-do-escopo">10.1.1 Mapa do escopo<a class="headerlink" href="#1011-mapa-do-escopo" title="Link para esta seção">#</a></h3>
+<p>O mapa distribui as features pelas Áreas e pelos conjuntos de features do FDD, com o Líder de Feature responsável e o ciclo em que cada conjunto fica concluído no MVP.</p>
+<table>
+<thead>
+<tr>
+<th>Área (FDD)</th>
+<th>Conjunto de features</th>
+<th>No MVP</th>
+<th>Versão posterior</th>
+<th>Responsável</th>
+<th>Conclusão prevista</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Inscrição no atendimento</td>
+<td>Inscrição on-line</td>
+<td>2</td>
+<td>1</td>
+<td>Jônatas</td>
+<td>Ciclo 3</td>
+</tr>
+<tr>
+<td>Triagem clínica</td>
+<td>Triagem e sinalização de casos</td>
+<td>2</td>
+<td>1</td>
+<td>Luís Henrique</td>
+<td>Ciclo 3</td>
+</tr>
+<tr>
+<td>Gestão da fila de espera</td>
+<td>Fila de espera e consulta de posição</td>
+<td>2</td>
+<td>1</td>
+<td>Jônatas</td>
+<td>Ciclo 4</td>
+</tr>
+<tr>
+<td>Agendamento e acompanhamento de sessões</td>
+<td>Agendamento</td>
+<td>2</td>
+<td>1</td>
+<td>Nicolas</td>
+<td>Ciclo 4</td>
+</tr>
+<tr>
+<td>Agendamento e acompanhamento de sessões</td>
+<td>Confirmação e lembrete</td>
+<td>1</td>
+<td>1</td>
+<td>Nicolas</td>
+<td>Ciclo 4</td>
+</tr>
+<tr>
+<td>Agendamento e acompanhamento de sessões</td>
+<td>Cancelamento</td>
+<td>3</td>
+<td>0</td>
+<td>Nicolas</td>
+<td>Ciclo 5</td>
+</tr>
+<tr>
+<td>Gestão de casos</td>
+<td>Distribuição entre supervisores</td>
+<td>3</td>
+<td>0</td>
+<td>Maria Clara</td>
+<td>Ciclo 3</td>
+</tr>
+<tr>
+<td>Gestão de casos</td>
+<td>Vinculação a estagiário</td>
+<td>3</td>
+<td>0</td>
+<td>Maria Clara</td>
+<td>Ciclo 4</td>
+</tr>
+<tr>
+<td>Gestão de casos</td>
+<td>Acompanhamento e reorganização</td>
+<td>1</td>
+<td>2</td>
+<td>Maria Clara</td>
+<td>Ciclo 4</td>
+</tr>
+<tr>
+<td>Acompanhamento clínico</td>
+<td>Prontuário</td>
+<td>2</td>
+<td>0</td>
+<td>Luís Henrique</td>
+<td>Ciclo 4</td>
+</tr>
+<tr>
+<td>Acompanhamento clínico</td>
+<td>Registro de evolução por sessão</td>
+<td>6</td>
+<td>0</td>
+<td>Luís Henrique</td>
+<td>Ciclo 6</td>
+</tr>
+<tr>
+<td>Acompanhamento clínico</td>
+<td>Encerramento do ciclo</td>
+<td>1</td>
+<td>1</td>
+<td>Luís Henrique</td>
+<td>Ciclo 6</td>
+</tr>
+<tr>
+<td>Assiduidade e alertas</td>
+<td>Controle de faltas do paciente</td>
+<td>5</td>
+<td>0</td>
+<td>Gabriel</td>
+<td>Ciclo 4</td>
+</tr>
+<tr>
+<td>Assiduidade e alertas</td>
+<td>Controle de faltas do estagiário</td>
+<td>4</td>
+<td>0</td>
+<td>Nicolas</td>
+<td>Ciclo 6</td>
+</tr>
+<tr>
+<td>Registros administrativos do atendimento</td>
+<td>Contribuição social</td>
+<td>3</td>
+<td>0</td>
+<td>Joaquim</td>
+<td>Ciclo 6</td>
+</tr>
+<tr>
+<td>Registros administrativos do atendimento</td>
+<td>Declaração de comparecimento</td>
+<td>2</td>
+<td>2</td>
+<td>Maria Clara</td>
+<td>Ciclo 6</td>
+</tr>
+<tr>
+<td>Gestão institucional</td>
+<td>Indicadores e relatórios institucionais</td>
+<td>2</td>
+<td>0</td>
+<td>Gabriel</td>
+<td>Ciclo 6</td>
+</tr>
+<tr>
+<td>Acesso e segurança</td>
+<td>Autenticação</td>
+<td>3</td>
+<td>0</td>
+<td>Joaquim</td>
+<td>Ciclo 4</td>
+</tr>
+<tr>
+<td>Acesso e segurança</td>
+<td>Controle de acesso por perfil</td>
+<td>3</td>
+<td>0</td>
+<td>Gabriel</td>
+<td>Ciclo 3</td>
+</tr>
+<tr>
+<td>Acesso e segurança</td>
+<td>Proteção de dados</td>
+<td>3</td>
+<td>0</td>
+<td>Jônatas</td>
+<td>Ciclo 6</td>
+</tr>
+<tr>
+<td>Continuidade do atendimento</td>
+<td>Continuidade de casos entre semestres</td>
+<td>0</td>
+<td>3</td>
+<td>Gabriel</td>
+<td>—</td>
+</tr>
+<tr>
+<td>Acessibilidade e usabilidade</td>
+<td>Personalização de exibição</td>
+<td>0</td>
+<td>2</td>
+<td>Gabriel</td>
+<td>—</td>
+</tr>
+<tr>
+<td><strong>Total</strong></td>
+<td></td>
+<td><strong>53</strong></td>
+<td><strong>15</strong></td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<h3 id="1012-itens-de-trabalho-do-mvp">10.1.2 Itens de trabalho do MVP<a class="headerlink" href="#1012-itens-de-trabalho-do-mvp" title="Link para esta seção">#</a></h3>
+<table>
+<thead>
+<tr>
+<th>Ordem</th>
+<th>Item de trabalho</th>
+<th>CP</th>
+<th>Depende de</th>
+<th>Responsável</th>
+<th>Ciclo</th>
+<th>Estado</th>
+<th>Issue</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td><a href="../funcionais/#rf1">RF1</a> — Registrar solicitação de atendimento on-line</td>
+<td>CP1</td>
+<td>—</td>
+<td>Jônatas</td>
+<td>Ciclo 3</td>
+<td>Planejada</td>
+<td>—</td>
+</tr>
+<tr>
+<td>2</td>
+<td><a href="../funcionais/#rf2">RF2</a> — Emitir comprovante de inscrição</td>
+<td>CP1</td>
+<td>—</td>
+<td>Jônatas</td>
+<td>Ciclo 3</td>
+<td>Planejada</td>
+<td>—</td>
+</tr>
+<tr>
+<td>3</td>
+<td><a href="../funcionais/#rf4">RF4</a> — Organizar informações da inscrição para triagem</td>
+<td>CP2</td>
+<td>CP1</td>
+<td>Luís Henrique</td>
+<td>Ciclo 3</td>
+<td>Planejada</td>
+<td>—</td>
+</tr>
+<tr>
+<td>4</td>
+<td><a href="../funcionais/#rf6">RF6</a> — Registrar prioridade clínica do inscrito</td>
+<td>CP2</td>
+<td><a href="../funcionais/#rf4">RF4</a>, <a href="../funcionais/#rf5">RF5</a> (fora do MVP)</td>
+<td>Luís Henrique</td>
+<td>Ciclo 3</td>
+<td>Planejada</td>
+<td>—</td>
+</tr>
+<tr>
+<td>5</td>
+<td><a href="../funcionais/#rf18">RF18</a> — Listar casos aguardando distribuição</td>
+<td>CP5</td>
+<td>—</td>
+<td>Maria Clara</td>
+<td>Ciclo 3</td>
+<td>Planejada</td>
+<td>—</td>
+</tr>
+<tr>
+<td>6</td>
+<td><a href="../funcionais/#rf19">RF19</a> — Registrar áreas de especialidade do supervisor</td>
+<td>CP5</td>
+<td>—</td>
+<td>Maria Clara</td>
+<td>Ciclo 3</td>
+<td>Planejada</td>
+<td>—</td>
+</tr>
+<tr>
+<td>7</td>
+<td><a href="../funcionais/#rf20">RF20</a> — Distribuir caso a supervisor conforme área de especialidade</td>
+<td>CP5</td>
+<td><a href="../funcionais/#rf18">RF18</a>, <a href="../funcionais/#rf19">RF19</a>, <a href="../funcionais/#rf6">RF6</a></td>
+<td>Maria Clara</td>
+<td>Ciclo 3</td>
+<td>Planejada</td>
+<td>—</td>
+</tr>
+<tr>
+<td>8</td>
+<td><a href="../funcionais/#rf50">RF50</a> — Autenticar usuário institucional</td>
+<td>CP12</td>
+<td>—</td>
+<td>Joaquim</td>
+<td>Ciclo 3</td>
+<td>Planejada</td>
+<td><a href="https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/issues/45">#45</a></td>
+</tr>
+<tr>
+<td>9</td>
+<td><a href="../funcionais/#rf53">RF53</a> — Cadastrar usuário institucional com perfil de acesso</td>
+<td>CP12</td>
+<td>—</td>
+<td>Gabriel</td>
+<td>Ciclo 3</td>
+<td>Planejada</td>
+<td><a href="https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/issues/48">#48</a></td>
+</tr>
+<tr>
+<td>10</td>
+<td><a href="../funcionais/#rf54">RF54</a> — Desativar usuário institucional</td>
+<td>CP12</td>
+<td>—</td>
+<td>Gabriel</td>
+<td>Ciclo 3</td>
+<td>Planejada</td>
+<td><a href="https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/issues/49">#49</a></td>
+</tr>
+<tr>
+<td>11</td>
+<td><a href="../funcionais/#rf21">RF21</a> — Vincular paciente a estagiário responsável</td>
+<td>CP5</td>
+<td><a href="../funcionais/#rf20">RF20</a>, <a href="../funcionais/#rf53">RF53</a>, <a href="../funcionais/#rf54">RF54</a></td>
+<td>Maria Clara</td>
+<td>Ciclo 3</td>
+<td>Planejada</td>
+<td>—</td>
+</tr>
+<tr>
+<td>12</td>
+<td><a href="../funcionais/#rf10">RF10</a> — Agendar sessão do paciente</td>
+<td>CP4</td>
+<td>CP5</td>
+<td>Nicolas</td>
+<td>Ciclo 3</td>
+<td>Planejada</td>
+<td>—</td>
+</tr>
+<tr>
+<td>13</td>
+<td><a href="../funcionais/#rf66">RF66</a> — Criar e inicializar o prontuário do paciente</td>
+<td>CP6</td>
+<td><a href="../funcionais/#rf21">RF21</a></td>
+<td>Luís Henrique</td>
+<td>Ciclo 3</td>
+<td>Planejada</td>
+<td>—</td>
+</tr>
+<tr>
+<td>14</td>
+<td><a href="../funcionais/#rf55">RF55</a> — Restringir acesso ao prontuário do paciente</td>
+<td>CP12</td>
+<td>—</td>
+<td>Gabriel</td>
+<td>Ciclo 3</td>
+<td>Planejada</td>
+<td><a href="https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/issues/50">#50</a></td>
+</tr>
+<tr>
+<td>15</td>
+<td><a href="../funcionais/#rf7">RF7</a> — Ordenar inscritos na fila de espera</td>
+<td>CP3</td>
+<td>—</td>
+<td>Jônatas</td>
+<td>Ciclo 4</td>
+<td>Planejada</td>
+<td>—</td>
+</tr>
+<tr>
+<td>16</td>
+<td><a href="../funcionais/#rf11">RF11</a> — Consultar agenda de sessões do estagiário</td>
+<td>CP4</td>
+<td><a href="../funcionais/#rf10">RF10</a>, CP5</td>
+<td>Nicolas</td>
+<td>Ciclo 4</td>
+<td>Planejada</td>
+<td>—</td>
+</tr>
+<tr>
+<td>17</td>
+<td><a href="../funcionais/#rf14">RF14</a> — Confirmar presença em sessão agendada</td>
+<td>CP4</td>
+<td><a href="../funcionais/#rf10">RF10</a></td>
+<td>Nicolas</td>
+<td>Ciclo 4</td>
+<td>Planejada</td>
+<td>—</td>
+</tr>
+<tr>
+<td>18</td>
+<td><a href="../funcionais/#rf15">RF15</a> — Registrar cancelamento de sessão pelo paciente</td>
+<td>CP4</td>
+<td><a href="../funcionais/#rf10">RF10</a></td>
+<td>Nicolas</td>
+<td>Ciclo 4</td>
+<td>Planejada</td>
+<td>—</td>
+</tr>
+<tr>
+<td>19</td>
+<td><a href="../funcionais/#rf16">RF16</a> — Registrar cancelamento de sessão pelo estagiário</td>
+<td>CP4</td>
+<td><a href="../funcionais/#rf10">RF10</a>, CP5</td>
+<td>Nicolas</td>
+<td>Ciclo 4</td>
+<td>Planejada</td>
+<td>—</td>
+</tr>
+<tr>
+<td>20</td>
+<td><a href="../funcionais/#rf22">RF22</a> — Consultar responsáveis pelo caso</td>
+<td>CP5</td>
+<td><a href="../funcionais/#rf21">RF21</a></td>
+<td>Maria Clara</td>
+<td>Ciclo 4</td>
+<td>Planejada</td>
+<td>—</td>
+</tr>
+<tr>
+<td>21</td>
+<td><a href="../funcionais/#rf23">RF23</a> — Consultar casos sob responsabilidade do estagiário ou supervisor</td>
+<td>CP5</td>
+<td><a href="../funcionais/#rf21">RF21</a></td>
+<td>Maria Clara</td>
+<td>Ciclo 4</td>
+<td>Planejada</td>
+<td>—</td>
+</tr>
+<tr>
+<td>22</td>
+<td><a href="../funcionais/#rf25">RF25</a> — Transferir caso para outro estagiário ou supervisor</td>
+<td>CP5</td>
+<td><a href="../funcionais/#rf21">RF21</a></td>
+<td>Maria Clara</td>
+<td>Ciclo 4</td>
+<td>Planejada</td>
+<td>—</td>
+</tr>
+<tr>
+<td>23</td>
+<td><a href="../funcionais/#rf27">RF27</a> — Consultar prontuário do paciente</td>
+<td>CP6</td>
+<td><a href="../funcionais/#rf66">RF66</a>, CP5</td>
+<td>Luís Henrique</td>
+<td>Ciclo 4</td>
+<td>Planejada</td>
+<td>—</td>
+</tr>
+<tr>
+<td>24</td>
+<td><a href="../funcionais/#rf28">RF28</a> — Registrar evolução da sessão realizada</td>
+<td>CP7</td>
+<td>CP4, CP5</td>
+<td>Luís Henrique</td>
+<td>Ciclo 4</td>
+<td>Planejada</td>
+<td>—</td>
+</tr>
+<tr>
+<td>25</td>
+<td><a href="../funcionais/#rf34">RF34</a> — Registrar falta do paciente na sessão</td>
+<td>CP9</td>
+<td><a href="../funcionais/#rf10">RF10</a>, <a href="../funcionais/#rf14">RF14</a>, <a href="../funcionais/#rf15">RF15</a></td>
+<td>Gabriel</td>
+<td>Ciclo 4</td>
+<td>Planejada</td>
+<td>—</td>
+</tr>
+<tr>
+<td>26</td>
+<td><a href="../funcionais/#rf35">RF35</a> — Contabilizar faltas do paciente no ciclo</td>
+<td>CP9</td>
+<td><a href="../funcionais/#rf15">RF15</a>, <a href="../funcionais/#rf34">RF34</a></td>
+<td>Gabriel</td>
+<td>Ciclo 4</td>
+<td>Planejada</td>
+<td>—</td>
+</tr>
+<tr>
+<td>27</td>
+<td><a href="../funcionais/#rf36">RF36</a> — Emitir alerta de limite de faltas atingido</td>
+<td>CP9</td>
+<td><a href="../funcionais/#rf35">RF35</a></td>
+<td>Gabriel</td>
+<td>Ciclo 4</td>
+<td>Planejada</td>
+<td>—</td>
+</tr>
+<tr>
+<td>28</td>
+<td><a href="../funcionais/#rf37">RF37</a> — Desligar paciente por faltas e liberar vaga</td>
+<td>CP9</td>
+<td><a href="../funcionais/#rf36">RF36</a></td>
+<td>Gabriel</td>
+<td>Ciclo 4</td>
+<td>Planejada</td>
+<td>—</td>
+</tr>
+<tr>
+<td>29</td>
+<td><a href="../funcionais/#rf38">RF38</a> — Reverter desligamento de paciente por faltas</td>
+<td>CP9</td>
+<td><a href="../funcionais/#rf37">RF37</a></td>
+<td>Gabriel</td>
+<td>Ciclo 4</td>
+<td>Planejada</td>
+<td>—</td>
+</tr>
+<tr>
+<td>30</td>
+<td><a href="../funcionais/#rf51">RF51</a> — Encerrar sessão do usuário</td>
+<td>CP12</td>
+<td>—</td>
+<td>Joaquim</td>
+<td>Ciclo 4</td>
+<td>Planejada</td>
+<td><a href="https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/issues/46">#46</a></td>
+</tr>
+<tr>
+<td>31</td>
+<td><a href="../funcionais/#rf52">RF52</a> — Verificar identidade do paciente ou responsável</td>
+<td>CP12</td>
+<td>—</td>
+<td>Joaquim</td>
+<td>Ciclo 4</td>
+<td>Planejada</td>
+<td><a href="https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/issues/47">#47</a></td>
+</tr>
+<tr>
+<td>32</td>
+<td><a href="../funcionais/#rf8">RF8</a> — Consultar posição individual na fila</td>
+<td>CP3</td>
+<td><a href="../funcionais/#rf52">RF52</a></td>
+<td>Jônatas</td>
+<td>Ciclo 4</td>
+<td>Planejada</td>
+<td>—</td>
+</tr>
+<tr>
+<td>33</td>
+<td><a href="../funcionais/#rf57">RF57</a> — Registrar consentimento para tratamento de dados</td>
+<td>CP12</td>
+<td>—</td>
+<td>Jônatas</td>
+<td>Ciclo 4</td>
+<td>Planejada</td>
+<td><a href="https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/issues/52">#52</a></td>
+</tr>
+<tr>
+<td>34</td>
+<td><a href="../funcionais/#rf17">RF17</a> — Notificar paciente sobre ausência do estagiário</td>
+<td>CP4</td>
+<td><a href="../funcionais/#rf16">RF16</a></td>
+<td>Nicolas</td>
+<td>Ciclo 5</td>
+<td>Planejada</td>
+<td>—</td>
+</tr>
+<tr>
+<td>35</td>
+<td><a href="../funcionais/#rf29">RF29</a> — Corrigir evolução registrada</td>
+<td>CP7</td>
+<td><a href="../funcionais/#rf28">RF28</a></td>
+<td>Luís Henrique</td>
+<td>Ciclo 5</td>
+<td>Planejada</td>
+<td>—</td>
+</tr>
+<tr>
+<td>36</td>
+<td><a href="../funcionais/#rf39">RF39</a> — Consolidar faltas do estagiário para a supervisão</td>
+<td>CP9</td>
+<td><a href="../funcionais/#rf16">RF16</a></td>
+<td>Nicolas</td>
+<td>Ciclo 5</td>
+<td>Planejada</td>
+<td>—</td>
+</tr>
+<tr>
+<td>37</td>
+<td><a href="../funcionais/#rf41">RF41</a> — Registrar pagamento da contribuição social do paciente</td>
+<td>CP10</td>
+<td>—</td>
+<td>Joaquim</td>
+<td>Ciclo 5</td>
+<td>Planejada</td>
+<td><a href="https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/issues/43">#43</a></td>
+</tr>
+<tr>
+<td>38</td>
+<td><a href="../funcionais/#rf44">RF44</a> — Listar sessões com comparecimento registrado do paciente</td>
+<td>CP10</td>
+<td><a href="../funcionais/#rf52">RF52</a></td>
+<td>Maria Clara</td>
+<td>Ciclo 5</td>
+<td>Planejada</td>
+<td>—</td>
+</tr>
+<tr>
+<td>39</td>
+<td><a href="../funcionais/#rf48">RF48</a> — Consultar indicadores operacionais</td>
+<td>CP11</td>
+<td><a href="../funcionais/#rf9">RF9</a> (fora do MVP), <a href="../funcionais/#rf37">RF37</a>, <a href="../funcionais/#rf38">RF38</a>, CP5</td>
+<td>Gabriel</td>
+<td>Ciclo 5</td>
+<td>Planejada</td>
+<td><a href="https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/issues/22">#22</a></td>
+</tr>
+<tr>
+<td>40</td>
+<td><a href="../funcionais/#rf56">RF56</a> — Consultar registro de acessos ao prontuário</td>
+<td>CP12</td>
+<td>—</td>
+<td>Jônatas</td>
+<td>Ciclo 5</td>
+<td>Planejada</td>
+<td><a href="https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/issues/51">#51</a></td>
+</tr>
+<tr>
+<td>41</td>
+<td><a href="../funcionais/#rf30">RF30</a> — Registrar complemento de evolução da sessão</td>
+<td>CP7</td>
+<td><a href="../funcionais/#rf28">RF28</a></td>
+<td>Luís Henrique</td>
+<td>Ciclo 6</td>
+<td>Planejada</td>
+<td>—</td>
+</tr>
+<tr>
+<td>42</td>
+<td><a href="../funcionais/#rf31">RF31</a> — Consultar evolução de uma sessão específica</td>
+<td>CP7</td>
+<td><a href="../funcionais/#rf28">RF28</a>, <a href="../funcionais/#rf29">RF29</a>, <a href="../funcionais/#rf30">RF30</a></td>
+<td>Luís Henrique</td>
+<td>Ciclo 6</td>
+<td>Planejada</td>
+<td>—</td>
+</tr>
+<tr>
+<td>43</td>
+<td><a href="../funcionais/#rf32">RF32</a> — Consultar histórico de evolução do paciente</td>
+<td>CP7</td>
+<td><a href="../funcionais/#rf27">RF27</a>, <a href="../funcionais/#rf28">RF28</a>, <a href="../funcionais/#rf29">RF29</a>, <a href="../funcionais/#rf30">RF30</a></td>
+<td>Luís Henrique</td>
+<td>Ciclo 6</td>
+<td>Planejada</td>
+<td>—</td>
+</tr>
+<tr>
+<td>44</td>
+<td><a href="../funcionais/#rf67">RF67</a> — Validar evolução pelo supervisor</td>
+<td>CP7</td>
+<td><a href="../funcionais/#rf28">RF28</a></td>
+<td>Luís Henrique</td>
+<td>Ciclo 6</td>
+<td>Planejada</td>
+<td>—</td>
+</tr>
+<tr>
+<td>45</td>
+<td><a href="../funcionais/#rf68">RF68</a> — Encerrar caso por alta</td>
+<td>CP7</td>
+<td><a href="../funcionais/#rf28">RF28</a></td>
+<td>Luís Henrique</td>
+<td>Ciclo 6</td>
+<td>Planejada</td>
+<td>—</td>
+</tr>
+<tr>
+<td>46</td>
+<td><a href="../funcionais/#rf40">RF40</a> — Contabilizar faltas do estagiário no semestre</td>
+<td>CP9</td>
+<td><a href="../funcionais/#rf16">RF16</a>, <a href="../funcionais/#rf39">RF39</a></td>
+<td>Nicolas</td>
+<td>Ciclo 6</td>
+<td>Planejada</td>
+<td>—</td>
+</tr>
+<tr>
+<td>47</td>
+<td><a href="../funcionais/#rf63">RF63</a> — Sinalizar reprovação do estagiário por faltas</td>
+<td>CP9</td>
+<td><a href="../funcionais/#rf40">RF40</a></td>
+<td>Nicolas</td>
+<td>Ciclo 6</td>
+<td>Planejada</td>
+<td>—</td>
+</tr>
+<tr>
+<td>48</td>
+<td><a href="../funcionais/#rf64">RF64</a> — Registrar decisão institucional sobre a reprovação do estagiário</td>
+<td>CP9</td>
+<td><a href="../funcionais/#rf63">RF63</a></td>
+<td>Nicolas</td>
+<td>Ciclo 6</td>
+<td>Planejada</td>
+<td>—</td>
+</tr>
+<tr>
+<td>49</td>
+<td><a href="../funcionais/#rf42">RF42</a> — Consultar situação da contribuição social dos pacientes</td>
+<td>CP10</td>
+<td>—</td>
+<td>Joaquim</td>
+<td>Ciclo 6</td>
+<td>Planejada</td>
+<td><a href="https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/issues/44">#44</a></td>
+</tr>
+<tr>
+<td>50</td>
+<td><a href="../funcionais/#rf43">RF43</a> — Bloquear agendamento por contribuição social pendente</td>
+<td>CP10</td>
+<td><a href="../funcionais/#rf41">RF41</a>, <a href="../funcionais/#rf42">RF42</a></td>
+<td>Joaquim</td>
+<td>Ciclo 6</td>
+<td>Planejada</td>
+<td>—</td>
+</tr>
+<tr>
+<td>51</td>
+<td><a href="../funcionais/#rf45">RF45</a> — Emitir declaração de comparecimento do paciente</td>
+<td>CP10</td>
+<td><a href="../funcionais/#rf52">RF52</a></td>
+<td>Maria Clara</td>
+<td>Ciclo 6</td>
+<td>Planejada</td>
+<td>—</td>
+</tr>
+<tr>
+<td>52</td>
+<td><a href="../funcionais/#rf49">RF49</a> — Exportar relatório institucional em PDF</td>
+<td>CP11</td>
+<td><a href="../funcionais/#rf48">RF48</a></td>
+<td>Gabriel</td>
+<td>Ciclo 6</td>
+<td>Planejada</td>
+<td><a href="https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/issues/23">#23</a></td>
+</tr>
+<tr>
+<td>53</td>
+<td><a href="../funcionais/#rf65">RF65</a> — Registrar revogação do consentimento</td>
+<td>CP12</td>
+<td><a href="../funcionais/#rf57">RF57</a>, <a href="../funcionais/#rf52">RF52</a></td>
+<td>Jônatas</td>
+<td>Ciclo 6</td>
+<td>Planejada</td>
+<td>—</td>
+</tr>
+</tbody>
+</table>
+<h3 id="1013-itens-para-versoes-posteriores">10.1.3 Itens para versões posteriores<a class="headerlink" href="#1013-itens-para-versoes-posteriores" title="Link para esta seção">#</a></h3>
+<p>Os itens abaixo ficam fora do recorte do MVP e voltam a ser avaliados ao fim da Unidade 4. O motivo de cada um está na <a href="#1023-definicao-do-mvp">definição do MVP</a>, e as condições combinadas com a FBr para o período em que não estão construídos, na <a href="#1024-validacao-do-mvp-com-o-cliente">validação do MVP com o cliente</a> e no próprio RF.</p>
+<table>
+<thead>
+<tr>
+<th>Item de trabalho</th>
+<th>CP</th>
+<th>Responsável</th>
+<th>Estado</th>
+<th>Issue</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="../funcionais/#rf3">RF3</a> — Registrar inscrição assistida</td>
+<td>CP1</td>
+<td>Jônatas</td>
+<td>Identificada</td>
+<td>—</td>
+</tr>
+<tr>
+<td><a href="../funcionais/#rf5">RF5</a> — Sinalizar pontos de atenção da inscrição</td>
+<td>CP2</td>
+<td>Luís Henrique</td>
+<td>Identificada</td>
+<td>—</td>
+</tr>
+<tr>
+<td><a href="../funcionais/#rf9">RF9</a> — Manter e informar condições gerais da fila</td>
+<td>CP3</td>
+<td>Jônatas</td>
+<td>Identificada</td>
+<td>—</td>
+</tr>
+<tr>
+<td><a href="../funcionais/#rf12">RF12</a> — Reagendar sessão do paciente</td>
+<td>CP4</td>
+<td>Nicolas</td>
+<td>Identificada</td>
+<td>—</td>
+</tr>
+<tr>
+<td><a href="../funcionais/#rf13">RF13</a> — Enviar lembrete de sessão agendada</td>
+<td>CP4</td>
+<td>Nicolas</td>
+<td>Identificada</td>
+<td>—</td>
+</tr>
+<tr>
+<td><a href="../funcionais/#rf24">RF24</a> — Visualizar distribuição de casos por supervisor</td>
+<td>CP5</td>
+<td>Maria Clara</td>
+<td>Identificada</td>
+<td>—</td>
+</tr>
+<tr>
+<td><a href="../funcionais/#rf26">RF26</a> — Consultar histórico de responsáveis do caso</td>
+<td>CP5</td>
+<td>Maria Clara</td>
+<td>Identificada</td>
+<td>—</td>
+</tr>
+<tr>
+<td><a href="../funcionais/#rf33">RF33</a> — Gerar relatório final de evolução</td>
+<td>CP8</td>
+<td>Luís Henrique</td>
+<td>Identificada</td>
+<td>—</td>
+</tr>
+<tr>
+<td><a href="../funcionais/#rf46">RF46</a> — Reemitir declaração de comparecimento</td>
+<td>CP10</td>
+<td>Maria Clara</td>
+<td>Identificada</td>
+<td>—</td>
+</tr>
+<tr>
+<td><a href="../funcionais/#rf47">RF47</a> — Validar autenticidade da declaração</td>
+<td>CP10</td>
+<td>Maria Clara</td>
+<td>Identificada</td>
+<td>—</td>
+</tr>
+<tr>
+<td><a href="../funcionais/#rf58">RF58</a> — Listar casos elegíveis para continuidade entre semestres</td>
+<td>CP13</td>
+<td>Gabriel</td>
+<td>Identificada</td>
+<td>—</td>
+</tr>
+<tr>
+<td><a href="../funcionais/#rf59">RF59</a> — Registrar decisão de continuidade do caso</td>
+<td>CP13</td>
+<td>Gabriel</td>
+<td>Identificada</td>
+<td>—</td>
+</tr>
+<tr>
+<td><a href="../funcionais/#rf60">RF60</a> — Vincular caso a novo estagiário na continuidade</td>
+<td>CP13</td>
+<td>Gabriel</td>
+<td>Identificada</td>
+<td>—</td>
+</tr>
+<tr>
+<td><a href="../funcionais/#rf61">RF61</a> — Ativar modo de alto contraste</td>
+<td>CP14</td>
+<td>Gabriel</td>
+<td>Identificada</td>
+<td><a href="https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/issues/24">#24</a></td>
+</tr>
+<tr>
+<td><a href="../funcionais/#rf62">RF62</a> — Ajustar tamanho do texto</td>
+<td>CP14</td>
+<td>Gabriel</td>
+<td>Identificada</td>
+<td><a href="https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/issues/25">#25</a></td>
+</tr>
+</tbody>
+</table>
+<h2 id="102-priorizacao-e-recorte-do-mvp">10.2 Priorização e Recorte do MVP<a class="headerlink" href="#102-priorizacao-e-recorte-do-mvp" title="Link para esta seção">#</a></h2>
+<h3 id="1021-avaliacao-de-valor-de-negocio-e-de-esforco-tecnico">10.2.1 Avaliação de Valor de Negócio e de Esforço Técnico<a class="headerlink" href="#1021-avaliacao-de-valor-de-negocio-e-de-esforco-tecnico" title="Link para esta seção">#</a></h3>
+<h4 id="10211-escala-e-criterios-de-valor-de-negocio">10.2.1.1 Escala e critérios de valor de negócio<a class="headerlink" href="#10211-escala-e-criterios-de-valor-de-negocio" title="Link para esta seção">#</a></h4>
+<p>O valor de negócio de cada RF foi avaliado pela Clínica Escola FBr — Karla (secretaria) e Robson (coordenador do curso de Psicologia) —, a partir de um rascunho inicial preenchido pela equipe como ponto de partida, conforme alinhado na reunião de 24/09/2026 (ver <a href="../../reunioes/">Reuniões da Unidade 2</a>), e revisado com Thiago Cardoso Viana (Diretor Financeiro e de Tecnologia) na validação do MVP (seção <a href="#1024-validacao-do-mvp-com-o-cliente">10.2.4</a>), que trouxe para a avaliação os critérios institucionais e de operação da clínica — como a continuidade do atendimento quando um estagiário se afasta e os relatórios prestados ao MEC. A escala adotada segue o método MoSCoW, com cada categoria associada a uma pontuação mensurável de 1 a 4, de significado claramente definido:</p>
+<table>
+<thead>
+<tr>
+<th>Pontuação</th>
+<th>Classificação</th>
+<th>Interpretação</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>4</td>
+<td>Must have</td>
+<td>Indispensável para resolver o problema central ou viabilizar o produto</td>
+</tr>
+<tr>
+<td>3</td>
+<td>Should have</td>
+<td>Muito importante, mas o produto ainda pode operar temporariamente sem o requisito</td>
+</tr>
+<tr>
+<td>2</td>
+<td>Could have</td>
+<td>Agrega valor, mas pode ser adiado sem comprometer o objetivo principal</td>
+</tr>
+<tr>
+<td>1</td>
+<td>Won't have now</td>
+<td>Não é prioritário para a versão atual</td>
+</tr>
+</tbody>
+</table>
+<p>A atribuição de cada nota não ficou restrita à etiqueta MoSCoW isolada: para cada RF, a Clínica Escola registrou uma justificativa em frase curta explicando o porquê da nota. Lidas em conjunto, essas justificativas apontam para critérios recorrentes — a importância do requisito para o problema central do projeto (as falhas de agendamento e de confirmação de presença que hoje produzem horários ociosos), a contribuição para os objetivos específicos da <a href="../../../unidade-1/solucao-proposta/#22-objetivos-especificos-oe-do-produto">Solução Proposta</a>, o impacto percebido por pacientes, estagiários e supervisores, e a dependência de outras funcionalidades já priorizadas — mas não seguiram um checklist formal aplicado requisito a requisito. As justificativas individuais estão registradas por RF na coluna "Justificativa do cliente" da tabela consolidada (<a href="#10214-tabela-consolidada">10.2.1.4</a>).</p>
+<h4 id="10212-escalas-adotadas">10.2.1.2 Escalas adotadas<a class="headerlink" href="#10212-escalas-adotadas" title="Link para esta seção">#</a></h4>
+<p>Foram mantidas as três escalas propostas pela disciplina, todas orientadas no mesmo sentido (quanto maior a pontuação, maior o custo ou o risco).</p>
+<p><strong>Esforço necessário para implementação</strong></p>
+<table>
+<thead>
+<tr>
+<th>Pontuação</th>
+<th>Interpretação</th>
+<th>Descrição</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>Esforço baixo</td>
+<td>até 2 horas</td>
+</tr>
+<tr>
+<td>2</td>
+<td>Esforço moderado</td>
+<td>entre 2 e 6 horas</td>
+</tr>
+<tr>
+<td>3</td>
+<td>Esforço alto</td>
+<td>entre 6 e 12 horas</td>
+</tr>
+<tr>
+<td>4</td>
+<td>Esforço muito alto</td>
+<td>mais de 12 horas</td>
+</tr>
+</tbody>
+</table>
+<p>O esforço considera o desenvolvimento completo do requisito — persistência, regra de negócio, serviço de aplicação, interface e testes —, conforme o fluxo de construção por feature adotado pela equipe.</p>
+<p><strong>Complexidade técnica</strong></p>
+<table>
+<thead>
+<tr>
+<th>Pontuação</th>
+<th>Interpretação</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>Utiliza solução conhecida, com poucas dependências</td>
+</tr>
+<tr>
+<td>2</td>
+<td>Exige alguma investigação ou integração</td>
+</tr>
+<tr>
+<td>3</td>
+<td>Possui várias dependências ou incertezas técnicas</td>
+</tr>
+<tr>
+<td>4</td>
+<td>Apresenta elevada incerteza, integração crítica ou tecnologia não dominada</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Lacuna de capacidade da equipe</strong></p>
+<table>
+<thead>
+<tr>
+<th>Pontuação</th>
+<th>Interpretação</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>A equipe domina plenamente os conhecimentos necessários</td>
+</tr>
+<tr>
+<td>2</td>
+<td>A equipe possui conhecimento suficiente, com pouca aprendizagem adicional</td>
+</tr>
+<tr>
+<td>3</td>
+<td>A equipe precisa desenvolver conhecimentos relevantes</td>
+</tr>
+<tr>
+<td>4</td>
+<td>A equipe ainda não possui os conhecimentos ou recursos necessários</td>
+</tr>
+</tbody>
+</table>
+<h4 id="10213-regra-de-consolidacao">10.2.1.3 Regra de consolidação<a class="headerlink" href="#10213-regra-de-consolidacao" title="Link para esta seção">#</a></h4>
+<p>O esforço técnico consolidado de cada requisito é a média aritmética simples dos três critérios:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>Esforço técnico = (esforço + complexidade + lacuna de capacidade) / 3
+</code></pre></div>
+<p>Regras definidas previamente e aplicadas de forma uniforme a todos os requisitos:</p>
+<ol>
+<li>O resultado é apresentado com <strong>uma casa decimal</strong>, com arredondamento matemático padrão (2,666… → 2,7).</li>
+<li><strong>Nenhum critério recebe peso maior que os outros.</strong> A equipe considerou ponderar a lacuna de capacidade, mas optou pela média simples para manter a regra previsível e auditável ao longo de todas as CPs.</li>
+<li>O valor decimal é o valor de referência. Quando for necessário convertê-lo para a escala de 1 a 4 (por exemplo, para posicionar o requisito na matriz 4 × 4), aplica-se o arredondamento para o inteiro mais próximo, com 0,5 arredondado para cima.</li>
+<li>A avaliação considerou a <strong>descrição completa</strong> de cada requisito, seus critérios de aceitação, suas dependências declaradas e as restrições transversais indicadas na rastreabilidade — não apenas o nome do requisito.</li>
+</ol>
+<h4 id="10214-tabela-consolidada">10.2.1.4 Tabela consolidada<a class="headerlink" href="#10214-tabela-consolidada" title="Link para esta seção">#</a></h4>
+<table>
+<thead>
+<tr>
+<th>Código</th>
+<th>Requisito</th>
+<th>CP</th>
+<th>Valor de negócio</th>
+<th>Justificativa do cliente</th>
+<th>Esforço</th>
+<th>Complexidade</th>
+<th>Lacuna de capacidade</th>
+<th>Esforço técnico consolidado</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="../funcionais/#rf1">RF1</a></td>
+<td>Registrar solicitação de atendimento on-line</td>
+<td>CP1</td>
+<td>4</td>
+<td>Ponto de entrada de todo o fluxo; sem isso nada começa</td>
+<td>4</td>
+<td>2</td>
+<td>2</td>
+<td><strong>2,7</strong></td>
+</tr>
+<tr>
+<td><a href="../funcionais/#rf2">RF2</a></td>
+<td>Emitir comprovante de inscrição</td>
+<td>CP1</td>
+<td>3</td>
+<td>Importante pro paciente, mas dá pra suprir manualmente no início</td>
+<td>2</td>
+<td>1</td>
+<td>1</td>
+<td><strong>1,3</strong></td>
+</tr>
+<tr>
+<td><a href="../funcionais/#rf3">RF3</a></td>
+<td>Registrar inscrição assistida</td>
+<td>CP1</td>
+<td>2</td>
+<td>Atende exclusão digital, mas por ora a recepção pode preencher o próprio formulário on-line (RF1) pelo interessado</td>
+<td>2</td>
+<td>2</td>
+<td>2</td>
+<td><strong>2,0</strong></td>
+</tr>
+<tr>
+<td><a href="../funcionais/#rf4">RF4</a></td>
+<td>Organizar informações da inscrição para triagem</td>
+<td>CP2</td>
+<td>4</td>
+<td>Base para a supervisão fazer a triagem</td>
+<td>2</td>
+<td>2</td>
+<td>2</td>
+<td><strong>2,0</strong></td>
+</tr>
+<tr>
+<td><a href="../funcionais/#rf5">RF5</a></td>
+<td>Sinalizar pontos de atenção da inscrição</td>
+<td>CP2</td>
+<td>3</td>
+<td>Ajuda a triagem, mas dá pra ler as informações manualmente</td>
+<td>4</td>
+<td>4</td>
+<td>3</td>
+<td><strong>3,7</strong></td>
+</tr>
+<tr>
+<td><a href="../funcionais/#rf6">RF6</a></td>
+<td>Registrar prioridade clínica do inscrito</td>
+<td>CP2</td>
+<td>4</td>
+<td>Alimenta a ordenação da fila (CP3); sem isso a fila não tem critério</td>
+<td>3</td>
+<td>3</td>
+<td>2</td>
+<td><strong>2,7</strong></td>
+</tr>
+<tr>
+<td><a href="../funcionais/#rf7">RF7</a></td>
+<td>Ordenar inscritos na fila de espera</td>
+<td>CP3</td>
+<td>4</td>
+<td>Núcleo de como o paciente entra no atendimento</td>
+<td>3</td>
+<td>3</td>
+<td>2</td>
+<td><strong>2,7</strong></td>
+</tr>
+<tr>
+<td><a href="../funcionais/#rf8">RF8</a></td>
+<td>Consultar posição individual na fila</td>
+<td>CP3</td>
+<td>4</td>
+<td>Melhora a experiência, mas a fila funciona sem essa consulta</td>
+<td>2</td>
+<td>3</td>
+<td>2</td>
+<td><strong>2,3</strong></td>
+</tr>
+<tr>
+<td><a href="../funcionais/#rf9">RF9</a></td>
+<td>Manter e informar condições gerais da fila</td>
+<td>CP3</td>
+<td>2</td>
+<td>Informação geral, não bloqueia a operação</td>
+<td>3</td>
+<td>2</td>
+<td>2</td>
+<td><strong>2,3</strong></td>
+</tr>
+<tr>
+<td><a href="../funcionais/#rf10">RF10</a></td>
+<td>Agendar sessão do paciente</td>
+<td>CP4</td>
+<td>3</td>
+<td>Núcleo do agendamento</td>
+<td>4</td>
+<td>3</td>
+<td>2</td>
+<td><strong>3,0</strong></td>
+</tr>
+<tr>
+<td><a href="../funcionais/#rf11">RF11</a></td>
+<td>Consultar agenda de sessões do estagiário</td>
+<td>CP4</td>
+<td>4</td>
+<td>Estagiário precisa disso pra atuar no dia a dia</td>
+<td>2</td>
+<td>2</td>
+<td>1</td>
+<td><strong>1,7</strong></td>
+</tr>
+<tr>
+<td><a href="../funcionais/#rf12">RF12</a></td>
+<td>Reagendar sessão do paciente</td>
+<td>CP4</td>
+<td>3</td>
+<td>Importante, mas no início dá pra cancelar e agendar de novo, sem contar falta</td>
+<td>4</td>
+<td>4</td>
+<td>2</td>
+<td><strong>3,3</strong></td>
+</tr>
+<tr>
+<td><a href="../funcionais/#rf13">RF13</a></td>
+<td>Enviar lembrete de sessão agendada</td>
+<td>CP4</td>
+<td>3</td>
+<td>Reduz falta, mas não é essencial pra operação existir</td>
+<td>4</td>
+<td>4</td>
+<td>4</td>
+<td><strong>4,0</strong></td>
+</tr>
+<tr>
+<td><a href="../funcionais/#rf14">RF14</a></td>
+<td>Confirmar presença em sessão agendada</td>
+<td>CP4</td>
+<td>4</td>
+<td>Alimenta assiduidade (CP9), mas dá pra registrar manualmente</td>
+<td>3</td>
+<td>3</td>
+<td>3</td>
+<td><strong>3,0</strong></td>
+</tr>
+<tr>
+<td><a href="../funcionais/#rf15">RF15</a></td>
+<td>Registrar cancelamento de sessão pelo paciente</td>
+<td>CP4</td>
+<td>4</td>
+<td>Sem registrar o aviso do paciente, a ausência conta como falta e pode até desligá-lo indevidamente</td>
+<td>3</td>
+<td>3</td>
+<td>2</td>
+<td><strong>2,7</strong></td>
+</tr>
+<tr>
+<td><a href="../funcionais/#rf16">RF16</a></td>
+<td>Registrar cancelamento de sessão pelo estagiário</td>
+<td>CP4</td>
+<td>3</td>
+<td>Mesma lógica do RF15</td>
+<td>2</td>
+<td>2</td>
+<td>1</td>
+<td><strong>1,7</strong></td>
+</tr>
+<tr>
+<td><a href="../funcionais/#rf17">RF17</a></td>
+<td>Notificar paciente sobre ausência do estagiário</td>
+<td>CP4</td>
+<td>3</td>
+<td>Comunicação útil, não bloqueia o fluxo</td>
+<td>2</td>
+<td>2</td>
+<td>2</td>
+<td><strong>2,0</strong></td>
+</tr>
+<tr>
+<td><a href="../funcionais/#rf18">RF18</a></td>
+<td>Listar casos aguardando distribuição</td>
+<td>CP5</td>
+<td>4</td>
+<td>Visibilidade operacional essencial</td>
+<td>2</td>
+<td>2</td>
+<td>1</td>
+<td><strong>1,7</strong></td>
+</tr>
+<tr>
+<td><a href="../funcionais/#rf19">RF19</a></td>
+<td>Registrar áreas de especialidade do supervisor</td>
+<td>CP5</td>
+<td>4</td>
+<td>Necessário pra lógica de distribuição funcionar</td>
+<td>2</td>
+<td>1</td>
+<td>1</td>
+<td><strong>1,3</strong></td>
+</tr>
+<tr>
+<td><a href="../funcionais/#rf20">RF20</a></td>
+<td>Distribuir caso a supervisor conforme área de especialidade</td>
+<td>CP5</td>
+<td>4</td>
+<td>Lógica central de distribuição</td>
+<td>3</td>
+<td>3</td>
+<td>2</td>
+<td><strong>2,7</strong></td>
+</tr>
+<tr>
+<td><a href="../funcionais/#rf21">RF21</a></td>
+<td>Vincular paciente a estagiário responsável</td>
+<td>CP5</td>
+<td>4</td>
+<td>Base pra tudo que depende de responsável (prontuário, evolução)</td>
+<td>3</td>
+<td>3</td>
+<td>2</td>
+<td><strong>2,7</strong></td>
+</tr>
+<tr>
+<td><a href="../funcionais/#rf22">RF22</a></td>
+<td>Consultar responsáveis pelo caso</td>
+<td>CP5</td>
+<td>2</td>
+<td>Consulta útil, mas inferível de outras telas no início</td>
+<td>1</td>
+<td>1</td>
+<td>1</td>
+<td><strong>1,0</strong></td>
+</tr>
+<tr>
+<td><a href="../funcionais/#rf23">RF23</a></td>
+<td>Consultar casos sob responsabilidade do estagiário ou supervisor</td>
+<td>CP5</td>
+<td>4</td>
+<td>Necessário pro trabalho diário de estagiários/supervisores</td>
+<td>2</td>
+<td>2</td>
+<td>1</td>
+<td><strong>1,7</strong></td>
+</tr>
+<tr>
+<td><a href="../funcionais/#rf24">RF24</a></td>
+<td>Visualizar distribuição de casos por supervisor</td>
+<td>CP5</td>
+<td>1</td>
+<td>Visão gerencial; pode ficar para uma versão posterior</td>
+<td>2</td>
+<td>1</td>
+<td>1</td>
+<td><strong>1,3</strong></td>
+</tr>
+<tr>
+<td><a href="../funcionais/#rf25">RF25</a></td>
+<td>Transferir caso para outro estagiário ou supervisor</td>
+<td>CP5</td>
+<td>4</td>
+<td>Se um estagiário sai ou adoece, o paciente fica travado e se perde o histórico de quem acessou o prontuário</td>
+<td>4</td>
+<td>4</td>
+<td>3</td>
+<td><strong>3,7</strong></td>
+</tr>
+<tr>
+<td><a href="../funcionais/#rf26">RF26</a></td>
+<td>Consultar histórico de responsáveis do caso</td>
+<td>CP5</td>
+<td>1</td>
+<td>Auditoria/histórico, valioso mas não bloqueia</td>
+<td>2</td>
+<td>3</td>
+<td>2</td>
+<td><strong>2,3</strong></td>
+</tr>
+<tr>
+<td><a href="../funcionais/#rf27">RF27</a></td>
+<td>Consultar prontuário do paciente</td>
+<td>CP6</td>
+<td>4</td>
+<td>Razão de existir do sistema</td>
+<td>4</td>
+<td>4</td>
+<td>3</td>
+<td><strong>3,7</strong></td>
+</tr>
+<tr>
+<td><a href="../funcionais/#rf66">RF66</a></td>
+<td>Criar e inicializar o prontuário do paciente</td>
+<td>CP6</td>
+<td>4</td>
+<td>Sem isso o prontuário não chega a existir formalmente nem guarda os dados iniciais (anamnese, contrato)</td>
+<td>2</td>
+<td>2</td>
+<td>1</td>
+<td><strong>1,7</strong></td>
+</tr>
+<tr>
+<td><a href="../funcionais/#rf28">RF28</a></td>
+<td>Registrar evolução da sessão realizada</td>
+<td>CP7</td>
+<td>4</td>
+<td>Registro clínico central</td>
+<td>3</td>
+<td>2</td>
+<td>2</td>
+<td><strong>2,3</strong></td>
+</tr>
+<tr>
+<td><a href="../funcionais/#rf29">RF29</a></td>
+<td>Corrigir evolução registrada</td>
+<td>CP7</td>
+<td>3</td>
+<td>Importante pra qualidade do dado; a correção precisa guardar a versão original</td>
+<td>2</td>
+<td>2</td>
+<td>2</td>
+<td><strong>2,0</strong></td>
+</tr>
+<tr>
+<td><a href="../funcionais/#rf30">RF30</a></td>
+<td>Registrar complemento de evolução da sessão</td>
+<td>CP7</td>
+<td>3</td>
+<td>Novo (resposta da FBr); complementa o registro principal, não o substitui</td>
+<td>2</td>
+<td>2</td>
+<td>2</td>
+<td><strong>2,0</strong></td>
+</tr>
+<tr>
+<td><a href="../funcionais/#rf67">RF67</a></td>
+<td>Validar evolução pelo supervisor</td>
+<td>CP7</td>
+<td>3</td>
+<td>Conferência mínima de qualidade pelo supervisor; o fluxo clínico opera sem ela no primeiro momento</td>
+<td>1</td>
+<td>1</td>
+<td>1</td>
+<td><strong>1,0</strong></td>
+</tr>
+<tr>
+<td><a href="../funcionais/#rf68">RF68</a></td>
+<td>Encerrar caso por alta</td>
+<td>CP7</td>
+<td>4</td>
+<td>Fecha o ciclo de atendimento dos casos que não vão continuar, além do desligamento por faltas</td>
+<td>2</td>
+<td>2</td>
+<td>1</td>
+<td><strong>1,7</strong></td>
+</tr>
+<tr>
+<td><a href="../funcionais/#rf31">RF31</a></td>
+<td>Consultar evolução de uma sessão específica</td>
+<td>CP7</td>
+<td>4</td>
+<td>Necessário pra continuidade do acompanhamento</td>
+<td>3</td>
+<td>2</td>
+<td>2</td>
+<td><strong>2,3</strong></td>
+</tr>
+<tr>
+<td><a href="../funcionais/#rf32">RF32</a></td>
+<td>Consultar histórico de evolução do paciente</td>
+<td>CP7</td>
+<td>4</td>
+<td>Necessário pra supervisão e continuidade</td>
+<td>3</td>
+<td>3</td>
+<td>2</td>
+<td><strong>2,7</strong></td>
+</tr>
+<tr>
+<td><a href="../funcionais/#rf33">RF33</a></td>
+<td>Gerar relatório final de evolução</td>
+<td>CP8</td>
+<td>3</td>
+<td>Entregável importante, mas pode ser compilado manualmente na primeira versão</td>
+<td>4</td>
+<td>4</td>
+<td>3</td>
+<td><strong>3,7</strong></td>
+</tr>
+<tr>
+<td><a href="../funcionais/#rf34">RF34</a></td>
+<td>Registrar falta do paciente na sessão</td>
+<td>CP9</td>
+<td>4</td>
+<td>Dado base para toda a política de faltas</td>
+<td>2</td>
+<td>2</td>
+<td>1</td>
+<td><strong>1,7</strong></td>
+</tr>
+<tr>
+<td><a href="../funcionais/#rf35">RF35</a></td>
+<td>Contabilizar faltas do paciente no ciclo</td>
+<td>CP9</td>
+<td>4</td>
+<td>Necessário para disparar a política de duas faltas</td>
+<td>2</td>
+<td>2</td>
+<td>2</td>
+<td><strong>2,0</strong></td>
+</tr>
+<tr>
+<td><a href="../funcionais/#rf36">RF36</a></td>
+<td>Emitir alerta de limite de faltas atingido</td>
+<td>CP9</td>
+<td>4</td>
+<td>Comportamento central da política de assiduidade do paciente</td>
+<td>2</td>
+<td>2</td>
+<td>1</td>
+<td><strong>1,7</strong></td>
+</tr>
+<tr>
+<td><a href="../funcionais/#rf37">RF37</a></td>
+<td>Desligar paciente por faltas e liberar vaga</td>
+<td>CP9</td>
+<td>4</td>
+<td>Fecha o ciclo da política e libera a vaga para reaproveitamento</td>
+<td>4</td>
+<td>4</td>
+<td>3</td>
+<td><strong>3,7</strong></td>
+</tr>
+<tr>
+<td><a href="../funcionais/#rf38">RF38</a></td>
+<td>Reverter desligamento de paciente por faltas</td>
+<td>CP9</td>
+<td>4</td>
+<td>Regra de exceção confirmada pela FBr; exige preservar histórico e tratar vaga já realocada</td>
+<td>4</td>
+<td>4</td>
+<td>3</td>
+<td><strong>3,7</strong></td>
+</tr>
+<tr>
+<td><a href="../funcionais/#rf39">RF39</a></td>
+<td>Consolidar faltas do estagiário para a supervisão</td>
+<td>CP9</td>
+<td>3</td>
+<td>Consulta de apoio à supervisão; não bloqueia o fluxo clínico principal</td>
+<td>2</td>
+<td>2</td>
+<td>1</td>
+<td><strong>1,7</strong></td>
+</tr>
+<tr>
+<td><a href="../funcionais/#rf40">RF40</a></td>
+<td>Contabilizar faltas do estagiário no semestre</td>
+<td>CP9</td>
+<td>4</td>
+<td>Base para a regra institucional de reprovação por três faltas</td>
+<td>2</td>
+<td>2</td>
+<td>2</td>
+<td><strong>2,0</strong></td>
+</tr>
+<tr>
+<td><a href="../funcionais/#rf63">RF63</a></td>
+<td>Sinalizar reprovação do estagiário por faltas</td>
+<td>CP9</td>
+<td>4</td>
+<td>Novo requisito derivado da regra confirmada de três faltas; valor de negócio alinhado ao RF40 conforme orientação da equipe</td>
+<td>3</td>
+<td>2</td>
+<td>2</td>
+<td><strong>2,3</strong></td>
+</tr>
+<tr>
+<td><a href="../funcionais/#rf64">RF64</a></td>
+<td>Registrar decisão institucional sobre a reprovação do estagiário</td>
+<td>CP9</td>
+<td>4</td>
+<td>Completa o fluxo da reprovação do estagiário; valor de negócio alinhado ao RF40 conforme orientação da equipe</td>
+<td>3</td>
+<td>2</td>
+<td>2</td>
+<td><strong>2,3</strong></td>
+</tr>
+<tr>
+<td><a href="../funcionais/#rf41">RF41</a></td>
+<td>Registrar pagamento da contribuição social do paciente</td>
+<td>CP10</td>
+<td>4</td>
+<td>Controle administrativo necessário para a regra institucional da contribuição</td>
+<td>3</td>
+<td>2</td>
+<td>2</td>
+<td><strong>2,3</strong></td>
+</tr>
+<tr>
+<td><a href="../funcionais/#rf42">RF42</a></td>
+<td>Consultar situação da contribuição social dos pacientes</td>
+<td>CP10</td>
+<td>4</td>
+<td>Dá visibilidade da situação da contribuição aos perfis autorizados</td>
+<td>3</td>
+<td>2</td>
+<td>2</td>
+<td><strong>2,3</strong></td>
+</tr>
+<tr>
+<td><a href="../funcionais/#rf43">RF43</a></td>
+<td>Bloquear agendamento por contribuição social pendente</td>
+<td>CP10</td>
+<td>4</td>
+<td>Regra de negócio dependente do registro e consulta da contribuição; exige integração com agendamento</td>
+<td>3</td>
+<td>3</td>
+<td>2</td>
+<td><strong>2,7</strong></td>
+</tr>
+<tr>
+<td><a href="../funcionais/#rf44">RF44</a></td>
+<td>Listar sessões com comparecimento registrado do paciente</td>
+<td>CP10</td>
+<td>3</td>
+<td>Apoia a emissão da declaração de comparecimento</td>
+<td>2</td>
+<td>2</td>
+<td>2</td>
+<td><strong>2,0</strong></td>
+</tr>
+<tr>
+<td><a href="../funcionais/#rf45">RF45</a></td>
+<td>Emitir declaração de comparecimento do paciente</td>
+<td>CP10</td>
+<td>4</td>
+<td>Entregável externo recorrente e concreto para o paciente</td>
+<td>4</td>
+<td>3</td>
+<td>2</td>
+<td><strong>3,0</strong></td>
+</tr>
+<tr>
+<td><a href="../funcionais/#rf46">RF46</a></td>
+<td>Reemitir declaração de comparecimento</td>
+<td>CP10</td>
+<td>2</td>
+<td>Suporte útil; a emissão inicial (RF45) já atende a necessidade principal</td>
+<td>2</td>
+<td>2</td>
+<td>1</td>
+<td><strong>1,7</strong></td>
+</tr>
+<tr>
+<td><a href="../funcionais/#rf47">RF47</a></td>
+<td>Validar autenticidade da declaração</td>
+<td>CP10</td>
+<td>2</td>
+<td>Controle antifraude útil, mas não bloqueia o lançamento inicial</td>
+<td>3</td>
+<td>3</td>
+<td>2</td>
+<td><strong>2,7</strong></td>
+</tr>
+<tr>
+<td><a href="../funcionais/#rf48">RF48</a></td>
+<td>Consultar indicadores operacionais</td>
+<td>CP11</td>
+<td>4</td>
+<td>Necessário para os relatórios institucionais que a FBr presta ao MEC</td>
+<td>4</td>
+<td>4</td>
+<td>3</td>
+<td><strong>3,7</strong></td>
+</tr>
+<tr>
+<td><a href="../funcionais/#rf49">RF49</a></td>
+<td>Exportar relatório institucional em PDF</td>
+<td>CP11</td>
+<td>3</td>
+<td>Exportação usada nos relatórios institucionais da FBr ao MEC</td>
+<td>3</td>
+<td>2</td>
+<td>2</td>
+<td><strong>2,3</strong></td>
+</tr>
+<tr>
+<td><a href="../funcionais/#rf50">RF50</a></td>
+<td>Autenticar usuário institucional</td>
+<td>CP12</td>
+<td>4</td>
+<td>Base de segurança para todas as funcionalidades internas</td>
+<td>3</td>
+<td>2</td>
+<td>2</td>
+<td><strong>2,3</strong></td>
+</tr>
+<tr>
+<td><a href="../funcionais/#rf51">RF51</a></td>
+<td>Encerrar sessão do usuário</td>
+<td>CP12</td>
+<td>4</td>
+<td>Controle básico de segurança e sessão</td>
+<td>1</td>
+<td>1</td>
+<td>1</td>
+<td><strong>1,0</strong></td>
+</tr>
+<tr>
+<td><a href="../funcionais/#rf52">RF52</a></td>
+<td>Verificar identidade do paciente ou responsável</td>
+<td>CP12</td>
+<td>4</td>
+<td>Necessário para acesso seguro a informações pessoais sem login institucional</td>
+<td>4</td>
+<td>4</td>
+<td>3</td>
+<td><strong>3,7</strong></td>
+</tr>
+<tr>
+<td><a href="../funcionais/#rf53">RF53</a></td>
+<td>Cadastrar usuário institucional com perfil de acesso</td>
+<td>CP12</td>
+<td>4</td>
+<td>Necessário para provisionar contas e perfis institucionais</td>
+<td>4</td>
+<td>3</td>
+<td>3</td>
+<td><strong>3,3</strong></td>
+</tr>
+<tr>
+<td><a href="../funcionais/#rf54">RF54</a></td>
+<td>Desativar usuário institucional</td>
+<td>CP12</td>
+<td>4</td>
+<td>Necessário para revogar acesso de usuários que deixam a clínica/estágio</td>
+<td>2</td>
+<td>2</td>
+<td>2</td>
+<td><strong>2,0</strong></td>
+</tr>
+<tr>
+<td><a href="../funcionais/#rf55">RF55</a></td>
+<td>Restringir acesso ao prontuário do paciente</td>
+<td>CP12</td>
+<td>4</td>
+<td>Obrigação de sigilo e proteção de dados de saúde</td>
+<td>4</td>
+<td>4</td>
+<td>3</td>
+<td><strong>3,7</strong></td>
+</tr>
+<tr>
+<td><a href="../funcionais/#rf56">RF56</a></td>
+<td>Consultar registro de acessos ao prontuário</td>
+<td>CP12</td>
+<td>4</td>
+<td>Trilha de auditoria importante para segurança e conformidade</td>
+<td>3</td>
+<td>3</td>
+<td>2</td>
+<td><strong>2,7</strong></td>
+</tr>
+<tr>
+<td><a href="../funcionais/#rf57">RF57</a></td>
+<td>Registrar consentimento para tratamento de dados</td>
+<td>CP12</td>
+<td>4</td>
+<td>Base de privacidade/compliance para tratamento de dados no cenário adotado pelo projeto</td>
+<td>3</td>
+<td>3</td>
+<td>3</td>
+<td><strong>3,0</strong></td>
+</tr>
+<tr>
+<td><a href="../funcionais/#rf65">RF65</a></td>
+<td>Registrar revogação do consentimento</td>
+<td>CP12</td>
+<td>4</td>
+<td>Complementa o fluxo de consentimento e privacidade; valor de negócio alinhado ao RF57 conforme orientação da equipe</td>
+<td>4</td>
+<td>4</td>
+<td>3</td>
+<td><strong>3,7</strong></td>
+</tr>
+<tr>
+<td><a href="../funcionais/#rf58">RF58</a></td>
+<td>Listar casos elegíveis para continuidade entre semestres</td>
+<td>CP13</td>
+<td>3</td>
+<td>Apoia a virada de semestre; depende de critérios e calendário institucional</td>
+<td>3</td>
+<td>3</td>
+<td>2</td>
+<td><strong>2,7</strong></td>
+</tr>
+<tr>
+<td><a href="../funcionais/#rf59">RF59</a></td>
+<td>Registrar decisão de continuidade do caso</td>
+<td>CP13</td>
+<td>3</td>
+<td>Registra decisão institucional e suas versões; depende do fluxo de continuidade</td>
+<td>4</td>
+<td>4</td>
+<td>3</td>
+<td><strong>3,7</strong></td>
+</tr>
+<tr>
+<td><a href="../funcionais/#rf60">RF60</a></td>
+<td>Vincular caso a novo estagiário na continuidade</td>
+<td>CP13</td>
+<td>3</td>
+<td>Efetiva a continuidade com preservação de histórico e troca de responsável</td>
+<td>3</td>
+<td>3</td>
+<td>2</td>
+<td><strong>2,7</strong></td>
+</tr>
+<tr>
+<td><a href="../funcionais/#rf61">RF61</a></td>
+<td>Ativar modo de alto contraste</td>
+<td>CP14</td>
+<td>2</td>
+<td>Recurso específico de acessibilidade; a acessibilidade geral já é obrigatória pelo RNF56</td>
+<td>2</td>
+<td>2</td>
+<td>2</td>
+<td><strong>2,0</strong></td>
+</tr>
+<tr>
+<td><a href="../funcionais/#rf62">RF62</a></td>
+<td>Ajustar tamanho do texto</td>
+<td>CP14</td>
+<td>2</td>
+<td>Recurso específico de acessibilidade complementar ao RNF56</td>
+<td>3</td>
+<td>3</td>
+<td>2</td>
+<td><strong>2,7</strong></td>
+</tr>
+</tbody>
+</table>
+<h3 id="1022-matriz-de-priorizacao-valor-de-negocio-esforco-tecnico">10.2.2 Matriz de Priorização (Valor de Negócio × Esforço Técnico)<a class="headerlink" href="#1022-matriz-de-priorizacao-valor-de-negocio-esforco-tecnico" title="Link para esta seção">#</a></h3>
+<p>A matriz cruza o valor de negócio de cada RF (1 a 4, atribuído pela Clínica Escola FBr — ver <a href="#10211-escala-e-criterios-de-valor-de-negocio">10.2.1.1</a>) com o esforço técnico consolidado, convertido para a escala inteira de 1 a 4 pela regra 3 da seção <a href="#10213-regra-de-consolidacao">10.2.1.3</a> (arredondamento para o inteiro mais próximo, com 0,5 para cima). Os 68 RFs declarados (RF1 a RF68) estão distribuídos no gráfico abaixo, dividido nos quatro quadrantes apresentados pelo professor na atividade: <strong>Quick wins</strong> (valor alto, esforço baixo), <strong>Grandes projetos</strong> (valor alto, esforço alto), <strong>Preenchimento</strong> (valor baixo, esforço baixo) e <strong>Tarefas ingratas</strong> (valor baixo, esforço alto).</p>
+<p><img alt="Matriz de Priorização — Valor de Negócio × Esforço Técnico (RF1 a RF68)" src="../../../assets/matriz-priorizacao-mvp.png" /></p>
+<p>Os pontos em azul compõem o recorte de MVP definido na seção 10.2.3; os pontos em laranja ficam para uma versão posterior. Dentro de cada célula da matriz (mesmo valor e mesmo esforço), os RFs são dispersos lado a lado apenas para permitir a leitura individual de cada ponto — essa dispersão não representa nenhuma ordem adicional de prioridade dentro da célula. A tabela completa com o valor, o esforço e a decisão de MVP de cada RF, célula a célula, está detalhada na seção 10.2.3 a seguir.</p>
+<h3 id="1023-definicao-do-mvp">10.2.3 Definição do MVP<a class="headerlink" href="#1023-definicao-do-mvp" title="Link para esta seção">#</a></h3>
+<p>O corte de MVP foi definido a partir da própria escala de valor de negócio usada na avaliação com a Clínica Escola FBr, que segue o MoSCoW (4 — <em>Must have</em>, indispensável; 3 — <em>Should have</em>, o sistema opera um tempo sem isso; 2 — <em>Could have</em>, agrega valor mas pode esperar; 1 — <em>Won't have now</em>, não é prioridade para esta versão). O esforço técnico entra como critério de desempate dentro de cada faixa de valor, para não inflar o MVP com itens caros que o próprio valor de negócio já qualifica como adiáveis:</p>
+<ol>
+<li><strong>Valor 4 (Must have):</strong> entra no MVP independentemente do esforço técnico. Por definição, o sistema não funciona sem esses requisitos.</li>
+<li><strong>Valor 1 (Won't have now):</strong> fica fora do MVP independentemente do esforço técnico, porque o próprio cliente já definiu que não é prioridade para esta versão.</li>
+<li><strong>Valor 3 (Should have):</strong> entra no MVP somente com esforço técnico baixo ou moderado (1 ou 2). Com esforço alto ou muito alto (3 ou 4), fica para depois — o sistema consegue operar um tempo sem esses requisitos, e não vale o risco de entregar algo caro que não é indispensável.</li>
+<li><strong>Valor 2 (Could have):</strong> entra no MVP somente com esforço técnico muito baixo (1), quando o custo de entregar já é praticamente o de não entregar. Com esforço 2 ou mais, fica para depois.</li>
+<li><strong>Exceção por dependência funcional:</strong> um requisito que a regra 3 ou 4 excluiria pode ser promovido ao MVP quando outros requisitos já incluídos dependem diretamente dele para formar um fluxo de uso minimamente completo — situação prevista no enunciado da atividade ("Um RF de alto valor e alto esforço não deve ser automaticamente descartado" e a necessidade de "formar um fluxo de uso minimamente completo"). Essa exceção foi aplicada uma vez:</li>
+</ol>
+<table>
+<thead>
+<tr>
+<th>RF promovido</th>
+<th>Classificação pelas regras 1–4</th>
+<th>RFs do MVP que dependem dele</th>
+<th>Por que o fluxo não fecha sem ele</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="../funcionais/#rf10">RF10</a> — Agendar sessão do paciente</td>
+<td>Should have, esforço alto (fora pela regra 3)</td>
+<td>RF11, RF14, RF15, RF16, RF17 e RF43</td>
+<td>Os seis requisitos pressupõem uma sessão previamente agendada, sem a qual não têm sobre o que operar.</td>
+</tr>
+</tbody>
+</table>
+<details class="revision-note">
+<summary>Por que os demais RFs fora do MVP não foram promovidos</summary>
+<p>Nenhum outro RF excluído pelas regras 1–4 tem essa mesma condição de bloqueio: os demais RFs fora do MVP (RF3, RF5, RF9, RF12, RF13, RF24, RF26, RF33, RF46, RF47, RF58, RF59, RF60, RF61, RF62) são consultas, refinamentos ou fluxos que os RFs do MVP não pressupõem como pré-condição de existir. Em particular, RF5 aparece como "Dependência: RF4/RF5" na rastreabilidade de RF6 (CP2), mas a notação indica fontes alternativas de insumo para a decisão do supervisor — a própria RF6 descreve a classificação como julgamento clínico apoiado nas "informações e sinalizações disponíveis", e as informações organizadas por RF4 (no MVP) já bastam para essa decisão, com a sinalização automática de RF5 como reforço opcional. Da mesma forma, o RF13 (lembrete automático) aparece como integração na rastreabilidade do RF14, mas o link de confirmação de presença é enviado ao paciente no próprio agendamento (RF10), e o lembrete apenas o reforça; e o RF12 (remarcação em uma única operação) pode ser suprido por cancelamento (RF15/RF16) seguido de novo agendamento (RF10), sem contar falta. Em nenhum desses casos a ausência do RF fora do MVP deixa um RF do MVP sem nada sobre o que operar — ao contrário de RF10, cuja ausência impede por completo a execução dos RFs do MVP que dependem dele.</p>
+</details>
+<p>Aplicando o critério aos 68 RFs (RF1 a RF68): <strong>53 entram no MVP</strong> e <strong>15 ficam para uma versão posterior</strong> — 42 por serem <em>Must have</em>, 9 <em>Should have</em> de baixo esforço, 1 <em>Should have</em> de esforço alto promovido por dependência (RF10) e 1 <em>Could have</em> de esforço mínimo; dos 15 de fora, 7 são <em>Should have</em> de esforço alto, 6 são <em>Could have</em> de esforço moderado/alto e 2 são <em>Won't have now</em>.</p>
+<p>A tabela abaixo aplica o critério requisito a requisito, mantendo a rastreabilidade entre CP, valor de negócio, esforço técnico e a decisão:</p>
+<table>
+<thead>
+<tr>
+<th>Código</th>
+<th>CP</th>
+<th>Valor de negócio</th>
+<th>Esforço técnico (1-4)</th>
+<th>No MVP?</th>
+<th>Motivo</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="../funcionais/#rf1">RF1</a></td>
+<td>CP1</td>
+<td>4</td>
+<td>3</td>
+<td>Sim</td>
+<td>Must have — indispensável; entra independentemente do esforço.</td>
+</tr>
+<tr>
+<td><a href="../funcionais/#rf2">RF2</a></td>
+<td>CP1</td>
+<td>3</td>
+<td>1</td>
+<td>Sim</td>
+<td>Should have com esforço baixo/moderado — vale entregar já.</td>
+</tr>
+<tr>
+<td><a href="../funcionais/#rf3">RF3</a></td>
+<td>CP1</td>
+<td>2</td>
+<td>2</td>
+<td>Não</td>
+<td>Could have com esforço moderado/alto — pode esperar, conforme a própria definição do cliente.</td>
+</tr>
+<tr>
+<td><a href="../funcionais/#rf4">RF4</a></td>
+<td>CP2</td>
+<td>4</td>
+<td>2</td>
+<td>Sim</td>
+<td>Must have — indispensável; entra independentemente do esforço.</td>
+</tr>
+<tr>
+<td><a href="../funcionais/#rf5">RF5</a></td>
+<td>CP2</td>
+<td>3</td>
+<td>4</td>
+<td>Não</td>
+<td>Should have com esforço alto — o sistema opera um tempo sem isso; adiado para reduzir risco do MVP.</td>
+</tr>
+<tr>
+<td><a href="../funcionais/#rf6">RF6</a></td>
+<td>CP2</td>
+<td>4</td>
+<td>3</td>
+<td>Sim</td>
+<td>Must have — indispensável; entra independentemente do esforço.</td>
+</tr>
+<tr>
+<td><a href="../funcionais/#rf7">RF7</a></td>
+<td>CP3</td>
+<td>4</td>
+<td>3</td>
+<td>Sim</td>
+<td>Must have — indispensável; entra independentemente do esforço.</td>
+</tr>
+<tr>
+<td><a href="../funcionais/#rf8">RF8</a></td>
+<td>CP3</td>
+<td>4</td>
+<td>2</td>
+<td>Sim</td>
+<td>Must have — indispensável; entra independentemente do esforço.</td>
+</tr>
+<tr>
+<td><a href="../funcionais/#rf9">RF9</a></td>
+<td>CP3</td>
+<td>2</td>
+<td>2</td>
+<td>Não</td>
+<td>Could have com esforço moderado/alto — pode esperar, conforme a própria definição do cliente.</td>
+</tr>
+<tr>
+<td><a href="../funcionais/#rf10">RF10</a></td>
+<td>CP4</td>
+<td>3</td>
+<td>3</td>
+<td>Sim</td>
+<td>Should have com esforço alto, mas promovido ao MVP por dependência: RF11, RF14, RF15, RF16, RF17 e RF43 (todos no MVP) pressupõem uma sessão já agendada — sem RF10 esses RFs não têm sobre o que operar, quebrando o fluxo mínimo de uso.</td>
+</tr>
+<tr>
+<td><a href="../funcionais/#rf11">RF11</a></td>
+<td>CP4</td>
+<td>4</td>
+<td>2</td>
+<td>Sim</td>
+<td>Must have — indispensável; entra independentemente do esforço.</td>
+</tr>
+<tr>
+<td><a href="../funcionais/#rf12">RF12</a></td>
+<td>CP4</td>
+<td>3</td>
+<td>3</td>
+<td>Não</td>
+<td>Should have com esforço alto — o sistema opera um tempo sem isso; adiado para reduzir risco do MVP.</td>
+</tr>
+<tr>
+<td><a href="../funcionais/#rf13">RF13</a></td>
+<td>CP4</td>
+<td>3</td>
+<td>4</td>
+<td>Não</td>
+<td>Should have com esforço alto — o sistema opera um tempo sem isso; adiado para reduzir risco do MVP.</td>
+</tr>
+<tr>
+<td><a href="../funcionais/#rf14">RF14</a></td>
+<td>CP4</td>
+<td>4</td>
+<td>3</td>
+<td>Sim</td>
+<td>Must have — indispensável; entra independentemente do esforço.</td>
+</tr>
+<tr>
+<td><a href="../funcionais/#rf15">RF15</a></td>
+<td>CP4</td>
+<td>4</td>
+<td>3</td>
+<td>Sim</td>
+<td>Must have — indispensável; entra independentemente do esforço.</td>
+</tr>
+<tr>
+<td><a href="../funcionais/#rf16">RF16</a></td>
+<td>CP4</td>
+<td>3</td>
+<td>2</td>
+<td>Sim</td>
+<td>Should have com esforço baixo/moderado — vale entregar já.</td>
+</tr>
+<tr>
+<td><a href="../funcionais/#rf17">RF17</a></td>
+<td>CP4</td>
+<td>3</td>
+<td>2</td>
+<td>Sim</td>
+<td>Should have com esforço baixo/moderado — vale entregar já.</td>
+</tr>
+<tr>
+<td><a href="../funcionais/#rf18">RF18</a></td>
+<td>CP5</td>
+<td>4</td>
+<td>2</td>
+<td>Sim</td>
+<td>Must have — indispensável; entra independentemente do esforço.</td>
+</tr>
+<tr>
+<td><a href="../funcionais/#rf19">RF19</a></td>
+<td>CP5</td>
+<td>4</td>
+<td>1</td>
+<td>Sim</td>
+<td>Must have — indispensável; entra independentemente do esforço.</td>
+</tr>
+<tr>
+<td><a href="../funcionais/#rf20">RF20</a></td>
+<td>CP5</td>
+<td>4</td>
+<td>3</td>
+<td>Sim</td>
+<td>Must have — indispensável; entra independentemente do esforço.</td>
+</tr>
+<tr>
+<td><a href="../funcionais/#rf21">RF21</a></td>
+<td>CP5</td>
+<td>4</td>
+<td>3</td>
+<td>Sim</td>
+<td>Must have — indispensável; entra independentemente do esforço.</td>
+</tr>
+<tr>
+<td><a href="../funcionais/#rf22">RF22</a></td>
+<td>CP5</td>
+<td>2</td>
+<td>1</td>
+<td>Sim</td>
+<td>Could have com esforço muito baixo — praticamente gratuito, entra.</td>
+</tr>
+<tr>
+<td><a href="../funcionais/#rf23">RF23</a></td>
+<td>CP5</td>
+<td>4</td>
+<td>2</td>
+<td>Sim</td>
+<td>Must have — indispensável; entra independentemente do esforço.</td>
+</tr>
+<tr>
+<td><a href="../funcionais/#rf24">RF24</a></td>
+<td>CP5</td>
+<td>1</td>
+<td>1</td>
+<td>Não</td>
+<td>Won't have now — o próprio cliente definiu que não é prioridade para esta versão.</td>
+</tr>
+<tr>
+<td><a href="../funcionais/#rf25">RF25</a></td>
+<td>CP5</td>
+<td>4</td>
+<td>4</td>
+<td>Sim</td>
+<td>Must have — indispensável; entra independentemente do esforço.</td>
+</tr>
+<tr>
+<td><a href="../funcionais/#rf26">RF26</a></td>
+<td>CP5</td>
+<td>1</td>
+<td>2</td>
+<td>Não</td>
+<td>Won't have now — o próprio cliente definiu que não é prioridade para esta versão.</td>
+</tr>
+<tr>
+<td><a href="../funcionais/#rf27">RF27</a></td>
+<td>CP6</td>
+<td>4</td>
+<td>4</td>
+<td>Sim</td>
+<td>Must have — indispensável; entra independentemente do esforço.</td>
+</tr>
+<tr>
+<td><a href="../funcionais/#rf66">RF66</a></td>
+<td>CP6</td>
+<td>4</td>
+<td>2</td>
+<td>Sim</td>
+<td>Must have — indispensável; entra independentemente do esforço.</td>
+</tr>
+<tr>
+<td><a href="../funcionais/#rf28">RF28</a></td>
+<td>CP7</td>
+<td>4</td>
+<td>2</td>
+<td>Sim</td>
+<td>Must have — indispensável; entra independentemente do esforço.</td>
+</tr>
+<tr>
+<td><a href="../funcionais/#rf29">RF29</a></td>
+<td>CP7</td>
+<td>3</td>
+<td>2</td>
+<td>Sim</td>
+<td>Should have com esforço baixo/moderado — vale entregar já.</td>
+</tr>
+<tr>
+<td><a href="../funcionais/#rf30">RF30</a></td>
+<td>CP7</td>
+<td>3</td>
+<td>2</td>
+<td>Sim</td>
+<td>Should have com esforço baixo/moderado — vale entregar já.</td>
+</tr>
+<tr>
+<td><a href="../funcionais/#rf67">RF67</a></td>
+<td>CP7</td>
+<td>3</td>
+<td>1</td>
+<td>Sim</td>
+<td>Should have com esforço baixo/moderado — vale entregar já.</td>
+</tr>
+<tr>
+<td><a href="../funcionais/#rf68">RF68</a></td>
+<td>CP7</td>
+<td>4</td>
+<td>2</td>
+<td>Sim</td>
+<td>Must have — indispensável; entra independentemente do esforço.</td>
+</tr>
+<tr>
+<td><a href="../funcionais/#rf31">RF31</a></td>
+<td>CP7</td>
+<td>4</td>
+<td>2</td>
+<td>Sim</td>
+<td>Must have — indispensável; entra independentemente do esforço.</td>
+</tr>
+<tr>
+<td><a href="../funcionais/#rf32">RF32</a></td>
+<td>CP7</td>
+<td>4</td>
+<td>3</td>
+<td>Sim</td>
+<td>Must have — indispensável; entra independentemente do esforço.</td>
+</tr>
+<tr>
+<td><a href="../funcionais/#rf33">RF33</a></td>
+<td>CP8</td>
+<td>3</td>
+<td>4</td>
+<td>Não</td>
+<td>Should have com esforço alto — o sistema opera um tempo sem isso; adiado para reduzir risco do MVP.</td>
+</tr>
+<tr>
+<td><a href="../funcionais/#rf34">RF34</a></td>
+<td>CP9</td>
+<td>4</td>
+<td>2</td>
+<td>Sim</td>
+<td>Must have — indispensável; entra independentemente do esforço.</td>
+</tr>
+<tr>
+<td><a href="../funcionais/#rf35">RF35</a></td>
+<td>CP9</td>
+<td>4</td>
+<td>2</td>
+<td>Sim</td>
+<td>Must have — indispensável; entra independentemente do esforço.</td>
+</tr>
+<tr>
+<td><a href="../funcionais/#rf36">RF36</a></td>
+<td>CP9</td>
+<td>4</td>
+<td>2</td>
+<td>Sim</td>
+<td>Must have — indispensável; entra independentemente do esforço.</td>
+</tr>
+<tr>
+<td><a href="../funcionais/#rf37">RF37</a></td>
+<td>CP9</td>
+<td>4</td>
+<td>4</td>
+<td>Sim</td>
+<td>Must have — indispensável; entra independentemente do esforço.</td>
+</tr>
+<tr>
+<td><a href="../funcionais/#rf38">RF38</a></td>
+<td>CP9</td>
+<td>4</td>
+<td>4</td>
+<td>Sim</td>
+<td>Must have — indispensável; entra independentemente do esforço.</td>
+</tr>
+<tr>
+<td><a href="../funcionais/#rf39">RF39</a></td>
+<td>CP9</td>
+<td>3</td>
+<td>2</td>
+<td>Sim</td>
+<td>Should have com esforço baixo/moderado — vale entregar já.</td>
+</tr>
+<tr>
+<td><a href="../funcionais/#rf40">RF40</a></td>
+<td>CP9</td>
+<td>4</td>
+<td>2</td>
+<td>Sim</td>
+<td>Must have — indispensável; entra independentemente do esforço.</td>
+</tr>
+<tr>
+<td><a href="../funcionais/#rf63">RF63</a></td>
+<td>CP9</td>
+<td>4</td>
+<td>2</td>
+<td>Sim</td>
+<td>Must have — indispensável; entra independentemente do esforço.</td>
+</tr>
+<tr>
+<td><a href="../funcionais/#rf64">RF64</a></td>
+<td>CP9</td>
+<td>4</td>
+<td>2</td>
+<td>Sim</td>
+<td>Must have — indispensável; entra independentemente do esforço.</td>
+</tr>
+<tr>
+<td><a href="../funcionais/#rf41">RF41</a></td>
+<td>CP10</td>
+<td>4</td>
+<td>2</td>
+<td>Sim</td>
+<td>Must have — indispensável; entra independentemente do esforço.</td>
+</tr>
+<tr>
+<td><a href="../funcionais/#rf42">RF42</a></td>
+<td>CP10</td>
+<td>4</td>
+<td>2</td>
+<td>Sim</td>
+<td>Must have — indispensável; entra independentemente do esforço.</td>
+</tr>
+<tr>
+<td><a href="../funcionais/#rf43">RF43</a></td>
+<td>CP10</td>
+<td>4</td>
+<td>3</td>
+<td>Sim</td>
+<td>Must have — indispensável; entra independentemente do esforço.</td>
+</tr>
+<tr>
+<td><a href="../funcionais/#rf44">RF44</a></td>
+<td>CP10</td>
+<td>3</td>
+<td>2</td>
+<td>Sim</td>
+<td>Should have com esforço baixo/moderado — vale entregar já.</td>
+</tr>
+<tr>
+<td><a href="../funcionais/#rf45">RF45</a></td>
+<td>CP10</td>
+<td>4</td>
+<td>3</td>
+<td>Sim</td>
+<td>Must have — indispensável; entra independentemente do esforço.</td>
+</tr>
+<tr>
+<td><a href="../funcionais/#rf46">RF46</a></td>
+<td>CP10</td>
+<td>2</td>
+<td>2</td>
+<td>Não</td>
+<td>Could have com esforço moderado/alto — pode esperar, conforme a própria definição do cliente.</td>
+</tr>
+<tr>
+<td><a href="../funcionais/#rf47">RF47</a></td>
+<td>CP10</td>
+<td>2</td>
+<td>3</td>
+<td>Não</td>
+<td>Could have com esforço moderado/alto — pode esperar, conforme a própria definição do cliente.</td>
+</tr>
+<tr>
+<td><a href="../funcionais/#rf48">RF48</a></td>
+<td>CP11</td>
+<td>4</td>
+<td>4</td>
+<td>Sim</td>
+<td>Must have — indispensável; entra independentemente do esforço.</td>
+</tr>
+<tr>
+<td><a href="../funcionais/#rf49">RF49</a></td>
+<td>CP11</td>
+<td>3</td>
+<td>2</td>
+<td>Sim</td>
+<td>Should have com esforço baixo/moderado — vale entregar já.</td>
+</tr>
+<tr>
+<td><a href="../funcionais/#rf50">RF50</a></td>
+<td>CP12</td>
+<td>4</td>
+<td>2</td>
+<td>Sim</td>
+<td>Must have — indispensável; entra independentemente do esforço.</td>
+</tr>
+<tr>
+<td><a href="../funcionais/#rf51">RF51</a></td>
+<td>CP12</td>
+<td>4</td>
+<td>1</td>
+<td>Sim</td>
+<td>Must have — indispensável; entra independentemente do esforço.</td>
+</tr>
+<tr>
+<td><a href="../funcionais/#rf52">RF52</a></td>
+<td>CP12</td>
+<td>4</td>
+<td>4</td>
+<td>Sim</td>
+<td>Must have — indispensável; entra independentemente do esforço.</td>
+</tr>
+<tr>
+<td><a href="../funcionais/#rf53">RF53</a></td>
+<td>CP12</td>
+<td>4</td>
+<td>3</td>
+<td>Sim</td>
+<td>Must have — indispensável; entra independentemente do esforço.</td>
+</tr>
+<tr>
+<td><a href="../funcionais/#rf54">RF54</a></td>
+<td>CP12</td>
+<td>4</td>
+<td>2</td>
+<td>Sim</td>
+<td>Must have — indispensável; entra independentemente do esforço.</td>
+</tr>
+<tr>
+<td><a href="../funcionais/#rf55">RF55</a></td>
+<td>CP12</td>
+<td>4</td>
+<td>4</td>
+<td>Sim</td>
+<td>Must have — indispensável; entra independentemente do esforço.</td>
+</tr>
+<tr>
+<td><a href="../funcionais/#rf56">RF56</a></td>
+<td>CP12</td>
+<td>4</td>
+<td>3</td>
+<td>Sim</td>
+<td>Must have — indispensável; entra independentemente do esforço.</td>
+</tr>
+<tr>
+<td><a href="../funcionais/#rf57">RF57</a></td>
+<td>CP12</td>
+<td>4</td>
+<td>3</td>
+<td>Sim</td>
+<td>Must have — indispensável; entra independentemente do esforço.</td>
+</tr>
+<tr>
+<td><a href="../funcionais/#rf65">RF65</a></td>
+<td>CP12</td>
+<td>4</td>
+<td>4</td>
+<td>Sim</td>
+<td>Must have — indispensável; entra independentemente do esforço.</td>
+</tr>
+<tr>
+<td><a href="../funcionais/#rf58">RF58</a></td>
+<td>CP13</td>
+<td>3</td>
+<td>3</td>
+<td>Não</td>
+<td>Should have com esforço alto — o sistema opera um tempo sem isso; adiado para reduzir risco do MVP.</td>
+</tr>
+<tr>
+<td><a href="../funcionais/#rf59">RF59</a></td>
+<td>CP13</td>
+<td>3</td>
+<td>4</td>
+<td>Não</td>
+<td>Should have com esforço alto — o sistema opera um tempo sem isso; adiado para reduzir risco do MVP.</td>
+</tr>
+<tr>
+<td><a href="../funcionais/#rf60">RF60</a></td>
+<td>CP13</td>
+<td>3</td>
+<td>3</td>
+<td>Não</td>
+<td>Should have com esforço alto — o sistema opera um tempo sem isso; adiado para reduzir risco do MVP.</td>
+</tr>
+<tr>
+<td><a href="../funcionais/#rf61">RF61</a></td>
+<td>CP14</td>
+<td>2</td>
+<td>2</td>
+<td>Não</td>
+<td>Could have com esforço moderado/alto — pode esperar, conforme a própria definição do cliente.</td>
+</tr>
+<tr>
+<td><a href="../funcionais/#rf62">RF62</a></td>
+<td>CP14</td>
+<td>2</td>
+<td>3</td>
+<td>Não</td>
+<td>Could have com esforço moderado/alto — pode esperar, conforme a própria definição do cliente.</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Este é o recorte do MVP validado com a Clínica Escola FBr</strong>, conforme o registro da seção <a href="#1024-validacao-do-mvp-com-o-cliente">10.2.4</a>. A classificação dos RNFs para o MVP, na subseção <a href="#10231-classificacao-dos-requisitos-nao-funcionais-para-o-mvp">10.2.3.1</a> a seguir, já reflete este recorte de 53 RFs, incluindo a promoção de RF10 por dependência. Os pontos ainda em aberto com a FBr estão registrados em <a href="../analise-feedback/#pendencias-de-validacao-com-a-fbr">Pendências de validação com a FBr</a>.</p>
+<h4 id="10231-classificacao-dos-requisitos-nao-funcionais-para-o-mvp">10.2.3.1 Classificação dos Requisitos Não Funcionais para o MVP<a class="headerlink" href="#10231-classificacao-dos-requisitos-nao-funcionais-para-o-mvp" title="Link para esta seção">#</a></h4>
+<p>A classificação abaixo relaciona cada Requisito Não Funcional (RNF) ao recorte do MVP definido acima, usando quatro categorias:</p>
+<div class="category-grid">
+<ul>
+<li><span class="rnf-class rnf-class--required">Obrigatório para o MVP</span> Aplica-se independentemente do RF específico, por decorrer de exigência transversal de segurança, privacidade, acessibilidade, integridade ou continuidade operacional.</li>
+<li><span class="rnf-class rnf-class--linked">Associado a RF do MVP</span> Sua aplicabilidade decorre diretamente de um RF que está no MVP.</li>
+<li><span class="rnf-class rnf-class--evolving">Evolutivo</span> O RF relacionado está no MVP, mas o próprio RNF pode ser refinado em iterações posteriores, sem bloquear o lançamento.</li>
+<li><span class="rnf-class rnf-class--na">Não aplicável ao MVP</span> Depende de um RF que ficou fora do recorte atual, a ser reavaliado se esse RF for incorporado.</li>
+</ul>
+</div>
+<p>A classificação foi conferida requisito a requisito contra os 53 RFs selecionados na tabela acima — inclusive a promoção de RF10 por dependência.</p>
+<table>
+<thead>
+<tr>
+<th>Código</th>
+<th>Requisito não funcional</th>
+<th>Classificação</th>
+<th>RF/escopo relacionado</th>
+<th>Justificativa</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="../nao-funcionais/#rnf1">RNF1</a></td>
+<td>Identificação e recuperação de erros no formulário</td>
+<td>Associado a RF do MVP</td>
+<td>RF1</td>
+<td>Aplica-se diretamente à inscrição on-line e evita perda dos dados válidos durante correções.</td>
+</tr>
+<tr>
+<td><a href="../nao-funcionais/#rnf2">RNF2</a></td>
+<td>Proteção das informações no comprovante de inscrição</td>
+<td>Associado a RF do MVP</td>
+<td>RF2</td>
+<td>RF2 está no recorte do MVP (Should have de esforço baixo); o comprovante de inscrição existe desde a primeira versão e sua proteção deve acompanhar o requisito.</td>
+</tr>
+<tr>
+<td><a href="../nao-funcionais/#rnf3">RNF3</a></td>
+<td>Sigilo das informações de triagem</td>
+<td>Obrigatório para o MVP</td>
+<td>CP2</td>
+<td>Protege dados sensíveis de triagem e é condição mínima de privacidade.</td>
+</tr>
+<tr>
+<td><a href="../nao-funcionais/#rnf4">RNF4</a></td>
+<td>Rastreabilidade das regras de sinalização</td>
+<td>Não aplicável ao MVP</td>
+<td>RF5</td>
+<td>Depende da sinalização automática de pontos de atenção; RF5 fica fora do MVP. Reavaliar se RF5 for incorporado.</td>
+</tr>
+<tr>
+<td><a href="../nao-funcionais/#rnf5">RNF5</a></td>
+<td>Integridade e auditoria das decisões de prioridade</td>
+<td>Obrigatório para o MVP</td>
+<td>RF6</td>
+<td>A prioridade clínica afeta a fila e precisa preservar autoria, histórico e integridade.</td>
+</tr>
+<tr>
+<td><a href="../nao-funcionais/#rnf6">RNF6</a></td>
+<td>Privacidade e controle de acesso à consulta da fila</td>
+<td>Obrigatório para o MVP</td>
+<td>RF8, RF52</td>
+<td>A consulta individual envolve dado pessoal e exige verificação de identidade.</td>
+</tr>
+<tr>
+<td><a href="../nao-funcionais/#rnf7">RNF7</a></td>
+<td>Compreensibilidade das informações sobre a posição na fila</td>
+<td>Associado a RF do MVP</td>
+<td>RF8</td>
+<td>Acompanha a consulta de posição e evita interpretação da posição como garantia de prazo.</td>
+</tr>
+<tr>
+<td><a href="../nao-funcionais/#rnf8">RNF8</a></td>
+<td>Confiabilidade das informações institucionais da fila</td>
+<td>Não aplicável ao MVP</td>
+<td>RF9</td>
+<td>Relaciona-se às informações gerais da fila; RF9 fica fora do MVP. Reavaliar se RF9 for incorporado.</td>
+</tr>
+<tr>
+<td><a href="../nao-funcionais/#rnf9">RNF9</a></td>
+<td>Integridade do agendamento</td>
+<td>Obrigatório para o MVP</td>
+<td>CP4</td>
+<td>Evita conflitos de agenda e estados incompatíveis; condição operacional mínima, reforçada pela promoção de RF10 ao MVP.</td>
+</tr>
+<tr>
+<td><a href="../nao-funcionais/#rnf10">RNF10</a></td>
+<td>Auditoria das operações sobre a sessão</td>
+<td>Associado a RF do MVP</td>
+<td>RF10, RF14, RF15, RF16</td>
+<td>Acompanha agendamento, confirmação de presença e cancelamento (pelo paciente e pelo estagiário) — todos no MVP — preservando rastreabilidade das alterações; a parte da meta referente ao reagendamento (RF12) entra no escopo quando o requisito for incorporado.</td>
+</tr>
+<tr>
+<td><a href="../nao-funcionais/#rnf11">RNF11</a></td>
+<td>Confiabilidade do envio de lembretes</td>
+<td>Não aplicável ao MVP</td>
+<td>RF13</td>
+<td>Depende do lembrete automático; RF13 fica fora do MVP (o link de confirmação do RF14 é enviado no próprio agendamento, RF10). Reavaliar se RF13 for incorporado.</td>
+</tr>
+<tr>
+<td><a href="../nao-funcionais/#rnf12">RNF12</a></td>
+<td>Tempo de resposta nas operações de agendamento</td>
+<td>Evolutivo</td>
+<td>CP4</td>
+<td>Meta quantitativa de desempenho que pode ser calibrada com testes de carga após o fluxo mínimo (RF10, RF11, RF14–RF17) estar em produção.</td>
+</tr>
+<tr>
+<td><a href="../nao-funcionais/#rnf13">RNF13</a></td>
+<td>Minimização de dados na agenda</td>
+<td>Obrigatório para o MVP</td>
+<td>RF11</td>
+<td>Reduz exposição de dados e atende ao princípio de minimização.</td>
+</tr>
+<tr>
+<td><a href="../nao-funcionais/#rnf14">RNF14</a></td>
+<td>Disponibilidade do módulo de agendamento</td>
+<td>Evolutivo</td>
+<td>CP4</td>
+<td>Meta formal de disponibilidade depende de infraestrutura e monitoramento, a formalizar após o MVP.</td>
+</tr>
+<tr>
+<td><a href="../nao-funcionais/#rnf15">RNF15</a></td>
+<td>Usabilidade da confirmação de presença pelo paciente</td>
+<td>Associado a RF do MVP</td>
+<td>RF14</td>
+<td>Acompanha a confirmação de presença e a proteção do fluxo público.</td>
+</tr>
+<tr>
+<td><a href="../nao-funcionais/#rnf16">RNF16</a></td>
+<td>Autorização para distribuição, vínculo e transferência de casos</td>
+<td>Obrigatório para o MVP</td>
+<td>RF20, RF21, RF25</td>
+<td>Alterações de responsabilidade clínica, inclusive a transferência de caso, exigem autorização por perfil.</td>
+</tr>
+<tr>
+<td><a href="../nao-funcionais/#rnf17">RNF17</a></td>
+<td>Privacidade dos dados nas telas de distribuição e consulta</td>
+<td>Obrigatório para o MVP</td>
+<td>CP5</td>
+<td>As telas de distribuição não devem expor dados além do necessário.</td>
+</tr>
+<tr>
+<td><a href="../nao-funcionais/#rnf18">RNF18</a></td>
+<td>Auditoria de atribuições, vínculos e transferências</td>
+<td>Associado a RF do MVP</td>
+<td>RF20, RF21, RF25</td>
+<td>Acompanha distribuição, vínculo e transferência de responsáveis, preservando rastreabilidade de todas elas.</td>
+</tr>
+<tr>
+<td><a href="../nao-funcionais/#rnf19">RNF19</a></td>
+<td>Integridade dos vínculos de responsabilidade</td>
+<td>Obrigatório para o MVP</td>
+<td>RF20, RF21</td>
+<td>Impede vínculos incompatíveis e preserva consistência de responsabilidade.</td>
+</tr>
+<tr>
+<td><a href="../nao-funcionais/#rnf20">RNF20</a></td>
+<td>Continuidade do histórico na troca de responsável</td>
+<td>Associado a RF do MVP</td>
+<td>RF25</td>
+<td>Acompanha a transferência de caso e preserva o histórico na troca de responsável.</td>
+</tr>
+<tr>
+<td><a href="../nao-funcionais/#rnf21">RNF21</a></td>
+<td>Desempenho das listagens e operações de vínculo</td>
+<td>Evolutivo</td>
+<td>CP5</td>
+<td>Meta de desempenho a refinar com massa de dados representativa.</td>
+</tr>
+<tr>
+<td><a href="../nao-funcionais/#rnf22">RNF22</a></td>
+<td>Usabilidade da distribuição e do vínculo de casos</td>
+<td>Evolutivo</td>
+<td>RF20, RF21</td>
+<td>Meta específica de usabilidade que pode ser refinada após validação do fluxo.</td>
+</tr>
+<tr>
+<td><a href="../nao-funcionais/#rnf23">RNF23</a></td>
+<td>Manutenibilidade das áreas de especialidade</td>
+<td>Evolutivo</td>
+<td>RF19</td>
+<td>Propriedade de modificabilidade importante, mas não impede a operação mínima.</td>
+</tr>
+<tr>
+<td><a href="../nao-funcionais/#rnf24">RNF24</a></td>
+<td>Acessibilidade das telas de distribuição e consulta</td>
+<td>Obrigatório para o MVP</td>
+<td>CP5</td>
+<td>Acessibilidade mínima das interfaces internas deve existir desde a primeira versão utilizável.</td>
+</tr>
+<tr>
+<td><a href="../nao-funcionais/#rnf25">RNF25</a></td>
+<td>Sigilo do conteúdo do prontuário</td>
+<td>Obrigatório para o MVP</td>
+<td>RF27, RF55, RF66</td>
+<td>O prontuário contém dados de saúde e exige proteção desde qualquer versão utilizável, inclusive os dados iniciais (anamnese e contrato) registrados na criação do prontuário (RF66).</td>
+</tr>
+<tr>
+<td><a href="../nao-funcionais/#rnf26">RNF26</a></td>
+<td>Sigilo do conteúdo da evolução</td>
+<td>Obrigatório para o MVP</td>
+<td>RF28, RF55</td>
+<td>As evoluções contêm dados clínicos sensíveis e exigem sigilo.</td>
+</tr>
+<tr>
+<td><a href="../nao-funcionais/#rnf27">RNF27</a></td>
+<td>Integridade e proveniência dos registros de evolução</td>
+<td>Obrigatório para o MVP</td>
+<td>RF28, RF31, RF32, RF67, RF68</td>
+<td>Registros clínicos precisam preservar autor, sessão, paciente e histórico, inclusive a validação do supervisor (RF67) e o encerramento por alta (RF68).</td>
+</tr>
+<tr>
+<td><a href="../nao-funcionais/#rnf28">RNF28</a></td>
+<td>Auditoria das correções de evolução</td>
+<td>Associado a RF do MVP</td>
+<td>RF29</td>
+<td>Acompanha a correção de evolução e preserva a versão original, condição mínima de confiabilidade do dado clínico.</td>
+</tr>
+<tr>
+<td><a href="../nao-funcionais/#rnf29">RNF29</a></td>
+<td>Desempenho do registro e da consulta de evolução</td>
+<td>Evolutivo</td>
+<td>CP7</td>
+<td>Meta quantitativa de desempenho a aferir após implementação do fluxo funcional.</td>
+</tr>
+<tr>
+<td><a href="../nao-funcionais/#rnf30">RNF30</a></td>
+<td>Usabilidade do registro de evolução</td>
+<td>Evolutivo</td>
+<td>RF28</td>
+<td>Meta de tempo/interações que pode ser refinada com testes de estagiários.</td>
+</tr>
+<tr>
+<td><a href="../nao-funcionais/#rnf31">RNF31</a></td>
+<td>Fidelidade e rastreabilidade do relatório final</td>
+<td>Não aplicável ao MVP</td>
+<td>RF33</td>
+<td>Acompanha o relatório final de evolução; RF33 fica fora do MVP. Reavaliar se for incorporado.</td>
+</tr>
+<tr>
+<td><a href="../nao-funcionais/#rnf32">RNF32</a></td>
+<td>Integridade e auditoria da contagem de faltas</td>
+<td>Obrigatório para o MVP</td>
+<td>RF34–RF38</td>
+<td>A política de faltas pode gerar desligamento; contagem e decisões precisam ser íntegras e auditáveis.</td>
+</tr>
+<tr>
+<td><a href="../nao-funcionais/#rnf33">RNF33</a></td>
+<td>Visibilidade do alerta de limite de faltas</td>
+<td>Associado a RF do MVP</td>
+<td>RF36</td>
+<td>Acompanha o alerta e garante percepção também sem dependência exclusiva de cor.</td>
+</tr>
+<tr>
+<td><a href="../nao-funcionais/#rnf34">RNF34</a></td>
+<td>Tempo de liberação da vaga após desligamento</td>
+<td>Associado a RF do MVP</td>
+<td>RF37</td>
+<td>Acompanha a liberação de vaga e evita ociosidade indevida.</td>
+</tr>
+<tr>
+<td><a href="../nao-funcionais/#rnf35">RNF35</a></td>
+<td>Privacidade dos dados de faltas do estagiário</td>
+<td>Obrigatório para o MVP</td>
+<td>RF39, RF40, RF63, RF64</td>
+<td>Abrange consulta, contagem, sinalização e decisão sobre faltas do estagiário.</td>
+</tr>
+<tr>
+<td><a href="../nao-funcionais/#rnf36">RNF36</a></td>
+<td>Auditoria dos registros de contribuição social</td>
+<td>Associado a RF do MVP</td>
+<td>RF41</td>
+<td>Acompanha registro/correção da contribuição e alteração do parâmetro de valor.</td>
+</tr>
+<tr>
+<td><a href="../nao-funcionais/#rnf37">RNF37</a></td>
+<td>Privacidade dos dados na declaração</td>
+<td>Associado a RF do MVP</td>
+<td>RF45</td>
+<td>Evita inclusão de dados clínicos desnecessários no documento.</td>
+</tr>
+<tr>
+<td><a href="../nao-funcionais/#rnf38">RNF38</a></td>
+<td>Autorização para emissão e consulta</td>
+<td>Obrigatório para o MVP</td>
+<td>RF45, RF50, RF52</td>
+<td>Emissão/consulta envolvem dados pessoais e exigem perfis e identidade verificada.</td>
+</tr>
+<tr>
+<td><a href="../nao-funcionais/#rnf39">RNF39</a></td>
+<td>Auditoria de emissões e reemissões</td>
+<td>Associado a RF do MVP</td>
+<td>RF45</td>
+<td>Acompanha a emissão, registrando autoria e operação; a reemissão (RF46) fica fora por ora, e a parte da meta referente a ela entra no escopo de auditoria quando for incorporada.</td>
+</tr>
+<tr>
+<td><a href="../nao-funcionais/#rnf40">RNF40</a></td>
+<td>Tempo de geração da declaração</td>
+<td>Evolutivo</td>
+<td>RF45</td>
+<td>Meta de desempenho que pode ser calibrada após o fluxo de emissão.</td>
+</tr>
+<tr>
+<td><a href="../nao-funcionais/#rnf41">RNF41</a></td>
+<td>Usabilidade da emissão</td>
+<td>Evolutivo</td>
+<td>RF45</td>
+<td>Meta de interações/taxa de sucesso a aperfeiçoar em testes posteriores.</td>
+</tr>
+<tr>
+<td><a href="../nao-funcionais/#rnf42">RNF42</a></td>
+<td>Portabilidade do documento</td>
+<td>Associado a RF do MVP</td>
+<td>RF45</td>
+<td>Acompanha a emissão e garante PDF A4 legível para uso externo.</td>
+</tr>
+<tr>
+<td><a href="../nao-funcionais/#rnf43">RNF43</a></td>
+<td>Acessibilidade da tela de emissão</td>
+<td>Obrigatório para o MVP</td>
+<td>RF44, RF45</td>
+<td>A interface de emissão deve atender requisitos mínimos de acessibilidade.</td>
+</tr>
+<tr>
+<td><a href="../nao-funcionais/#rnf44">RNF44</a></td>
+<td>Integridade do conteúdo da declaração</td>
+<td>Associado a RF do MVP</td>
+<td>RF45</td>
+<td>Garante coerência entre o documento emitido e o registro de origem; a coerência da reemissão (RF46) entra no escopo quando o requisito for incorporado.</td>
+</tr>
+<tr>
+<td><a href="../nao-funcionais/#rnf45">RNF45</a></td>
+<td>Segurança da consulta pública de autenticidade</td>
+<td>Não aplicável ao MVP</td>
+<td>RF47</td>
+<td>É exclusiva da validação pública de autenticidade; RF47 fica fora do MVP.</td>
+</tr>
+<tr>
+<td><a href="../nao-funcionais/#rnf46">RNF46</a></td>
+<td>Atualização dos indicadores operacionais</td>
+<td>Associado a RF do MVP</td>
+<td>RF48</td>
+<td>Acompanha a consulta de indicadores operacionais usada nos relatórios institucionais.</td>
+</tr>
+<tr>
+<td><a href="../nao-funcionais/#rnf47">RNF47</a></td>
+<td>Tempo de geração do relatório institucional</td>
+<td>Associado a RF do MVP</td>
+<td>RF48, RF49</td>
+<td>Acompanha a consulta de indicadores e a exportação do relatório institucional.</td>
+</tr>
+<tr>
+<td><a href="../nao-funcionais/#rnf48">RNF48</a></td>
+<td>Auditoria de relatórios institucionais</td>
+<td>Associado a RF do MVP</td>
+<td>RF49</td>
+<td>Acompanha a exportação do relatório institucional, registrando autoria e operação.</td>
+</tr>
+<tr>
+<td><a href="../nao-funcionais/#rnf49">RNF49</a></td>
+<td>Proteção das credenciais de acesso</td>
+<td>Obrigatório para o MVP</td>
+<td>RF50, RF53</td>
+<td>Senha, hash e bloqueio contra tentativas são controles mínimos de autenticação.</td>
+</tr>
+<tr>
+<td><a href="../nao-funcionais/#rnf50">RNF50</a></td>
+<td>Expiração da sessão por inatividade</td>
+<td>Obrigatório para o MVP</td>
+<td>RF50, RF51</td>
+<td>Reduz exposição de dados em computadores compartilhados.</td>
+</tr>
+<tr>
+<td><a href="../nao-funcionais/#rnf51">RNF51</a></td>
+<td>Criptografia dos dados</td>
+<td>Obrigatório para o MVP</td>
+<td>Transversal</td>
+<td>Protege dados sensíveis em trânsito e em repouso; condição de segurança e privacidade.</td>
+</tr>
+<tr>
+<td><a href="../nao-funcionais/#rnf52">RNF52</a></td>
+<td>Trilha de auditoria de acessos ao prontuário</td>
+<td>Obrigatório para o MVP</td>
+<td>RF55, RF56</td>
+<td>Acesso ao prontuário exige rastreabilidade de acessos permitidos e negados.</td>
+</tr>
+<tr>
+<td><a href="../nao-funcionais/#rnf53">RNF53</a></td>
+<td>Cópia de segurança e recuperação dos dados</td>
+<td>Obrigatório para o MVP</td>
+<td>Transversal</td>
+<td>Requisito mínimo de continuidade operacional e preservação dos registros.</td>
+</tr>
+<tr>
+<td><a href="../nao-funcionais/#rnf54">RNF54</a></td>
+<td>Auditoria das decisões de continuidade</td>
+<td>Não aplicável ao MVP</td>
+<td>RF59</td>
+<td>Depende do fluxo de continuidade entre semestres; toda a CP13 (RF58–RF60) fica fora do MVP.</td>
+</tr>
+<tr>
+<td><a href="../nao-funcionais/#rnf55">RNF55</a></td>
+<td>Integridade do histórico na continuidade</td>
+<td>Não aplicável ao MVP</td>
+<td>RF60</td>
+<td>Aplica-se à continuidade/transferência entre semestres; RF60 fica fora do MVP.</td>
+</tr>
+<tr>
+<td><a href="../nao-funcionais/#rnf56">RNF56</a></td>
+<td>Conformidade com WCAG 2.2 nível AA</td>
+<td>Obrigatório para o MVP</td>
+<td>CP14 / páginas externas</td>
+<td>Acessibilidade foi confirmada como mandatória pela FBr/MEC e deve existir desde o MVP, mesmo com RF61 e RF62 fora do recorte do MVP.</td>
+</tr>
+<tr>
+<td><a href="../nao-funcionais/#rnf57">RNF57</a></td>
+<td>Aparência reforçada do indicador de foco</td>
+<td>Evolutivo</td>
+<td>RF61, RF62 / páginas externas</td>
+<td>Exigência adicional de nível AAA; RF61 e RF62 ficam fora do MVP, mas a meta AA do RNF56 permanece obrigatória.</td>
+</tr>
+<tr>
+<td><a href="../nao-funcionais/#rnf58">RNF58</a></td>
+<td>Responsividade da interface</td>
+<td>Obrigatório para o MVP</td>
+<td>Páginas externas</td>
+<td>A solução é web responsiva e precisa funcionar entre 320 e 1920 px sem perda funcional.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="1024-validacao-do-mvp-com-o-cliente">10.2.4 Validação do MVP com o Cliente<a class="headerlink" href="#1024-validacao-do-mvp-com-o-cliente" title="Link para esta seção">#</a></h3>
+<p>A validação do MVP com a Clínica Escola FBr foi feita por mensagens no grupo de WhatsApp "Sistema Clínica Escola FBr - Alunos UnB", canal de contato com o cliente previsto na <a href="../../../unidade-1/gestao/equipe-comunicacao/#comunicacao-com-o-cliente">seção 7.2 — Comunicação com o Cliente</a>, entre 24/09/2026 e 08/10/2026, em duas rodadas. As respostas da FBr foram incorporadas aos requisitos e à priorização apresentados nas seções <a href="#1021-avaliacao-de-valor-de-negocio-e-de-esforco-tecnico">10.2.1</a> a <a href="#1023-definicao-do-mvp">10.2.3</a>.</p>
+<ul>
+<li><strong>Quem participou:</strong> pela Clínica Escola FBr, <strong>Robson Luís de Araújo</strong> (coordenador do curso de Psicologia, responsável pela Clínica Escola) e <strong>Thiago Cardoso Viana</strong> (Diretor Financeiro e de Tecnologia; ver <a href="../../../unidade-1/cenario-atual/#16-mapa-de-stakeholders">Mapa de Stakeholders</a>); pela equipe, <strong>Gabriel Barbaceli</strong> e <strong>Jônatas</strong>, com os demais integrantes acompanhando o grupo.</li>
+<li><strong>Quando ocorreu:</strong> em duas rodadas — de 24/09 a 02/10/2026, sobre a primeira proposta de MVP, e de 06/10 a 08/10/2026, sobre a proposta revisada, aprovada por Thiago em 07/10 ("Olhei a proposta e tá ok, podem seguir") e encerrada em 08/10 ("Certo, vamos em frente!"). A linha do tempo completa da conversa e as capturas de tela estão em <a href="../../reunioes/#validacao-do-mvp-com-a-clinica-escola-fbr">Reuniões da Unidade 2 — Validação do MVP com a Clínica Escola FBr</a>.</li>
+<li><strong>RFs aprovados para o MVP:</strong> os 53 RFs assinalados "Sim" na tabela da seção <a href="#1023-definicao-do-mvp">10.2.3</a>, incluindo os novos RF66, RF67 e RF68.</li>
+<li><strong>RNFs aplicáveis ao MVP:</strong> os RNFs classificados como "Obrigatório para o MVP", "Associado a RF do MVP" ou "Evolutivo" na seção <a href="#10231-classificacao-dos-requisitos-nao-funcionais-para-o-mvp">10.2.3.1</a>, que acompanham os RFs aprovados.</li>
+<li><strong>Requisitos que ficaram para entregas futuras:</strong> os 15 RFs assinalados "Não" na seção <a href="#1023-definicao-do-mvp">10.2.3</a> — RF3, RF5, RF9, RF12, RF13, RF24, RF26, RF33, RF46, RF47, RF58, RF59, RF60, RF61 e RF62 — e os RNFs classificados como "Não aplicável ao MVP". A continuidade de casos entre semestres (RF58 a RF60) será tratada caso a caso pela transferência de caso (RF25) nesta primeira versão.</li>
+<li><strong>Ajustes solicitados pelo cliente:</strong><ol>
+<li>Com o RF5 fora do MVP, a triagem deve ter um prazo máximo após a inscrição, configurável como parâmetro, com o valor a ser definido pela coordenação (<a href="../funcionais/#rf4">RF4</a>), e o formulário de inscrição deve exibir um aviso fixo com os contatos do CVV (188) e do SAMU (192) (<a href="../funcionais/#rf1">RF1</a>).</li>
+<li>Com o RF26 fora do MVP, a transferência de caso deve gravar quem transferiu, o responsável anterior, o novo responsável, a data/hora e o motivo (<a href="../funcionais/#rf25">RF25</a>).</li>
+<li>Sem o RF12, o cancelamento feito para remarcar uma sessão não conta como falta nem do paciente nem do estagiário (<a href="../funcionais/#rf15">RF15</a>, <a href="../funcionais/#rf16">RF16</a>).</li>
+<li>A correção de evolução deve guardar a versão original (<a href="../funcionais/#rf29">RF29</a>, <a href="../nao-funcionais/#rnf28">RNF28</a>).</li>
+<li>O apoio manual à inscrição, enquanto o RF3 não for implementado, é feito pela recepção preenchendo o mesmo formulário do sistema, para que a pessoa entre na mesma fila (<a href="../funcionais/#rf3">RF3</a>, <a href="../funcionais/#rf1">RF1</a>).</li>
+</ol>
+</li>
+<li><strong>Decisões ou divergências registradas:</strong> não ficaram divergências em aberto. Ficaram dois pontos para definição posterior, registrados em <a href="../analise-feedback/#pendencias-de-validacao-com-a-fbr">Pendências de validação com a FBr</a>: (a) o valor do prazo máximo para triagem, a ser definido pela coordenação; e (b) a data de entrega do relatório final de evolução (RF33). O RF33 fica fora do MVP, mas a FBr pediu que fique pronto antes do fim do semestre, junto com a reprovação do estagiário (RF63/RF64, no MVP, com implementação prevista para mais perto do fim do semestre). A data será combinada quando o cronograma da fase de construção estiver detalhado. Para que a confirmação de presença (RF14) não dependa do lembrete automático (RF13), o link de confirmação passou a ser enviado no próprio agendamento (RF10).</li>
+</ul>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Voltar para o topo
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    
+      
+      <nav class="md-footer__inner md-grid" aria-label="Rodapé" >
+        
+          
+          <a href="../dor-dod/" class="md-footer__link md-footer__link--prev" aria-label="Anterior: 9. DoR e DoD">
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+            </div>
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Anterior
+              </span>
+              <div class="md-ellipsis">
+                9. DoR e DoD
+              </div>
+            </div>
+          </a>
+        
+        
+          
+          <a href="../../gestao/cronograma/" class="md-footer__link md-footer__link--next" aria-label="Próximo: Cronograma e Entregas">
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Próximo
+              </span>
+              <div class="md-ellipsis">
+                Cronograma e Entregas
+              </div>
+            </div>
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11z"/></svg>
+            </div>
+          </a>
+        
+      </nav>
+    
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      Clínica Escola FBr · Documentação acadêmica do projeto · 2026
+    </div>
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../../..", "features": ["navigation.tabs", "navigation.tabs.sticky", "navigation.sections", "navigation.path", "navigation.top", "navigation.footer", "navigation.tracking", "toc.follow", "search.suggest", "search.highlight", "content.code.copy"], "search": "../../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copiado para \u00e1rea de transfer\u00eancia", "clipboard.copy": "Copiar para \u00e1rea de transfer\u00eancia", "search.result.more.one": "mais 1 nesta p\u00e1gina", "search.result.more.other": "# mais nesta p\u00e1gina", "search.result.none": "Nenhum documento encontrado", "search.result.one": "1 documento encontrado", "search.result.other": "# documentos encontrados", "search.result.placeholder": "Digite para iniciar a busca", "search.result.term.missing": "Ausente", "select.version": "Selecione a vers\u00e3o"}, "version": null}</script>
+    
+    
+      <script src="../../../assets/javascripts/bundle.d7400e89.min.js"></script>
+      
+        <script src="../../../assets/javascripts/extra.js"></script>
+      
+        <script src="../../../assets/javascripts/reading.js"></script>
+      
+        <script src="../../../assets/javascripts/matriz.js"></script>
+      
+        <script src="../../../assets/javascripts/melhorias.js"></script>
+      
+    
+  </body>
+</html>
