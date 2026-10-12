@@ -9,7 +9,7 @@ A solução deverá:
 - Ampliar o aproveitamento das vagas ofertadas a cada semestre
 - Atacar prioritariamente as falhas de agendamento e de confirmação de presença que hoje produzem horários ociosos
 - Reduzir o esforço manual da coordenação, da secretaria, dos supervisores e dos estagiários
-- Preservar integralmente o caráter presencial do atendimento psicológico, conforme exigido pelo Conselho Regional de Psicologia
+- Preservar integralmente o caráter presencial do atendimento psicológico, conforme informado pela Clínica Escola (a base normativa dessa restrição está pendente de confirmação; ver [Cenário Atual, 1.4](cenario-atual.md#14-identificacao-da-oportunidade-ou-problema))
 
 ## 2.2 Objetivos Específicos (OE) do Produto
 

@@ -15,7 +15,7 @@ A Clínica Escola de Psicologia da Faculdade Brasília oferta aproximadamente **
 - Dificuldade de geração de indicadores
 - Riscos no tratamento de dados sensíveis
 
-O **Clínica Escola FBr** é a solução proposta para digitalizar as etapas permitidas pela regulação (inscrição, triagem, agendamento, confirmação de presença, registro clínico e emissão de documentos), **sem alterar o caráter presencial do atendimento psicológico**, conforme exigido pelo Conselho Regional de Psicologia.
+O **Clínica Escola FBr** é a solução proposta para digitalizar as etapas permitidas pela regulação (inscrição, triagem, agendamento, confirmação de presença, registro clínico e emissão de documentos), **sem alterar o caráter presencial do atendimento psicológico**, conforme informado pela Clínica Escola.
 
 ---
 
