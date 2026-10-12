@@ -181,6 +181,9 @@ Exemplo:
 
 ### 4.2 Exemplo de decomposição do MVP
 
+!!! note "Exemplo ilustrativo"
+    Esta decomposição é um exemplo do início do projeto e não corresponde à lista final de features. Algumas features daqui não existem mais, como a pré-classificação automática de prioridade, já que o sistema não atribui prioridade clínica (CP2). A lista oficial está em [Backlog de Produto, 10.1.1](../../unidade-2/requisitos/backlog.md#1011-mapa-do-escopo).
+
 Uma possível organização inicial é:
 
 ```text
@@ -292,6 +295,9 @@ feat: registra confirmação de presença da sessão
 O pull request deve informar a feature relacionada, os requisitos atendidos, os testes executados, eventuais decisões de segurança e o estado da validação com a FBr.
 
 ### 5.4 Definition of Ready e Definition of Done
+
+!!! note "Versão oficial"
+    Esta seção é a proposta inicial, de agosto de 2026. A Definition of Ready e a Definition of Done adotadas pela equipe estão na seção [9. DoR e DoD](../../unidade-2/requisitos/dor-dod.md).
 
 Antes de iniciar uma feature, a equipe deve verificar a Definition of Ready (DoR). No mínimo, a feature deve ter objetivo, descrição, prioridade, dependências conhecidas, critérios de aceitação e responsável definido.
 
