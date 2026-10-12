@@ -848,7 +848,7 @@ _Critérios de aceitação:_
 - Evolução validada que recebe nova correção (RF29) ou novo complemento (RF30) volta para "pendente de validação".
 - Na consulta (RF31/RF32), evoluções pendentes de validação aparecem de forma distinta das validadas.
 
-_Rastreabilidade:_ Feature "Validar evolução pelo supervisor" → CP7 — Registro de evolução por sessão → OE5/OE6. Dependência: RF28; integração: RF29, RF30.
+_Rastreabilidade:_ Feature "Validar evolução pelo supervisor" → CP7 — Registro de evolução por sessão → OE5/OE2. Dependência: RF28; integração: RF29, RF30.
 
 #### Feature — Encerrar caso por alta
 
@@ -863,7 +863,7 @@ _Critérios de aceitação:_
 - O histórico do caso identifica o encerramento como alta, distinto do desligamento por faltas (RF37).
 - O encerramento por alta só é concluído após a confirmação do supervisor.
 
-_Rastreabilidade:_ Feature "Encerrar caso por alta" → CP7 — Registro de evolução por sessão → OE5/OE6. Dependência: RF28; integração: RF21 (CP5), RF37 (CP9).
+_Rastreabilidade:_ Feature "Encerrar caso por alta" → CP7 — Registro de evolução por sessão → OE5/OE2. Dependência: RF28; integração: RF21 (CP5), RF37 (CP9).
 
 #### Feature — Consultar evolução de uma sessão específica
 
@@ -961,7 +961,7 @@ _Critérios de aceitação:_
 - Sessão já cancelada (RF15) ou já registrada como realizada não aceita registro de falta.
 - Cada falta registrada gera o evento consumido pela contagem cumulativa (RF35).
 
-_Rastreabilidade:_ Feature "Registrar falta do paciente na sessão" → CP9 — Controle de assiduidade e alertas → OE3/OE4. Dependência: RF10, RF14, RF15 (CP4).
+_Rastreabilidade:_ Feature "Registrar falta do paciente na sessão" → CP9 — Controle de assiduidade e alertas → OE4/OE3. Dependência: RF10, RF14, RF15 (CP4).
 
 #### Feature — Contabilizar faltas do paciente no ciclo
 
@@ -976,7 +976,7 @@ _Critérios de aceitação:_
 - Paciente que não confirmou a sessão no prazo (RF14), mas compareceu, não tem a contagem de faltas incrementada.
 - A reversão de desligamento feito por engano (RF38) ajusta a contagem de faltas conforme a decisão registrada, preservando o histórico de cada evento para auditoria.
 
-_Rastreabilidade:_ Feature "Contabilizar faltas do paciente no ciclo" → CP9 — Controle de assiduidade e alertas → OE3/OE4. Dependência: RF15 (CP4), RF34.
+_Rastreabilidade:_ Feature "Contabilizar faltas do paciente no ciclo" → CP9 — Controle de assiduidade e alertas → OE4/OE3. Dependência: RF15 (CP4), RF34.
 
 #### Feature — Emitir alerta de limite de faltas atingido
 
@@ -989,7 +989,7 @@ _Critérios de aceitação:_
 - Ao atingir duas faltas no ciclo, consecutivas ou não, é exibido um alerta em destaque vermelho para a secretaria, o estagiário responsável e a coordenação.
 - O registro da decisão de desligamento (RF37) remove o alerta pendente do paciente.
 
-_Rastreabilidade:_ Feature "Emitir alerta de limite de faltas atingido" → CP9 — Controle de assiduidade e alertas → OE3/OE4. Dependência: RF35.
+_Rastreabilidade:_ Feature "Emitir alerta de limite de faltas atingido" → CP9 — Controle de assiduidade e alertas → OE4/OE3. Dependência: RF35.
 
 #### Feature — Desligar paciente por faltas e liberar vaga
 
@@ -1009,7 +1009,7 @@ _Critérios de aceitação:_
 - Nenhum inscrito é vinculado automaticamente à vaga liberada; ela só deixa de estar pendente quando o supervisor registra o novo vínculo (RF21).
 - Paciente sem alerta de limite de faltas pendente não pode ser desligado por faltas.
 
-_Rastreabilidade:_ Feature "Desligar paciente por faltas e liberar vaga" → CP9 — Controle de assiduidade e alertas → OE3/OE4. Dependência: RF36. Integração: CP3 — Fila de espera e consulta de posição (RF7); CP5 — Distribuição de casos (RF20, RF21), responsável pela realocação.
+_Rastreabilidade:_ Feature "Desligar paciente por faltas e liberar vaga" → CP9 — Controle de assiduidade e alertas → OE4/OE3. Dependência: RF36. Integração: CP3 — Fila de espera e consulta de posição (RF7); CP5 — Distribuição de casos (RF20, RF21), responsável pela realocação.
 
 #### Feature — Reverter desligamento de paciente por faltas
 
@@ -1024,7 +1024,7 @@ _Critérios de aceitação:_
 - Usuário sem perfil de coordenação não consegue reverter desligamento por faltas.
 - Após a reversão, o registro original do desligamento e o da reversão continuam disponíveis para auditoria, cada um com autor, data/hora e motivo.
 
-_Rastreabilidade:_ Feature "Reverter desligamento de paciente por faltas" → CP9 — Controle de assiduidade e alertas → OE3/OE4. Dependência: RF37.
+_Rastreabilidade:_ Feature "Reverter desligamento de paciente por faltas" → CP9 — Controle de assiduidade e alertas → OE4/OE3. Dependência: RF37.
 
 #### Controle de faltas do estagiário
 
@@ -1041,7 +1041,7 @@ _Critérios de aceitação:_
 - A consulta do supervisor às faltas de estagiário sob sua supervisão lista as sessões canceladas por ausência real (RF16) no período escolhido, sem os cancelamentos administrativos para remarcação.
 - Usuário sem vínculo de supervisão com o estagiário não acessa a relação de faltas.
 
-_Rastreabilidade:_ Feature "Consolidar faltas do estagiário para a supervisão" → CP9 — Controle de assiduidade e alertas → OE3/OE4. Dependência: RF16 (CP4). Restrição transversal: CP12 — Segurança, sigilo e controle de acesso.
+_Rastreabilidade:_ Feature "Consolidar faltas do estagiário para a supervisão" → CP9 — Controle de assiduidade e alertas → OE4/OE3. Dependência: RF16 (CP4). Restrição transversal: CP12 — Segurança, sigilo e controle de acesso.
 
 #### Feature — Contabilizar faltas do estagiário no semestre
 
@@ -1056,7 +1056,7 @@ _Critérios de aceitação:_
 - No início de cada semestre letivo, a contagem do estagiário volta a zero, e a do semestre anterior fica preservada no histórico.
 - Somente o supervisor do estagiário e a coordenação consultam a contagem de faltas dele.
 
-_Rastreabilidade:_ Feature "Contabilizar faltas do estagiário no semestre" → CP9 — Controle de assiduidade e alertas → OE3/OE4. Dependência: RF16 (CP4), RF39.
+_Rastreabilidade:_ Feature "Contabilizar faltas do estagiário no semestre" → CP9 — Controle de assiduidade e alertas → OE4/OE3. Dependência: RF16 (CP4), RF39.
 
 #### Feature — Sinalizar reprovação do estagiário por faltas
 
@@ -1071,7 +1071,7 @@ _Critérios de aceitação:_
 - Faltas além da terceira no mesmo semestre não criam nova sinalização.
 - Somente o supervisor do estagiário e a coordenação visualizam a sinalização de reprovação.
 
-_Rastreabilidade:_ Feature "Sinalizar reprovação do estagiário por faltas" → CP9 — Controle de assiduidade e alertas → OE3/OE4. Dependência: RF40.
+_Rastreabilidade:_ Feature "Sinalizar reprovação do estagiário por faltas" → CP9 — Controle de assiduidade e alertas → OE4/OE3. Dependência: RF40.
 
 #### Feature — Registrar decisão institucional sobre a reprovação do estagiário
 
@@ -1086,7 +1086,7 @@ _Critérios de aceitação:_
 - Usuário sem perfil de coordenação não consegue registrar a decisão.
 - A sinalização encerrada e a decisão continuam disponíveis no histórico do estagiário para o supervisor e a coordenação.
 
-_Rastreabilidade:_ Feature "Registrar decisão institucional sobre a reprovação do estagiário" → CP9 — Controle de assiduidade e alertas → OE3/OE4. Dependência: RF63.
+_Rastreabilidade:_ Feature "Registrar decisão institucional sobre a reprovação do estagiário" → CP9 — Controle de assiduidade e alertas → OE4/OE3. Dependência: RF63.
 
 #### Modelo de domínio da CP9
 
@@ -1154,7 +1154,7 @@ _Critérios de aceitação:_
 - Com contribuição pendente e ao menos uma sessão já realizada no ciclo, o agendamento de nova sessão é bloqueado, informando o motivo (contribuição pendente).
 - Após o registro da contribuição como efetivada (RF41), o agendamento antes bloqueado passa a ser permitido.
 
-_Rastreabilidade:_ Feature "Bloquear agendamento por contribuição social pendente" → CP10 — Registros administrativos do atendimento; restrição sobre a feature "Agendar sessão do paciente" (RF10, CP4). Dependência: RF41, RF42.
+_Rastreabilidade:_ Feature "Bloquear agendamento por contribuição social pendente" → CP10 — Registros administrativos do atendimento → OE6/OE4; restrição sobre a feature "Agendar sessão do paciente" (RF10, CP4). Dependência: RF41, RF42.
 
 #### Declaração de comparecimento
 
@@ -1172,7 +1172,7 @@ _Critérios de aceitação:_
 - Paciente ou responsável com identidade verificada (RF52) vê somente as próprias sessões.
 - Paciente sem sessão com presença registrada recebe o aviso de que não há sessões disponíveis para declaração.
 
-_Rastreabilidade:_ Feature "Listar sessões com comparecimento registrado do paciente" → CP10 — Registros administrativos do atendimento → OE6/OE5. Dependência: RF52 (CP12).
+_Rastreabilidade:_ Feature "Listar sessões com comparecimento registrado do paciente" → CP10 — Registros administrativos do atendimento → OE6/OE4. Dependência: RF52 (CP12).
 
 #### Feature — Emitir declaração de comparecimento do paciente
 
@@ -1196,7 +1196,7 @@ _Critérios de aceitação:_
 - Para paciente menor de idade com a autorização preenchida, o responsável legal emite a declaração normalmente.
 - O documento só pode ser visualizado em tela e impresso, sem download nem envio por e-mail.
 
-_Rastreabilidade:_ Feature "Emitir declaração de comparecimento do paciente" → CP10 — Registros administrativos do atendimento → OE6/OE5. Dependência: RF52 (CP12).
+_Rastreabilidade:_ Feature "Emitir declaração de comparecimento do paciente" → CP10 — Registros administrativos do atendimento → OE6/OE4. Dependência: RF52 (CP12).
 
 
 #### Feature — Reemitir declaração de comparecimento
@@ -1211,7 +1211,7 @@ _Critérios de aceitação:_
 - A secretaria reemite a declaração de qualquer paciente; o paciente ou responsável com identidade verificada reemite apenas declarações das próprias sessões.
 - A tentativa de reemitir declaração de outro paciente é negada e registrada (RNF39).
 
-_Rastreabilidade:_ Feature "Reemitir declaração de comparecimento" → CP10 — Registros administrativos do atendimento → OE6/OE5.
+_Rastreabilidade:_ Feature "Reemitir declaração de comparecimento" → CP10 — Registros administrativos do atendimento → OE6/OE4.
 
 #### Feature — Validar autenticidade da declaração
 
@@ -1225,7 +1225,7 @@ _Critérios de aceitação:_
 - Código inexistente retorna apenas uma mensagem genérica de código inválido.
 - Código de declaração cujo registro de origem foi corrigido após a emissão informa que o documento não corresponde mais ao registro vigente, sem exibir os dados anteriores.
 
-_Rastreabilidade:_ Feature "Validar autenticidade da declaração" → CP10 — Registros administrativos do atendimento → OE6/OE5.
+_Rastreabilidade:_ Feature "Validar autenticidade da declaração" → CP10 — Registros administrativos do atendimento → OE6/OE4.
 
 ### Indicadores e Relatórios Institucionais (CP11)
 
@@ -1256,7 +1256,7 @@ _Critérios de aceitação:_
 - Indicador sem registros no intervalo, ou com divisão de denominador zero, é exibido como zero, nunca omitido ou em branco.
 - Intervalo com data final posterior à data da consulta, ou com data inicial posterior à final, é recusado e o motivo é informado.
 
-_Rastreabilidade:_ Feature "Consultar indicadores operacionais" → CP11 — Indicadores e relatórios institucionais. Dependência: RF9 (CP3), RF37 e RF38 (CP9), CP5.
+_Rastreabilidade:_ Feature "Consultar indicadores operacionais" → CP11 — Indicadores e relatórios institucionais → OE6/OE4. Dependência: RF9 (CP3), RF37 e RF38 (CP9), CP5.
 
 #### Feature — Exportar relatório institucional em PDF [#23](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/issues/23)
 
@@ -1270,7 +1270,7 @@ _Critérios de aceitação:_
 - Se o total de vagas ofertadas não foi registrado (RF48), o PDF reproduz o mesmo aviso exibido em tela.
 - Usuário sem perfil de coordenação não consegue exportar o relatório.
 
-_Rastreabilidade:_ Feature "Exportar relatório institucional em PDF" → CP11 — Indicadores e relatórios institucionais. Dependência: RF48.
+_Rastreabilidade:_ Feature "Exportar relatório institucional em PDF" → CP11 — Indicadores e relatórios institucionais → OE6/OE4. Dependência: RF48.
 
 ### Segurança, Sigilo e Controle de Acesso (CP12)
 
@@ -1325,7 +1325,7 @@ _Critérios de aceitação:_
 - Novo código pedido menos de 60 segundos após o anterior é recusado, informando o tempo restante.
 - Depois de 3 códigos enviados ao mesmo CPF em 60 minutos, um quarto pedido é recusado e o bloqueio dura 60 minutos.
 
-_Rastreabilidade:_ Feature "Verificar identidade do paciente ou responsável" → CP12 — Segurança, sigilo e controle de acesso → OE7/OE1. Atende à verificação de acesso exigida pela feature "Consultar posição individual na fila" (CP3) e pelas features de declaração da CP10.
+_Rastreabilidade:_ Feature "Verificar identidade do paciente ou responsável" → CP12 — Segurança, sigilo e controle de acesso → OE7/OE5. Atende à verificação de acesso exigida pela feature "Consultar posição individual na fila" (CP3) e pelas features de declaração da CP10.
 
 #### Feature — Cadastrar usuário institucional com perfil de acesso [#48](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/issues/48)
 
@@ -1507,7 +1507,8 @@ A CP14 foi decomposta em duas features de personalização da exibição, voltad
 O sistema deve permitir que o paciente ative um modo de alto contraste em todas as páginas voltadas ao público externo, alterando a combinação de cores de texto e plano de fundo para atender, no mínimo, à razão de contraste exigida pelo nível AA da WCAG 2.2 (ver RNF56).
 
 _Critério de aceitação:_ O modo de alto contraste ativado permanece em todas as páginas públicas durante a mesma sessão do navegador, sem precisar ser reativado; a preferência não precisa ser mantida após o fim da sessão, já que essas páginas não exigem login do paciente.
-_Rastreabilidade:_ Feature "Ativar modo de alto contraste" → CP14 — Acessibilidade e usabilidade.
+
+_Rastreabilidade:_ Feature "Ativar modo de alto contraste" → CP14 — Acessibilidade e usabilidade → OE1/OE7.
 
 #### Feature — Ajustar tamanho do texto [#25](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/issues/25)
 
@@ -1516,4 +1517,5 @@ _Rastreabilidade:_ Feature "Ativar modo de alto contraste" → CP14 — Acessibi
 O sistema deve permitir que o paciente aumente ou diminua o tamanho do texto exibido nas páginas voltadas ao público externo, em pelo menos 3 níveis (padrão — 100%, grande — 150% e extra grande — 200% do tamanho base do texto), sem cortar texto, sobrepor elementos ou impedir o acesso a qualquer funcionalidade dessas páginas.
 
 _Critério de aceitação:_ O nível de tamanho de texto escolhido vale para todas as páginas públicas, com a mesma regra de persistência por sessão do navegador do RF61.
-_Rastreabilidade:_ Feature "Ajustar tamanho do texto" → CP14 — Acessibilidade e usabilidade.
+
+_Rastreabilidade:_ Feature "Ajustar tamanho do texto" → CP14 — Acessibilidade e usabilidade → OE1/OE7.
