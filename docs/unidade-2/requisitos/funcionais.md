@@ -353,7 +353,7 @@ _Rastreabilidade:_ Feature "Sinalizar pontos de atenção da inscrição" → CP
 
 **RF6 — Registrar prioridade clínica do inscrito**{ #rf6 }
 
-O sistema deve permitir exclusivamente que um supervisor ou integrante da coordenação registre a classificação final de uma inscrição como vermelha, amarela ou verde, após avaliar as informações e sinalizações disponíveis. Deve ser possível corrigir uma classificação mediante nova decisão de um desses perfis, preservando o histórico das classificações e o responsável por cada decisão. Inscrições sem decisão devem permanecer com prioridade pendente e não devem ser tratadas pela fila como classificadas. O sistema deve disponibilizar à CP3 somente a prioridade final vigente definida pela equipe clínica.
+O sistema deve permitir exclusivamente que um supervisor ou integrante da coordenação registre a classificação final de uma inscrição como vermelha, amarela ou verde, após avaliar as informações e sinalizações disponíveis. Deve ser possível corrigir uma classificação mediante nova decisão de um desses perfis, preservando o histórico das classificações e o responsável por cada decisão. Inscrições sem decisão devem permanecer com prioridade pendente e não devem ser tratadas pela fila como classificadas. O sistema deve disponibilizar à CP3 somente a prioridade final vigente definida pela equipe clínica. No mesmo registro, o supervisor ou a coordenação pode indicar, de forma opcional, a área de especialidade clínica exigida pelo caso, que é consumida pela distribuição de casos (RF20, CP5).
 
 A classificação continua sendo um julgamento clínico da equipe, não uma regra automatizada — mas, segundo a reunião de 26/08/2026 com a Clínica Escola ([ata](../../unidade-1/reunioes.md)), a própria FBr descreveu a referência que hoje orienta essa decisão: prioridade vermelha para quadro clínico já caracterizado (ex.: quadros depressivos ou de ansiedade), especialmente quando o interessado já está em uso de medicação; prioridade amarela para sofrimento emocional pontual, sem caracterização de quadro clínico e sem uso de medicação (ex.: luto); e prioridade verde quando não há indício de adoecimento e a busca é por desenvolvimento pessoal, sendo esse grupo atendido apenas se houver vaga disponível após o atendimento das prioridades vermelha e amarela. A tela de decisão deve exibir esses critérios como apoio textual ao supervisor ou à coordenação, mas não deve calculá-los nem sugerir automaticamente uma cor a partir das respostas do formulário.
 
@@ -364,15 +364,16 @@ _Critérios de aceitação:_
 - Inscrição sem classificação confirmada aparece na fila como pendente, sem usar sinalizações como prioridade final.
 - A alteração autorizada de prioridade mantém o histórico da decisão anterior e disponibiliza a nova classificação para a fila (CP3).
 - A tela de registro de prioridade exibe a referência vermelha/amarela/verde da Clínica Escola como apoio textual, sem preencher nem sugerir a cor automaticamente.
+- A área de especialidade indicada junto à decisão de prioridade fica disponível para a distribuição (RF20); sem indicação, o caso segue para a distribuição sem área exigida.
 
-_Rastreabilidade:_ Feature "Registrar prioridade clínica do inscrito" → CP2 — Triagem e sinalização de casos → OE2/OE1. Dependência: RF4/RF5; integração: RF7 (CP3); restrição transversal: CP12 — Segurança, sigilo e controle de acesso.
+_Rastreabilidade:_ Feature "Registrar prioridade clínica do inscrito" → CP2 — Triagem e sinalização de casos → OE2/OE1. Dependência: RF4/RF5; integração: RF7 (CP3) e RF20 (CP5); restrição transversal: CP12 — Segurança, sigilo e controle de acesso.
 
 #### Modelo de domínio da CP2
 
 - **Inscrição:** solicitação identificada pelo número gerado na CP1; contém respostas declaradas pelo interessado e possui uma situação de triagem.
 - **Resposta de triagem:** informação associada à inscrição e à pergunta do formulário aprovado; sua origem declaratória permanece explícita.
 - **Ponto de atenção:** sinalização derivada de uma resposta e de uma regra institucional aprovada; não possui valor de prioridade clínica.
-- **Decisão de prioridade:** classificação vermelha, amarela ou verde, vinculada à inscrição, ao integrante autorizado da equipe clínica e ao momento da decisão. A decisão vigente pode substituir outra sem apagar seu histórico.
+- **Decisão de prioridade:** classificação vermelha, amarela ou verde, vinculada à inscrição, ao integrante autorizado da equipe clínica e ao momento da decisão. A decisão vigente pode substituir outra sem apagar seu histórico. Pode indicar, opcionalmente, a área de especialidade clínica exigida pelo caso, usada na distribuição (CP5).
 - **Fila de espera:** utiliza a decisão de prioridade vigente e confirmada; inscrições pendentes não recebem prioridade por inferência.
 
 ### Fila de espera e consulta de posição (CP3)
@@ -649,7 +650,7 @@ _Critérios de aceitação:_
 - A coordenação consegue associar uma ou mais áreas de especialidade a um supervisor.
 - A remoção de uma área de especialidade do supervisor não retira dele os casos já distribuídos.
 
-_Rastreabilidade:_ Feature "Registrar áreas de especialidade do supervisor" → CP5 — Distribuição de casos entre supervisores e estagiários → OE5.
+_Rastreabilidade:_ Feature "Registrar áreas de especialidade do supervisor" → CP5 — Distribuição de casos entre supervisores e estagiários → OE5. RNF relacionado: RNF23 (modificabilidade do cadastro de áreas de especialidade).
 
 #### Feature — Distribuir caso a supervisor conforme área de especialidade
 
@@ -1112,6 +1113,7 @@ O controle da taxa é feito hoje à mão ([ata de 26/08/2026](../../unidade-1/re
 - Toda alteração do parâmetro pela coordenação deve ser registrada com o valor anterior, o novo valor, o autor e a data/hora, e passa a valer somente para pagamentos registrados a partir dela, sem alterar pagamentos já efetivados.
 - Cada paciente pode ter apenas um pagamento de contribuição social registrado por ciclo de atendimento, já que a taxa é semestral: conforme confirmado pela Clínica Escola, ela é cobrada uma vez por semestre e volta a ser devida caso o paciente se inscreva novamente em outro semestre.
 - Não há isenção da taxa para pacientes sem condição de pagar.
+- Um pagamento registrado com valor, data ou forma incorretos não pode ser apagado nem sobrescrito: a secretaria registra uma correção, informando o motivo, que gera uma nova versão do registro com autor e data/hora e preserva a versão anterior (auditoria no RNF36).
 - Para este requisito, **ciclo de atendimento** é o período de acompanhamento de um paciente que vai da primeira sessão até o encerramento do atendimento (conclusão das sessões com o relatório final, desligamento por faltas ou desistência) dentro do mesmo semestre.
 
 _Critérios de aceitação:_
@@ -1121,6 +1123,7 @@ _Critérios de aceitação:_
 - Usuário sem perfil de secretaria não consegue registrar pagamento.
 - A alteração do parâmetro "valor da contribuição social" (padrão de R$ 35,00) pela coordenação registra valor anterior, novo valor, autor e data/hora, e o novo valor vale só para pagamentos registrados depois dela.
 - Usuário sem perfil de coordenação não consegue alterar o valor da contribuição.
+- A correção de um pagamento registrado exige o motivo, gera nova versão com autor e data/hora e mantém a versão anterior consultável.
 
 _Rastreabilidade:_ Feature "Registrar pagamento da contribuição social do paciente" → CP10 — Registros administrativos do atendimento → OE6/OE4.
 
@@ -1179,12 +1182,12 @@ _Rastreabilidade:_ Feature "Listar sessões com comparecimento registrado do pac
 - A emissão só é permitida para sessão com presença registrada; sessões com falta ou cancelamento não geram declaração.
 - A declaração não deve conter informação clínica (queixa, prioridade, diagnóstico, evolução), preservando o sigilo do atendimento, e pode indicar que o atendimento é de natureza psicológica, sem necessidade de texto neutro.
 - Para paciente menor de idade, a retirada da declaração pelo responsável legal exige que a Autorização para Acompanhamento Psicoterapêutico de Crianças e Adolescentes, assinada presencialmente, já esteja preenchida; sem essa autorização, a declaração não deve ser emitida para o responsável.
-- Toda emissão deve ser registrada para fins de auditoria (usuário, data/hora e sessão de origem).
+- Toda emissão é auditada conforme o RNF39.
 - Além de data, horário e nome do estagiário, o documento deve conter a assinatura e o carimbo do psicólogo responsável e o número de CRP, conforme o modelo fornecido pela Clínica Escola.
 
 _Critérios de aceitação:_
 
-- A emissão para sessão com presença registrada, solicitada pela secretaria ou pelo paciente/responsável, gera o documento com data, horário e nome do estagiário conforme o registro da sessão, e registra a emissão para auditoria.
+- A emissão para sessão com presença registrada, solicitada pela secretaria ou pelo paciente/responsável, gera o documento com data, horário e nome do estagiário conforme o registro da sessão, e a emissão fica auditada (RNF39).
 - Sessão sem presença registrada (falta ou cancelamento) não gera declaração; o motivo é informado.
 - Usuário sem permissão para a sessão não emite a declaração, e a tentativa é registrada.
 - Paciente ou responsável com identidade verificada (RF52) não emite declaração de sessão de outro paciente.
@@ -1200,9 +1203,13 @@ _Rastreabilidade:_ Feature "Emitir declaração de comparecimento do paciente" �
 
 **RF46 — Reemitir declaração de comparecimento**{ #rf46 }
 
-O sistema deve permitir gerar novamente uma declaração já emitida (por exemplo, em caso de perda do documento), mantendo o conteúdo consistente com o registro da sessão, a menos que esse registro tenha sido corrigido desde a emissão original. Cada reemissão deve ser registrada para auditoria, distinguindo-se da emissão original.
+O sistema deve permitir gerar novamente uma declaração já emitida (por exemplo, em caso de perda do documento), mantendo o conteúdo consistente com o registro da sessão, a menos que esse registro tenha sido corrigido desde a emissão original. Podem solicitar a reemissão os mesmos perfis autorizados a emitir a declaração original (RF45): a secretaria, para qualquer paciente, e o paciente ou responsável com identidade verificada (RF52), exclusivamente para as próprias sessões. Cada reemissão é auditada conforme o RNF39, distinguindo-se da emissão original.
 
-_Critério de aceitação:_ A reemissão gera o documento com o mesmo conteúdo da emissão original (salvo correção do registro) e fica registrada vinculada a ela.
+_Critérios de aceitação:_
+
+- A reemissão gera o documento com o mesmo conteúdo da emissão original (salvo correção do registro) e fica vinculada a ela.
+- A secretaria reemite a declaração de qualquer paciente; o paciente ou responsável com identidade verificada reemite apenas declarações das próprias sessões.
+- A tentativa de reemitir declaração de outro paciente é negada e registrada (RNF39).
 
 _Rastreabilidade:_ Feature "Reemitir declaração de comparecimento" → CP10 — Registros administrativos do atendimento → OE6/OE5.
 

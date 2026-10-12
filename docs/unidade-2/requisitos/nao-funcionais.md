@@ -18,7 +18,7 @@ Os requisitos não funcionais (RNFs) descrevem propriedades e restrições mensu
 | [RNF17 — Privacidade dos dados nas telas de distribuição e consulta](#rnf17) | [RNF18 — Auditoria de atribuições, vínculos e transferências](#rnf18) |
 | [RNF19 — Integridade dos vínculos de responsabilidade](#rnf19) | [RNF20 — Continuidade do histórico na troca de responsável](#rnf20) |
 | [RNF21 — Desempenho das listagens e operações de vínculo](#rnf21) | [RNF22 — Usabilidade da distribuição e do vínculo de casos](#rnf22) |
-| [RNF23 — Manutenibilidade das áreas de especialidade](#rnf23) | [RNF24 — Acessibilidade das telas de distribuição e consulta](#rnf24) |
+| [RNF23 — Modificabilidade do cadastro de áreas de especialidade](#rnf23) | [RNF24 — Acessibilidade das telas de distribuição e consulta](#rnf24) |
 | [RNF25 — Sigilo do conteúdo do prontuário](#rnf25) | [RNF26 — Sigilo do conteúdo da evolução](#rnf26) |
 | [RNF27 — Integridade e proveniência dos registros de evolução](#rnf27) | [RNF28 — Auditoria das correções de evolução](#rnf28) |
 | [RNF29 — Desempenho do registro e da consulta de evolução](#rnf29) | [RNF30 — Usabilidade do registro de evolução](#rnf30) |
@@ -27,7 +27,7 @@ Os requisitos não funcionais (RNFs) descrevem propriedades e restrições mensu
 | [RNF35 — Privacidade dos dados de faltas do estagiário](#rnf35) | [RNF36 — Auditoria dos registros de contribuição social](#rnf36) |
 | [RNF37 — Privacidade dos dados na declaração](#rnf37) | [RNF38 — Autorização para emissão e consulta](#rnf38) |
 | [RNF39 — Auditoria de emissões e reemissões](#rnf39) | [RNF40 — Tempo de geração da declaração](#rnf40) |
-| [RNF41 — Usabilidade da emissão](#rnf41) | [RNF42 — Portabilidade do documento](#rnf42) |
+| [RNF41 — Usabilidade da emissão](#rnf41) | [RNF42 — Formato e compatibilidade do documento](#rnf42) |
 | [RNF43 — Acessibilidade da tela de emissão](#rnf43) | [RNF44 — Integridade do conteúdo da declaração](#rnf44) |
 | [RNF45 — Segurança da consulta pública de autenticidade](#rnf45) | [RNF46 — Atualização dos indicadores operacionais](#rnf46) |
 | [RNF47 — Tempo de geração do relatório institucional](#rnf47) | [RNF48 — Auditoria de relatórios institucionais](#rnf48) |
@@ -336,7 +336,7 @@ A conformidade deve ser verificada por teste de usabilidade com uma amostra mín
 Classificação: usabilidade (URPS+).
 Rastreabilidade: CP5 — Distribuição de casos entre supervisores e estagiários (transversal às features "Listar casos aguardando distribuição", "Distribuir caso a supervisor conforme área de especialidade" e "Vincular paciente a estagiário responsável").
 
-**RNF23 — Manutenibilidade das áreas de especialidade**{ #rnf23 }
+**RNF23 — Modificabilidade do cadastro de áreas de especialidade**{ #rnf23 }
 
 As áreas de especialidade e sua associação aos supervisores (RF19) devem ser armazenadas como dado configurável, e não como valor fixo no código-fonte, de modo que a inclusão, edição ou remoção de uma área pela interface (RF19) fique disponível para uso na distribuição (RF20) imediatamente, sem exigir alteração de código, recompilação ou novo deploy da aplicação.
 
@@ -546,7 +546,7 @@ A conformidade deve ser verificada por teste de usabilidade com uma amostra mín
 Classificação: usabilidade (URPS+).
 Rastreabilidade: Feature "Listar sessões com comparecimento registrado do paciente" → CP10 — Registros administrativos do atendimento; relacionada à feature "Emitir declaração de comparecimento do paciente".
 
-**RNF42 — Portabilidade do documento**{ #rnf42 }
+**RNF42 — Formato e compatibilidade do documento**{ #rnf42 }
 
 O documento gerado deve ser entregue ao paciente em formato impresso (papel), conforme confirmado pela Clínica Escola. Internamente, o sistema pode gerar e pré-visualizar o documento em tela — inclusive em celular, para conferência antes da impressão —, em formato PDF tamanho A4, legível tanto em impressão preto e branco quanto em tela.
 

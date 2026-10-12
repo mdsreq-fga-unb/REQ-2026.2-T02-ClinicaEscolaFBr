@@ -405,7 +405,7 @@ A classificação foi conferida requisito a requisito contra os 53 RFs seleciona
 | [RNF20](nao-funcionais.md#rnf20) | Continuidade do histórico na troca de responsável | Associado a RF do MVP | RF25 | Acompanha a transferência de caso e preserva o histórico na troca de responsável. |
 | [RNF21](nao-funcionais.md#rnf21) | Desempenho das listagens e operações de vínculo | Evolutivo | CP5 | Meta de desempenho a refinar com massa de dados representativa. |
 | [RNF22](nao-funcionais.md#rnf22) | Usabilidade da distribuição e do vínculo de casos | Evolutivo | RF20, RF21 | Meta específica de usabilidade que pode ser refinada após validação do fluxo. |
-| [RNF23](nao-funcionais.md#rnf23) | Manutenibilidade das áreas de especialidade | Evolutivo | RF19 | Propriedade de modificabilidade importante, mas não impede a operação mínima. |
+| [RNF23](nao-funcionais.md#rnf23) | Modificabilidade do cadastro de áreas de especialidade | Evolutivo | RF19 | Propriedade de modificabilidade importante, mas não impede a operação mínima. |
 | [RNF24](nao-funcionais.md#rnf24) | Acessibilidade das telas de distribuição e consulta | Obrigatório para o MVP | CP5 | Acessibilidade mínima das interfaces internas deve existir desde a primeira versão utilizável. |
 | [RNF25](nao-funcionais.md#rnf25) | Sigilo do conteúdo do prontuário | Obrigatório para o MVP | RF27, RF55, RF66 | O prontuário contém dados de saúde e exige proteção desde qualquer versão utilizável, inclusive os dados iniciais (anamnese e contrato) registrados na criação do prontuário (RF66). |
 | [RNF26](nao-funcionais.md#rnf26) | Sigilo do conteúdo da evolução | Obrigatório para o MVP | RF28, RF55 | As evoluções contêm dados clínicos sensíveis e exigem sigilo. |
@@ -424,7 +424,7 @@ A classificação foi conferida requisito a requisito contra os 53 RFs seleciona
 | [RNF39](nao-funcionais.md#rnf39) | Auditoria de emissões e reemissões | Associado a RF do MVP | RF45 | Acompanha a emissão, registrando autoria e operação; a reemissão (RF46) fica fora por ora, e a parte da meta referente a ela entra no escopo de auditoria quando for incorporada. |
 | [RNF40](nao-funcionais.md#rnf40) | Tempo de geração da declaração | Evolutivo | RF45 | Meta de desempenho que pode ser calibrada após o fluxo de emissão. |
 | [RNF41](nao-funcionais.md#rnf41) | Usabilidade da emissão | Evolutivo | RF45 | Meta de interações/taxa de sucesso a aperfeiçoar em testes posteriores. |
-| [RNF42](nao-funcionais.md#rnf42) | Portabilidade do documento | Associado a RF do MVP | RF45 | Acompanha a emissão e garante PDF A4 legível para uso externo. |
+| [RNF42](nao-funcionais.md#rnf42) | Formato e compatibilidade do documento | Associado a RF do MVP | RF45 | Acompanha a emissão e garante PDF A4 legível para uso externo. |
 | [RNF43](nao-funcionais.md#rnf43) | Acessibilidade da tela de emissão | Obrigatório para o MVP | RF44, RF45 | A interface de emissão deve atender requisitos mínimos de acessibilidade. |
 | [RNF44](nao-funcionais.md#rnf44) | Integridade do conteúdo da declaração | Associado a RF do MVP | RF45 | Garante coerência entre o documento emitido e o registro de origem; a coerência da reemissão (RF46) entra no escopo quando o requisito for incorporado. |
 | [RNF45](nao-funcionais.md#rnf45) | Segurança da consulta pública de autenticidade | Não aplicável ao MVP | RF47 | É exclusiva da validação pública de autenticidade; RF47 fica fora do MVP. |
