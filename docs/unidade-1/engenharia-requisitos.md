@@ -12,7 +12,7 @@ O processo de ER separa técnicas, práticas, ferramentas e resultados. Entrevis
 
 ### Análise e Consenso
 
-- **Priorização MoSCoW:** será utilizada para classificar as features conforme sua importância para o produto em _Must Have_, _Should Have_, _Could Have_ e _Won’t Have this time_, apoiando a definição do escopo e das funcionalidades prioritárias para o MVP.
+- **Priorização MoSCoW:** será utilizada para classificar as features conforme sua importância para o produto em _Must Have_, _Should Have_, _Could Have_ e _Won’t Have this time_, apoiando a definição do escopo e das funcionalidades prioritárias para o MVP. Na Unidade 2, essa escala (de 1 a 4) foi cruzada com o esforço técnico estimado pela equipe numa matriz de valor de negócio × esforço técnico ([Backlog de Produto, 10.2](../unidade-2/requisitos/backlog.md#102-priorizacao-e-recorte-do-mvp)).
 
 - **Negociação:** será utilizada quando forem identificadas necessidades, prioridades ou restrições conflitantes, buscando estabelecer decisões consensuais entre a equipe e os stakeholders.
 
@@ -65,7 +65,7 @@ As sessões com pacientes e responsáveis devem proteger dados sensíveis, permi
 
 ## 5.2 Requisitos não funcionais no processo FDD
 
-No processo adotado, os RNFs são declarados junto à característica de produto e relacionados às features FDD que eles afetam. Essa aplicação já está documentada nas CP1, CP2, CP3, CP5, CP9, CP10, CP11, CP12 e CP14.
+No processo adotado, os RNFs são declarados junto à característica de produto e relacionados às features FDD que eles afetam. Essa aplicação está documentada nas 14 características de produto ([Requisitos Não Funcionais](../unidade-2/requisitos/nao-funcionais.md)).
 
 Para cada CP, o fluxo de tratamento dos RNFs é:
 
@@ -79,7 +79,7 @@ Cada RNF é registrado em formato descritivo, associado à feature correspondent
 
 Os critérios de aceitação permanecem registrados no arquivo de requisitos funcionais e devem ser usados em conjunto com os RNFs aplicáveis. A rastreabilidade liga a CP à feature, ao RNF, à regra de negócio, ao critério de aceitação e à evidência de verificação. Serão utilizados os seguintes checklists: (a) checklist de qualidade dos requisitos, para clareza, completude, consistência e verificabilidade; (b) checklist de segurança e privacidade, para perfis, minimização de dados, sigilo e auditoria; (c) checklist de acessibilidade e usabilidade, para teclado, leitor de tela, contraste, linguagem simples e uso em celular; e (d) checklist de verificação técnica, para desempenho, integridade, portabilidade e tratamento de erros. Na versão atual, esses checklists ainda serão aplicados na revisão interna; a documentação já registra explicitamente a verificação de acessibilidade e os métodos de teste dos demais RNFs.
 
-Na CP10 (declaração de comparecimento), permanecem pendentes de validação com a FBr, entre outros pontos, os campos obrigatórios da declaração, o responsável pela emissão, a declaração consolidada, a autenticação por terceiros e algumas metas de acessibilidade, desempenho e usabilidade. Essas pendências devem permanecer visíveis no requisito e ser resolvidas antes do aceite final.
+Na CP10 (declaração de comparecimento), os campos obrigatórios da declaração, os perfis autorizados a emiti-la e a consulta de autenticidade por terceiros foram definidos com a Clínica Escola ([RF45 a RF47](../unidade-2/requisitos/funcionais.md#rf45)), e a declaração consolidada foi retirada do escopo (versão 2.23 do histórico). Os pontos que ainda dependem da FBr ficam visíveis em [Pendências de validação com a FBr](../unidade-2/requisitos/analise-feedback.md#pendencias-de-validacao-com-a-fbr) e devem ser resolvidos antes do aceite final.
 
 ## 5.3 Engenharia de Requisitos e o FDD
 
