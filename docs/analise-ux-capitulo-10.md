@@ -1,6 +1,8 @@
-# Melhorias de UX a partir do capítulo 10
+# Análise de UX do site
 
-A análise usa o capítulo **Princípios e Diretrizes para o Design de IHC**, do livro *Interação Humano-Computador e Experiência do Usuário*, de Barbosa et al. (2021), páginas impressas 237–260, fornecido em `ihc-ux Cap. 10.pdf`.
+_Elaborada por Luís Henrique em 03/10/2026, junto com o redesign visual do site (versão 2.32 do histórico de revisão)._
+
+A análise usa o capítulo 10, **Princípios e Diretrizes para o Design de IHC**, do livro *Interação Humano-Computador e Experiência do Usuário*, de Barbosa et al. (2021), páginas impressas 237–260.
 
 O objeto avaliado é o site de documentação acadêmica, cujo uso principal é ler o projeto, localizar requisitos e conferir decisões. Esta análise por inspeção não substitui uma avaliação com leitores reais, como o próprio capítulo ressalta na seção 10.1.
 
