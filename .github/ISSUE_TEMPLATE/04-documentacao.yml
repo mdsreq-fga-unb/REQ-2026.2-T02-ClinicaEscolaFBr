@@ -1,0 +1,38 @@
+name: "Documentação"
+description: "Correção ou atualização do site de documentação (GitHub Pages)."
+title: "docs: <o que muda na documentação>"
+labels: ["documentation"]
+body:
+  - type: input
+    id: pagina
+    attributes:
+      label: "Página ou seção"
+      placeholder: "Unidade 2 · 10.2.4 Validação do MVP com o cliente"
+    validations:
+      required: true
+
+  - type: textarea
+    id: mudanca
+    attributes:
+      label: "O que precisa mudar"
+      description: "O problema atual e o que deve passar a constar."
+    validations:
+      required: true
+
+  - type: textarea
+    id: origem
+    attributes:
+      label: "Origem"
+      description: "De onde veio a necessidade: feedback do professor ou do monitor, verificação cruzada, reunião com a FBr ou revisão interna."
+    validations:
+      required: true
+
+  - type: checkboxes
+    id: pronto
+    attributes:
+      label: "Pronta quando"
+      options:
+        - label: "Conteúdo atualizado e coerente com as demais páginas que tratam do mesmo assunto"
+        - label: "Linha adicionada ao histórico de revisão"
+        - label: "Site gerado sem erros e sem links quebrados"
+        - label: "PR revisado por outro integrante"

@@ -1,4 +1,4 @@
-## 8.2 Lista de Requisitos Não Funcionais
+# 8.2 Lista de Requisitos Não Funcionais
 
 Os requisitos não funcionais (RNFs) descrevem propriedades e restrições mensuráveis do sistema, classificadas conforme o modelo **URPS+** (Usabilidade, Confiabilidade, Desempenho, Suportabilidade e demais categorias, como Segurança e Auditoria). Cada RNF mantém rastreabilidade com a **Feature** que ele restringe e, por meio dela, com a Característica de Produto (CP) de origem — mesma cadeia usada nos [Requisitos Funcionais](funcionais.md).
 
@@ -18,7 +18,7 @@ Os requisitos não funcionais (RNFs) descrevem propriedades e restrições mensu
 | [RNF17 — Privacidade dos dados nas telas de distribuição e consulta](#rnf17) | [RNF18 — Auditoria de atribuições, vínculos e transferências](#rnf18) |
 | [RNF19 — Integridade dos vínculos de responsabilidade](#rnf19) | [RNF20 — Continuidade do histórico na troca de responsável](#rnf20) |
 | [RNF21 — Desempenho das listagens e operações de vínculo](#rnf21) | [RNF22 — Usabilidade da distribuição e do vínculo de casos](#rnf22) |
-| [RNF23 — Manutenibilidade das áreas de especialidade](#rnf23) | [RNF24 — Acessibilidade das telas de distribuição e consulta](#rnf24) |
+| [RNF23 — Modificabilidade do cadastro de áreas de especialidade](#rnf23) | [RNF24 — Acessibilidade das telas de distribuição e consulta](#rnf24) |
 | [RNF25 — Sigilo do conteúdo do prontuário](#rnf25) | [RNF26 — Sigilo do conteúdo da evolução](#rnf26) |
 | [RNF27 — Integridade e proveniência dos registros de evolução](#rnf27) | [RNF28 — Auditoria das correções de evolução](#rnf28) |
 | [RNF29 — Desempenho do registro e da consulta de evolução](#rnf29) | [RNF30 — Usabilidade do registro de evolução](#rnf30) |
@@ -27,7 +27,7 @@ Os requisitos não funcionais (RNFs) descrevem propriedades e restrições mensu
 | [RNF35 — Privacidade dos dados de faltas do estagiário](#rnf35) | [RNF36 — Auditoria dos registros de contribuição social](#rnf36) |
 | [RNF37 — Privacidade dos dados na declaração](#rnf37) | [RNF38 — Autorização para emissão e consulta](#rnf38) |
 | [RNF39 — Auditoria de emissões e reemissões](#rnf39) | [RNF40 — Tempo de geração da declaração](#rnf40) |
-| [RNF41 — Usabilidade da emissão](#rnf41) | [RNF42 — Portabilidade do documento](#rnf42) |
+| [RNF41 — Usabilidade da emissão](#rnf41) | [RNF42 — Formato e compatibilidade do documento](#rnf42) |
 | [RNF43 — Acessibilidade da tela de emissão](#rnf43) | [RNF44 — Integridade do conteúdo da declaração](#rnf44) |
 | [RNF45 — Segurança da consulta pública de autenticidade](#rnf45) | [RNF46 — Atualização dos indicadores operacionais](#rnf46) |
 | [RNF47 — Tempo de geração do relatório institucional](#rnf47) | [RNF48 — Auditoria de relatórios institucionais](#rnf48) |
@@ -106,7 +106,7 @@ Rastreabilidade: Feature "Registrar prioridade clínica do inscrito" → CP2 —
 
 ### Fila de espera e consulta de posição (CP3)
 
-A CP3 possui três features: **Ordenar inscritos na fila de espera**, **Consultar posição individual na fila** e **Informar condições gerais da fila**.
+A CP3 possui três features: **Ordenar inscritos na fila de espera**, **Consultar posição individual na fila** e **Manter e informar condições gerais da fila**.
 
 Os RNFs abaixo estabelecem condições de segurança, privacidade, compreensibilidade e confiabilidade das informações apresentadas ao interessado.
 
@@ -336,7 +336,7 @@ A conformidade deve ser verificada por teste de usabilidade com uma amostra mín
 Classificação: usabilidade (URPS+).
 Rastreabilidade: CP5 — Distribuição de casos entre supervisores e estagiários (transversal às features "Listar casos aguardando distribuição", "Distribuir caso a supervisor conforme área de especialidade" e "Vincular paciente a estagiário responsável").
 
-**RNF23 — Manutenibilidade das áreas de especialidade**{ #rnf23 }
+**RNF23 — Modificabilidade do cadastro de áreas de especialidade**{ #rnf23 }
 
 As áreas de especialidade e sua associação aos supervisores (RF19) devem ser armazenadas como dado configurável, e não como valor fixo no código-fonte, de modo que a inclusão, edição ou remoção de uma área pela interface (RF19) fique disponível para uso na distribuição (RF20) imediatamente, sem exigir alteração de código, recompilação ou novo deploy da aplicação.
 
@@ -356,7 +356,7 @@ Rastreabilidade: CP5 — Distribuição de casos entre supervisores e estagiári
 
 ### Prontuário eletrônico (CP6)
 
-A CP6 tem uma feature (ver [Requisitos Funcionais](funcionais.md)); o RNF abaixo estabelece a condição de qualidade para a consulta ao prontuário. As condições de integridade, auditoria e desempenho relativas ao registro da evolução em si estão declaradas na CP7, e as relativas ao relatório final, na CP8.
+A CP6 tem duas features (ver [Requisitos Funcionais](funcionais.md)); o RNF abaixo estabelece a condição de qualidade para a consulta ao prontuário. As condições de integridade, auditoria e desempenho relativas ao registro da evolução em si estão declaradas na CP7, e as relativas ao relatório final, na CP8.
 
 **RNF25 — Sigilo do conteúdo do prontuário**{ #rnf25 }
 
@@ -369,7 +369,7 @@ Rastreabilidade: Features "Criar e inicializar o prontuário do paciente" e "Con
 
 ### Registro de evolução por sessão (CP7)
 
-A CP7 tem cinco features (ver [Requisitos Funcionais](funcionais.md)); os RNFs abaixo estabelecem condições de qualidade para o registro, a correção, a complementação e a consulta da evolução clínica de cada sessão.
+A CP7 tem sete features (ver [Requisitos Funcionais](funcionais.md)); os RNFs abaixo estabelecem condições de qualidade para o registro, a correção, a complementação e a consulta da evolução clínica de cada sessão.
 
 **RNF26 — Sigilo do conteúdo da evolução**{ #rnf26 }
 
@@ -499,7 +499,7 @@ Rastreabilidade: Feature "Registrar pagamento da contribuição social do pacien
 
 #### Declaração de comparecimento
 
-Este conjunto reúne cinco features (ver [Requisitos Funcionais](funcionais.md)); os RNFs abaixo estabelecem condições de qualidade para a emissão, reemissão e verificação da declaração de comparecimento, aplicando-se de forma transversal ao conjunto das features, conforme indicado na rastreabilidade de cada um. A rastreabilidade de cada RNF identifica explicitamente as features afetadas, preservando a relação CP10 → feature → RNF. Os RNFs de segurança e privacidade (RNF37 a RNF39) devem ser alinhados com os requisitos gerais de acesso e sigilo da CP12, evitando duplicidade, e o RNF43 segue a mesma meta de acessibilidade definida para a CP14 (RNF56).
+Este conjunto reúne quatro features (ver [Requisitos Funcionais](funcionais.md)); os RNFs abaixo estabelecem condições de qualidade para a emissão, reemissão e verificação da declaração de comparecimento, aplicando-se de forma transversal ao conjunto das features, conforme indicado na rastreabilidade de cada um. A rastreabilidade de cada RNF identifica explicitamente as features afetadas, preservando a relação CP10 → feature → RNF. Os RNFs de segurança e privacidade (RNF37 a RNF39) devem ser alinhados com os requisitos gerais de acesso e sigilo da CP12, evitando duplicidade, e o RNF43 segue a mesma meta de acessibilidade definida para a CP14 (RNF56).
 
 **RNF37 — Privacidade dos dados na declaração**{ #rnf37 }
 
@@ -546,7 +546,7 @@ A conformidade deve ser verificada por teste de usabilidade com uma amostra mín
 Classificação: usabilidade (URPS+).
 Rastreabilidade: Feature "Listar sessões com comparecimento registrado do paciente" → CP10 — Registros administrativos do atendimento; relacionada à feature "Emitir declaração de comparecimento do paciente".
 
-**RNF42 — Portabilidade do documento**{ #rnf42 }
+**RNF42 — Formato e compatibilidade do documento**{ #rnf42 }
 
 O documento gerado deve ser entregue ao paciente em formato impresso (papel), conforme confirmado pela Clínica Escola. Internamente, o sistema pode gerar e pré-visualizar o documento em tela — inclusive em celular, para conferência antes da impressão —, em formato PDF tamanho A4, legível tanto em impressão preto e branco quanto em tela.
 
@@ -658,7 +658,7 @@ Rastreabilidade: Feature "Restringir acesso ao prontuário do paciente" → CP12
 
 **RNF52 — Trilha de auditoria de acessos ao prontuário**{ #rnf52 }
 
-O sistema deve registrar automaticamente todo acesso ao prontuário, permitido ou negado, com o usuário, o perfil, a data/hora, o paciente e a operação realizada. Nenhum perfil pode alterar ou apagar esses registros, que devem ser mantidos por, no mínimo, 5 anos a partir do acesso. Esse é o prazo mínimo de guarda do registro documental do serviço psicológico fixado pela Resolução CFP nº 1/2009 (art. 4º, § 1º); por ser um mínimo normativo, não depende de confirmação da FBr, que pode apenas ampliá-lo por política institucional.
+O sistema deve registrar automaticamente todo acesso ao prontuário, permitido ou negado, com o usuário, o perfil, a data/hora, o paciente e a operação realizada. Nenhum perfil pode alterar ou apagar esses registros, que devem ser mantidos por, no mínimo, 5 anos a partir do acesso. Esse é o prazo mínimo de guarda do registro documental do serviço psicológico fixado pela Resolução CFP nº 1/2009 (art. 4º, § 1º) e reafirmado, para os prontuários do estágio, pela Resolução CFP nº 5/2025; por ser um mínimo normativo, não depende de confirmação da FBr, que pode apenas ampliá-lo por política institucional.
 
 A conformidade deve ser verificada por teste: realizar acessos permitidos e negados com usuários de teste e conferir se todos aparecem na consulta do RF56, e por inspeção, confirmando que a interface não oferece meio de alterar ou apagar os registros.
 
@@ -682,7 +682,7 @@ A CP13 tem três features (ver [Requisitos Funcionais](funcionais.md)); os RNFs 
 
 **RNF54 — Auditoria das decisões de continuidade**{ #rnf54 }
 
-Toda decisão de continuidade (RF59) deve ser registrada com o caso, o estagiário que está concluindo o estágio, o novo estagiário indicado ou o motivo do encerramento, o autor da decisão e a data. Cada correção deve preservar a versão anterior e registrar a nova decisão, o motivo, o integrante da coordenação responsável, a data/hora e o efeito sobre uma transferência pendente ou já efetivada. Esses registros não podem ser apagados nem sobrescritos e devem ser mantidos por, no mínimo, 5 anos contados do encerramento do caso ou da última decisão de continuidade, prevalecendo a data mais recente, conforme o período mínimo de guarda estabelecido pela Resolução CFP nº 5/2025 para documentos decorrentes da prestação de serviços psicológicos.
+Toda decisão de continuidade (RF59) deve ser registrada com o caso, o estagiário que está concluindo o estágio, o novo estagiário indicado ou o motivo do encerramento, o autor da decisão e a data. Cada correção deve preservar a versão anterior e registrar a nova decisão, o motivo, o integrante da coordenação responsável, a data/hora e o efeito sobre uma transferência pendente ou já efetivada. Esses registros não podem ser apagados nem sobrescritos e devem ser mantidos por, no mínimo, 5 anos contados do encerramento do caso ou da última decisão de continuidade, prevalecendo a data mais recente, conforme o período mínimo de guarda de 5 anos fixado pela Resolução CFP nº 1/2009 (art. 4º, § 1º) para o registro documental do serviço psicológico e reafirmado, para os prontuários do estágio, pela Resolução CFP nº 5/2025 (o mesmo prazo do RNF52).
 
 Após o prazo mínimo, a eliminação ou anonimização somente pode ocorrer mediante autorização registrada da pessoa psicóloga responsável técnica e conforme a política institucional da FBr. O sistema deve impedir a destinação enquanto houver prazo adicional previsto em lei, determinação judicial, fiscalização, investigação ou outra necessidade formal de manutenção, e deve registrar o responsável, a data/hora, o método e o fundamento da destinação realizada.
 

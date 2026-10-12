@@ -36,6 +36,8 @@ As issues estão no GitHub. Os integrantes podem ser atribuídos como responsáv
 
 ### 3. Divisão das características de produto
 
+> Esta divisão usa a numeração provisória de 12 CPs, anterior à numeração final (CP1 a CP14). A correspondência com a numeração final está no [Cronograma da Unidade 2](gestao/cronograma.md#escopo-de-requisitos-as-14-cps).
+
 - Jônatas: CP1 — inscrição on-line; CP3 — fila de espera e consulta de posição.
 - Maria Clara: CP5 — distribuição dos casos entre supervisores e estagiários; CP9 — emissão de declaração de comparecimento.
 - Luís: CP2 — triagem e classificação de prioridade; CP6 — prontuário eletrônico, evolução e relatório final.
@@ -74,7 +76,7 @@ A reunião definiu a divisão das tarefas para a entrega de 22/09, priorizando a
 
 **Data:** 24/09/2026
 **Local:** Reunião on-line (Google Meet)
-**Participantes:** Gabriel da Cunha Barbaceli; Luís Henrique; Maria Clara Canuto; Nicolas Lopes da Costa; Jônatas Davi Oliveira Farias; Robson — coordenador do curso de Psicologia (FBr); Karla — secretaria (FBr).
+**Participantes:** Gabriel da Cunha Barbaceli; Luís Henrique; Maria Clara Canuto; Nicolas Lopes da Costa; Jônatas Davi Oliveira Farias; Robson Luís de Araújo — coordenador do curso de Psicologia (FBr); Karla Gardene Baima — Secretária Acadêmica (FBr).
 
 ![Registro da reunião de avaliação de valor de negócio com a Clínica Escola FBr](../assets/reuniao-2-cliente.jpeg)
 

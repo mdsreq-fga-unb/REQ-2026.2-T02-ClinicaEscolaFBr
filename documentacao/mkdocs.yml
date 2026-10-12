@@ -91,7 +91,7 @@ nav:
       - 5. Engenharia de Requisitos: unidade-1/engenharia-requisitos.md
       - Gestão do Projeto:
           - 6. Cronograma e Entregas: unidade-1/gestao/cronograma.md
-          - 7. Equipe e Comunicação: unidade-1/gestao/equipe-comunicacao.md
+          - 7. Interação entre Equipe e Cliente: unidade-1/gestao/equipe-comunicacao.md
           - Boas práticas no GitHub: unidade-1/gestao/boas-praticas-github.md
           - Reuniões: unidade-1/reunioes.md
       - Estudos e referências:
@@ -111,4 +111,4 @@ nav:
           - Reuniões: unidade-2/reunioes.md
       - Aprendizados e documentação:
           - Lições Aprendidas: unidade-2/licoes-aprendidas.md
-          - Melhorias de UX — Capítulo 10: analise-ux-capitulo-10.md
+          - Análise de UX do site: analise-ux-capitulo-10.md

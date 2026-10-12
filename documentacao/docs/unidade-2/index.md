@@ -52,7 +52,7 @@ Todos os requisitos desta unidade seguem a mesma cadeia de rastreabilidade. Cada
 <div class="unit-cards" markdown>
 
 - [:material-school-outline: **Lições Aprendidas** O que a equipe aprendeu na unidade.](licoes-aprendidas.md)
-- [:material-palette-outline: **Melhorias de UX — Capítulo 10** Melhorias de experiência a partir do capítulo 10.](../analise-ux-capitulo-10.md)
+- [:material-palette-outline: **Análise de UX do site** Melhorias de experiência do site a partir do capítulo 10 do livro de IHC de Barbosa et al. (2021).](../analise-ux-capitulo-10.md)
 
 </div>
 
