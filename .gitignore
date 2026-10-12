@@ -1,2 +1,12 @@
 .venv/
-site/
+documentacao/site/
+node_modules/
+dist/
+.next/
+.turbo/
+coverage/
+playwright-report/
+test-results/
+.env
+.env.local
+*.tsbuildinfo

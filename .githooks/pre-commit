@@ -1,0 +1,4 @@
+#!/bin/sh
+if [ -d node_modules ]; then
+  pnpm exec lint-staged
+fi

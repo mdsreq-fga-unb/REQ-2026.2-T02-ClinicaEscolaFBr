@@ -1,0 +1,96 @@
+name: CI
+
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+
+# Um push novo na mesma PR cancela a execução anterior (na main, nada é cancelado).
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+jobs:
+  mudancas:
+    runs-on: ubuntu-latest
+    outputs:
+      codigo: ${{ steps.filtro.outputs.codigo }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dorny/paths-filter@v3
+        id: filtro
+        with:
+          filters: |
+            codigo:
+              - "apps/**"
+              - "packages/**"
+              - "package.json"
+              - "pnpm-lock.yaml"
+              - "pnpm-workspace.yaml"
+              - "turbo.json"
+              - ".github/workflows/ci.yml"
+
+  verificar:
+    needs: mudancas
+    if: needs.mudancas.outputs.codigo == 'true'
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:17
+        env:
+          POSTGRES_USER: clinica
+          POSTGRES_PASSWORD: clinica
+          POSTGRES_DB: clinica
+        ports: ["5432:5432"]
+        options: >-
+          --health-cmd "pg_isready -U clinica"
+          --health-interval 5s
+          --health-retries 10
+    env:
+      DATABASE_URL: postgresql://clinica:clinica@localhost:5432/clinica
+      API_PORT: 3333
+      WEB_URL: http://localhost:3000
+      SMTP_HOST: localhost
+      SMTP_PORT: 1025
+      NEXT_PUBLIC_API_URL: http://localhost:3333
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm turbo run build --filter=@clinica/database...
+      - run: pnpm db:migrate
+      - run: pnpm turbo run lint typecheck test build
+
+  e2e:
+    needs: [mudancas, verificar]
+    if: needs.mudancas.outputs.codigo == 'true'
+    runs-on: ubuntu-latest
+    env:
+      NEXT_PUBLIC_API_URL: http://localhost:3333
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm --filter @clinica/web exec playwright install --with-deps chromium
+      - run: pnpm turbo run build --filter=@clinica/web...
+      - run: pnpm --filter @clinica/web test:e2e
+
+  resultado:
+    if: always()
+    needs: [mudancas, verificar, e2e]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Verificar resultado dos jobs
+        run: |
+          if [ "${{ contains(needs.*.result, 'failure') || contains(needs.*.result, 'cancelled') }}" = "true" ]; then
+            exit 1
+          fi

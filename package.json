@@ -1,0 +1,28 @@
+{
+  "name": "clinica-escola-fbr",
+  "private": true,
+  "packageManager": "pnpm@10.30.3",
+  "engines": {
+    "node": ">=24"
+  },
+  "scripts": {
+    "dev": "turbo run dev",
+    "build": "turbo run build",
+    "lint": "turbo run lint",
+    "typecheck": "turbo run typecheck",
+    "test": "turbo run test",
+    "format": "prettier --write .",
+    "db:generate": "pnpm --filter @clinica/database db:generate",
+    "db:migrate": "pnpm --filter @clinica/database db:migrate",
+    "docs:serve": "mkdocs serve -f documentacao/mkdocs.yml",
+    "prepare": "git config core.hooksPath .githooks"
+  },
+  "lint-staged": {
+    "{apps,packages}/**/*.{ts,tsx,js,mjs,json,css}": "prettier --write"
+  },
+  "devDependencies": {
+    "lint-staged": "^17.6.0",
+    "prettier": "^3.9.10",
+    "turbo": "^2.11.7"
+  }
+}
