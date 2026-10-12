@@ -106,7 +106,7 @@ Rastreabilidade: Feature "Registrar prioridade clínica do inscrito" → CP2 —
 
 ### Fila de espera e consulta de posição (CP3)
 
-A CP3 possui três features: **Ordenar inscritos na fila de espera**, **Consultar posição individual na fila** e **Informar condições gerais da fila**.
+A CP3 possui três features: **Ordenar inscritos na fila de espera**, **Consultar posição individual na fila** e **Manter e informar condições gerais da fila**.
 
 Os RNFs abaixo estabelecem condições de segurança, privacidade, compreensibilidade e confiabilidade das informações apresentadas ao interessado.
 
@@ -356,7 +356,7 @@ Rastreabilidade: CP5 — Distribuição de casos entre supervisores e estagiári
 
 ### Prontuário eletrônico (CP6)
 
-A CP6 tem uma feature (ver [Requisitos Funcionais](funcionais.md)); o RNF abaixo estabelece a condição de qualidade para a consulta ao prontuário. As condições de integridade, auditoria e desempenho relativas ao registro da evolução em si estão declaradas na CP7, e as relativas ao relatório final, na CP8.
+A CP6 tem duas features (ver [Requisitos Funcionais](funcionais.md)); o RNF abaixo estabelece a condição de qualidade para a consulta ao prontuário. As condições de integridade, auditoria e desempenho relativas ao registro da evolução em si estão declaradas na CP7, e as relativas ao relatório final, na CP8.
 
 **RNF25 — Sigilo do conteúdo do prontuário**{ #rnf25 }
 
@@ -369,7 +369,7 @@ Rastreabilidade: Features "Criar e inicializar o prontuário do paciente" e "Con
 
 ### Registro de evolução por sessão (CP7)
 
-A CP7 tem cinco features (ver [Requisitos Funcionais](funcionais.md)); os RNFs abaixo estabelecem condições de qualidade para o registro, a correção, a complementação e a consulta da evolução clínica de cada sessão.
+A CP7 tem sete features (ver [Requisitos Funcionais](funcionais.md)); os RNFs abaixo estabelecem condições de qualidade para o registro, a correção, a complementação e a consulta da evolução clínica de cada sessão.
 
 **RNF26 — Sigilo do conteúdo da evolução**{ #rnf26 }
 
@@ -499,7 +499,7 @@ Rastreabilidade: Feature "Registrar pagamento da contribuição social do pacien
 
 #### Declaração de comparecimento
 
-Este conjunto reúne cinco features (ver [Requisitos Funcionais](funcionais.md)); os RNFs abaixo estabelecem condições de qualidade para a emissão, reemissão e verificação da declaração de comparecimento, aplicando-se de forma transversal ao conjunto das features, conforme indicado na rastreabilidade de cada um. A rastreabilidade de cada RNF identifica explicitamente as features afetadas, preservando a relação CP10 → feature → RNF. Os RNFs de segurança e privacidade (RNF37 a RNF39) devem ser alinhados com os requisitos gerais de acesso e sigilo da CP12, evitando duplicidade, e o RNF43 segue a mesma meta de acessibilidade definida para a CP14 (RNF56).
+Este conjunto reúne quatro features (ver [Requisitos Funcionais](funcionais.md)); os RNFs abaixo estabelecem condições de qualidade para a emissão, reemissão e verificação da declaração de comparecimento, aplicando-se de forma transversal ao conjunto das features, conforme indicado na rastreabilidade de cada um. A rastreabilidade de cada RNF identifica explicitamente as features afetadas, preservando a relação CP10 → feature → RNF. Os RNFs de segurança e privacidade (RNF37 a RNF39) devem ser alinhados com os requisitos gerais de acesso e sigilo da CP12, evitando duplicidade, e o RNF43 segue a mesma meta de acessibilidade definida para a CP14 (RNF56).
 
 **RNF37 — Privacidade dos dados na declaração**{ #rnf37 }
 
