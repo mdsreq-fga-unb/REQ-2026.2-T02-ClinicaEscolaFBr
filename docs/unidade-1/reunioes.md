@@ -6,7 +6,7 @@ Registro das reuniões realizadas durante a Unidade 1 do projeto Clínica Escola
 
 **Data:** 20/08/2026
 **Local:** Reunião on-line (Google Meet)
-**Participantes:** Gabriel; Joaquim José da Fonseca Viana; Jônatas Davi Oliveira Farias; Luís Henrique; Maria Clara Canuto; Nicolas Lopes.
+**Participantes:** Gabriel da Cunha Barbaceli; Joaquim José da Fonseca Viana; Jônatas Davi Oliveira Farias; Luís Henrique; Maria Clara Canuto; Nicolas Lopes da Costa.
 
 ![Registro da reunião de alinhamento 01](../assets/reuniao-1.jpeg)
 
@@ -81,7 +81,7 @@ O desenvolvimento será modular, começando pelas dores mais relevantes e por um
 ## Projeto GitHub Pages — entrega, slides e gravação de vídeo
 
 **Data:** 03/09/2026
-**Participantes:** Gabriel da Cunha Barbaceli; Joaquim José da Fonseca Viana; Jônatas Davi Oliveira Farias; Nicolas Lopes.
+**Participantes:** Gabriel da Cunha Barbaceli; Joaquim José da Fonseca Viana; Jônatas Davi Oliveira Farias; Nicolas Lopes da Costa.
 
 ![Registro da reunião de acompanhamento do projeto](../assets/reuniao-2.jpeg)
 
