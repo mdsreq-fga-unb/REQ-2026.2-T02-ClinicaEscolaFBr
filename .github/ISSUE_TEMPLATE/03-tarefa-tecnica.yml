@@ -1,0 +1,55 @@
+name: "Tarefa técnica"
+description: "Trabalho de infraestrutura, configuração, CI/CD, dependências ou refatoração que não é uma feature do backlog."
+title: "chore: <tarefa>"
+labels: ["enhancement"]
+body:
+  - type: textarea
+    id: objetivo
+    attributes:
+      label: "Objetivo"
+      description: "O que precisa ser feito e por quê."
+    validations:
+      required: true
+
+  - type: dropdown
+    id: area
+    attributes:
+      label: "Área"
+      options:
+        - "Web (apps/web)"
+        - "API (apps/api)"
+        - "Banco de dados (packages/database)"
+        - "Pacotes compartilhados (packages/shared)"
+        - "CI/CD e automações"
+        - "Dependências"
+        - "Outra"
+    validations:
+      required: true
+
+  - type: input
+    id: features
+    attributes:
+      label: "Features que dependem desta tarefa"
+      description: "Issues de feature bloqueadas por esta tarefa. Escreva \"nenhuma\" se não houver."
+      placeholder: "#NN, #NN"
+    validations:
+      required: true
+
+  - type: textarea
+    id: concluido
+    attributes:
+      label: "Critérios de conclusão"
+      description: "Uma afirmação verificável por linha."
+      value: |
+        - [ ]
+    validations:
+      required: true
+
+  - type: checkboxes
+    id: pronto
+    attributes:
+      label: "Pronta quando"
+      options:
+        - label: "PR revisado e aprovado por outro integrante"
+        - label: "CI passando (lint, tipos, testes e build)"
+        - label: "README ou documentação atualizados, se a forma de rodar o projeto mudou"

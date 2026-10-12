@@ -1,0 +1,76 @@
+name: "Bug"
+description: "Comportamento do sistema diferente do que o requisito ou o critério de aceitação define."
+title: "fix: <o que está errado>"
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Descreva o erro com passos que permitam reproduzi-lo. Nunca coloque dados reais de pacientes nem prints com nomes, telefones ou informações clínicas.
+
+  - type: input
+    id: feature
+    attributes:
+      label: "Feature e requisito afetados"
+      description: "Issue da feature e o RF ou critério de aceitação que não está sendo cumprido."
+      placeholder: "#NN · RF34, critério 2"
+    validations:
+      required: true
+
+  - type: textarea
+    id: passos
+    attributes:
+      label: "Passos para reproduzir"
+      placeholder: |
+        1. Entrar com o perfil de secretaria
+        2. Abrir a sessão de 10/11 às 14h
+        3. Clicar em "Registrar falta"
+    validations:
+      required: true
+
+  - type: textarea
+    id: esperado
+    attributes:
+      label: "Resultado esperado"
+      description: "O que o requisito ou o critério de aceitação define."
+    validations:
+      required: true
+
+  - type: textarea
+    id: obtido
+    attributes:
+      label: "Resultado obtido"
+      description: "O que acontece de fato. Inclua mensagens de erro e prints, sem dados reais."
+    validations:
+      required: true
+
+  - type: dropdown
+    id: ambiente
+    attributes:
+      label: "Onde aconteceu"
+      options:
+        - "Ambiente local (desenvolvimento)"
+        - "Homologação"
+        - "Produção"
+    validations:
+      required: true
+
+  - type: dropdown
+    id: gravidade
+    attributes:
+      label: "Gravidade"
+      options:
+        - "Alta: impede o uso da feature ou expõe dados"
+        - "Média: a feature funciona com contorno"
+        - "Baixa: problema visual ou de texto"
+    validations:
+      required: true
+
+  - type: checkboxes
+    id: pronto
+    attributes:
+      label: "Correção pronta quando"
+      options:
+        - label: "Teste que reproduz o erro escrito e passando"
+        - label: "Correção revisada por outro integrante no PR"
+        - label: "Critério de aceitação afetado conferido de novo"
