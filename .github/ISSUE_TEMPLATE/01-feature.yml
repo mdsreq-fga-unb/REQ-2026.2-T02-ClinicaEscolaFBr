@@ -1,0 +1,293 @@
+name: "Feature (FDD)"
+description: "Feature do backlog, com os RFs e RNFs, o checklist do DoR (entrada na construção) e o do DoD (feature pronta)."
+title: "CP<n> — <ação> <resultado> <objeto> (RF<n>)"
+labels: ["requirements", "fdd:planejar-feature"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Use este modelo para cada feature do [Backlog de Produto](https://mdsreq-fga-unb.github.io/REQ-2026.2-T02-ClinicaEscolaFBr/unidade-2/requisitos/backlog/).
+
+        - O **DoR** é marcado antes de a feature entrar na construção. Os critérios **[B]** são bloqueantes, e os **[R]** podem ficar pendentes se a pendência for registrada.
+        - O **DoD** é marcado ao longo da construção, marco a marco do FDD. Só marque um critério com a evidência registrada nos comentários da issue (link, print ou ata).
+
+        Os critérios completos estão na [seção 9 — DoR e DoD](https://mdsreq-fga-unb.github.io/REQ-2026.2-T02-ClinicaEscolaFBr/unidade-2/requisitos/dor-dod/). Na criação da issue, deixe os checklists desmarcados e vá marcando editando a descrição.
+
+  - type: input
+    id: feature
+    attributes:
+      label: "Feature"
+      description: "No formato <ação> <resultado> <objeto>, igual à lista de features (seção 8.1)."
+      placeholder: "Registrar falta do paciente na sessão"
+    validations:
+      required: true
+
+  - type: input
+    id: cp
+    attributes:
+      label: "Característica de Produto (CP) e conjunto de features"
+      placeholder: "CP9 — Controle de assiduidade e alertas · Controle de faltas do paciente"
+    validations:
+      required: true
+
+  - type: input
+    id: rfs
+    attributes:
+      label: "RF(s) declarado(s)"
+      description: "Código e título, com link para a declaração no site."
+      placeholder: "[RF34 — Registrar falta do paciente na sessão](https://mdsreq-fga-unb.github.io/REQ-2026.2-T02-ClinicaEscolaFBr/unidade-2/requisitos/funcionais/#rf34)"
+    validations:
+      required: true
+
+  - type: input
+    id: rnfs
+    attributes:
+      label: "RNFs que restringem a feature"
+      placeholder: "RNF29, RNF30"
+    validations:
+      required: true
+
+  - type: input
+    id: rastreabilidade
+    attributes:
+      label: "Rastreabilidade"
+      placeholder: "Feature → CP9 → OE4/OE3"
+    validations:
+      required: true
+
+  - type: input
+    id: dependencias
+    attributes:
+      label: "Depende de"
+      description: "Features ou issues que precisam estar prontas antes. Escreva \"nenhuma\" se não houver."
+      placeholder: "#NN (RF10), #NN (RF14)"
+    validations:
+      required: true
+
+  - type: dropdown
+    id: ciclo
+    attributes:
+      label: "Ciclo de construção"
+      options:
+        - "Ciclo 3 (14/10 a 27/10)"
+        - "Ciclo 4 (28/10 a 10/11)"
+        - "Ciclo 5 (11/11 a 17/11)"
+        - "Ciclo 6 (18/11 a 01/12)"
+        - "Fora do MVP (versão posterior)"
+    validations:
+      required: true
+
+  - type: input
+    id: lider
+    attributes:
+      label: "Líder de Feature e revisor"
+      description: "O revisor faz a revisão cruzada do DoR e as inspeções, e nunca é o próprio Líder de Feature."
+      placeholder: "Líder: <nome> · Revisor: <nome>"
+    validations:
+      required: true
+
+  - type: dropdown
+    id: estado
+    attributes:
+      label: "Estado da feature (FDD)"
+      description: "Atualize editando a descrição sempre que a feature mudar de marco."
+      options:
+        - "Planejada"
+        - "Em design"
+        - "Design inspecionado"
+        - "Código concluído"
+        - "Código inspecionado"
+        - "Promovida para a versão integrada"
+        - "Demonstrada"
+        - "Aceita"
+      default: 0
+    validations:
+      required: true
+
+  - type: markdown
+    attributes:
+      value: |
+        ---
+        ## Definition of Ready (DoR)
+
+  - type: checkboxes
+    id: dor-r1
+    attributes:
+      label: "DoR — Estrutura e rastreabilidade"
+      options:
+        - label: "R1.1 [B] A feature segue o formato <ação> <resultado> <objeto> e está na lista de features, dentro de uma Área e de um Conjunto."
+        - label: "R1.2 [B] Cada RF tem o cabeçalho \"RFn — título\" igual ao da feature e a linha de Rastreabilidade Feature → CP → OE."
+        - label: "R1.3 [B] Dependências, integrações e restrições transversais declaradas, e os requisitos dos quais a feature depende já estão prontos ou em construção."
+        - label: "R1.4 [B] A feature não está marcada como entrega posterior ou adiada (ou a condição registrada já foi resolvida)."
+        - label: "R1.5 [B] A feature consta no Backlog de Produto e está no escopo do MVP, ou foi decidida explicitamente como fora dele."
+        - label: "R1.6 [R] A issue da feature está vinculada no título da feature na documentação (#NN)."
+
+  - type: checkboxes
+    id: dor-r2
+    attributes:
+      label: "DoR — Clareza e completude da descrição"
+      options:
+        - label: "R2.1 [B] O requisito expressa uma única funcionalidade."
+        - label: "R2.2 [B] O ator está identificado por perfil, sem termos genéricos como \"usuário\"."
+        - label: "R2.3 [B] Não há termos vagos (\"pode\", \"quando aplicável\", \"rapidamente\", \"a definir\") em regras a implementar."
+        - label: "R2.4 [B] Prazos, limites e valores definidos ou declarados como parâmetro configurável, com valor padrão e perfil que pode alterá-lo."
+        - label: "R2.5 [B] Dados de entrada e de saída enumerados, incluindo o que cada perfil vê."
+        - label: "R2.6 [B] Termos de domínio definidos (prioridade clínica ≠ prioridade no backlog)."
+        - label: "R2.7 [B] A descrição não contradiz outro RF, RNF, critério de aceitação, título ou modelo de domínio."
+        - label: "R2.8 [B] O requisito respeita o que está fora do escopo (atendimento remoto, gestão de semestres letivos, sugestão automática de cor)."
+
+  - type: checkboxes
+    id: dor-r3
+    attributes:
+      label: "DoR — Critérios de aceitação"
+      options:
+        - label: "R3.1 [B] Critérios de aceitação em lista de verificação, uma afirmação curta e verificável por comportamento."
+        - label: "R3.2 [B] Os critérios cobrem o fluxo principal, os fluxos de exceção e as negações de acesso por perfil."
+        - label: "R3.3 [B] Cada critério tem resultado observável e valores concretos quando há prazo, limite ou contagem."
+        - label: "R3.4 [B] Nenhuma regra da descrição fica sem critério, e nenhum critério exige algo que a descrição não declara."
+        - label: "R3.5 [B] Critérios de acesso e sigilo usam os perfis da CP12, sem expor dados clínicos a perfis sem acesso ao prontuário."
+
+  - type: checkboxes
+    id: dor-r4
+    attributes:
+      label: "DoR — Dependências e validação com a FBr"
+      options:
+        - label: "R4.1 [B] Regras de negócio confirmadas pela FBr (ata ou resposta registrada) ou registradas como pendência de validação."
+        - label: "R4.2 [B] Toda pendência com a FBr está na seção Pendências de validação com a FBr (8.3), com o valor padrão adotado."
+        - label: "R4.3 [B] Nenhuma decisão em aberto altera o comportamento central da feature."
+        - label: "R4.4 [R] Regras, termos e modelos que dependem de aprovação da FBr estão aprovados e versionados."
+
+  - type: checkboxes
+    id: dor-r5
+    attributes:
+      label: "DoR — Requisitos não funcionais associados"
+      options:
+        - label: "R5.1 [B] RNFs que restringem a feature identificados, cobrindo as categorias URPS+ aplicáveis."
+        - label: "R5.2 [B] Cada RNF tem meta mensurável, método de verificação, classificação URPS+ e rastreabilidade."
+        - label: "R5.3 [B] Metas de desempenho e disponibilidade indicam o cenário de referência (carga, massa de dados, janela)."
+        - label: "R5.4 [R] Regras transversais referenciadas, e não repetidas (RNF10, RNF56, CP12)."
+        - label: "R5.5 [B] Com dados pessoais ou de saúde, os RNFs de criptografia, acesso, auditoria e retenção da CP12 foram considerados."
+
+  - type: checkboxes
+    id: dor-r6
+    attributes:
+      label: "DoR — Segurança, privacidade e conformidade"
+      options:
+        - label: "R6.1 [B] Matriz de acesso por perfil definida: quem executa, quem consulta e o que cada perfil vê."
+        - label: "R6.2 [B] Paciente ou responsável usa a verificação de identidade (RF52), e não \"usuário autenticado\"."
+        - label: "R6.3 [B] Operações que alteram dados relevantes têm auditoria (autor, data/hora, estado anterior e novo)."
+        - label: "R6.4 [B] O tratamento de dados pessoais e de saúde tem finalidade clara, e pontos não validados estão como pendência."
+
+  - type: checkboxes
+    id: dor-r7
+    attributes:
+      label: "DoR — Interface e acessibilidade"
+      options:
+        - label: "R7.1 [B] Páginas do público externo consideram os requisitos da CP14 (RNF56, RNF57 e RNF58). Marque também se a feature não tiver página externa."
+        - label: "R7.2 [R] Estados vazios e mensagens esperadas descritos."
+        - label: "R7.3 [R] Esboço ou protótipo validado para as features de maior interação."
+
+  - type: checkboxes
+    id: dor-r8
+    attributes:
+      label: "DoR — Viabilidade técnica e tamanho"
+      options:
+        - label: "R8.1 [B] A equipe entende o requisito e consegue estimá-lo sem esclarecimentos pendentes."
+        - label: "R8.2 [B] A feature cabe em uma iteração (ou foi dividida sem perder a rastreabilidade)."
+        - label: "R8.3 [R] Integrações externas (e-mail, SMS, PDF) e a massa de dados de teste identificadas."
+
+  - type: textarea
+    id: dor-registro
+    attributes:
+      label: "Registro da avaliação do DoR"
+      description: "Preencha quando a avaliação for feita (seção 9.1.5)."
+      value: |
+        Data: <dd/mm/aaaa>    Avaliador: <nome>    Revisor: <nome>
+        Resultado: Pronta | Pronta com ressalvas | Não pronta
+        Critérios [B] não atendidos: <códigos e motivo, ou "nenhum">
+        Pendências [R] e/ou com a FBr: <descrição, responsável, prazo, ou "nenhuma">
+
+  - type: markdown
+    attributes:
+      value: |
+        ---
+        ## Definition of Done (DoD)
+
+        Só avalie o DoD depois de o DoR dar **Pronta** ou **Pronta com ressalvas**. Marque cada critério apenas com a evidência indicada registrada na issue.
+
+  - type: checkboxes
+    id: dod-1
+    attributes:
+      label: "DoD 1 — Design inspecionado"
+      options:
+        - label: "D1.1 Modelo detalhado, diagramas, protótipos, regras e critérios revisados pela equipe. Evidência: links dos artefatos e quem revisou."
+        - label: "D1.2 Consistência com o modelo de domínio verificada. Evidência: classes e relacionamentos usados, citados na inspeção."
+        - label: "D1.3 Viabilidade técnica confirmada. Evidência: quem confirmou, tecnologias, integrações, dados de teste e riscos."
+        - label: "D1.4 Acessibilidade verificada. Evidência: RNFs da CP14 aplicáveis e o resultado de cada um."
+        - label: "D1.5 Segurança e LGPD verificadas. Evidência: RNFs da CP12 aplicáveis e o resultado de cada um."
+        - label: "D1.6 Conformidade com as normas do CRP verificada. Evidência: normas consideradas e conclusão."
+        - label: "D1.7 Restrições da modalidade presencial consideradas. Evidência: restrições citadas na inspeção."
+        - label: "D1.8 Resultado da inspeção registrado. Evidência: comentário com data, participantes, resultado e apontamentos."
+
+  - type: checkboxes
+    id: dod-2
+    attributes:
+      label: "DoD 2 — Código concluído"
+      options:
+        - label: "D2.1 Todos os critérios de aceitação implementados. Evidência: cada critério com o commit ou PR que o implementa."
+        - label: "D2.2 Feature integrada aos componentes necessários. Evidência: componentes e integrações descritos no PR."
+        - label: "D2.3 Nenhuma regra aprovada alterada sem registro e validação. Evidência: ausência de alteração ou link do registro."
+        - label: "D2.4 Testes unitários escritos e passando. Evidência: execução dos testes no PR (CI) sem falhas."
+
+  - type: checkboxes
+    id: dod-3
+    attributes:
+      label: "DoD 3 — Código inspecionado"
+      options:
+        - label: "D3.1 Código revisado por outro integrante (nunca o autor). Evidência: aprovação no PR."
+        - label: "D3.2 Legibilidade e padrões da equipe respeitados. Evidência: revisão sem apontamentos de padrão em aberto."
+        - label: "D3.3 Tratamento de erros adequado. Evidência: fluxos de exceção cobertos por testes ou verificados na revisão."
+        - label: "D3.4 Segurança e controle de acesso verificados. Evidência: negações de acesso por perfil testadas ou revisadas."
+        - label: "D3.5 Proteção de dados sensíveis (LGPD) verificada. Evidência: verificação registrada na revisão."
+        - label: "D3.6 Aderência aos critérios de aceitação confirmada. Evidência: critérios marcados pelo revisor."
+        - label: "D3.7 Apontamentos da revisão corrigidos ou registrados. Evidência: comentários resolvidos ou issue vinculada."
+
+  - type: checkboxes
+    id: dod-4
+    attributes:
+      label: "DoD 4 — Promovido para a versão integrada (Promote to Build)"
+      options:
+        - label: "D4.1 Aprovada nas inspeções de design e de código. Evidência: registros D1.8 e D3.1 na issue."
+        - label: "D4.2 Testes unitários e de integração passando. Evidência: execução na versão integrada sem falhas."
+        - label: "D4.3 Integrada sem quebrar a build. Evidência: PR mesclado e build da main concluída."
+        - label: "D4.4 Resultado registrado. Evidência: comentário com o link do PR, o resultado dos testes e as pendências."
+
+  - type: checkboxes
+    id: dod-5
+    attributes:
+      label: "DoD 5 — Demonstrada"
+      options:
+        - label: "D5.1 Feature apresentada à coordenação e à equipe da FBr, junto ao seu conjunto. Evidência: ata vinculada."
+        - label: "D5.2 Demonstração com cenários próximos da operação real da clínica. Evidência: cenários listados na ata."
+
+  - type: checkboxes
+    id: dod-6
+    attributes:
+      label: "DoD 6 — Aceita"
+      options:
+        - label: "D6.1 Aceite formal da FBr registrado. Evidência: link da ata ou da mensagem da FBr."
+        - label: "D6.2 Observações, pendências e correções da FBr registradas. Evidência: itens listados, cada correção com issue própria."
+
+  - type: textarea
+    id: dod-registro
+    attributes:
+      label: "Registro do DoD"
+      description: "Atualize a cada marco (seção 9.2.3). Se a FBr não aceitar, registre o motivo e devolva a feature ao backlog (D6.3)."
+      value: |
+        Inspeção de design: <data> | <participantes> | <resultado>
+        Inspeção de código: <link do PR> | <revisor> | <resultado>
+        Promote to Build: <link do PR mesclado> | <resultado dos testes>
+        Demonstração: <data> | <link da ata>
+        Aceite da FBr: Aceita | Não aceita | <data> | <link da ata ou mensagem>
+        Pendências: <descrição, responsável, prazo>
+        Correções solicitadas: <descrição e issue vinculada>
