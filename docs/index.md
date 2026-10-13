@@ -6,7 +6,7 @@ hide:
 
 # Clínica Escola FBr — Documentação do projeto
 
-Documentação do projeto · versão 2.43
+Documentação do projeto · versão 2.44
 
 <details class="revision-history" id="historico-de-revisao" markdown>
 <summary>Histórico de revisão</summary>
@@ -74,6 +74,7 @@ Registro cronológico das versões e alterações do documento de visão e dos a
 | 10/10/2026 | 2.41 | Nova seção 9.2, Definition of Done (DoD) (issue #69): regra de fluxo entre DoR e DoD, checklist por marco do FDD com a evidência de cada critério (design inspecionado, código concluído, código inspecionado, promoção para a versão integrada, demonstração e aceite da FBr), registro na issue da feature e DoD da entrega final do MVP; correções da revisão aplicadas por Luís Henrique | Nicolas Lopes da Costa |
 | 10/10/2026 | 2.42 | Fechamento da Unidade 2: ajustes de consistência entre DoR, DoD, critérios de aceitação e Líderes de Feature na seção 9; links de evidência no Ciclo 2 do cronograma da Unidade 2; primeira versão das Lições Aprendidas da Unidade 2 | Gabriel da Cunha Barbaceli |
 | 12/10/2026 | 2.43 | Atualização geral do site (issue #71), a partir de uma revisão completa da documentação: tabela de efeitos emergentes da Intervenção Social na numeração final; decisões aceitas na análise do feedback que faltavam nos requisitos (RF6, RF19, RF41, RF45, RF46, RNF23, RNF42); OEs dos RFs alinhados ao mapeamento CP→OE da Solução Proposta, inclusive nos RFs que não tinham OE; contagens de features corrigidas nos RNFs; restrição ao atendimento remoto e prazo de guarda alinhados às pendências e às normas (Resoluções CFP nº 1/2009 e nº 5/2025); regras pendentes da CP5 definidas em Pendências; cronogramas das Unidades 1 e 2 com a verificação cruzada nos dois sentidos, o desvio da validação do MVP e o recorte final; nomes padronizados nas atas, na equipe e neste histórico; títulos, menu e página inicial ajustados. Registro retroativo de mudanças sem entrada própria: reorganização da navegação e da leitura das Unidades 1 e 2 (PR #76, Luís Henrique, 05 e 06/10), ata da reunião de acompanhamento de 08/10 com as capturas da validação do MVP (Gabriel da Cunha Barbaceli, 08/10) e espaçamento das tabelas retráteis (PR #83, Luís Henrique, 10/10) | Joaquim José da Fonseca Viana |
+| 13/10/2026 | 2.44 | Publicação do vídeo de apresentação da Unidade 2 ([YouTube](https://youtu.be/XUJEFZv7Pn8)) na página da Unidade 2 e na página inicial; registro da entrega no cronograma da Unidade 2 | Joaquim José da Fonseca Viana |
 
 A versão 1.6 está registrada com a data do commit (04/09/2026), posterior à da versão 1.7; a numeração foi mantida para preservar as referências já feitas a essas versões.
 
