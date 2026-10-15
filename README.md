@@ -23,6 +23,7 @@ O **Clínica Escola FBr** é a solução proposta para digitalizar as etapas per
 
 ```
 ├── docs/ # Documentação do projeto (MkDocs)
+│ ├── visao-geral/ # Cronograma geral e backlog, com o status atualizado
 │ ├── unidade-1/ # Conteúdo e registros da Unidade 1
 │ │ ├── gestao/ # Cronograma, equipe e comunicação
 │ │ ├── estudos/ # Estudo de FDD
@@ -55,6 +56,7 @@ Nela você encontra:
 - Solução Proposta (objetivos, características de produto, análise de mercado)
 - Estratégias de Engenharia de Software
 - Engenharia de Requisitos
+- Visão geral do projeto: cronograma geral e backlog, com o status de cada ciclo e de cada feature
 - Gestão (cronograma, equipe e comunicação)
 - [Boas práticas de utilização do GitHub](docs/unidade-1/gestao/boas-praticas-github.md)
 - Lições Aprendidas da Unidade 1

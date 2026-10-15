@@ -14,7 +14,7 @@ Os critérios foram derivados da estrutura que os requisitos já seguem na [Seç
 
 - **Unidade de avaliação:** a **feature** (FDD), com seus RFs e os RNFs que a restringem. Um RF só entra na construção se a feature a que pertence também estiver pronta.
 - **Quando aplicar:** antes de a feature ser puxada para uma iteração de construção.
-- **Quem avalia:** o Líder de Feature responsável pela feature (ver a [composição da equipe](../../unidade-1/gestao/equipe-comunicacao.md#71-composicao-da-equipe) e o [Backlog de Produto](backlog.md#1012-itens-de-trabalho-do-mvp)) faz a autoavaliação pelo checklist, e outro integrante, na revisão cruzada, confirma antes da entrada.
+- **Quem avalia:** o Líder de Feature responsável pela feature (ver a [composição da equipe](../../unidade-1/gestao/equipe-comunicacao.md#71-composicao-da-equipe) e o [Features e backlog](../../visao-geral/backlog.md)) faz a autoavaliação pelo checklist, e outro integrante, na revisão cruzada, confirma antes da entrada.
 - **Resultado:** **Pronta**, **Pronta com ressalvas** ou **Não pronta** ([seção 9.1.5](#915-resultado-da-avaliacao)).
 
 ### 9.1.3 Checklist de critérios
