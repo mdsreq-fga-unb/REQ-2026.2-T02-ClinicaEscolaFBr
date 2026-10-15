@@ -1971,12 +1971,6 @@ html .md-footer-meta.md-typeset a:hover {
   min-width: 0;
 }
 
-/* Bento: a segunda linha tem dois cards mais largos */
-.home-path__list li:nth-child(4),
-.home-path__list li:nth-child(5) {
-  grid-column: span 3;
-}
-
 .home-card {
   --mx: 50%;
   --my: 50%;
@@ -2563,13 +2557,8 @@ html .md-footer-meta.md-typeset a:hover {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
-  .home-path__list li,
-  .home-path__list li:nth-child(4) {
+  .home-path__list li {
     grid-column: span 1;
-  }
-
-  .home-path__list li:nth-child(5) {
-    grid-column: span 2;
   }
 }
 
