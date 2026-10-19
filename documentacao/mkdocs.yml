@@ -112,3 +112,10 @@ nav:
       - Aprendizados e documentação:
           - Lições Aprendidas: unidade-2/licoes-aprendidas.md
           - Análise de UX do site: analise-ux-capitulo-10.md
+  - Unidade 3 — Construção do MVP:
+      - Início da unidade: unidade-3/index.md
+      - Gestão do Projeto:
+          - Cronograma e Entregas: unidade-3/gestao/cronograma.md
+          - Reuniões: unidade-3/reunioes.md
+      - Aprendizados:
+          - Lições Aprendidas: unidade-3/licoes-aprendidas.md
