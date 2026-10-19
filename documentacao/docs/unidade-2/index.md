@@ -58,21 +58,15 @@ Todos os requisitos desta unidade seguem a mesma cadeia de rastreabilidade. Cada
 
 ## Vídeo de Apresentação da Unidade 2
 
-!!! info "Vídeo em produção"
-    O vídeo de apresentação da Unidade 2 será publicado aqui junto com a entrega da unidade, prevista para 13/10/2026.
-
-<!--
-  Quando o vídeo estiver no YouTube, apague o aviso acima e descomente o bloco
-  abaixo, trocando ID_DO_VIDEO pelo código do link (youtu.be/ID_DO_VIDEO).
-
 <div class="video-container">
   <iframe
-    src="https://www.youtube.com/embed/ID_DO_VIDEO"
+    src="https://www.youtube.com/embed/XUJEFZv7Pn8"
     title="Apresentação da Unidade 2 — Clínica Escola FBr"
     allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
     allowfullscreen>
   </iframe>
 </div>
 
-▶ **[Assistir no YouTube](https://youtu.be/ID_DO_VIDEO)**
--->
+Apresentação da entrega da Unidade 2, cobrindo a rastreabilidade dos requisitos, a declaração por feature e os critérios de aceitação, a verificação cruzada entre equipes, a priorização por valor de negócio e esforço técnico, o MVP e sua validação com a FBr, a Definition of Ready e a Definition of Done, o backlog do produto por ciclos e as lições aprendidas.
+
+▶ **[Assistir no YouTube](https://youtu.be/XUJEFZv7Pn8)**
