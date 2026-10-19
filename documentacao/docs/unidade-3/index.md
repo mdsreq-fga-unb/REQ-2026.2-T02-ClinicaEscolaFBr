@@ -27,6 +27,7 @@ Os itens de cada ciclo, com o Líder de Feature e as dependências, estão no [B
 
 <div class="unit-cards" markdown>
 
+- [:material-sitemap-outline: **Projeto das features do Ciclo 3** Modelo detalhado, diagramas e roteiro da inspeção de design.](projeto-features-ciclo-3.md)
 - [:material-check-decagram-outline: **9. DoR e DoD** Critérios de entrada na construção e de feature pronta.](../unidade-2/requisitos/dor-dod.md)
 - [:material-rocket-launch-outline: **10. Backlog de Produto** Itens do MVP por ciclo e Líder de Feature.](../unidade-2/requisitos/backlog.md)
 
