@@ -52,8 +52,8 @@ Sumário de todas as features declaradas, organizadas por Área e Conjunto confo
 <summary>Área: Inscrição no atendimento <span class="feature-area__count">3 features</span></summary>
 
 - *Conjunto: Inscrição on-line*
-    - [Registrar solicitação de atendimento on-line](#feature-registrar-solicitacao-de-atendimento-on-line)
-    - [Emitir comprovante de inscrição](#feature-emitir-comprovante-de-inscricao)
+    - [Registrar solicitação de atendimento on-line](#feature-registrar-solicitacao-de-atendimento-on-line-88)
+    - [Emitir comprovante de inscrição](#feature-emitir-comprovante-de-inscricao-89)
     - [Registrar inscrição assistida](#feature-registrar-inscricao-assistida)
 
 </details>
@@ -62,9 +62,9 @@ Sumário de todas as features declaradas, organizadas por Área e Conjunto confo
 <summary>Área: Triagem clínica <span class="feature-area__count">3 features</span></summary>
 
 - *Conjunto: Triagem e sinalização de casos*
-    - [Organizar informações da inscrição para triagem](#feature-organizar-informacoes-da-inscricao-para-triagem)
+    - [Organizar informações da inscrição para triagem](#feature-organizar-informacoes-da-inscricao-para-triagem-90)
     - [Sinalizar pontos de atenção da inscrição](#feature-sinalizar-pontos-de-atencao-da-inscricao)
-    - [Registrar prioridade clínica do inscrito](#feature-registrar-prioridade-clinica-do-inscrito)
+    - [Registrar prioridade clínica do inscrito](#feature-registrar-prioridade-clinica-do-inscrito-91)
 
 </details>
 
@@ -82,7 +82,7 @@ Sumário de todas as features declaradas, organizadas por Área e Conjunto confo
 <summary>Área: Agendamento e acompanhamento de sessões <span class="feature-area__count">8 features</span></summary>
 
 - *Conjunto: Agendamento*
-    - [Agendar sessão do paciente](#feature-agendar-sessao-do-paciente)
+    - [Agendar sessão do paciente](#feature-agendar-sessao-do-paciente-96)
     - [Consultar agenda de sessões do estagiário](#feature-consultar-agenda-de-sessoes-do-estagiario)
     - [Reagendar sessão do paciente](#feature-reagendar-sessao-do-paciente)
 - *Conjunto: Confirmação e lembrete*
@@ -99,11 +99,11 @@ Sumário de todas as features declaradas, organizadas por Área e Conjunto confo
 <summary>Área: Gestão de casos <span class="feature-area__count">9 features</span></summary>
 
 - *Conjunto: Distribuição entre supervisores*
-    - [Listar casos aguardando distribuição](#feature-listar-casos-aguardando-distribuicao)
-    - [Registrar áreas de especialidade do supervisor](#feature-registrar-areas-de-especialidade-do-supervisor)
-    - [Distribuir caso a supervisor conforme área de especialidade](#feature-distribuir-caso-a-supervisor-conforme-area-de-especialidade)
+    - [Listar casos aguardando distribuição](#feature-listar-casos-aguardando-distribuicao-92)
+    - [Registrar áreas de especialidade do supervisor](#feature-registrar-areas-de-especialidade-do-supervisor-93)
+    - [Distribuir caso a supervisor conforme área de especialidade](#feature-distribuir-caso-a-supervisor-conforme-area-de-especialidade-94)
 - *Conjunto: Vinculação a estagiário*
-    - [Vincular paciente a estagiário responsável](#feature-vincular-paciente-a-estagiario-responsavel)
+    - [Vincular paciente a estagiário responsável](#feature-vincular-paciente-a-estagiario-responsavel-95)
     - [Consultar responsáveis pelo caso](#feature-consultar-responsaveis-pelo-caso)
     - [Consultar casos sob responsabilidade do estagiário ou supervisor](#feature-consultar-casos-sob-responsabilidade-do-estagiario-ou-supervisor)
 - *Conjunto: Acompanhamento e reorganização*
@@ -117,7 +117,7 @@ Sumário de todas as features declaradas, organizadas por Área e Conjunto confo
 <summary>Área: Acompanhamento clínico <span class="feature-area__count">10 features</span></summary>
 
 - *Conjunto: Prontuário*
-    - [Criar e inicializar o prontuário do paciente](#feature-criar-e-inicializar-o-prontuario-do-paciente)
+    - [Criar e inicializar o prontuário do paciente](#feature-criar-e-inicializar-o-prontuario-do-paciente-97)
     - [Consultar prontuário do paciente](#feature-consultar-prontuario-do-paciente)
 - *Conjunto: Registro de evolução por sessão*
     - [Registrar evolução da sessão realizada](#feature-registrar-evolucao-da-sessao-realizada)
@@ -219,7 +219,7 @@ O registro da inscrição assistida constitui uma resposta proposta ao risco de 
 
 As funcionalidades destinadas ao público externo devem observar os requisitos de acessibilidade da CP14, enquanto o acesso institucional aos dados dos inscritos deve respeitar os perfis e as restrições estabelecidos pela CP12.
 
-#### Feature — Registrar solicitação de atendimento on-line
+#### Feature — Registrar solicitação de atendimento on-line [#88](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/issues/88)
 
 **RF1 — Registrar solicitação de atendimento on-line**{ #rf1 }
 
@@ -254,9 +254,13 @@ _Critérios de aceitação:_
 
 - O aviso com os contatos do CVV (188) e do SAMU (192) fica visível em todas as etapas do formulário.
 
-_Rastreabilidade:_ Feature "Registrar solicitação de atendimento on-line" → CP1 — Inscrição on-line → OE1/OE4.
+- Antes do registro, o interessado revisa os dados informados e confirma o envio; sem essa confirmação, a solicitação não é registrada.
 
-#### Feature — Emitir comprovante de inscrição
+- Para interessado menor de idade, calculado pela data de nascimento, o envio sem o nome do responsável legal é bloqueado e o campo é indicado.
+
+_Rastreabilidade:_ Feature "Registrar solicitação de atendimento on-line" → CP1 — Inscrição on-line → OE1/OE4. Restrição transversal: CP12 — Segurança, sigilo e controle de acesso.
+
+#### Feature — Emitir comprovante de inscrição [#89](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/issues/89)
 
 **RF2 — Emitir comprovante de inscrição**{ #rf2 }
 
@@ -278,7 +282,7 @@ _Critérios de aceitação:_
 
 - O comprovante não contém a queixa nem dados clínicos desnecessários à confirmação do registro.
 
-_Rastreabilidade:_ Feature "Emitir comprovante de inscrição" → CP1 — Inscrição on-line → OE1/OE4.
+_Rastreabilidade:_ Feature "Emitir comprovante de inscrição" → CP1 — Inscrição on-line → OE1/OE4. Dependência: RF1.
 
 #### Feature — Registrar inscrição assistida
 
@@ -316,20 +320,22 @@ Na prática hoje descrita pela FBr, a triagem parte da leitura da queixa em text
 
 Em conversa de Nicolas com a FBr em 22/09/2026, a Clínica Escola confirmou que essa abordagem mais simples — o sistema apenas organiza as respostas e destaca os pontos de atenção, sem sugerir cor, cabendo à equipe clínica decidir a prioridade diretamente a partir dessas informações — é a que deve ser adotada agora; uma eventual sugestão automática de cor foi explicitamente deixada para uma evolução futura, fora do escopo atual. Os RFs abaixo já refletem essa abordagem confirmada.
 
-#### Feature — Organizar informações da inscrição para triagem
+#### Feature — Organizar informações da inscrição para triagem [#90](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/issues/90)
 
 **RF4 — Organizar informações da inscrição para triagem**{ #rf4 }
 
 O sistema deve apresentar aos supervisores e à coordenação as inscrições recebidas, identificadas pelo número de inscrição, com os três campos de triagem definidos no RF1: queixa, percepção de urgência e histórico relevante informado. A apresentação deve distinguir informação declarada pelo interessado de avaliação registrada pela equipe e indicar dados ausentes em inscrições legadas, sem preencher lacunas por inferência.
 
-Como a sinalização automática de pontos de atenção (RF5) fica para uma entrega posterior, o sistema deve sinalizar à coordenação as inscrições que estejam há mais tempo aguardando triagem do que o parâmetro "prazo máximo para triagem" (configurável pela coordenação, valor a confirmar junto à FBr), contado a partir do registro da inscrição (RF1/RF3), de forma a preservar a revisão humana tempestiva dos casos sem depender da sinalização automática.
+Como a sinalização automática de pontos de atenção (RF5) fica para uma entrega posterior, o sistema deve sinalizar à coordenação as inscrições que estejam há mais tempo aguardando triagem do que o parâmetro "prazo máximo para triagem" (configurável pela coordenação, com valor padrão de 7 dias corridos até a confirmação junto à FBr), contado a partir do registro da inscrição (RF1/RF3), de forma a preservar a revisão humana tempestiva dos casos sem depender da sinalização automática.
 
 _Critérios de aceitação:_
 
 - A triagem apresenta a supervisores e coordenação o número da inscrição, a queixa, a percepção de urgência e o histórico relevante, para inscrições on-line ou assistidas.
 - Campo de triagem sem resposta aparece como ausente, sem conteúdo presumido.
 - Usuários sem autorização para dados de triagem não visualizam as respostas da inscrição.
-- Inscrição sem triagem concluída após o prazo máximo configurado é sinalizada à coordenação como pendente além do prazo.
+- Inscrição sem triagem concluída após o prazo máximo configurado (padrão de 7 dias corridos) é sinalizada à coordenação como pendente além do prazo.
+- As respostas do interessado aparecem identificadas como declaração do interessado, separadas de qualquer avaliação registrada pela equipe.
+- Sem inscrições aguardando triagem, a tela informa que não há inscrições pendentes.
 
 _Rastreabilidade:_ Feature "Organizar informações da inscrição para triagem" → CP2 — Triagem e sinalização de casos → OE2/OE1. Dependência: CP1; restrição transversal: CP12 — Segurança, sigilo e controle de acesso.
 
@@ -349,7 +355,7 @@ _Critérios de aceitação:_
 
 _Rastreabilidade:_ Feature "Sinalizar pontos de atenção da inscrição" → CP2 — Triagem e sinalização de casos → OE2/OE1. Dependência: RF4; restrição transversal: CP12 — Segurança, sigilo e controle de acesso.
 
-#### Feature — Registrar prioridade clínica do inscrito
+#### Feature — Registrar prioridade clínica do inscrito [#91](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/issues/91)
 
 **RF6 — Registrar prioridade clínica do inscrito**{ #rf6 }
 
@@ -475,7 +481,7 @@ O canal do lembrete (e-mail e SMS) e o limite de uma remarcação por paciente n
 | Prazo de confirmação de presença           | até 12 horas antes do início da sessão | Coordenação                  | RF14         |
 | Antecedência mínima para cancelamento sem falta | 24 horas antes do início da sessão | Coordenação                  | RF15, RF35   |
 
-#### Feature — Agendar sessão do paciente
+#### Feature — Agendar sessão do paciente [#96](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/issues/96)
 
 **RF10 — Agendar sessão do paciente**{ #rf10 }
 
@@ -493,8 +499,10 @@ _Critérios de aceitação:_
 - Com uma sessão do estagiário das 14h00 às 14h50, uma nova sessão desse estagiário ou do mesmo paciente iniciando às 14h30 é bloqueada e o conflito é informado.
 - Com uma sessão do estagiário das 14h00 às 14h50, uma nova sessão desse estagiário iniciando às 14h50 é permitida.
 - Paciente sem estagiário responsável vinculado não pode ter sessão agendada.
+- Horário de término ajustado para antes do início, ou igual a ele, é recusado, com a indicação do erro.
+- Estagiário que não é o responsável pelo paciente, supervisor e coordenação não conseguem agendar sessão para o paciente.
 
-_Rastreabilidade:_ Feature "Agendar sessão do paciente" → CP4 — Agendamento, confirmação e remarcação → OE3/OE4. Dependência: CP5 — Distribuição de casos entre supervisores e estagiários; restrição transversal: CP12 — Segurança, sigilo e controle de acesso.
+_Rastreabilidade:_ Feature "Agendar sessão do paciente" → CP4 — Agendamento, confirmação e remarcação → OE3/OE4. Dependência: CP5 — Distribuição de casos entre supervisores e estagiários; integração: RF1 (canal de contato preferencial) e RF14 (link de confirmação de presença); restrição transversal: CP12 — Segurança, sigilo e controle de acesso.
 
 #### Feature — Consultar agenda de sessões do estagiário
 
@@ -625,34 +633,39 @@ A CP5 foi decomposta em nove features, organizadas em três conjuntos: distribui
 
 A distribuição depende da classificação de prioridade realizada na CP2 e da fila de espera da CP3, enquanto o acesso ao prontuário do caso pelo estagiário e pelo supervisor respeita os perfis e restrições definidos na CP12. Três regras de distribuição ainda dependem de confirmação da FBr e estão registradas em [Pendências de validação com a FBr](analise-feedback.md#pendencias-de-validacao-com-a-fbr): se a prioridade clínica orienta diretamente a ordem de distribuição (RN5.4), se há limite de casos simultâneos por estagiário e por supervisor (RN5.8) e se um caso pode ser atendido em dupla (RN5.9). Enquanto não houver resposta, os requisitos adotam o padrão de um responsável principal por caso, sem limite configurado, com a lista de pendentes ordenada pela prioridade. O enquadramento da transferência de caso na CP5 (RF25) foi validado com o MVP.
 
-#### Feature — Listar casos aguardando distribuição
+#### Feature — Listar casos aguardando distribuição [#92](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/issues/92)
 
 **RF18 — Listar casos aguardando distribuição**{ #rf18 }
 
-O sistema deve listar, para um usuário autenticado com perfil de coordenação ou supervisor, os casos (pacientes) já triados que ainda não têm supervisor e estagiário responsáveis identificados, ordenados por prioridade, para apoiar a reunião inicial de estágio. Casos já distribuídos deixam de aparecer na lista. Quando não houver caso pendente, o sistema deve informar isso de forma clara.
+O sistema deve listar, para um usuário autenticado com perfil de coordenação ou supervisor, os casos (pacientes) já triados que ainda não têm supervisor responsável atribuído (RF20), ordenados pela prioridade clínica (vermelha, amarela e verde) e, dentro da mesma prioridade, pela data da inscrição, da mais antiga para a mais recente, para apoiar a reunião inicial de estágio. Para cada caso, a lista exibe o número da inscrição, o nome do paciente, a prioridade clínica e a data da inscrição; a queixa e as demais informações de triagem não são exibidas. Os perfis de secretaria e de estagiário não acessam a lista. Casos já distribuídos a um supervisor deixam de aparecer na lista. Quando não houver caso pendente, o sistema deve informar isso de forma clara.
 
 _Critérios de aceitação:_
 
-- A lista de casos aguardando distribuição mostra à coordenação ou ao supervisor somente casos triados sem supervisor e estagiário responsáveis, ordenados por prioridade.
+- A lista de casos aguardando distribuição mostra à coordenação ou ao supervisor somente casos triados sem supervisor responsável, ordenados pela prioridade clínica e, na mesma prioridade, da inscrição mais antiga para a mais recente.
+- Cada caso da lista mostra o número da inscrição, o nome, a prioridade clínica e a data da inscrição, sem a queixa nem as demais informações de triagem.
+- Secretaria e estagiário têm o acesso à lista negado.
 - Caso já distribuído a um supervisor não aparece na lista de pendentes.
 - Sem casos pendentes, a lista informa que não há casos aguardando distribuição.
 
-_Rastreabilidade:_ Feature "Listar casos aguardando distribuição" → CP5 — Distribuição de casos entre supervisores e estagiários → OE5/OE2.
+_Rastreabilidade:_ Feature "Listar casos aguardando distribuição" → CP5 — Distribuição de casos entre supervisores e estagiários → OE5/OE2. Dependência: RF6 (CP2); restrição transversal: CP12 — Segurança, sigilo e controle de acesso.
 
-#### Feature — Registrar áreas de especialidade do supervisor
+#### Feature — Registrar áreas de especialidade do supervisor [#93](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/issues/93)
 
 **RF19 — Registrar áreas de especialidade do supervisor**{ #rf19 }
 
-O sistema deve permitir que a coordenação registre e mantenha as áreas de especialidade de cada supervisor, que servem de critério para a distribuição dos casos (RF20). Cada supervisor pode ter uma ou mais áreas de especialidade, e a manutenção dessa lista deve ser possível pela interface, sem intervenção técnica. Alterar as áreas de um supervisor não deve afetar os casos já distribuídos a ele.
+O sistema deve permitir que a coordenação registre e mantenha as áreas de especialidade de cada supervisor, que servem de critério para a distribuição dos casos (RF20). Cada supervisor pode ter uma ou mais áreas de especialidade, e a manutenção dessa lista deve ser possível pela interface, sem intervenção técnica. Alterar as áreas de um supervisor não deve afetar os casos já distribuídos a ele. As áreas formam um catálogo mantido pela coordenação na própria interface: a coordenação cadastra as áreas no catálogo e associa as áreas cadastradas a cada supervisor. Com o catálogo vazio, o sistema orienta a coordenação a cadastrar a primeira área.
 
 _Critérios de aceitação:_
 
 - A coordenação consegue associar uma ou mais áreas de especialidade a um supervisor.
 - A remoção de uma área de especialidade do supervisor não retira dele os casos já distribuídos.
+- A área cadastrada pela coordenação no catálogo fica disponível para associação aos supervisores.
+- Usuário sem perfil de coordenação não consegue alterar o catálogo nem as áreas dos supervisores.
+- Com o catálogo vazio, a tela orienta o cadastro da primeira área.
 
-_Rastreabilidade:_ Feature "Registrar áreas de especialidade do supervisor" → CP5 — Distribuição de casos entre supervisores e estagiários → OE5. RNF relacionado: RNF23 (modificabilidade do cadastro de áreas de especialidade).
+_Rastreabilidade:_ Feature "Registrar áreas de especialidade do supervisor" → CP5 — Distribuição de casos entre supervisores e estagiários → OE5. RNF relacionado: RNF23 (modificabilidade do cadastro de áreas de especialidade); restrição transversal: CP12 — Segurança, sigilo e controle de acesso.
 
-#### Feature — Distribuir caso a supervisor conforme área de especialidade
+#### Feature — Distribuir caso a supervisor conforme área de especialidade [#94](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/issues/94)
 
 **RF20 — Distribuir caso a supervisor conforme área de especialidade**{ #rf20 }
 
@@ -664,18 +677,20 @@ _Critérios de aceitação:_
 - Sem supervisor compatível disponível, o sistema informa a falta de compatibilidade e permite a atribuição manual, registrando a exceção.
 - Caso que já tem supervisor responsável não pode ser distribuído de novo; o sistema orienta o uso da transferência (RF25).
 - Caso sem área de especialidade registrada pode ser distribuído a qualquer supervisor, sem exigência de compatibilidade.
+- Usuário sem perfil de coordenação não consegue distribuir casos.
 
-_Rastreabilidade:_ Feature "Distribuir caso a supervisor conforme área de especialidade" → CP5 — Distribuição de casos entre supervisores e estagiários → OE5. Dependência: RF18, RF19, RF6 (CP2).
+_Rastreabilidade:_ Feature "Distribuir caso a supervisor conforme área de especialidade" → CP5 — Distribuição de casos entre supervisores e estagiários → OE5. Dependência: RF18, RF19, RF6 (CP2); restrição transversal: CP12 — Segurança, sigilo e controle de acesso.
 
-#### Feature — Vincular paciente a estagiário responsável
+#### Feature — Vincular paciente a estagiário responsável [#95](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/issues/95)
 
 **RF21 — Vincular paciente a estagiário responsável**{ #rf21 }
 
-O sistema deve permitir que o supervisor vincule cada paciente sob sua responsabilidade a um estagiário com conta institucional ativa (RF53 e RF54), responsável pelo atendimento. A gestão de semestres letivos e do vínculo acadêmico do estagiário com a instituição de ensino não faz parte do escopo deste sistema: a condição de "estagiário ativo" equivale à conta institucional mantida ativa pela coordenação, que a desativa (RF54) ao término do estágio, retirando-o das opções de vinculação. Após o vínculo, o caso passa a ter estagiário e supervisor identificados, e o estagiário vinculado passa a ter acesso ao prontuário do caso, respeitando os perfis e restrições definidos na CP12. O supervisor só pode vincular estagiários a casos sob sua própria responsabilidade, e o vínculo deve ficar registrado com data e autor.
+O sistema deve permitir que o supervisor vincule cada paciente sob sua responsabilidade a um estagiário com conta institucional ativa (RF53 e RF54), responsável pelo atendimento. A gestão de semestres letivos e do vínculo acadêmico do estagiário com a instituição de ensino não faz parte do escopo deste sistema: a condição de "estagiário ativo" equivale à conta institucional mantida ativa pela coordenação, que a desativa (RF54) ao término do estágio, retirando-o das opções de vinculação. Após o vínculo, o caso passa a ter estagiário e supervisor identificados, e o estagiário vinculado passa a ter acesso ao prontuário do caso, respeitando os perfis e restrições definidos na CP12. O supervisor só pode vincular estagiários a casos sob sua própria responsabilidade, e o vínculo deve ficar registrado com data e autor. Até a resposta da FBr sobre o atendimento em dupla (RN5.9, em [Pendências de validação com a FBr](analise-feedback.md#pendencias-de-validacao-com-a-fbr)), cada caso tem um único estagiário responsável vigente.
 
 _Critérios de aceitação:_
 
-- O vínculo de um estagiário ao caso pelo supervisor responsável registra o estagiário como responsável e lhe dá acesso ao caso.
+- O vínculo de um estagiário ao caso pelo supervisor responsável registra o estagiário como responsável, com a data e o autor do vínculo, e lhe dá acesso ao caso.
+- Sem estagiário com conta ativa disponível, o sistema informa que não há estagiários disponíveis para vínculo.
 - Supervisor que não é responsável pelo caso não consegue vincular estagiário a ele.
 - Estagiário com conta desativada (RF54) não aparece entre as opções de vínculo.
 
@@ -749,11 +764,11 @@ A CP6 foi decomposta em duas features: a criação e inicialização do prontuá
 
 O acesso ao prontuário depende do vínculo de responsabilidade definido na CP5 e está sujeito à restrição de acesso do RF55 — Restringir acesso ao prontuário do paciente (CP12). Para tornar a completude verificável sem presumir conteúdo diagnóstico, o prontuário possui o conjunto mínimo de dados estruturais definido no RF27; campos clínicos adicionais somente podem ser acrescentados após validação institucional.
 
-#### Feature — Criar e inicializar o prontuário do paciente
+#### Feature — Criar e inicializar o prontuário do paciente [#97](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/issues/97)
 
 **RF66 — Criar e inicializar o prontuário do paciente**{ #rf66 }
 
-O sistema deve criar o prontuário eletrônico do paciente automaticamente no momento em que o caso for vinculado a um estagiário responsável (RF21), inicializando-o com a identificação do paciente, do caso e do ciclo de atendimento. A partir da criação, o estagiário responsável deve poder registrar, como dados iniciais do prontuário, a anamnese e o contrato terapêutico (ou documento equivalente) que formalizam o início do acompanhamento. Um prontuário não pode ser criado para um caso ainda sem estagiário responsável vinculado, e cada caso deve ter exatamente um prontuário por ciclo de atendimento. O sigilo dos dados iniciais segue o RNF25 e o acesso, a restrição do RF55.
+O sistema deve criar o prontuário eletrônico do paciente automaticamente no momento em que o caso for vinculado a um estagiário responsável (RF21), inicializando-o com a identificação do paciente, do caso e do ciclo de atendimento. A partir da criação, somente o estagiário responsável deve poder registrar, como dados iniciais do prontuário, a anamnese e o contrato terapêutico (ou documento equivalente) que formalizam o início do acompanhamento. Até a FBr fornecer os modelos de anamnese e de contrato usados pela clínica ([Pendências de validação com a FBr](analise-feedback.md#pendencias-de-validacao-com-a-fbr)), cada um é registrado como texto livre, e o contrato inclui a data de assinatura. Um prontuário não pode ser criado para um caso ainda sem estagiário responsável vinculado, e cada caso deve ter exatamente um prontuário por ciclo de atendimento. O sigilo dos dados iniciais segue o RNF25 e o acesso, a restrição do RF55.
 
 _Critérios de aceitação:_
 
@@ -761,6 +776,7 @@ _Critérios de aceitação:_
 - A anamnese e o contrato terapêutico registrados pelo estagiário ficam armazenados como dados iniciais do prontuário, com autor e data/hora.
 - Caso sem estagiário responsável vinculado não pode ter prontuário criado.
 - Caso que já tem prontuário no ciclo vigente não recebe um segundo prontuário.
+- Usuário que não é o estagiário responsável pelo caso não consegue registrar a anamnese nem o contrato.
 
 _Rastreabilidade:_ Feature "Criar e inicializar o prontuário do paciente" → CP6 — Prontuário eletrônico → OE5/OE6. Dependência: RF21 (CP5); restrição transversal: CP12 — Segurança, sigilo e controle de acesso.
 
@@ -1337,7 +1353,7 @@ O sistema deve permitir que um usuário com perfil de coordenação cadastre usu
 2. **Ativação e senha inicial:** ao abrir o link, o próprio usuário define sua senha, que deve atender às regras do RNF49; a conta passa a "ativa" e o link deixa de valer.
 3. **Reenvio:** enquanto o usuário estiver pendente, a coordenação pode reenviar o convite, o que gera um novo link e invalida o anterior.
 
-Um usuário pendente de ativação não consegue se autenticar (RF50).
+Um usuário pendente de ativação não consegue se autenticar (RF50). O cadastro, o reenvio do convite e a ativação ficam registrados na trilha de auditoria, com o autor, o usuário afetado e a data/hora.
 
 _Critérios de aceitação:_
 
@@ -1347,6 +1363,7 @@ _Critérios de aceitação:_
 - O reenvio do convite a usuário pendente invalida o link anterior.
 - E-mail já cadastrado não pode ser cadastrado de novo.
 - Usuário sem perfil de coordenação não consegue cadastrar usuários.
+- O cadastro, o reenvio do convite e a ativação ficam registrados na auditoria, com o autor, o usuário afetado e a data/hora.
 
 _Rastreabilidade:_ Feature "Cadastrar usuário institucional com perfil de acesso" → CP12 — Segurança, sigilo e controle de acesso → OE7/OE5.
 
@@ -1354,11 +1371,12 @@ _Rastreabilidade:_ Feature "Cadastrar usuário institucional com perfil de acess
 
 **RF54 — Desativar usuário institucional**{ #rf54 }
 
-O sistema deve permitir que um usuário com perfil de coordenação desative um usuário institucional, bloqueando seu acesso sem apagar o histórico de registros feitos por ele. Como os estagiários mudam a cada semestre, a desativação é o meio de retirar o acesso de quem concluiu o estágio.
+O sistema deve permitir que um usuário com perfil de coordenação desative um usuário institucional, bloqueando seu acesso sem apagar o histórico de registros feitos por ele. Como os estagiários mudam a cada semestre, a desativação é o meio de retirar o acesso de quem concluiu o estágio. A desativação fica registrada na trilha de auditoria, com quem desativou, o usuário desativado e a data/hora.
 
 _Critérios de aceitação:_
 
-- A desativação de um estagiário pela coordenação corta o acesso imediatamente, inclusive com sessão aberta.
+- Após a desativação de um estagiário pela coordenação, a próxima requisição dele é recusada, inclusive com sessão aberta, e ele não consegue entrar de novo.
+- A desativação fica registrada na auditoria, com quem desativou, o usuário desativado e a data/hora.
 - Os registros anteriores de usuário desativado continuam disponíveis a usuários autorizados, identificados com o nome de quem os fez.
 - Usuário sem perfil de coordenação não consegue desativar usuários.
 
@@ -1368,7 +1386,7 @@ _Rastreabilidade:_ Feature "Desativar usuário institucional" → CP12 — Segur
 
 **RF55 — Restringir acesso ao prontuário do paciente**{ #rf55 }
 
-O sistema deve permitir o acesso ao prontuário de um paciente (CP6), que reúne os registros de evolução (CP7) e o relatório final (CP8), somente ao estagiário responsável pelo paciente e ao supervisor desse estagiário, conforme o vínculo definido na CP5. Os perfis de secretaria e de coordenação não devem ter acesso ao conteúdo clínico do prontuário, apenas aos dados cadastrais e administrativos do paciente. A regra não prevê exceções por perfil, conforme a definição da CP12 aprovada na [Seção 2.3](../../unidade-1/solucao-proposta.md#23-caracteristicas-de-produto-mapeadas-com-os-objetivos-especificos), que restringe o prontuário ao estagiário responsável e ao seu supervisor.
+O sistema deve permitir o acesso ao prontuário de um paciente (CP6), que reúne os registros de evolução (CP7) e o relatório final (CP8), somente ao estagiário responsável pelo paciente e ao supervisor desse estagiário, conforme o vínculo definido na CP5. Os perfis de secretaria e de coordenação não devem ter acesso ao conteúdo clínico do prontuário, apenas aos dados cadastrais (nome, data de nascimento, contatos e responsável legal) e administrativos (situação do caso, sessões agendadas e realizadas, faltas e situação da contribuição social) do paciente. A regra não prevê exceções por perfil, conforme a definição da CP12 aprovada na [Seção 2.3](../../unidade-1/solucao-proposta.md#23-caracteristicas-de-produto-mapeadas-com-os-objetivos-especificos), que restringe o prontuário ao estagiário responsável e ao seu supervisor.
 
 _Critérios de aceitação:_
 
