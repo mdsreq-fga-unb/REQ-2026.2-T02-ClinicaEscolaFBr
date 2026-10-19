@@ -1,0 +1,20 @@
+# Coloca etiquetas automáticas nas PRs conforme as pastas alteradas
+# (regras em .github/labeler.yml).
+name: Labeler
+
+on:
+  pull_request_target:
+    types: [opened, synchronize, reopened]
+
+permissions:
+  contents: read
+  pull-requests: write
+
+jobs:
+  etiquetar:
+    name: Etiquetar PR
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/labeler@v5
+        with:
+          sync-labels: true

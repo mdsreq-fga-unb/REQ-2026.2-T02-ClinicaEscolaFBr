@@ -1,0 +1,29 @@
+# Compila o site de documentação nas PRs que mexem em documentacao/, para que erros
+# apareçam antes do merge (o deploy em si continua no deploy-docs.yaml, só na main).
+name: Docs Check
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - "documentacao/**"
+      - ".github/workflows/docs-check.yml"
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    name: Compilar a documentação
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.x"
+      - run: pip install mkdocs-material pymdown-extensions
+      - run: mkdocs build --config-file documentacao/mkdocs.yml
