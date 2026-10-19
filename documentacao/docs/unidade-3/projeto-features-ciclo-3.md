@@ -2,7 +2,7 @@
 
 Esta página registra o processo **Projetar por Feature** do FDD para as 14 features do Ciclo 3: o modelo detalhado, os diagramas de sequência, as rotas da API, as regras ligadas aos critérios de aceitação e os dados de teste de cada feature. Ela é o material da **inspeção de design** (marco 1 do [DoD](../unidade-2/requisitos/dor-dod.md#1-design-inspecionado)). O resultado da inspeção de cada feature é registrado na sua issue.
 
-Os requisitos de origem estão na [seção 8.1](../unidade-2/requisitos/funcionais.md), e os itens do ciclo, no [Backlog de Produto](../unidade-2/requisitos/backlog.md#1012-itens-de-trabalho-do-mvp).
+Os requisitos de origem estão na [seção 8.1](../unidade-2/requisitos/funcionais.md), e os itens do ciclo, em [Features e backlog](../visao-geral/backlog.md#ciclo-3).
 
 ## Convenções
 

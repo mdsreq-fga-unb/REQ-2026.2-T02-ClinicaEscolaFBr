@@ -1,8 +1,8 @@
 # Cronograma e Entregas da Unidade 3
 
-O planejamento da Unidade 3 dá continuidade à abordagem ágil, ao ciclo de vida ágil e ao processo Feature-Driven Development (FDD) adotados nas unidades anteriores. O cronograma compreende o período de **14/10/2026 a 17/11/2026**, organizado em três ciclos de construção (ver Unidade 1, [Seção 6.2](../../unidade-1/gestao/cronograma.md#62-visao-macro-das-unidades-2-3-e-4)). Em cada ciclo, as features do [Backlog de Produto](../../unidade-2/requisitos/backlog.md#1012-itens-de-trabalho-do-mvp) passam pelos processos **Planejar por Feature**, **Projetar por Feature** e **Construir por Feature**: a feature só entra na construção depois de atender ao [DoR](../../unidade-2/requisitos/dor-dod.md#91-definition-of-ready-dor) e só é considerada pronta quando atende ao [DoD](../../unidade-2/requisitos/dor-dod.md#92-definition-of-done-dod), com as evidências registradas na issue da feature.
+O planejamento da Unidade 3 dá continuidade à abordagem ágil, ao ciclo de vida ágil e ao processo Feature-Driven Development (FDD) adotados nas unidades anteriores. O cronograma compreende o período de **14/10/2026 a 17/11/2026**, organizado em três ciclos de construção (ver o [Cronograma geral](../../visao-geral/cronograma.md), com o status de todos os ciclos do projeto). Em cada ciclo, as features do [backlog](../../visao-geral/backlog.md) passam pelos processos **Planejar por Feature**, **Projetar por Feature** e **Construir por Feature**: a feature só entra na construção depois de atender ao [DoR](../../unidade-2/requisitos/dor-dod.md#91-definition-of-ready-dor) e só é considerada pronta quando atende ao [DoD](../../unidade-2/requisitos/dor-dod.md#92-definition-of-done-dod), com as evidências registradas na issue da feature.
 
-## Ciclo 3 (14/10 a 27/10) — Base técnica e primeiras features do MVP
+## Ciclo 3 (14/10 a 27/10) — Base técnica e primeiras features do MVP { #ciclo-3 }
 
 | Período | Fase / Processo FDD | Atividades | Atividade de ER / Resultado | Entregáveis |
 | --- | --- | --- | --- | --- |
@@ -14,13 +14,13 @@ O planejamento da Unidade 3 dá continuidade à abordagem ágil, ao ciclo de vid
 | 23/10 a 27/10 | Construir por Feature | Implementação, testes unitários, inspeção de código no pull request e integração à branch principal. Em paralelo, levantamento do DoR das features do Ciclo 4. | Verificação e validação (inspeção de código e testes). | Marcos "Código concluído", "Código inspecionado" e "Promovido para a versão integrada" (DoD 2 a 4) registrados na issue. |
 | 27/10 | Fechamento do ciclo | Revisão do estado de cada feature, do DoR e do DoD, e ajuste do planejamento do Ciclo 4. | Organização e atualização (estado das features). | Estado das features atualizado nas issues. |
 
-## Ciclo 4 (28/10 a 10/11) — Continuação da construção do MVP
+## Ciclo 4 (28/10 a 10/11) — Continuação da construção do MVP { #ciclo-4 }
 
 | Período | Fase / Processo FDD | Atividades | Atividade de ER / Resultado | Entregáveis |
 | --- | --- | --- | --- | --- |
 | 28/10 a 10/11 | Projetar por Feature / Construir por Feature | Construção dos 19 itens do Ciclo 4, com o DoR avaliado ao fim do Ciclo 3, e demonstração dos incrementos do Ciclo 3 à Clínica Escola FBr. | Representação, verificação e validação (inspeções, testes e demonstração ao cliente). | Features do Ciclo 4 registradas nas issues; demonstração registrada em ata. |
 
-## Ciclo 5 (11/11 a 17/11) — Consolidação e entrega da Unidade 3
+## Ciclo 5 (11/11 a 17/11) — Consolidação e entrega da Unidade 3 { #ciclo-5 }
 
 | Período | Fase / Processo FDD | Atividades | Atividade de ER / Resultado | Entregáveis |
 | --- | --- | --- | --- | --- |

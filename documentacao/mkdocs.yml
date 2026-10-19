@@ -82,6 +82,9 @@ markdown_extensions:
 
 nav:
   - Início: index.md
+  - Visão geral do projeto:
+      - Cronograma geral: visao-geral/cronograma.md
+      - Features e backlog: visao-geral/backlog.md
   - Unidade 1 — Visão e planejamento:
       - Início da unidade: unidade-1/index.md
       - 1. Cenário Atual: unidade-1/cenario-atual.md

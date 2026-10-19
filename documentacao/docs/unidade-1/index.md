@@ -2,6 +2,9 @@
 
 Visão geral da entrega da Unidade 1: o cenário da clínica, a solução proposta, a estratégia de Engenharia de Software e de Engenharia de Requisitos e a gestão do projeto.
 
+!!! info "Andamento do projeto"
+    O cronograma geral e o backlog, com o status de cada ciclo e de cada feature, ficam na Visão geral do projeto: [Cronograma geral](../visao-geral/cronograma.md) e [Features e backlog](../visao-geral/backlog.md).
+
 ## Conteúdo da unidade
 
 ### Visão do produto
