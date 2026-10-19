@@ -329,7 +329,7 @@ Rastreabilidade: CP5 — Distribuição de casos entre supervisores e estagiári
 
 **RNF22 — Usabilidade da distribuição e do vínculo de casos**{ #rnf22 }
 
-O supervisor e a coordenação devem conseguir distribuir e vincular casos sem treinamento prévio, inclusive a partir do celular, concluindo a distribuição de um caso em até 3 interações a partir da lista de pendentes.
+A coordenação deve conseguir distribuir os casos (RF20) e o supervisor, vincular o estagiário ao caso (RF21), sem treinamento prévio e inclusive a partir do celular. A distribuição de um caso deve ser concluída em até 3 interações a partir da lista de pendentes.
 
 A conformidade deve ser verificada por teste de usabilidade com uma amostra mínima de 5 participantes representativos por perfil (supervisor e coordenação), em telas responsivas, com pelo menos 90% dos participantes concluindo a tarefa sem auxílio externo.
 

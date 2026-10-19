@@ -6,7 +6,7 @@ hide:
 
 # Clínica Escola FBr — Documentação do projeto
 
-Documentação do projeto · versão 3.1
+Documentação do projeto · versão 3.2
 
 <details class="revision-history" id="historico-de-revisao" markdown>
 <summary>Histórico de revisão</summary>
@@ -77,6 +77,7 @@ Registro cronológico das versões e alterações do documento de visão e dos a
 | 13/10/2026 | 2.44 | Publicação do vídeo de apresentação da Unidade 2 ([YouTube](https://youtu.be/XUJEFZv7Pn8)) na página da Unidade 2 e na página inicial; registro da entrega no cronograma da Unidade 2 | Joaquim José da Fonseca Viana |
 | 19/10/2026 | 3.0 | Início da Unidade 3: nova seção "Unidade 3 — Construção do MVP" no menu, com página inicial (ciclos da unidade, atalhos e espaço para o vídeo de apresentação), Cronograma e Entregas dos Ciclos 3 a 5 (Ciclo 3 detalhado, com os processos Planejar, Projetar e Construir por Feature e a avaliação do DoR), página de Reuniões com o registro da reunião de planejamento do Ciclo 3 de 15/10/2026 (imagem e ata em PDF) e página de Lições Aprendidas da unidade; atalhos para o cronograma e as reuniões da Unidade 3 na página inicial | Gabriel da Cunha Barbaceli |
 | 19/10/2026 | 3.1 | DoR das features do Ciclo 3: nos requisitos, restrição transversal da CP12 e dependências na rastreabilidade (RF1, RF2 e RF18 a RF20), integração do RF10 com o RF1 e o RF14, critérios de confirmação do envio e de responsável legal (RF1), de declaração do interessado e lista vazia (RF4), de negação de acesso (RF10, RF18 a RF20 e RF66), de autor e data do vínculo (RF21), de término da sessão (RF10) e de auditoria (RF53 e RF54); prioridade clínica, desempate e dados exibidos no RF18; catálogo de áreas no RF19; valor padrão de 7 dias no prazo da triagem (RF4); dados administrativos no RF55; texto livre provisório para anamnese e contrato no RF66; um estagiário por caso até a resposta sobre atendimento em dupla (RF21); links das issues nas features; novas pendências com a FBr. Nova página "Projeto das features do Ciclo 3", com modelo detalhado, diagramas de sequência, rotas, regras, dados de teste e roteiro da inspeção de design | Gabriel da Cunha Barbaceli |
+| 19/10/2026 | 3.2 | Nova página "Protótipos do Ciclo 3" na Unidade 3, com as telas das 14 features organizadas pelo fluxo do sistema, uma seção por feature com o requisito, a issue e os estados de cada tela, no computador e no celular, a origem dos protótipos e o PDF completo em alta resolução; RNF22 alinhado ao RF20 e ao RF21 (a coordenação distribui os casos e o supervisor vincula o estagiário) | Gabriel da Cunha Barbaceli |
 
 A versão 1.6 está registrada com a data do commit (04/09/2026), posterior à da versão 1.7; a numeração foi mantida para preservar as referências já feitas a essas versões.
 
