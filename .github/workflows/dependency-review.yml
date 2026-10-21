@@ -16,7 +16,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/dependency-review-action@v4
+      - uses: actions/dependency-review-action@v5
         with:
           fail-on-severity: high
           # braces <= 3.0.3 (GHSA-vfj7-8cjw-p6xm) ainda não tem versão corrigida. Chega
