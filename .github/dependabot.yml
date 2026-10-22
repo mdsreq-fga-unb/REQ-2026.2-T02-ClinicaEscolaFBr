@@ -6,9 +6,20 @@ updates:
     # Mensagens de commit no padrão do projeto (ex.: "build: bump zod from 4.1.0 to 4.2.0")
     commit-message:
       prefix: build
+    # O grupo semanal junta só versões menores e correções. Cada versão principal
+    # vem num PR separado, para ser avaliada sozinha.
     groups:
       dependencias:
         patterns: ["*"]
+        update-types: [minor, patch]
+    ignore:
+      # O TypeScript 7 não traz a API em JavaScript que o tsup usa para gerar os .d.ts.
+      # Remover quando o tsup suportar o TypeScript 7.
+      - dependency-name: typescript
+        update-types: [version-update:semver-major]
+      # Os tipos do Node acompanham a versão do .nvmrc (Node 24).
+      - dependency-name: "@types/node"
+        update-types: [version-update:semver-major]
   - package-ecosystem: github-actions
     directory: /
     schedule: { interval: weekly }
