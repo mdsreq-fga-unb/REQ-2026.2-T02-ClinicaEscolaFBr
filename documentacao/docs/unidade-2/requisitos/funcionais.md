@@ -246,7 +246,7 @@ _Critérios de aceitação:_
 
 - Nenhuma confirmação de inscrição é exibida se a solicitação não tiver sido efetivamente registrada.
 
-- CPF e RG são pedidos apenas como números digitados, sem envio de cópia digitalizada ou foto do documento.
+- O CPF e o RG são informados por digitação em campos de texto, sem necessidade de envio de cópia digitalizada ou foto dos documentos. Os campos admitem caracteres numéricos e não exige a informação do órgão emissor.
 
 - O formato dos canais informados é validado, pelo menos um canal (celular ou e-mail) é exigido e o canal preferencial fica registrado.
 
