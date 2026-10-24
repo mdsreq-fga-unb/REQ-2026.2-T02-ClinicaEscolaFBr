@@ -66,7 +66,6 @@ classDiagram
       +uuid id
       +string corCifrada
       +datetime decididaEm
-      +bool vigente
     }
     class Caso {
       +uuid id
@@ -136,7 +135,7 @@ classDiagram
 
 **Restrições de integridade no banco** (RNF19, RNF9):
 
-- No máximo uma `DecisaoPrioridade` vigente por inscrição, uma `AtribuicaoSupervisor` vigente por caso e um `VinculoEstagiario` vigente por caso. São índices únicos parciais `WHERE vigente`.
+- Uma `AtribuicaoSupervisor` vigente por caso e um `VinculoEstagiario` vigente por caso, garantidos por índices únicos parciais `WHERE vigente`. A `DecisaoPrioridade` é somente inserção (RNF5), e a vigente é a mais recente da inscrição.
 - Um `Prontuario` por caso e ciclo de atendimento: índice único em `(caso_id, ciclo_atendimento)`.
 - `SessaoAtendimento.termino` maior que `inicio` e `fimIntervaloAnotacoes` igual ou maior que `termino`, garantidos por restrições `CHECK`.
 
@@ -411,8 +410,7 @@ sequenceDiagram
     participant DB as Banco
     S->>A: POST prioridade com a cor
     A->>DB: transação
-    A->>DB: decisão anterior deixa de ser vigente
-    A->>DB: nova DecisaoPrioridade vigente com autor e data/hora
+    A->>DB: nova DecisaoPrioridade com autor e data/hora (a anterior não é alterada)
     A->>DB: cria o Caso na primeira decisão
     A->>DB: auditoria (RNF5)
     A-->>S: prioridade registrada
@@ -420,7 +418,7 @@ sequenceDiagram
 
 | Regra | Critério de aceitação |
 | --- | --- |
-| Histórico com `vigente` e índice único parcial | A alteração mantém a decisão anterior no histórico |
+| Histórico somente inserção, com trava no banco; a vigente é a mais recente (RNF5) | A alteração mantém a decisão anterior no histórico, sem alterá-la |
 | A tela mostra a referência vermelha/amarela/verde como texto, sem cor pré-selecionada | Nenhuma sugestão automática de cor |
 | Sem decisão vigente, a fila e a distribuição tratam o caso como pendente | Inscrição sem classificação aparece como pendente |
 
@@ -490,7 +488,7 @@ sequenceDiagram
 
 ### RF21 — Vincular paciente a estagiário responsável ([#95](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/issues/95))
 
-**Rota:** `POST /casos/:id/estagiario` (supervisor responsável pelo caso). Mostra como opções apenas estagiários com a situação `ativo`. O vínculo e a criação do prontuário (RF66) acontecem na mesma transação. O caso tem um único estagiário responsável vigente, garantido por índice único parcial; os estagiários de apoio só observam e não são vinculados ([DF27](../unidade-2/requisitos/decisoes-fbr.md)).
+**Rota:** `POST /casos/:id/estagiario` (supervisor responsável pelo caso). Mostra como opções apenas estagiários com a situação `ativo`, cada um com a quantidade de pacientes em atendimento, como no protótipo. O vínculo e a criação do prontuário (RF66) acontecem na mesma transação. O caso tem um único estagiário responsável vigente, garantido por índice único parcial; os estagiários de apoio só observam e não são vinculados ([DF27](../unidade-2/requisitos/decisoes-fbr.md)).
 
 ```mermaid
 sequenceDiagram
