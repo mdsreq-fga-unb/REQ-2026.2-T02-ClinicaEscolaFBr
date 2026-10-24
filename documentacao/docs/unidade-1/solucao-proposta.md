@@ -44,7 +44,7 @@ A solução proposta para a Clínica Escola da FBr deverá contemplar, de forma 
 
 ### Escopo do MVP
 
-O recorte atual do MVP é feito **por requisito**: **53 dos 68 RFs** declarados, definidos na priorização da Unidade 2 e validados com a Clínica Escola FBr ([seções 10.2.3 e 10.2.4 do Backlog de Produto](../unidade-2/requisitos/backlog.md#1023-definicao-do-mvp)), que cruzaram o valor de negócio avaliado pela FBr com o esforço técnico de cada RF. A tabela resume o recorte por característica; o detalhamento requisito a requisito está na seção 10.2.3.
+O recorte atual do MVP é feito **por requisito**: **55 dos 69 RFs** declarados, definidos na priorização da Unidade 2 e validados com a Clínica Escola FBr ([seções 10.2.3 e 10.2.4 do Backlog de Produto](../unidade-2/requisitos/backlog.md#1023-definicao-do-mvp)), que cruzaram o valor de negócio avaliado pela FBr com o esforço técnico de cada RF. A tabela resume o recorte por característica; o detalhamento requisito a requisito está na seção 10.2.3.
 
 | CP | Característica | RFs no MVP | Situação | RFs fora do MVP |
 | --- | --- | --- | --- | --- |
@@ -53,9 +53,9 @@ O recorte atual do MVP é feito **por requisito**: **53 dos 68 RFs** declarados,
 | CP3 | Fila de espera e consulta de posição | 2 de 3 | Parcial no MVP | RF9 |
 | CP4 | Agendamento, confirmação e remarcação | 6 de 8 | Parcial no MVP | RF12, RF13 |
 | CP5 | Distribuição de casos entre supervisores e estagiários | 7 de 9 | Parcial no MVP | RF24, RF26 |
-| CP6 | Prontuário eletrônico | 2 de 2 | Completa no MVP | — |
+| CP6 | Prontuário eletrônico | 3 de 3 | Completa no MVP | — |
 | CP7 | Registro de evolução por sessão | 7 de 7 | Completa no MVP | — |
-| CP8 | Geração do relatório final de evolução | 0 de 1 | Fora do MVP | RF33 |
+| CP8 | Geração do relatório final de evolução | 1 de 1 | Completa no MVP | — |
 | CP9 | Controle de assiduidade e alertas | 9 de 9 | Completa no MVP | — |
 | CP10 | Registros administrativos do atendimento | 5 de 7 | Parcial no MVP | RF46, RF47 |
 | CP11 | Indicadores e relatórios institucionais | 2 de 2 | Completa no MVP | — |
@@ -63,14 +63,14 @@ O recorte atual do MVP é feito **por requisito**: **53 dos 68 RFs** declarados,
 | CP13 | Continuidade de casos entre semestres | 0 de 3 | Fora do MVP | RF58, RF59, RF60 |
 | CP14 | Acessibilidade e usabilidade | 0 de 2 | Fora do MVP | RF61, RF62 |
 
-A CP6 inclui o RF66 (criação do prontuário) e a CP7 inclui os RF67 e RF68 (validação da evolução pelo supervisor e encerramento do caso por alta), declarados a partir das dúvidas levantadas pela FBr na validação do MVP (ver [10.2.4](../unidade-2/requisitos/backlog.md#1024-validacao-do-mvp-com-o-cliente)). Na CP9, a reprovação do estagiário (RF63/RF64) faz parte do MVP, com implementação prevista para mais perto do fim do semestre.
+A CP6 inclui o RF66 (criação do prontuário) e o RF69 (registro da anamnese e do contrato, separado do RF66 em 24/10/2026) e a CP7 inclui os RF67 e RF68 (validação da evolução pelo supervisor e encerramento do caso por alta), declarados a partir das dúvidas levantadas pela FBr na validação do MVP (ver [10.2.4](../unidade-2/requisitos/backlog.md#1024-validacao-do-mvp-com-o-cliente)). Na CP9, a reprovação do estagiário (RF63/RF64) faz parte do MVP, com implementação prevista para mais perto do fim do semestre.
 
 Na CP14, embora os dois RFs específicos (RF61 e RF62 — alto contraste e ajuste de tamanho de texto) fiquem para depois, o piso de conformidade WCAG 2.2 nível AA (RNF56) permanece obrigatório desde o MVP, por exigência confirmada da FBr/MEC.
 
 <details class="revision-note" markdown>
 <summary>Histórico: recorte inicial por característica (Unidade 1)</summary>
 
-Na Unidade 1, antes da priorização formal, o MVP foi definido por característica. Esse recorte foi refinado pela priorização da Unidade 2, resumida na tabela acima: CP6, CP7, CP10 e CP11, antes no escopo desejável, entraram no MVP (a CP10 parcialmente); a CP8 ficou para uma versão posterior; CP14 teve seus dois RFs específicos adiados; e CP13 permanece fora do MVP. O texto original da Unidade 1 está preservado abaixo.
+Na Unidade 1, antes da priorização formal, o MVP foi definido por característica. Esse recorte foi refinado pela priorização da Unidade 2, resumida na tabela acima: CP6, CP7, CP10 e CP11, antes no escopo desejável, entraram no MVP (a CP10 parcialmente); a CP8 ficou inicialmente para uma versão posterior e entrou no MVP em 24/10/2026, a pedido da FBr; CP14 teve seus dois RFs específicos adiados; e CP13 permanece fora do MVP. O texto original da Unidade 1 está preservado abaixo.
 
 Considerando o prazo de um semestre letivo e a priorização acordada com o cliente, o **Produto Mínimo Viável (MVP)** será composto pelas características:
 
@@ -148,7 +148,7 @@ A literatura acadêmica registra iniciativas de sistemas de triagem e atendiment
 
 A solução da Clínica Escola FBr irá se diferenciar pelos seguintes aspectos:
 
-- **Fluxo desenhado para a clínica escola** *(no MVP, conforme a atualização em "Escopo do MVP")*: no recorte final ([10.2.3](../unidade-2/requisitos/backlog.md#1023-definicao-do-mvp)), o MVP cobre o processo da solicitação online de atendimento pelo cidadão até o agendamento, a confirmação de presença, a alocação do caso a um estagiário e seu supervisor, a criação e o registro do prontuário e da evolução por sessão, com validação pelo supervisor (CP6, CP7), e o encerramento do caso por alta. Ficam para depois refinamentos desse fluxo, como a remarcação em uma única operação (RF12), o lembrete automático (RF13) e a geração do relatório final ao término do ciclo (CP8); o encerramento/encaminhamento de casos entre semestres (CP13) permanece como visão de produto de mais longo prazo, tratado caso a caso pela transferência de caso (RF25) nesta primeira versão.
+- **Fluxo desenhado para a clínica escola** *(no MVP, conforme a atualização em "Escopo do MVP")*: no recorte final ([10.2.3](../unidade-2/requisitos/backlog.md#1023-definicao-do-mvp)), o MVP cobre o processo da solicitação online de atendimento pelo cidadão até o agendamento, a confirmação de presença, a alocação do caso a um estagiário e seu supervisor, a criação e o registro do prontuário e da evolução por sessão, com validação pelo supervisor (CP6, CP7), e o encerramento do caso por alta. Ficam para depois refinamentos desse fluxo, como a remarcação em uma única operação (RF12), e o lembrete automático (RF13), enquanto a geração do relatório final ao término do ciclo (CP8) entrou no MVP em 24/10/2026; o encerramento/encaminhamento de casos entre semestres (CP13) permanece como visão de produto de mais longo prazo, tratado caso a caso pela transferência de caso (RF25) nesta primeira versão.
 - **Papéis alinhados à estrutura acadêmica** *(no MVP)*: os perfis de solicitante, secretaria, estagiário, supervisor e coordenação, com controle de acesso (CP12), fazem parte do MVP. Como o prontuário eletrônico (CP6) também está no MVP, a restrição de acesso ao prontuário ao estagiário responsável e ao seu supervisor já se aplica desde esta primeira entrega, sem depender de uma fase posterior.
 - **Continuidade dos casos entre semestres** *(visão de produto)*: corresponde à CP13, ainda sem definição institucional fechada com o cliente; permanece como direção de evolução do produto, e não como entrega prevista no curto prazo.
 - **Indicadores sociais e acadêmicos em lugar de gestão financeira** *(no MVP)*: corresponde à CP11, incluída no MVP por atender aos relatórios institucionais que a FBr presta ao MEC; o foco dos relatórios será deslocado da cobrança para indicadores de valor institucional (vagas ocupadas, tempo médio de espera, taxa de evasão e distribuição de casos por supervisor, conforme o [RF48](../unidade-2/requisitos/funcionais.md#rf48)).

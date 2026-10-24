@@ -62,14 +62,14 @@ Os critérios **[B]** são **bloqueantes**: sem eles, a feature não entra na co
 | R4.1 | As regras de negócio usadas pelo requisito foram confirmadas pela FBr (ata ou resposta registrada) ou estão registradas como **pendência de validação**. | B |
 | R4.2 | Toda pendência com a FBr está listada na seção "Pendências de validação com a FBr" da [Análise do Feedback](./analise-feedback.md#pendencias-de-validacao-com-a-fbr), com o valor padrão adotado até a validação. | B |
 | R4.3 | Nenhuma decisão em aberto altera o **comportamento central** da feature. Se alterar, a feature é **Não pronta**. | B |
-| R4.4 | Regras, termos e modelos que dependem de aprovação da FBr (regras de sinalização, texto do termo de consentimento, modelo da declaração) estão aprovados e versionados. | R |
+| R4.4 | Regras, termos e modelos que dependem de aprovação da FBr e que **definem uma condição essencial** da feature (regras de sinalização do RF5, texto do termo de consentimento do RF57, modelo da declaração do RF45) estão aprovados e versionados. Quando o documento apenas **complementa** a feature, porque o requisito já define o comportamento sem ele (por exemplo, o modelo da anamnese no RF69, registrado como texto livre até a FBr enviar o modelo), a falta dele é registrada como pendência (R4.2) e não impede a entrada. | B |
 
 #### Requisitos não funcionais associados
 
 | # | Critério | Tipo |
 | ---- | -------- | ---- |
 | R5.1 | Os RNFs que restringem a feature estão identificados na rastreabilidade do RNF ("transversal às features …"), cobrindo as categorias URPS+ aplicáveis. | B |
-| R5.2 | Cada RNF tem **meta mensurável**, **método de verificação** ("A conformidade deve ser verificada por …"), **classificação URPS+** e **rastreabilidade**. | B |
+| R5.2 | Cada RNF tem **meta mensurável**, **método de verificação** ("A conformidade deve ser verificada por …"), **classificação URPS+** e **rastreabilidade**. Para os RNFs classificados como **Evolutivos**, a meta exigida na entrada e no aceite é o [patamar mínimo de lançamento](backlog.md#patamar-minimo-de-lancamento-dos-rnfs-evolutivos), e só o refinamento indicado nessa tabela fica para depois. | B |
 | R5.3 | Metas de desempenho e disponibilidade indicam o cenário de referência (carga, massa de dados, janela de apuração), não apenas "condições normais de uso". | B |
 | R5.4 | Regras transversais são **referenciadas**, e não repetidas: auditoria das operações sobre a sessão no RNF10, acessibilidade no RNF56, e acesso e sigilo na CP12. | R |
 | R5.5 | Se a feature trata dados pessoais ou de saúde, os RNFs de criptografia, restrição de acesso, trilha de auditoria e retenção da CP12 foram considerados. | B |
@@ -119,19 +119,22 @@ Antes de marcar os grupos de descrição e critérios como atendidos, confere-se
 | **Pronta com ressalvas** | Todos os [B] atendidos; um ou mais [R] pendentes, registrados com responsável e prazo. | Pode entrar na construção; as pendências são acompanhadas. |
 | **Não pronta** | Algum critério [B] não atendido. | Volta ao Líder de Feature com a lista dos critérios que falharam. |
 
-Uma pendência de validação com a FBr não bloqueia a entrada quando o requisito adota **parâmetro configurável com valor padrão** (R2.4) e a pendência está registrada (R4.2). Ela bloqueia quando a decisão em aberto muda o comportamento central da feature (R4.3).
+Uma pendência de validação com a FBr não bloqueia a entrada quando o requisito adota **parâmetro configurável com valor padrão** (R2.4) e a pendência está registrada (R4.2). Ela bloqueia quando a decisão em aberto muda o comportamento central da feature (R4.3) ou quando falta um documento que define uma condição essencial dela (R4.4).
+
+Um RNF evolutivo também não bloqueia a entrada por ter refinamento previsto: a feature entra com o patamar mínimo de lançamento definido para ele (R5.2).
 
 #### Registro
 
-Cada avaliação é registrada na issue da feature:
+A decisão de prontidão só vale com o **registro preenchido** num comentário da issue da feature. Marcar os itens do checklist não basta: o registro é a evidência da decisão e precisa trazer a data, o avaliador (o Líder de Feature), o revisor (outro integrante, que confirma a avaliação), o resultado e a justificativa de cada critério não atendido ou pendente. Enquanto não houver registro, a feature continua com o **DoR em avaliação** no backlog, mesmo que todos os itens estejam marcados.
 
 ```text
 Feature: <nome> (CP<n>)
 RFs: <códigos>    RNFs: <códigos>
 Data: <dd/mm/aaaa>    Avaliador: <nome>    Revisor: <nome>
 Resultado: Pronta | Pronta com ressalvas | Não pronta
-Critérios [B] não atendidos: <códigos e motivo>
-Pendências [R] e/ou com a FBr: <descrição, responsável, prazo>
+Critérios [B] não atendidos: <códigos e motivo, ou "nenhum">
+Pendências [R] e/ou com a FBr: <descrição, responsável, prazo, ou "nenhuma">
+Justificativas: <por que cada critério pendente não impede ou impede a entrada>
 ```
 
 ### 9.1.6 Situação conhecida na documentação
@@ -172,6 +175,8 @@ O DoR e o DoD marcam as duas pontas da construção de uma feature:
 
 Uma feature que não passou pelo DoR não é avaliada pelo DoD. A validação ocorre de forma incremental, acompanhando os marcos do FDD e combinando inspeções internas, testes e demonstrações com o cliente.
 
+Esta seção é a **fonte única** dos critérios de validação de cada marco. O [processo de validação (7.3)](../../unidade-1/gestao/equipe-comunicacao.md#73-processo-de-validacao) apenas explica como esses marcos se encaixam no processo da equipe e aponta para cá, sem repetir os critérios.
+
 ### 9.2.2 Checklist por marco do FDD
 
 Uma feature só é considerada **pronta** quando cumprir todos os critérios abaixo, na ordem. Cada critério indica a **evidência** que comprova o seu cumprimento: sem a evidência registrada, o critério não é marcado como atendido. Todas as evidências ficam na issue da feature no GitHub (seção 9.2.3), por anexo ou link.
@@ -208,7 +213,7 @@ Uma feature só é considerada **pronta** quando cumprir todos os critérios aba
 | D3.4 | Segurança e controle de acesso verificados. | Negações de acesso por perfil testadas ou verificadas na revisão. |
 | D3.5 | Proteção de dados sensíveis verificada (LGPD). | Verificação registrada na revisão para os dados pessoais e de saúde tratados pela feature. |
 | D3.6 | Aderência aos critérios de aceitação confirmada. | Critérios de aceitação marcados como verificados pelo revisor. |
-| D3.7 | Apontamentos da revisão corrigidos ou registrados como pendência. | Comentários da revisão resolvidos, ou pendência aberta como issue vinculada. |
+| D3.7 | Apontamentos **impeditivos** corrigidos antes da aprovação: falha de critério de aceitação, de controle de acesso, de proteção de dados, de teste ou de build. Só os apontamentos **não impeditivos** (legibilidade, organização ou otimização que não altera nenhum critério de aceitação nem RNF) podem virar pendência. | Comentários impeditivos resolvidos no próprio PR; cada pendência não impeditiva aberta como issue vinculada, com a justificativa de por que não impede. |
 
 #### 4. Promovido para a versão integrada (Promote to Build)
 
@@ -218,6 +223,7 @@ Uma feature só é considerada **pronta** quando cumprir todos os critérios aba
 | D4.2 | Testes unitários e de integração passando. | Execução dos testes na versão integrada sem falhas. |
 | D4.3 | Código integrado à base compartilhada sem quebrar a build. | PR mesclado e build da branch principal concluída com sucesso. |
 | D4.4 | Resultado registrado no GitHub, com evidências dos testes e pendências conhecidas. | Comentário na issue com o link do PR, o resultado dos testes e as pendências conhecidas. |
+| D4.5 | RNFs que restringem a feature verificados no patamar exigido: a meta completa ou, para os RNFs evolutivos, o [patamar mínimo de lançamento](backlog.md#patamar-minimo-de-lancamento-dos-rnfs-evolutivos). | Resultado de cada verificação (teste, inspeção ou relatório) no comentário da issue; o refinamento posterior dos evolutivos fica registrado como pendência. |
 
 #### 5. Demonstrada
 
@@ -245,7 +251,7 @@ Feature: <nome> (CP<n>)
 RFs: <códigos>    RNFs: <códigos>
 Inspeção de design: <data> | <participantes> | <resultado>
 Inspeção de código: <link do PR> | <revisor> | <resultado>
-Promote to Build: <link do PR mesclado> | <resultado dos testes>
+Promote to Build: <link do PR mesclado> | <resultado dos testes> | <RNFs verificados e patamar>
 Demonstração: <data> | <link da ata>
 Aceite da FBr: Aceita | Não aceita | <data> | <quem aceitou> | <link da ata ou mensagem>
 Pendências: <descrição, responsável, prazo>
