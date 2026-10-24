@@ -65,5 +65,6 @@ export type UsuarioListado = {
   situacao: z.infer<typeof situacaoUsuarioSchema>;
   conviteEnviadoEm: string | null;
   conviteExpiraEm: string | null;
+  conviteVencido: boolean;
   desativadoEm: string | null;
 };

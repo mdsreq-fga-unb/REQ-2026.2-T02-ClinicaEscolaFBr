@@ -104,6 +104,10 @@ export class UsuariosService {
           u.situacao === 'pendente_ativacao' && convite
             ? convite.expiraEm.toISOString()
             : null,
+        conviteVencido:
+          u.situacao === 'pendente_ativacao' &&
+          !!convite &&
+          convite.expiraEm.getTime() <= Date.now(),
         desativadoEm:
           u.situacao === 'desativado' && desativacao
             ? desativacao.em.toISOString()
