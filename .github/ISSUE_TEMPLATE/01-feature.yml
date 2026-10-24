@@ -194,7 +194,7 @@ body:
       options:
         - label: "R8.1 [B] A equipe entende o requisito e consegue estimá-lo sem esclarecimentos pendentes."
         - label: "R8.2 [B] A feature cabe em uma iteração (ou foi dividida sem perder a rastreabilidade)."
-        - label: "R8.3 [R] Integrações externas (e-mail, SMS, PDF) e a massa de dados de teste identificadas."
+        - label: "R8.3 [R] Integrações externas (e-mail, WhatsApp, PDF) e a massa de dados de teste identificadas."
 
   - type: textarea
     id: dor-registro

@@ -1,6 +1,6 @@
 # Projeto das features do Ciclo 3
 
-Esta página registra o processo **Projetar por Feature** do FDD para as 14 features do Ciclo 3: o modelo detalhado, os diagramas de sequência, as rotas da API, as regras ligadas aos critérios de aceitação e os dados de teste de cada feature. Ela é o material da **inspeção de design** (marco 1 do [DoD](../unidade-2/requisitos/dor-dod.md#1-design-inspecionado)). O resultado da inspeção de cada feature é registrado na sua issue.
+Esta página registra o processo **Projetar por Feature** do FDD para as 13 features do Ciclo 3 (o RF19 foi removido em 24/10/2026, por decisão da FBr): o modelo detalhado, os diagramas de sequência, as rotas da API, as regras ligadas aos critérios de aceitação e os dados de teste de cada feature. Ela é o material da **inspeção de design** (marco 1 do [DoD](../unidade-2/requisitos/dor-dod.md#1-design-inspecionado)). O resultado da inspeção de cada feature é registrado na sua issue.
 
 Os requisitos de origem estão na [seção 8.1](../unidade-2/requisitos/funcionais.md), e os itens do ciclo, no [Backlog de Produto](../unidade-2/requisitos/backlog.md#1012-itens-de-trabalho-do-mvp).
 
@@ -15,7 +15,7 @@ Os requisitos de origem estão na [seção 8.1](../unidade-2/requisitos/funciona
 
 ## Modelo detalhado do Ciclo 3
 
-O diagrama reúne as classes usadas pelas 14 features. Ele detalha o [modelo de domínio](../unidade-2/requisitos/funcionais.md) de cada CP no nível de implementação.
+O diagrama reúne as classes usadas pelas 13 features e já reflete as decisões da reunião com a FBr de 23/10/2026 ([Registro de Decisões](../unidade-2/requisitos/decisoes-fbr.md)). Ele detalha o [modelo de domínio](../unidade-2/requisitos/funcionais.md) de cada CP no nível de implementação.
 
 ```mermaid
 classDiagram
@@ -67,10 +67,6 @@ classDiagram
       +datetime decididaEm
       +bool vigente
     }
-    class AreaEspecialidade {
-      +uuid id
-      +string nome
-    }
     class Caso {
       +uuid id
       +SituacaoCaso situacao
@@ -79,7 +75,6 @@ classDiagram
     class AtribuicaoSupervisor {
       +uuid id
       +datetime atribuidoEm
-      +string justificativaExcecao
       +bool vigente
     }
     class VinculoEstagiario {
@@ -99,7 +94,9 @@ classDiagram
       +uuid id
       +datetime inicio
       +datetime termino
+      +datetime fimIntervaloAnotacoes
       +StatusSessao status
+      +datetime mensagemWhatsappEm
     }
     class LinkConfirmacao {
       +uuid id
@@ -115,10 +112,8 @@ classDiagram
     Usuario "1" --> "0..*" ConviteAtivacao
     Usuario "1" --> "0..*" SessaoLogin
     Inscricao "1" --> "0..*" DecisaoPrioridade : histórico
-    DecisaoPrioridade "0..*" --> "0..1" AreaEspecialidade : área exigida
     DecisaoPrioridade "0..*" --> "1" Usuario : decidida por
     Inscricao "1" --> "0..1" Caso
-    Usuario "0..*" --> "0..*" AreaEspecialidade : supervisor atende
     Caso "1" --> "0..*" AtribuicaoSupervisor : histórico
     AtribuicaoSupervisor "0..*" --> "1" Usuario : supervisor
     Caso "1" --> "0..*" VinculoEstagiario : histórico
@@ -133,7 +128,7 @@ classDiagram
 
 - `Perfil`: secretaria, estagiario, supervisor, coordenacao (já existe em `@clinica/shared`).
 - `SituacaoUsuario`: pendente_ativacao, ativo, desativado. Substitui a coluna booleana `ativo` da base técnica, que não representa o estado "pendente de ativação" do RF53.
-- `Canal`: celular, email.
+- `Canal`: email, whatsapp, ligacao. O SMS não é usado ([DF24](../unidade-2/requisitos/decisoes-fbr.md)); WhatsApp e ligação exigem o celular.
 - `Cor`: vermelha, amarela, verde.
 - `SituacaoCaso`: aguardando_distribuicao, aguardando_vinculo, em_atendimento, encerrado.
 - `StatusSessao`: agendada (os demais status entram com o RF14, o RF15 e o RF16 no Ciclo 4).
@@ -142,14 +137,15 @@ classDiagram
 
 - No máximo uma `DecisaoPrioridade` vigente por inscrição, uma `AtribuicaoSupervisor` vigente por caso e um `VinculoEstagiario` vigente por caso. São índices únicos parciais `WHERE vigente`.
 - Um `Prontuario` por caso e ciclo de atendimento: índice único em `(caso_id, ciclo_atendimento)`.
-- `SessaoAtendimento.termino` maior que `inicio`, garantido por restrição `CHECK`.
+- `SessaoAtendimento.termino` maior que `inicio` e `fimIntervaloAnotacoes` igual ou maior que `termino`, garantidos por restrições `CHECK`.
 
 **Parâmetros iniciais** (tabela `parametros`, alterados pela coordenação):
 
 | Chave | Valor padrão | Usado em |
 | --- | --- | --- |
-| `prazo_maximo_triagem_dias` | 7 | RF4 |
 | `duracao_sessao_minutos` | 50 | RF10 |
+| `intervalo_anotacoes_minutos` | 10 | RF10 |
+| `limite_casos_supervisor` | 50 | RF20 |
 | `validade_convite_horas` | 72 | RF53 |
 
 ---
@@ -174,7 +170,7 @@ sequenceDiagram
     W->>A: POST /auth/login
     A->>DB: busca usuário pelo e-mail
     alt usuário inexistente, senha errada ou situação diferente de ativo
-        A->>DB: soma tentativa falha (bloqueia por 15 min na 5ª, RNF49)
+        A->>DB: soma tentativa falha (bloqueia por 15 min na 3ª, RNF49)
         A-->>W: 401 com mensagem genérica
     else credenciais corretas e conta ativa
         A->>DB: cria SessaoLogin e zera tentativas
@@ -187,9 +183,10 @@ sequenceDiagram
 | --- | --- |
 | A senha é comparada com o hash (bcrypt ou Argon2), e a mesma mensagem é usada para qualquer falha | E-mail ou senha incorretos negam o acesso sem indicar o campo |
 | Só a situação `ativo` autentica | Usuário desativado (RF54) não entra; usuário pendente (RF53) também não |
+| Contador `tentativasFalhas` e `bloqueadoAte` no usuário ([DF25](../unidade-2/requisitos/decisoes-fbr.md)) | Na 3ª tentativa seguida com erro, o acesso fica bloqueado por 15 minutos |
 | O menu e as rotas são filtrados pelo perfil (`PerfisGuard`) | Usuário ativo vê apenas as funcionalidades do seu perfil |
 
-**Dados de teste:** um usuário de cada perfil, ativo; um desativado; um pendente de ativação; um com 4 tentativas falhas (para testar o bloqueio na 5ª).
+**Dados de teste:** um usuário de cada perfil, ativo; um desativado; um pendente de ativação; um com 2 tentativas falhas (para testar o bloqueio na 3ª).
 
 ### RF53 — Cadastrar usuário institucional com perfil de acesso ([#48](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/issues/48))
 
@@ -335,13 +332,13 @@ sequenceDiagram
 | --- | --- |
 | O mesmo esquema Zod é usado na interface e na API | Envio com campo obrigatório vazio é bloqueado, e os dados são mantidos |
 | A idade é calculada a partir da data de nascimento, e o responsável legal é obrigatório para menores de 18 anos | Menor de idade sem responsável legal é bloqueado |
-| Pelo menos um canal (celular ou e-mail) e o canal preferencial são obrigatórios | Formato validado, um canal exigido e o preferencial registrado |
-| CPF e RG são campos de texto, sem upload | Nenhum envio de cópia do documento |
+| Pelo menos um contato (celular ou e-mail) e o canal preferencial (e-mail, WhatsApp ou ligação) são obrigatórios; WhatsApp e ligação exigem o celular | Formato validado, um contato exigido e o preferencial registrado |
+| CPF com 11 números; RG como texto livre, como está no documento, sem órgão emissor e sem upload | Nenhum envio de cópia do documento |
 | A API só grava com `confirmado: true` | Sem confirmação, a solicitação não é registrada |
 | A interface só mostra a confirmação após a resposta 201 | Nenhuma confirmação sem registro efetivo |
 | Componente `AvisoEmergencia` fixo no layout do formulário | Aviso do CVV e do SAMU em todas as etapas |
 
-**Dados de teste:** um adulto com e-mail; um menor com responsável legal e só celular; uma inscrição com CPF em formato inválido.
+**Dados de teste:** um adulto com e-mail como canal preferencial; um menor com responsável legal, só celular e WhatsApp como canal; uma inscrição com ligação como canal e sem celular (recusada); uma inscrição com CPF em formato inválido; um RG com letra ("12.345.678-X").
 
 ### RF2 — Emitir comprovante de inscrição ([#89](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/issues/89))
 
@@ -374,7 +371,7 @@ sequenceDiagram
 
 ### RF4 — Organizar informações da inscrição para triagem ([#90](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/issues/90))
 
-**Rota:** `GET /triagem/inscricoes` (supervisor e coordenação). Devolve as inscrições sem decisão de prioridade vigente, com o campo calculado `alemDoPrazo`, que é verdadeiro quando o tempo desde `criadaEm` passa do parâmetro `prazo_maximo_triagem_dias` (padrão de 7).
+**Rota:** `GET /triagem/inscricoes` (supervisor e coordenação). Devolve as inscrições sem decisão de prioridade vigente, com o campo calculado `diasAguardando` (dias desde `criadaEm`), e aceita ordenação por esse campo. A FBr não adota prazo de triagem ([DF19](../unidade-2/requisitos/decisoes-fbr.md)), então não há sinal de "além do prazo".
 
 ```mermaid
 sequenceDiagram
@@ -382,12 +379,12 @@ sequenceDiagram
     participant A as API (triagem)
     participant DB as Banco
     S->>A: GET /triagem/inscricoes
-    A->>DB: inscrições sem decisão vigente e o parâmetro de prazo
-    A->>A: marca alemDoPrazo e deixa os campos vazios como ausentes
+    A->>DB: inscrições sem decisão vigente
+    A->>A: calcula diasAguardando e deixa os campos vazios como ausentes
     alt não há inscrições aguardando
         A-->>S: lista vazia, e a tela informa que não há pendências
     else há inscrições
-        A-->>S: número, queixa, urgência, histórico (como declaração do interessado) e o sinal de além do prazo
+        A-->>S: número, queixa, urgência, histórico (como declaração do interessado) e os dias aguardando
     end
 ```
 
@@ -396,20 +393,20 @@ sequenceDiagram
 | `@Perfis('supervisor','coordenacao')` | Usuários sem autorização não veem as respostas |
 | Campo vazio é enviado como `null`, e a interface mostra "não informado" | Campo sem resposta aparece como ausente |
 | As respostas aparecem num bloco "Declarado pelo interessado", separado da decisão da equipe | Declaração separada da avaliação da equipe |
-| Prazo vindo do parâmetro (padrão de 7 dias corridos) | Sinalização além do prazo à coordenação |
+| `diasAguardando` calculado a partir de `criadaEm` | Cada inscrição mostra há quantos dias aguarda, sem sinal de prazo |
 
-**Dados de teste:** uma inscrição de hoje; uma de 8 dias atrás sem triagem (aparece além do prazo); uma inscrição legada com o histórico vazio.
+**Dados de teste:** uma inscrição de hoje; uma de 8 dias atrás sem triagem (aparece com 8 dias aguardando, sem sinal de prazo); uma inscrição legada com o histórico vazio.
 
 ### RF6 — Registrar prioridade clínica do inscrito ([#91](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/issues/91))
 
-**Rota:** `POST /triagem/inscricoes/:id/prioridade` (supervisor e coordenação). Recebe a cor e, opcionalmente, a área de especialidade exigida. A primeira decisão cria o `Caso` com a situação `aguardando_distribuicao`.
+**Rota:** `POST /triagem/inscricoes/:id/prioridade` (supervisor e coordenação). Recebe a cor. A primeira decisão cria o `Caso` com a situação `aguardando_distribuicao`.
 
 ```mermaid
 sequenceDiagram
     actor S as Supervisor ou coordenação
     participant A as API (triagem)
     participant DB as Banco
-    S->>A: POST prioridade com cor e área opcional
+    S->>A: POST prioridade com a cor
     A->>DB: transação
     A->>DB: decisão anterior deixa de ser vigente
     A->>DB: nova DecisaoPrioridade vigente com autor e data/hora
@@ -423,7 +420,6 @@ sequenceDiagram
 | Histórico com `vigente` e índice único parcial | A alteração mantém a decisão anterior no histórico |
 | A tela mostra a referência vermelha/amarela/verde como texto, sem cor pré-selecionada | Nenhuma sugestão automática de cor |
 | Sem decisão vigente, a fila e a distribuição tratam o caso como pendente | Inscrição sem classificação aparece como pendente |
-| A área é opcional e fica na decisão vigente | A área exigida fica disponível para o RF20 |
 
 **Dados de teste:** uma inscrição sem decisão; uma com decisão amarela que muda para vermelha; uma secretaria tentando registrar (recebe 403).
 
@@ -453,58 +449,45 @@ sequenceDiagram
 
 ### RF19 — Registrar áreas de especialidade do supervisor ([#93](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/issues/93))
 
+**Removido em 24/10/2026.** A FBr não divide os atendimentos por área de especialidade ([DF26](../unidade-2/requisitos/decisoes-fbr.md)). Não há rotas nem tabelas de áreas no Ciclo 3.
+
+### RF20 — Distribuir caso a supervisor ([#94](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/issues/94))
+
 **Rotas:**
-- `GET /areas`;
-- `POST /areas` (coordenação), para o catálogo;
-- `PUT /supervisores/:id/areas` (coordenação), que recebe a lista de áreas do supervisor.
-
-Remover uma área do supervisor não mexe nas atribuições já feitas.
+- `GET /supervisores/disponibilidade` (coordenação): devolve os supervisores ativos com a contagem de casos ativos (com atribuição vigente e situação diferente de `encerrado`) e o parâmetro `limite_casos_supervisor` (padrão de 50).
+- `POST /casos/:id/supervisor` (coordenação): recebe o supervisor.
 
 ```mermaid
 sequenceDiagram
     actor C as Coordenação
     participant A as API (casos)
     participant DB as Banco
-    C->>A: GET /areas
-    alt catálogo vazio
-        A-->>C: lista vazia, e a tela orienta cadastrar a primeira área
-    end
-    C->>A: POST /areas com o nome
-    A->>DB: grava a área no catálogo
-    C->>A: PUT /supervisores/:id/areas com a lista de áreas
-    A->>DB: substitui as associações, sem tocar nas atribuições de casos
-    A-->>C: áreas do supervisor atualizadas
-```
-
-**Dados de teste:** catálogo vazio; catálogo com "Infância e adolescência", "Adultos" e "Casal e família"; um supervisor com duas áreas.
-
-### RF20 — Distribuir caso a supervisor conforme área de especialidade ([#94](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/issues/94))
-
-**Rota:** `POST /casos/:id/supervisor` (coordenação). Recebe o supervisor e uma `justificativaExcecao`, obrigatória quando não há compatibilidade de área.
-
-```mermaid
-sequenceDiagram
-    actor C as Coordenação
-    participant A as API (casos)
-    participant DB as Banco
+    C->>A: GET /supervisores/disponibilidade
+    A-->>C: supervisores com "casos ativos de limite"
     C->>A: POST /casos/:id/supervisor
-    A->>DB: busca a atribuição vigente e a área exigida pelo caso
+    A->>DB: busca a atribuição vigente e conta os casos ativos do supervisor
     alt o caso já tem supervisor
         A-->>C: 409 use a transferência de caso (RF25)
-    else área exigida e supervisor sem essa área, sem justificativa
-        A-->>C: 422 nenhum supervisor compatível, informe a justificativa
-    else compatível, sem área exigida ou com justificativa
+    else supervisor no limite de casos
+        A-->>C: 422 limite de casos atingido
+    else supervisor abaixo do limite
         A->>DB: AtribuicaoSupervisor vigente com autor e data e situação aguardando_vinculo
         A->>DB: auditoria (RNF18)
         A-->>C: caso distribuído
     end
 ```
 
-**Dados de teste:** um caso com área "Infância e adolescência" e um supervisor compatível; um caso com área que nenhum supervisor atende; um caso sem área; um caso já distribuído.
+| Regra | Critério de aceitação |
+| --- | --- |
+| A contagem e a atribuição acontecem na mesma transação, com bloqueio da linha do supervisor | Supervisor no limite não recebe novo caso, mesmo com duas distribuições simultâneas |
+| Limite vindo do parâmetro `limite_casos_supervisor` ([DF17](../unidade-2/requisitos/decisoes-fbr.md)) | A lista mostra "12 de 50" e o motivo quando o supervisor está no limite |
+| `@Perfis('coordenacao')` | Usuário sem perfil de coordenação não distribui casos |
+
+**Dados de teste:** um supervisor com 12 casos; um supervisor com 50 casos (no limite); todos os supervisores no limite (mensagem de nenhum disponível); um caso já distribuído.
 
 ### RF21 — Vincular paciente a estagiário responsável ([#95](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/issues/95))
 
-**Rota:** `POST /casos/:id/estagiario` (supervisor responsável pelo caso). Mostra como opções apenas estagiários com a situação `ativo`. O vínculo e a criação do prontuário (RF66) acontecem na mesma transação. Até a resposta da FBr sobre o atendimento em dupla (RN5.9), o caso tem um único vínculo vigente, garantido por índice único parcial.
+**Rota:** `POST /casos/:id/estagiario` (supervisor responsável pelo caso). Mostra como opções apenas estagiários com a situação `ativo`. O vínculo e a criação do prontuário (RF66) acontecem na mesma transação. O caso tem um único estagiário responsável vigente, garantido por índice único parcial; os estagiários de apoio só observam e não são vinculados ([DF27](../unidade-2/requisitos/decisoes-fbr.md)).
 
 ```mermaid
 sequenceDiagram
@@ -535,9 +518,9 @@ sequenceDiagram
 
 ### RF10 — Agendar sessão do paciente ([#96](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/issues/96))
 
-**Rota:** `POST /sessoes` (secretaria, ou o estagiário responsável pelo caso). Recebe o caso, o início e, opcionalmente, o término. Sem término, ele é calculado com o parâmetro `duracao_sessao_minutos` (padrão de 50).
+**Rota:** `POST /sessoes` (secretaria, ou o estagiário responsável pelo caso). Recebe o caso, o início e, opcionalmente, o término. Sem término, ele é calculado com o parâmetro `duracao_sessao_minutos` (padrão de 50). O fim do intervalo para anotações é `termino + intervalo_anotacoes_minutos` (padrão de 10) ([DF18](../unidade-2/requisitos/decisoes-fbr.md)).
 
-**Escopo no Ciclo 3:** o agendamento gera o link de confirmação e o envia por e-mail. O envio por SMS e a página que confirma a presença entram com o RF14, no Ciclo 4.
+**Escopo no Ciclo 3:** o agendamento gera o link de confirmação. Com e-mail como canal preferencial, a API envia o link por e-mail; com WhatsApp ou ligação, a resposta traz a mensagem pronta e o endereço `https://wa.me/55<celular>?text=<mensagem>`, e a interface mostra o botão "Enviar pelo WhatsApp", que chama `POST /sessoes/:id/whatsapp` para registrar `mensagemWhatsappEm` ([DF24](../unidade-2/requisitos/decisoes-fbr.md)). O SMS não é usado. A página que confirma a presença entra com o RF14, no Ciclo 4.
 
 ```mermaid
 sequenceDiagram
@@ -556,14 +539,18 @@ sequenceDiagram
     else horário livre
         A->>DB: SessaoAtendimento agendada e LinkConfirmacao
         A->>DB: auditoria (RNF10)
-        A->>M: envia o link de confirmação de presença
-        A-->>U: sessão agendada
+        alt canal preferencial e-mail
+            A->>M: envia o link de confirmação de presença
+            A-->>U: sessão agendada, link enviado por e-mail
+        else canal WhatsApp ou ligação
+            A-->>U: sessão agendada, com a mensagem pronta e o endereço do WhatsApp
+        end
     end
 ```
 
-**Regra de sobreposição:** existe conflito quando outra sessão `agendada` do mesmo estagiário ou do mesmo paciente tem `inicio < novoTermino` e `termino > novoInicio`. Como as desigualdades são estritas, uma sessão que termina às 14h50 não conflita com outra que começa às 14h50.
+**Regra de sobreposição:** para o mesmo estagiário, existe conflito quando outra sessão `agendada` tem `inicio < novoFimIntervalo` e `fimIntervaloAnotacoes > novoInicio`; para o mesmo paciente, quando `inicio < novoTermino` e `termino > novoInicio`. Como as desigualdades são estritas, uma sessão do estagiário das 14h00 às 14h50, com anotações até as 15h00, não conflita com outra que começa às 15h00.
 
-**Dados de teste:** uma sessão existente das 14h00 às 14h50 e as tentativas às 14h30 (bloqueada) e às 14h50 (permitida); um paciente sem estagiário; um estagiário que não é o responsável; um término anterior ao início.
+**Dados de teste:** uma sessão existente das 14h00 às 14h50, com anotações até as 15h00, e as tentativas do mesmo estagiário às 14h50 (bloqueada) e às 15h00 (permitida); um paciente com e-mail e outro com WhatsApp como canal; um paciente sem estagiário; um estagiário que não é o responsável; um término anterior ao início.
 
 ---
 

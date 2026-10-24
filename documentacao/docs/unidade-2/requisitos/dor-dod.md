@@ -97,7 +97,7 @@ Os critérios **[B]** são **bloqueantes**: sem eles, a feature não entra na co
 | ---- | -------- | ---- |
 | R8.1 | A equipe de desenvolvimento entende o requisito e consegue estimá-lo sem esclarecimentos pendentes. | B |
 | R8.2 | A feature cabe em uma iteração. Se não couber, foi dividida em partes menores sem perder a rastreabilidade. | B |
-| R8.3 | Integrações externas (envio de e-mail e SMS, geração de PDF) e a massa de dados necessária para teste estão identificadas. | R |
+| R8.3 | Integrações externas (envio de e-mail, mensagem pronta de WhatsApp, geração de PDF) e a massa de dados necessária para teste estão identificadas. | R |
 
 ### 9.1.4 Verificação rápida da redação
 
@@ -139,7 +139,7 @@ Justificativas: <por que cada critério pendente não impede ou impede a entrada
 
 ### 9.1.6 Situação conhecida na documentação
 
-Com base na Seção 8.1 consultada em 08/10/2026, os pontos abaixo afetam a avaliação e devem ser conferidos antes de cada feature entrar na construção.
+Com base na Seção 8.1 consultada em 08/10/2026 e atualizada em 24/10/2026 com as decisões de 23/10, os pontos abaixo afetam a avaliação e devem ser conferidos antes de cada feature entrar na construção.
 
 | Requisito ou CP | Situação registrada | Efeito no DoR |
 | --------------- | ------------------- | ------------- |
@@ -147,11 +147,11 @@ Com base na Seção 8.1 consultada em 08/10/2026, os pontos abaixo afetam a aval
 | RF5 (pontos de atenção) | Adiado; depende de regras aprovadas e vigentes pela coordenação. | R1.4 e R4.4: precisa das regras versionadas. |
 | RF12 (reagendamento) | Entrega posterior; hoje é feito por cancelamento (RF15/RF16) e nova sessão (RF10). | R1.4. |
 | RF13 (lembrete automático) | Entrega posterior; o RF14 funciona sem ele. | R1.4. |
-| RF4 (triagem) | Prazo máximo para triagem a confirmar com a FBr. | R2.4 e R4.2: registrar como parâmetro com valor padrão. |
-| CP5 (distribuição) | Ordem de prioridade (RN5.4), limite de casos simultâneos (RN5.8) e atendimento em dupla (RN5.9) dependem da FBr. | R4.1 e R4.2: registrar a pendência e o padrão adotado. |
+| RF4 (triagem) | Resolvido em 23/10/2026: a FBr não adota prazo de triagem ([DF19](decisoes-fbr.md)); a lista mostra há quantos dias cada inscrição aguarda. | Nenhum: R2.4 deixa de se aplicar ao prazo. |
+| CP5 (distribuição) | Resolvido em 23/10/2026: desempate pela data de inscrição, limite de 50 casos por supervisor, sem limite por estagiário, um estagiário responsável por caso e sem área de especialidade ([DF16, DF17, DF26 e DF27](decisoes-fbr.md)). | Nenhum. |
 | RF57 (consentimento) | Base legal depende da FBr, como controladora dos dados. | R6.4: pendência registrada. |
-| Parâmetros de agendamento | Duração da sessão (50 min), antecedência do lembrete (24 h), prazo de confirmação (12 h) e antecedência mínima de cancelamento (24 h) são propostas a validar. | R2.4: atendido pelo parâmetro configurável. |
-| RNF12 | Carga de referência de 30 usuários simultâneos é estimativa a validar. | R5.3: atendido, com validação pendente. |
+| Parâmetros de agendamento | Confirmados em 23/10/2026: sessão de 50 min mais 10 min de anotações, lembrete 24 h antes e cancelamento sem falta até 1 h antes ([DF18, DF20 e DF21](decisoes-fbr.md)). O prazo de confirmação (12 h) segue como proposta a validar. | R2.4: atendido pelo parâmetro configurável. |
+| RNF12 | Carga de referência de 30 usuários simultâneos confirmada em 23/10/2026 ([DF22](decisoes-fbr.md)). | R5.3: atendido. |
 
 ### 9.1.7 Relação com os demais documentos
 

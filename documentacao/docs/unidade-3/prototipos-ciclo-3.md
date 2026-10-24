@@ -2,6 +2,9 @@
 
 Os protótipos das telas do Ciclo 3 foram gerados com uma ferramenta de prototipação assistida por IA (Claude Design), a partir dos requisitos funcionais e não funcionais da [seção 8](../unidade-2/requisitos/funcionais.md) e do [projeto das features do Ciclo 3](projeto-features-ciclo-3.md). A equipe conferiu cada tela contra os critérios de aceitação e os RNFs de acessibilidade (RNF56 a RNF58) e pediu as correções necessárias, como a da distribuição de casos, que é feita somente pela coordenação (RF20). A revisão final de cada tela faz parte da inspeção de design da feature, registrada na sua issue.
 
+!!! info "Ajustes da validação com a FBr (23/10/2026)"
+    A FBr aprovou estes protótipos na [reunião de 23/10/2026](reunioes.md#reuniao-de-validacao-do-prototipo-do-ciclo-3-com-a-fbr), com ajustes que estão sendo aplicados às imagens: sem área de especialidade (o RF19 foi removido e o RF20 passa a mostrar os casos ativos de cada supervisor em relação ao limite de 50), canal preferencial entre e-mail, WhatsApp e ligação, sem SMS, triagem sem o selo "Além do prazo", bloqueio do login na 3ª tentativa, sessão de 50 minutos mais 10 de anotações com o botão "Enviar pelo WhatsApp" no agendamento e prontuário da secretaria sem a contribuição social. As decisões estão no [Registro de Decisões com a FBr](../unidade-2/requisitos/decisoes-fbr.md).
+
 As telas estão organizadas pelo fluxo do sistema, uma seção por feature. Cada imagem reúne os estados da tela (padrão, erro, vazio, acesso negado), identificados no topo de cada quadro. As páginas públicas aparecem no computador (1366 px) e no celular (360 px). Os dados mostrados são fictícios. Clique numa imagem para abri-la em tamanho original.
 
 Para ver os detalhes de cada tela, os protótipos completos também estão em PDF, em alta resolução.
@@ -70,13 +73,7 @@ Para ver os detalhes de cada tela, os protótipos completos também estão em PD
 
 [![Casos aguardando distribuição: lista da coordenação, celular, estado vazio e visão do supervisor](../assets/prototipos-ciclo-3/4-1-casos-aguardando.webp)](../assets/prototipos-ciclo-3/4-1-casos-aguardando.webp){ target="_blank" }
 
-### RF19 — Registrar áreas de especialidade do supervisor { #rf19 }
-
-[RF19](../unidade-2/requisitos/funcionais.md#rf19) · issue [#93](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/issues/93). Catálogo de áreas, áreas atendidas por supervisor, cadastro de nova área e catálogo vazio.
-
-[![Áreas de especialidade: catálogo, áreas por supervisor, nova área e catálogo vazio](../assets/prototipos-ciclo-3/4-2-areas.webp)](../assets/prototipos-ciclo-3/4-2-areas.webp){ target="_blank" }
-
-### RF20 — Distribuir caso a supervisor conforme área de especialidade { #rf20 }
+### RF20 — Distribuir caso a supervisor { #rf20 }
 
 [RF20](../unidade-2/requisitos/funcionais.md#rf20) · issue [#94](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/issues/94). Painel de distribuição da coordenação, exceção sem supervisor compatível, caso que já tem supervisor e o fluxo de três passos no celular.
 
