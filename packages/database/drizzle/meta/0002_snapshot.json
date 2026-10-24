@@ -1,5 +1,5 @@
 {
-  "id": "39a16183-f111-4fdd-9e84-70106f1cb128",
+  "id": "ad0e2124-2082-4853-9231-abf504bb5f77",
   "prevId": "b38d0230-455e-41cc-af89-564b64bb9521",
   "version": "7",
   "dialect": "postgresql",
@@ -623,28 +623,26 @@
           "primaryKey": false,
           "notNull": true,
           "default": "now()"
-        },
-        "vigente": {
-          "name": "vigente",
-          "type": "boolean",
-          "primaryKey": false,
-          "notNull": true,
-          "default": true
         }
       },
       "indexes": {
-        "decisoes_prioridade_vigente_unica": {
-          "name": "decisoes_prioridade_vigente_unica",
+        "decisoes_prioridade_inscricao": {
+          "name": "decisoes_prioridade_inscricao",
           "columns": [
             {
               "expression": "inscricao_id",
               "isExpression": false,
               "asc": true,
               "nulls": "last"
+            },
+            {
+              "expression": "decidida_em",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
             }
           ],
-          "isUnique": true,
-          "where": "\"decisoes_prioridade\".\"vigente\"",
+          "isUnique": false,
           "concurrently": false,
           "method": "btree",
           "with": {}

@@ -69,8 +69,7 @@ CREATE TABLE "decisoes_prioridade" (
 	"inscricao_id" uuid NOT NULL,
 	"cor_cifrada" text NOT NULL,
 	"decidida_por" uuid NOT NULL,
-	"decidida_em" timestamp with time zone DEFAULT now() NOT NULL,
-	"vigente" boolean DEFAULT true NOT NULL
+	"decidida_em" timestamp with time zone DEFAULT now() NOT NULL
 );
 --> statement-breakpoint
 CREATE TABLE "vinculos_estagiario" (
@@ -164,7 +163,7 @@ ALTER TABLE "prontuarios" ADD CONSTRAINT "prontuarios_vinculo_origem_id_vinculos
 ALTER TABLE "prontuarios" ADD CONSTRAINT "prontuarios_dados_iniciais_por_usuarios_id_fk" FOREIGN KEY ("dados_iniciais_por") REFERENCES "public"."usuarios"("id") ON DELETE no action ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "parametros" ADD CONSTRAINT "parametros_alterado_por_usuarios_id_fk" FOREIGN KEY ("alterado_por") REFERENCES "public"."usuarios"("id") ON DELETE no action ON UPDATE no action;--> statement-breakpoint
 CREATE UNIQUE INDEX "atribuicoes_supervisor_vigente_unica" ON "atribuicoes_supervisor" USING btree ("caso_id") WHERE "atribuicoes_supervisor"."vigente";--> statement-breakpoint
-CREATE UNIQUE INDEX "decisoes_prioridade_vigente_unica" ON "decisoes_prioridade" USING btree ("inscricao_id") WHERE "decisoes_prioridade"."vigente";--> statement-breakpoint
+CREATE INDEX "decisoes_prioridade_inscricao" ON "decisoes_prioridade" USING btree ("inscricao_id","decidida_em");--> statement-breakpoint
 CREATE UNIQUE INDEX "vinculos_estagiario_vigente_unico" ON "vinculos_estagiario" USING btree ("caso_id") WHERE "vinculos_estagiario"."vigente";--> statement-breakpoint
 CREATE INDEX "sessoes_estagiario_inicio" ON "sessoes_atendimento" USING btree ("estagiario_id","inicio");--> statement-breakpoint
 CREATE INDEX "sessoes_caso_inicio" ON "sessoes_atendimento" USING btree ("caso_id","inicio");--> statement-breakpoint
@@ -194,3 +193,7 @@ ALTER TABLE "sessoes_atendimento" ADD CONSTRAINT "sessoes_estagiario_sem_sobrepo
 ALTER TABLE "sessoes_atendimento" ADD CONSTRAINT "sessoes_caso_sem_sobreposicao"
   EXCLUDE USING gist ("caso_id" WITH =, tstzrange("inicio", "termino", '[)') WITH &&)
   WHERE ("status" = 'agendada');
+--> statement-breakpoint
+-- O histórico das decisões de prioridade é somente inserção (RNF5).
+CREATE TRIGGER "decisoes_prioridade_somente_insercao" BEFORE UPDATE OR DELETE ON "decisoes_prioridade"
+  FOR EACH ROW EXECUTE FUNCTION "impedir_alteracao_registro"();

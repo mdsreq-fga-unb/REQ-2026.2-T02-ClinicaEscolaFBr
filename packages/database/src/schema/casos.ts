@@ -6,6 +6,7 @@ import {
   pgTable,
   text,
   timestamp,
+  index,
   uniqueIndex,
   uuid,
 } from "drizzle-orm/pg-core";
@@ -15,7 +16,8 @@ import { inscricoes } from "./inscricao";
 
 export const situacaoCasoEnum = pgEnum("situacao_caso", SITUACOES_CASO);
 
-// Decisão de prioridade clínica (RF6), com histórico: só uma vigente por inscrição.
+// Decisão de prioridade clínica (RF6). O histórico é somente inserção (RNF5): a decisão
+// vigente é a mais recente da inscrição, e nenhuma decisão anterior é alterada.
 // Não há área de especialidade (DF26). A cor é dado de saúde e fica cifrada (RNF51),
 // com o valor de CORES (@clinica/shared) validado pela aplicação antes de cifrar.
 export const decisoesPrioridade = pgTable(
@@ -32,12 +34,9 @@ export const decisoesPrioridade = pgTable(
     decididaEm: timestamp("decidida_em", { withTimezone: true })
       .notNull()
       .defaultNow(),
-    vigente: boolean("vigente").notNull().default(true),
   },
   (t) => [
-    uniqueIndex("decisoes_prioridade_vigente_unica")
-      .on(t.inscricaoId)
-      .where(sql`${t.vigente}`),
+    index("decisoes_prioridade_inscricao").on(t.inscricaoId, t.decididaEm),
   ],
 );
 
