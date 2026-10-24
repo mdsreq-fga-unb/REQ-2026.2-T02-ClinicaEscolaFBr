@@ -7,9 +7,10 @@ Os protótipos das telas do Ciclo 3 foram gerados com uma ferramenta de prototip
 
 As telas estão organizadas pelo fluxo do sistema, uma seção por feature. Cada imagem reúne os estados da tela (padrão, erro, vazio, acesso negado), identificados no topo de cada quadro. As páginas públicas aparecem no computador (1366 px) e no celular (360 px). Os dados mostrados são fictícios. Clique numa imagem para abri-la em tamanho original.
 
-O PDF abaixo, em alta resolução, é a versão de 19/10/2026, anterior aos ajustes da validação; as imagens desta página são a versão vigente.
+Os protótipos também podem ser abertos no próprio Claude Design, onde é possível navegar entre as telas, e em PDF, em alta resolução. As duas versões são a de 24/10/2026, com os ajustes da validação.
 
-[:material-file-pdf-box: Abrir a versão de 19/10 em PDF (25 MB)](../assets/prototipos-ciclo-3/prototipos-ciclo-3.pdf){ .md-button target="_blank" rel="noopener" }
+[:material-palette-outline: Abrir no Claude Design](https://claude.ai/artifact/Ad1CLwRmS2AFtZHDj8vtwo#page-dcb81aee8d83){ .md-button .md-button--primary target="_blank" rel="noopener" }
+[:material-file-pdf-box: Abrir em PDF (24 MB)](../assets/prototipos-ciclo-3/prototipos-ciclo-3.pdf){ .md-button target="_blank" rel="noopener" }
 
 ## 1. Público: inscrição e comprovante
 
