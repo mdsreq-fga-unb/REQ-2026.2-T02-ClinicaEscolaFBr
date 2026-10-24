@@ -11,6 +11,7 @@ Os requisitos de origem estão na [seção 8.1](../unidade-2/requisitos/funciona
 - **Validação:** esquemas Zod em `packages/shared`, usados tanto pela API quanto pela interface.
 - **Auditoria:** toda operação que altera dados relevantes chama o `AuditoriaService`, que grava na tabela `auditoria` (somente inserção) o autor, a operação, a entidade, o estado anterior e o novo.
 - **Datas:** gravadas com fuso horário (`timestamptz`) e exibidas no horário de Brasília.
+- **Criptografia em repouso (RNF51):** os dados de saúde (queixa, percepção de urgência, histórico, prioridade clínica e dados iniciais do prontuário) ficam em colunas `*_cifrada`, cifradas com AES-256-GCM pela aplicação (`apps/api/src/common/criptografia.ts`). A chave fica na variável `CHAVE_DADOS`, fora do banco e do repositório. Como a cor fica cifrada, as listas ordenadas pela prioridade (RF18) são ordenadas na aplicação, depois de decifrar.
 - **Dados de teste:** sempre fictícios. Nenhum dado real de paciente entra no repositório, no banco de desenvolvimento ou em prints.
 
 ## Modelo detalhado do Ciclo 3
@@ -56,14 +57,14 @@ classDiagram
       +string celular
       +string email
       +Canal canalPreferencial
-      +string queixa
-      +string percepcaoUrgencia
-      +string historicoRelevante
+      +string queixaCifrada
+      +string percepcaoUrgenciaCifrada
+      +string historicoRelevanteCifrado
       +datetime criadaEm
     }
     class DecisaoPrioridade {
       +uuid id
-      +Cor cor
+      +string corCifrada
       +datetime decididaEm
       +bool vigente
     }
@@ -86,8 +87,8 @@ classDiagram
       +uuid id
       +int cicloAtendimento
       +datetime criadoEm
-      +string anamnese
-      +string contrato
+      +string anamneseCifrada
+      +string contratoCifrado
       +date dataAssinaturaContrato
     }
     class SessaoAtendimento {
@@ -158,7 +159,7 @@ classDiagram
 - `POST /auth/login` (pública): recebe e-mail e senha e devolve um cookie de sessão `httpOnly`.
 - `POST /auth/logout`.
 
-O `SessaoGuard` valida a sessão em cada requisição e preenche `req.usuario`, que o `PerfisGuard` já usa.
+O `SessaoGuard` valida a sessão em cada requisição e preenche `req.usuario`, que o `PerfisGuard` já usa. A cada requisição válida, ele renova `expiraEm` para 30 minutos depois, e a sessão parada por 30 minutos expira (RNF50). O cookie é `httpOnly`, `Secure` e `SameSite=Lax`, e só o hash do token fica no banco.
 
 ```mermaid
 sequenceDiagram
@@ -322,7 +323,7 @@ sequenceDiagram
         I->>W: confirma o envio
         W->>A: POST /inscricoes com confirmado igual a true
         A->>A: valida de novo no servidor
-        A->>DB: grava a inscrição e gera o número único
+        A->>DB: cifra a queixa, a urgência e o histórico, grava a inscrição e gera o número único
         A-->>W: 201 com número, data e hora
         W-->>I: confirmação e comprovante (RF2)
     end
@@ -335,6 +336,8 @@ sequenceDiagram
 | Pelo menos um contato (celular ou e-mail) e o canal preferencial (e-mail, WhatsApp ou ligação) são obrigatórios; WhatsApp e ligação exigem o celular | Formato validado, um contato exigido e o preferencial registrado |
 | CPF com 11 números; RG como texto livre, como está no documento, sem órgão emissor e sem upload | Nenhum envio de cópia do documento |
 | A API só grava com `confirmado: true` | Sem confirmação, a solicitação não é registrada |
+| Número no formato `AAAA-NNNNN`, com o ano do registro e a sequência `inscricoes_numero_seq`, que não reinicia a cada ano | Cada inscrição recebe um número único, como "2026-00487" |
+| Queixa, urgência e histórico são cifrados antes de gravar (RNF51) | Nenhum desses campos aparece legível no banco |
 | A interface só mostra a confirmação após a resposta 201 | Nenhuma confirmação sem registro efetivo |
 | Componente `AvisoEmergencia` fixo no layout do formulário | Aviso do CVV e do SAMU em todas as etapas |
 
@@ -429,7 +432,7 @@ sequenceDiagram
 
 ### RF18 — Listar casos aguardando distribuição ([#92](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/issues/92))
 
-**Rota:** `GET /casos/aguardando-distribuicao` (coordenação e supervisor). Devolve os casos com a situação `aguardando_distribuicao`, ordenados pela cor (vermelha, amarela, verde) e pela data da inscrição, da mais antiga para a mais recente. Cada item traz só o número da inscrição, o nome, a cor e a data.
+**Rota:** `GET /casos/aguardando-distribuicao` (coordenação e supervisor). Devolve os casos com a situação `aguardando_distribuicao`, ordenados pela cor (vermelha, amarela, verde, decifrada na aplicação) e pela data da inscrição, da mais antiga para a mais recente. Cada item traz só o número da inscrição, o nome, a cor e a data.
 
 ```mermaid
 sequenceDiagram
@@ -547,6 +550,8 @@ sequenceDiagram
         end
     end
 ```
+
+**Garantia no banco (RNF9):** além da verificação na API, duas restrições de exclusão na tabela `sessoes_atendimento` impedem a sobreposição mesmo com duas requisições simultâneas; a API traduz a violação em 409.
 
 **Regra de sobreposição:** para o mesmo estagiário, existe conflito quando outra sessão `agendada` tem `inicio < novoFimIntervalo` e `fimIntervaloAnotacoes > novoInicio`; para o mesmo paciente, quando `inicio < novoTermino` e `termino > novoInicio`. Como as desigualdades são estritas, uma sessão do estagiário das 14h00 às 14h50, com anotações até as 15h00, não conflita com outra que começa às 15h00.
 

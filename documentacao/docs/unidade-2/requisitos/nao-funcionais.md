@@ -292,7 +292,7 @@ As telas de distribuição de casos e de consulta de responsáveis devem exibir,
 | Supervisor                | Os mesmos campos da secretaria, para os próprios casos e os dos seus estagiários (RF23) |
 | Coordenação                | Todos os campos acima, sem restrição de caso |
 
-Nenhum perfil sem acesso ao prontuário (RF55, CP12) deve visualizar dado clínico (queixa, prioridade, evolução) nessas telas.
+Nenhum perfil sem acesso ao prontuário (RF55, CP12) deve visualizar dado clínico (queixa, evolução) nessas telas. A única exceção é a prioridade clínica (vermelha, amarela ou verde), que aparece na lista de casos aguardando distribuição e no painel de distribuição (RF18 e RF20) para a coordenação e os supervisores, porque a ordem de distribuição segue a prioridade, como confirmado pela Clínica Escola ([DF16](decisoes-fbr.md)); a queixa e as demais informações de triagem continuam ocultas. Exceção registrada em 24/10/2026, na inspeção de design do RF18, para resolver a contradição com o RF18.
 
 A conformidade deve ser verificada por revisão das telas por perfil, comparando o conteúdo exibido com a matriz acima, e por teste do conteúdo efetivamente exibido, confirmando a ausência de campos clínicos para perfis sem acesso ao prontuário.
 
