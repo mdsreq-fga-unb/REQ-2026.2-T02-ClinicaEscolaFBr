@@ -53,6 +53,8 @@ jobs:
       WEB_URL: http://localhost:3000
       SMTP_HOST: localhost
       SMTP_PORT: 1025
+      # Chave só de teste, sem dados reais (RNF51).
+      CHAVE_DADOS: AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=
       NEXT_PUBLIC_API_URL: http://localhost:3333
     steps:
       - uses: actions/checkout@v7
