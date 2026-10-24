@@ -261,8 +261,8 @@ sequenceDiagram
 ### RF55 — Restringir acesso ao prontuário do paciente ([#50](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/issues/50))
 
 **Escopo no Ciclo 3:**
-- **O que entra agora:** a regra de acesso protege o prontuário criado pelo RF66 e os seus dados iniciais.
-- **O que entra depois:** a mesma política passa a valer para a evolução (CP7, a partir do Ciclo 4). O critério da transferência entre estagiários é verificado quando a transferência (RF25) for construída, no Ciclo 4. O relatório final (CP8) está fora do MVP.
+- **O que entra agora:** a regra de acesso protege o prontuário criado pelo RF66; os dados iniciais (RF69) entram no Ciclo 4 sob a mesma regra.
+- **O que entra depois:** a mesma política passa a valer para a evolução (CP7, a partir do Ciclo 4). O critério da transferência entre estagiários é verificado quando a transferência (RF25) for construída, no Ciclo 4, e a política passa a proteger também o relatório final (RF33) no Ciclo 6.
 
 **Rotas:**
 - `GET /prontuarios/:id`: estagiário responsável e supervisor do caso.
