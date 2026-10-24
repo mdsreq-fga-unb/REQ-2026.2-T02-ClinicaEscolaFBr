@@ -114,6 +114,9 @@ _Figura 16 — Registro da reunião de validação do protótipo do Ciclo 3 com 
 
 [Consultar ata completa em PDF](../assets/atas-reunioes/Ata_Reuniao_Ciclo3_Validacao_Prototipo_FBr_23-10-2026.pdf)
 
+!!! note "Correção de 24/10/2026"
+    Conferido com a gravação da reunião, o resumo abaixo corrige três pontos da ata em PDF: o e-mail continua como canal de contato (só o SMS foi descartado), as 2 faltas que levam ao desligamento valem consecutivas ou não, e os 10 dias para o pagamento contam do vínculo com o estagiário. Também registra a ausência de prazo de triagem, dita na reunião e não incluída na ata. As decisões estão no [Registro de Decisões com a FBr](../unidade-2/requisitos/decisoes-fbr.md).
+
 ### Objetivo
 
 Apresentar o andamento do projeto e o protótipo de alta fidelidade do Ciclo 3 à Clínica Escola FBr, validando as regras de negócio pendentes antes do início do desenvolvimento.
@@ -124,15 +127,16 @@ A equipe apresentou à FBr o protótipo de alta fidelidade das funcionalidades d
 
 ### 1. Regras de negócio definidas
 
-- **Prazo de pagamento:** o paciente selecionado terá 10 dias para pagar e efetivar a vaga.
+- **Prazo de pagamento:** o paciente selecionado terá 10 dias para pagar e efetivar a vaga, contados do vínculo com o estagiário. Sem pagamento, perde a vaga e volta para a fila.
 - **Prioridade em caso de empate:** considerar primeiro a gravidade clínica e, em seguida, a data de inscrição.
 - **Limite de casos:** cada supervisor poderá acompanhar até 50 casos, limite ajustado para comportar o crescimento do número de estagiários. Para estagiários, não haverá limite fixo; a quantidade dependerá da disponibilidade.
 - **Duração da sessão:** 50 minutos de atendimento, seguidos de 10 minutos para anotações.
-- **Cancelamento pelo paciente:** permitido até 1 hora antes da sessão, com justificativa. O limite é de 2 cancelamentos ou faltas consecutivos.
+- **Cancelamento pelo paciente:** permitido até 1 hora antes da sessão, com justificativa. O desligamento continua ao atingir 2 faltas no ciclo, consecutivas ou não, e o cancelamento fora desse prazo conta como falta.
 - **Lembrete de sessão:** notificação automática enviada com até 24 horas de antecedência.
 - **Capacidade simultânea:** estimativa de 30 usuários em horário de pico.
 - **Registro de evolução:** campos obrigatórios para data, evolução da queixa (até 10 linhas) e planejamento. Deve haver fechamento avaliativo a cada 10 sessões.
-- **Canais de contato:** WhatsApp e ligação telefônica. E-mail e SMS foram descartados devido ao baixo acesso tecnológico do público.
+- **Canais de contato:** o paciente escolhe entre e-mail, WhatsApp e ligação. Quem escolhe e-mail recebe as mensagens automáticas; quem escolhe WhatsApp ou ligação é contatado pela secretaria. O SMS foi descartado devido ao baixo acesso tecnológico do público.
+- **Prazo de triagem:** a clínica não adota prazo de triagem; a inscrição aguarda conforme as vagas e só é chamada quando uma vaga é liberada.
 - **Login:** o acesso será bloqueado por 15 minutos após 3 tentativas incorretas, reduzidas de 5 para 3 por sugestão da coordenação de Psicologia.
 - **Especialidades:** não haverá divisão por área; todos os atendimentos serão tratados como psicologia clínica geral. O conceito de área de especialidade será removido do cadastro, dos critérios de distribuição e dos itens de menu.
 
@@ -141,7 +145,7 @@ A equipe apresentou à FBr o protótipo de alta fidelidade das funcionalidades d
 Foram apresentadas e aprovadas pela FBr as telas de inscrição (desktop e mobile), erro de preenchimento, triagem, revisão e comprovante, login, ativação de conta, painel de usuários, listagem de triagem, atribuição de prioridade clínica, distribuição para supervisores, vinculação de estagiário, agendamento de sessão e prontuário. Foram acordados os seguintes ajustes:
 
 - Remover campos, telas e opções de menu relacionados à área de especialidade, incluindo os pontos de triagem e distribuição.
-- Manter apenas WhatsApp e ligação como canais de contato, removendo as demais opções.
+- Manter e-mail, WhatsApp e ligação como canais de contato, removendo o SMS.
 - Manter os campos de anamnese e contrato terapêutico do prontuário como ilustrativos até o recebimento do material oficial da coordenação.
 - Configurar a ativação da conta por link enviado pela coordenação, com validade de 72 horas.
 

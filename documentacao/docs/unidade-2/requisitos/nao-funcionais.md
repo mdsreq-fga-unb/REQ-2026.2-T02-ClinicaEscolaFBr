@@ -193,9 +193,9 @@ Rastreabilidade: CP4 — Agendamento, confirmação e remarcação (transversal 
 
 **RNF11 — Confiabilidade do envio de lembretes**{ #rnf11 }
 
-O sistema deve entregar ao provedor de envio pelo menos 98% dos lembretes de sessão (RF13), medidos separadamente para cada canal (e-mail e SMS). Como o sistema não controla a chegada da mensagem ao aparelho do paciente, considera-se **entregue** o lembrete aceito pelo provedor de e-mail ou de SMS.
+O sistema deve entregar ao provedor de e-mail pelo menos 98% dos lembretes de sessão (RF13) dos pacientes com e-mail como canal preferencial; o SMS foi descartado pela Clínica Escola em 23/10/2026 ([DF24](decisoes-fbr.md)), e os lembretes por WhatsApp são enviados pela secretaria. Como o sistema não controla a chegada da mensagem ao aparelho do paciente, considera-se **entregue** o lembrete aceito pelo provedor de e-mail.
 
-- **Fórmula e janela:** taxa de cada canal = lembretes aceitos pelo provedor ÷ lembretes programados no canal × 100, apurada por mês civil, sobre todos os lembretes programados no mês.
+- **Fórmula e janela:** taxa = lembretes aceitos pelo provedor ÷ lembretes programados por e-mail × 100, apurada por mês civil, sobre todos os lembretes programados no mês.
 - **Nova tentativa:** um lembrete recusado ou sem resposta do provedor deve ser reenviado automaticamente até 3 vezes, dentro de 1 hora após a primeira tentativa.
 - **Falhas externas:** saem do denominador, mas continuam registradas, os lembretes que falharam por contato inválido informado na inscrição e os que falharam durante indisponibilidade do provedor registrada no seu painel de status. A qualidade do cadastro é responsabilidade da secretaria, e a indisponibilidade do provedor é acompanhada pela equipe técnica.
 - **Tratamento da falha:** quando as tentativas se esgotarem nos dois canais, a sessão deve ser sinalizada à secretaria para contato por telefone.
@@ -211,7 +211,7 @@ Rastreabilidade: Feature "Enviar lembrete de sessão agendada" → CP4 — Agend
 
 As operações de agendar, reagendar, confirmar presença e registrar cancelamento devem apresentar retorno em até 2 segundos para 95% das requisições no cenário de referência abaixo. O tempo é medido no servidor, do recebimento da requisição ao envio da resposta, sem incluir a rede do usuário.
 
-- **Carga:** 30 usuários simultâneos executando essas operações de forma contínua por 10 minutos, estimativa da equipe para o pico de uso de secretaria, estagiários e supervisores, a validar com a FBr.
+- **Carga:** 30 usuários simultâneos executando essas operações de forma contínua por 10 minutos, pico de uso de secretaria, estagiários e supervisores estimado pela equipe e confirmado pela Clínica Escola em 23/10/2026 ([DF22](decisoes-fbr.md)).
 - **Massa de dados:** dois semestres de operação, com cerca de 360 inscrições, 200 pacientes atendidos e 4.000 sessões registradas, a partir do volume da clínica de 100 vagas e 160 a 180 inscrições por semestre.
 - **Infraestrutura:** ambiente de homologação com a mesma configuração do servidor de produção (VPS da FBr).
 
@@ -289,10 +289,10 @@ As telas de distribuição de casos e de consulta de responsáveis devem exibir,
 | ------------------------- | ---------------- |
 | Secretaria                | Paciente, estagiário responsável, supervisor responsável, situação de distribuição (pendente/distribuído) |
 | Estagiário                | Os mesmos campos da secretaria, restritos aos próprios casos (RF23) |
-| Supervisor                | Os mesmos campos da secretaria, para os próprios casos e os dos seus estagiários (RF23), mais as áreas de especialidade dos supervisores (RF19) na tela de distribuição |
+| Supervisor                | Os mesmos campos da secretaria, para os próprios casos e os dos seus estagiários (RF23) |
 | Coordenação                | Todos os campos acima, sem restrição de caso |
 
-Nenhum perfil sem acesso ao prontuário (RF55, CP12) deve visualizar dado clínico (queixa, prioridade, evolução) nessas telas.
+Nenhum perfil sem acesso ao prontuário (RF55, CP12) deve visualizar dado clínico (queixa, evolução) nessas telas. A única exceção é a prioridade clínica (vermelha, amarela ou verde), que aparece na lista de casos aguardando distribuição e no painel de distribuição (RF18 e RF20) para a coordenação e os supervisores, porque a ordem de distribuição segue a prioridade, como confirmado pela Clínica Escola ([DF16](decisoes-fbr.md)); a queixa e as demais informações de triagem continuam ocultas. Exceção registrada em 24/10/2026, na inspeção de design do RF18, para resolver a contradição com o RF18.
 
 A conformidade deve ser verificada por revisão das telas por perfil, comparando o conteúdo exibido com a matriz acima, e por teste do conteúdo efetivamente exibido, confirmando a ausência de campos clínicos para perfis sem acesso ao prontuário.
 
@@ -306,7 +306,7 @@ Toda atribuição, vínculo, alteração e transferência de responsável por um
 A conformidade deve ser verificada por teste de integração, confirmando o registro de auditoria após cada operação de distribuição, vínculo ou transferência.
 
 Classificação: auditoria (URPS+).
-Rastreabilidade: CP5 — Distribuição de casos entre supervisores e estagiários (transversal às features "Distribuir caso a supervisor conforme área de especialidade", "Vincular paciente a estagiário responsável", "Transferir caso para outro estagiário ou supervisor" e "Consultar histórico de responsáveis do caso").
+Rastreabilidade: CP5 — Distribuição de casos entre supervisores e estagiários (transversal às features "Distribuir caso a supervisor", "Vincular paciente a estagiário responsável", "Transferir caso para outro estagiário ou supervisor" e "Consultar histórico de responsáveis do caso").
 
 **RNF19 — Integridade dos vínculos de responsabilidade**{ #rnf19 }
 
@@ -315,7 +315,7 @@ Após a distribuição (RF20), todo caso ativo deve ter um supervisor responsáv
 A conformidade deve ser garantida por restrições de integridade no banco de dados, além de testes de regra de negócio, confirmando que um caso distribuído sem estagiário vinculado permanece válido no estado "aguardando vínculo", e sem nenhuma inconsistência de vínculo identificada nos demais casos.
 
 Classificação: confiabilidade (URPS+).
-Rastreabilidade: CP5 — Distribuição de casos entre supervisores e estagiários (transversal às features "Distribuir caso a supervisor conforme área de especialidade", "Vincular paciente a estagiário responsável" e "Transferir caso para outro estagiário ou supervisor").
+Rastreabilidade: CP5 — Distribuição de casos entre supervisores e estagiários (transversal às features "Distribuir caso a supervisor", "Vincular paciente a estagiário responsável" e "Transferir caso para outro estagiário ou supervisor").
 
 **RNF20 — Continuidade do histórico na troca de responsável**{ #rnf20 }
 
@@ -342,16 +342,11 @@ A coordenação deve conseguir distribuir os casos (RF20) e o supervisor, vincul
 A conformidade deve ser verificada por teste de usabilidade com uma amostra mínima de 5 participantes representativos por perfil (supervisor e coordenação), em telas responsivas, com pelo menos 90% dos participantes concluindo a tarefa sem auxílio externo.
 
 Classificação: usabilidade (URPS+).
-Rastreabilidade: CP5 — Distribuição de casos entre supervisores e estagiários (transversal às features "Listar casos aguardando distribuição", "Distribuir caso a supervisor conforme área de especialidade" e "Vincular paciente a estagiário responsável").
+Rastreabilidade: CP5 — Distribuição de casos entre supervisores e estagiários (transversal às features "Listar casos aguardando distribuição", "Distribuir caso a supervisor" e "Vincular paciente a estagiário responsável").
 
 **RNF23 — Modificabilidade do cadastro de áreas de especialidade**{ #rnf23 }
 
-As áreas de especialidade e sua associação aos supervisores (RF19) devem ser armazenadas como dado configurável, e não como valor fixo no código-fonte, de modo que a inclusão, edição ou remoção de uma área pela interface (RF19) fique disponível para uso na distribuição (RF20) imediatamente, sem exigir alteração de código, recompilação ou novo deploy da aplicação.
-
-A conformidade deve ser verificada por inspeção técnica do modelo de dados, confirmando que as áreas de especialidade não estão fixadas no código, e por teste de aceitação: a coordenação inclui uma nova área pela interface e confirma sua disponibilidade imediata na tela de distribuição (RF20), sem reinício ou nova implantação da aplicação.
-
-Classificação: modificabilidade (URPS+).
-Rastreabilidade: Feature "Registrar áreas de especialidade do supervisor" → CP5 — Distribuição de casos entre supervisores e estagiários. Dependência: RF19, RF20.
+**Removido em 24/10/2026**, junto com o RF19: a Clínica Escola informou que não há divisão por área de especialidade ([DF26](decisoes-fbr.md)). O número foi mantido para preservar as referências já feitas a ele.
 
 **RNF24 — Acessibilidade das telas de distribuição e consulta**{ #rnf24 }
 
@@ -360,7 +355,7 @@ As telas de distribuição de casos, vínculo e consulta de responsáveis devem 
 A conformidade deve ser verificada com leitor de tela e checklist de acessibilidade.
 
 Classificação: acessibilidade (URPS+).
-Rastreabilidade: CP5 — Distribuição de casos entre supervisores e estagiários (transversal às features "Listar casos aguardando distribuição", "Registrar áreas de especialidade do supervisor", "Distribuir caso a supervisor conforme área de especialidade", "Vincular paciente a estagiário responsável", "Consultar responsáveis pelo caso", "Consultar casos sob responsabilidade do estagiário ou supervisor" e "Visualizar distribuição de casos por supervisor"); relacionada à CP14 — Acessibilidade e usabilidade.
+Rastreabilidade: CP5 — Distribuição de casos entre supervisores e estagiários (transversal às features "Listar casos aguardando distribuição", "Distribuir caso a supervisor", "Vincular paciente a estagiário responsável", "Consultar responsáveis pelo caso", "Consultar casos sob responsabilidade do estagiário ou supervisor" e "Visualizar distribuição de casos por supervisor"); relacionada à CP14 — Acessibilidade e usabilidade.
 
 ### Prontuário eletrônico (CP6)
 
@@ -416,7 +411,7 @@ O registro de uma nova evolução e a consulta de uma evolução já registrada,
 - **Rede:** conexão do cliente com pelo menos 20 Mbps, latência de ida e volta de até 50 ms e sem perda de pacotes durante o teste.
 - **Infraestrutura:** ambiente de homologação com a mesma configuração do servidor de produção da FBr; a quantidade de vCPUs, memória, versão do banco de dados e versão da aplicação deve ser registrada no relatório do teste.
 
-A conformidade deve ser verificada por teste de carga automatizado, por exemplo com k6 ou JMeter, calculando separadamente o percentil 95 do tempo de resposta de ponta a ponta para registro e consulta. A carga de 30 usuários é uma estimativa técnica da equipe e deve ser validada com a FBr antes do aceite definitivo.
+A conformidade deve ser verificada por teste de carga automatizado, por exemplo com k6 ou JMeter, calculando separadamente o percentil 95 do tempo de resposta de ponta a ponta para registro e consulta. A carga de 30 usuários foi confirmada pela Clínica Escola em 23/10/2026 ([DF22](decisoes-fbr.md)).
 
 Classificação: desempenho (URPS+).
 Rastreabilidade: CP7 — Registro de evolução por sessão (transversal às features "Registrar evolução da sessão realizada" e "Consultar evolução de uma sessão específica").
@@ -626,9 +621,9 @@ Os RNFs abaixo restringem as features da CP12 e valem para todas as funcionalida
 
 **RNF49 — Proteção das credenciais de acesso**{ #rnf49 }
 
-As senhas dos usuários institucionais devem ter, no mínimo, 8 caracteres, com pelo menos uma letra e um número, e devem ser armazenadas apenas na forma de hash com algoritmo próprio para senhas (bcrypt ou Argon2), nunca em texto legível. Após 5 tentativas de login seguidas com erro para o mesmo usuário, o sistema deve bloquear novas tentativas desse usuário por 15 minutos.
+As senhas dos usuários institucionais devem ter, no mínimo, 8 caracteres, com pelo menos uma letra e um número, e devem ser armazenadas apenas na forma de hash com algoritmo próprio para senhas (bcrypt ou Argon2), nunca em texto legível. Após 3 tentativas de login seguidas com erro para o mesmo usuário, o sistema deve bloquear novas tentativas desse usuário por 15 minutos, como pedido pela Clínica Escola em 23/10/2026 ([DF25](decisoes-fbr.md)).
 
-A conformidade deve ser verificada por inspeção do banco de dados (nenhuma senha legível armazenada) e por teste de 5 tentativas de login com erro, confirmando o bloqueio e sua liberação após 15 minutos.
+A conformidade deve ser verificada por inspeção do banco de dados (nenhuma senha legível armazenada) e por teste de 3 tentativas de login com erro, confirmando o bloqueio e sua liberação após 15 minutos.
 
 Classificação: segurança (URPS+).
 Rastreabilidade: Feature "Autenticar usuário institucional" → CP12 — Segurança, sigilo e controle de acesso.

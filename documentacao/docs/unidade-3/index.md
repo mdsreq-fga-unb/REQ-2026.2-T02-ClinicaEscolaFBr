@@ -6,8 +6,8 @@ Visão geral da Unidade 3: a construção das primeiras features do MVP nos Cicl
 
 | Ciclo | Período | Foco | Itens do MVP |
 | --- | --- | --- | --- |
-| Ciclo 3 | 14/10 a 27/10/2026 | Base técnica, acesso, inscrição, triagem, distribuição de casos, agendamento e prontuário | 14 |
-| Ciclo 4 | 28/10 a 10/11/2026 | Continuação dos conjuntos iniciados no Ciclo 3 e novos conjuntos do MVP | 19 |
+| Ciclo 3 | 14/10 a 27/10/2026 | Base técnica, acesso, inscrição, triagem, distribuição de casos, agendamento e prontuário | 13 |
+| Ciclo 4 | 28/10 a 10/11/2026 | Continuação dos conjuntos iniciados no Ciclo 3 e novos conjuntos do MVP | 20 |
 | Ciclo 5 | 11/11 a 17/11/2026 | Consolidação dos incrementos e entrega da Unidade 3 | 7 |
 
 Os itens de cada ciclo, com o Líder de Feature e as dependências, estão no [Backlog de Produto, 10.1.2](../unidade-2/requisitos/backlog.md#1012-itens-de-trabalho-do-mvp). Cada feature é acompanhada na sua issue do GitHub, que traz os checklists do [DoR e do DoD](../unidade-2/requisitos/dor-dod.md).
