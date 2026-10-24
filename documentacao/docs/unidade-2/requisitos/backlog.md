@@ -72,7 +72,7 @@ A coluna **Depende de** lista só as dependências obrigatórias, sempre pelo RF
 | 21 | [RF23](funcionais.md#rf23) — Consultar casos sob responsabilidade do estagiário ou supervisor | CP5 | [RF21](funcionais.md#rf21) | Maria Clara | Ciclo 4 | Planejada | — |
 | 22 | [RF25](funcionais.md#rf25) — Transferir caso para outro estagiário ou supervisor | CP5 | [RF21](funcionais.md#rf21) | Maria Clara | Ciclo 4 | Planejada | — |
 | 23 | [RF27](funcionais.md#rf27) — Consultar prontuário do paciente | CP6 | [RF66](funcionais.md#rf66), [RF21](funcionais.md#rf21) | Luís Henrique | Ciclo 4 | Planejada | — |
-| 24 | [RF69](funcionais.md#rf69) — Registrar anamnese e contrato terapêutico do paciente | CP6 | [RF66](funcionais.md#rf66) | Luís Henrique | Ciclo 4 | Planejada | — |
+| 24 | [RF69](funcionais.md#rf69) — Registrar anamnese e contrato terapêutico do paciente | CP6 | [RF66](funcionais.md#rf66) | Luís Henrique | Ciclo 4 | Planejada | [#130](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/issues/130) |
 | 25 | [RF28](funcionais.md#rf28) — Registrar evolução da sessão realizada | CP7 | [RF10](funcionais.md#rf10), [RF21](funcionais.md#rf21) | Luís Henrique | Ciclo 4 | Planejada | — |
 | 26 | [RF34](funcionais.md#rf34) — Registrar falta do paciente na sessão | CP9 | [RF10](funcionais.md#rf10), [RF14](funcionais.md#rf14), [RF15](funcionais.md#rf15) | Gabriel | Ciclo 4 | Planejada | — |
 | 27 | [RF35](funcionais.md#rf35) — Contabilizar faltas do paciente no ciclo | CP9 | [RF15](funcionais.md#rf15), [RF34](funcionais.md#rf34) | Gabriel | Ciclo 4 | Planejada | — |
@@ -93,7 +93,7 @@ A coluna **Depende de** lista só as dependências obrigatórias, sempre pelo RF
 | 42 | [RF30](funcionais.md#rf30) — Registrar complemento de evolução da sessão | CP7 | [RF28](funcionais.md#rf28) | Luís Henrique | Ciclo 6 | Planejada | — |
 | 43 | [RF31](funcionais.md#rf31) — Consultar evolução de uma sessão específica | CP7 | [RF28](funcionais.md#rf28), [RF29](funcionais.md#rf29), [RF30](funcionais.md#rf30) | Luís Henrique | Ciclo 6 | Planejada | — |
 | 44 | [RF32](funcionais.md#rf32) — Consultar histórico de evolução do paciente | CP7 | [RF27](funcionais.md#rf27), [RF28](funcionais.md#rf28), [RF29](funcionais.md#rf29), [RF30](funcionais.md#rf30) | Luís Henrique | Ciclo 6 | Planejada | — |
-| 45 | [RF33](funcionais.md#rf33) — Gerar relatório final de evolução | CP8 | [RF28](funcionais.md#rf28), [RF32](funcionais.md#rf32) | Gabriel | Ciclo 6 | Planejada | — |
+| 45 | [RF33](funcionais.md#rf33) — Gerar relatório final de evolução | CP8 | [RF28](funcionais.md#rf28), [RF32](funcionais.md#rf32) | Gabriel | Ciclo 6 | Planejada | [#131](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/issues/131) |
 | 46 | [RF67](funcionais.md#rf67) — Validar evolução pelo supervisor | CP7 | [RF28](funcionais.md#rf28) | Luís Henrique | Ciclo 6 | Planejada | — |
 | 47 | [RF68](funcionais.md#rf68) — Encerrar caso por alta | CP7 | [RF28](funcionais.md#rf28) | Luís Henrique | Ciclo 6 | Planejada | — |
 | 48 | [RF40](funcionais.md#rf40) — Contabilizar faltas do estagiário no semestre | CP9 | [RF16](funcionais.md#rf16), [RF39](funcionais.md#rf39) | Nicolas | Ciclo 6 | Planejada | — |
