@@ -1,5 +1,5 @@
 {
-  "id": "f3856ce4-86fe-49f4-bf10-61b89d7bc1ec",
+  "id": "39a16183-f111-4fdd-9e84-70106f1cb128",
   "prevId": "b38d0230-455e-41cc-af89-564b64bb9521",
   "version": "7",
   "dialect": "postgresql",
@@ -374,20 +374,20 @@
           "primaryKey": false,
           "notNull": true
         },
-        "queixa": {
-          "name": "queixa",
+        "queixa_cifrada": {
+          "name": "queixa_cifrada",
           "type": "text",
           "primaryKey": false,
           "notNull": true
         },
-        "percepcao_urgencia": {
-          "name": "percepcao_urgencia",
+        "percepcao_urgencia_cifrada": {
+          "name": "percepcao_urgencia_cifrada",
           "type": "text",
           "primaryKey": false,
           "notNull": true
         },
-        "historico_relevante": {
-          "name": "historico_relevante",
+        "historico_relevante_cifrado": {
+          "name": "historico_relevante_cifrado",
           "type": "text",
           "primaryKey": false,
           "notNull": true
@@ -605,10 +605,9 @@
           "primaryKey": false,
           "notNull": true
         },
-        "cor": {
-          "name": "cor",
-          "type": "cor",
-          "typeSchema": "public",
+        "cor_cifrada": {
+          "name": "cor_cifrada",
+          "type": "text",
           "primaryKey": false,
           "notNull": true
         },
@@ -1116,14 +1115,14 @@
           "notNull": true,
           "default": "now()"
         },
-        "anamnese": {
-          "name": "anamnese",
+        "anamnese_cifrada": {
+          "name": "anamnese_cifrada",
           "type": "text",
           "primaryKey": false,
           "notNull": false
         },
-        "contrato": {
-          "name": "contrato",
+        "contrato_cifrado": {
+          "name": "contrato_cifrado",
           "type": "text",
           "primaryKey": false,
           "notNull": false
@@ -1253,11 +1252,6 @@
       "name": "canal",
       "schema": "public",
       "values": ["email", "whatsapp", "ligacao"]
-    },
-    "public.cor": {
-      "name": "cor",
-      "schema": "public",
-      "values": ["vermelha", "amarela", "verde"]
     },
     "public.situacao_caso": {
       "name": "situacao_caso",

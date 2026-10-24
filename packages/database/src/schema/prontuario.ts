@@ -12,7 +12,7 @@ import { perfilEnum, usuarios } from "./base";
 import { casos, vinculosEstagiario } from "./casos";
 
 // Prontuário (RF66): criado na mesma transação do vínculo (RF21), um por caso e ciclo.
-// Os dados iniciais (anamnese e contrato) são do RF69, no Ciclo 4.
+// Os dados iniciais (anamnese e contrato) são do RF69, no Ciclo 4, e ficam cifrados (RNF51).
 export const prontuarios = pgTable(
   "prontuarios",
   {
@@ -27,8 +27,8 @@ export const prontuarios = pgTable(
     criadoEm: timestamp("criado_em", { withTimezone: true })
       .notNull()
       .defaultNow(),
-    anamnese: text("anamnese"),
-    contrato: text("contrato"),
+    anamneseCifrada: text("anamnese_cifrada"),
+    contratoCifrado: text("contrato_cifrado"),
     dataAssinaturaContrato: date("data_assinatura_contrato"),
     dadosIniciaisPor: uuid("dados_iniciais_por").references(() => usuarios.id),
     dadosIniciaisEm: timestamp("dados_iniciais_em", { withTimezone: true }),

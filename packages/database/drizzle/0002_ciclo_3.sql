@@ -1,5 +1,4 @@
 CREATE TYPE "public"."canal" AS ENUM('email', 'whatsapp', 'ligacao');--> statement-breakpoint
-CREATE TYPE "public"."cor" AS ENUM('vermelha', 'amarela', 'verde');--> statement-breakpoint
 CREATE TYPE "public"."situacao_caso" AS ENUM('aguardando_distribuicao', 'aguardando_vinculo', 'em_atendimento', 'encerrado');--> statement-breakpoint
 CREATE TYPE "public"."status_sessao" AS ENUM('agendada');--> statement-breakpoint
 CREATE SEQUENCE "public"."inscricoes_numero_seq" INCREMENT BY 1 MINVALUE 1 MAXVALUE 9223372036854775807 START WITH 1 CACHE 1;--> statement-breakpoint
@@ -37,9 +36,9 @@ CREATE TABLE "inscricoes" (
 	"celular" text,
 	"email" text,
 	"canal_preferencial" "canal" NOT NULL,
-	"queixa" text NOT NULL,
-	"percepcao_urgencia" text NOT NULL,
-	"historico_relevante" text NOT NULL,
+	"queixa_cifrada" text NOT NULL,
+	"percepcao_urgencia_cifrada" text NOT NULL,
+	"historico_relevante_cifrado" text NOT NULL,
 	"criada_em" timestamp with time zone DEFAULT now() NOT NULL,
 	CONSTRAINT "inscricoes_numero_unique" UNIQUE("numero"),
 	CONSTRAINT "inscricoes_algum_contato" CHECK ("inscricoes"."celular" is not null or "inscricoes"."email" is not null),
@@ -68,7 +67,7 @@ CREATE TABLE "casos" (
 CREATE TABLE "decisoes_prioridade" (
 	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
 	"inscricao_id" uuid NOT NULL,
-	"cor" "cor" NOT NULL,
+	"cor_cifrada" text NOT NULL,
 	"decidida_por" uuid NOT NULL,
 	"decidida_em" timestamp with time zone DEFAULT now() NOT NULL,
 	"vigente" boolean DEFAULT true NOT NULL
@@ -125,8 +124,8 @@ CREATE TABLE "prontuarios" (
 	"ciclo_atendimento" integer NOT NULL,
 	"vinculo_origem_id" uuid NOT NULL,
 	"criado_em" timestamp with time zone DEFAULT now() NOT NULL,
-	"anamnese" text,
-	"contrato" text,
+	"anamnese_cifrada" text,
+	"contrato_cifrado" text,
 	"data_assinatura_contrato" date,
 	"dados_iniciais_por" uuid,
 	"dados_iniciais_em" timestamp with time zone,
@@ -184,4 +183,14 @@ $$ LANGUAGE plpgsql;--> statement-breakpoint
 CREATE TRIGGER "auditoria_somente_insercao" BEFORE UPDATE OR DELETE ON "auditoria"
   FOR EACH ROW EXECUTE FUNCTION "impedir_alteracao_registro"();--> statement-breakpoint
 CREATE TRIGGER "acessos_prontuario_somente_insercao" BEFORE UPDATE OR DELETE ON "acessos_prontuario"
-  FOR EACH ROW EXECUTE FUNCTION "impedir_alteracao_registro"();
+  FOR EACH ROW EXECUTE FUNCTION "impedir_alteracao_registro"();--> statement-breakpoint
+-- Sem sobreposição de sessões, mesmo com duas requisições simultâneas (RNF9):
+-- o estagiário ocupa a sessão e o intervalo de anotações (DF18); o paciente, só a sessão.
+-- Quando o RF14 a RF16 criarem novos status, a condição WHERE precisa incluí-los.
+CREATE EXTENSION IF NOT EXISTS btree_gist;--> statement-breakpoint
+ALTER TABLE "sessoes_atendimento" ADD CONSTRAINT "sessoes_estagiario_sem_sobreposicao"
+  EXCLUDE USING gist ("estagiario_id" WITH =, tstzrange("inicio", "fim_intervalo_anotacoes", '[)') WITH &&)
+  WHERE ("status" = 'agendada');--> statement-breakpoint
+ALTER TABLE "sessoes_atendimento" ADD CONSTRAINT "sessoes_caso_sem_sobreposicao"
+  EXCLUDE USING gist ("caso_id" WITH =, tstzrange("inicio", "termino", '[)') WITH &&)
+  WHERE ("status" = 'agendada');

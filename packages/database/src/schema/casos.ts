@@ -4,19 +4,20 @@ import {
   integer,
   pgEnum,
   pgTable,
+  text,
   timestamp,
   uniqueIndex,
   uuid,
 } from "drizzle-orm/pg-core";
-import { CORES, SITUACOES_CASO } from "@clinica/shared";
+import { SITUACOES_CASO } from "@clinica/shared";
 import { usuarios } from "./base";
 import { inscricoes } from "./inscricao";
 
-export const corEnum = pgEnum("cor", CORES);
 export const situacaoCasoEnum = pgEnum("situacao_caso", SITUACOES_CASO);
 
 // Decisão de prioridade clínica (RF6), com histórico: só uma vigente por inscrição.
-// Não há área de especialidade (DF26).
+// Não há área de especialidade (DF26). A cor é dado de saúde e fica cifrada (RNF51),
+// com o valor de CORES (@clinica/shared) validado pela aplicação antes de cifrar.
 export const decisoesPrioridade = pgTable(
   "decisoes_prioridade",
   {
@@ -24,7 +25,7 @@ export const decisoesPrioridade = pgTable(
     inscricaoId: uuid("inscricao_id")
       .notNull()
       .references(() => inscricoes.id),
-    cor: corEnum("cor").notNull(),
+    corCifrada: text("cor_cifrada").notNull(),
     decididaPor: uuid("decidida_por")
       .notNull()
       .references(() => usuarios.id),

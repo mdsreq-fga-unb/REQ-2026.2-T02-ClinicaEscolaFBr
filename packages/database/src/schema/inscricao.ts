@@ -17,7 +17,7 @@ export const canalEnum = pgEnum("canal", CANAIS);
 export const inscricoesNumeroSeq = pgSequence("inscricoes_numero_seq");
 
 // Inscrição on-line (RF1). Queixa, percepção de urgência e histórico são declarações
-// do interessado (RF4). Pelo menos um contato é obrigatório, e WhatsApp ou ligação
+// do interessado (RF4) e dados de saúde: ficam cifrados no banco (RNF51). Pelo menos um contato é obrigatório, e WhatsApp ou ligação
 // exigem o celular (DF24).
 export const inscricoes = pgTable(
   "inscricoes",
@@ -34,9 +34,9 @@ export const inscricoes = pgTable(
     celular: text("celular"),
     email: text("email"),
     canalPreferencial: canalEnum("canal_preferencial").notNull(),
-    queixa: text("queixa").notNull(),
-    percepcaoUrgencia: text("percepcao_urgencia").notNull(),
-    historicoRelevante: text("historico_relevante").notNull(),
+    queixaCifrada: text("queixa_cifrada").notNull(),
+    percepcaoUrgenciaCifrada: text("percepcao_urgencia_cifrada").notNull(),
+    historicoRelevanteCifrado: text("historico_relevante_cifrado").notNull(),
     criadaEm: timestamp("criada_em", { withTimezone: true })
       .notNull()
       .defaultNow(),
