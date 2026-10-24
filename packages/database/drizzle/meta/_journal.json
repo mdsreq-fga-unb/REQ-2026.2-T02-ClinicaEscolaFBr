@@ -15,6 +15,13 @@
       "when": 1792454379308,
       "tag": "0001_amazing_quicksilver",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1792856233100,
+      "tag": "0002_ciclo_3",
+      "breakpoints": true
     }
   ]
 }
