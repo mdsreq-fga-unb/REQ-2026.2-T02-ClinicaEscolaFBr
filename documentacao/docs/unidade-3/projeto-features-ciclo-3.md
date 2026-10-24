@@ -571,34 +571,17 @@ sequenceDiagram
 
 ### RF66 — Criar e inicializar o prontuário do paciente ([#97](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/issues/97))
 
-**Criação:** automática, na mesma transação do vínculo (RF21).
+**Criação:** automática, na mesma transação do vínculo (RF21). Não há rota própria: o prontuário nasce com a identificação do paciente, do caso, do ciclo de atendimento, do estagiário responsável e do supervisor.
 
-**Rota:** `PUT /prontuarios/:id/dados-iniciais` (somente o estagiário responsável). Recebe a anamnese, o contrato e a data de assinatura do contrato. Os três ficam como texto livre até a FBr enviar os modelos de anamnese e de contrato.
-
-```mermaid
-sequenceDiagram
-    actor E as Estagiário
-    participant A as API (acompanhamento clínico)
-    participant P as PoliticaProntuario
-    participant DB as Banco
-    E->>A: PUT /prontuarios/:id/dados-iniciais
-    A->>P: é o estagiário responsável pelo caso?
-    alt não é
-        A-->>E: 403
-    else é
-        A->>DB: grava anamnese, contrato e data de assinatura, com autor e data/hora
-        A->>DB: auditoria (RNF52)
-        A-->>E: dados iniciais registrados
-    end
-```
+**Fora do Ciclo 3:** o registro da anamnese e do contrato terapêutico foi separado no [RF69](../unidade-2/requisitos/funcionais.md#rf69) em 24/10/2026 e entra no Ciclo 4, depois que a FBr enviar os modelos. No Ciclo 3, a tela do prontuário mostra a identificação e o espaço dos dados iniciais ainda vazio.
 
 | Regra | Critério de aceitação |
 | --- | --- |
 | A criação acontece só dentro da transação do RF21 | Caso sem estagiário vinculado não tem prontuário |
 | Índice único em `(caso_id, ciclo_atendimento)` | Não é criado um segundo prontuário no mesmo ciclo |
-| `PoliticaProntuario` (a mesma do RF55) | Só o estagiário responsável registra os dados iniciais |
+| A criação guarda a data/hora e o vínculo que a originou | O prontuário mostra quando e por qual vínculo foi criado |
 
-**Dados de teste:** um caso recém-vinculado; uma tentativa de vincular de novo no mesmo ciclo; o supervisor tentando registrar a anamnese (recebe 403).
+**Dados de teste:** um caso recém-vinculado; uma tentativa de vincular de novo no mesmo ciclo.
 
 ---
 

@@ -100,7 +100,7 @@ Para ver os detalhes de cada tela, os protótipos completos também estão em PD
 
 ### RF66 e RF55 — Criar o prontuário e restringir o acesso { #rf66-rf55 }
 
-[RF66](../unidade-2/requisitos/funcionais.md#rf66) e [RF55](../unidade-2/requisitos/funcionais.md#rf55) · issues [#97](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/issues/97) e [#50](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/issues/50). Visão do estagiário responsável com os dados iniciais, visão da secretaria só com dados cadastrais e administrativos e acesso negado a outro estagiário.
+[RF66](../unidade-2/requisitos/funcionais.md#rf66) e [RF55](../unidade-2/requisitos/funcionais.md#rf55) · issues [#97](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/issues/97) e [#50](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/issues/50). Visão do estagiário responsável com os dados iniciais, visão da secretaria só com dados cadastrais e administrativos e acesso negado a outro estagiário. Os campos de anamnese e contrato mostrados na visão do estagiário são do [RF69](../unidade-2/requisitos/funcionais.md#rf69), separado do RF66 em 24/10/2026 e previsto para o Ciclo 4, e continuam ilustrativos até a FBr enviar os modelos.
 
 [![Prontuário: visão do estagiário, visão da secretaria e acesso negado](../assets/prototipos-ciclo-3/6-1-prontuario.webp)](../assets/prototipos-ciclo-3/6-1-prontuario.webp){ target="_blank" }
 

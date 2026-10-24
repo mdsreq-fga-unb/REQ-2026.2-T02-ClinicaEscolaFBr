@@ -3,7 +3,7 @@
 Os requisitos não funcionais (RNFs) descrevem propriedades e restrições mensuráveis do sistema, classificadas conforme o modelo **URPS+** (Usabilidade, Confiabilidade, Desempenho, Suportabilidade e demais categorias, como Segurança e Auditoria). Cada RNF mantém rastreabilidade com a **Feature** que ele restringe e, por meio dela, com a Característica de Produto (CP) de origem — mesma cadeia usada nos [Requisitos Funcionais](funcionais.md).
 
 <details class="requirement-index" markdown>
-<summary>Índice de requisitos não funcionais por código (58)</summary>
+<summary>Índice de requisitos não funcionais por código (59)</summary>
 
 | Requisito | Requisito |
 | --- | --- |
@@ -19,7 +19,7 @@ Os requisitos não funcionais (RNFs) descrevem propriedades e restrições mensu
 | [RNF19 — Integridade dos vínculos de responsabilidade](#rnf19) | [RNF20 — Continuidade do histórico na troca de responsável](#rnf20) |
 | [RNF21 — Desempenho das listagens e operações de vínculo](#rnf21) | [RNF22 — Usabilidade da distribuição e do vínculo de casos](#rnf22) |
 | [RNF23 — Modificabilidade do cadastro de áreas de especialidade](#rnf23) | [RNF24 — Acessibilidade das telas de distribuição e consulta](#rnf24) |
-| [RNF25 — Sigilo do conteúdo do prontuário](#rnf25) | [RNF26 — Sigilo do conteúdo da evolução](#rnf26) |
+| [RNF25 — Sigilo do conteúdo clínico nas respostas negadas](#rnf25) | [RNF26 — Sigilo do conteúdo da evolução (consolidado no RNF25)](#rnf26) |
 | [RNF27 — Integridade e proveniência dos registros de evolução](#rnf27) | [RNF28 — Auditoria das correções de evolução](#rnf28) |
 | [RNF29 — Desempenho do registro e da consulta de evolução](#rnf29) | [RNF30 — Usabilidade do registro de evolução](#rnf30) |
 | [RNF31 — Fidelidade e rastreabilidade do relatório final](#rnf31) | [RNF32 — Integridade e auditoria da contagem de faltas](#rnf32) |
@@ -36,6 +36,7 @@ Os requisitos não funcionais (RNFs) descrevem propriedades e restrições mensu
 | [RNF53 — Cópia de segurança e recuperação dos dados](#rnf53) | [RNF54 — Auditoria das decisões de continuidade](#rnf54) |
 | [RNF55 — Integridade do histórico na continuidade](#rnf55) | [RNF56 — Conformidade com WCAG 2.2 nível AA](#rnf56) |
 | [RNF57 — Aparência reforçada do indicador de foco](#rnf57) | [RNF58 — Responsividade da interface](#rnf58) |
+| [RNF59 — Segurança do link de confirmação de presença](#rnf59) | |
 
 </details>
 
@@ -245,9 +246,16 @@ Rastreabilidade: CP4 — Agendamento, confirmação e remarcação (transversal 
 
 **RNF15 — Usabilidade da confirmação de presença pelo paciente**{ #rnf15 }
 
-A confirmação de presença deve ser possível a partir do link enviado no agendamento (RF10), e reforçado pelo lembrete automático quando este estiver disponível (RF13), sem exigir login ou cadastro de senha, em no máximo 2 interações, considerando o público com pouca familiaridade com tecnologia atendido pela clínica.
+A confirmação de presença deve ser possível a partir do link enviado no agendamento (RF10), e reforçado pelo lembrete automático quando este estiver disponível (RF13), sem exigir login ou cadastro de senha, em no máximo 2 interações, considerando o público com pouca familiaridade com tecnologia atendido pela clínica. As condições de segurança do mesmo link estão no [RNF59](#rnf59).
 
-Como o link dispensa login, ele deve ser protegido contra uso por terceiros:
+A conformidade deve ser verificada por teste de usabilidade com, no mínimo, 10 participantes representativos, incluindo pessoas com baixo letramento digital, sem ajuda durante a execução. O requisito é atendido quando pelo menos 90% dos participantes confirmam a presença em até 2 interações a partir do link.
+
+Classificação: usabilidade (URPS+).
+Rastreabilidade: Feature "Confirmar presença em sessão agendada" → CP4 — Agendamento, confirmação e remarcação; relacionada à CP14 — Acessibilidade e usabilidade e ao RNF59 (segurança do mesmo link).
+
+**RNF59 — Segurança do link de confirmação de presença**{ #rnf59 }
+
+Como o link de confirmação de presença (RNF15) dispensa login, ele deve ser protegido contra uso por terceiros:
 
 - **Token imprevisível:** o link deve conter um token gerado aleatoriamente, com pelo menos 128 bits de entropia, vinculado a uma única sessão e sem nenhum dado do paciente (nome, CPF ou número de inscrição) no endereço.
 - **Validade:** o token vale até o fim do prazo de confirmação da sessão (RF14); uma remarcação (RF12) ou um cancelamento (RF15/RF16) invalida o token anterior, e uma remarcação gera um novo.
@@ -255,10 +263,10 @@ Como o link dispensa login, ele deve ser protegido contra uso por terceiros:
 - **Expiração ou token inválido:** o sistema deve informar que o link não é mais válido e orientar o contato com a secretaria, sem exibir dados da sessão.
 - **Dados exibidos:** a página de confirmação mostra apenas a data e o horário da sessão e o primeiro nome do paciente, e não permite nenhuma outra operação, como cancelar ou remarcar.
 
-A conformidade deve ser verificada por teste de usabilidade com usuários representativos, incluindo pessoas com baixo letramento digital, e por testes de segurança que abram o link após o uso, após o fim do prazo, após uma remarcação e com um token alterado, confirmando em todos os casos a recusa sem exposição de dados.
+A conformidade deve ser verificada por testes de segurança que abram o link após o uso, após o fim do prazo, após uma remarcação, após um cancelamento e com um token alterado, confirmando em todos os casos a recusa sem exposição de dados, e por inspeção do código de geração do token, conferindo a fonte aleatória e o tamanho.
 
-Classificação: usabilidade e segurança (URPS+).
-Rastreabilidade: Feature "Confirmar presença em sessão agendada" → CP4 — Agendamento, confirmação e remarcação; relacionada à CP14 — Acessibilidade e usabilidade.
+Classificação: segurança (URPS+).
+Rastreabilidade: Feature "Confirmar presença em sessão agendada" → CP4 — Agendamento, confirmação e remarcação; relacionada ao RNF15 (usabilidade do mesmo link) e à CP12 — Segurança, sigilo e controle de acesso.
 
 ### Distribuição de casos entre supervisores e estagiários (CP5)
 
@@ -358,14 +366,20 @@ Rastreabilidade: CP5 — Distribuição de casos entre supervisores e estagiári
 
 A CP6 tem duas features (ver [Requisitos Funcionais](funcionais.md)); o RNF abaixo estabelece a condição de qualidade para a consulta ao prontuário. As condições de integridade, auditoria e desempenho relativas ao registro da evolução em si estão declaradas na CP7, e as relativas ao relatório final, na CP8.
 
-**RNF25 — Sigilo do conteúdo do prontuário**{ #rnf25 }
+**RNF25 — Sigilo do conteúdo clínico nas respostas negadas**{ #rnf25 }
 
-Listagens, resultados de busca, endereços eletrônicos, notificações, mensagens de erro e respostas do servidor não devem expor conteúdo do prontuário quando o acesso for negado pelo RF55. A resposta negada também não deve revelar quais seções clínicas possuem ou não registros. Os perfis e vínculos autorizados permanecem definidos exclusivamente no RF55.
+Quando o acesso for negado pelo RF55, nenhuma listagem, resultado de busca, endereço eletrônico, notificação, mensagem de erro ou resposta do servidor deve expor conteúdo clínico nem indicar a sua existência. Os perfis e vínculos autorizados permanecem definidos exclusivamente no RF55. A regra vale para todo registro clínico, com as particularidades abaixo:
 
-A conformidade deve ser verificada com prontuários fictícios completos e incompletos, inspecionando a interface e as respostas do servidor em tentativas negadas antes e depois de uma transferência de responsável e confirmando que nenhum conteúdo ou indicador de existência das seções clínicas é exposto.
+| Registro | O que a resposta negada não pode expor nem indicar |
+| --- | --- |
+| Prontuário (CP6): anamnese, contrato terapêutico e demais dados iniciais | O conteúdo e quais seções clínicas possuem ou não registros. |
+| Evolução (CP7): registro original, correções e complementos | O conteúdo e a existência ou a quantidade de evoluções, correções e complementos. |
+| Relatório final (CP8) | O conteúdo, as versões e a existência do relatório. |
+
+A conformidade deve ser verificada com registros fictícios completos e incompletos de cada tipo (prontuário com e sem seções preenchidas, evoluções com correções e complementos), inspecionando a interface e as respostas do servidor em tentativas negadas antes e depois de uma transferência de responsável e confirmando que nenhum conteúdo ou indicador de existência é exposto.
 
 Classificação: segurança e privacidade (URPS+).
-Rastreabilidade: Features "Criar e inicializar o prontuário do paciente" e "Consultar prontuário do paciente" → CP6 — Prontuário eletrônico; relacionada ao RF55 (CP12).
+Rastreabilidade: transversal às features "Criar e inicializar o prontuário do paciente" e "Consultar prontuário do paciente" (CP6), às features de registro e consulta de evolução (CP7) e à feature "Gerar relatório final de evolução" (CP8); relacionada ao RF55 (CP12).
 
 ### Registro de evolução por sessão (CP7)
 
@@ -373,12 +387,7 @@ A CP7 tem sete features (ver [Requisitos Funcionais](funcionais.md)); os RNFs ab
 
 **RNF26 — Sigilo do conteúdo da evolução**{ #rnf26 }
 
-Listagens, resultados de busca, endereços eletrônicos, notificações, mensagens de erro e respostas do servidor não devem expor o conteúdo original, as correções ou os complementos de uma evolução quando o acesso for negado pelo RF55. A resposta negada também não deve revelar a existência ou a quantidade desses registros. Os perfis e vínculos autorizados permanecem definidos exclusivamente no RF55.
-
-A conformidade deve ser verificada com evoluções fictícias contendo correções e complementos, inspecionando a interface e as respostas do servidor em tentativas negadas antes e depois de uma transferência de responsável e confirmando que nenhum conteúdo ou indicador de existência dos registros é exposto.
-
-Classificação: segurança e privacidade (URPS+).
-Rastreabilidade: CP7 — Registro de evolução por sessão (transversal às features "Registrar evolução da sessão realizada", "Corrigir evolução registrada", "Registrar complemento de evolução da sessão", "Consultar evolução de uma sessão específica" e "Consultar histórico de evolução do paciente"); relacionada à CP12 — Segurança, sigilo e controle de acesso.
+Consolidado no [RNF25](#rnf25) em 24/10/2026, que passou a ser a regra única de sigilo do conteúdo clínico nas respostas negadas, com as particularidades da evolução (registro original, correções, complementos e a sua quantidade). O número foi mantido para preservar as referências já feitas a ele.
 
 **RNF27 — Integridade e proveniência dos registros de evolução**{ #rnf27 }
 
@@ -660,7 +669,7 @@ Rastreabilidade: Feature "Restringir acesso ao prontuário do paciente" → CP12
 
 O sistema deve registrar automaticamente todo acesso ao prontuário, permitido ou negado, com o usuário, o perfil, a data/hora, o paciente e a operação realizada. Nenhum perfil pode alterar ou apagar esses registros, que devem ser mantidos por, no mínimo, 5 anos a partir do acesso. Esse é o prazo mínimo de guarda do registro documental do serviço psicológico fixado pela Resolução CFP nº 1/2009 (art. 4º, § 1º) e reafirmado, para os prontuários do estágio, pela Resolução CFP nº 5/2025; por ser um mínimo normativo, não depende de confirmação da FBr, que pode apenas ampliá-lo por política institucional.
 
-A conformidade deve ser verificada por teste: realizar acessos permitidos e negados com usuários de teste e conferir se todos aparecem na consulta do RF56, e por inspeção, confirmando que a interface não oferece meio de alterar ou apagar os registros.
+A conformidade deve ser verificada por teste: realizar acessos permitidos e negados com usuários de teste e conferir se todos aparecem na consulta do RF56, por teste da API, enviando requisições de alteração e de exclusão dos registros de acesso com usuários de todos os perfis e confirmando que todas são recusadas, e por inspeção das permissões do banco de dados, confirmando que o usuário da aplicação só pode inserir e consultar a tabela de registros de acesso, sem permissão de alteração ou exclusão.
 
 Classificação: auditoria (URPS+).
 Rastreabilidade: Feature "Consultar registro de acessos ao prontuário" → CP12 — Segurança, sigilo e controle de acesso.
@@ -711,7 +720,7 @@ A exigência de acessibilidade não é apenas uma boa prática do projeto: a Cl�
 As páginas voltadas ao público externo devem atender a todos os critérios de sucesso de nível A e AA da WCAG 2.2 aplicáveis a conteúdo web, verificável pela combinação de ferramenta automatizada de auditoria de acessibilidade (ex.: Lighthouse ou axe) e inspeção/teste manual (incluindo navegação por teclado e leitor de tela), sem nenhuma ocorrência de falha de nível A ou AA apontada pela ferramenta ou identificada na inspeção manual.
 
 Classificação: acessibilidade (URPS+).
-Rastreabilidade: CP14 — Acessibilidade e usabilidade (transversal às features "Ativar modo de alto contraste" e "Ajustar tamanho do texto").
+Rastreabilidade: CP14 — Acessibilidade e usabilidade (transversal às páginas voltadas ao público externo, das features "Registrar solicitação de atendimento on-line" (RF1), "Emitir comprovante de inscrição" (RF2), "Consultar posição individual na fila" (RF8), "Confirmar presença em sessão agendada" (RF14), "Listar sessões com comparecimento registrado do paciente" (RF44), "Emitir declaração de comparecimento do paciente" (RF45), "Verificar identidade do paciente ou responsável" (RF52) e "Registrar consentimento para tratamento de dados" (RF57), e às features "Ativar modo de alto contraste" e "Ajustar tamanho do texto").
 
 **RNF57 — Aparência reforçada do indicador de foco**{ #rnf57 }
 
@@ -724,13 +733,13 @@ A operação por teclado e a existência de um indicador de foco visível já fa
 A conformidade deve ser verificada navegando por teclado por todas as páginas voltadas ao público externo, nas combinações de contraste e tamanho de texto, e medindo, com ferramenta de verificação de contraste, a espessura e o contraste do indicador de cada tipo de elemento interativo.
 
 Classificação: acessibilidade (URPS+).
-Rastreabilidade: CP14 — Acessibilidade e usabilidade (transversal às features "Ativar modo de alto contraste" e "Ajustar tamanho do texto").
+Rastreabilidade: CP14 — Acessibilidade e usabilidade (transversal às páginas voltadas ao público externo, das features "Registrar solicitação de atendimento on-line" (RF1), "Emitir comprovante de inscrição" (RF2), "Consultar posição individual na fila" (RF8), "Confirmar presença em sessão agendada" (RF14), "Listar sessões com comparecimento registrado do paciente" (RF44), "Emitir declaração de comparecimento do paciente" (RF45), "Verificar identidade do paciente ou responsável" (RF52) e "Registrar consentimento para tratamento de dados" (RF57), e às features "Ativar modo de alto contraste" e "Ajustar tamanho do texto").
 
 **RNF58 — Responsividade da interface**{ #rnf58 }
 
 A adaptação à largura de 320 pixels já é exigida pelo RNF56 (critério 1.4.10 — Refluxo da WCAG 2.2). Este RNF estende a exigência às telas maiores: as páginas voltadas ao público externo devem se adaptar a qualquer largura de tela entre 320 e 1920 pixels, cobrindo celulares, tablets e computadores, sem perda de funcionalidade, sem sobreposição ou corte de elementos e sem exigir rolagem horizontal.
 
-A conformidade deve ser verificada exibindo cada página voltada ao público externo nas larguras de 360, 768, 1024, 1366 e 1920 pixels, com a ferramenta de simulação de dispositivos do navegador, e confirmando em cada uma a ausência de rolagem horizontal, sobreposição, corte ou funcionalidade inacessível.
+A conformidade deve ser verificada exibindo cada página voltada ao público externo nas larguras de 320, 360, 768, 1024, 1366 e 1920 pixels, com a ferramenta de simulação de dispositivos do navegador, e confirmando em cada uma a ausência de rolagem horizontal, sobreposição, corte ou funcionalidade inacessível.
 
 Classificação: usabilidade (URPS+).
-Rastreabilidade: CP14 — Acessibilidade e usabilidade (transversal às features "Ativar modo de alto contraste" e "Ajustar tamanho do texto").
+Rastreabilidade: CP14 — Acessibilidade e usabilidade (transversal às páginas voltadas ao público externo, das features "Registrar solicitação de atendimento on-line" (RF1), "Emitir comprovante de inscrição" (RF2), "Consultar posição individual na fila" (RF8), "Confirmar presença em sessão agendada" (RF14), "Listar sessões com comparecimento registrado do paciente" (RF44), "Emitir declaração de comparecimento do paciente" (RF45), "Verificar identidade do paciente ou responsável" (RF52) e "Registrar consentimento para tratamento de dados" (RF57), e às features "Ativar modo de alto contraste" e "Ajustar tamanho do texto").
