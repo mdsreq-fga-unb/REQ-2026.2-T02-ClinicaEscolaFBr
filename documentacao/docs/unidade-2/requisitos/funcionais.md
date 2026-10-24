@@ -127,7 +127,7 @@ Sumário de todas as features declaradas, organizadas por Área e Conjunto confo
 
 - *Conjunto: Prontuário*
     - [Criar e inicializar o prontuário do paciente](#feature-criar-e-inicializar-o-prontuario-do-paciente-97)
-    - [Registrar anamnese e contrato terapêutico do paciente](#feature-registrar-anamnese-e-contrato-terapeutico-do-paciente)
+    - [Registrar anamnese e contrato terapêutico do paciente](#feature-registrar-anamnese-e-contrato-terapeutico-do-paciente-130)
     - [Consultar prontuário do paciente](#feature-consultar-prontuario-do-paciente)
 - *Conjunto: Registro de evolução por sessão*
     - [Registrar evolução da sessão realizada](#feature-registrar-evolucao-da-sessao-realizada)
@@ -138,7 +138,7 @@ Sumário de todas as features declaradas, organizadas por Área e Conjunto confo
     - [Consultar histórico de evolução do paciente](#feature-consultar-historico-de-evolucao-do-paciente)
 - *Conjunto: Encerramento do ciclo*
     - [Encerrar caso por alta](#feature-encerrar-caso-por-alta)
-    - [Gerar relatório final de evolução](#feature-gerar-relatorio-final-de-evolucao)
+    - [Gerar relatório final de evolução](#feature-gerar-relatorio-final-de-evolucao-131)
 
 </details>
 
@@ -789,7 +789,7 @@ _Critérios de aceitação:_
 
 _Rastreabilidade:_ Feature "Criar e inicializar o prontuário do paciente" → CP6 — Prontuário eletrônico → OE5/OE6. Dependência: RF21 (CP5). Integração: RF69 (registro dos dados iniciais). Restrição transversal: CP12 — Segurança, sigilo e controle de acesso.
 
-#### Feature — Registrar anamnese e contrato terapêutico do paciente
+#### Feature — Registrar anamnese e contrato terapêutico do paciente [#130](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/issues/130)
 
 **RF69 — Registrar anamnese e contrato terapêutico do paciente**{ #rf69 }
 
@@ -954,7 +954,7 @@ _Rastreabilidade:_ Feature "Consultar histórico de evolução do paciente" → 
 
 A CP8 foi decomposta em uma feature: a geração do relatório final de evolução do ciclo de atendimento, a partir das evoluções registradas na CP7, para revisão do supervisor responsável, conforme a [Solução Proposta, §2.3](../../unidade-1/solucao-proposta.md#23-caracteristicas-de-produto-mapeadas-com-os-objetivos-especificos). Esta seção substitui a decomposição anteriormente consolidada sob o rótulo único "CP6" (issue #34) para a parte referente ao relatório final.
 
-#### Feature — Gerar relatório final de evolução
+#### Feature — Gerar relatório final de evolução [#131](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/issues/131)
 
 **RF33 — Gerar relatório final de evolução**{ #rf33 }
 
