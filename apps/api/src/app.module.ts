@@ -7,6 +7,7 @@ import { validarEnv } from './config/env';
 import { DatabaseModule } from './database/database.module';
 import { HealthController } from './health/health.controller';
 import { NotificacoesModule } from './notificacoes/notificacoes.module';
+import { ParametrosModule } from './parametros/parametros.module';
 import { AcessoModule } from './modules/acesso/acesso.module';
 import { AcompanhamentoClinicoModule } from './modules/acompanhamento-clinico/acompanhamento-clinico.module';
 import { AdministrativoModule } from './modules/administrativo/administrativo.module';
@@ -28,6 +29,7 @@ import { TriagemModule } from './modules/triagem/triagem.module';
     DatabaseModule,
     AuditoriaModule,
     NotificacoesModule,
+    ParametrosModule,
     InscricaoModule,
     TriagemModule,
     FilaModule,
