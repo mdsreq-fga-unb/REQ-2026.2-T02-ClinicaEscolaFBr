@@ -40,7 +40,7 @@ O backlog segue o processo **Planejar por Feature** do FDD:
 
 ### Ciclo 3 (14/10 a 27/10) · Em andamento { #ciclo-3 }
 
-Antes das features, Gabriel preparou a base técnica do projeto (repositório, banco de dados, autenticação base, integração contínua e provedores de e-mail, SMS e PDF), da qual todas dependem. Ela foi concluída em 21/10/2026, no [PR #82](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/pull/82). O DoR e o [projeto das features do Ciclo 3](../unidade-3/projeto-features-ciclo-3.md) estão registrados nas issues.
+Antes das features, Gabriel preparou a base técnica do projeto (repositório, banco de dados, autenticação base, integração contínua, envio de e-mail e geração de PDF), da qual todas dependem. Ela foi concluída em 21/10/2026, no [PR #82](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/pull/82). O DoR e o [projeto das features do Ciclo 3](../unidade-3/projeto-features-ciclo-3.md) estão registrados nas issues.
 
 | Ordem | Feature (RF) | CP | Depende de | Líder de Feature | Issue |
 | --- | --- | --- | --- | --- | --- |
