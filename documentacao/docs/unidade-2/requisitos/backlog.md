@@ -50,7 +50,7 @@ A coluna **Depende de** lista só as dependências obrigatórias, sempre pelo RF
 
 | Ordem | Item de trabalho | CP | Depende de | Responsável | Ciclo | Estado | Issue |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| 0 | Base técnica do projeto (repositório, banco de dados, autenticação base, integração contínua, envio de e-mail e geração de PDF; o envio de SMS, preparado só como simulação, deixou de ser usado com a [DF24](decisoes-fbr.md)) | — | — | Gabriel | Ciclo 3 | Concluída em 21/10/2026 | [PR #82](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/pull/82) |
+| 0 | Base técnica do projeto (repositório, banco de dados, autenticação base, integração contínua, envio de e-mail e geração de PDF) | — | — | Gabriel | Ciclo 3 | Concluída em 21/10/2026 | [PR #82](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/pull/82) |
 | 1 | [RF1](funcionais.md#rf1) — Registrar solicitação de atendimento on-line | CP1 | — | Jônatas | Ciclo 3 | DoR em avaliação | [#88](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/issues/88) |
 | 2 | [RF2](funcionais.md#rf2) — Emitir comprovante de inscrição | CP1 | [RF1](funcionais.md#rf1) | Jônatas | Ciclo 3 | DoR em avaliação | [#89](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/issues/89) |
 | 3 | [RF4](funcionais.md#rf4) — Organizar informações da inscrição para triagem | CP2 | [RF1](funcionais.md#rf1) | Luís Henrique | Ciclo 3 | DoR em avaliação | [#90](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/issues/90) |
