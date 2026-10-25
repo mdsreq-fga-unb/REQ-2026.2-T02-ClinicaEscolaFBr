@@ -176,17 +176,36 @@ export class SessoesService {
     if (atual?.bloqueadoAte && atual.bloqueadoAte > agora) {
       throw this.bloqueio(atual.bloqueadoAte);
     }
-    await conferirSenha(senha, await hashDeComparacao());
+    // Como na conta real, a tentativa é reservada antes de qualquer espera:
+    // tentativas simultâneas também não passam de 3.
     const tentativas = (atual?.bloqueadoAte ? 0 : (atual?.tentativas ?? 0)) + 1;
-    if (this.desconhecidos.size >= MAX_DESCONHECIDOS)
-      this.desconhecidos.clear();
-    if (tentativas >= TENTATIVAS_ATE_BLOQUEIO) {
-      const ate = minutos(MINUTOS_BLOQUEIO, agora);
-      this.desconhecidos.set(email, { tentativas: 0, bloqueadoAte: ate });
-      throw this.bloqueio(ate);
-    }
-    this.desconhecidos.set(email, { tentativas, bloqueadoAte: null });
+    const ate =
+      tentativas >= TENTATIVAS_ATE_BLOQUEIO
+        ? minutos(MINUTOS_BLOQUEIO, agora)
+        : null;
+    this.liberarEspaco(agora);
+    this.desconhecidos.set(
+      email,
+      ate
+        ? { tentativas: 0, bloqueadoAte: ate }
+        : { tentativas, bloqueadoAte: null },
+    );
+    await conferirSenha(senha, await hashDeComparacao());
+    if (ate) throw this.bloqueio(ate);
     throw new UnauthorizedException(MENSAGEM_CREDENCIAIS);
+  }
+
+  // Com a lista cheia, sai primeiro quem não está bloqueado, do mais antigo
+  // para o mais novo, para um bloqueio ativo não ser apagado antes da hora.
+  private liberarEspaco(agora: Date) {
+    if (this.desconhecidos.size < MAX_DESCONHECIDOS) return;
+    for (const [email, t] of this.desconhecidos) {
+      if (!t.bloqueadoAte || t.bloqueadoAte <= agora)
+        this.desconhecidos.delete(email);
+      if (this.desconhecidos.size < MAX_DESCONHECIDOS) return;
+    }
+    const maisAntigo = this.desconhecidos.keys().next().value;
+    if (maisAntigo !== undefined) this.desconhecidos.delete(maisAntigo);
   }
 
   private bloqueio(ate: Date) {

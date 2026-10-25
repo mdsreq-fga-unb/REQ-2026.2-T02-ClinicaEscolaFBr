@@ -203,6 +203,16 @@ describe('Autenticação: login, sessão e logout', () => {
     await entrar('sem.conta@fbr.edu.br', SENHA).expect(423);
   });
 
+  it('tentativas simultâneas com e-mail sem conta também param na 3ª', async () => {
+    const respostas = await Promise.all(
+      ['e1', 'e2', 'e3', 'e4', 'e5', 'e6'].map((s) =>
+        entrar('outro.sem.conta@fbr.edu.br', `errada${s}00`),
+      ),
+    );
+    const status = respostas.map((r) => r.status).sort((a, b) => a - b);
+    expect(status).toEqual([401, 401, 423, 423, 423, 423]);
+  });
+
   it('depois dos 15 minutos, a senha certa entra e zera o bloqueio', async () => {
     for (const senha of ['errada111', 'errada222', 'errada333']) {
       await entrar('ana@fbr.edu.br', senha);
