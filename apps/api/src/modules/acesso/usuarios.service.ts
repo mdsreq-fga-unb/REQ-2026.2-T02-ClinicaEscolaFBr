@@ -4,10 +4,22 @@ import {
   GoneException,
   Inject,
   Injectable,
+  Logger,
   NotFoundException,
+  ServiceUnavailableException,
 } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { and, asc, desc, eq, ilike, inArray, isNull, or } from 'drizzle-orm';
+import {
+  and,
+  asc,
+  desc,
+  eq,
+  gt,
+  ilike,
+  inArray,
+  isNull,
+  or,
+} from 'drizzle-orm';
 import {
   auditoria,
   convitesAtivacao,
@@ -19,6 +31,7 @@ import type {
   Ativacao,
   CadastroUsuario,
   FiltroUsuarios,
+  ResultadoCadastroUsuario,
   UsuarioListado,
 } from '@clinica/shared';
 import type { UsuarioAutenticado } from '../../auth/usuario-autenticado';
@@ -41,8 +54,19 @@ const NOMES_PERFIL = {
   coordenacao: 'Coordenação',
 } as const;
 
+const EMAIL_REPETIDO = 'Este e-mail já está cadastrado para outro usuário.';
+const LINK_INVALIDO = 'Este link de ativação não é mais válido.';
+
+// Violação de unique no Postgres (23505), direto ou embrulhada pelo Drizzle.
+const violaUnico = (erro: unknown) => {
+  const e = erro as { code?: string; cause?: { code?: string } };
+  return e?.code === '23505' || e?.cause?.code === '23505';
+};
+
 @Injectable()
 export class UsuariosService {
+  private readonly logger = new Logger(UsuariosService.name);
+
   constructor(
     @Inject(DB) private readonly db: Db,
     private readonly auditoria: AuditoriaService,
@@ -117,37 +141,50 @@ export class UsuariosService {
   }
 
   // Cadastro com perfil e envio do convite de ativação (RF53).
-  async cadastrar(dados: CadastroUsuario, autor: UsuarioAutenticado) {
+  async cadastrar(
+    dados: CadastroUsuario,
+    autor: UsuarioAutenticado,
+  ): Promise<ResultadoCadastroUsuario> {
     const [existente] = await this.db
       .select({ id: usuarios.id })
       .from(usuarios)
       .where(eq(usuarios.email, dados.email));
-    if (existente) {
-      throw new ConflictException(
-        'Este e-mail já está cadastrado para outro usuário.',
-      );
-    }
+    if (existente) throw new ConflictException(EMAIL_REPETIDO);
     const horas = await this.parametros.numero('validade_convite_horas');
-    const { usuario, token } = await this.db.transaction(async (tx) => {
-      const [usuario] = await tx
-        .insert(usuarios)
-        .values({ ...dados, situacao: 'pendente_ativacao' })
-        .returning();
-      const token = await this.criarConvite(tx, usuario.id, horas);
-      await this.auditoria.registrar(
-        {
-          usuarioId: autor.id,
-          operacao: 'cadastrar_usuario',
-          entidade: 'usuarios',
-          entidadeId: usuario.id,
-          dadosNovos: dados,
-        },
-        tx,
-      );
-      return { usuario, token };
-    });
-    await this.enviarConvite(usuario, token, horas);
-    return { id: usuario.id, situacao: usuario.situacao };
+    // Dois cadastros simultâneos passam pela consulta acima; o unique do banco decide.
+    const { usuario, token } = await this.db
+      .transaction(async (tx) => {
+        const [usuario] = await tx
+          .insert(usuarios)
+          .values({ ...dados, situacao: 'pendente_ativacao' })
+          .returning();
+        const token = await this.criarConvite(tx, usuario.id, horas);
+        await this.auditoria.registrar(
+          {
+            usuarioId: autor.id,
+            operacao: 'cadastrar_usuario',
+            entidade: 'usuarios',
+            entidadeId: usuario.id,
+            dadosNovos: dados,
+          },
+          tx,
+        );
+        return { usuario, token };
+      })
+      .catch((erro: unknown) => {
+        if (violaUnico(erro)) throw new ConflictException(EMAIL_REPETIDO);
+        throw erro;
+      });
+    // O e-mail sai depois do commit: se falhar, o cadastro continua valendo e a
+    // coordenação reenvia o convite pela lista.
+    let conviteEnviado = true;
+    try {
+      await this.enviarConvite(usuario, token, horas);
+    } catch (erro) {
+      conviteEnviado = false;
+      this.logger.error(`Convite não enviado para ${usuario.id}`, erro);
+    }
+    return { id: usuario.id, situacao: usuario.situacao, conviteEnviado };
   }
 
   // Reenvio do convite: o anterior deixa de valer (RF53).
@@ -182,7 +219,14 @@ export class UsuariosService {
       );
       return token;
     });
-    await this.enviarConvite(usuario, token, horas);
+    try {
+      await this.enviarConvite(usuario, token, horas);
+    } catch (erro) {
+      this.logger.error(`Convite não reenviado para ${id}`, erro);
+      throw new ServiceUnavailableException(
+        'O e-mail do convite não pôde ser enviado agora. Tente reenviar em instantes.',
+      );
+    }
   }
 
   // Desativação (RF54): nada é apagado; as sessões abertas são revogadas.
@@ -238,18 +282,38 @@ export class UsuariosService {
   }
 
   // Ativação da conta: grava o hash da senha e marca o convite como usado (RF53).
+  // As duas gravações repetem as condições da consulta inicial: enquanto o hash da
+  // senha é calculado, outro envio do mesmo link ou uma desativação pode chegar
+  // antes, e então nenhuma linha muda e a resposta é 410.
   async ativar(dados: Ativacao) {
     const { convite, usuario } = await this.buscarConviteValido(dados.token);
     const senhaHash = await gerarHashSenha(dados.senha);
     await this.db.transaction(async (tx) => {
-      await tx
+      const agora = new Date();
+      const usado = await tx
+        .update(convitesAtivacao)
+        .set({ usadoEm: agora })
+        .where(
+          and(
+            eq(convitesAtivacao.id, convite.id),
+            isNull(convitesAtivacao.usadoEm),
+            isNull(convitesAtivacao.invalidadoEm),
+            gt(convitesAtivacao.expiraEm, agora),
+          ),
+        )
+        .returning({ id: convitesAtivacao.id });
+      if (usado.length === 0) throw new GoneException(LINK_INVALIDO);
+      const ativado = await tx
         .update(usuarios)
         .set({ senhaHash, situacao: 'ativo' })
-        .where(eq(usuarios.id, usuario.id));
-      await tx
-        .update(convitesAtivacao)
-        .set({ usadoEm: new Date() })
-        .where(eq(convitesAtivacao.id, convite.id));
+        .where(
+          and(
+            eq(usuarios.id, usuario.id),
+            eq(usuarios.situacao, 'pendente_ativacao'),
+          ),
+        )
+        .returning({ id: usuarios.id });
+      if (ativado.length === 0) throw new GoneException(LINK_INVALIDO);
       await this.auditoria.registrar(
         {
           usuarioId: usuario.id,
@@ -286,7 +350,7 @@ export class UsuariosService {
       linha.convite.expiraEm.getTime() <= Date.now() ||
       linha.usuario.situacao !== 'pendente_ativacao';
     if (invalido) {
-      throw new GoneException('Este link de ativação não é mais válido.');
+      throw new GoneException(LINK_INVALIDO);
     }
     return linha;
   }

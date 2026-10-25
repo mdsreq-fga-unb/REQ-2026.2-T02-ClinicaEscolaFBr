@@ -8,6 +8,7 @@ import {
   SITUACOES_USUARIO,
   type CadastroUsuario,
   type Perfil,
+  type ResultadoCadastroUsuario,
   type SituacaoUsuario,
   type UsuarioListado,
 } from "@clinica/shared";
@@ -69,7 +70,7 @@ function FormularioCadastro({
   aoConcluir,
   aoCancelar,
 }: {
-  aoConcluir: (email: string) => void;
+  aoConcluir: (email: string, conviteEnviado: boolean) => void;
   aoCancelar: () => void;
 }) {
   const [dados, setDados] = useState<Partial<CadastroUsuario>>({});
@@ -79,10 +80,13 @@ function FormularioCadastro({
   const cliente = useQueryClient();
   const cadastro = useMutation({
     mutationFn: (valores: CadastroUsuario) =>
-      api("/usuarios", { method: "POST", body: JSON.stringify(valores) }),
-    onSuccess: (_, valores) => {
+      api<ResultadoCadastroUsuario>("/usuarios", {
+        method: "POST",
+        body: JSON.stringify(valores),
+      }),
+    onSuccess: (resultado, valores) => {
       void cliente.invalidateQueries({ queryKey: ["usuarios"] });
-      aoConcluir(valores.email);
+      aoConcluir(valores.email, resultado.conviteEnviado);
     },
     onError: (erro) => {
       if (erro instanceof ErroApi && erro.status === 409) {
@@ -212,6 +216,7 @@ export default function UsuariosPage() {
     null,
   );
   const [mensagem, setMensagem] = useState<{
+    tipo?: "sucesso" | "alerta";
     titulo: string;
     texto: string;
   } | null>(null);
@@ -297,12 +302,16 @@ export default function UsuariosPage() {
       </div>
 
       {mensagem && (
-        <Aviso tipo="sucesso" titulo={mensagem.titulo}>
+        <Aviso tipo={mensagem.tipo ?? "sucesso"} titulo={mensagem.titulo}>
           {mensagem.texto}
         </Aviso>
       )}
       {reenvio.isError && (
-        <Aviso tipo="erro" titulo="Não foi possível reenviar o convite." />
+        <Aviso tipo="erro" titulo="Não foi possível reenviar o convite.">
+          {reenvio.error instanceof ErroApi && reenvio.error.status === 503
+            ? reenvio.error.message
+            : null}
+        </Aviso>
       )}
 
       <section
@@ -443,13 +452,22 @@ export default function UsuariosPage() {
         {cadastroAberto && (
           <FormularioCadastro
             aoCancelar={() => setCadastroAberto(false)}
-            aoConcluir={(email) => {
+            aoConcluir={(email, conviteEnviado) => {
               setCadastroAberto(false);
-              setMensagem({
-                titulo: `Convite enviado para ${email}.`,
-                texto:
-                  'A conta fica "Pendente de ativação" até a pessoa criar a própria senha pelo link do convite (válido por 72 horas).',
-              });
+              setMensagem(
+                conviteEnviado
+                  ? {
+                      titulo: `Convite enviado para ${email}.`,
+                      texto:
+                        'A conta fica "Pendente de ativação" até a pessoa criar a própria senha pelo link do convite (válido por 72 horas).',
+                    }
+                  : {
+                      tipo: "alerta",
+                      titulo: `Usuário cadastrado, mas o convite não foi enviado para ${email}.`,
+                      texto:
+                        'O e-mail não pôde ser enviado agora. Use "Reenviar convite" na linha da pessoa para tentar de novo.',
+                    },
+              );
             }}
           />
         )}
