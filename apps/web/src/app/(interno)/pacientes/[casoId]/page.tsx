@@ -6,6 +6,7 @@ import { Aviso } from "@/components/comum/aviso";
 import { Dados } from "@/components/comum/dados";
 import { buttonVariants } from "@/components/ui/button";
 import { api } from "@/lib/api";
+import { useSessao } from "@/lib/sessao";
 import { cn } from "@/lib/utils";
 import {
   dataBr,
@@ -27,14 +28,18 @@ type DadosAdministrativos = {
   proximaSessao: string | null;
   estagiario: string | null;
   supervisor: string | null;
+  // Só vem para a coordenação, que consulta o prontuário (DF32).
+  prontuarioId?: string | null;
 };
 
 const celularBr = (c: string | null) =>
   c ? c.replace(/^(\d{2})(\d{4,5})(\d{4})$/, "($1) $2-$3") : "—";
 
-// Dados cadastrais e administrativos, sem conteúdo clínico (RF55).
+// Dados cadastrais e administrativos (RF55). O conteúdo clínico fica no prontuário,
+// que a coordenação abre por aqui e a secretaria não vê.
 export default function PacientePage() {
   const { casoId } = useParams<{ casoId: string }>();
+  const { data: sessao } = useSessao();
   const consulta = useQuery({
     queryKey: ["paciente", casoId],
     queryFn: () =>
@@ -54,13 +59,15 @@ export default function PacientePage() {
         › {d.nome}
       </nav>
       <h1 className="text-2xl font-semibold text-marca">{d.nome}</h1>
-      <Aviso
-        tipo="info"
-        titulo="O conteúdo clínico não aparece para o seu perfil."
-      >
-        Anamnese, contrato terapêutico e registros de sessão são restritos ao
-        estagiário responsável e ao seu supervisor.
-      </Aviso>
+      {d.prontuarioId === undefined && (
+        <Aviso
+          tipo="info"
+          titulo="O conteúdo clínico não aparece para o seu perfil."
+        >
+          Anamnese, contrato terapêutico e registros de sessão são restritos ao
+          estagiário responsável, ao seu supervisor e à coordenação.
+        </Aviso>
+      )}
       <div className="grid gap-4 md:grid-cols-2">
         <section
           aria-labelledby="cadastrais"
@@ -103,15 +110,27 @@ export default function PacientePage() {
           />
         </section>
       </div>
-      <Link
-        href={`/agendar-sessao?caso=${d.casoId}`}
-        className={cn(
-          buttonVariants({ variant: "outline", size: "lg" }),
-          "border-primary text-primary",
+      <div className="flex flex-wrap gap-3">
+        {d.prontuarioId && (
+          <Link
+            href={`/prontuarios/${d.prontuarioId}`}
+            className={buttonVariants({ size: "lg" })}
+          >
+            Ver prontuário
+          </Link>
         )}
-      >
-        Agendar sessão
-      </Link>
+        {sessao?.perfil === "secretaria" && (
+          <Link
+            href={`/agendar-sessao?caso=${d.casoId}`}
+            className={cn(
+              buttonVariants({ variant: "outline", size: "lg" }),
+              "border-primary text-primary",
+            )}
+          >
+            Agendar sessão
+          </Link>
+        )}
+      </div>
     </div>
   );
 }

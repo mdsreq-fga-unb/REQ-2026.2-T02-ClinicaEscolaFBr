@@ -24,6 +24,7 @@ describe('Restrição de acesso ao prontuário (RF55)', () => {
   let limpar: () => Promise<unknown>;
   let fechar: () => Promise<void>;
   let servico: ProntuariosService;
+  let politica: PoliticaProntuario;
   let prontuarioId: string;
   let casoId: string;
   const pessoas: Record<string, UsuarioAutenticado> = {};
@@ -109,9 +110,10 @@ describe('Restrição de acesso ao prontuário (RF55)', () => {
       .returning();
     prontuarioId = prontuario.id;
 
+    politica = new PoliticaProntuario(db);
     servico = new ProntuariosService(
       db,
-      new PoliticaProntuario(db),
+      politica,
       new ConfigService({ CHAVE_DADOS: CHAVE_TESTE }),
     );
   });
@@ -146,7 +148,38 @@ describe('Restrição de acesso ao prontuário (RF55)', () => {
     ).resolves.toMatchObject({ id: prontuarioId });
   });
 
-  it.each(['estagiarioB', 'outroSupervisor', 'secretaria', 'coordenacao'])(
+  it('a coordenação vê o conteúdo clínico de qualquer prontuário, e o acesso é registrado (DF32)', async () => {
+    const prontuario = await servico.consultar(
+      prontuarioId,
+      pessoas.coordenacao,
+    );
+    expect(prontuario.dadosIniciais.anamnese).toBe(
+      'Relata cansaço e desânimo.',
+    );
+    expect(await acessos()).toEqual([
+      expect.objectContaining({
+        usuarioId: pessoas.coordenacao.id,
+        perfil: 'coordenacao',
+        permitido: true,
+        prontuarioId,
+      }),
+    ]);
+  });
+
+  it('a coordenação não tem acesso de escrita ao prontuário', async () => {
+    await expect(
+      politica.exigirAcesso(
+        pessoas.coordenacao,
+        prontuarioId,
+        'registrar_evolucao',
+        'escrita',
+      ),
+    ).rejects.toMatchObject({ status: 403 });
+    const [registro] = await acessos();
+    expect(registro).toMatchObject({ permitido: false, prontuarioId });
+  });
+
+  it.each(['estagiarioB', 'outroSupervisor', 'secretaria'])(
     '%s tem o acesso negado na API, e a tentativa é registrada',
     async (quem) => {
       await expect(
@@ -184,7 +217,10 @@ describe('Restrição de acesso ao prontuário (RF55)', () => {
   });
 
   it('os dados administrativos não trazem conteúdo clínico', async () => {
-    const dados = await servico.dadosAdministrativos(casoId);
+    const dados = await servico.dadosAdministrativos(
+      casoId,
+      pessoas.secretaria,
+    );
     expect(dados).toMatchObject({
       nome: 'Mariana Alves Toledo',
       celular: '61998765432',
@@ -202,6 +238,17 @@ describe('Restrição de acesso ao prontuário (RF55)', () => {
     ]) {
       expect(texto).not.toContain(clinico);
     }
+  });
+
+  it('só a coordenação recebe o id do prontuário nos dados administrativos', async () => {
+    await expect(
+      servico.dadosAdministrativos(casoId, pessoas.coordenacao),
+    ).resolves.toMatchObject({ prontuarioId });
+    const daSecretaria = await servico.dadosAdministrativos(
+      casoId,
+      pessoas.secretaria,
+    );
+    expect(daSecretaria).not.toHaveProperty('prontuarioId');
   });
 
   it('o registro de acessos não pode ser alterado nem apagado (RNF52)', async () => {

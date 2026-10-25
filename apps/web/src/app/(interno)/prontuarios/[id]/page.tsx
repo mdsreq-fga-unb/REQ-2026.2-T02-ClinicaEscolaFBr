@@ -57,7 +57,8 @@ function AcessoNegado({ voltar }: { voltar: string }) {
   );
 }
 
-// Prontuário, só para o estagiário responsável e o supervisor do caso (RF55).
+// Prontuário, para o estagiário responsável e o supervisor do caso e, só para
+// consulta, para a coordenação (RF55, DF32).
 export default function ProntuarioPage() {
   const { id } = useParams<{ id: string }>();
   const { data: sessao } = useSessao();
@@ -86,7 +87,11 @@ export default function ProntuarioPage() {
     <div className="mx-auto max-w-5xl space-y-6">
       <nav aria-label="Trilha" className="text-sm">
         <Link href={voltar} className="text-primary underline">
-          {sessao?.perfil === "supervisor" ? "Meus casos" : "Meus pacientes"}
+          {sessao?.perfil === "supervisor"
+            ? "Meus casos"
+            : sessao?.perfil === "estagiario"
+              ? "Meus pacientes"
+              : "Pacientes"}
         </Link>{" "}
         › Prontuário
       </nav>

@@ -1,10 +1,11 @@
 import { Inject, Injectable, NotFoundException } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { aliasedTable, and, eq, gt, asc } from 'drizzle-orm';
+import { aliasedTable, and, eq, gt, asc, desc } from 'drizzle-orm';
 import {
   atribuicoesSupervisor,
   casos,
   inscricoes,
+  prontuarios,
   sessoesAtendimento,
   usuarios,
   vinculosEstagiario,
@@ -26,12 +27,14 @@ export class ProntuariosService {
     private readonly config: ConfigService,
   ) {}
 
-  // Prontuário com o conteúdo clínico, só para o estagiário e o supervisor do caso (RF55).
+  // Prontuário com o conteúdo clínico, para o estagiário e o supervisor do caso e,
+  // em qualquer caso, para a coordenação (RF55, DF32).
   async consultar(id: string, usuario: UsuarioAutenticado) {
     const prontuario = await this.politica.exigirAcesso(
       usuario,
       id,
       'consultar_prontuario',
+      'leitura',
     );
     const caso = await this.resumoDoCaso(prontuario.casoId);
     const chave = this.config.getOrThrow<string>('CHAVE_DADOS');
@@ -53,7 +56,9 @@ export class ProntuariosService {
 
   // Dados cadastrais e administrativos, sem conteúdo clínico, para a secretaria e a
   // coordenação (RF55). Faltas e contribuição social entram com o RF34 e o RF41.
-  async dadosAdministrativos(casoId: string) {
+  // Só a coordenação recebe o id do prontuário, para abri-lo; para a secretaria, nem a
+  // existência do prontuário é revelada (RNF25).
+  async dadosAdministrativos(casoId: string, usuario: UsuarioAutenticado) {
     const caso = await this.resumoDoCaso(casoId);
     const [linha] = await this.db
       .select({
@@ -77,7 +82,15 @@ export class ProntuariosService {
       )
       .orderBy(asc(sessoesAtendimento.inicio))
       .limit(1);
-    return { ...caso, ...linha, proximaSessao: proxima?.inicio ?? null };
+    const dados = { ...caso, ...linha, proximaSessao: proxima?.inicio ?? null };
+    if (usuario.perfil !== 'coordenacao') return dados;
+    const [prontuario] = await this.db
+      .select({ id: prontuarios.id })
+      .from(prontuarios)
+      .where(eq(prontuarios.casoId, casoId))
+      .orderBy(desc(prontuarios.cicloAtendimento))
+      .limit(1);
+    return { ...dados, prontuarioId: prontuario?.id ?? null };
   }
 
   private async resumoDoCaso(casoId: string) {

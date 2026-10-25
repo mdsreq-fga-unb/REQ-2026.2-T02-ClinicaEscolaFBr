@@ -11,7 +11,8 @@ import type { UsuarioAutenticado } from '../../auth/usuario-autenticado';
 import { DB } from '../../database/database.module';
 
 // Regra de acesso ao prontuário (RF55): só o estagiário responsável e o supervisor
-// do caso veem o conteúdo clínico. A verificação é feita na API, e todo acesso,
+// do caso veem o conteúdo clínico, e a coordenação consulta qualquer prontuário,
+// sem registrar nem alterar nada nele (DF32). A verificação é feita na API, e todo acesso,
 // permitido ou negado, é registrado (RNF52). A resposta negada é a mesma para
 // prontuário inexistente, para não revelar o que existe (RNF25).
 @Injectable()
@@ -22,6 +23,7 @@ export class PoliticaProntuario {
     usuario: UsuarioAutenticado,
     prontuarioId: string,
     operacao: string,
+    modo: 'leitura' | 'escrita',
   ) {
     const [linha] = await this.db
       .select({
@@ -49,7 +51,9 @@ export class PoliticaProntuario {
     const permitido =
       !!linha &&
       ((usuario.perfil === 'estagiario' && linha.estagiarioId === usuario.id) ||
-        (usuario.perfil === 'supervisor' && linha.supervisorId === usuario.id));
+        (usuario.perfil === 'supervisor' &&
+          linha.supervisorId === usuario.id) ||
+        (usuario.perfil === 'coordenacao' && modo === 'leitura'));
 
     await this.db.insert(acessosProntuario).values({
       prontuarioId: linha?.prontuario.id ?? null,

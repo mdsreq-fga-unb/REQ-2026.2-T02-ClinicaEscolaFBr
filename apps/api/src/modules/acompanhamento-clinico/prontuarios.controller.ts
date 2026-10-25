@@ -32,7 +32,10 @@ export class ProntuariosController {
   @Get('pacientes/:casoId/dados-administrativos')
   @UseGuards(PerfisGuard)
   @Perfis('secretaria', 'coordenacao')
-  dadosAdministrativos(@Param('casoId', ParseUUIDPipe) casoId: string) {
-    return this.prontuarios.dadosAdministrativos(casoId);
+  dadosAdministrativos(
+    @Param('casoId', ParseUUIDPipe) casoId: string,
+    @UsuarioAtual() usuario: UsuarioAutenticado,
+  ) {
+    return this.prontuarios.dadosAdministrativos(casoId, usuario);
   }
 }
