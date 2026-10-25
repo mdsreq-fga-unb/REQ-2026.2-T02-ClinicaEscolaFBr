@@ -265,7 +265,7 @@ sequenceDiagram
 - **O que entra depois:** a mesma política passa a valer para a evolução (CP7, a partir do Ciclo 4). O critério da transferência entre estagiários é verificado quando a transferência (RF25) for construída, no Ciclo 4, e a política passa a proteger também o relatório final (RF33) no Ciclo 6.
 
 **Rotas:**
-- `GET /prontuarios/:id`: estagiário responsável e supervisor do caso.
+- `GET /prontuarios/:id`: estagiário responsável e supervisor do caso; coordenação, só leitura, em qualquer caso ([DF32](../unidade-2/requisitos/decisoes-fbr.md)).
 - `GET /pacientes/:id/dados-administrativos`: secretaria e coordenação.
 
 ```mermaid
@@ -277,11 +277,11 @@ sequenceDiagram
     U->>A: GET /prontuarios/:id
     A->>P: pode acessar(usuário, prontuário)?
     P->>DB: vínculo vigente do caso (estagiário e supervisor)
-    alt é o estagiário responsável ou o supervisor do caso
+    alt coordenação, estagiário responsável ou supervisor do caso
         P-->>A: permitido
         A->>DB: auditoria do acesso (RNF52)
         A-->>U: conteúdo clínico
-    else qualquer outro perfil ou estagiário
+    else secretaria, outro estagiário ou outro supervisor
         P-->>A: negado
         A->>DB: auditoria do acesso negado (RNF52)
         A-->>U: 403
@@ -291,7 +291,8 @@ sequenceDiagram
 | Regra | Critério de aceitação |
 | --- | --- |
 | A verificação acontece na API (`PoliticaProntuario`), não só na interface | Estagiário não responsável tem o acesso negado, inclusive com requisição direta ao servidor |
-| A rota administrativa devolve apenas nome, data de nascimento, contatos, responsável legal, situação do caso, sessões, faltas e contribuição | Secretaria e coordenação veem só os dados cadastrais e administrativos |
+| A coordenação consulta qualquer prontuário, sem vínculo com o caso, e o acesso fica registrado | A coordenação vê o conteúdo clínico de um caso sem vínculo, e o acesso aparece no registro |
+| A rota administrativa devolve apenas nome, data de nascimento, contatos, responsável legal, situação do caso, sessões, faltas e contribuição | A secretaria vê só os dados cadastrais e administrativos |
 | Os dados são criptografados em repouso e em trânsito (RNF51) | Inspeção do banco e do HTTPS no ambiente de homologação |
 
 **Dados de teste:** um caso com estagiário A e supervisor S; outro estagiário B; uma secretaria; uma coordenação.

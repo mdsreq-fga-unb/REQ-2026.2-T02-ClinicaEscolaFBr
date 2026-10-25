@@ -363,7 +363,7 @@ A CP6 tem duas features (ver [Requisitos Funcionais](funcionais.md)); o RNF abai
 
 **RNF25 — Sigilo do conteúdo clínico nas respostas negadas**{ #rnf25 }
 
-Quando o acesso for negado pelo RF55, nenhuma listagem, resultado de busca, endereço eletrônico, notificação, mensagem de erro ou resposta do servidor deve expor conteúdo clínico nem indicar a sua existência. Os perfis e vínculos autorizados permanecem definidos exclusivamente no RF55. A regra vale para todo registro clínico, com as particularidades abaixo:
+Quando o acesso for negado pelo RF55 (a secretaria, o estagiário e o supervisor sem vínculo com o caso), nenhuma listagem, resultado de busca, endereço eletrônico, notificação, mensagem de erro ou resposta do servidor deve expor conteúdo clínico nem indicar a sua existência. Os perfis e vínculos autorizados permanecem definidos exclusivamente no RF55. A regra vale para todo registro clínico, com as particularidades abaixo:
 
 | Registro | O que a resposta negada não pode expor nem indicar |
 | --- | --- |

@@ -115,7 +115,7 @@ _Figura 16 — Registro da reunião de validação do protótipo do Ciclo 3 com 
 [Consultar ata completa em PDF](../assets/atas-reunioes/Ata_Reuniao_Ciclo3_Validacao_Prototipo_FBr_23-10-2026.pdf)
 
 !!! note "Correção de 24/10/2026"
-    Conferido com a gravação da reunião, o resumo abaixo corrige três pontos da ata em PDF: o e-mail continua como canal de contato (só o SMS foi descartado), as 2 faltas que levam ao desligamento valem consecutivas ou não, e os 10 dias para o pagamento contam do vínculo com o estagiário. Também registra a ausência de prazo de triagem, dita na reunião e não incluída na ata. As decisões estão no [Registro de Decisões com a FBr](../unidade-2/requisitos/decisoes-fbr.md).
+    Conferido com a gravação da reunião, o resumo abaixo corrige três pontos da ata em PDF: o e-mail continua como canal de contato (só o SMS foi descartado), as 2 faltas que levam ao desligamento valem consecutivas ou não, e os 10 dias para o pagamento contam do vínculo com o estagiário. Também registra dois pontos ditos na reunião e não incluídos na ata: a ausência de prazo de triagem e a consulta, pela coordenação, do conteúdo clínico de todos os prontuários. As decisões estão no [Registro de Decisões com a FBr](../unidade-2/requisitos/decisoes-fbr.md).
 
 ### Objetivo
 
@@ -137,6 +137,7 @@ A equipe apresentou à FBr o protótipo de alta fidelidade das funcionalidades d
 - **Registro de evolução:** campos obrigatórios para data, evolução da queixa (até 10 linhas) e planejamento. Deve haver fechamento avaliativo a cada 10 sessões.
 - **Canais de contato:** o paciente escolhe entre e-mail, WhatsApp e ligação. Quem escolhe e-mail recebe as mensagens automáticas; quem escolhe WhatsApp ou ligação é contatado pela secretaria. O SMS foi descartado devido ao baixo acesso tecnológico do público.
 - **Prazo de triagem:** a clínica não adota prazo de triagem; a inscrição aguarda conforme as vagas e só é chamada quando uma vaga é liberada.
+- **Acesso da coordenação ao prontuário:** a coordenação consulta o conteúdo clínico de todos os prontuários, além das tentativas de acesso negado.
 - **Login:** o acesso será bloqueado por 15 minutos após 3 tentativas incorretas, reduzidas de 5 para 3 por sugestão da coordenação de Psicologia.
 - **Especialidades:** não haverá divisão por área; todos os atendimentos serão tratados como psicologia clínica geral. O conceito de área de especialidade será removido do cadastro, dos critérios de distribuição e dos itens de menu.
 
