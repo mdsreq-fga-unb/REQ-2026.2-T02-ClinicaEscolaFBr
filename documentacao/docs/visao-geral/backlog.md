@@ -78,7 +78,7 @@ Antes das features, Gabriel preparou a base técnica do projeto (repositório, b
 | 27 | [RF36](../unidade-2/requisitos/funcionais.md#rf36) — Emitir alerta de limite de faltas atingido | CP9 | [RF35](../unidade-2/requisitos/funcionais.md#rf35) | Gabriel | — |
 | 28 | [RF37](../unidade-2/requisitos/funcionais.md#rf37) — Desligar paciente por faltas e liberar vaga | CP9 | [RF36](../unidade-2/requisitos/funcionais.md#rf36) | Gabriel | — |
 | 29 | [RF38](../unidade-2/requisitos/funcionais.md#rf38) — Reverter desligamento de paciente por faltas | CP9 | [RF37](../unidade-2/requisitos/funcionais.md#rf37) | Gabriel | — |
-| 30 | [RF51](../unidade-2/requisitos/funcionais.md#rf51) — Encerrar sessão do usuário | CP12 | — | Joaquim | [#46](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/issues/46) |
+| 30 | [RF51](../unidade-2/requisitos/funcionais.md#rf51) — Encerrar sessão do usuário | CP12 | [RF50](../unidade-2/requisitos/funcionais.md#rf50) | Joaquim | [#46](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/issues/46) |
 | 31 | [RF52](../unidade-2/requisitos/funcionais.md#rf52) — Verificar identidade do paciente ou responsável | CP12 | — | Joaquim | [#47](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/issues/47) |
 | 32 | [RF8](../unidade-2/requisitos/funcionais.md#rf8) — Consultar posição individual na fila | CP3 | [RF52](../unidade-2/requisitos/funcionais.md#rf52) | Jônatas | — |
 | 33 | [RF57](../unidade-2/requisitos/funcionais.md#rf57) — Registrar consentimento para tratamento de dados | CP12 | — | Jônatas | [#52](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/issues/52) |
