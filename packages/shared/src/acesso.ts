@@ -75,3 +75,11 @@ export type UsuarioListado = {
   conviteVencido: boolean;
   desativadoEm: string | null;
 };
+
+// Resposta do cadastro: o usuário fica salvo mesmo se o e-mail do convite falhar,
+// e a coordenação usa o reenvio (RF53).
+export type ResultadoCadastroUsuario = {
+  id: string;
+  situacao: z.infer<typeof situacaoUsuarioSchema>;
+  conviteEnviado: boolean;
+};

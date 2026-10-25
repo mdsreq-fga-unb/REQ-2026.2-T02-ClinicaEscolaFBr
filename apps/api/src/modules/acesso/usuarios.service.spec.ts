@@ -20,6 +20,7 @@ describe('UsuariosService (RF53 e RF54)', () => {
   let fechar: () => Promise<void>;
   let servico: UsuariosService;
   let emails: { para: string; html: string }[];
+  let falharEmail: boolean;
   const coordenacao = {
     id: '',
     nome: 'Helena Duarte',
@@ -40,8 +41,10 @@ describe('UsuariosService (RF53 e RF54)', () => {
   beforeEach(async () => {
     await limpar();
     emails = [];
+    falharEmail = false;
     const email = {
       enviar: jest.fn(async (para: string, _assunto: string, html: string) => {
+        if (falharEmail) throw new Error('SMTP fora do ar');
         emails.push({ para, html });
       }),
     } as unknown as EmailService;
@@ -95,6 +98,49 @@ describe('UsuariosService (RF53 e RF54)', () => {
     });
   });
 
+  it('dois cadastros simultâneos com o mesmo e-mail: um entra e o outro recebe 409', async () => {
+    const dados = {
+      nome: 'Pedro Lima',
+      email: 'pedro@fbr.edu.br',
+      perfil: 'estagiario' as const,
+    };
+    const resultados = await Promise.allSettled([
+      servico.cadastrar(dados, coordenacao),
+      servico.cadastrar(dados, coordenacao),
+    ]);
+    expect(resultados.filter((r) => r.status === 'fulfilled')).toHaveLength(1);
+    expect(resultados.find((r) => r.status === 'rejected')).toMatchObject({
+      reason: { status: 409 },
+    });
+  });
+
+  it('se o e-mail do convite falhar, o cadastro vale e avisa que o convite não saiu', async () => {
+    falharEmail = true;
+    const resultado = await servico.cadastrar(
+      { nome: 'Pedro Lima', email: 'pedro@fbr.edu.br', perfil: 'estagiario' },
+      coordenacao,
+    );
+    expect(resultado).toMatchObject({
+      situacao: 'pendente_ativacao',
+      conviteEnviado: false,
+    });
+
+    falharEmail = false;
+    await servico.reenviarConvite(resultado.id, coordenacao);
+    expect(emails.map((e) => e.para)).toEqual(['pedro@fbr.edu.br']);
+  });
+
+  it('se o e-mail do reenvio falhar, responde 503 para a coordenação tentar de novo', async () => {
+    const { id } = await servico.cadastrar(
+      { nome: 'Pedro Lima', email: 'pedro@fbr.edu.br', perfil: 'estagiario' },
+      coordenacao,
+    );
+    falharEmail = true;
+    await expect(
+      servico.reenviarConvite(id, coordenacao),
+    ).rejects.toMatchObject({ status: 503 });
+  });
+
   it('recusa e-mail já cadastrado', async () => {
     await expect(
       servico.cadastrar(
@@ -130,6 +176,44 @@ describe('UsuariosService (RF53 e RF54)', () => {
     await expect(servico.conviteValido(token)).rejects.toMatchObject({
       status: 410,
     });
+  });
+
+  it('dois envios simultâneos do mesmo link: só o primeiro ativa a conta', async () => {
+    const { id } = await servico.cadastrar(
+      { nome: 'Ana Costa', email: 'ana@fbr.edu.br', perfil: 'estagiario' },
+      coordenacao,
+    );
+    const token = tokenDoUltimoEmail();
+    const resultados = await Promise.allSettled([
+      servico.ativar({ token, senha: 'primeira1', confirmacao: 'primeira1' }),
+      servico.ativar({ token, senha: 'segunda22', confirmacao: 'segunda22' }),
+    ]);
+    expect(resultados.filter((r) => r.status === 'fulfilled')).toHaveLength(1);
+    expect(resultados.find((r) => r.status === 'rejected')).toMatchObject({
+      reason: { status: 410 },
+    });
+    const [ana] = await db.select().from(usuarios).where(eq(usuarios.id, id));
+    const vencedora =
+      resultados[0].status === 'fulfilled' ? 'primeira1' : 'segunda22';
+    await expect(conferirSenha(vencedora, ana.senhaHash!)).resolves.toBe(true);
+  });
+
+  it('a desativação feita durante a ativação prevalece', async () => {
+    const { id } = await servico.cadastrar(
+      { nome: 'Ana Costa', email: 'ana@fbr.edu.br', perfil: 'estagiario' },
+      coordenacao,
+    );
+    // A ativação confere o link e começa a calcular o hash; a desativação chega antes da gravação.
+    const ativacao = servico.ativar({
+      token: tokenDoUltimoEmail(),
+      senha: 'senhaSegura1',
+      confirmacao: 'senhaSegura1',
+    });
+    await new Promise((r) => setImmediate(r));
+    await servico.desativar(id, coordenacao);
+    await expect(ativacao).rejects.toMatchObject({ status: 410 });
+    const [ana] = await db.select().from(usuarios).where(eq(usuarios.id, id));
+    expect(ana).toMatchObject({ situacao: 'desativado', senhaHash: null });
   });
 
   it('recusa convite vencido (mais de 72 horas)', async () => {
