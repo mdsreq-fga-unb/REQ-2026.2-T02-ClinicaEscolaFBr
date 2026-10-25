@@ -115,7 +115,7 @@ _Figura 16 — Registro da reunião de validação do protótipo do Ciclo 3 com 
 [Consultar ata completa em PDF](../assets/atas-reunioes/Ata_Reuniao_Ciclo3_Validacao_Prototipo_FBr_23-10-2026.pdf)
 
 !!! note "Correção de 24/10/2026"
-    Conferido com a gravação da reunião, o resumo abaixo corrige três pontos da ata em PDF: o e-mail continua como canal de contato (só o SMS foi descartado), as 2 faltas que levam ao desligamento valem consecutivas ou não, e os 10 dias para o pagamento contam do vínculo com o estagiário. Também registra dois pontos ditos na reunião e não incluídos na ata: a ausência de prazo de triagem e a consulta, pela coordenação, do conteúdo clínico de todos os prontuários. As decisões estão no [Registro de Decisões com a FBr](../unidade-2/requisitos/decisoes-fbr.md).
+    Conferido com a gravação da reunião, o resumo abaixo corrige três pontos da ata em PDF: o e-mail continua como canal de contato (só o SMS foi descartado), as 2 faltas que levam ao desligamento valem consecutivas ou não, e os 10 dias para o pagamento contam do vínculo com o estagiário. Também registra três pontos ditos na reunião e não incluídos na ata: a ausência de prazo de triagem, a consulta, pela coordenação, do conteúdo clínico de todos os prontuários e a volta à fila de quem perde a vaga por falta de pagamento. As decisões estão no [Registro de Decisões com a FBr](../unidade-2/requisitos/decisoes-fbr.md).
 
 ### Objetivo
 
@@ -127,7 +127,7 @@ A equipe apresentou à FBr o protótipo de alta fidelidade das funcionalidades d
 
 ### 1. Regras de negócio definidas
 
-- **Prazo de pagamento:** o paciente selecionado terá 10 dias para pagar e efetivar a vaga, contados do vínculo com o estagiário. Sem pagamento, perde a vaga e volta para a fila.
+- **Prazo de pagamento:** o paciente selecionado terá 10 dias para pagar e efetivar a vaga, contados do vínculo com o estagiário. Sem pagamento, perde a vaga e volta para a fila, com a mesma prioridade clínica e a data da volta. Enquanto o prazo corre, o agendamento da 2ª sessão em diante fica bloqueado.
 - **Prioridade em caso de empate:** considerar primeiro a gravidade clínica e, em seguida, a data de inscrição.
 - **Limite de casos:** cada supervisor poderá acompanhar até 50 casos, limite ajustado para comportar o crescimento do número de estagiários. Para estagiários, não haverá limite fixo; a quantidade dependerá da disponibilidade.
 - **Duração da sessão:** 50 minutos de atendimento, seguidos de 10 minutos para anotações.

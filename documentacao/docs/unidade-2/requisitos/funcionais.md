@@ -415,7 +415,7 @@ O sistema não deve utilizar sinalizações da triagem como decisão clínica de
 
 Quando ocorrer uma alteração autorizada na prioridade ou na situação de um inscrito, o sistema deve atualizar seu posicionamento na fila de acordo com os critérios institucionais definidos para a ordenação.
 
-Os critérios de desempate entre inscritos com a mesma prioridade seguem a ordem de registro da inscrição: entre dois inscritos com a mesma prioridade, tem precedência quem se inscreveu primeiro, conforme confirmado pela Clínica Escola.
+Os critérios de desempate entre inscritos com a mesma prioridade seguem a ordem de registro da inscrição: entre dois inscritos com a mesma prioridade, tem precedência quem se inscreveu primeiro, conforme confirmado pela Clínica Escola. Para quem voltou à fila por perda da vaga (RF43), vale a data da volta, e não a da inscrição original ([DF33](decisoes-fbr.md)).
 
 _Critérios de aceitação:_
 
@@ -1203,7 +1203,7 @@ _Rastreabilidade:_ Feature "Consultar situação da contribuição social dos pa
 
 **RF43 — Bloquear agendamento por contribuição social pendente**{ #rf43 }
 
-O paciente tem 10 dias corridos, contados do vínculo com o estagiário (RF21), para pagar a contribuição social e efetivar a vaga, como decidido com a Clínica Escola. Se o pagamento não for registrado (RF41) nesse prazo, o sistema avisa a secretaria, e a secretaria ou a coordenação confirma a perda da vaga: o vínculo é encerrado, a vaga é liberada, as sessões futuras são canceladas e o paciente volta à fila de espera (CP3). Enquanto o prazo corre, o sistema também deve impedir o agendamento (RF10) da 2ª sessão em diante de um paciente cuja contribuição social do ciclo de atendimento atual (RF41) ainda esteja pendente. A 1ª sessão do paciente não deve ser bloqueada por essa razão — a taxa é exigida a partir dela, mas o bloqueio só passa a valer da 2ª sessão em diante, conforme confirmado pela Clínica Escola. Como não existe isenção da taxa, o bloqueio se aplica a todos os pacientes sem exceção.
+O paciente tem 10 dias corridos, contados do vínculo com o estagiário (RF21), para pagar a contribuição social e efetivar a vaga, como decidido com a Clínica Escola. Se o pagamento não for registrado (RF41) nesse prazo, o sistema avisa a secretaria, e a secretaria ou a coordenação confirma a perda da vaga: o vínculo é encerrado, a vaga é liberada, as sessões futuras são canceladas e o paciente volta à fila de espera (CP3), com a mesma prioridade clínica e, para o desempate, a data em que voltou para a fila, e não a da inscrição original ([DF33](decisoes-fbr.md)). Enquanto o prazo corre, o sistema também deve impedir o agendamento (RF10) da 2ª sessão em diante de um paciente cuja contribuição social do ciclo de atendimento atual (RF41) ainda esteja pendente. A 1ª sessão do paciente não deve ser bloqueada por essa razão — a taxa é exigida a partir dela, mas o bloqueio só passa a valer da 2ª sessão em diante, conforme confirmado pela Clínica Escola. Como não existe isenção da taxa, o bloqueio se aplica a todos os pacientes sem exceção.
 
 _Critérios de aceitação:_
 
@@ -1212,8 +1212,9 @@ _Critérios de aceitação:_
 - Após o registro da contribuição como efetivada (RF41), o agendamento antes bloqueado passa a ser permitido.
 - Paciente vinculado há 10 dias corridos sem pagamento registrado gera aviso à secretaria; a confirmação da perda da vaga encerra o vínculo, libera a vaga, cancela as sessões futuras e devolve o paciente à fila de espera.
 - Paciente que paga dentro dos 10 dias não gera aviso nem perde a vaga.
+- Paciente que perdeu a vaga volta à fila com a mesma prioridade clínica, atrás dos inscritos da mesma prioridade que entraram na fila antes da data da perda da vaga.
 
-_Rastreabilidade:_ Feature "Bloquear agendamento por contribuição social pendente" → CP10 — Registros administrativos do atendimento → OE6/OE4; restrição sobre a feature "Agendar sessão do paciente" (RF10, CP4). Dependência: RF41, RF42. Origem: [DF15](decisoes-fbr.md).
+_Rastreabilidade:_ Feature "Bloquear agendamento por contribuição social pendente" → CP10 — Registros administrativos do atendimento → OE6/OE4; restrição sobre a feature "Agendar sessão do paciente" (RF10, CP4). Dependência: RF41, RF42. Origem: [DF15](decisoes-fbr.md) e [DF33](decisoes-fbr.md).
 
 #### Declaração de comparecimento
 
