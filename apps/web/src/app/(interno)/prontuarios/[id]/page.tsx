@@ -1,6 +1,6 @@
 "use client";
 import { useQuery } from "@tanstack/react-query";
-import { Lock } from "lucide-react";
+import { Eye, Lock } from "lucide-react";
 import Link from "next/link";
 import { useParams } from "next/navigation";
 import { useState } from "react";
@@ -43,9 +43,9 @@ function AcessoNegado({ voltar }: { voltar: string }) {
         Você não tem acesso a este prontuário
       </h1>
       <p className="text-sm">
-        O prontuário só pode ser aberto pelo estagiário responsável pelo caso e
-        pelo supervisor dele. Se você acha que deveria ter acesso, fale com o
-        supervisor do caso.
+        O prontuário só pode ser aberto pelo estagiário responsável pelo caso,
+        pelo supervisor dele e pela coordenação. Se você acha que deveria ter
+        acesso, fale com o supervisor do caso.
       </p>
       <Link href={voltar} className={buttonVariants({ size: "lg" })}>
         Voltar
@@ -103,6 +103,12 @@ export default function ProntuarioPage() {
           <Lock aria-hidden className="size-3" /> Conteúdo clínico restrito
         </span>
       </div>
+      {sessao?.perfil === "coordenacao" && (
+        <p className="flex items-center gap-2 text-sm text-muted-foreground">
+          <Eye aria-hidden className="size-4" /> Seu acesso fica registrado no
+          registro de acessos ao prontuário.
+        </p>
+      )}
       <section
         aria-labelledby="identificacao"
         className="rounded-lg border border-border bg-card p-5"
