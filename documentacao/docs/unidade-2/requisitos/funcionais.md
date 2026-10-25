@@ -1199,11 +1199,11 @@ _Rastreabilidade:_ Feature "Autenticar usuário institucional" → CP12 — Segu
 
 **RF51 — Encerrar sessão do usuário**{ #rf51 }
 
-O sistema deve permitir que o usuário autenticado encerre a própria sessão a qualquer momento, exigindo nova autenticação para voltar a acessar as funcionalidades internas. O encerramento automático por inatividade é tratado no RNF50.
+O sistema deve permitir que o usuário institucional autenticado (secretaria, estagiário, supervisor ou coordenação) encerre a própria sessão a qualquer momento, exigindo nova autenticação para voltar a acessar as funcionalidades internas. O encerramento automático por inatividade é tratado no RNF50.
 
 _Critério de aceitação:_ Ao sair, a sessão é encerrada e qualquer página interna, inclusive pelo botão "voltar" do navegador, exige nova autenticação.
 
-_Rastreabilidade:_ Feature "Encerrar sessão do usuário" → CP12 — Segurança, sigilo e controle de acesso → OE7.
+_Rastreabilidade:_ Feature "Encerrar sessão do usuário" → CP12 — Segurança, sigilo e controle de acesso → OE7. Dependência: RF50, que cria a sessão encerrada aqui.
 
 #### Feature — Verificar identidade do paciente ou responsável [#47](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/issues/47)
 
