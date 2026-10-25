@@ -183,6 +183,28 @@ Após a revisão:
 
 Se a PR for atualizada depois da aprovação de forma relevante, ela deve passar por nova conferência do revisor.
 
+## Acompanhamento automático das features
+
+O workflow **Feature Status** mantém o campo "Estado da feature (FDD)" de cada issue de feature e o Status do [Project](https://github.com/orgs/mdsreq-fga-unb/projects/124) de acordo com o que a equipe já registra. Nada volta para trás sozinho; quem reabre uma issue a devolve para "Em Construção".
+
+| O que acontece | Efeito na issue | Status no Project |
+| --- | --- | --- |
+| A issue ganha o milestone de um ciclo | Ciclo e CP preenchidos no Project | Planejado |
+| Todos os critérios [B] do DoR marcados e o registro do DoR preenchido | Estado "Em design" | Em Design |
+| D1 completo (inspeção de design) | Estado "Design inspecionado" | Em Construção |
+| PR que cita a issue (por exemplo, "Refs #48") aberta | — | Em Construção |
+| PR aprovada por outro integrante | D3.1 marcado, com o link da revisão | Em Construção |
+| PR mesclada na `main` | D4.3 marcado, com o link da PR | Em Validação |
+| D6.1 marcado (aceite da FBr) | Estado "Aceita" | Concluído, e a issue fecha |
+
+Comandos em comentário, aceitos só de integrantes da equipe:
+
+- `/de-acordo`: confirma a inspeção de design e marca o D1.8. Precisa vir de alguém diferente de quem registrou a inspeção.
+- `/demonstrada <link da ata>`: marca o D5.1.
+- `/aceite <link da ata ou da mensagem da FBr>`: marca o D6.1.
+
+Os demais critérios continuam sendo marcados por quem tem a evidência. A PR de feature (título `feat:`) precisa citar a issue da feature; sem isso, o check "PR cita a issue da feature" falha. O workflow usa o segredo `PROJECT_TOKEN` do repositório; sem ele, apenas avisa e não altera nada.
+
 ## Checklist rápido
 
 - [ ] A branch foi criada a partir de `develop` atualizada ou de `main` atualizada.
