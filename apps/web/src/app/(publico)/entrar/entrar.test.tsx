@@ -1,6 +1,7 @@
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { cleanup, fireEvent, render, screen } from "@testing-library/react";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+import { horaBr } from "@/lib/formato";
 import EntrarPage from "./page";
 
 const replace = vi.fn();
@@ -79,10 +80,7 @@ describe("Entrar no sistema (RF50)", () => {
     expect(
       await screen.findByText("Acesso bloqueado por 15 minutos."),
     ).toBeTruthy();
-    const horario = ate.toLocaleTimeString("pt-BR", {
-      hour: "2-digit",
-      minute: "2-digit",
-    });
+    const horario = horaBr(ate);
     const botao = screen.getByRole("button", {
       name: `Entrar (disponível às ${horario})`,
     });

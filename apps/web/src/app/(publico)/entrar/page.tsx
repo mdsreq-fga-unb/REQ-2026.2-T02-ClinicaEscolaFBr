@@ -11,10 +11,8 @@ import { inicioDoPerfil } from "@/components/layout/menu";
 import { PaginaEquipe } from "@/components/layout/pagina-equipe";
 import { Button } from "@/components/ui/button";
 import { api, ErroApi } from "@/lib/api";
+import { horaBr } from "@/lib/formato";
 import { useSessao, type UsuarioDaSessao } from "@/lib/sessao";
-
-const hora = (data: Date) =>
-  data.toLocaleTimeString("pt-BR", { hour: "2-digit", minute: "2-digit" });
 
 // Entrada da equipe no sistema (RF50): erro genérico e bloqueio de 15 minutos (RNF49).
 export default function EntrarPage() {
@@ -109,7 +107,7 @@ export default function EntrarPage() {
           className="mt-4"
         >
           Houve 3 tentativas de entrada sem sucesso. Tente novamente a partir
-          das {hora(bloqueadoAte)}. Se não lembra a senha, procure a
+          das {horaBr(bloqueadoAte)}. Se não lembra a senha, procure a
           coordenação.
         </Aviso>
       )}
@@ -170,7 +168,7 @@ export default function EntrarPage() {
           disabled={entrada.isPending || bloqueadoAte !== null}
         >
           {bloqueadoAte
-            ? `Entrar (disponível às ${hora(bloqueadoAte)})`
+            ? `Entrar (disponível às ${horaBr(bloqueadoAte)})`
             : entrada.isPending
               ? "Entrando…"
               : "Entrar"}
