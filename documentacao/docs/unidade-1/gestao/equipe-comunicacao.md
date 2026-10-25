@@ -39,14 +39,14 @@ O GitHub será o repositório central do código-fonte, dos diagramas de domíni
 
 ## 7.3 Processo de Validação
 
-A validação ocorrerá de forma incremental, acompanhando os marcos do FDD e combinando inspeções internas, testes e demonstrações com o cliente. Cada feature deverá possuir descrição, prioridade, critérios de aceitação e vínculo com as necessidades do negócio antes de ser considerada pronta para o ciclo de desenvolvimento.
+A validação ocorre de forma incremental, acompanhando os marcos do FDD e combinando inspeções internas, testes e demonstrações com o cliente. Uma feature só entra na construção depois de atender ao [Definition of Ready (9.1)](../../unidade-2/requisitos/dor-dod.md#91-definition-of-ready-dor) e só é considerada pronta quando atende ao [Definition of Done (9.2)](../../unidade-2/requisitos/dor-dod.md#92-definition-of-done-dod), que é a fonte única dos critérios e das evidências de cada marco. Esta seção mostra apenas onde cada marco acontece no processo:
 
-1. **Design Inspecionado:** após o Projeto por Feature, a equipe revisará o modelo detalhado, os diagramas de sequência, os protótipos, as regras de negócio e os critérios de aceitação. A inspeção verificará consistência com o modelo de domínio, viabilidade técnica, acessibilidade, segurança e restrições da modalidade presencial informadas pela Clínica Escola.
-2. **Código Concluído:** durante o Construir por Feature, a equipe confirmará que a implementação cobre os cenários previstos e que a feature está integrada aos componentes necessários, sem alterar regras aprovadas sem registro e validação.
-3. **Inspeção de Código:** o código será revisado por outro integrante da equipe, observando legibilidade, padrões definidos, tratamento de erros, segurança, controle de acesso, proteção de dados sensíveis e aderência aos critérios de aceitação.
-4. **Promoção para a Versão Integrada (*Promote to Build*):** somente as features aprovadas nas inspeções e nos testes unitários e de integração serão integradas à versão consolidada do produto (build integrada); a construção da feature já ocorreu nos itens 2 e 3, e este item trata exclusivamente da integração do código aprovado à base compartilhada, não do início de uma nova construção. O resultado será registrado no GitHub, com evidências dos testes e das pendências conhecidas.
-5. **Demonstração da Feature:** ao final de cada conjunto relevante de features, será realizada uma demo com Robson e a equipe da FBr. A demonstração utilizará cenários próximos da operação real da clínica, como inscrição, triagem, consulta da fila, agendamento e confirmação de presença.
-6. **Aceite e ajustes:** a FBr avaliará o comportamento apresentado e o valor para os usuários. O aceite formal, as observações e eventuais solicitações de ajuste serão registrados e vinculados às features. Itens não aceitos retornarão ao planejamento com prioridade e critérios revisados.
+1. **Design inspecionado:** ao fim do Projetar por Feature, numa inspeção com o Líder de Feature e um revisor (DoD, etapa 1).
+2. **Código concluído:** durante o Construir por Feature (DoD, etapa 2).
+3. **Código inspecionado:** na revisão do PR por outro integrante (DoD, etapa 3).
+4. **Promovido para a versão integrada (*Promote to Build*):** no merge do código aprovado na base compartilhada, sem iniciar nova construção (DoD, etapa 4).
+5. **Demonstrada:** na reunião com Robson e a equipe da FBr ao fim de cada conjunto relevante de features (DoD, etapa 5).
+6. **Aceita:** no registro do aceite, das observações e das correções pedidas pela FBr; itens não aceitos voltam ao planejamento (DoD, etapa 6).
 
 **Importante:** a validação do cliente e a verificação regulatória são controles complementares, não substitutos um do outro. A demonstração e o aceite da FBr avaliam comportamento, valor e adequação às necessidades da clínica; a comprovação de conformidade com as normas do CRP, com a LGPD e com os requisitos de acessibilidade é responsabilidade da equipe técnica, verificada internamente nas etapas de Design Inspecionado e Inspeção de Código, e não pode ser delegada ao cliente durante a demonstração.
 

@@ -1,5 +1,4 @@
 import {
-  boolean,
   jsonb,
   pgEnum,
   pgTable,
@@ -7,16 +6,22 @@ import {
   timestamp,
   uuid,
 } from "drizzle-orm/pg-core";
-import { PERFIS } from "@clinica/shared";
+import { PERFIS, SITUACOES_USUARIO } from "@clinica/shared";
 
 export const perfilEnum = pgEnum("perfil", PERFIS);
+export const situacaoUsuarioEnum = pgEnum(
+  "situacao_usuario",
+  SITUACOES_USUARIO,
+);
 
 export const usuarios = pgTable("usuarios", {
   id: uuid("id").primaryKey().defaultRandom(),
   nome: text("nome").notNull(),
   email: text("email").notNull().unique(),
   perfil: perfilEnum("perfil").notNull(),
-  ativo: boolean("ativo").notNull().default(true),
+  situacao: situacaoUsuarioEnum("situacao")
+    .notNull()
+    .default("pendente_ativacao"),
   criadoEm: timestamp("criado_em", { withTimezone: true })
     .notNull()
     .defaultNow(),

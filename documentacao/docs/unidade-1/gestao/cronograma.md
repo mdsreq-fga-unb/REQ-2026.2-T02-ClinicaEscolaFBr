@@ -32,8 +32,8 @@ Para tornar essa sobreposição verificável, o trabalho é organizado em **cicl
 
 A tabela dos ciclos, com a fase do FDD predominante, as atividades e resultados de ER, o entregável e o **status** de cada ciclo, está no [Cronograma geral](../../visao-geral/cronograma.md), o cronograma único do projeto.
 
-!!! note "Nota de revisão (19/10/2026)"
-    Até a versão 3.1, a tabela dos ciclos ficava nesta seção. Ela passou, com o mesmo conteúdo, para o Cronograma geral, que acrescenta o status de cada ciclo e evita manter dois cronogramas com a mesma informação.
+!!! note "Nota de revisão (25/10/2026)"
+    Até a versão 3.7, a tabela dos ciclos ficava nesta seção. Ela passou, com o mesmo conteúdo, para o Cronograma geral, que acrescenta o status de cada ciclo e evita manter dois cronogramas com a mesma informação.
 
 ## 6.3 Atualização do Planejamento
 

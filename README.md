@@ -53,7 +53,7 @@ O sistema atende a cinco públicos:
 - **Supervisores:** acompanhamento e supervisão dos casos;
 - **Coordenação:** indicadores, relatórios e gestão geral da clínica.
 
-O MVP reúne 53 dos 68 requisitos funcionais declarados (ver o [Backlog de Produto](https://mdsreq-fga-unb.github.io/REQ-2026.2-T02-ClinicaEscolaFBr/unidade-2/requisitos/backlog/)).
+O MVP reúne 54 dos 68 requisitos funcionais vigentes (ver o [Backlog de Produto](https://mdsreq-fga-unb.github.io/REQ-2026.2-T02-ClinicaEscolaFBr/unidade-2/requisitos/backlog/)).
 
 ---
 

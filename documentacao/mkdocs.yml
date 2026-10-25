@@ -107,6 +107,7 @@ nav:
           - 8.1 Requisitos Funcionais: unidade-2/requisitos/funcionais.md
           - 8.2 Requisitos Não Funcionais: unidade-2/requisitos/nao-funcionais.md
           - 8.3 Análise do Feedback: unidade-2/requisitos/analise-feedback.md
+          - 8.4 Registro de Decisões com a FBr: unidade-2/requisitos/decisoes-fbr.md
       - 9. DoR e DoD: unidade-2/requisitos/dor-dod.md
       - 10. Backlog de Produto: unidade-2/requisitos/backlog.md
       - Gestão do Projeto:
@@ -118,6 +119,7 @@ nav:
   - Unidade 3 — Construção do MVP:
       - Início da unidade: unidade-3/index.md
       - Projeto das features do Ciclo 3: unidade-3/projeto-features-ciclo-3.md
+      - Protótipos do Ciclo 3: unidade-3/prototipos-ciclo-3.md
       - Gestão do Projeto:
           - Cronograma e Entregas: unidade-3/gestao/cronograma.md
           - Reuniões: unidade-3/reunioes.md

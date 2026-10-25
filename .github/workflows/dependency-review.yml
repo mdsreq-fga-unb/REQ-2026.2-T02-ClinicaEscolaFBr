@@ -15,8 +15,12 @@ jobs:
     name: Revisar dependências
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/dependency-review-action@v4
+      - uses: actions/checkout@v7
+      - uses: actions/dependency-review-action@v5
         with:
           fail-on-severity: high
+          # braces <= 3.0.3 (GHSA-vfj7-8cjw-p6xm) ainda não tem versão corrigida. Chega
+          # pelo micromatch, usado pelo eslint-config-next e pela CLI do shadcn, sem
+          # passar por código executado em produção. Remover quando sair a correção.
+          allow-ghsas: GHSA-vfj7-8cjw-p6xm
           comment-summary-in-pr: on-failure
