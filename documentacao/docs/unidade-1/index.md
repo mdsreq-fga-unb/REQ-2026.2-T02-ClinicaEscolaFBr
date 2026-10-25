@@ -2,6 +2,9 @@
 
 Visão geral da entrega da Unidade 1: o cenário da clínica, a solução proposta, a estratégia de Engenharia de Software e de Engenharia de Requisitos e a gestão do projeto.
 
+!!! abstract "Entrega original e referência vigente"
+    A Solução Proposta, a Estratégia de ESW, a Engenharia de Requisitos e a Equipe e Comunicação continuam sendo atualizadas e valem como referência vigente do projeto; cada uma traz esse aviso no topo. As demais páginas registram a Unidade 1 como foi entregue em 07/09/2026. A versão entregue completa pode ser consultada [no repositório](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/tree/c4601b23320d9dd120a6f7982d863ff75291743d), e cada mudança posterior está no [histórico de revisão](../index.md#historico-de-revisao).
+
 !!! info "Andamento do projeto"
     O cronograma geral e o backlog, com o status de cada ciclo, ficam na Visão geral do projeto: [Cronograma geral](../visao-geral/cronograma.md) e [Features e backlog](../visao-geral/backlog.md). O status de cada feature fica na sua issue e no [Project do repositório](https://github.com/orgs/mdsreq-fga-unb/projects/124).
 

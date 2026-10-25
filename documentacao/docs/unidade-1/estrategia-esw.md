@@ -1,5 +1,8 @@
 # 4. Estratégias de Engenharia de Software
 
+!!! abstract "Referência vigente"
+    Esta página é mantida atualizada depois da entrega da Unidade 1 (07/09/2026) e vale como referência da estratégia do projeto. As mudanças posteriores estão no [histórico de revisão](../index.md#historico-de-revisao). A versão entregue na Unidade 1 pode ser consultada [no repositório](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/tree/c4601b23320d9dd120a6f7982d863ff75291743d).
+
 A partir das informações apresentadas em [Cenário Atual](cenario-atual.md) e em [Solução Proposta](solucao-proposta.md), foram tomadas as decisões relativas às estratégias de engenharia de software que orientam a construção do produto da Clínica Escola FBr.
 
 ## 4.1 Estratégia Priorizada
@@ -66,7 +69,7 @@ Os pontos ainda abertos estão listados em [Pendências de validação com a FBr
 
 As quatorze características definidas na [Solução Proposta](solucao-proposta.md), da inscrição on-line ao controle de assiduidade e à emissão de declarações, correspondem a funcionalidades delimitadas, com valor perceptível para a clínica e para o paciente, compatíveis com a definição de feature adotada pelo FDD: uma pequena função valorizada pelo cliente, implementável em duas semanas ou menos e declarada no formato `<ação> <resultado> <objeto>`.
 
-O escopo do MVP inicial foi delimitado com o cliente nas características CP1, CP2, CP3, CP4, CP5, CP9, CP12 e CP14 (numeração final da [Solução Proposta](solucao-proposta.md)), o que permitiu iniciar a construção da lista de features e o planejamento por feature sem etapa preparatória adicional. O recorte final, cruzando valor de negócio e esforço requisito a requisito e validado com a FBr, está em [10.2.3](../unidade-2/requisitos/backlog.md#1023-definicao-do-mvp) e [10.2.4 do Backlog de Produto](../unidade-2/requisitos/backlog.md#1024-validacao-do-mvp-com-o-cliente) e amplia esse ponto de partida para 53 dos 68 RFs declarados, incorporando também as CP6, CP7 e CP11 e parte da CP10.
+O escopo do MVP inicial foi delimitado com o cliente nas características CP1, CP2, CP3, CP4, CP5, CP9, CP12 e CP14 (numeração final da [Solução Proposta](solucao-proposta.md)), o que permitiu iniciar a construção da lista de features e o planejamento por feature sem etapa preparatória adicional. O recorte final, cruzando valor de negócio e esforço requisito a requisito e validado com a FBr, está em [10.2.3](../unidade-2/requisitos/backlog.md#1023-definicao-do-mvp) e [10.2.4 do Backlog de Produto](../unidade-2/requisitos/backlog.md#1024-validacao-do-mvp-com-o-cliente) e amplia esse ponto de partida, incorporando também as CP6, CP7, CP8 e CP11 e parte da CP10. A lista vigente das features do MVP está em [Features e backlog](../visao-geral/backlog.md).
 
 ### 3. As inspeções oferecem um ponto de controle explícito para sigilo e conformidade
 

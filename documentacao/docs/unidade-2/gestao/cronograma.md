@@ -42,7 +42,7 @@ O escopo de requisitos da Unidade 2 cobre, na numeração final adotada pela equ
 > **Observação sobre a CP9:** a CP9 (Controle de assiduidade e alertas), atribuída originalmente a Nicolas, foi declarada por Gabriel a partir dos pontos confirmados com a Clínica Escola em 26/08/2026, porque o trabalho de Nicolas se concentrou na CP7 ([issue #35](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/issues/35)). Depois, foi revisada por Joaquim na correção posterior à verificação cruzada e validada com a FBr no MVP ([10.2.4](../requisitos/backlog.md#1024-validacao-do-mvp-com-o-cliente)). Na construção, as features de faltas do paciente ficam com Gabriel e as de faltas do estagiário com Nicolas ([Features e backlog](../../visao-geral/backlog.md#features-por-area-e-conjunto)).
 
 
-A priorização foi feita requisito a requisito, e não por CP, cruzando o valor de negócio avaliado pela FBr com o esforço técnico estimado pela equipe. O recorte do MVP (53 dos 68 RFs, de 11 das 14 CPs) foi validado com a Clínica Escola em 08/10/2026 e segue para os ciclos de construção das Unidades 3 e 4 ([Backlog de Produto, 10.2](../requisitos/backlog.md#102-priorizacao-e-recorte-do-mvp)).
+A priorização foi feita requisito a requisito, e não por CP, cruzando o valor de negócio avaliado pela FBr com o esforço técnico estimado pela equipe. O recorte do MVP foi validado com a Clínica Escola em 08/10/2026 e segue para os ciclos de construção das Unidades 3 e 4 ([Backlog de Produto, 10.2](../requisitos/backlog.md#102-priorizacao-e-recorte-do-mvp)); a lista vigente das features do MVP está em [Features e backlog](../../visao-geral/backlog.md).
 
 ## Entregáveis da Unidade 2
 

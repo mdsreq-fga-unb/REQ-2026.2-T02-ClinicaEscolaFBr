@@ -18,7 +18,7 @@ O planejamento da Unidade 3 dá continuidade à abordagem ágil, ao ciclo de vid
 
 | Período | Fase / Processo FDD | Atividades | Atividade de ER / Resultado | Entregáveis |
 | --- | --- | --- | --- | --- |
-| 28/10 a 10/11 | Projetar por Feature / Construir por Feature | Construção dos 19 itens do Ciclo 4, com o DoR avaliado ao fim do Ciclo 3, e demonstração dos incrementos do Ciclo 3 à Clínica Escola FBr. | Representação, verificação e validação (inspeções, testes e demonstração ao cliente). | Features do Ciclo 4 registradas nas issues; demonstração registrada em ata. |
+| 28/10 a 10/11 | Projetar por Feature / Construir por Feature | Construção dos 20 itens do Ciclo 4, com o DoR avaliado ao fim do Ciclo 3, e demonstração dos incrementos do Ciclo 3 à Clínica Escola FBr. | Representação, verificação e validação (inspeções, testes e demonstração ao cliente). | Features do Ciclo 4 registradas nas issues; demonstração registrada em ata. |
 
 ## Ciclo 5 (11/11 a 17/11) — Consolidação e entrega da Unidade 3 { #ciclo-5 }
 

@@ -1,5 +1,8 @@
 # 7. Interação entre Equipe e Cliente
 
+!!! abstract "Referência vigente"
+    Esta página é mantida atualizada depois da entrega da Unidade 1 (07/09/2026) e vale como referência da interação com a FBr e do processo de validação. As mudanças posteriores estão no [histórico de revisão](../../index.md#historico-de-revisao). A versão entregue na Unidade 1 pode ser consultada [no repositório](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/tree/c4601b23320d9dd120a6f7982d863ff75291743d).
+
 A interação do projeto será baseada em colaboração contínua entre a equipe de desenvolvimento e os especialistas de domínio da Faculdade Brasília (FBr). O processo FDD organizará o trabalho em features pequenas, rastreáveis e demonstráveis, permitindo validar progressivamente o modelo de domínio, o design e o comportamento do produto.
 
 ## 7.1 Composição da Equipe
