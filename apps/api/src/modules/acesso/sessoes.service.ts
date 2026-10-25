@@ -5,7 +5,7 @@ import {
   Injectable,
   UnauthorizedException,
 } from '@nestjs/common';
-import { and, eq, gt, isNull, sql } from 'drizzle-orm';
+import { and, eq, gt, isNull, lte, or, sql } from 'drizzle-orm';
 import { sessoesLogin, usuarios, type Db } from '@clinica/database';
 import type { Login } from '@clinica/shared';
 import { AuditoriaService } from '../../auditoria/auditoria.service';
@@ -30,6 +30,12 @@ const minutos = (m: number, a = new Date()) =>
 
 // Hash usado quando o e-mail não existe, para a resposta levar o mesmo tempo.
 let hashFalso: Promise<string> | undefined;
+const hashDeComparacao = () =>
+  (hashFalso ??= gerarHashSenha('senha-que-nunca-confere-1'));
+// Limite de e-mails desconhecidos guardados em memória.
+const MAX_DESCONHECIDOS = 10_000;
+
+type Tentativas = { tentativas: number; bloqueadoAte: Date | null };
 
 @Injectable()
 export class SessoesService {
@@ -38,30 +44,47 @@ export class SessoesService {
     private readonly auditoria: AuditoriaService,
   ) {}
 
+  // Tentativas com e-mails que não existem. Eles também chegam ao bloqueio,
+  // para a resposta não revelar quais e-mails têm conta.
+  private readonly desconhecidos = new Map<string, Tentativas>();
+
   // Entrada com e-mail e senha (RF50). Qualquer falha devolve a mesma mensagem.
   async entrar({ email, senha }: Login) {
     const agora = new Date();
-    const [usuario] = await this.db
-      .select()
-      .from(usuarios)
-      .where(eq(usuarios.email, email));
 
-    if (usuario?.bloqueadoAte && usuario.bloqueadoAte > agora) {
-      throw this.bloqueio(usuario.bloqueadoAte);
+    // A tentativa é reservada antes de conferir a senha, numa única operação:
+    // tentativas simultâneas não passam de 3 por janela de bloqueio (RNF49).
+    const ate = minutos(MINUTOS_BLOQUEIO, agora);
+    const vaiBloquear = sql`${usuarios.tentativasFalhas} + 1 >= ${TENTATIVAS_ATE_BLOQUEIO}`;
+    const [usuario] = await this.db
+      .update(usuarios)
+      .set({
+        tentativasFalhas: sql`CASE WHEN ${vaiBloquear} THEN 0 ELSE ${usuarios.tentativasFalhas} + 1 END`,
+        bloqueadoAte: sql`CASE WHEN ${vaiBloquear} THEN ${ate.toISOString()}::timestamptz ELSE NULL END`,
+      })
+      .where(
+        and(
+          eq(usuarios.email, email),
+          or(isNull(usuarios.bloqueadoAte), lte(usuarios.bloqueadoAte, agora)),
+        ),
+      )
+      .returning();
+
+    if (!usuario) {
+      const [bloqueado] = await this.db
+        .select({ bloqueadoAte: usuarios.bloqueadoAte })
+        .from(usuarios)
+        .where(eq(usuarios.email, email));
+      if (bloqueado?.bloqueadoAte) throw this.bloqueio(bloqueado.bloqueadoAte);
+      return this.falharDesconhecido(email, senha, agora);
     }
 
-    hashFalso ??= gerarHashSenha('senha-que-nunca-confere-1');
     const senhaConfere = await conferirSenha(
       senha,
-      usuario?.senhaHash ?? (await hashFalso),
+      usuario.senhaHash ?? (await hashDeComparacao()),
     );
-    if (
-      !usuario ||
-      !usuario.senhaHash ||
-      !senhaConfere ||
-      usuario.situacao !== 'ativo'
-    ) {
-      if (usuario) await this.registrarFalha(usuario.id, agora);
+    if (!usuario.senhaHash || !senhaConfere || usuario.situacao !== 'ativo') {
+      if (usuario.bloqueadoAte) throw this.bloqueio(usuario.bloqueadoAte);
       throw new UnauthorizedException(MENSAGEM_CREDENCIAIS);
     }
 
@@ -142,20 +165,28 @@ export class SessoesService {
     }
   }
 
-  // Soma a tentativa com erro; na 3ª seguida, bloqueia por 15 minutos.
-  private async registrarFalha(usuarioId: string, agora: Date) {
-    const [{ tentativas }] = await this.db
-      .update(usuarios)
-      .set({ tentativasFalhas: sql`${usuarios.tentativasFalhas} + 1` })
-      .where(eq(usuarios.id, usuarioId))
-      .returning({ tentativas: usuarios.tentativasFalhas });
-    if (tentativas < TENTATIVAS_ATE_BLOQUEIO) return;
-    const ate = minutos(MINUTOS_BLOQUEIO, agora);
-    await this.db
-      .update(usuarios)
-      .set({ tentativasFalhas: 0, bloqueadoAte: ate })
-      .where(eq(usuarios.id, usuarioId));
-    throw this.bloqueio(ate);
+  // E-mail sem conta: confere um hash falso e conta a tentativa em memória,
+  // com o mesmo bloqueio de uma conta real.
+  private async falharDesconhecido(
+    email: string,
+    senha: string,
+    agora: Date,
+  ): Promise<never> {
+    const atual = this.desconhecidos.get(email);
+    if (atual?.bloqueadoAte && atual.bloqueadoAte > agora) {
+      throw this.bloqueio(atual.bloqueadoAte);
+    }
+    await conferirSenha(senha, await hashDeComparacao());
+    const tentativas = (atual?.bloqueadoAte ? 0 : (atual?.tentativas ?? 0)) + 1;
+    if (this.desconhecidos.size >= MAX_DESCONHECIDOS)
+      this.desconhecidos.clear();
+    if (tentativas >= TENTATIVAS_ATE_BLOQUEIO) {
+      const ate = minutos(MINUTOS_BLOQUEIO, agora);
+      this.desconhecidos.set(email, { tentativas: 0, bloqueadoAte: ate });
+      throw this.bloqueio(ate);
+    }
+    this.desconhecidos.set(email, { tentativas, bloqueadoAte: null });
+    throw new UnauthorizedException(MENSAGEM_CREDENCIAIS);
   }
 
   private bloqueio(ate: Date) {
