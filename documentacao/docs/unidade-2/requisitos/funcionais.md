@@ -1369,7 +1369,7 @@ _Rastreabilidade:_ Feature "Encerrar sessão do usuário" → CP12 — Seguranç
 
 **RF52 — Verificar identidade do paciente ou responsável**{ #rf52 }
 
-O sistema deve exigir que o paciente, ou o responsável legal no caso de crianças e adolescentes, confirme sua identidade antes de acessar as informações do próprio paciente (posição na fila da CP3 e declarações de comparecimento da CP10). A confirmação é feita informando o CPF ou o número de inscrição e, em seguida, um código de uso único enviado ao e-mail cadastrado na inscrição (RF1). Como o SMS foi descartado pela Clínica Escola, o envio do código ao paciente que informou só o celular está em [pendência de validação com a FBr](analise-feedback.md#pendencias-de-validacao-com-a-fbr). Conhecer apenas o CPF ou o número de inscrição não deve ser suficiente para acessar as informações.
+O sistema deve exigir que o paciente, ou o responsável legal no caso de crianças e adolescentes, confirme sua identidade antes de acessar as informações do próprio paciente (posição na fila da CP3 e declarações de comparecimento da CP10). A confirmação é feita informando o CPF ou o número de inscrição e, em seguida, um código de uso único enviado ao e-mail cadastrado na inscrição (RF1). O código é enviado só por e-mail. Como o SMS foi descartado pela Clínica Escola (DF24) e o envio automático pelo WhatsApp exigiria uma conta empresarial paga da FBr na Meta, o paciente que informou só o celular não faz a consulta pelo sistema: ele consulta a posição na fila e pede a declaração na secretaria, que confere a identidade pessoalmente ou por telefone (decisão da equipe de 24/10/2026). Conhecer apenas o CPF ou o número de inscrição não deve ser suficiente para acessar as informações.
 
 O código segue as regras abaixo:
 
@@ -1383,6 +1383,7 @@ _Critérios de aceitação:_
 
 - O CPF ou o número de inscrição, junto com o código recebido no contato cadastrado e informado em até 10 minutos, libera acesso apenas às informações desse paciente.
 - Sem código, ou com código incorreto ou expirado, nenhuma informação da inscrição é exibida, nem a existência dela é confirmada.
+- Para inscrição sem e-mail, nenhum código é enviado, e a resposta é a mesma de qualquer pedido: o código foi enviado ao e-mail cadastrado, se houver, e quem não informou e-mail deve procurar a secretaria.
 - Código já utilizado é recusado.
 - Na quinta tentativa incorreta, o código é invalidado e nem o código correto passa a ser aceito.
 - Novo código pedido menos de 60 segundos após o anterior é recusado, informando o tempo restante.
