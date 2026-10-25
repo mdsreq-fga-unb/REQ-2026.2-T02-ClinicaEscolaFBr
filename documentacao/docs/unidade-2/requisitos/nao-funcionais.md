@@ -359,7 +359,7 @@ Rastreabilidade: CP5 — Distribuição de casos entre supervisores e estagiári
 
 ### Prontuário eletrônico (CP6)
 
-A CP6 tem duas features (ver [Requisitos Funcionais](funcionais.md)); o RNF abaixo estabelece a condição de qualidade para a consulta ao prontuário. As condições de integridade, auditoria e desempenho relativas ao registro da evolução em si estão declaradas na CP7, e as relativas ao relatório final, na CP8.
+A CP6 tem três features (ver [Requisitos Funcionais](funcionais.md)): a criação do prontuário (RF66), o registro da anamnese e do contrato terapêutico (RF69) e a consulta ao prontuário (RF27); o RNF abaixo estabelece a condição de sigilo do conteúdo clínico registrado nelas. As condições de integridade, auditoria e desempenho relativas ao registro da evolução em si estão declaradas na CP7, e as relativas ao relatório final, na CP8.
 
 **RNF25 — Sigilo do conteúdo clínico nas respostas negadas**{ #rnf25 }
 
@@ -367,14 +367,14 @@ Quando o acesso for negado pelo RF55 (a secretaria, o estagiário e o supervisor
 
 | Registro | O que a resposta negada não pode expor nem indicar |
 | --- | --- |
-| Prontuário (CP6): anamnese, contrato terapêutico e demais dados iniciais | O conteúdo e quais seções clínicas possuem ou não registros. |
+| Prontuário (CP6): identificação registrada na criação (RF66) e dados iniciais, isto é, anamnese e contrato terapêutico (RF69) | O conteúdo e quais seções clínicas possuem ou não registros. |
 | Evolução (CP7): registro original, correções e complementos | O conteúdo e a existência ou a quantidade de evoluções, correções e complementos. |
 | Relatório final (CP8) | O conteúdo, as versões e a existência do relatório. |
 
 A conformidade deve ser verificada com registros fictícios completos e incompletos de cada tipo (prontuário com e sem seções preenchidas, evoluções com correções e complementos), inspecionando a interface e as respostas do servidor em tentativas negadas antes e depois de uma transferência de responsável e confirmando que nenhum conteúdo ou indicador de existência é exposto.
 
 Classificação: segurança e privacidade (URPS+).
-Rastreabilidade: transversal às features "Criar e inicializar o prontuário do paciente" e "Consultar prontuário do paciente" (CP6), às features de registro e consulta de evolução (CP7) e à feature "Gerar relatório final de evolução" (CP8); relacionada ao RF55 (CP12).
+Rastreabilidade: transversal às features "Criar e inicializar o prontuário do paciente" (RF66), "Registrar anamnese e contrato terapêutico do paciente" (RF69) e "Consultar prontuário do paciente" (RF27) (CP6), às features de registro e consulta de evolução (CP7) e à feature "Gerar relatório final de evolução" (CP8); relacionada ao RF55 (CP12).
 
 ### Registro de evolução por sessão (CP7)
 
