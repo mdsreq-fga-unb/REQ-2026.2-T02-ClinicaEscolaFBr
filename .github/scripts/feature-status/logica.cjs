@@ -58,13 +58,26 @@ const doGrupo = (itens, prefixo) =>
   itens.filter((i) => i.codigo.startsWith(`${prefixo}.`));
 const completo = (itens) => itens.length > 0 && itens.every((i) => i.marcado);
 
+// Issue de feature: título no formato "CP<n> — ..." (seção 8.1). Vale também para
+// as issues convertidas à mão para o modelo novo, sem o rótulo requirements.
+const ehFeature = (issue) =>
+  !issue.pull_request && /^CP\d+\b/.test(issue.title ?? "");
+
+// As issues criadas pelo modelo usam "###" nos títulos das seções, e as convertidas
+// à mão usam "##"; as duas formas valem.
+const SECAO = "#{2,3} ";
+
 // O registro do DoR só vale preenchido (seção 9.1.5). Issues antigas, sem a
 // seção, dependem só do checklist.
 function registroDoRPreenchido(corpo) {
-  const inicio = (corpo ?? "").indexOf("### Registro da avaliação do DoR");
-  if (inicio === -1) return true;
-  const fim = corpo.indexOf("\n### ", inicio + 1);
-  const trecho = corpo.slice(inicio, fim === -1 ? undefined : fim);
+  const texto = corpo ?? "";
+  const m = new RegExp(`^${SECAO}Registro da avaliação do DoR`, "m").exec(
+    texto,
+  );
+  if (!m) return true;
+  const resto = texto.slice(m.index + m[0].length);
+  const proxima = new RegExp(`^${SECAO}`, "m").exec(resto);
+  const trecho = proxima ? resto.slice(0, proxima.index) : resto;
   return (
     !trecho.includes("Avaliador: <nome>") &&
     !trecho.includes("Pronta | Pronta com ressalvas | Não pronta")
@@ -89,20 +102,26 @@ function estadoDoChecklist(corpo) {
   return ESTADOS[nivel];
 }
 
+// O DoR está aprovado: sem ele, a feature não é avaliada pelo DoD (seção 9.2).
+const dorAprovado = (corpo) =>
+  ESTADOS.indexOf(estadoDoChecklist(corpo)) >= ESTADOS.indexOf("Em design");
+
+const SECAO_ESTADO = new RegExp(
+  `(^${SECAO}Estado da feature \\(FDD\\)\\s*\\n+)([^\\n]+)`,
+  "m",
+);
+
 // Estado escrito hoje na descrição da issue, ou null se a seção não existir.
 function estadoAtual(corpo) {
-  const m = /### Estado da feature \(FDD\)\s*\n+([^\n]+)/.exec(corpo ?? "");
+  const m = SECAO_ESTADO.exec(corpo ?? "");
   if (!m) return null;
-  const valor = m[1].trim();
+  const valor = m[2].trim();
   return ESTADOS.includes(valor) ? valor : null;
 }
 
 // Troca o estado escrito na descrição. Sem a seção, a descrição fica igual.
 function escreverEstado(corpo, estado) {
-  return corpo.replace(
-    /(### Estado da feature \(FDD\)\s*\n+)([^\n]+)/,
-    (_, cabecalho) => `${cabecalho}${estado}`,
-  );
+  return corpo.replace(SECAO_ESTADO, (_, cabecalho) => `${cabecalho}${estado}`);
 }
 
 // Marca os itens do checklist com esses códigos. Itens já marcados não mudam.
@@ -125,16 +144,34 @@ const maisAvancado = (lista, a, b) => {
   return lista.indexOf(a) >= lista.indexOf(b) ? a : b;
 };
 
-// Issues citadas numa PR (título ou descrição), como #48, "Refs #48" ou "Closes #48".
+// Issues que uma PR declara implementar: só as citadas depois de "Refs", "Closes",
+// "Fixes" ou "Resolves" (e variações), como "Refs #48" ou "Closes #45, #46". Um
+// "#N" solto, como numa lista de issues relacionadas da documentação, não conta.
+const PALAVRA_CHAVE =
+  /\b(?:refs?|closes?|closed|fix(?:es|ed)?|resolves?|resolved)\b:?\s*((?:#\d+\b[\s,]*(?:e\s+|and\s+)?)+)/gi;
+
 function issuesCitadas(...textos) {
   const numeros = new Set();
   for (const texto of textos) {
-    for (const m of (texto ?? "").matchAll(/(?<![\w/])#(\d+)\b/g)) {
-      numeros.add(Number(m[1]));
+    for (const m of (texto ?? "").matchAll(PALAVRA_CHAVE)) {
+      for (const n of m[1].matchAll(/#(\d+)/g)) numeros.add(Number(n[1]));
     }
   }
   return [...numeros];
 }
+
+// Só PRs que mexem no código do produto contam para os marcos de código do DoD.
+const mexeNoCodigo = (arquivos) =>
+  arquivos.some((a) => /^(apps|packages)\//.test(a));
+
+// Marca invisível nos comentários do robô, para que eles nunca contem como
+// registro de inspeção nem como evidência.
+const MARCA_ROBO = "<!-- feature-status -->";
+
+// Comentário que registra a inspeção de design, pelo cabeçalho usado na equipe.
+const ehInspecao = (texto) =>
+  !(texto ?? "").includes(MARCA_ROBO) &&
+  new RegExp(`^${SECAO}Inspeção de design \\(DoD 1\\)`, "m").test(texto ?? "");
 
 // Comandos aceitos nos comentários das issues de feature.
 function lerComando(texto) {
@@ -166,6 +203,11 @@ function cpDoTitulo(titulo) {
 }
 
 module.exports = {
+  MARCA_ROBO,
+  ehFeature,
+  dorAprovado,
+  mexeNoCodigo,
+  ehInspecao,
   ESTADOS,
   STATUS,
   STATUS_DO_ESTADO,

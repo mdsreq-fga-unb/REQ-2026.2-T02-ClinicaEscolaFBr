@@ -7,11 +7,7 @@ const L = require("./logica.cjs");
 const P = require("./projeto.cjs");
 
 const MEMBROS = ["OWNER", "MEMBER", "COLLABORATOR"];
-
-const ehFeature = (issue) =>
-  !issue.pull_request &&
-  /^CP\d+\b/.test(issue.title) &&
-  issue.labels.some((l) => (l.name ?? l) === "requirements");
+const { ehFeature } = L;
 
 module.exports = async ({ github, context, core }) => {
   const { owner, repo } = context.repo;
@@ -37,7 +33,7 @@ module.exports = async ({ github, context, core }) => {
       owner,
       repo,
       issue_number: numero,
-      body,
+      body: `${body}\n\n${L.MARCA_ROBO}`,
     });
 
   const marcar = async (issue, codigos) => {
@@ -53,7 +49,8 @@ module.exports = async ({ github, context, core }) => {
   };
 
   // Alinha o estado escrito na issue e os campos do Project. Nada volta para trás
-  // sozinho; quem reabre a issue é o workflow nativo do Project.
+  // sozinho. Fechar a issue no Concluído e devolvê-la a Em Construção quando é
+  // reaberta ficam com os workflows nativos do Project.
   const sincronizar = async (issue, statusMinimo = null) => {
     if (!ehFeature(issue) || issue.state !== "open") return;
     const corpo = issue.body ?? "";
@@ -95,13 +92,26 @@ module.exports = async ({ github, context, core }) => {
     }
   };
 
-  // Issues de feature citadas por uma PR.
+  // Issues de feature que uma PR declara implementar. Só PRs que mexem no código
+  // contam, e só features com o DoR aprovado: sem DoR, o DoD não é avaliado.
   const featuresDaPr = async (pr) => {
+    const arquivos = await github.paginate(github.rest.pulls.listFiles, {
+      owner,
+      repo,
+      pull_number: pr.number,
+      per_page: 100,
+    });
+    if (!L.mexeNoCodigo(arquivos.map((a) => a.filename))) return [];
     const issues = [];
     for (const numero of L.issuesCitadas(pr.title, pr.body)) {
       try {
         const issue = await buscarIssue(numero);
-        if (ehFeature(issue)) issues.push(issue);
+        if (!ehFeature(issue)) continue;
+        if (L.dorAprovado(issue.body)) issues.push(issue);
+        else
+          core.warning(
+            `#${issue.number} citada na PR #${pr.number}, mas sem o DoR aprovado: o DoD não foi atualizado.`,
+          );
       } catch {
         // Número que não é issue deste repositório.
       }
@@ -138,12 +148,12 @@ module.exports = async ({ github, context, core }) => {
         per_page: 100,
       });
       const inspetores = comentarios
-        .filter((c) => /inspe[cç][aã]o de design/i.test(c.body ?? ""))
+        .filter((c) => L.ehInspecao(c.body))
         .map((c) => c.user.login);
       if (inspetores.length === 0) {
         await comentar(
           issue.number,
-          `@${autor}, ainda não há comentário com a inspeção de design nesta issue. Registre a inspeção antes do \`/de-acordo\`.`,
+          `@${autor}, ainda não há o registro da inspeção nesta issue (comentário com o cabeçalho "## Inspeção de design (DoD 1)"). Registre a inspeção antes do \`/de-acordo\`.`,
         );
         return;
       }
@@ -189,6 +199,7 @@ module.exports = async ({ github, context, core }) => {
     const pr = carga.pull_request;
     const revisor = carga.review.user.login;
     if (revisor === pr.user.login) return;
+    if (!MEMBROS.includes(carga.review.author_association)) return;
     for (const issue of await featuresDaPr(pr)) {
       const atualizada = await marcar(issue, ["D3.1"]);
       if (atualizada !== issue) {
@@ -208,9 +219,8 @@ module.exports = async ({ github, context, core }) => {
       owner,
       repo,
       state: "open",
-      labels: "requirements",
       per_page: 100,
     });
-    for (const issue of issues) await sincronizar(issue);
+    for (const issue of issues.filter(ehFeature)) await sincronizar(issue);
   }
 };

@@ -157,3 +157,41 @@ test("ciclo e CP vêm dos nomes", () => {
     12,
   );
 });
+
+test("só conta a issue citada depois de Refs, Closes, Fixes ou Resolves", () => {
+  assert.deepEqual(L.issuesCitadas("", "Refs #45, #46 e #48"), [45, 46, 48]);
+  assert.deepEqual(L.issuesCitadas("", "Fixes: #12\nresolves #13"), [12, 13]);
+  assert.deepEqual(L.issuesCitadas("", "Issues relacionadas: #88, #89"), []);
+  assert.deepEqual(L.issuesCitadas("", "parte da #133"), []);
+});
+
+test("aceita os títulos de seção com ## das issues convertidas à mão", () => {
+  const corpo = "## Estado da feature (FDD)\n\nPlanejada\n\n## Outra";
+  assert.equal(L.estadoAtual(corpo), "Planejada");
+  assert.equal(
+    L.estadoAtual(L.escreverEstado(corpo, "Em design")),
+    "Em design",
+  );
+  assert.equal(
+    L.registroDoRPreenchido(
+      "## Registro da avaliação do DoR\n\nAvaliador: <nome>\n",
+    ),
+    false,
+  );
+});
+
+test("feature é reconhecida pelo título, e PR de código pelos arquivos", () => {
+  assert.ok(
+    L.ehFeature({ title: "CP12 — Desativar usuário institucional (RF54)" }),
+  );
+  assert.ok(!L.ehFeature({ title: "Unidade 2 - DoR" }));
+  assert.ok(!L.ehFeature({ title: "CP1 — x", pull_request: {} }));
+  assert.ok(L.mexeNoCodigo(["documentacao/a.md", "apps/api/src/x.ts"]));
+  assert.ok(!L.mexeNoCodigo(["documentacao/a.md", ".github/workflows/ci.yml"]));
+});
+
+test("só o comentário com o cabeçalho da inspeção, fora do robô, é inspeção", () => {
+  assert.ok(L.ehInspecao("## Inspeção de design (DoD 1) — RF53\n..."));
+  assert.ok(!L.ehInspecao("Fiz a inspeção de design ontem."));
+  assert.ok(!L.ehInspecao(`## Inspeção de design (DoD 1)\n\n${L.MARCA_ROBO}`));
+});

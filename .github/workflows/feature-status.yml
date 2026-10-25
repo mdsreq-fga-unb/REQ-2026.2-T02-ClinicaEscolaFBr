@@ -48,7 +48,7 @@ jobs:
 
   issue-da-feature:
     name: PR cita a issue da feature
-    # PRs de feature precisam citar a issue (por exemplo, "Refs #48").
+    # PRs de feature precisam declarar a issue (por exemplo, "Refs #48").
     if: github.event_name == 'pull_request' && github.event.action != 'closed' && startsWith(github.event.pull_request.title, 'feat')
     runs-on: ubuntu-latest
     steps:
@@ -61,7 +61,7 @@ jobs:
             const { issuesCitadas } = require('./.github/scripts/feature-status/logica.cjs');
             const pr = context.payload.pull_request;
             if (issuesCitadas(pr.title, pr.body).length === 0) {
-              core.setFailed('A PR de feature precisa citar a issue da feature na descrição, por exemplo "Refs #48".');
+              core.setFailed('A PR de feature precisa declarar a issue da feature na descrição, com "Refs", "Closes", "Fixes" ou "Resolves", por exemplo "Refs #48".');
             }
 
   testes:

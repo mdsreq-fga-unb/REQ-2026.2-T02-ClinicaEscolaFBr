@@ -13,7 +13,7 @@ body:
 
         Os critérios completos estão na [seção 9 — DoR e DoD](https://mdsreq-fga-unb.github.io/REQ-2026.2-T02-ClinicaEscolaFBr/unidade-2/requisitos/dor-dod/). Na criação da issue, deixe os checklists desmarcados e vá marcando editando a descrição.
 
-        O **Estado da feature** e o Status do Project são atualizados sozinhos a partir do checklist e das PRs que citam a issue (por exemplo, "Refs #48"). Comandos em comentário: `/de-acordo` (confirma a inspeção de design, D1.8, vindo de quem não registrou a inspeção), `/demonstrada <link da ata>` (D5.1) e `/aceite <link>` (D6.1).
+        O **Estado da feature** e o Status do Project são atualizados sozinhos a partir do checklist e das PRs de código que declaram a issue ("Refs #48", "Closes #48"). Comandos em comentário: `/de-acordo` (confirma a inspeção de design registrada com o cabeçalho "## Inspeção de design (DoD 1)", D1.8, vindo de quem não registrou a inspeção), `/demonstrada <link da ata>` (D5.1) e `/aceite <link>` (D6.1).
 
   - type: input
     id: feature
