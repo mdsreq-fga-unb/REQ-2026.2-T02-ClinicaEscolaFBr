@@ -1,4 +1,5 @@
 "use client";
+import { useQueryClient } from "@tanstack/react-query";
 import { LogOut, Menu, X } from "lucide-react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
@@ -36,6 +37,7 @@ export function AreaInterna({ children }: { children: ReactNode }) {
   const { data: usuario, error, isPending } = useSessao();
   const caminho = usePathname();
   const router = useRouter();
+  const queryClient = useQueryClient();
   const [menuAberto, setMenuAberto] = useState(false);
 
   useEffect(() => {
@@ -51,8 +53,11 @@ export function AreaInterna({ children }: { children: ReactNode }) {
     );
   }
 
+  // Saída (RF51): a sessão é revogada na API e os dados em cache são apagados,
+  // para que o botão "voltar" do navegador peça uma nova entrada.
   const sair = async () => {
     await api("/auth/logout", { method: "POST" }).catch(() => undefined);
+    queryClient.clear();
     router.replace("/entrar");
   };
 
