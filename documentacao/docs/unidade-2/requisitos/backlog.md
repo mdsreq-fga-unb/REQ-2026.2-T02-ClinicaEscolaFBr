@@ -7,7 +7,7 @@ O backlog reúne os **itens de trabalho** do produto. Cada item corresponde a um
 A organização segue o processo **Planejar por Feature** do FDD:
 
 - **Responsável:** Líder de Feature que conduz o projeto, a construção e a demonstração do conjunto de features, conforme a [composição da equipe](../../unidade-1/gestao/equipe-comunicacao.md#71-composicao-da-equipe); cada feature conta ainda com a revisão cruzada de outro integrante nas inspeções de design e de código.
-- **Ciclo:** ciclo de construção em que a feature passa pelos processos **Projetar por Feature** e **Construir por Feature** — Ciclo 3 (14/10 a 27/10), Ciclo 4 (28/10 a 10/11), Ciclo 5 (11/11 a 17/11) ou Ciclo 6 (18/11 a 01/12) —, conforme o [planejamento macro das Unidades 2, 3 e 4](../../unidade-1/gestao/cronograma.md#62-visao-macro-das-unidades-2-3-e-4). No início do Ciclo 3, Gabriel prepara a base técnica do projeto (repositório, banco de dados, autenticação, integração contínua e provedores de e-mail, SMS e PDF), da qual dependem todas as features. Os itens que servem de base para os demais (acesso, inscrição, triagem, distribuição de casos e agendamento) vêm primeiro, a carga de cada responsável é distribuída pelas horas estimadas na escala de esforço (seção [10.2.1.2](#10212-escalas-adotadas)), e cada CP do MVP tem ao menos um incremento construído até a entrega da Unidade 3, em 17/11. A construção do MVP termina no Ciclo 6, no início de dezembro, como combinado com a FBr; o Ciclo 7 (02/12 a 10/12) fica reservado à demonstração integrada, ao aceite da FBr e à entrega da Unidade 4, em 10/12.
+- **Ciclo:** ciclo de construção em que a feature passa pelos processos **Projetar por Feature** e **Construir por Feature** — Ciclo 3 (14/10 a 27/10), Ciclo 4 (28/10 a 10/11), Ciclo 5 (11/11 a 17/11) ou Ciclo 6 (18/11 a 01/12) —, conforme o [planejamento macro das Unidades 2, 3 e 4](../../unidade-1/gestao/cronograma.md#62-visao-macro-das-unidades-2-3-e-4). No início do Ciclo 3, Gabriel prepara a base técnica do projeto (repositório, banco de dados, autenticação, integração contínua, envio de e-mail e geração de PDF), da qual dependem todas as features. Os itens que servem de base para os demais (acesso, inscrição, triagem, distribuição de casos e agendamento) vêm primeiro, a carga de cada responsável é distribuída pelas horas estimadas na escala de esforço (seção [10.2.1.2](#10212-escalas-adotadas)), e cada CP do MVP tem ao menos um incremento construído até a entrega da Unidade 3, em 17/11. A construção do MVP termina no Ciclo 6, no início de dezembro, como combinado com a FBr; o Ciclo 7 (02/12 a 10/12) fica reservado à demonstração integrada, ao aceite da FBr e à entrega da Unidade 4, em 10/12.
 - **Ordem:** os itens aparecem na ordem de construção, ciclo a ciclo, respeitando as dependências declaradas na rastreabilidade de cada RF.
 - **Estado:** estado da feature no FDD, conforme o [estudo do FDD (§3.3)](../../unidade-1/estudos/fdd.md#33-planejar-por-feature). Os itens do MVP começam **Planejados**, ficam com o **DoR em avaliação** enquanto o checklist e o registro do [Definition of Ready](dor-dod.md) estão abertos na issue e passam a **Em design** quando o registro conclui que a feature está pronta; os itens fora do MVP permanecem **Identificados**.
 - **Issue:** issue do GitHub em que o item é acompanhado e em que a avaliação do DoR é registrada, quando já criada.
@@ -24,7 +24,7 @@ O mapa distribui as features pelas Áreas e pelos conjuntos de features do FDD, 
 | Agendamento e acompanhamento de sessões | Agendamento | 2 | 1 | Nicolas | Ciclo 4 |
 | Agendamento e acompanhamento de sessões | Confirmação e lembrete | 1 | 1 | Nicolas | Ciclo 4 |
 | Agendamento e acompanhamento de sessões | Cancelamento | 3 | 0 | Nicolas | Ciclo 5 |
-| Gestão de casos | Distribuição entre supervisores | 3 | 0 | Maria Clara | Ciclo 3 |
+| Gestão de casos | Distribuição entre supervisores | 2 | 0 | Maria Clara | Ciclo 3 |
 | Gestão de casos | Vinculação a estagiário | 3 | 0 | Maria Clara | Ciclo 4 |
 | Gestão de casos | Acompanhamento e reorganização | 1 | 2 | Maria Clara | Ciclo 4 |
 | Acompanhamento clínico | Prontuário | 3 | 0 | Luís Henrique | Ciclo 4 |
@@ -40,70 +40,71 @@ O mapa distribui as features pelas Áreas e pelos conjuntos de features do FDD, 
 | Acesso e segurança | Proteção de dados | 3 | 0 | Jônatas | Ciclo 6 |
 | Continuidade do atendimento | Continuidade de casos entre semestres | 0 | 3 | Gabriel | — |
 | Acessibilidade e usabilidade | Personalização de exibição | 0 | 2 | Gabriel | — |
-| **Total** | | **55** | **14** | | |
+| **Total** | | **54** | **14** | | |
+
+O RF19 (áreas de especialidade) foi removido em 24/10/2026, por decisão da FBr ([DF26](decisoes-fbr.md)), e não entra nas contagens.
 
 ### 10.1.2 Itens de trabalho do MVP
 
-A coluna **Depende de** lista só as dependências obrigatórias, sempre pelo RF necessário; integrações e apoios opcionais ficam na rastreabilidade de cada RF ([como ler a rastreabilidade](funcionais.md#como-ler-a-rastreabilidade)). A base técnica (item 0) é pré-condição de todos os itens e aparece na mesma estrutura, com o seu próprio estado. O estado de cada feature é atualizado a cada marco do FDD e foi conferido em 24/10/2026: as 14 features do Ciclo 3 estão com o DoR em avaliação nas suas issues.
+A coluna **Depende de** lista só as dependências obrigatórias, sempre pelo RF necessário; integrações e apoios opcionais ficam na rastreabilidade de cada RF ([como ler a rastreabilidade](funcionais.md#como-ler-a-rastreabilidade)). A base técnica (item 0) é pré-condição de todos os itens e aparece na mesma estrutura, com o seu próprio estado. O estado de cada feature é atualizado a cada marco do FDD e foi conferido em 24/10/2026: as 13 features do Ciclo 3 estão com o DoR em avaliação nas suas issues.
 
 | Ordem | Item de trabalho | CP | Depende de | Responsável | Ciclo | Estado | Issue |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| 0 | Base técnica do projeto (repositório, banco de dados, autenticação base, integração contínua e provedores de e-mail, SMS e PDF) | — | — | Gabriel | Ciclo 3 | Concluída em 21/10/2026 | [PR #82](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/pull/82) |
+| 0 | Base técnica do projeto (repositório, banco de dados, autenticação base, integração contínua, envio de e-mail e geração de PDF) | — | — | Gabriel | Ciclo 3 | Concluída em 21/10/2026 | [PR #82](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/pull/82) |
 | 1 | [RF1](funcionais.md#rf1) — Registrar solicitação de atendimento on-line | CP1 | — | Jônatas | Ciclo 3 | DoR em avaliação | [#88](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/issues/88) |
 | 2 | [RF2](funcionais.md#rf2) — Emitir comprovante de inscrição | CP1 | [RF1](funcionais.md#rf1) | Jônatas | Ciclo 3 | DoR em avaliação | [#89](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/issues/89) |
 | 3 | [RF4](funcionais.md#rf4) — Organizar informações da inscrição para triagem | CP2 | [RF1](funcionais.md#rf1) | Luís Henrique | Ciclo 3 | DoR em avaliação | [#90](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/issues/90) |
 | 4 | [RF6](funcionais.md#rf6) — Registrar prioridade clínica do inscrito | CP2 | [RF4](funcionais.md#rf4) · apoio opcional: [RF5](funcionais.md#rf5) (fora do MVP) | Luís Henrique | Ciclo 3 | DoR em avaliação | [#91](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/issues/91) |
 | 5 | [RF18](funcionais.md#rf18) — Listar casos aguardando distribuição | CP5 | [RF6](funcionais.md#rf6) | Maria Clara | Ciclo 3 | DoR em avaliação | [#92](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/issues/92) |
-| 6 | [RF19](funcionais.md#rf19) — Registrar áreas de especialidade do supervisor | CP5 | — | Maria Clara | Ciclo 3 | DoR em avaliação | [#93](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/issues/93) |
-| 7 | [RF20](funcionais.md#rf20) — Distribuir caso a supervisor conforme área de especialidade | CP5 | [RF18](funcionais.md#rf18), [RF19](funcionais.md#rf19), [RF6](funcionais.md#rf6) | Maria Clara | Ciclo 3 | DoR em avaliação | [#94](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/issues/94) |
-| 8 | [RF50](funcionais.md#rf50) — Autenticar usuário institucional | CP12 | — | Joaquim | Ciclo 3 | DoR em avaliação | [#45](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/issues/45) |
-| 9 | [RF53](funcionais.md#rf53) — Cadastrar usuário institucional com perfil de acesso | CP12 | — | Gabriel | Ciclo 3 | DoR em avaliação | [#48](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/issues/48) |
-| 10 | [RF54](funcionais.md#rf54) — Desativar usuário institucional | CP12 | — | Gabriel | Ciclo 3 | DoR em avaliação | [#49](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/issues/49) |
-| 11 | [RF21](funcionais.md#rf21) — Vincular paciente a estagiário responsável | CP5 | [RF20](funcionais.md#rf20), [RF53](funcionais.md#rf53), [RF54](funcionais.md#rf54) | Maria Clara | Ciclo 3 | DoR em avaliação | [#95](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/issues/95) |
-| 12 | [RF10](funcionais.md#rf10) — Agendar sessão do paciente | CP4 | [RF21](funcionais.md#rf21) | Nicolas | Ciclo 3 | DoR em avaliação | [#96](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/issues/96) |
-| 13 | [RF66](funcionais.md#rf66) — Criar e inicializar o prontuário do paciente | CP6 | [RF21](funcionais.md#rf21) | Luís Henrique | Ciclo 3 | DoR em avaliação | [#97](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/issues/97) |
-| 14 | [RF55](funcionais.md#rf55) — Restringir acesso ao prontuário do paciente | CP12 | [RF21](funcionais.md#rf21), [RF66](funcionais.md#rf66) | Gabriel | Ciclo 3 | DoR em avaliação | [#50](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/issues/50) |
-| 15 | [RF7](funcionais.md#rf7) — Ordenar inscritos na fila de espera | CP3 | [RF6](funcionais.md#rf6) | Jônatas | Ciclo 4 | Planejada | — |
-| 16 | [RF11](funcionais.md#rf11) — Consultar agenda de sessões do estagiário | CP4 | [RF10](funcionais.md#rf10), [RF21](funcionais.md#rf21) | Nicolas | Ciclo 4 | Planejada | — |
-| 17 | [RF14](funcionais.md#rf14) — Confirmar presença em sessão agendada | CP4 | [RF10](funcionais.md#rf10) | Nicolas | Ciclo 4 | Planejada | — |
-| 18 | [RF15](funcionais.md#rf15) — Registrar cancelamento de sessão pelo paciente | CP4 | [RF10](funcionais.md#rf10) | Nicolas | Ciclo 4 | Planejada | — |
-| 19 | [RF16](funcionais.md#rf16) — Registrar cancelamento de sessão pelo estagiário | CP4 | [RF10](funcionais.md#rf10), [RF21](funcionais.md#rf21) | Nicolas | Ciclo 4 | Planejada | — |
-| 20 | [RF22](funcionais.md#rf22) — Consultar responsáveis pelo caso | CP5 | [RF21](funcionais.md#rf21) | Maria Clara | Ciclo 4 | Planejada | — |
-| 21 | [RF23](funcionais.md#rf23) — Consultar casos sob responsabilidade do estagiário ou supervisor | CP5 | [RF21](funcionais.md#rf21) | Maria Clara | Ciclo 4 | Planejada | — |
-| 22 | [RF25](funcionais.md#rf25) — Transferir caso para outro estagiário ou supervisor | CP5 | [RF21](funcionais.md#rf21) | Maria Clara | Ciclo 4 | Planejada | — |
-| 23 | [RF27](funcionais.md#rf27) — Consultar prontuário do paciente | CP6 | [RF66](funcionais.md#rf66), [RF21](funcionais.md#rf21) | Luís Henrique | Ciclo 4 | Planejada | — |
-| 24 | [RF69](funcionais.md#rf69) — Registrar anamnese e contrato terapêutico do paciente | CP6 | [RF66](funcionais.md#rf66) | Luís Henrique | Ciclo 4 | Planejada | [#130](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/issues/130) |
-| 25 | [RF28](funcionais.md#rf28) — Registrar evolução da sessão realizada | CP7 | [RF10](funcionais.md#rf10), [RF21](funcionais.md#rf21) | Luís Henrique | Ciclo 4 | Planejada | — |
-| 26 | [RF34](funcionais.md#rf34) — Registrar falta do paciente na sessão | CP9 | [RF10](funcionais.md#rf10), [RF14](funcionais.md#rf14), [RF15](funcionais.md#rf15) | Gabriel | Ciclo 4 | Planejada | — |
-| 27 | [RF35](funcionais.md#rf35) — Contabilizar faltas do paciente no ciclo | CP9 | [RF15](funcionais.md#rf15), [RF34](funcionais.md#rf34) | Gabriel | Ciclo 4 | Planejada | — |
-| 28 | [RF36](funcionais.md#rf36) — Emitir alerta de limite de faltas atingido | CP9 | [RF35](funcionais.md#rf35) | Gabriel | Ciclo 4 | Planejada | — |
-| 29 | [RF37](funcionais.md#rf37) — Desligar paciente por faltas e liberar vaga | CP9 | [RF36](funcionais.md#rf36) | Gabriel | Ciclo 4 | Planejada | — |
-| 30 | [RF38](funcionais.md#rf38) — Reverter desligamento de paciente por faltas | CP9 | [RF37](funcionais.md#rf37) | Gabriel | Ciclo 4 | Planejada | — |
-| 31 | [RF51](funcionais.md#rf51) — Encerrar sessão do usuário | CP12 | — | Joaquim | Ciclo 4 | Planejada | [#46](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/issues/46) |
-| 32 | [RF52](funcionais.md#rf52) — Verificar identidade do paciente ou responsável | CP12 | — | Joaquim | Ciclo 4 | Planejada | [#47](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/issues/47) |
-| 33 | [RF8](funcionais.md#rf8) — Consultar posição individual na fila | CP3 | [RF52](funcionais.md#rf52) | Jônatas | Ciclo 4 | Planejada | — |
-| 34 | [RF57](funcionais.md#rf57) — Registrar consentimento para tratamento de dados | CP12 | — | Jônatas | Ciclo 4 | Planejada | [#52](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/issues/52) |
-| 35 | [RF17](funcionais.md#rf17) — Notificar paciente sobre ausência do estagiário | CP4 | [RF16](funcionais.md#rf16) | Nicolas | Ciclo 5 | Planejada | — |
-| 36 | [RF29](funcionais.md#rf29) — Corrigir evolução registrada | CP7 | [RF28](funcionais.md#rf28) | Luís Henrique | Ciclo 5 | Planejada | — |
-| 37 | [RF39](funcionais.md#rf39) — Consolidar faltas do estagiário para a supervisão | CP9 | [RF16](funcionais.md#rf16) | Nicolas | Ciclo 5 | Planejada | — |
-| 38 | [RF41](funcionais.md#rf41) — Registrar pagamento da contribuição social do paciente | CP10 | — | Joaquim | Ciclo 5 | Planejada | [#43](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/issues/43) |
-| 39 | [RF44](funcionais.md#rf44) — Listar sessões com comparecimento registrado do paciente | CP10 | [RF52](funcionais.md#rf52) | Maria Clara | Ciclo 5 | Planejada | — |
-| 40 | [RF48](funcionais.md#rf48) — Consultar indicadores operacionais | CP11 | [RF37](funcionais.md#rf37), [RF38](funcionais.md#rf38), [RF21](funcionais.md#rf21) | Gabriel | Ciclo 5 | Planejada | [#22](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/issues/22) |
-| 41 | [RF56](funcionais.md#rf56) — Consultar registro de acessos ao prontuário | CP12 | — | Jônatas | Ciclo 5 | Planejada | [#51](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/issues/51) |
-| 42 | [RF30](funcionais.md#rf30) — Registrar complemento de evolução da sessão | CP7 | [RF28](funcionais.md#rf28) | Luís Henrique | Ciclo 6 | Planejada | — |
-| 43 | [RF31](funcionais.md#rf31) — Consultar evolução de uma sessão específica | CP7 | [RF28](funcionais.md#rf28), [RF29](funcionais.md#rf29), [RF30](funcionais.md#rf30) | Luís Henrique | Ciclo 6 | Planejada | — |
-| 44 | [RF32](funcionais.md#rf32) — Consultar histórico de evolução do paciente | CP7 | [RF27](funcionais.md#rf27), [RF28](funcionais.md#rf28), [RF29](funcionais.md#rf29), [RF30](funcionais.md#rf30) | Luís Henrique | Ciclo 6 | Planejada | — |
-| 45 | [RF33](funcionais.md#rf33) — Gerar relatório final de evolução | CP8 | [RF28](funcionais.md#rf28), [RF32](funcionais.md#rf32) | Gabriel | Ciclo 6 | Planejada | [#131](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/issues/131) |
-| 46 | [RF67](funcionais.md#rf67) — Validar evolução pelo supervisor | CP7 | [RF28](funcionais.md#rf28) | Luís Henrique | Ciclo 6 | Planejada | — |
-| 47 | [RF68](funcionais.md#rf68) — Encerrar caso por alta | CP7 | [RF28](funcionais.md#rf28) | Luís Henrique | Ciclo 6 | Planejada | — |
-| 48 | [RF40](funcionais.md#rf40) — Contabilizar faltas do estagiário no semestre | CP9 | [RF16](funcionais.md#rf16), [RF39](funcionais.md#rf39) | Nicolas | Ciclo 6 | Planejada | — |
-| 49 | [RF63](funcionais.md#rf63) — Sinalizar reprovação do estagiário por faltas | CP9 | [RF40](funcionais.md#rf40) | Nicolas | Ciclo 6 | Planejada | — |
-| 50 | [RF64](funcionais.md#rf64) — Registrar decisão institucional sobre a reprovação do estagiário | CP9 | [RF63](funcionais.md#rf63) | Nicolas | Ciclo 6 | Planejada | — |
-| 51 | [RF42](funcionais.md#rf42) — Consultar situação da contribuição social dos pacientes | CP10 | — | Joaquim | Ciclo 6 | Planejada | [#44](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/issues/44) |
-| 52 | [RF43](funcionais.md#rf43) — Bloquear agendamento por contribuição social pendente | CP10 | [RF41](funcionais.md#rf41), [RF42](funcionais.md#rf42) | Joaquim | Ciclo 6 | Planejada | — |
-| 53 | [RF45](funcionais.md#rf45) — Emitir declaração de comparecimento do paciente | CP10 | [RF52](funcionais.md#rf52) | Maria Clara | Ciclo 6 | Planejada | — |
-| 54 | [RF49](funcionais.md#rf49) — Exportar relatório institucional em PDF | CP11 | [RF48](funcionais.md#rf48) | Gabriel | Ciclo 6 | Planejada | [#23](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/issues/23) |
-| 55 | [RF65](funcionais.md#rf65) — Registrar revogação do consentimento | CP12 | [RF57](funcionais.md#rf57), [RF52](funcionais.md#rf52) | Jônatas | Ciclo 6 | Planejada | — |
+| 6 | [RF20](funcionais.md#rf20) — Distribuir caso a supervisor | CP5 | [RF18](funcionais.md#rf18), [RF6](funcionais.md#rf6) | Maria Clara | Ciclo 3 | DoR em avaliação | [#94](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/issues/94) |
+| 7 | [RF50](funcionais.md#rf50) — Autenticar usuário institucional | CP12 | — | Joaquim | Ciclo 3 | DoR em avaliação | [#45](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/issues/45) |
+| 8 | [RF53](funcionais.md#rf53) — Cadastrar usuário institucional com perfil de acesso | CP12 | — | Gabriel | Ciclo 3 | DoR em avaliação | [#48](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/issues/48) |
+| 9 | [RF54](funcionais.md#rf54) — Desativar usuário institucional | CP12 | — | Gabriel | Ciclo 3 | DoR em avaliação | [#49](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/issues/49) |
+| 10 | [RF21](funcionais.md#rf21) — Vincular paciente a estagiário responsável | CP5 | [RF20](funcionais.md#rf20), [RF53](funcionais.md#rf53), [RF54](funcionais.md#rf54) | Maria Clara | Ciclo 3 | DoR em avaliação | [#95](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/issues/95) |
+| 11 | [RF10](funcionais.md#rf10) — Agendar sessão do paciente | CP4 | [RF21](funcionais.md#rf21) | Nicolas | Ciclo 3 | DoR em avaliação | [#96](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/issues/96) |
+| 12 | [RF66](funcionais.md#rf66) — Criar e inicializar o prontuário do paciente | CP6 | [RF21](funcionais.md#rf21) | Luís Henrique | Ciclo 3 | DoR em avaliação | [#97](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/issues/97) |
+| 13 | [RF55](funcionais.md#rf55) — Restringir acesso ao prontuário do paciente | CP12 | [RF21](funcionais.md#rf21), [RF66](funcionais.md#rf66) | Gabriel | Ciclo 3 | DoR em avaliação | [#50](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/issues/50) |
+| 14 | [RF7](funcionais.md#rf7) — Ordenar inscritos na fila de espera | CP3 | [RF6](funcionais.md#rf6) | Jônatas | Ciclo 4 | Planejada | — |
+| 15 | [RF11](funcionais.md#rf11) — Consultar agenda de sessões do estagiário | CP4 | [RF10](funcionais.md#rf10), [RF21](funcionais.md#rf21) | Nicolas | Ciclo 4 | Planejada | — |
+| 16 | [RF14](funcionais.md#rf14) — Confirmar presença em sessão agendada | CP4 | [RF10](funcionais.md#rf10) | Nicolas | Ciclo 4 | Planejada | — |
+| 17 | [RF15](funcionais.md#rf15) — Registrar cancelamento de sessão pelo paciente | CP4 | [RF10](funcionais.md#rf10) | Nicolas | Ciclo 4 | Planejada | — |
+| 18 | [RF16](funcionais.md#rf16) — Registrar cancelamento de sessão pelo estagiário | CP4 | [RF10](funcionais.md#rf10), [RF21](funcionais.md#rf21) | Nicolas | Ciclo 4 | Planejada | — |
+| 19 | [RF22](funcionais.md#rf22) — Consultar responsáveis pelo caso | CP5 | [RF21](funcionais.md#rf21) | Maria Clara | Ciclo 4 | Planejada | — |
+| 20 | [RF23](funcionais.md#rf23) — Consultar casos sob responsabilidade do estagiário ou supervisor | CP5 | [RF21](funcionais.md#rf21) | Maria Clara | Ciclo 4 | Planejada | — |
+| 21 | [RF25](funcionais.md#rf25) — Transferir caso para outro estagiário ou supervisor | CP5 | [RF21](funcionais.md#rf21) | Maria Clara | Ciclo 4 | Planejada | — |
+| 22 | [RF27](funcionais.md#rf27) — Consultar prontuário do paciente | CP6 | [RF66](funcionais.md#rf66), [RF21](funcionais.md#rf21) | Luís Henrique | Ciclo 4 | Planejada | — |
+| 23 | [RF69](funcionais.md#rf69) — Registrar anamnese e contrato terapêutico do paciente | CP6 | [RF66](funcionais.md#rf66) | Luís Henrique | Ciclo 4 | Planejada | [#130](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/issues/130) |
+| 24 | [RF28](funcionais.md#rf28) — Registrar evolução da sessão realizada | CP7 | [RF10](funcionais.md#rf10), [RF21](funcionais.md#rf21) | Luís Henrique | Ciclo 4 | Planejada | — |
+| 25 | [RF34](funcionais.md#rf34) — Registrar falta do paciente na sessão | CP9 | [RF10](funcionais.md#rf10), [RF14](funcionais.md#rf14), [RF15](funcionais.md#rf15) | Gabriel | Ciclo 4 | Planejada | — |
+| 26 | [RF35](funcionais.md#rf35) — Contabilizar faltas do paciente no ciclo | CP9 | [RF15](funcionais.md#rf15), [RF34](funcionais.md#rf34) | Gabriel | Ciclo 4 | Planejada | — |
+| 27 | [RF36](funcionais.md#rf36) — Emitir alerta de limite de faltas atingido | CP9 | [RF35](funcionais.md#rf35) | Gabriel | Ciclo 4 | Planejada | — |
+| 28 | [RF37](funcionais.md#rf37) — Desligar paciente por faltas e liberar vaga | CP9 | [RF36](funcionais.md#rf36) | Gabriel | Ciclo 4 | Planejada | — |
+| 29 | [RF38](funcionais.md#rf38) — Reverter desligamento de paciente por faltas | CP9 | [RF37](funcionais.md#rf37) | Gabriel | Ciclo 4 | Planejada | — |
+| 30 | [RF51](funcionais.md#rf51) — Encerrar sessão do usuário | CP12 | — | Joaquim | Ciclo 4 | Planejada | [#46](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/issues/46) |
+| 31 | [RF52](funcionais.md#rf52) — Verificar identidade do paciente ou responsável | CP12 | — | Joaquim | Ciclo 4 | Planejada | [#47](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/issues/47) |
+| 32 | [RF8](funcionais.md#rf8) — Consultar posição individual na fila | CP3 | [RF52](funcionais.md#rf52) | Jônatas | Ciclo 4 | Planejada | — |
+| 33 | [RF57](funcionais.md#rf57) — Registrar consentimento para tratamento de dados | CP12 | — | Jônatas | Ciclo 4 | Planejada | [#52](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/issues/52) |
+| 34 | [RF17](funcionais.md#rf17) — Notificar paciente sobre ausência do estagiário | CP4 | [RF16](funcionais.md#rf16) | Nicolas | Ciclo 5 | Planejada | — |
+| 35 | [RF29](funcionais.md#rf29) — Corrigir evolução registrada | CP7 | [RF28](funcionais.md#rf28) | Luís Henrique | Ciclo 5 | Planejada | — |
+| 36 | [RF39](funcionais.md#rf39) — Consolidar faltas do estagiário para a supervisão | CP9 | [RF16](funcionais.md#rf16) | Nicolas | Ciclo 5 | Planejada | — |
+| 37 | [RF41](funcionais.md#rf41) — Registrar pagamento da contribuição social do paciente | CP10 | — | Joaquim | Ciclo 5 | Planejada | [#43](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/issues/43) |
+| 38 | [RF44](funcionais.md#rf44) — Listar sessões com comparecimento registrado do paciente | CP10 | [RF52](funcionais.md#rf52) | Maria Clara | Ciclo 5 | Planejada | — |
+| 39 | [RF48](funcionais.md#rf48) — Consultar indicadores operacionais | CP11 | [RF37](funcionais.md#rf37), [RF38](funcionais.md#rf38), [RF21](funcionais.md#rf21) | Gabriel | Ciclo 5 | Planejada | [#22](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/issues/22) |
+| 40 | [RF56](funcionais.md#rf56) — Consultar registro de acessos ao prontuário | CP12 | — | Jônatas | Ciclo 5 | Planejada | [#51](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/issues/51) |
+| 41 | [RF30](funcionais.md#rf30) — Registrar complemento de evolução da sessão | CP7 | [RF28](funcionais.md#rf28) | Luís Henrique | Ciclo 6 | Planejada | — |
+| 42 | [RF31](funcionais.md#rf31) — Consultar evolução de uma sessão específica | CP7 | [RF28](funcionais.md#rf28), [RF29](funcionais.md#rf29), [RF30](funcionais.md#rf30) | Luís Henrique | Ciclo 6 | Planejada | — |
+| 43 | [RF32](funcionais.md#rf32) — Consultar histórico de evolução do paciente | CP7 | [RF27](funcionais.md#rf27), [RF28](funcionais.md#rf28), [RF29](funcionais.md#rf29), [RF30](funcionais.md#rf30) | Luís Henrique | Ciclo 6 | Planejada | — |
+| 44 | [RF33](funcionais.md#rf33) — Gerar relatório final de evolução | CP8 | [RF28](funcionais.md#rf28), [RF32](funcionais.md#rf32) | Gabriel | Ciclo 6 | Planejada | [#131](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/issues/131) |
+| 45 | [RF67](funcionais.md#rf67) — Validar evolução pelo supervisor | CP7 | [RF28](funcionais.md#rf28) | Luís Henrique | Ciclo 6 | Planejada | — |
+| 46 | [RF68](funcionais.md#rf68) — Encerrar caso por alta | CP7 | [RF28](funcionais.md#rf28) | Luís Henrique | Ciclo 6 | Planejada | — |
+| 47 | [RF40](funcionais.md#rf40) — Contabilizar faltas do estagiário no semestre | CP9 | [RF16](funcionais.md#rf16), [RF39](funcionais.md#rf39) | Nicolas | Ciclo 6 | Planejada | — |
+| 48 | [RF63](funcionais.md#rf63) — Sinalizar reprovação do estagiário por faltas | CP9 | [RF40](funcionais.md#rf40) | Nicolas | Ciclo 6 | Planejada | — |
+| 49 | [RF64](funcionais.md#rf64) — Registrar decisão institucional sobre a reprovação do estagiário | CP9 | [RF63](funcionais.md#rf63) | Nicolas | Ciclo 6 | Planejada | — |
+| 50 | [RF42](funcionais.md#rf42) — Consultar situação da contribuição social dos pacientes | CP10 | — | Joaquim | Ciclo 6 | Planejada | [#44](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/issues/44) |
+| 51 | [RF43](funcionais.md#rf43) — Bloquear agendamento por contribuição social pendente | CP10 | [RF41](funcionais.md#rf41), [RF42](funcionais.md#rf42) | Joaquim | Ciclo 6 | Planejada | — |
+| 52 | [RF45](funcionais.md#rf45) — Emitir declaração de comparecimento do paciente | CP10 | [RF52](funcionais.md#rf52) | Maria Clara | Ciclo 6 | Planejada | — |
+| 53 | [RF49](funcionais.md#rf49) — Exportar relatório institucional em PDF | CP11 | [RF48](funcionais.md#rf48) | Gabriel | Ciclo 6 | Planejada | [#23](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/issues/23) |
+| 54 | [RF65](funcionais.md#rf65) — Registrar revogação do consentimento | CP12 | [RF57](funcionais.md#rf57), [RF52](funcionais.md#rf52) | Jônatas | Ciclo 6 | Planejada | — |
 
 ### 10.1.3 Itens para versões posteriores
 
@@ -213,8 +214,8 @@ Regras definidas previamente e aplicadas de forma uniforme a todos os requisitos
 | [RF16](funcionais.md#rf16) | Registrar cancelamento de sessão pelo estagiário | CP4 | 3 | Mesma lógica do RF15 | 2 | 2 | 1 | **1,7** |
 | [RF17](funcionais.md#rf17) | Notificar paciente sobre ausência do estagiário | CP4 | 3 | Comunicação útil, não bloqueia o fluxo | 2 | 2 | 2 | **2,0** |
 | [RF18](funcionais.md#rf18) | Listar casos aguardando distribuição | CP5 | 4 | Visibilidade operacional essencial | 2 | 2 | 1 | **1,7** |
-| [RF19](funcionais.md#rf19) | Registrar áreas de especialidade do supervisor | CP5 | 4 | Necessário pra lógica de distribuição funcionar | 2 | 1 | 1 | **1,3** |
-| [RF20](funcionais.md#rf20) | Distribuir caso a supervisor conforme área de especialidade | CP5 | 4 | Lógica central de distribuição | 3 | 3 | 2 | **2,7** |
+| [RF19](funcionais.md#rf19) | Registrar áreas de especialidade do supervisor (removido em 24/10/2026) | CP5 | 4 | Necessário pra lógica de distribuição funcionar | 2 | 1 | 1 | **1,3** |
+| [RF20](funcionais.md#rf20) | Distribuir caso a supervisor | CP5 | 4 | Lógica central de distribuição | 3 | 3 | 2 | **2,7** |
 | [RF21](funcionais.md#rf21) | Vincular paciente a estagiário responsável | CP5 | 4 | Base pra tudo que depende de responsável (prontuário, evolução) | 3 | 3 | 2 | **2,7** |
 | [RF22](funcionais.md#rf22) | Consultar responsáveis pelo caso | CP5 | 2 | Consulta útil, mas inferível de outras telas no início | 1 | 1 | 1 | **1,0** |
 | [RF23](funcionais.md#rf23) | Consultar casos sob responsabilidade do estagiário ou supervisor | CP5 | 4 | Necessário pro trabalho diário de estagiários/supervisores | 2 | 2 | 1 | **1,7** |
@@ -296,7 +297,7 @@ Nenhum outro RF excluído pelas regras 1–4 tem essa mesma condição de bloque
 
 </details>
 
-Aplicando o critério aos 69 RFs (RF1 a RF69): **55 entram no MVP** e **14 ficam para uma versão posterior** — 43 por serem *Must have*, 9 *Should have* de baixo esforço, 1 *Should have* de esforço alto promovido por dependência (RF10), 1 *Should have* de esforço alto incluído a pedido da FBr (RF33) e 1 *Could have* de esforço mínimo; dos 14 de fora, 6 são *Should have* de esforço alto, 6 são *Could have* de esforço moderado/alto e 2 são *Won't have now*.
+Aplicando o critério aos 68 RFs vigentes (RF1 a RF69, sem o RF19, removido em 24/10/2026): **54 entram no MVP** e **14 ficam para uma versão posterior** — 42 por serem *Must have*, 9 *Should have* de baixo esforço, 1 *Should have* de esforço alto promovido por dependência (RF10), 1 *Should have* de esforço alto incluído a pedido da FBr (RF33) e 1 *Could have* de esforço mínimo; dos 14 de fora, 6 são *Should have* de esforço alto, 6 são *Could have* de esforço moderado/alto e 2 são *Won't have now*.
 
 A tabela abaixo aplica o critério requisito a requisito, mantendo a rastreabilidade entre CP, valor de negócio, esforço técnico e a decisão:
 
@@ -320,7 +321,7 @@ A tabela abaixo aplica o critério requisito a requisito, mantendo a rastreabili
 | [RF16](funcionais.md#rf16) | CP4 | 3 | 2 | Sim | Should have com esforço baixo/moderado — vale entregar já. |
 | [RF17](funcionais.md#rf17) | CP4 | 3 | 2 | Sim | Should have com esforço baixo/moderado — vale entregar já. |
 | [RF18](funcionais.md#rf18) | CP5 | 4 | 2 | Sim | Must have — indispensável; entra independentemente do esforço. |
-| [RF19](funcionais.md#rf19) | CP5 | 4 | 1 | Sim | Must have — indispensável; entra independentemente do esforço. |
+| [RF19](funcionais.md#rf19) | CP5 | 4 | 1 | Removido | Removido em 24/10/2026: a FBr não divide os atendimentos por área de especialidade ([DF26](decisoes-fbr.md)). |
 | [RF20](funcionais.md#rf20) | CP5 | 4 | 3 | Sim | Must have — indispensável; entra independentemente do esforço. |
 | [RF21](funcionais.md#rf21) | CP5 | 4 | 3 | Sim | Must have — indispensável; entra independentemente do esforço. |
 | [RF22](funcionais.md#rf22) | CP5 | 2 | 1 | Sim | Could have com esforço muito baixo — praticamente gratuito, entra. |
@@ -372,7 +373,7 @@ A tabela abaixo aplica o critério requisito a requisito, mantendo a rastreabili
 | [RF61](funcionais.md#rf61) | CP14 | 2 | 2 | Não | Could have com esforço moderado/alto — pode esperar, conforme a própria definição do cliente. |
 | [RF62](funcionais.md#rf62) | CP14 | 2 | 3 | Não | Could have com esforço moderado/alto — pode esperar, conforme a própria definição do cliente. |
 
-**Este é o recorte do MVP validado com a Clínica Escola FBr**, conforme o registro da seção [10.2.4](#1024-validacao-do-mvp-com-o-cliente). A classificação dos RNFs para o MVP, na subseção [10.2.3.1](#10231-classificacao-dos-requisitos-nao-funcionais-para-o-mvp) a seguir, já reflete este recorte de 55 RFs, incluindo a promoção de RF10 por dependência. Os pontos ainda em aberto com a FBr estão registrados em [Pendências de validação com a FBr](analise-feedback.md#pendencias-de-validacao-com-a-fbr).
+**Este é o recorte do MVP validado com a Clínica Escola FBr**, conforme o registro da seção [10.2.4](#1024-validacao-do-mvp-com-o-cliente). A classificação dos RNFs para o MVP, na subseção [10.2.3.1](#10231-classificacao-dos-requisitos-nao-funcionais-para-o-mvp) a seguir, já reflete este recorte de 54 RFs, incluindo a promoção de RF10 por dependência. Os pontos ainda em aberto com a FBr estão registrados em [Pendências de validação com a FBr](analise-feedback.md#pendencias-de-validacao-com-a-fbr).
 
 #### 10.2.3.1 Classificação dos Requisitos Não Funcionais para o MVP
 
@@ -387,7 +388,7 @@ A classificação abaixo relaciona cada Requisito Não Funcional (RNF) ao recort
 
 </div>
 
-A classificação foi conferida requisito a requisito contra os 55 RFs selecionados na tabela acima — inclusive a promoção de RF10 por dependência.
+A classificação foi conferida requisito a requisito contra os 54 RFs selecionados na tabela acima — inclusive a promoção de RF10 por dependência.
 
 | Código | Requisito não funcional | Classificação | RF/escopo relacionado | Justificativa |
 | --- | --- | --- | --- | --- |
@@ -413,7 +414,7 @@ A classificação foi conferida requisito a requisito contra os 55 RFs seleciona
 | [RNF20](nao-funcionais.md#rnf20) | Continuidade do histórico na troca de responsável | Associado a RF do MVP | RF25 | Acompanha a transferência de caso e preserva o histórico na troca de responsável. |
 | [RNF21](nao-funcionais.md#rnf21) | Desempenho das listagens e operações de vínculo | Evolutivo | CP5 | Meta de desempenho a refinar com massa de dados representativa. |
 | [RNF22](nao-funcionais.md#rnf22) | Usabilidade da distribuição e do vínculo de casos | Evolutivo | RF20, RF21 | Meta específica de usabilidade que pode ser refinada após validação do fluxo. |
-| [RNF23](nao-funcionais.md#rnf23) | Modificabilidade do cadastro de áreas de especialidade | Evolutivo | RF19 | Propriedade de modificabilidade importante, mas não impede a operação mínima. |
+| [RNF23](nao-funcionais.md#rnf23) | Modificabilidade do cadastro de áreas de especialidade | Não aplicável ao MVP | RF19 (removido) | Removido em 24/10/2026, junto com o RF19 ([DF26](decisoes-fbr.md)). |
 | [RNF24](nao-funcionais.md#rnf24) | Acessibilidade das telas de distribuição e consulta | Obrigatório para o MVP | CP5 | Acessibilidade mínima das interfaces internas deve existir desde a primeira versão utilizável. |
 | [RNF25](nao-funcionais.md#rnf25) | Sigilo do conteúdo clínico nas respostas negadas | Obrigatório para o MVP | RF27, RF28, RF55, RF66, RF69 | O prontuário contém dados de saúde e exige proteção desde qualquer versão utilizável: a identificação registrada na criação do prontuário (RF66) e os dados iniciais, anamnese e contrato, registrados pelo RF69. |
 | [RNF26](nao-funcionais.md#rnf26) | Sigilo do conteúdo da evolução | Obrigatório para o MVP | RF28, RF55 | Consolidado no RNF25 em 24/10/2026; a classificação acompanha a do RNF25. |
@@ -462,7 +463,6 @@ Adiar o refinamento de uma meta não significa lançar sem ela. A tabela define,
 | [RNF14](nao-funcionais.md#rnf14) | Antes da integração (D4.5): monitor externo configurado para consultar a página de agendamento a cada minuto do horário comercial, com a detecção de falha (sem resposta em 10 segundos ou erro do servidor) e o cálculo da fórmula do RNF conferidos no ambiente de homologação. O relatório do primeiro mês completo não faz parte do D4.5, porque só existe depois do lançamento: é o primeiro acompanhamento da meta, e um resultado abaixo de 99% abre correção no ciclo seguinte. | Ajustar a meta de 99% e a janela de manutenção com o histórico de disponibilidade. |
 | [RNF21](nao-funcionais.md#rnf21) | Meta de 3 segundos no percentil 95, verificada uma vez no cenário de referência do RNF12. | Recalibrar a meta com massa de dados real. |
 | [RNF22](nao-funcionais.md#rnf22) | Teste de tarefa com pelo menos 3 participantes por perfil (coordenação e supervisor), sem ajuda, todos concluindo a distribuição em até 3 interações. | Ampliar a amostra para 5 participantes por perfil e a taxa de 90% do RNF. |
-| [RNF23](nao-funcionais.md#rnf23) | Catálogo de áreas alterável pela coordenação, sem intervenção técnica, sem alterar as distribuições já feitas. | Nenhum refinamento previsto. |
 | [RNF29](nao-funcionais.md#rnf29) | Meta de 2 segundos no percentil 95, verificada uma vez no cenário de referência do RNF. | Recalibrar a meta com as medições do uso real. |
 | [RNF30](nao-funcionais.md#rnf30) | Teste de tarefa com pelo menos 3 estagiários, sem ajuda, todos registrando a evolução em até 3 minutos e 6 interações. | Ampliar a amostra para 10 estagiários e a taxa de 90% do RNF. |
 | [RNF40](nao-funcionais.md#rnf40) | Meta de 5 segundos no percentil 95, verificada uma vez no cenário de referência do RNF12. | Recalibrar a meta com as medições do uso real. |
@@ -475,7 +475,7 @@ A validação do MVP com a Clínica Escola FBr foi feita por mensagens no grupo 
 
 - **Quem participou:** pela Clínica Escola FBr, **Robson Luís de Araújo** (coordenador do curso de Psicologia, responsável pela Clínica Escola) e **Thiago Cardoso Viana** (Diretor Financeiro e de Tecnologia; ver [Mapa de Stakeholders](../../unidade-1/cenario-atual.md#16-mapa-de-stakeholders)); pela equipe, **Gabriel Barbaceli** e **Jônatas**, com os demais integrantes acompanhando o grupo.
 - **Quando ocorreu:** em duas rodadas — de 24/09 a 02/10/2026, sobre a primeira proposta de MVP, e de 06/10 a 08/10/2026, sobre a proposta revisada, aprovada por Thiago em 07/10 ("Olhei a proposta e tá ok, podem seguir") e encerrada em 08/10 ("Certo, vamos em frente!"). A linha do tempo completa da conversa e as capturas de tela estão em [Reuniões da Unidade 2 — Validação do MVP com a Clínica Escola FBr](../reunioes.md#validacao-do-mvp-com-a-clinica-escola-fbr).
-- **RFs aprovados para o MVP:** os 53 RFs assinalados "Sim" na tabela da seção [10.2.3](#1023-definicao-do-mvp), incluindo os novos RF66, RF67 e RF68. Em 24/10/2026, o RF66 foi dividido, e o registro da anamnese e do contrato passou ao RF69, que herda a classificação do RF66; no mesmo dia, o RF33 entrou no MVP a pedido da FBr, e o MVP passou a ter 55 RFs.
+- **RFs aprovados para o MVP:** os 53 RFs assinalados "Sim" na tabela da seção [10.2.3](#1023-definicao-do-mvp), incluindo os novos RF66, RF67 e RF68. Em 24/10/2026, o RF66 foi dividido, e o registro da anamnese e do contrato passou ao RF69, que herda a classificação do RF66; no mesmo dia, o RF33 entrou no MVP a pedido da FBr, e o RF19 foi removido por decisão da FBr, e o MVP passou a ter 54 RFs.
 - **RNFs aplicáveis ao MVP:** os RNFs classificados como "Obrigatório para o MVP", "Associado a RF do MVP" ou "Evolutivo" na seção [10.2.3.1](#10231-classificacao-dos-requisitos-nao-funcionais-para-o-mvp), que acompanham os RFs aprovados.
 - **Requisitos que ficaram para entregas futuras:** os RFs assinalados "Não" na seção [10.2.3](#1023-definicao-do-mvp) — na validação, RF3, RF5, RF9, RF12, RF13, RF24, RF26, RF33, RF46, RF47, RF58, RF59, RF60, RF61 e RF62; desde 24/10/2026, sem o RF33, que entrou no MVP — e os RNFs classificados como "Não aplicável ao MVP". A continuidade de casos entre semestres (RF58 a RF60) será tratada caso a caso pela transferência de caso (RF25) nesta primeira versão.
 - **Ajustes solicitados pelo cliente:**
