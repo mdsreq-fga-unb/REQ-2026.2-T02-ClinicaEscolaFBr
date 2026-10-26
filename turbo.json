@@ -6,7 +6,8 @@
     "API_PORT",
     "WEB_URL",
     "SMTP_HOST",
-    "SMTP_PORT"
+    "SMTP_PORT",
+    "CHAVE_DADOS"
   ],
   "tasks": {
     "build": {
