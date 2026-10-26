@@ -244,7 +244,7 @@ sequenceDiagram
     C->>A: POST /usuarios/:id/desativacao
     A->>DB: situação desativado e revoga as SessaoLogin abertas
     A->>DB: auditoria com quem desativou, o usuário e a data/hora
-    A-->>C: 200 usuário desativado
+    A-->>C: 204 usuário desativado
     E->>A: próxima requisição com a sessão antiga
     A->>DB: SessaoGuard encontra a sessão revogada
     A-->>E: 401 sessão encerrada
