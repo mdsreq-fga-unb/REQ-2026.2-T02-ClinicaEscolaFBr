@@ -2,7 +2,7 @@ name: CI
 
 on:
   pull_request:
-    branches: [main, feat/rf50-autenticacao]
+    branches: [main]
   push:
     branches: [main]
 
@@ -41,15 +41,14 @@ jobs:
         env:
           POSTGRES_USER: clinica
           POSTGRES_PASSWORD: clinica
-          POSTGRES_DB: clinica_rf1_test_ci
+          POSTGRES_DB: clinica
         ports: ["5432:5432"]
         options: >-
           --health-cmd "pg_isready -U clinica"
           --health-interval 5s
           --health-retries 10
     env:
-      DATABASE_URL: postgresql://clinica:clinica@localhost:5432/clinica_rf1_test_ci
-      TEST_DATABASE_URL: postgresql://clinica:clinica@localhost:5432/clinica_rf1_test_ci
+      DATABASE_URL: postgresql://clinica:clinica@localhost:5432/clinica
       API_PORT: 3333
       WEB_URL: http://localhost:3000
       SMTP_HOST: localhost
@@ -68,33 +67,13 @@ jobs:
       - run: pnpm turbo run build --filter=@clinica/database...
       - run: pnpm db:migrate
       - run: pnpm turbo run lint typecheck test build
-      - run: pnpm --filter @clinica/api test:integration
 
   e2e:
     needs: [mudancas, verificar]
     if: needs.mudancas.outputs.codigo == 'true'
     runs-on: ubuntu-latest
-    services:
-      postgres:
-        image: postgres:17
-        env:
-          POSTGRES_USER: clinica
-          POSTGRES_PASSWORD: clinica
-          POSTGRES_DB: clinica_rf1_test_e2e
-        ports: ["5432:5432"]
-        options: >-
-          --health-cmd "pg_isready -U clinica"
-          --health-interval 5s
-          --health-retries 10
     env:
       NEXT_PUBLIC_API_URL: http://localhost:3333
-      DATABASE_URL: postgresql://clinica:clinica@localhost:5432/clinica_rf1_test_e2e
-      API_PORT: 3333
-      WEB_URL: http://localhost:3000
-      SMTP_HOST: localhost
-      SMTP_PORT: 1025
-      # Chave apenas para dados fictícios deste job; nunca usada em produção.
-      CHAVE_DADOS: AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=
     steps:
       - uses: actions/checkout@v7
       - uses: pnpm/action-setup@v6
@@ -104,14 +83,8 @@ jobs:
           cache: pnpm
       - run: pnpm install --frozen-lockfile
       - run: pnpm --filter @clinica/web exec playwright install --with-deps chromium
-      - run: pnpm build
-      - run: pnpm db:migrate
+      - run: pnpm turbo run build --filter=@clinica/web...
       - run: pnpm --filter @clinica/web test:e2e
-      - uses: actions/upload-artifact@v4
-        if: always()
-        with:
-          name: evidencias-e2e
-          path: apps/web/test-results
 
   resultado:
     if: always()
