@@ -717,4 +717,4 @@ pnpm db:migrate
 | Nicolas Costa     | Analista de Viabilidade                                              |
 | Jônatas Farias    | Analista de Negócio                                                  |
 
-Todos atuam como **Líderes de Feature** dos conjuntos de features sob sua responsabilidade. A divisão completa está na [composição da equipe](https://mdsreq-fga-unb.github.io/REQ-2026.2-T02-ClinicaEscolaFBr/unidade-1/gestao/equipe-comunicacao/) e no [Backlog de Produto](https://mdsreq-fga-unb.github.io/REQ-2026.2-T02-ClinicaEscolaFBr/unidade-2/requisitos/backlog/).
+Todos atuam como **Líderes de Feature** dos conjuntos de features sob sua responsabilidade. A divisão completa está na [composição da equipe](https://mdsreq-fga-unb.github.io/REQ-2026.2-T02-ClinicaEscolaFBr/unidade-1/gestao/equipe-comunicacao/) e em [Features e backlog](https://mdsreq-fga-unb.github.io/REQ-2026.2-T02-ClinicaEscolaFBr/visao-geral/backlog/), com o ciclo e o status de cada feature.

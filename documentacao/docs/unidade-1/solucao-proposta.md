@@ -1,5 +1,8 @@
 # 2. Solução Proposta
 
+!!! abstract "Referência vigente"
+    Esta página é mantida atualizada depois da entrega da Unidade 1 (07/09/2026) e vale como referência do produto. As mudanças posteriores estão no [histórico de revisão](../index.md#historico-de-revisao) e, quando vieram da Clínica Escola, no [Registro de Decisões com a FBr](../unidade-2/requisitos/decisoes-fbr.md). A versão entregue na Unidade 1 pode ser consultada [no repositório](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/tree/c4601b23320d9dd120a6f7982d863ff75291743d).
+
 ## 2.1 Objetivo Geral do Produto
 
 O objetivo do produto é **apoiar a integração e a digitalização da gestão da Clínica Escola de Psicologia da Faculdade Brasília**, por meio de uma aplicação web responsiva que apoie o processo desde a inscrição do paciente até a entrega do relatório final de evolução.
@@ -44,26 +47,9 @@ A solução proposta para a Clínica Escola da FBr deverá contemplar, de forma 
 
 ### Escopo do MVP
 
-O recorte atual do MVP é feito **por requisito**: **54 dos 68 RFs** vigentes, definidos na priorização da Unidade 2 e validados com a Clínica Escola FBr ([seções 10.2.3 e 10.2.4 do Backlog de Produto](../unidade-2/requisitos/backlog.md#1023-definicao-do-mvp)), que cruzaram o valor de negócio avaliado pela FBr com o esforço técnico de cada RF. A tabela resume o recorte por característica; o detalhamento requisito a requisito está na seção 10.2.3.
+O recorte do MVP é feito **por requisito**, e não por característica: a priorização da Unidade 2 cruzou o valor de negócio avaliado pela Clínica Escola FBr com o esforço técnico de cada RF, e o resultado foi validado com a FBr ([seções 10.2.3 e 10.2.4 do Backlog de Produto](../unidade-2/requisitos/backlog.md#1023-definicao-do-mvp)). Por isso, uma mesma característica pode ter parte dos seus RFs no MVP e parte em versões posteriores.
 
-| CP | Característica | RFs no MVP | Situação | RFs fora do MVP |
-| --- | --- | --- | --- | --- |
-| CP1 | Inscrição on-line | 2 de 3 | Parcial no MVP | RF3 |
-| CP2 | Triagem e sinalização de casos | 2 de 3 | Parcial no MVP | RF5 |
-| CP3 | Fila de espera e consulta de posição | 2 de 3 | Parcial no MVP | RF9 |
-| CP4 | Agendamento, confirmação e remarcação | 6 de 8 | Parcial no MVP | RF12, RF13 |
-| CP5 | Distribuição de casos entre supervisores e estagiários | 6 de 8 | Parcial no MVP | RF24, RF26 (RF19 removido em 24/10/2026) |
-| CP6 | Prontuário eletrônico | 3 de 3 | Completa no MVP | — |
-| CP7 | Registro de evolução por sessão | 7 de 7 | Completa no MVP | — |
-| CP8 | Geração do relatório final de evolução | 1 de 1 | Completa no MVP | — |
-| CP9 | Controle de assiduidade e alertas | 9 de 9 | Completa no MVP | — |
-| CP10 | Registros administrativos do atendimento | 5 de 7 | Parcial no MVP | RF46, RF47 |
-| CP11 | Indicadores e relatórios institucionais | 2 de 2 | Completa no MVP | — |
-| CP12 | Segurança, sigilo e controle de acesso | 9 de 9 | Completa no MVP | — |
-| CP13 | Continuidade de casos entre semestres | 0 de 3 | Fora do MVP | RF58, RF59, RF60 |
-| CP14 | Acessibilidade e usabilidade | 0 de 2 | Fora do MVP | RF61, RF62 |
-
-A CP6 inclui o RF66 (criação do prontuário) e o RF69 (registro da anamnese e do contrato, separado do RF66 em 24/10/2026) e a CP7 inclui os RF67 e RF68 (validação da evolução pelo supervisor e encerramento do caso por alta), declarados a partir das dúvidas levantadas pela FBr na validação do MVP (ver [10.2.4](../unidade-2/requisitos/backlog.md#1024-validacao-do-mvp-com-o-cliente)). Na CP9, a reprovação do estagiário (RF63/RF64) faz parte do MVP, com implementação prevista para mais perto do fim do semestre.
+A lista vigente das features do MVP e das que ficam para depois, organizada por área e conjunto do FDD (que correspondem às características acima), fica num só lugar: [Features e backlog](../visao-geral/backlog.md#features-por-area-e-conjunto). As mudanças de escopo depois da validação estão no [Registro de Decisões com a FBr](../unidade-2/requisitos/decisoes-fbr.md).
 
 Na CP14, embora os dois RFs específicos (RF61 e RF62 — alto contraste e ajuste de tamanho de texto) fiquem para depois, o piso de conformidade WCAG 2.2 nível AA (RNF56) permanece obrigatório desde o MVP, por exigência confirmada da FBr/MEC.
 

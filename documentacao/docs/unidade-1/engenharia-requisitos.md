@@ -1,5 +1,8 @@
 # 5. Engenharia de Requisitos
 
+!!! abstract "Referência vigente"
+    Esta página é mantida atualizada depois da entrega da Unidade 1 (07/09/2026) e vale como referência do processo de Engenharia de Requisitos. As mudanças posteriores estão no [histórico de revisão](../index.md#historico-de-revisao). A versão entregue na Unidade 1 pode ser consultada [no repositório](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/tree/c4601b23320d9dd120a6f7982d863ff75291743d).
+
 O processo de ER separa técnicas, práticas, ferramentas e resultados. Entrevistas, análise documental, priorização, negociação, modelagem, revisão e validação orientada a cenários são técnicas. A lista de features, a rastreabilidade, os relatórios de progresso e os critérios de aceitação são artefatos ou estruturas produzidas/mantidas pelo processo; o GitHub Projects é a ferramenta de apoio.
 
 ## 5.1 Atividades e Técnicas de ER

@@ -6,7 +6,7 @@ hide:
 
 # Clínica Escola FBr — Documentação do projeto
 
-Documentação do projeto · versão 3.4
+Documentação do projeto · versão 3.10
 
 <details class="revision-history" id="historico-de-revisao" markdown>
 <summary>Histórico de revisão</summary>
@@ -83,6 +83,9 @@ Registro cronológico das versões e alterações do documento de visão e dos a
 | 24/10/2026 | 3.5 | Acesso da coordenação ao prontuário, pedido pela FBr na reunião de 23/10/2026 e não incluído na ata em PDF ([DF32](unidade-2/requisitos/decisoes-fbr.md)): a coordenação consulta, só para leitura, o conteúdo clínico de todos os prontuários, com o acesso registrado. Atualizados a CP6 e a CP12 na Solução Proposta, a Estratégia, o RF27, o RF31, o RF32, o RF55, o RNF25, a ata da reunião, o projeto do RF55 e o protótipo do prontuário (imagem e PDF), com a visão da coordenação. | Gabriel da Cunha Barbaceli |
 | 24/10/2026 | 3.6 | Volta à fila de quem perde a vaga por falta de pagamento, decidida com a FBr na reunião de 23/10/2026 e não incluída na ata em PDF ([DF33](unidade-2/requisitos/decisoes-fbr.md)): mesma prioridade clínica, data da volta para o desempate e bloqueio do agendamento da 2ª sessão em diante mantido. Atualizados o RF7, o RF43, a ata da reunião e as pendências com a FBr. | Gabriel da Cunha Barbaceli |
 | 24/10/2026 | 3.7 | RF52: o código de verificação vai só por e-mail, e quem informou só o celular consulta a fila e pede a declaração na secretaria, conforme a regra de contato decidida com a FBr ([DF24](unidade-2/requisitos/decisoes-fbr.md)). A pendência saiu da lista de pendências com a FBr. | Gabriel da Cunha Barbaceli |
+| 25/10/2026 | 3.8 | Reorganização a partir dos comentários do professor à apresentação da Unidade 2: nova área "Visão geral do projeto", fora das unidades, com o Cronograma geral (entregas, etapas e ciclos com status: encerrado, em andamento ou aguardando) e a página Features e backlog (ciclo, feature, Líder de Feature, dependências e issue, em uma lista única, e o status de cada ciclo; o estado de cada feature fica nas issues e no Project); a tabela dos ciclos da seção 6.2, as tabelas do backlog da seção 10.1 e a lista de features da seção 8.1 passam para essas páginas, e as Unidades 1, 2 e 3 levam até elas por links. Sem mudança no MVP, nas features ou nos requisitos | Joaquim José da Fonseca Viana |
+| 25/10/2026 | 3.9 | Resposta às issues de avaliação #109 e #110: aviso de referência vigente na Solução Proposta, na Estratégia de ESW, na Engenharia de Requisitos e na Equipe e Comunicação, com o link da versão entregue na Unidade 1; escopo do MVP mantido só em Features e backlog, com links nas demais páginas; e, no Cronograma geral, previsto e realizado (com o Ciclo 3 marco a marco), pontos de controle por feature em cada ciclo, carga por Líder de Feature e ciclo e o registro do fechamento dos ciclos. | Gabriel da Cunha Barbaceli |
+| 25/10/2026 | 3.10 | DoR do RF51 (#46), antecipado para o Ciclo 3 junto com o RF50: o ator passa a nomear os perfis institucionais (secretaria, estagiário, supervisor ou coordenação) e a rastreabilidade e o backlog declaram a dependência do RF50 | Joaquim José da Fonseca Viana |
 
 A versão 1.6 está registrada com a data do commit (04/09/2026), posterior à da versão 1.7; a numeração foi mantida para preservar as referências já feitas a essas versões.
 
