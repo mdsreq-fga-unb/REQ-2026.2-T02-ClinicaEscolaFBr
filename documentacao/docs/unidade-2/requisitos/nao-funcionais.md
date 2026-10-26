@@ -263,7 +263,15 @@ Como o link de confirmação de presença (RNF15) dispensa login e também permi
 - **Expiração ou token inválido:** o sistema deve informar que o link não é mais válido e orientar o contato com a secretaria, sem exibir dados da sessão.
 - **Dados exibidos e operações:** a página do link mostra apenas a data e o horário da sessão e o primeiro nome do paciente, e só permite confirmar a presença (RF14) e cancelar com justificativa (RF15); nenhuma outra operação, como remarcar, é oferecida.
 
-A conformidade deve ser verificada por testes de segurança que abram o link após a confirmação, após o cancelamento, após o fim do prazo, após o início da sessão, após uma remarcação e com um token alterado, confirmando em todos os casos a recusa sem exposição de dados, e por inspeção do código de geração do token, conferindo a fonte aleatória e o tamanho.
+A conformidade deve ser verificada por testes de segurança que abram o link em cada situação e confirmem o comportamento esperado:
+
+- **Após a confirmação:** uma nova confirmação é recusada, e o cancelamento continua disponível até o início da sessão.
+- **Após o fim do prazo de confirmação:** a confirmação é recusada, e o cancelamento continua disponível até o início da sessão.
+- **Após o cancelamento:** o token não permite nenhuma nova operação.
+- **Após o início da sessão ou uma remarcação:** o token anterior não permite nenhuma operação.
+- **Com token inválido ou alterado:** o acesso é recusado.
+
+Em toda recusa, nenhum dado da sessão é exposto. A conformidade também deve ser verificada por inspeção do código de geração do token, conferindo a fonte aleatória e o tamanho.
 
 Classificação: segurança (URPS+).
 Rastreabilidade: Feature "Confirmar presença em sessão agendada" → CP4 — Agendamento, confirmação e remarcação; relacionada ao RNF15 (usabilidade do mesmo link) e à CP12 — Segurança, sigilo e controle de acesso.
