@@ -439,11 +439,14 @@ O sistema deve permitir que o paciente, ou a secretaria em seu nome, cancele uma
 
 Depois do horário de início, a sessão não pode mais ser cancelada; o não comparecimento é tratado como falta (RF34). A classificação é feita com o valor do parâmetro vigente no momento do registro do cancelamento.
 
+Como o paciente não tem conta no sistema, o cancelamento feito por ele usa o mesmo link da confirmação de presença, recebido no agendamento (RF14): a página do link oferece a opção de cancelar, com a justificativa obrigatória, e segue as proteções do [RNF59](nao-funcionais.md#rnf59). O paciente que informou só o celular, e por isso recebe o link pela secretaria ou não o recebe, pode pedir o cancelamento à secretaria, por WhatsApp ou ligação, e a secretaria o registra em seu nome ([DF24](decisoes-fbr.md)).
+
 _Critérios de aceitação:_
 
 - Com sessão às 14h00 e antecedência mínima de 1 hora, o cancelamento com justificativa registrado até as 13h00 muda o status para "cancelada", guarda a justificativa, é classificado como "no prazo" e gera o registro de auditoria do RNF10.
 - Na mesma sessão, o cancelamento registrado a partir das 13h01, antes do início, é classificado como "fora do prazo" e gera o evento de falta para a CP9.
 - Cancelamento sem justificativa não é registrado, e o campo é indicado.
+- Pelo link da sessão, sem login, o paciente cancela informando a justificativa; depois disso, o link não permite nenhuma nova operação.
 - Sessão já iniciada ou realizada não pode ser cancelada.
 - O cancelamento registrado pela secretaria ou pelo estagiário como administrativo para remarcação é classificado nessa categoria e não gera evento de falta para a CP9, qualquer que seja a antecedência.
 
@@ -556,7 +559,10 @@ _Rastreabilidade:_ Feature "Vincular paciente a estagiário responsável" → CP
 
 O sistema deve exibir, para cada caso, o estagiário e o supervisor responsáveis, para uso da secretaria no agendamento, do próprio estagiário e supervisor no acompanhamento do caso, e da coordenação no acompanhamento geral. A consulta deve exibir apenas o nome do estagiário e do supervisor responsáveis, sem expor dados clínicos a perfis que não têm acesso ao prontuário, e casos ainda sem responsáveis devem ser sinalizados como pendentes de distribuição.
 
-_Critério de aceitação:_ A consulta do caso por secretaria, estagiário, supervisor ou coordenação mostra o estagiário e o supervisor responsáveis, sem dados clínicos.
+_Critérios de aceitação:_
+
+- A consulta do caso por secretaria, estagiário, supervisor ou coordenação mostra o estagiário e o supervisor responsáveis, sem dados clínicos.
+- Caso ainda sem supervisor ou sem estagiário responsável aparece como "pendente de distribuição", sem nome no campo que falta.
 
 _Rastreabilidade:_ Feature "Consultar responsáveis pelo caso" → CP5 — Distribuição de casos entre supervisores e estagiários → OE5. Dependência: RF21.
 
@@ -652,16 +658,16 @@ _Rastreabilidade:_ Feature "Registrar anamnese e contrato terapêutico do pacien
 
 **RF27 — Consultar prontuário do paciente**{ #rf27 }
 
-O sistema deve apresentar ao estagiário responsável, ao seu supervisor e, para consulta, à coordenação o prontuário eletrônico do paciente vinculado ao caso. O prontuário deve conter, no mínimo: identificação do paciente e do caso; identificação do ciclo de atendimento; dados iniciais registrados na criação do prontuário (anamnese e contrato terapêutico, RF66); estagiário e supervisor responsáveis, inclusive o histórico de responsáveis; sessões do ciclo com data e situação; evoluções vinculadas às sessões, com original, correções, complementos e situação de validação pelo supervisor (RF67); encerramento do caso por alta, quando houver (RF68); e relatório final, quando existente, com sua versão e estado de revisão. A consulta deve refletir o vínculo de responsabilidade vigente, inclusive após transferência de caso (RF25), e preservar a associação de cada registro ao paciente, ao caso e ao ciclo correspondente. O acesso de outros perfis ao conteúdo clínico segue a restrição do RF55.
+O sistema deve apresentar ao estagiário responsável, ao seu supervisor e, para consulta, à coordenação o prontuário eletrônico do paciente vinculado ao caso. O prontuário deve conter, no mínimo: identificação do paciente e do caso; identificação do ciclo de atendimento; dados iniciais (anamnese e contrato terapêutico, registrados pelo RF69 no prontuário criado pelo RF66); estagiário e supervisor responsáveis, inclusive o histórico de responsáveis; sessões do ciclo com data e situação; evoluções vinculadas às sessões, com original, correções, complementos e situação de validação pelo supervisor (RF67); encerramento do caso por alta, quando houver (RF68); e relatório final, quando existente, com sua versão e estado de revisão. A consulta deve refletir o vínculo de responsabilidade vigente, inclusive após transferência de caso (RF25), e preservar a associação de cada registro ao paciente, ao caso e ao ciclo correspondente. O acesso de outros perfis ao conteúdo clínico segue a restrição do RF55.
 
 _Critérios de aceitação:_
 
 - Ao abrir o prontuário, o estagiário ou o supervisor do caso vê todos os elementos mínimos do ciclo: identificação do paciente, do caso e do ciclo; dados iniciais; responsáveis; sessões; evoluções com correções, complementos e situação de validação; e encerramento por alta e relatório final, quando existentes.
 - Elemento mínimo ainda sem registro no ciclo aparece como ausente, sem omitir a seção e sem conteúdo clínico presumido.
 - Após transferência, o novo responsável autorizado encontra no prontuário os registros anteriores preservados.
-- Usuário sem vínculo clínico vigente com o caso não acessa o conteúdo clínico do prontuário.
+- Usuário sem vínculo clínico vigente com o caso não acessa o conteúdo clínico do prontuário, com exceção da coordenação, que o consulta só para leitura (RF55, [DF32](decisoes-fbr.md)).
 
-_Rastreabilidade:_ Feature "Consultar prontuário do paciente" → CP6 — Prontuário eletrônico → OE5/OE6. Dependência: RF66, RF21 (CP5); restrição transversal: RF55 (CP12).
+_Rastreabilidade:_ Feature "Consultar prontuário do paciente" → CP6 — Prontuário eletrônico → OE5/OE6. Dependência: RF66, RF21 (CP5); integração: RF69 (dados iniciais); restrição transversal: RF55 (CP12).
 
 #### Modelo de domínio da CP6
 
@@ -851,11 +857,15 @@ Este conjunto trata da contagem cumulativa de faltas do paciente e das consequê
 
 O sistema deve permitir que o estagiário responsável, ou a secretaria, registre que o paciente não compareceu a uma sessão agendada e presencial (RF10), diferenciando esse registro do cancelamento (RF15): a falta é registrada quando a sessão ocorre sem o comparecimento do paciente, sem cancelamento prévio. O sistema deve atualizar o status da sessão para "falta do paciente", associando data, horário e usuário que efetuou o registro.
 
+A secretaria, o estagiário responsável ou o supervisor responsável pode marcar uma falta como **justificada** quando o paciente comprova uma necessidade real (atestado, comprovante de trabalho etc.), informando o motivo, sem anexar o documento. A marcação pode ser feita no registro da falta ou depois, quando o comprovante chega, a partir da lista de sessões do paciente: nos dados administrativos do paciente, para a secretaria (RF55), e no prontuário, para o estagiário e o supervisor (RF27). Ela fica registrada com autor e data/hora (RNF32) e não altera a contagem de faltas (RF35).
+
 _Critérios de aceitação:_
 
 - O registro da falta pelo estagiário responsável ou pela secretaria, em sessão presencial já passada sem realização nem cancelamento (confirmada ou não pelo paciente, RF14), muda o status para "falta do paciente", com data, horário e usuário responsável.
 - Sessão já cancelada (RF15) ou já registrada como realizada não aceita registro de falta.
 - Cada falta registrada gera o evento consumido pela contagem cumulativa (RF35).
+- A secretaria, o estagiário responsável ou o supervisor responsável marca uma falta como justificada, com o motivo, no registro da falta ou depois, a partir da lista de sessões do paciente; a marcação fica com autor e data/hora.
+- Usuário que não é a secretaria nem o estagiário ou o supervisor responsáveis pelo caso não marca a falta como justificada.
 
 _Rastreabilidade:_ Feature "Registrar falta do paciente na sessão" → CP9 — Controle de assiduidade e alertas → OE4/OE3. Dependência: RF10, RF14, RF15 (CP4).
 
@@ -863,13 +873,14 @@ _Rastreabilidade:_ Feature "Registrar falta do paciente na sessão" → CP9 — 
 
 **RF35 — Contabilizar faltas do paciente no ciclo**{ #rf35 }
 
-O sistema deve manter, por paciente, a contagem cumulativa de faltas no ciclo de atendimento atual, consecutivas ou não, consumindo dois eventos: a falta registrada na sessão (RF34) e o cancelamento fora do prazo (RF15), isto é, feito com antecedência menor que o mínimo configurado na CP4. Cancelamentos no prazo e cancelamentos administrativos para remarcação (RF15) não incrementam a contagem. A ausência de confirmação de presença (RF14) não conta como falta. Conforme confirmado pela Clínica Escola, o desligamento é acionado ao atingir 2 faltas no ciclo, consecutivas ou não; por isso a contagem nunca é zerada por uma sessão realizada, e só recomeça em um novo ciclo de atendimento. Uma falta é considerada "não justificada" quando não há comprovação de necessidade real (atestado, comprovante de trabalho etc.); essa classificação orienta a comunicação ao paciente, mas não altera a contagem.
+O sistema deve manter, por paciente, a contagem cumulativa de faltas no ciclo de atendimento atual, consecutivas ou não, consumindo dois eventos: a falta registrada na sessão (RF34) e o cancelamento fora do prazo (RF15), isto é, feito com antecedência menor que o mínimo configurado na CP4. Cancelamentos no prazo e cancelamentos administrativos para remarcação (RF15) não incrementam a contagem. A ausência de confirmação de presença (RF14) não conta como falta. Conforme confirmado pela Clínica Escola, o desligamento é acionado ao atingir 2 faltas no ciclo, consecutivas ou não; por isso a contagem nunca é zerada por uma sessão realizada, e só recomeça em um novo ciclo de atendimento. A falta pode ser marcada como justificada, conforme o RF34; essa classificação orienta a comunicação ao paciente e a análise de uma reversão de desligamento (RF38), mas não altera a contagem.
 
 _Critérios de aceitação:_
 
 - A primeira falta do ciclo (RF34) ou o primeiro cancelamento fora do prazo (RF15) eleva a contagem para uma unidade e avisa a secretaria e o estagiário responsável de que uma nova falta resultará em desligamento.
 - Uma nova falta, mesmo com sessões realizadas desde a anterior, eleva a contagem para duas unidades e dispara o alerta de limite (RF36).
 - Paciente que não confirmou a sessão no prazo (RF14), mas compareceu, não tem a contagem de faltas incrementada.
+- Falta marcada como justificada (RF34) continua contando para o limite de 2 faltas.
 - A reversão de desligamento feito por engano (RF38) ajusta a contagem de faltas conforme a decisão registrada, preservando o histórico de cada evento para auditoria.
 
 _Rastreabilidade:_ Feature "Contabilizar faltas do paciente no ciclo" → CP9 — Controle de assiduidade e alertas → OE4/OE3. Dependência: RF15 (CP4), RF34. Origem: [DF20](decisoes-fbr.md).
