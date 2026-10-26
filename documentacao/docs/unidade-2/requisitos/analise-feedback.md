@@ -298,6 +298,7 @@ As correções acima exigiram ajustes em requisitos que não tinham apontamento,
 
 As decisões já tomadas com a FBr estão no [Registro de Decisões com a FBr (8.4)](decisoes-fbr.md). Esta lista guarda só o que ainda está aberto, com o valor padrão adotado até a resposta. Na reunião de 23/10/2026 foram resolvidas as pendências da carga de referência (DF22), das regras de distribuição da CP5 (DF16, DF17, DF26 e DF27), do conteúdo da evolução (DF23), do prazo de triagem (DF19), da maior parte dos parâmetros de agendamento (DF18, DF20 e DF21) e da volta à fila de quem perde a vaga por falta de pagamento (DF33).
 
+- Texto do termo de consentimento para tratamento de dados (RF57), que a FBr aprova como controladora dos dados: finalidade, prazo de guarda e canal de revogação. Padrão adotado até a resposta: a feature é construída com uma versão provisória do texto, redigida pela equipe a partir do RF57, e o sistema só passa a ser usado com pacientes reais depois da versão aprovada.
 - Prazo de confirmação de presença (RF14). Padrão adotado até a resposta: até 12 horas antes do início da sessão.
 - Base legal do tratamento dos dados de saúde (RF57) e canal de atendimento dos demais direitos do titular.
 - Base normativa da restrição ao atendimento psicológico remoto no estágio supervisionado (norma do CFP/CRP-DF ou regulamento de estágio da FBr). A Clínica Escola confirmou que as sessões são presenciais; falta a referência formal ([Cenário Atual, 1.4](../../unidade-1/cenario-atual.md#14-identificacao-da-oportunidade-ou-problema)).

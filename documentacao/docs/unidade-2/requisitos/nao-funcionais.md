@@ -255,15 +255,15 @@ Rastreabilidade: Feature "Confirmar presença em sessão agendada" → CP4 — A
 
 **RNF59 — Segurança do link de confirmação de presença**{ #rnf59 }
 
-Como o link de confirmação de presença (RNF15) dispensa login, ele deve ser protegido contra uso por terceiros:
+Como o link de confirmação de presença (RNF15) dispensa login e também permite ao paciente cancelar a sessão (RF15), ele deve ser protegido contra uso por terceiros:
 
 - **Token imprevisível:** o link deve conter um token gerado aleatoriamente, com pelo menos 128 bits de entropia, vinculado a uma única sessão e sem nenhum dado do paciente (nome, CPF ou número de inscrição) no endereço.
-- **Validade:** o token vale até o fim do prazo de confirmação da sessão (RF14); uma remarcação (RF12) ou um cancelamento (RF15/RF16) invalida o token anterior, e uma remarcação gera um novo.
-- **Uso único:** após a confirmação, o token não permite nenhuma nova operação; ao ser aberto de novo, o link apenas informa que a presença já foi confirmada.
+- **Validade:** o token permite confirmar a presença até o fim do prazo de confirmação (RF14) e cancelar até o início da sessão (RF15); uma remarcação (RF12) ou um cancelamento (RF15/RF16) invalida o token anterior, e uma remarcação gera um novo.
+- **Uso único:** cada operação é feita uma única vez: após a confirmação, o link informa que a presença já foi confirmada e só permite cancelar; após o cancelamento, o token não permite nenhuma nova operação.
 - **Expiração ou token inválido:** o sistema deve informar que o link não é mais válido e orientar o contato com a secretaria, sem exibir dados da sessão.
-- **Dados exibidos:** a página de confirmação mostra apenas a data e o horário da sessão e o primeiro nome do paciente, e não permite nenhuma outra operação, como cancelar ou remarcar.
+- **Dados exibidos e operações:** a página do link mostra apenas a data e o horário da sessão e o primeiro nome do paciente, e só permite confirmar a presença (RF14) e cancelar com justificativa (RF15); nenhuma outra operação, como remarcar, é oferecida.
 
-A conformidade deve ser verificada por testes de segurança que abram o link após o uso, após o fim do prazo, após uma remarcação, após um cancelamento e com um token alterado, confirmando em todos os casos a recusa sem exposição de dados, e por inspeção do código de geração do token, conferindo a fonte aleatória e o tamanho.
+A conformidade deve ser verificada por testes de segurança que abram o link após a confirmação, após o cancelamento, após o fim do prazo, após o início da sessão, após uma remarcação e com um token alterado, confirmando em todos os casos a recusa sem exposição de dados, e por inspeção do código de geração do token, conferindo a fonte aleatória e o tamanho.
 
 Classificação: segurança (URPS+).
 Rastreabilidade: Feature "Confirmar presença em sessão agendada" → CP4 — Agendamento, confirmação e remarcação; relacionada ao RNF15 (usabilidade do mesmo link) e à CP12 — Segurança, sigilo e controle de acesso.
@@ -288,11 +288,11 @@ As telas de distribuição de casos e de consulta de responsáveis devem exibir,
 | Perfil                    | Campos exibidos |
 | ------------------------- | ---------------- |
 | Secretaria                | Paciente, estagiário responsável, supervisor responsável, situação de distribuição (pendente/distribuído) |
-| Estagiário                | Os mesmos campos da secretaria, restritos aos próprios casos (RF23) |
-| Supervisor                | Os mesmos campos da secretaria, para os próprios casos e os dos seus estagiários (RF23) |
+| Estagiário                | Os mesmos campos da secretaria, restritos aos próprios casos; na lista dos próprios casos (RF23), também a prioridade clínica e a situação do caso |
+| Supervisor                | Os mesmos campos da secretaria, para os próprios casos e os dos seus estagiários; na lista desses casos (RF23), também a prioridade clínica e a situação do caso |
 | Coordenação                | Todos os campos acima, sem restrição de caso |
 
-Nenhum perfil sem acesso ao prontuário (RF55, CP12) deve visualizar dado clínico (queixa, evolução) nessas telas. A única exceção é a prioridade clínica (vermelha, amarela ou verde), que aparece na lista de casos aguardando distribuição e no painel de distribuição (RF18 e RF20) para a coordenação e os supervisores, porque a ordem de distribuição segue a prioridade, como confirmado pela Clínica Escola ([DF16](decisoes-fbr.md)); a queixa e as demais informações de triagem continuam ocultas. Exceção registrada em 24/10/2026, na inspeção de design do RF18, para resolver a contradição com o RF18.
+Nenhum perfil sem acesso ao prontuário (RF55, CP12) deve visualizar dado clínico (queixa, evolução) nessas telas. A única exceção é a prioridade clínica (vermelha, amarela ou verde), que aparece na lista de casos aguardando distribuição e no painel de distribuição (RF18 e RF20) para a coordenação e os supervisores, porque a ordem de distribuição segue a prioridade, como confirmado pela Clínica Escola ([DF16](decisoes-fbr.md)), e na lista de casos do estagiário e do supervisor (RF23), restrita aos casos sob a responsabilidade deles, que já têm acesso ao prontuário desses casos; a queixa e as demais informações de triagem continuam ocultas. Exceção registrada em 24/10/2026, na inspeção de design do RF18, para resolver a contradição com o RF18, e ampliada ao RF23 em 26/10/2026, na avaliação do DoR do Ciclo 4.
 
 A conformidade deve ser verificada por revisão das telas por perfil, comparando o conteúdo exibido com a matriz acima, e por teste do conteúdo efetivamente exibido, confirmando a ausência de campos clínicos para perfis sem acesso ao prontuário.
 
