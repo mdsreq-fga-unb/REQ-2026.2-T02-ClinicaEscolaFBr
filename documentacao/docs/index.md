@@ -6,7 +6,7 @@ hide:
 
 # Clínica Escola FBr — Documentação do projeto
 
-Documentação do projeto · versão 3.10
+Documentação do projeto · versão 3.11
 
 <details class="revision-history" id="historico-de-revisao" markdown>
 <summary>Histórico de revisão</summary>
@@ -86,6 +86,7 @@ Registro cronológico das versões e alterações do documento de visão e dos a
 | 25/10/2026 | 3.8 | Reorganização a partir dos comentários do professor à apresentação da Unidade 2: nova área "Visão geral do projeto", fora das unidades, com o Cronograma geral (entregas, etapas e ciclos com status: encerrado, em andamento ou aguardando) e a página Features e backlog (ciclo, feature, Líder de Feature, dependências e issue, em uma lista única, e o status de cada ciclo; o estado de cada feature fica nas issues e no Project); a tabela dos ciclos da seção 6.2, as tabelas do backlog da seção 10.1 e a lista de features da seção 8.1 passam para essas páginas, e as Unidades 1, 2 e 3 levam até elas por links. Sem mudança no MVP, nas features ou nos requisitos | Joaquim José da Fonseca Viana |
 | 25/10/2026 | 3.9 | Resposta às issues de avaliação #109 e #110: aviso de referência vigente na Solução Proposta, na Estratégia de ESW, na Engenharia de Requisitos e na Equipe e Comunicação, com o link da versão entregue na Unidade 1; escopo do MVP mantido só em Features e backlog, com links nas demais páginas; e, no Cronograma geral, previsto e realizado (com o Ciclo 3 marco a marco), pontos de controle por feature em cada ciclo, carga por Líder de Feature e ciclo e o registro do fechamento dos ciclos. | Gabriel da Cunha Barbaceli |
 | 25/10/2026 | 3.10 | DoR do RF51 (#46), antecipado para o Ciclo 3 junto com o RF50: o ator passa a nomear os perfis institucionais (secretaria, estagiário, supervisor ou coordenação) e a rastreabilidade e o backlog declaram a dependência do RF50 | Joaquim José da Fonseca Viana |
+| 26/10/2026 | 3.11 | Issues das 16 features do Ciclo 4 que ainda não tinham issue (#140 a #155) vinculadas nos títulos das features em Requisitos Funcionais e na tabela do Ciclo 4 em Features e backlog. | Gabriel da Cunha Barbaceli |
 
 A versão 1.6 está registrada com a data do commit (04/09/2026), posterior à da versão 1.7; a numeração foi mantida para preservar as referências já feitas a essas versões.
 
