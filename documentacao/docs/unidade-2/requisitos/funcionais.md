@@ -243,7 +243,7 @@ A ordenação da fila depende da classificação de prioridade realizada na CP2,
 
 A apresentação das condições gerais de atendimento constitui uma resposta proposta aos riscos de aumento da demanda e de criação de expectativas inadequadas sobre o tempo de espera, identificados na intervenção social (Seção 3).
 
-#### Feature — Ordenar inscritos na fila de espera
+#### Feature — Ordenar inscritos na fila de espera [#140](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/issues/140)
 
 **RF7 — Ordenar inscritos na fila de espera**{ #rf7 }
 
@@ -271,7 +271,7 @@ _Critérios de aceitação:_
 
 _Rastreabilidade:_ Feature "Ordenar inscritos na fila de espera" → CP3 — Fila de espera e consulta de posição → OE4/OE7. Dependência: RF6 (CP2), que fornece a prioridade clínica confirmada. Origem: [DF16](decisoes-fbr.md).
 
-#### Feature — Consultar posição individual na fila
+#### Feature — Consultar posição individual na fila [#155](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/issues/155)
 
 **RF8 — Consultar posição individual na fila**{ #rf8 }
 
@@ -360,7 +360,7 @@ _Critérios de aceitação:_
 
 _Rastreabilidade:_ Feature "Agendar sessão do paciente" → CP4 — Agendamento, confirmação e remarcação → OE3/OE4. Dependência: RF21 (CP5 — vínculo do paciente ao estagiário responsável); integração: RF1 (canal de contato preferencial) e RF14 (link de confirmação de presença); restrição transversal: CP12 — Segurança, sigilo e controle de acesso. Origem: [DF01](decisoes-fbr.md), [DF18](decisoes-fbr.md), [DF24](decisoes-fbr.md).
 
-#### Feature — Consultar agenda de sessões do estagiário
+#### Feature — Consultar agenda de sessões do estagiário [#141](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/issues/141)
 
 **RF11 — Consultar agenda de sessões do estagiário**{ #rf11 }
 
@@ -410,7 +410,7 @@ _Critérios de aceitação:_
 
 _Rastreabilidade:_ Feature "Enviar lembrete de sessão agendada" → CP4 — Agendamento, confirmação e remarcação → OE3. Dependência: RF10. Origem: [DF06](decisoes-fbr.md), [DF21](decisoes-fbr.md), [DF24](decisoes-fbr.md).
 
-#### Feature — Confirmar presença em sessão agendada
+#### Feature — Confirmar presença em sessão agendada [#142](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/issues/142)
 
 **RF14 — Confirmar presença em sessão agendada**{ #rf14 }
 
@@ -427,7 +427,7 @@ _Critérios de aceitação:_
 
 _Rastreabilidade:_ Feature "Confirmar presença em sessão agendada" → CP4 — Agendamento, confirmação e remarcação → OE3. Dependência: RF10; integração: RF13 (lembrete automático adicional, entrega posterior). Origem: [DF24](decisoes-fbr.md).
 
-#### Feature — Registrar cancelamento de sessão pelo paciente
+#### Feature — Registrar cancelamento de sessão pelo paciente [#143](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/issues/143)
 
 **RF15 — Registrar cancelamento de sessão pelo paciente**{ #rf15 }
 
@@ -449,7 +449,7 @@ _Critérios de aceitação:_
 
 _Rastreabilidade:_ Feature "Registrar cancelamento de sessão pelo paciente" → CP4 — Agendamento, confirmação e remarcação → OE3. Dependência: RF10. Integração: CP9 — Controle de assiduidade e alertas. Origem: [DF10](decisoes-fbr.md), [DF20](decisoes-fbr.md).
 
-#### Feature — Registrar cancelamento de sessão pelo estagiário
+#### Feature — Registrar cancelamento de sessão pelo estagiário [#144](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/issues/144)
 
 **RF16 — Registrar cancelamento de sessão pelo estagiário**{ #rf16 }
 
@@ -550,7 +550,7 @@ _Critérios de aceitação:_
 
 _Rastreabilidade:_ Feature "Vincular paciente a estagiário responsável" → CP5 — Distribuição de casos entre supervisores e estagiários → OE5. Dependência: RF20, RF53 e RF54 (CP12). Integração: RF66 (CP6 — criação do prontuário a partir do vínculo). Origem: [DF17](decisoes-fbr.md), [DF27](decisoes-fbr.md).
 
-#### Feature — Consultar responsáveis pelo caso
+#### Feature — Consultar responsáveis pelo caso [#145](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/issues/145)
 
 **RF22 — Consultar responsáveis pelo caso**{ #rf22 }
 
@@ -560,7 +560,7 @@ _Critério de aceitação:_ A consulta do caso por secretaria, estagiário, supe
 
 _Rastreabilidade:_ Feature "Consultar responsáveis pelo caso" → CP5 — Distribuição de casos entre supervisores e estagiários → OE5. Dependência: RF21.
 
-#### Feature — Consultar casos sob responsabilidade do estagiário ou supervisor
+#### Feature — Consultar casos sob responsabilidade do estagiário ou supervisor [#146](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/issues/146)
 
 **RF23 — Consultar casos sob responsabilidade do estagiário ou supervisor**{ #rf23 }
 
@@ -584,7 +584,7 @@ _Critério de aceitação:_ A visão de distribuição mostra à coordenação o
 
 _Rastreabilidade:_ Feature "Visualizar distribuição de casos por supervisor" → CP5 — Distribuição de casos entre supervisores e estagiários → OE5; alimenta CP11 — Indicadores e relatórios institucionais. Dependência: RF20.
 
-#### Feature — Transferir caso para outro estagiário ou supervisor
+#### Feature — Transferir caso para outro estagiário ou supervisor [#147](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/issues/147)
 
 **RF25 — Transferir caso para outro estagiário ou supervisor**{ #rf25 }
 
@@ -648,7 +648,7 @@ _Critérios de aceitação:_
 
 _Rastreabilidade:_ Feature "Registrar anamnese e contrato terapêutico do paciente" → CP6 — Prontuário eletrônico → OE5/OE6. Dependência: RF66. Restrição transversal: CP12 — Segurança, sigilo e controle de acesso.
 
-#### Feature — Consultar prontuário do paciente
+#### Feature — Consultar prontuário do paciente [#148](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/issues/148)
 
 **RF27 — Consultar prontuário do paciente**{ #rf27 }
 
@@ -677,7 +677,7 @@ O registro de evolução depende de uma sessão já realizada (CP4) e do víncul
 
 O prazo de correção (RF29) e a possibilidade de complementos (RF30) já foram confirmados pela Clínica Escola. O conteúdo clínico obrigatório de um registro de evolução ainda depende de definição com a FBr ([Pendências](analise-feedback.md#pendencias-de-validacao-com-a-fbr)). Como referência para essa definição, a FBr descreveu, na reunião de 26/08/2026 ([ata](../../unidade-1/reunioes.md)), que a evolução esperada é um resumo objetivo da sessão ("um resuminho"), e não uma transcrição integral do atendimento — o que orienta o formato, mas não substitui a definição formal dos campos obrigatórios.
 
-#### Feature — Registrar evolução da sessão realizada
+#### Feature — Registrar evolução da sessão realizada [#149](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/issues/149)
 
 **RF28 — Registrar evolução da sessão realizada**{ #rf28 }
 
@@ -845,7 +845,7 @@ A declaração abaixo parte diretamente dos pontos já confirmados com a Clínic
 
 Este conjunto trata da contagem cumulativa de faltas do paciente e das consequências previstas quando o limite é atingido. Consome o evento de cancelamento fora do prazo gerado pela CP4 (RF15) — a ausência de confirmação (RF14) apenas sinaliza a sessão para a secretaria e não conta como falta — e complementa a CP4 com o registro do não comparecimento efetivo à sessão presencial, que ainda não havia sido declarado em nenhuma feature.
 
-#### Feature — Registrar falta do paciente na sessão
+#### Feature — Registrar falta do paciente na sessão [#150](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/issues/150)
 
 **RF34 — Registrar falta do paciente na sessão**{ #rf34 }
 
@@ -859,7 +859,7 @@ _Critérios de aceitação:_
 
 _Rastreabilidade:_ Feature "Registrar falta do paciente na sessão" → CP9 — Controle de assiduidade e alertas → OE4/OE3. Dependência: RF10, RF14, RF15 (CP4).
 
-#### Feature — Contabilizar faltas do paciente no ciclo
+#### Feature — Contabilizar faltas do paciente no ciclo [#151](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/issues/151)
 
 **RF35 — Contabilizar faltas do paciente no ciclo**{ #rf35 }
 
@@ -874,7 +874,7 @@ _Critérios de aceitação:_
 
 _Rastreabilidade:_ Feature "Contabilizar faltas do paciente no ciclo" → CP9 — Controle de assiduidade e alertas → OE4/OE3. Dependência: RF15 (CP4), RF34. Origem: [DF20](decisoes-fbr.md).
 
-#### Feature — Emitir alerta de limite de faltas atingido
+#### Feature — Emitir alerta de limite de faltas atingido [#152](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/issues/152)
 
 **RF36 — Emitir alerta de limite de faltas atingido**{ #rf36 }
 
@@ -887,7 +887,7 @@ _Critérios de aceitação:_
 
 _Rastreabilidade:_ Feature "Emitir alerta de limite de faltas atingido" → CP9 — Controle de assiduidade e alertas → OE4/OE3. Dependência: RF35.
 
-#### Feature — Desligar paciente por faltas e liberar vaga
+#### Feature — Desligar paciente por faltas e liberar vaga [#153](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/issues/153)
 
 **RF37 — Desligar paciente por faltas e liberar vaga**{ #rf37 }
 
@@ -907,7 +907,7 @@ _Critérios de aceitação:_
 
 _Rastreabilidade:_ Feature "Desligar paciente por faltas e liberar vaga" → CP9 — Controle de assiduidade e alertas → OE4/OE3. Dependência: RF36. Integração: CP3 — Fila de espera e consulta de posição (RF7); CP5 — Distribuição de casos (RF20, RF21), responsável pela realocação.
 
-#### Feature — Reverter desligamento de paciente por faltas
+#### Feature — Reverter desligamento de paciente por faltas [#154](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/issues/154)
 
 **RF38 — Reverter desligamento de paciente por faltas**{ #rf38 }
 
