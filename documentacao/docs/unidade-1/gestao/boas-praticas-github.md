@@ -250,7 +250,7 @@ Um comentário pode registrar vários RNFs com a mesma evidência (`/rnf RNF56 R
 | Alguém comenta `/rnf` | A tabela da feature é atualizada na hora. Se a feature ainda não foi integrada, o registro fica guardado para a avaliação depois do D4.3. |
 | Todos os RNFs da feature têm evidência | O D4.5 é marcado. |
 
-Os RNFs de cada feature vêm da seção "RNFs que restringem a feature" da issue (ou de "Requisito(s) relacionado(s)", nas issues convertidas à mão). Mantenha essa seção completa: um RNF que não está nela não é cobrado.
+Os RNFs de cada feature vêm da seção "RNFs que restringem a feature" da issue (ou de "Requisito(s) relacionado(s)", nas issues convertidas à mão). Um intervalo como "RNF56 a RNF58" vale por todos os códigos entre eles. Mantenha essa seção completa: um RNF que não está nela não é cobrado.
 
 ## Checklist rápido
 

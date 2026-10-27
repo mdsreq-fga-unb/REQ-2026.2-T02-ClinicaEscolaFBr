@@ -5,13 +5,28 @@
 
 const { MARCA_ROBO } = require("./logica.cjs");
 
-const codigos = (texto, prefixo) => [
-  ...new Set(
-    [...(texto ?? "").matchAll(new RegExp(`\\b${prefixo}(\\d+)\\b`, "g"))].map(
-      (m) => `${prefixo}${m[1]}`,
-    ),
-  ),
-];
+// Códigos citados no texto, um a um ("RNF56, RNF57") ou em intervalo ("RNF56 a
+// RNF58", "RNF56-RNF58", "RNF56 a 58"), que vale por todos os códigos entre eles.
+function codigos(texto, prefixo) {
+  const achados = new Set();
+  const intervalo = new RegExp(
+    `\\b${prefixo}(\\d+)\\s*(?:a|até|-|–)\\s*(?:${prefixo})?(\\d+)\\b`,
+    "g",
+  );
+  for (const m of (texto ?? "").matchAll(intervalo)) {
+    const [inicio, fim] = [Number(m[1]), Number(m[2])];
+    if (fim <= inicio) continue;
+    for (let n = inicio; n <= fim; n += 1) achados.add(`${prefixo}${n}`);
+  }
+  for (const m of (texto ?? "").matchAll(
+    new RegExp(`\\b${prefixo}(\\d+)\\b`, "g"),
+  )) {
+    achados.add(`${prefixo}${m[1]}`);
+  }
+  return [...achados].sort(
+    (a, b) => Number(a.slice(prefixo.length)) - Number(b.slice(prefixo.length)),
+  );
+}
 const codigosRnf = (texto) => codigos(texto, "RNF");
 const codigosRf = (texto) => codigos(texto, "RF");
 
