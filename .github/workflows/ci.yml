@@ -72,8 +72,28 @@ jobs:
     needs: [mudancas, verificar]
     if: needs.mudancas.outputs.codigo == 'true'
     runs-on: ubuntu-latest
+    # O e2e sobe a API compilada (playwright.config.ts), que precisa do banco migrado e da chave.
+    services:
+      postgres:
+        image: postgres:17
+        env:
+          POSTGRES_USER: clinica
+          POSTGRES_PASSWORD: clinica
+          POSTGRES_DB: clinica
+        ports: ["5432:5432"]
+        options: >-
+          --health-cmd "pg_isready -U clinica"
+          --health-interval 5s
+          --health-retries 10
     env:
       NEXT_PUBLIC_API_URL: http://localhost:3333
+      DATABASE_URL: postgresql://clinica:clinica@localhost:5432/clinica
+      API_PORT: 3333
+      WEB_URL: http://localhost:3000
+      SMTP_HOST: localhost
+      SMTP_PORT: 1025
+      # Chave apenas para dados fictícios deste job; nunca usada em produção.
+      CHAVE_DADOS: AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=
     steps:
       - uses: actions/checkout@v7
       - uses: pnpm/action-setup@v6
@@ -83,8 +103,14 @@ jobs:
           cache: pnpm
       - run: pnpm install --frozen-lockfile
       - run: pnpm --filter @clinica/web exec playwright install --with-deps chromium
-      - run: pnpm turbo run build --filter=@clinica/web...
+      - run: pnpm turbo run build --filter=@clinica/web... --filter=@clinica/api...
+      - run: pnpm db:migrate
       - run: pnpm --filter @clinica/web test:e2e
+      - uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          name: evidencias-e2e
+          path: apps/web/test-results
 
   resultado:
     if: always()

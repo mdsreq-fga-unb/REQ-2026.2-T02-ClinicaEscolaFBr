@@ -5,8 +5,10 @@ const nextConfig: NextConfig = {
   cacheComponents: true,
   partialPrefetching: true,
   turbopack: {
+    // Só o globals.css passa pelo Tailwind: aplicado aos CSS modules, o loader
+    // tira o hash das classes e os estilos deixam de valer.
     rules: {
-      "*.css": {
+      "globals.css": {
         loaders: ["@tailwindcss/turbopack"],
         as: "*.css",
       },
