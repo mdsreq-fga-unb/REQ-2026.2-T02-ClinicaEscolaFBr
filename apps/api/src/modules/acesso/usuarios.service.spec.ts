@@ -150,7 +150,7 @@ describe('UsuariosService (RF53 e RF54)', () => {
     ).rejects.toMatchObject({ status: 409 });
   });
 
-  it('ativa a conta com a senha guardada só como hash e não aceita o link de novo', async () => {
+  it('ativa a conta com a senha guardada só como hash e não aceita o link de novo (RF53, RNF49)', async () => {
     const { id } = await servico.cadastrar(
       { nome: 'Ana Costa', email: 'ana@fbr.edu.br', perfil: 'estagiario' },
       coordenacao,
