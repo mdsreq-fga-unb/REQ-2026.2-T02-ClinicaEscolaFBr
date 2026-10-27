@@ -67,7 +67,7 @@ describe("Entrar no sistema (RF50)", () => {
     expect(replace).not.toHaveBeenCalled();
   });
 
-  it("no bloqueio, informa o horário e desativa o botão até lá", async () => {
+  it("no bloqueio, informa o horário e desativa o botão até lá (RNF49)", async () => {
     const ate = new Date(Date.now() + 15 * 60_000);
     simularApi({
       status: 423,
