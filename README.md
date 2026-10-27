@@ -376,6 +376,14 @@ Copy-Item apps\web\.env.example apps\web\.env.local
 
 </details>
 
+Agora gere a chave que cifra os dados de saúde (`CHAVE_DADOS`). Sem ela, a API não sobe e mostra o erro "CHAVE_DADOS deve ter 32 bytes em base64". O comando é igual nos três sistemas, porque usa o Node.js instalado no Passo 2:
+
+```bash
+node -e "console.log(require('crypto').randomBytes(32).toString('base64'))"
+```
+
+Copie o resultado e cole depois de `CHAVE_DADOS=` no arquivo `.env`, sem espaços nem aspas. Por exemplo: `CHAVE_DADOS=q3Vx...=`. Cada pessoa usa a sua chave; não envie a chave para o GitHub.
+
 ---
 
 ### Passo 8 — Ligar o banco de dados

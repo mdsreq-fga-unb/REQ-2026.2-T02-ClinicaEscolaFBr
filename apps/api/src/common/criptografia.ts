@@ -34,6 +34,8 @@ export function decifrar(valor: string, chaveBase64: string): string {
     'aes-256-gcm',
     lerChave(chaveBase64),
     Buffer.from(iv, 'base64'),
+    // Exige a etiqueta completa: sem isso, uma etiqueta encurtada é aceita.
+    { authTagLength: 16 },
   );
   decifra.setAuthTag(Buffer.from(tag, 'base64'));
   return Buffer.concat([
