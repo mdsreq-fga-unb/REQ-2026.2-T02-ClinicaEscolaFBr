@@ -168,7 +168,7 @@ describe('Autenticação: login, sessão e logout', () => {
       .expect(400);
   });
 
-  it('na 3ª tentativa seguida com erro, bloqueia por 15 minutos, mesmo com a senha certa', async () => {
+  it('na 3ª tentativa seguida com erro, bloqueia por 15 minutos, mesmo com a senha certa (RF50, RNF49)', async () => {
     await entrar('ana@fbr.edu.br', 'errada111').expect(401);
     await entrar('ana@fbr.edu.br', 'errada222').expect(401);
     const antes = Date.now();
@@ -182,7 +182,7 @@ describe('Autenticação: login, sessão e logout', () => {
     expect(comSenhaCerta.body.bloqueadoAte).toBe(bloqueio.body.bloqueadoAte);
   });
 
-  it('tentativas simultâneas não passam de 3 antes do bloqueio', async () => {
+  it('tentativas simultâneas não passam de 3 antes do bloqueio (RF50, RNF49)', async () => {
     const respostas = await Promise.all(
       ['e1', 'e2', 'e3', 'e4', 'e5', 'e6'].map((s) =>
         entrar('ana@fbr.edu.br', `errada${s}00`),
@@ -193,7 +193,7 @@ describe('Autenticação: login, sessão e logout', () => {
     await entrar('ana@fbr.edu.br', SENHA).expect(423);
   });
 
-  it('e-mail sem conta também chega ao bloqueio, sem revelar se o e-mail existe', async () => {
+  it('e-mail sem conta também chega ao bloqueio, sem revelar se o e-mail existe (RF50, RNF49)', async () => {
     await entrar('sem.conta@fbr.edu.br', 'errada111').expect(401);
     await entrar('sem.conta@fbr.edu.br', 'errada222').expect(401);
     const bloqueio = await entrar('sem.conta@fbr.edu.br', 'errada333').expect(
@@ -203,7 +203,7 @@ describe('Autenticação: login, sessão e logout', () => {
     await entrar('sem.conta@fbr.edu.br', SENHA).expect(423);
   });
 
-  it('tentativas simultâneas com e-mail sem conta também param na 3ª', async () => {
+  it('tentativas simultâneas com e-mail sem conta também param na 3ª (RF50, RNF49)', async () => {
     const respostas = await Promise.all(
       ['e1', 'e2', 'e3', 'e4', 'e5', 'e6'].map((s) =>
         entrar('outro.sem.conta@fbr.edu.br', `errada${s}00`),
@@ -213,7 +213,7 @@ describe('Autenticação: login, sessão e logout', () => {
     expect(status).toEqual([401, 401, 423, 423, 423, 423]);
   });
 
-  it('depois dos 15 minutos, a senha certa entra e zera o bloqueio', async () => {
+  it('depois dos 15 minutos, a senha certa entra e zera o bloqueio (RF50, RNF49)', async () => {
     for (const senha of ['errada111', 'errada222', 'errada333']) {
       await entrar('ana@fbr.edu.br', senha);
     }
@@ -228,7 +228,7 @@ describe('Autenticação: login, sessão e logout', () => {
     expect(depois.tentativasFalhas).toBe(0);
   });
 
-  it('a entrada com sucesso zera as tentativas: o bloqueio exige 3 erros seguidos', async () => {
+  it('a entrada com sucesso zera as tentativas: o bloqueio exige 3 erros seguidos (RF50, RNF49)', async () => {
     await entrar('ana@fbr.edu.br', 'errada111').expect(401);
     await entrar('ana@fbr.edu.br', 'errada222').expect(401);
     await entrar('ana@fbr.edu.br', SENHA).expect(200);
@@ -236,7 +236,7 @@ describe('Autenticação: login, sessão e logout', () => {
     await entrar('ana@fbr.edu.br', 'errada444').expect(401);
   });
 
-  it('cada requisição renova a sessão por 30 minutos, e a sessão parada expira (RNF50)', async () => {
+  it('cada requisição renova a sessão por 30 minutos, e a sessão parada expira (RF51, RNF50)', async () => {
     const res = await entrar('ana@fbr.edu.br', SENHA).expect(200);
     await db
       .update(sessoesLogin)
