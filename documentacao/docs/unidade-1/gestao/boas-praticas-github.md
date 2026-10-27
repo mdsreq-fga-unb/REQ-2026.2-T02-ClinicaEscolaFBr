@@ -183,6 +183,34 @@ Após a revisão:
 
 Se a PR for atualizada depois da aprovação de forma relevante, ela deve passar por nova conferência do revisor.
 
+## Acompanhamento automático das features
+
+O workflow **Feature Status** mantém o campo "Estado da feature (FDD)" de cada issue de feature e o Status do [Project](https://github.com/orgs/mdsreq-fga-unb/projects/124) de acordo com o que a equipe já registra. Uma issue de feature é reconhecida pelo título no formato "CP<n> — ...", com ou sem o rótulo `requirements`. Nada volta para trás sozinho. Fechar a issue quando ela chega a "Concluído" e devolvê-la a "Em Construção" quando é reaberta ficam com os workflows nativos do Project.
+
+| O que acontece | Efeito na issue | Status no Project |
+| --- | --- | --- |
+| A issue ganha o milestone de um ciclo | Ciclo e CP preenchidos no Project | Planejado |
+| Todos os critérios [B] do DoR marcados e o registro do DoR preenchido | Estado "Em design" | Em Design |
+| D1 completo (inspeção de design) | Estado "Design inspecionado" | Em Construção |
+| PR que declara a issue aberta | — | Em Construção |
+| PR aprovada por outro integrante da equipe | D3.1 marcado, com o link da revisão | Em Construção |
+| PR mesclada na `main` | D4.3 marcado, com o link da PR | Em Validação |
+| D6.1 marcado (aceite da FBr) | Estado "Aceita" | Concluído, e o Project fecha a issue |
+
+As três linhas de PR só valem quando:
+
+- a PR **declara** a issue com "Refs", "Closes", "Fixes" ou "Resolves" (por exemplo, "Refs #48" ou "Closes #45, #46"). Um "#N" solto, como na lista de issues relacionadas de uma PR de documentação, não conta;
+- a PR mexe no código do produto (`apps/` ou `packages/`);
+- a feature já tem o DoR aprovado. Sem ele, o DoD não é avaliado, e o workflow só deixa um aviso no log.
+
+Comandos em comentário, aceitos só de integrantes da equipe:
+
+- `/de-acordo`: confirma a inspeção de design e marca o D1.8. A inspeção precisa estar registrada num comentário com o cabeçalho "## Inspeção de design (DoD 1)", e o `/de-acordo` precisa vir de alguém diferente de quem a registrou.
+- `/demonstrada <link da ata>`: marca o D5.1.
+- `/aceite <link da ata ou da mensagem da FBr>`: marca o D6.1.
+
+Os demais critérios continuam sendo marcados por quem tem a evidência. A PR de feature (título `feat:`) precisa declarar a issue da feature; sem isso, o check "PR cita a issue da feature" falha. O workflow usa o segredo `PROJECT_TOKEN` do repositório; sem ele, apenas avisa e não altera nada.
+
 ## Checklist rápido
 
 - [ ] A branch foi criada a partir de `develop` atualizada ou de `main` atualizada.

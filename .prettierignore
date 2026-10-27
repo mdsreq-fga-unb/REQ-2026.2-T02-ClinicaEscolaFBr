@@ -3,3 +3,5 @@ pnpm-lock.yaml
 dist/
 .next/
 .turbo/
+# Descrição real de issue usada nos testes do acompanhamento das features
+.github/scripts/feature-status/exemplos/

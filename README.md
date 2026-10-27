@@ -53,7 +53,7 @@ O sistema atende a cinco públicos:
 - **Supervisores:** acompanhamento e supervisão dos casos;
 - **Coordenação:** indicadores, relatórios e gestão geral da clínica.
 
-O MVP reúne 53 dos 68 requisitos funcionais declarados (ver o [Backlog de Produto](https://mdsreq-fga-unb.github.io/REQ-2026.2-T02-ClinicaEscolaFBr/unidade-2/requisitos/backlog/)).
+O MVP reúne 54 dos 68 requisitos funcionais vigentes (ver o [Backlog de Produto](https://mdsreq-fga-unb.github.io/REQ-2026.2-T02-ClinicaEscolaFBr/unidade-2/requisitos/backlog/)).
 
 ---
 
@@ -375,6 +375,14 @@ Copy-Item apps\web\.env.example apps\web\.env.local
 ```
 
 </details>
+
+Agora gere a chave que cifra os dados de saúde (`CHAVE_DADOS`). Sem ela, a API não sobe e mostra o erro "CHAVE_DADOS deve ter 32 bytes em base64". O comando é igual nos três sistemas, porque usa o Node.js instalado no Passo 2:
+
+```bash
+node -e "console.log(require('crypto').randomBytes(32).toString('base64'))"
+```
+
+Copie o resultado e cole depois de `CHAVE_DADOS=` no arquivo `.env`, sem espaços nem aspas. Por exemplo: `CHAVE_DADOS=q3Vx...=`. Cada pessoa usa a sua chave; não envie a chave para o GitHub.
 
 ---
 
@@ -717,4 +725,4 @@ pnpm db:migrate
 | Nicolas Costa     | Analista de Viabilidade                                              |
 | Jônatas Farias    | Analista de Negócio                                                  |
 
-Todos atuam como **Líderes de Feature** dos conjuntos de features sob sua responsabilidade. A divisão completa está na [composição da equipe](https://mdsreq-fga-unb.github.io/REQ-2026.2-T02-ClinicaEscolaFBr/unidade-1/gestao/equipe-comunicacao/) e no [Backlog de Produto](https://mdsreq-fga-unb.github.io/REQ-2026.2-T02-ClinicaEscolaFBr/unidade-2/requisitos/backlog/).
+Todos atuam como **Líderes de Feature** dos conjuntos de features sob sua responsabilidade. A divisão completa está na [composição da equipe](https://mdsreq-fga-unb.github.io/REQ-2026.2-T02-ClinicaEscolaFBr/unidade-1/gestao/equipe-comunicacao/) e em [Features e backlog](https://mdsreq-fga-unb.github.io/REQ-2026.2-T02-ClinicaEscolaFBr/visao-geral/backlog/), com o ciclo e o status de cada feature.
