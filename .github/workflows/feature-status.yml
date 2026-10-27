@@ -1,7 +1,7 @@
 # Acompanhamento automático das issues de feature (FDD): o "Estado da feature" da
 # issue e o Status do Project seguem o checklist do DoR e do DoD, as PRs que citam
-# a issue e os comandos /de-acordo, /demonstrada e /aceite (regras em
-# .github/scripts/feature-status). Precisa do segredo PROJECT_TOKEN, um token com
+# a issue, os comandos /de-acordo, /demonstrada, /aceite e /rnf e os testes da
+# versão integrada, para o D4.5 (regras em .github/scripts/feature-status). Precisa do segredo PROJECT_TOKEN, um token com
 # os escopos repo e project; sem ele, o workflow só avisa e não altera nada.
 name: Feature Status
 
@@ -14,6 +14,11 @@ on:
     types: [opened, reopened, ready_for_review, edited, closed]
   pull_request_review:
     types: [submitted]
+  # CI da main concluído: o relatório dos testes reavalia o D4.5 das features.
+  workflow_run:
+    workflows: [CI]
+    types: [completed]
+    branches: [main]
   schedule:
     # Todo dia às 8h de Brasília: alinha as features que mudaram sem evento.
     - cron: "0 11 * * *"
@@ -21,6 +26,8 @@ on:
 
 permissions:
   contents: read
+  # Para baixar o relatório de RNFs gerado pelo CI da main.
+  actions: read
 
 # Uma execução por issue ou PR de cada vez, para as edições não se cruzarem.
 concurrency:
@@ -37,6 +44,27 @@ jobs:
       - uses: actions/checkout@v7
         with:
           sparse-checkout: .github/scripts
+      - name: Baixar o relatório de RNFs da main
+        if: >-
+          github.event_name == 'workflow_run' || github.event_name == 'schedule' ||
+          github.event_name == 'workflow_dispatch' ||
+          (github.event_name == 'issue_comment' && contains(github.event.comment.body, '/rnf'))
+        env:
+          GH_TOKEN: ${{ github.token }}
+          EXECUCAO: ${{ github.event.workflow_run.id }}
+        run: |
+          # Na conclusão do CI, o relatório daquela execução; nos demais eventos, o
+          # mais recente da main. Sem relatório (PR só de documentação), segue sem ele.
+          if [ -z "$EXECUCAO" ]; then
+            EXECUCAO=$(gh api "repos/$GITHUB_REPOSITORY/actions/artifacts?name=rnfs-verificados&per_page=30" \
+              --jq '[.artifacts[] | select(.workflow_run.head_branch == "main" and (.expired | not))][0].workflow_run.id // empty')
+          fi
+          if [ -n "$EXECUCAO" ] && gh run download "$EXECUCAO" -R "$GITHUB_REPOSITORY" -n rnfs-verificados -D "$RUNNER_TEMP/rnfs"; then
+            echo "RELATORIO_RNFS=$RUNNER_TEMP/rnfs/rnfs-verificados.json" >> "$GITHUB_ENV"
+            echo "EXECUCAO_RNFS=$GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$EXECUCAO" >> "$GITHUB_ENV"
+          else
+            echo "::notice::Sem relatório de RNFs da main: o D4.5 não foi avaliado nesta execução."
+          fi
       - uses: actions/github-script@v9
         env:
           TEM_TOKEN: ${{ secrets.PROJECT_TOKEN != '' }}

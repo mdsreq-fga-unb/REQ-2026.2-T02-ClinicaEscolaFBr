@@ -25,6 +25,17 @@ const config: Config = {
   ],
   coverageDirectory: './coverage',
   testEnvironment: 'node',
+  // No CI (RELATORIO_TESTES=1), grava também o resultado de cada teste para o
+  // relatório de RNFs (D4.5).
+  reporters: process.env.RELATORIO_TESTES
+    ? [
+        'default',
+        [
+          '<rootDir>/test/relatorio-testes.cjs',
+          { arquivo: 'relatorio-testes/api.json' },
+        ],
+      ]
+    : ['default'],
 };
 
 export default config;
