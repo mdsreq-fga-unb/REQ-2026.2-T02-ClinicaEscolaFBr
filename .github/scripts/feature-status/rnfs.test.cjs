@@ -199,3 +199,34 @@ test("o comentário traz a tabela, a marca para ser editado e como completar", (
   assert.match(texto, /\/rnf RNF53/);
   assert.ok(texto.includes(R.MARCA_RNFS));
 });
+
+test("intervalos de RNFs valem por todos os códigos entre eles", () => {
+  assert.deepEqual(R.codigosRnf("transversal CP14 — RNF56 a RNF58"), [
+    "RNF56",
+    "RNF57",
+    "RNF58",
+  ]);
+  assert.deepEqual(R.codigosRnf("RNF51; RNF56-RNF58 e RNF10 até 11"), [
+    "RNF10",
+    "RNF11",
+    "RNF51",
+    "RNF56",
+    "RNF57",
+    "RNF58",
+  ]);
+  // Só os códigos soltos quando o "intervalo" não cresce.
+  assert.deepEqual(R.codigosRnf("RNF58 a RNF56"), ["RNF56", "RNF58"]);
+  // Travessão separando o código do título não é intervalo.
+  assert.deepEqual(R.codigosRnf("RNF1 — Identificação de erros"), ["RNF1"]);
+});
+
+test("a seção de RNFs das issues #52 e #155, com intervalo, inclui o RNF57", () => {
+  const corpo = (rnfs) =>
+    `### RF(s) declarado(s)\n\nRF57\n\n### RNFs que restringem a feature\n\n${rnfs}\n\n### Rastreabilidade\n\n-`;
+  assert.deepEqual(
+    R.rnfsDaFeature(
+      corpo("RNF51 — Criptografia; transversal CP14 — RNF56 a RNF58"),
+    ),
+    ["RNF51", "RNF56", "RNF57", "RNF58"],
+  );
+});
