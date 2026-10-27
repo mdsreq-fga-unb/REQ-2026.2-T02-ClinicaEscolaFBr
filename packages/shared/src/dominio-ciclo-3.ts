@@ -13,6 +13,28 @@ export type Canal = z.infer<typeof canalSchema>;
 export const CORES = ["vermelha", "amarela", "verde"] as const;
 export const corSchema = z.enum(CORES);
 export type Cor = z.infer<typeof corSchema>;
+export const prioridadeSchema = z.object({ cor: corSchema });
+
+export const dadosIniciaisSchema = z.object({
+  anamnese: z.string().trim().min(1, "Informe a anamnese."),
+  contrato: z.string().trim().min(1, "Informe o contrato terapêutico."),
+  dataAssinaturaContrato: z.iso.date(),
+});
+export type DadosIniciais = z.infer<typeof dadosIniciaisSchema>;
+
+export const evolucaoSchema = z.object({
+  queixa: z
+    .string()
+    .trim()
+    .min(1)
+    .max(1000)
+    .refine(
+      (texto) => texto.split(/\r?\n/).length <= 10,
+      "Use no máximo 10 linhas.",
+    ),
+  planejamento: z.string().trim().min(1),
+});
+export type Evolucao = z.infer<typeof evolucaoSchema>;
 
 // Situação do caso ao longo da distribuição (RF18 a RF21).
 export const SITUACOES_CASO = [
@@ -25,7 +47,7 @@ export const situacaoCasoSchema = z.enum(SITUACOES_CASO);
 export type SituacaoCaso = z.infer<typeof situacaoCasoSchema>;
 
 // Status da sessão (RF10). Os demais status entram com o RF14, o RF15 e o RF16 no Ciclo 4.
-export const STATUS_SESSAO = ["agendada"] as const;
+export const STATUS_SESSAO = ["agendada", "realizada"] as const;
 export const statusSessaoSchema = z.enum(STATUS_SESSAO);
 export type StatusSessao = z.infer<typeof statusSessaoSchema>;
 

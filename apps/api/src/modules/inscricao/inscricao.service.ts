@@ -67,6 +67,9 @@ export class InscricaoService {
             );
           if (
             !mesmoCadastro ||
+            !anterior.queixaCifrada ||
+            !anterior.percepcaoUrgenciaCifrada ||
+            !anterior.historicoRelevanteCifrado ||
             decifrar(anterior.queixaCifrada, chave) !== queixa ||
             decifrar(anterior.percepcaoUrgenciaCifrada, chave) !==
               percepcaoUrgencia ||
