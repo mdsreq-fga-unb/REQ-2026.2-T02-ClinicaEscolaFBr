@@ -27,6 +27,14 @@ describe('criptografia dos dados de saúde (RNF51)', () => {
     expect(() => decifrar(partes.join('.'), chave)).toThrow();
   });
 
+  it('recusa etiqueta de autenticação encurtada', () => {
+    const partes = cifrar('urgência alta', chave).split('.');
+    partes[2] = Buffer.from(partes[2], 'base64')
+      .subarray(0, 4)
+      .toString('base64');
+    expect(() => decifrar(partes.join('.'), chave)).toThrow();
+  });
+
   it('recusa chave com tamanho diferente de 32 bytes', () => {
     expect(() =>
       cifrar('x', Buffer.from('curta').toString('base64')),

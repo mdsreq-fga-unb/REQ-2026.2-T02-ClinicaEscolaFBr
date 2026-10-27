@@ -182,7 +182,7 @@ Exemplo:
 ### 4.2 Exemplo de decomposição do MVP
 
 !!! note "Exemplo ilustrativo"
-    Esta decomposição é um exemplo do início do projeto e não corresponde à lista final de features. Algumas features daqui não existem mais, como a pré-classificação automática de prioridade, já que o sistema não atribui prioridade clínica (CP2). A lista oficial está em [Backlog de Produto, 10.1.1](../../unidade-2/requisitos/backlog.md#1011-mapa-do-escopo).
+    Esta decomposição é um exemplo do início do projeto e não corresponde à lista final de features. Algumas features daqui não existem mais, como a pré-classificação automática de prioridade, já que o sistema não atribui prioridade clínica (CP2). A lista oficial está em [Features e backlog](../../visao-geral/backlog.md#features-por-area-e-conjunto).
 
 Uma possível organização inicial é:
 
