@@ -13,6 +13,8 @@ body:
 
         Os critérios completos estão na [seção 9 — DoR e DoD](https://mdsreq-fga-unb.github.io/REQ-2026.2-T02-ClinicaEscolaFBr/unidade-2/requisitos/dor-dod/). Na criação da issue, deixe os checklists desmarcados e vá marcando editando a descrição.
 
+        O **Estado da feature** e o Status do Project são atualizados sozinhos a partir do checklist e das PRs de código que declaram a issue ("Refs #48", "Closes #48"). Comandos em comentário: `/de-acordo` (confirma a inspeção de design registrada com o cabeçalho "## Inspeção de design (DoD 1)", D1.8, vindo de quem não registrou a inspeção), `/demonstrada <link da ata>` (D5.1) e `/aceite <link>` (D6.1).
+
   - type: input
     id: feature
     attributes:
@@ -155,7 +157,7 @@ body:
         - label: "R4.1 [B] Regras de negócio confirmadas pela FBr (ata ou resposta registrada) ou registradas como pendência de validação."
         - label: "R4.2 [B] Toda pendência com a FBr está na seção Pendências de validação com a FBr (8.3), com o valor padrão adotado."
         - label: "R4.3 [B] Nenhuma decisão em aberto altera o comportamento central da feature."
-        - label: "R4.4 [R] Regras, termos e modelos que dependem de aprovação da FBr estão aprovados e versionados."
+        - label: "R4.4 [B] Regras, termos e modelos da FBr que definem uma condição essencial da feature estão aprovados e versionados (documento só complementar: pendência registrada em R4.2)."
 
   - type: checkboxes
     id: dor-r5
@@ -163,7 +165,7 @@ body:
       label: "DoR — Requisitos não funcionais associados"
       options:
         - label: "R5.1 [B] RNFs que restringem a feature identificados, cobrindo as categorias URPS+ aplicáveis."
-        - label: "R5.2 [B] Cada RNF tem meta mensurável, método de verificação, classificação URPS+ e rastreabilidade."
+        - label: "R5.2 [B] Cada RNF tem meta mensurável, método de verificação, classificação URPS+ e rastreabilidade (evolutivo: patamar mínimo de lançamento, seção 10.2.3.1)."
         - label: "R5.3 [B] Metas de desempenho e disponibilidade indicam o cenário de referência (carga, massa de dados, janela)."
         - label: "R5.4 [R] Regras transversais referenciadas, e não repetidas (RNF10, RNF56, CP12)."
         - label: "R5.5 [B] Com dados pessoais ou de saúde, os RNFs de criptografia, acesso, auditoria e retenção da CP12 foram considerados."
@@ -194,7 +196,7 @@ body:
       options:
         - label: "R8.1 [B] A equipe entende o requisito e consegue estimá-lo sem esclarecimentos pendentes."
         - label: "R8.2 [B] A feature cabe em uma iteração (ou foi dividida sem perder a rastreabilidade)."
-        - label: "R8.3 [R] Integrações externas (e-mail, SMS, PDF) e a massa de dados de teste identificadas."
+        - label: "R8.3 [R] Integrações externas (e-mail, WhatsApp, PDF) e a massa de dados de teste identificadas."
 
   - type: textarea
     id: dor-registro
@@ -206,6 +208,7 @@ body:
         Resultado: Pronta | Pronta com ressalvas | Não pronta
         Critérios [B] não atendidos: <códigos e motivo, ou "nenhum">
         Pendências [R] e/ou com a FBr: <descrição, responsável, prazo, ou "nenhuma">
+        Justificativas: <por que cada critério pendente não impede ou impede a entrada>
 
   - type: markdown
     attributes:
@@ -250,7 +253,7 @@ body:
         - label: "D3.4 Segurança e controle de acesso verificados. Evidência: negações de acesso por perfil testadas ou revisadas."
         - label: "D3.5 Proteção de dados sensíveis (LGPD) verificada. Evidência: verificação registrada na revisão."
         - label: "D3.6 Aderência aos critérios de aceitação confirmada. Evidência: critérios marcados pelo revisor."
-        - label: "D3.7 Apontamentos da revisão corrigidos ou registrados. Evidência: comentários resolvidos ou issue vinculada."
+        - label: "D3.7 Apontamentos impeditivos (critério de aceitação, acesso, dados, teste ou build) corrigidos no PR; só os não impeditivos viram pendência. Evidência: comentários resolvidos e issue vinculada para cada pendência."
 
   - type: checkboxes
     id: dod-4
@@ -261,6 +264,7 @@ body:
         - label: "D4.2 Testes unitários e de integração passando. Evidência: execução na versão integrada sem falhas."
         - label: "D4.3 Integrada sem quebrar a build. Evidência: PR mesclado e build da main concluída."
         - label: "D4.4 Resultado registrado. Evidência: comentário com o link do PR, o resultado dos testes e as pendências."
+        - label: "D4.5 RNFs da feature verificados no patamar exigido (meta completa ou patamar mínimo dos evolutivos). Evidência: resultado de cada verificação na issue."
 
   - type: checkboxes
     id: dod-5
@@ -286,7 +290,7 @@ body:
       value: |
         Inspeção de design: <data> | <participantes> | <resultado>
         Inspeção de código: <link do PR> | <revisor> | <resultado>
-        Promote to Build: <link do PR mesclado> | <resultado dos testes>
+        Promote to Build: <link do PR mesclado> | <resultado dos testes> | <RNFs verificados e patamar>
         Demonstração: <data> | <link da ata>
         Aceite da FBr: Aceita | Não aceita | <data> | <link da ata ou mensagem>
         Pendências: <descrição, responsável, prazo>
