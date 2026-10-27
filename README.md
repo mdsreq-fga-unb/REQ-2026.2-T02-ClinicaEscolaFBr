@@ -624,6 +624,8 @@ O site publicado é atualizado **automaticamente** quando uma alteração em `do
 - validações e tipos compartilhados: `packages/shared/src/`;
 - tabelas: `packages/database/src/schema/`, sempre com `pnpm db:generate` no mesmo PR.
 
+**Testes que verificam um RNF** citam no nome o RF da feature e o RNF, entre parênteses, por exemplo `describe('Restrição de acesso ao prontuário (RF55)')` com `it('o registro de acessos não pode ser alterado nem apagado (RNF52)')`. Assim o CI conta o teste como evidência do D4.5 da feature. O que não é teste automático entra com o comentário `/rnf RNF53 <link>` na issue. A convenção completa está em [Verificação dos RNFs (D4.5)](https://mdsreq-fga-unb.github.io/REQ-2026.2-T02-ClinicaEscolaFBr/unidade-1/gestao/boas-praticas-github/#verificacao-dos-rnfs-d45).
+
 Mais orientações em [Boas práticas de utilização do GitHub](https://mdsreq-fga-unb.github.io/REQ-2026.2-T02-ClinicaEscolaFBr/unidade-1/gestao/boas-praticas-github/).
 
 ---
