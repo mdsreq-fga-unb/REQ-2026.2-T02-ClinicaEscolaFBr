@@ -47,3 +47,7 @@ export const MENU_POR_PERFIL: Record<Perfil, ItemMenu[]> = {
     { rotulo: "Usuários", href: "/usuarios", Icone: Users },
   ],
 };
+
+// Página inicial de cada perfil depois da entrada: o primeiro item do menu (RF50).
+export const inicioDoPerfil = (perfil: Perfil) =>
+  MENU_POR_PERFIL[perfil][0].href;

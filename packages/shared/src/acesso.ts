@@ -49,6 +49,13 @@ export const ativacaoSchema = z
   });
 export type Ativacao = z.infer<typeof ativacaoSchema>;
 
+// Entrada no sistema com e-mail e senha (RF50).
+export const loginSchema = z.object({
+  email: z.email("Informe um e-mail válido.").trim().toLowerCase(),
+  senha: z.string().min(1, "Informe a senha."),
+});
+export type Login = z.infer<typeof loginSchema>;
+
 // Filtros da lista de usuários (RF53 e RF54).
 export const filtroUsuariosSchema = z.object({
   busca: z.string().trim().optional(),

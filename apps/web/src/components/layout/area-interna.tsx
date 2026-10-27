@@ -1,4 +1,5 @@
 "use client";
+import { useQueryClient } from "@tanstack/react-query";
 import { LogOut, Menu, X } from "lucide-react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
@@ -36,7 +37,10 @@ export function AreaInterna({ children }: { children: ReactNode }) {
   const { data: usuario, error, isPending } = useSessao();
   const caminho = usePathname();
   const router = useRouter();
+  const queryClient = useQueryClient();
   const [menuAberto, setMenuAberto] = useState(false);
+  const [saindo, setSaindo] = useState(false);
+  const [falhaNaSaida, setFalhaNaSaida] = useState(false);
 
   useEffect(() => {
     if (error instanceof ErroApi && error.status === 401)
@@ -51,8 +55,21 @@ export function AreaInterna({ children }: { children: ReactNode }) {
     );
   }
 
+  // Saída (RF51): só depois de a API confirmar que revogou a sessão, os dados em
+  // cache são apagados e a pessoa volta à entrada; assim o "voltar" do navegador
+  // pede uma nova entrada. Sem a confirmação (por exemplo, sem conexão), a saída
+  // não é dada como concluída e a pessoa pode tentar de novo.
   const sair = async () => {
-    await api("/auth/logout", { method: "POST" }).catch(() => undefined);
+    setSaindo(true);
+    setFalhaNaSaida(false);
+    try {
+      await api("/auth/logout", { method: "POST" });
+    } catch {
+      setFalhaNaSaida(true);
+      setSaindo(false);
+      return;
+    }
+    queryClient.clear();
     router.replace("/entrar");
   };
 
@@ -99,13 +116,23 @@ export function AreaInterna({ children }: { children: ReactNode }) {
             </span>
           </span>
         </div>
+        {falhaNaSaida && (
+          <p
+            role="alert"
+            className="mb-3 rounded-md bg-erro-fundo p-2 text-xs text-foreground"
+          >
+            Não foi possível sair: a sessão continua aberta. Verifique a conexão
+            e tente de novo.
+          </p>
+        )}
         <button
           type="button"
           onClick={sair}
-          className="flex w-full items-center justify-center gap-2 rounded-md border border-white/60 py-2 text-sm hover:bg-sidebar-accent"
+          disabled={saindo}
+          className="flex w-full items-center justify-center gap-2 rounded-md border border-white/60 py-2 text-sm hover:bg-sidebar-accent disabled:opacity-60"
         >
           <LogOut aria-hidden className="size-4" />
-          Sair
+          {saindo ? "Saindo…" : falhaNaSaida ? "Tentar sair de novo" : "Sair"}
         </button>
       </div>
     </nav>
