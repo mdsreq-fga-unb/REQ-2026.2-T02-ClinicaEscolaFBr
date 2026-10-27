@@ -2,6 +2,9 @@
 
 Visão geral da entrega da Unidade 2: os requisitos funcionais e não funcionais, a análise do feedback, o DoR e o DoD e o backlog de produto com a priorização do MVP.
 
+!!! info "Andamento do projeto"
+    O cronograma geral e o backlog, com o status de cada ciclo, ficam na Visão geral do projeto: [Cronograma geral](../visao-geral/cronograma.md) e [Features e backlog](../visao-geral/backlog.md). O status de cada feature fica na sua issue e no [Project do repositório](https://github.com/orgs/mdsreq-fga-unb/projects/124).
+
 ## Da necessidade ao requisito
 
 Todos os requisitos desta unidade seguem a mesma cadeia de rastreabilidade. Cada etapa leva à seção onde ela é definida.
@@ -12,8 +15,8 @@ Todos os requisitos desta unidade seguem a mesma cadeia de rastreabilidade. Cada
 2. [<span class="trace-chain__step">Objetivo geral</span> Integrar e digitalizar a gestão da Clínica Escola](../unidade-1/solucao-proposta.md#21-objetivo-geral-do-produto)
 3. [<span class="trace-chain__step">7 objetivos específicos</span> OE1 a OE7](../unidade-1/solucao-proposta.md#22-objetivos-especificos-oe-do-produto)
 4. [<span class="trace-chain__step">14 características</span> CP1 a CP14, cada uma ligada a um OE](../unidade-1/solucao-proposta.md#23-caracteristicas-de-produto-mapeadas-com-os-objetivos-especificos)
-5. [<span class="trace-chain__step">Features</span> Funcionalidades no formato ação, resultado e objeto](requisitos/funcionais.md#lista-de-features-fdd)
-6. [<span class="trace-chain__step">68 RFs e 58 RNFs</span> Declarados por feature, com critérios de aceitação](requisitos/funcionais.md)
+5. [<span class="trace-chain__step">Features</span> Funcionalidades no formato ação, resultado e objeto](../visao-geral/backlog.md#features-por-area-e-conjunto)
+6. [<span class="trace-chain__step">68 RFs e 58 RNFs vigentes</span> Declarados por feature, com critérios de aceitação](requisitos/funcionais.md)
 
 </div>
 
@@ -26,6 +29,7 @@ Todos os requisitos desta unidade seguem a mesma cadeia de rastreabilidade. Cada
 - [:material-clipboard-check-outline: **8.1 Requisitos Funcionais** Funcionalidades do sistema, organizadas por feature.](requisitos/funcionais.md)
 - [:material-shield-check-outline: **8.2 Requisitos Não Funcionais** Requisitos de qualidade, segurança e acessibilidade.](requisitos/nao-funcionais.md)
 - [:material-message-text-outline: **8.3 Análise do Feedback** Ajustes da verificação cruzada e pendências com a FBr.](requisitos/analise-feedback.md)
+- [:material-handshake-outline: **8.4 Registro de Decisões com a FBr** Regras decididas com a clínica, com data, fonte e requisitos.](requisitos/decisoes-fbr.md)
 
 </div>
 
@@ -34,7 +38,7 @@ Todos os requisitos desta unidade seguem a mesma cadeia de rastreabilidade. Cada
 <div class="unit-cards" markdown>
 
 - [:material-check-decagram-outline: **9. DoR e DoD** Critérios de preparação e de conclusão dos itens.](requisitos/dor-dod.md)
-- [:material-rocket-launch-outline: **10. Backlog de Produto** Backlog, priorização e recorte do MVP.](requisitos/backlog.md)
+- [:material-rocket-launch-outline: **10. Backlog de Produto** Priorização e recorte do MVP.](requisitos/backlog.md)
 
 </div>
 

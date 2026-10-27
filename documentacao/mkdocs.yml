@@ -82,6 +82,9 @@ markdown_extensions:
 
 nav:
   - Início: index.md
+  - Visão geral do projeto:
+      - Cronograma geral: visao-geral/cronograma.md
+      - Features e backlog: visao-geral/backlog.md
   - Unidade 1 — Visão e planejamento:
       - Início da unidade: unidade-1/index.md
       - 1. Cenário Atual: unidade-1/cenario-atual.md
@@ -104,6 +107,7 @@ nav:
           - 8.1 Requisitos Funcionais: unidade-2/requisitos/funcionais.md
           - 8.2 Requisitos Não Funcionais: unidade-2/requisitos/nao-funcionais.md
           - 8.3 Análise do Feedback: unidade-2/requisitos/analise-feedback.md
+          - 8.4 Registro de Decisões com a FBr: unidade-2/requisitos/decisoes-fbr.md
       - 9. DoR e DoD: unidade-2/requisitos/dor-dod.md
       - 10. Backlog de Produto: unidade-2/requisitos/backlog.md
       - Gestão do Projeto:
