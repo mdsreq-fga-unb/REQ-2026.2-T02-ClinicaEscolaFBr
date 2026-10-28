@@ -31,6 +31,7 @@ Os itens de cada ciclo, com o Líder de Feature e as dependências, estão em [F
 <div class="unit-cards" markdown>
 
 - [:material-sitemap-outline: **Projeto das features do Ciclo 3** Modelo detalhado, diagramas e roteiro da inspeção de design.](projeto-features-ciclo-3.md)
+- [:material-format-list-checks: **Plano de specs — Luís Henrique** Escopo, dependências e validação das issues #90, #91, #97, #130, #148 e #149.](plano-specs-luis-henrique.md)
 - [:material-cellphone-link: **Protótipos do Ciclo 3** Telas de cada feature, organizadas pelo fluxo do sistema.](prototipos-ciclo-3.md)
 - [:material-sitemap-outline: **Projeto das features do Ciclo 4** Modelo detalhado e diagramas das features do Ciclo 4, começando pelo RF52.](projeto-features-ciclo-4.md)
 - [:material-cellphone-link: **Protótipos do Ciclo 4** Telas das features do Ciclo 4.](prototipos-ciclo-4.md)

@@ -252,6 +252,19 @@ describe('Travas do banco no schema do Ciclo 3', () => {
         .values(sessao(casoB, estagiarioA, 60));
     });
 
+    it('a sessão realizada continua ocupando o horário, inclusive o intervalo de anotações (RF10, RNF9)', async () => {
+      await db.insert(sessoesAtendimento).values(sessao(casoA, estagiarioA, 0));
+      await db.update(sessoesAtendimento).set({ status: 'realizada' });
+      await recusada(
+        db.insert(sessoesAtendimento).values(sessao(casoB, estagiarioA, 55)),
+        'sessoes_estagiario_sem_sobreposicao',
+      );
+      await recusada(
+        db.insert(sessoesAtendimento).values(sessao(casoA, estagiarioB, 30)),
+        'sessoes_caso_sem_sobreposicao',
+      );
+    });
+
     it('impede sessões sobrepostas do mesmo paciente, contando só a sessão', async () => {
       await db.insert(sessoesAtendimento).values(sessao(casoA, estagiarioA, 0));
       await recusada(

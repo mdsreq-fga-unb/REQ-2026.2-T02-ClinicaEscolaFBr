@@ -34,9 +34,11 @@ export const inscricoes = pgTable(
     celular: text("celular"),
     email: text("email"),
     canalPreferencial: canalEnum("canal_preferencial").notNull(),
-    queixaCifrada: text("queixa_cifrada").notNull(),
-    percepcaoUrgenciaCifrada: text("percepcao_urgencia_cifrada").notNull(),
-    historicoRelevanteCifrado: text("historico_relevante_cifrado").notNull(),
+    // Campos nullable para suportar inscrições legadas importadas sem resposta;
+    // novas inscrições continuam validadas como obrigatórias na API RF1.
+    queixaCifrada: text("queixa_cifrada"),
+    percepcaoUrgenciaCifrada: text("percepcao_urgencia_cifrada"),
+    historicoRelevanteCifrado: text("historico_relevante_cifrado"),
     criadaEm: timestamp("criada_em", { withTimezone: true })
       .notNull()
       .defaultNow(),

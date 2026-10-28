@@ -221,6 +221,8 @@ describe('RF1/RF2: HTTP, transações e migrations oficiais', () => {
             | 'percepcaoUrgenciaCifrada'
             | 'historicoRelevanteCifrado'
         ];
+      if (!cifrado)
+        throw new Error(`A inscrição nova não gravou ${campo} cifrada.`);
       expect(cifrado).toMatch(/^v1\./);
       expect(cifrado).not.toContain(dados[campo]);
       expect(decifrar(cifrado, chave)).toBe(dados[campo]);

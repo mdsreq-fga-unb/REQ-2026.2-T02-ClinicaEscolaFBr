@@ -1,6 +1,7 @@
 import { sql } from "drizzle-orm";
 import {
   boolean,
+  type AnyPgColumn,
   integer,
   pgEnum,
   pgTable,
@@ -28,6 +29,9 @@ export const decisoesPrioridade = pgTable(
       .notNull()
       .references(() => inscricoes.id),
     corCifrada: text("cor_cifrada").notNull(),
+    decisaoAnteriorId: uuid("decisao_anterior_id").references(
+      (): AnyPgColumn => decisoesPrioridade.id,
+    ),
     decididaPor: uuid("decidida_por")
       .notNull()
       .references(() => usuarios.id),
