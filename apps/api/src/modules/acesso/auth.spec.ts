@@ -193,6 +193,44 @@ describe('Autenticação: login, sessão e logout', () => {
     await entrar('ana@fbr.edu.br', SENHA).expect(423);
   });
 
+  it('entradas simultâneas com a senha certa são todas aceitas, sem bloquear a conta (RF50, RNF49)', async () => {
+    const respostas = await Promise.all(
+      Array.from({ length: 8 }, () => entrar('ana@fbr.edu.br', SENHA)),
+    );
+    expect(respostas.map((r) => r.status)).toEqual(Array(8).fill(200));
+    const depois = await ana();
+    expect(depois).toMatchObject({
+      tentativasFalhas: 0,
+      bloqueadoAte: null,
+      entradasEmCurso: 0,
+    });
+    // As entradas esperam a vez de 3 em 3, e cada senha leva o tempo do bcrypt.
+  }, 30_000);
+
+  it('entradas certas ao mesmo tempo que uma errada não contam como erro (RF50, RNF49)', async () => {
+    const respostas = await Promise.all([
+      entrar('ana@fbr.edu.br', SENHA),
+      entrar('ana@fbr.edu.br', 'errada111'),
+      entrar('ana@fbr.edu.br', SENHA),
+      entrar('ana@fbr.edu.br', SENHA),
+    ]);
+    const status = respostas.map((r) => r.status).sort((a, b) => a - b);
+    expect(status).toEqual([200, 200, 200, 401]);
+    expect((await ana()).bloqueadoAte).toBeNull();
+  });
+
+  it('uma reserva interrompida há mais de 30 segundos não ocupa a vaga (RF50, RNF49)', async () => {
+    await db
+      .update(usuarios)
+      .set({
+        entradasEmCurso: 3,
+        emCursoDesde: new Date(Date.now() - 60_000),
+      })
+      .where(eq(usuarios.email, 'ana@fbr.edu.br'));
+    await entrar('ana@fbr.edu.br', SENHA).expect(200);
+    expect((await ana()).entradasEmCurso).toBe(0);
+  });
+
   it('e-mail sem conta também chega ao bloqueio, sem revelar se o e-mail existe (RF50, RNF49)', async () => {
     await entrar('sem.conta@fbr.edu.br', 'errada111').expect(401);
     await entrar('sem.conta@fbr.edu.br', 'errada222').expect(401);

@@ -184,6 +184,7 @@ sequenceDiagram
 | A senha é comparada com o hash (bcrypt ou Argon2), e a mesma mensagem é usada para qualquer falha | E-mail ou senha incorretos negam o acesso sem indicar o campo |
 | Só a situação `ativo` autentica | Usuário desativado (RF54) não entra; usuário pendente (RF53) também não |
 | Contador `tentativasFalhas` e `bloqueadoAte` no usuário ([DF25](../unidade-2/requisitos/decisoes-fbr.md)) | Na 3ª tentativa seguida com erro, o acesso fica bloqueado por 15 minutos |
+| `entradasEmCurso` reserva a conferência de cada entrada: os erros somados às entradas em curso não passam de 3, e as entradas além disso esperam uma vaga em vez de serem recusadas; só a senha errada conta como erro ([#176](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/issues/176)) | Tentativas simultâneas com erro não passam de 3 antes do bloqueio, e entradas simultâneas com a senha certa são todas aceitas |
 | O menu e as rotas são filtrados pelo perfil (`PerfisGuard`) | Usuário ativo vê apenas as funcionalidades do seu perfil |
 
 **Dados de teste:** um usuário de cada perfil, ativo; um desativado; um pendente de ativação; um com 2 tentativas falhas (para testar o bloqueio na 3ª).
