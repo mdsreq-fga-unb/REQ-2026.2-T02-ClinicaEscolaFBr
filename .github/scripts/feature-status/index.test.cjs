@@ -1,6 +1,7 @@
 const { test, beforeEach } = require("node:test");
 const assert = require("node:assert/strict");
-const { readFileSync } = require("node:fs");
+const { mkdtempSync, readFileSync, writeFileSync } = require("node:fs");
+const { tmpdir } = require("node:os");
 const { join } = require("node:path");
 const acompanhar = require("./index.cjs");
 const L = require("./logica.cjs");
@@ -67,17 +68,28 @@ const github = {
         return { data: issue };
       },
       createComment: async ({ body }) => {
-        comentarios.push({ body, user: { login: "gabriel" } });
+        comentarios.push({
+          id: comentarios.length + 1,
+          body,
+          user: { login: "gabriel" },
+        });
+      },
+      updateComment: async ({ comment_id, body }) => {
+        comentarios = comentarios.map((c) =>
+          c.id === comment_id ? { ...c, body } : c,
+        );
       },
       listComments: async () => ({ data: comentarios }),
       listForRepo: () => {},
     },
     pulls: { listFiles: () => {} },
   },
-  paginate: async (metodo) =>
-    metodo === github.rest.pulls.listFiles
-      ? arquivos.map((filename) => ({ filename }))
-      : [issue, { number: 99, title: "Unidade 2 - Cronograma" }],
+  paginate: async (metodo) => {
+    if (metodo === github.rest.pulls.listFiles)
+      return arquivos.map((filename) => ({ filename }));
+    if (metodo === github.rest.issues.listComments) return comentarios;
+    return [issue, { number: 99, title: "Unidade 2 - Cronograma" }];
+  },
   graphql: async (consulta, variaveis) => {
     if (consulta.includes("organization(")) {
       return {
@@ -156,6 +168,7 @@ const comentario = (body, login, associacao = "MEMBER") => ({
 
 beforeEach(() => {
   process.env.TEM_TOKEN = "true";
+  delete process.env.RELATORIO_RNFS;
   issue = {
     number: 88,
     node_id: "ISSUE88",
@@ -350,4 +363,94 @@ test("issues que não são de feature ficam de fora", async () => {
 test("a execução diária acompanha só as issues de feature", async () => {
   await rodar("workflow_dispatch", {});
   assert.equal(item.Status, "Em Design");
+});
+
+// Relatório dos testes da main, como o gerado por coletar-rnfs.cjs.
+const comRelatorio = (testes) => {
+  const arquivo = join(mkdtempSync(join(tmpdir(), "rnfs-")), "rnfs.json");
+  writeFileSync(arquivo, JSON.stringify({ testes }));
+  process.env.RELATORIO_RNFS = arquivo;
+};
+const testeRnf = (nome, origem = "api") => ({
+  nome,
+  origem,
+  rnfs: nome.match(/\bRNF\d+\b/g),
+  rfs: nome.match(/\bRF\d+\b/g) ?? [],
+});
+const integrada = () => {
+  issue = {
+    ...issue,
+    body: L.marcarItens(issue.body, ["D4.3"]),
+  };
+};
+const tabela = () =>
+  comentarios.filter((c) => c.body.includes("<!-- feature-status:rnfs -->"));
+
+test("CI da main: testes que citam o RF e o RNF viram evidência na tabela do D4.5", async () => {
+  integrada();
+  comRelatorio([
+    testeRnf("inscrição (RF1) › recusa o envio sem contato (RNF1)"),
+    testeRnf("inscrição (RF1) › grava a queixa cifrada (RNF51)"),
+    // Teste de outra feature com o mesmo RNF não conta para o RF1.
+    testeRnf("prontuário (RF55) › registro de acessos (RNF53)"),
+  ]);
+  await rodar("workflow_run", { workflow_run: { conclusion: "success" } });
+  assert.equal(tabela().length, 1);
+  assert.match(tabela()[0].body, /\| RNF1 \| ✅ verificado/);
+  assert.match(tabela()[0].body, /\| RNF53 \| ⏳ sem evidência/);
+  assert.doesNotMatch(issue.body, /- \[x\] D4\.5/);
+});
+
+test("/rnf completa as evidências, marca o D4.5 e edita a mesma tabela", async () => {
+  integrada();
+  comRelatorio([
+    testeRnf("inscrição (RF1) › recusa o envio sem contato (RNF1)"),
+    testeRnf("inscrição (RF1) › grava a queixa cifrada (RNF51)"),
+    testeRnf(
+      "inscrição (RF1) › sem violações WCAG (RNF56, RNF57, RNF58)",
+      "e2e",
+    ),
+  ]);
+  await rodar("workflow_run", { workflow_run: { conclusion: "success" } });
+  const pedido = comentario(
+    "/rnf RNF53 https://github.com/x/actions/runs/1",
+    "gabriel",
+  );
+  comentarios.push(pedido);
+  await rodar("issue_comment", { issue, comment: pedido });
+  assert.equal(tabela().length, 1);
+  assert.match(
+    tabela()[0].body,
+    /\| RNF53 \| ✅ verificado \| \[registro de @gabriel\]/,
+  );
+  assert.match(issue.body, /- \[x\] D4\.5/);
+});
+
+test("/rnf antes da integração fica registrado para a avaliação depois do D4.3", async () => {
+  comRelatorio([]);
+  const pedido = comentario("/rnf RNF53 https://x/relatorio", "gabriel");
+  await rodar("issue_comment", { issue, comment: pedido });
+  assert.equal(tabela().length, 0);
+  assert.match(
+    comentarios.at(-1).body,
+    /avaliado depois que a feature for integrada/,
+  );
+});
+
+test("/rnf sem link pede a evidência", async () => {
+  integrada();
+  comRelatorio([]);
+  await rodar("issue_comment", {
+    issue,
+    comment: comentario("/rnf RNF53", "gabriel"),
+  });
+  assert.match(comentarios.at(-1).body, /precisa do RNF e do link/);
+  assert.equal(tabela().length, 0);
+});
+
+test("CI da main com falha não avalia os RNFs", async () => {
+  integrada();
+  comRelatorio([testeRnf("inscrição (RF1) › erros (RNF1)")]);
+  await rodar("workflow_run", { workflow_run: { conclusion: "failure" } });
+  assert.equal(comentarios.length, 0);
 });

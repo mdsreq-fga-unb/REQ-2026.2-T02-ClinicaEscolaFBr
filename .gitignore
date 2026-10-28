@@ -7,6 +7,7 @@ dist/
 coverage/
 playwright-report/
 test-results/
+relatorio-testes/
 .env
 .env.local
 *.tsbuildinfo

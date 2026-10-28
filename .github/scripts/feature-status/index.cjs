@@ -1,10 +1,13 @@
 // Acompanhamento automático das issues de feature (FDD): mantém o "Estado da
 // feature" da issue e o Status do Project de acordo com o checklist do DoR e do
-// DoD, com as PRs que citam a issue e com os comandos dos comentários.
-// Chamado pelo workflow feature-status.yml, via actions/github-script.
+// DoD, com as PRs que citam a issue, com os comandos dos comentários e com os
+// testes da versão integrada (D4.5). Chamado pelo workflow feature-status.yml,
+// via actions/github-script.
 
+const { existsSync, readFileSync } = require("node:fs");
 const L = require("./logica.cjs");
 const P = require("./projeto.cjs");
+const R = require("./rnfs.cjs");
 
 const MEMBROS = ["OWNER", "MEMBER", "COLLABORATOR"];
 const { ehFeature } = L;
@@ -20,6 +23,13 @@ module.exports = async ({ github, context, core }) => {
     );
     return;
   }
+
+  // Relatório dos testes da main, baixado pelo workflow (coletar-rnfs.cjs).
+  const arquivoRnfs = process.env.RELATORIO_RNFS;
+  const relatorio =
+    arquivoRnfs && existsSync(arquivoRnfs)
+      ? JSON.parse(readFileSync(arquivoRnfs, "utf8"))
+      : null;
 
   let projeto;
   const obterProjeto = async () =>
@@ -92,6 +102,61 @@ module.exports = async ({ github, context, core }) => {
     }
   };
 
+  // Verificação dos RNFs (D4.5), só depois da integração (D4.3): os testes da main
+  // e os registros /rnf viram uma tabela num comentário, que é editado a cada
+  // avaliação. Devolve a issue atualizada, ou null se ela não foi avaliada.
+  const verificarRnfs = async (issue) => {
+    if (!ehFeature(issue) || issue.state !== "open" || !relatorio) return null;
+    const corpo = issue.body ?? "";
+    const integrada = L.lerChecklist(corpo).some(
+      (i) => i.codigo === "D4.3" && i.marcado,
+    );
+    const rnfs = R.rnfsDaFeature(corpo);
+    if (!integrada || rnfs.length === 0) return null;
+    const comentarios = await github.paginate(github.rest.issues.listComments, {
+      owner,
+      repo,
+      issue_number: issue.number,
+      per_page: 100,
+    });
+    const linhas = R.avaliarRnfs({
+      rnfs,
+      rfs: R.rfsDaFeature(issue.title, corpo),
+      testes: relatorio.testes,
+      registros: R.registrosManuais(comentarios, MEMBROS),
+    });
+    const texto = R.comentarioRnfs(linhas, process.env.EXECUCAO_RNFS);
+    const anterior = comentarios.find((c) =>
+      (c.body ?? "").includes(R.MARCA_RNFS),
+    );
+    if (!anterior) {
+      await github.rest.issues.createComment({
+        owner,
+        repo,
+        issue_number: issue.number,
+        body: texto,
+      });
+    } else if (anterior.body !== texto) {
+      await github.rest.issues.updateComment({
+        owner,
+        repo,
+        comment_id: anterior.id,
+        body: texto,
+      });
+    }
+    return R.todosVerificados(linhas) ? marcar(issue, ["D4.5"]) : issue;
+  };
+
+  const featuresAbertas = async () =>
+    (
+      await github.paginate(github.rest.issues.listForRepo, {
+        owner,
+        repo,
+        state: "open",
+        per_page: 100,
+      })
+    ).filter(ehFeature);
+
   // Issues de feature que uma PR declara implementar. Só PRs que mexem no código
   // contam, e só features com o DoR aprovado: sem DoR, o DoD não é avaliado.
   const featuresDaPr = async (pr) => {
@@ -126,6 +191,28 @@ module.exports = async ({ github, context, core }) => {
 
   if (evento === "issue_comment") {
     const issue = carga.issue;
+    const rnf = R.lerComandoRnf(carga.comment.body);
+    if (rnf && ehFeature(issue)) {
+      if (!MEMBROS.includes(carga.comment.author_association)) return;
+      const autor = carga.comment.user.login;
+      if (rnf.rnfs.length === 0 || !rnf.link) {
+        await comentar(
+          issue.number,
+          `@${autor}, o comando \`/rnf\` precisa do RNF e do link da evidência, por exemplo \`/rnf RNF53 https://...\` com o link do relatório ou da inspeção.`,
+        );
+        return;
+      }
+      const avaliada = await verificarRnfs(issue);
+      if (avaliada) {
+        await sincronizar(avaliada);
+      } else {
+        await comentar(
+          issue.number,
+          `Verificação de ${rnf.rnfs.join(", ")} registrada por @${autor}. O D4.5 é avaliado depois que a feature for integrada na \`main\` (D4.3) e o CI da \`main\` gerar o relatório dos testes.`,
+        );
+      }
+      return;
+    }
     const lido = L.lerComando(carga.comment.body);
     if (!lido || !ehFeature(issue)) return;
     const autor = carga.comment.user.login;
@@ -213,14 +300,20 @@ module.exports = async ({ github, context, core }) => {
     return;
   }
 
+  // CI da main concluído: reavalia os RNFs das features integradas.
+  if (evento === "workflow_run") {
+    if (carga.workflow_run.conclusion !== "success") return;
+    for (const issue of await featuresAbertas()) {
+      const avaliada = await verificarRnfs(issue);
+      if (avaliada) await sincronizar(avaliada);
+    }
+    return;
+  }
+
   // Execução diária ou manual: alinha todas as issues de feature abertas.
   if (evento === "schedule" || evento === "workflow_dispatch") {
-    const issues = await github.paginate(github.rest.issues.listForRepo, {
-      owner,
-      repo,
-      state: "open",
-      per_page: 100,
-    });
-    for (const issue of issues.filter(ehFeature)) await sincronizar(issue);
+    for (const issue of await featuresAbertas()) {
+      await sincronizar((await verificarRnfs(issue)) ?? issue);
+    }
   }
 };

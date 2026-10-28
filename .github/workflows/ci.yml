@@ -56,6 +56,8 @@ jobs:
       # Chave só de teste, sem dados reais (RNF51).
       CHAVE_DADOS: AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=
       NEXT_PUBLIC_API_URL: http://localhost:3333
+      # Os testes gravam o resultado de cada um em relatorio-testes/ (relatório de RNFs).
+      RELATORIO_TESTES: "1"
     steps:
       - uses: actions/checkout@v7
       - uses: pnpm/action-setup@v6
@@ -67,6 +69,12 @@ jobs:
       - run: pnpm turbo run build --filter=@clinica/database...
       - run: pnpm db:migrate
       - run: pnpm turbo run lint typecheck test build
+      - uses: actions/upload-artifact@v4
+        if: success() || failure()
+        with:
+          name: relatorio-testes-verificar
+          path: apps/*/relatorio-testes/*.json
+          if-no-files-found: ignore
 
   e2e:
     needs: [mudancas, verificar]
@@ -94,6 +102,7 @@ jobs:
       SMTP_PORT: 1025
       # Chave apenas para dados fictícios deste job; nunca usada em produção.
       CHAVE_DADOS: AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=
+      RELATORIO_TESTES: "1"
     steps:
       - uses: actions/checkout@v7
       - uses: pnpm/action-setup@v6
@@ -111,6 +120,37 @@ jobs:
         with:
           name: evidencias-e2e
           path: apps/web/test-results
+      - uses: actions/upload-artifact@v4
+        if: success() || failure()
+        with:
+          name: relatorio-testes-e2e
+          path: apps/web/relatorio-testes/e2e.json
+          if-no-files-found: ignore
+
+  # Junta os resultados dos testes no relatório dos RNFs verificados, que o Feature
+  # Status usa para avaliar o D4.5 das features (convenção em "Boas práticas de
+  # utilização do GitHub"). Só informa: não bloqueia a PR.
+  rnfs:
+    name: Relatório de RNFs
+    needs: [mudancas, verificar, e2e]
+    if: ${{ !cancelled() && needs.mudancas.outputs.codigo == 'true' }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          sparse-checkout: .github/scripts
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 24
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: relatorio-testes-*
+          path: relatorio-testes
+      - run: node .github/scripts/feature-status/coletar-rnfs.cjs relatorio-testes rnfs-verificados.json
+      - uses: actions/upload-artifact@v4
+        with:
+          name: rnfs-verificados
+          path: rnfs-verificados.json
 
   resultado:
     if: always()

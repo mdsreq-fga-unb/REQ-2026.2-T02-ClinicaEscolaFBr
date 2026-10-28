@@ -2,7 +2,7 @@ import AxeBuilder from "@axe-core/playwright";
 import { expect, test } from "@playwright/test";
 
 // Verificação automática de WCAG 2.2 AA (RNF56). Acrescente cada página nova à lista.
-for (const pagina of ["/inscricao", "/painel", "/entrar"]) {
+for (const pagina of ["/inscricao", "/painel", "/entrar", "/agendar-sessao"]) {
   test(`sem violações WCAG AA em ${pagina}`, async ({ page }) => {
     await page.goto(pagina);
     const resultado = await new AxeBuilder({ page })

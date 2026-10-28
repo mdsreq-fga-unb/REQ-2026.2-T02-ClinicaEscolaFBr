@@ -208,8 +208,49 @@ Comandos em comentário, aceitos só de integrantes da equipe:
 - `/de-acordo`: confirma a inspeção de design e marca o D1.8. A inspeção precisa estar registrada num comentário com o cabeçalho "## Inspeção de design (DoD 1)", e o `/de-acordo` precisa vir de alguém diferente de quem a registrou.
 - `/demonstrada <link da ata>`: marca o D5.1.
 - `/aceite <link da ata ou da mensagem da FBr>`: marca o D6.1.
+- `/rnf <RNF> <link da evidência>`: registra a verificação de um RNF que não é teste automático, para o D4.5 (veja a seção abaixo).
 
 Os demais critérios continuam sendo marcados por quem tem a evidência. A PR de feature (título `feat:`) precisa declarar a issue da feature; sem isso, o check "PR cita a issue da feature" falha. O workflow usa o segredo `PROJECT_TOKEN` do repositório; sem ele, apenas avisa e não altera nada.
+
+### Verificação dos RNFs (D4.5)
+
+O D4.5 pede que cada RNF que restringe a feature esteja verificado no patamar exigido: a meta completa ou, para os RNFs evolutivos, o [patamar mínimo de lançamento](../../unidade-2/requisitos/backlog.md#patamar-minimo-de-lancamento-dos-rnfs-evolutivos). O Feature Status monta essa verificação sozinho a partir dos testes que passam na `main` e dos registros feitos com `/rnf`.
+
+**1. Cite o RF e o RNF no nome do teste.** Um teste é evidência de um RNF quando o nome completo dele (o `describe` mais o `it` ou o `test`) cita o código do RNF e o código do RF da feature, entre parênteses:
+
+```ts
+describe('Restrição de acesso ao prontuário (RF55)', () => {
+  it('o registro de acessos não pode ser alterado nem apagado (RNF52)', ...);
+});
+```
+
+```ts
+test('inscrição sem violações WCAG 2.2 AA em 320px (RF1, RNF56, RNF58)', ...);
+```
+
+- Vale para os testes da API (Jest), do web (Vitest) e de ponta a ponta (Playwright).
+- O RF pode estar no `describe` e o RNF no teste, ou os dois no mesmo nome.
+- O RF é obrigatório para que o teste de uma feature não sirva de evidência para outra que tem o mesmo RNF.
+- Só cite um RNF quando o teste verifica de fato a meta dele (ou o patamar mínimo, se for evolutivo). Um teste que só passa pela funcionalidade não é evidência do RNF.
+
+**2. Registre com `/rnf` o que não é teste automático.** Inspeção, relatório, teste manual ou teste de restauração da cópia de segurança entram por um comentário na issue da feature, com o link da evidência:
+
+```text
+/rnf RNF53 https://link-do-relatorio-ou-da-ata
+```
+
+Um comentário pode registrar vários RNFs com a mesma evidência (`/rnf RNF56 RNF57 <link>`). O comando só vale de integrantes da equipe e precisa do link.
+
+**3. O que acontece sozinho:**
+
+| Quando | O que o workflow faz |
+| --- | --- |
+| Em toda PR de código | O job "Relatório de RNFs" do CI lista, no resumo da execução, os RNFs verificados pelos testes que passaram. |
+| O CI da `main` termina com sucesso | Em cada feature integrada (D4.3 marcado), o Feature Status cria ou atualiza o comentário "Verificação dos RNFs (D4.5)", com a situação e a evidência de cada RNF. |
+| Alguém comenta `/rnf` | A tabela da feature é atualizada na hora. Se a feature ainda não foi integrada, o registro fica guardado para a avaliação depois do D4.3. |
+| Todos os RNFs da feature têm evidência | O D4.5 é marcado. |
+
+Os RNFs de cada feature vêm da seção "RNFs que restringem a feature" da issue (ou de "Requisito(s) relacionado(s)", nas issues convertidas à mão). Um intervalo como "RNF56 a RNF58" vale por todos os códigos entre eles. Mantenha essa seção completa: um RNF que não está nela não é cobrado.
 
 ## Checklist rápido
 
