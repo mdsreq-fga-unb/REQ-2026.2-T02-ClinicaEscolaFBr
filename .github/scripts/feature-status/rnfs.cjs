@@ -100,6 +100,20 @@ function resumoMarkdown(verificados) {
   ].join("\n");
 }
 
+// Junta os relatórios de mais de um workflow (o CI e o do leitor de tela). Cada
+// teste guarda o link da execução de onde veio, para a evidência apontar para ela.
+function juntarRelatorios(fontes) {
+  const presentes = fontes.filter((f) => f.relatorio);
+  return {
+    arquivos: presentes.flatMap((f) => f.relatorio.arquivos ?? []),
+    testes: presentes.flatMap((f) =>
+      (f.relatorio.testes ?? []).map((t) =>
+        f.execucao ? { ...t, execucao: f.execucao } : t,
+      ),
+    ),
+  };
+}
+
 const SECAO = "#{2,3} ";
 
 // Texto das seções com esses títulos, juntas.
@@ -191,7 +205,12 @@ const limitar = (lista, n) =>
 function comentarioRnfs(linhas, execucao) {
   const tabela = linhas.map((l) => {
     const evidencias = [
-      ...l.testes.map((t) => `teste "${t.nome}" (${t.origem})`),
+      ...l.testes.map((t) =>
+        // O teste de outro workflow traz o link da própria execução.
+        t.execucao && t.execucao !== execucao
+          ? `teste "${t.nome}" ([${t.origem}](${t.execucao}))`
+          : `teste "${t.nome}" (${t.origem})`,
+      ),
       ...l.registros.map((r) => `[registro de @${r.autor}](${r.link})`),
     ];
     return `| ${l.rnf} | ${verificado(l) ? "✅ verificado" : "⏳ sem evidência"} | ${limitar(evidencias, 3).join("<br>") || "—"} |`;
@@ -222,6 +241,7 @@ module.exports = {
   lerRelatorio,
   resumirTestes,
   resumoMarkdown,
+  juntarRelatorios,
   rnfsDaFeature,
   rfsDaFeature,
   lerComandoRnf,

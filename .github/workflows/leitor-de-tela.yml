@@ -1,12 +1,21 @@
 name: Leitor de tela
 
 # Testes com o VoiceOver de verdade (RNF24), num runner macOS. Rodam toda semana e
-# quando as telas cobertas mudam. Não bloqueiam a PR: o resultado é a evidência do
-# D4.5, registrada na issue com /rnf.
+# quando as telas cobertas mudam. Não bloqueiam a PR. Na main, o relatório dos
+# testes (rnfs-leitor-de-tela) entra no D4.5 das features pelo Feature Status.
 on:
   schedule:
     - cron: "0 9 * * 1"
   workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - "apps/web/src/app/(interno)/distribuicao/**"
+      - "apps/web/src/app/(interno)/meus-casos/**"
+      - "apps/web/src/components/comum/**"
+      - "apps/web/e2e/leitor-de-tela/**"
+      - "apps/web/playwright.leitor-de-tela.config.ts"
+      - ".github/workflows/leitor-de-tela.yml"
   pull_request:
     branches: [main]
     paths:
@@ -28,6 +37,8 @@ jobs:
     timeout-minutes: 40
     env:
       NEXT_PUBLIC_API_URL: http://localhost:3333
+      # Os testes gravam o resultado em relatorio-testes/ (relatório de RNFs).
+      RELATORIO_TESTES: "1"
     steps:
       - uses: actions/checkout@v7
       - uses: pnpm/action-setup@v6
@@ -40,6 +51,8 @@ jobs:
       - uses: guidepup/setup-action@acf1a64cc26292ebe0db6a28d1341bd1bae93c65
         with:
           record: true
+      # Arquivos do VoiceOver da versão do Guidepup instalada no projeto.
+      - run: pnpm --filter @clinica/web exec guidepup install voiceover
       - run: pnpm --filter @clinica/web exec playwright install webkit
       - run: pnpm turbo run build --filter=@clinica/web...
       - run: pnpm --filter @clinica/web test:leitor-de-tela
@@ -50,4 +63,12 @@ jobs:
           path: |
             apps/web/test-results
             recordings
+          if-no-files-found: ignore
+      - run: node .github/scripts/feature-status/coletar-rnfs.cjs apps/web/relatorio-testes rnfs-verificados.json
+        if: (success() || failure()) && hashFiles('apps/web/relatorio-testes/*.json') != ''
+      - uses: actions/upload-artifact@v4
+        if: success() || failure()
+        with:
+          name: rnfs-leitor-de-tela
+          path: rnfs-verificados.json
           if-no-files-found: ignore

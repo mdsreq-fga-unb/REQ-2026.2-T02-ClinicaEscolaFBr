@@ -200,6 +200,60 @@ test("o comentário traz a tabela, a marca para ser editado e como completar", (
   assert.ok(texto.includes(R.MARCA_RNFS));
 });
 
+test("junta os relatórios do CI e do leitor de tela, com o link de cada execução", () => {
+  const ci = "https://github.com/x/actions/runs/1";
+  const leitor = "https://github.com/x/actions/runs/2";
+  const junto = R.juntarRelatorios([
+    {
+      execucao: ci,
+      relatorio: {
+        arquivos: ["api.json"],
+        testes: [
+          {
+            nome: "a (RF55, RNF52)",
+            origem: "api",
+            rnfs: ["RNF52"],
+            rfs: ["RF55"],
+          },
+        ],
+      },
+    },
+    {
+      execucao: leitor,
+      relatorio: {
+        arquivos: ["leitor-de-tela.json"],
+        testes: [
+          {
+            nome: "b (RF20, RNF24)",
+            origem: "leitor-de-tela",
+            rnfs: ["RNF24"],
+            rfs: ["RF20"],
+          },
+        ],
+      },
+    },
+    { execucao: null, relatorio: null },
+  ]);
+  assert.deepEqual(junto.arquivos, ["api.json", "leitor-de-tela.json"]);
+  assert.deepEqual(
+    junto.testes.map((t) => t.execucao),
+    [ci, leitor],
+  );
+
+  const texto = R.comentarioRnfs(
+    [
+      { rnf: "RNF52", testes: [junto.testes[0]], registros: [] },
+      { rnf: "RNF24", testes: [junto.testes[1]], registros: [] },
+    ],
+    ci,
+  );
+  // O teste do CI fica como antes; o do leitor de tela leva o link da execução dele.
+  assert.match(texto, /teste "a \(RF55, RNF52\)" \(api\) \|/);
+  assert.ok(
+    texto.includes(`teste "b (RF20, RNF24)" ([leitor-de-tela](${leitor}))`),
+  );
+});
+
 test("intervalos de RNFs valem por todos os códigos entre eles", () => {
   assert.deepEqual(R.codigosRnf("transversal CP14 — RNF56 a RNF58"), [
     "RNF56",

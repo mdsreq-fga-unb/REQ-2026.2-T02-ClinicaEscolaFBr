@@ -12,6 +12,14 @@ export default withGuidepup({
   timeout: 5 * 60_000,
   retries: 2,
   reportSlowTests: null,
+  // No CI (RELATORIO_TESTES=1), grava o resultado de cada teste para o relatório
+  // de RNFs (D4.5), como o e2e comum.
+  reporter: process.env.RELATORIO_TESTES
+    ? [
+        ["list"],
+        ["json", { outputFile: "relatorio-testes/leitor-de-tela.json" }],
+      ]
+    : undefined,
   use: {
     baseURL: webURL,
     trace: "retain-on-failure",

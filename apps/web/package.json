@@ -33,6 +33,7 @@
     "@clinica/database": "workspace:*",
     "@guidepup/guidepup": "0.36.2",
     "@guidepup/playwright": "0.20.0",
+    "@guidepup/setup": "0.29.3",
     "@playwright/test": "^1.64.1",
     "@tailwindcss/turbopack": "^4",
     "@testing-library/jest-dom": "^7.0.1",
