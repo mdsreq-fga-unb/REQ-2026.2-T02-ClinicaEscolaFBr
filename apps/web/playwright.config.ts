@@ -7,6 +7,8 @@ const apiURL = `http://localhost:${apiPort}`;
 
 export default defineConfig({
   testDir: "./e2e",
+  // Os testes com leitor de tela têm configuração e workflow próprios.
+  testIgnore: "leitor-de-tela/**",
   // Contas da equipe usadas pelo fluxo integrado (e2e/ciclo-3.spec.ts).
   globalSetup: "./e2e/semente.ts",
   timeout: 90_000,

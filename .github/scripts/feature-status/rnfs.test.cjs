@@ -200,6 +200,60 @@ test("o comentário traz a tabela, a marca para ser editado e como completar", (
   assert.ok(texto.includes(R.MARCA_RNFS));
 });
 
+test("junta os relatórios do CI e do leitor de tela, com o link de cada execução", () => {
+  const ci = "https://github.com/x/actions/runs/1";
+  const leitor = "https://github.com/x/actions/runs/2";
+  const junto = R.juntarRelatorios([
+    {
+      execucao: ci,
+      relatorio: {
+        arquivos: ["api.json"],
+        testes: [
+          {
+            nome: "a (RF55, RNF52)",
+            origem: "api",
+            rnfs: ["RNF52"],
+            rfs: ["RF55"],
+          },
+        ],
+      },
+    },
+    {
+      execucao: leitor,
+      relatorio: {
+        arquivos: ["leitor-de-tela.json"],
+        testes: [
+          {
+            nome: "b (RF20, RNF24)",
+            origem: "leitor-de-tela",
+            rnfs: ["RNF24"],
+            rfs: ["RF20"],
+          },
+        ],
+      },
+    },
+    { execucao: null, relatorio: null },
+  ]);
+  assert.deepEqual(junto.arquivos, ["api.json", "leitor-de-tela.json"]);
+  assert.deepEqual(
+    junto.testes.map((t) => t.execucao),
+    [ci, leitor],
+  );
+
+  const texto = R.comentarioRnfs(
+    [
+      { rnf: "RNF52", testes: [junto.testes[0]], registros: [] },
+      { rnf: "RNF24", testes: [junto.testes[1]], registros: [] },
+    ],
+    ci,
+  );
+  // O teste do CI fica como antes; o do leitor de tela leva o link da execução dele.
+  assert.match(texto, /teste "a \(RF55, RNF52\)" \(api\) \|/);
+  assert.ok(
+    texto.includes(`teste "b (RF20, RNF24)" ([leitor-de-tela](${leitor}))`),
+  );
+});
+
 test("o RNF24 só fica verificado com o teste do e2e e o do leitor de tela", () => {
   const e2e = { nome: "teclado (RF20, RNF24)", origem: "e2e" };
   const leitor = { nome: "VoiceOver (RF20, RNF24)", origem: "leitor-de-tela" };
