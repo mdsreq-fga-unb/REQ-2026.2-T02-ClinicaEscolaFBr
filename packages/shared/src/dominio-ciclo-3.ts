@@ -51,6 +51,13 @@ export const STATUS_SESSAO = ["agendada", "realizada"] as const;
 export const statusSessaoSchema = z.enum(STATUS_SESSAO);
 export type StatusSessao = z.infer<typeof statusSessaoSchema>;
 
+// Status que ocupam o horário na agenda (RNF9): a sessão realizada continua ocupando,
+// para não se marcar outra por cima do intervalo de anotações.
+export const STATUS_QUE_OCUPAM_AGENDA: StatusSessao[] = [
+  "agendada",
+  "realizada",
+];
+
 // Parâmetros alterados pela coordenação, com o valor padrão confirmado com a FBr.
 export const PARAMETROS_PADRAO = {
   duracao_sessao_minutos: 50, // RF10, DF18

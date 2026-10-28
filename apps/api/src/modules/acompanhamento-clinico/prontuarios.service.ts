@@ -158,6 +158,9 @@ export class ProntuariosService {
     };
   }
 
+  // Provisório: nenhum RF define ainda quem marca a sessão como realizada. Até o
+  // registro de presença do Ciclo 4 (RF14 e RF34), o estagiário responsável marca,
+  // depois do término, para poder registrar a evolução (RF28).
   async marcarSessaoRealizada(
     id: string,
     sessaoId: string,
@@ -281,7 +284,7 @@ export class ProntuariosService {
     dados: DadosIniciais,
     usuario: UsuarioAutenticado,
   ) {
-    const prontuario = await this.politica.exigirAcesso(
+    await this.politica.exigirAcesso(
       usuario,
       id,
       'registrar_dados_iniciais',

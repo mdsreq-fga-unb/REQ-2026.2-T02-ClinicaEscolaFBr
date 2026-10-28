@@ -4,6 +4,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
 import { Aviso } from "@/components/comum/aviso";
 import { api } from "@/lib/api";
+import { useSessao } from "@/lib/sessao";
 
 type InscricaoPendente = {
   id: string;
@@ -36,18 +37,24 @@ const REFERENCIA: Record<(typeof CORES)[number], string> = {
   verde: "Sem indício de adoecimento; busca por desenvolvimento pessoal.",
 };
 
+// Triagem (RF4) e prioridade clínica (RF6), só para supervisores e a coordenação.
 export default function TriagemPage() {
+  const { data: sessao } = useSessao();
+  const autorizado =
+    sessao?.perfil === "supervisor" || sessao?.perfil === "coordenacao";
   const cache = useQueryClient();
   const [ordem, setOrdem] = useState<"antigas" | "recentes">("antigas");
   const pendentes = useQuery({
     queryKey: ["triagem", "pendentes", ordem],
     queryFn: () =>
       api<InscricaoPendente[]>(`/triagem/inscricoes?ordem=${ordem}`),
+    enabled: autorizado,
   });
   const classificadas = useQuery({
     queryKey: ["triagem", "classificadas"],
     queryFn: () =>
       api<InscricaoClassificada[]>("/triagem/inscricoes/classificadas"),
+    enabled: autorizado,
   });
   const decisao = useMutation({
     mutationFn: ({ id, cor }: { id: string; cor: string }) =>
@@ -63,8 +70,17 @@ export default function TriagemPage() {
     },
   });
 
+  if (sessao && !autorizado) {
+    return (
+      <Aviso
+        tipo="erro"
+        titulo="Acesso restrito aos supervisores e à coordenação."
+      />
+    );
+  }
+
   return (
-    <main className="mx-auto max-w-5xl space-y-8">
+    <div className="mx-auto max-w-5xl space-y-8">
       <header className="space-y-2">
         <h1 className="text-2xl font-semibold text-marca">Triagem clínica</h1>
         <p className="text-sm text-muted-foreground">
@@ -91,7 +107,9 @@ export default function TriagemPage() {
             </select>
           </label>
         </div>
-        {pendentes.isPending && <p role="status">Carregando inscrições…</p>}
+        {pendentes.isPending && autorizado && (
+          <p role="status">Carregando inscrições…</p>
+        )}
         {pendentes.isError && (
           <Aviso
             tipo="erro"
@@ -241,6 +259,6 @@ export default function TriagemPage() {
       {decisao.isSuccess && (
         <Aviso tipo="sucesso" titulo="Decisão de prioridade registrada." />
       )}
-    </main>
+    </div>
   );
 }
