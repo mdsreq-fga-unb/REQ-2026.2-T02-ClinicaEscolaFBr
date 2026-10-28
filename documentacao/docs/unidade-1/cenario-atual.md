@@ -76,18 +76,8 @@ Somam-se a esse gargalo outros efeitos do processo manual:
 A oportunidade, portanto, é digitalizar as etapas do processo que hoje dependem inteiramente de deslocamento presencial e de controles manuais — inscrição, triagem, agendamento, confirmação de presença, registro clínico e emissão de documentos.
 
 > **Nota sobre a base regulatória:** uma versão anterior deste documento afirmava que "o Conselho Regional de Psicologia veda o atendimento psicológico on-line para a clínica-escola", com base na Resolução CFP nº 11/2018. Essa resolução foi **revogada** pela [Resolução CFP nº 9/2024](https://leis.org/cfp/lei/resolucao-do-exercicio-profissional/2024/9/resolucao-do-exercicio-profissional-n-9-2024-regulamenta-o-exercicio-profissional-da-psicologia-mediado-por-tecnologias-digitais-da-informacao-e-da-comunicacao-tdics-em-territorio-nacional-e-revoga-as-resolucao-cfp-n-11-de-11-de-maio-de-2018-e-resolucao-cfp-n-04-de-26-de-marco-de), que passou a regulamentar o exercício profissional da psicologia mediado por tecnologias digitais (TDICs) em território nacional, sem uma vedação geral ao atendimento on-line.
->
-> Isso **não significa** que a Clínica Escola deva oferecer atendimento on-line: a instituição pode ter restrições pedagógicas, operacionais, contratuais ou regulatórias próprias que limitem essa modalidade no contexto de estágio supervisionado.
->
-> **Decisão já tomada:** a Clínica Escola confirmou, na reunião de 26/08/2026, que o atendimento psicológico do estágio é exclusivamente presencial ([DF01](../unidade-2/requisitos/decisoes-fbr.md)). Os requisitos da CP4 seguem essa decisão, e o projeto não prevê atendimento on-line.
->
-> **Referência normativa ainda pendente:** falta a FBr indicar a norma que fundamenta essa restrição, registrada nas [pendências de validação com a FBr](../unidade-2/requisitos/analise-feedback.md#pendencias-de-validacao-com-a-fbr):
->
-> - qual é a norma atual aplicável ao atendimento psicológico da Clínica Escola;
-> - qual a orientação específica do CRP-DF sobre o tema;
-> - o que diz o regulamento de estágio da FBr a respeito da modalidade de atendimento.
->
-> A falta dessa referência não muda o escopo: a decisão operacional da FBr já vale, e a norma, quando indicada, entra como fundamento da restrição.
+> 
+> Contudo, a escolha de realizar os atendimentos **exclusivamente na modalidade presencial** decorre de uma decisão de negócio e operacional própria da Faculdade Brasília ([DF01](../../unidade-2/requisitos/decisoes-fbr.md)), visando à infraestrutura de supervisão local, e não de uma restrição em aberto na regulamentação do CFP.
 
 ![Diagrama de Ishikawa das causas do problema da Clínica Escola](../assets/ishikawa-diagram.png)
 > **Figura 2 - Diagrama de Ishikawa das causas do problema da Clínica Escola** (organizado pelos 6M's).
