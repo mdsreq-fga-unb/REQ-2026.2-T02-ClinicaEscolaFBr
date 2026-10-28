@@ -1,5 +1,6 @@
+"use client";
 import { AlertCircle, CheckCircle2, Info, TriangleAlert } from "lucide-react";
-import type { ReactNode } from "react";
+import { useEffect, useRef, type ReactNode } from "react";
 import { cn } from "@/lib/utils";
 
 const estilos = {
@@ -26,20 +27,33 @@ const estilos = {
 } as const;
 
 // Mensagem de estado com ícone e texto, sem depender só da cor (RNF1 e RNF56).
+// Com `focar`, o aviso recebe o foco ao aparecer: o leitor de tela lê o resultado
+// de uma ação feita num diálogo, que de outro modo passa em silêncio (RNF24).
 export function Aviso({
   tipo,
   titulo,
   children,
   className,
+  focar = false,
 }: {
   tipo: keyof typeof estilos;
   titulo: string;
   children?: ReactNode;
   className?: string;
+  focar?: boolean;
 }) {
   const { classe, Icone, cor } = estilos[tipo];
+  const ref = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    if (!focar) return;
+    // Depois do diálogo fechar, que devolve o foco a quem o abriu.
+    const espera = setTimeout(() => ref.current?.focus());
+    return () => clearTimeout(espera);
+  }, [focar]);
   return (
     <div
+      ref={ref}
+      tabIndex={focar ? -1 : undefined}
       role={tipo === "erro" ? "alert" : "status"}
       className={cn(
         "flex gap-3 rounded-lg border p-4 text-sm",

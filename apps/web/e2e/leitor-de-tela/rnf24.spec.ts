@@ -131,6 +131,23 @@ async function falou(voiceOver: VoiceOverPlaywright, texto: string) {
     .toContain(texto);
 }
 
+// Depois de confirmar, o aviso de sucesso recebe o foco. Pede ao VoiceOver que
+// descreva o item com o foco do teclado, para conferir o que ele lê ali, mesmo
+// que a fala espontânea da troca de foco não tenha sido captada.
+async function ouvirAviso(
+  page: Page,
+  voiceOver: VoiceOverPlaywright,
+  texto: string,
+) {
+  await expect(
+    page.getByRole("status").filter({ hasText: texto }),
+  ).toBeFocused();
+  await voiceOver.perform(
+    voiceOver.keyboardCommands.describeItemWithKeyboardFocus,
+  );
+  await falou(voiceOver, texto);
+}
+
 async function anexarFala(voiceOver: VoiceOverPlaywright, nome: string) {
   await test.info().attach(nome, {
     body: JSON.stringify(await voiceOver.spokenPhraseLog(), null, 2),
@@ -163,7 +180,7 @@ test.describe("Leitor de tela na distribuição e no vínculo (RNF24)", () => {
 
       await irAte(voiceOver, "Confirmar distribuição");
       await voiceOver.act();
-      await falou(voiceOver, "Caso distribuído");
+      await ouvirAviso(page, voiceOver, "Caso distribuído");
       await falou(voiceOver, `agora está com ${SUPERVISOR}`);
     } finally {
       await anexarFala(voiceOver, "fala-distribuicao.json");
@@ -194,7 +211,7 @@ test.describe("Leitor de tela na distribuição e no vínculo (RNF24)", () => {
 
       await irAte(voiceOver, "Confirmar vínculo");
       await voiceOver.act();
-      await falou(voiceOver, "O prontuário do caso foi criado");
+      await ouvirAviso(page, voiceOver, "O prontuário do caso foi criado");
     } finally {
       await anexarFala(voiceOver, "fala-vinculo.json");
     }
