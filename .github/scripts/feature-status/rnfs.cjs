@@ -190,8 +190,33 @@ function avaliarRnfs({ rnfs, rfs, testes, registros }) {
   }));
 }
 
+// RNFs cuja meta pede mais de um tipo de verificação: só contam como verificados
+// com testes de todas estas origens (o nome do relatório: "e2e" é o Playwright do
+// CI, "leitor-de-tela" é o workflow do VoiceOver). O RNF24 pede navegação por
+// teclado e contraste (e2e) e o leitor de tela de verdade.
+const ORIGENS_EXIGIDAS = {
+  RNF24: ["e2e", "leitor-de-tela"],
+};
+
+// Origens exigidas que ainda não têm teste passando para o RNF.
+const origensFaltando = (linha) =>
+  (ORIGENS_EXIGIDAS[linha.rnf] ?? []).filter(
+    (origem) => !linha.testes.some((t) => t.origem === origem),
+  );
+
+// Um registro com /rnf conta sozinho: é a verificação feita e assumida por um
+// integrante, com o link da evidência.
 const verificado = (linha) =>
-  linha.testes.length > 0 || linha.registros.length > 0;
+  linha.registros.length > 0 ||
+  (linha.testes.length > 0 && origensFaltando(linha).length === 0);
+
+function situacao(linha) {
+  if (verificado(linha)) return "✅ verificado";
+  if (linha.testes.length > 0) {
+    return `⏳ falta o teste de: ${origensFaltando(linha).join(", ")}`;
+  }
+  return "⏳ sem evidência";
+}
 const todosVerificados = (linhas) =>
   linhas.length > 0 && linhas.every(verificado);
 
@@ -213,7 +238,7 @@ function comentarioRnfs(linhas, execucao) {
       ),
       ...l.registros.map((r) => `[registro de @${r.autor}](${r.link})`),
     ];
-    return `| ${l.rnf} | ${verificado(l) ? "✅ verificado" : "⏳ sem evidência"} | ${limitar(evidencias, 3).join("<br>") || "—"} |`;
+    return `| ${l.rnf} | ${situacao(l)} | ${limitar(evidencias, 3).join("<br>") || "—"} |`;
   });
   const completo = todosVerificados(linhas);
   return [
@@ -236,6 +261,7 @@ function comentarioRnfs(linhas, execucao) {
 
 module.exports = {
   MARCA_RNFS,
+  ORIGENS_EXIGIDAS,
   codigosRnf,
   codigosRf,
   lerRelatorio,
