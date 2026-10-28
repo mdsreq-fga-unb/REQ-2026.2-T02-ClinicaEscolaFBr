@@ -17,7 +17,7 @@ on:
   # CI ou testes com leitor de tela concluídos na main: o relatório dos testes
   # reavalia o D4.5 das features.
   workflow_run:
-    workflows: [CI, Leitor de tela]
+    workflows: [CI, Leitor de tela, Carga]
     types: [completed]
     branches: [main]
   schedule:
@@ -55,18 +55,20 @@ jobs:
           EXECUCAO: ${{ github.event.workflow_run.id }}
           WORKFLOW: ${{ github.event.workflow_run.name }}
         run: |
-          # Um relatório do CI e um dos testes com leitor de tela. Do workflow que
+          # Os relatórios do CI, dos testes com leitor de tela e da carga. Do workflow que
           # acabou de concluir, o daquela execução; do outro, o mais recente da main.
           # Sem nenhum relatório (PR só de documentação), segue sem ele.
           ultimo() {
             gh api "repos/$GITHUB_REPOSITORY/actions/artifacts?name=$1&per_page=30" \
               --jq '[.artifacts[] | select(.workflow_run.head_branch == "main" and (.expired | not))][0].workflow_run.id // empty'
           }
-          CI=""; LEITOR=""
+          CI=""; LEITOR=""; CARGA=""
           if [ "$WORKFLOW" = "CI" ]; then CI="$EXECUCAO"; fi
           if [ "$WORKFLOW" = "Leitor de tela" ]; then LEITOR="$EXECUCAO"; fi
           [ -n "$CI" ] || CI=$(ultimo rnfs-verificados)
           [ -n "$LEITOR" ] || LEITOR=$(ultimo rnfs-leitor-de-tela)
+          # Da carga, só existe relatório das execuções contra a homologação.
+          CARGA=$(ultimo rnfs-carga)
           RUNS="$GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs"
           FONTES=()
           if [ -n "$CI" ] && gh run download "$CI" -R "$GITHUB_REPOSITORY" -n rnfs-verificados -D "$RUNNER_TEMP/ci"; then
@@ -75,6 +77,9 @@ jobs:
           fi
           if [ -n "$LEITOR" ] && gh run download "$LEITOR" -R "$GITHUB_REPOSITORY" -n rnfs-leitor-de-tela -D "$RUNNER_TEMP/leitor"; then
             FONTES+=("$RUNNER_TEMP/leitor/rnfs-verificados.json" "$RUNS/$LEITOR")
+          fi
+          if [ -n "$CARGA" ] && gh run download "$CARGA" -R "$GITHUB_REPOSITORY" -n rnfs-carga -D "$RUNNER_TEMP/carga"; then
+            FONTES+=("$RUNNER_TEMP/carga/rnfs-verificados.json" "$RUNS/$CARGA")
           fi
           if [ ${#FONTES[@]} -gt 0 ]; then
             node .github/scripts/feature-status/juntar-rnfs.cjs "$RUNNER_TEMP/rnfs-verificados.json" "${FONTES[@]}"
