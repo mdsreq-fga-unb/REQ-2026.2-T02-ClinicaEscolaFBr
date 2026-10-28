@@ -6,9 +6,11 @@ const envSchema = z.object({
   WEB_URL: z.url(),
   SMTP_HOST: z.string(),
   SMTP_PORT: z.coerce.number(),
-  // Chave da criptografia em repouso dos dados de saúde (RNF51): 32 bytes em base64.
   // Inscrições públicas novas por origem a cada 10 minutos (RF1).
   LIMITE_INSCRICOES_POR_ORIGEM: z.coerce.number().int().positive().default(20),
+  // Proxies à frente da API na implantação, para o req.ip ser o do visitante.
+  SALTOS_DE_PROXY: z.coerce.number().int().nonnegative().default(0),
+  // Chave da criptografia em repouso dos dados de saúde (RNF51): 32 bytes em base64.
   CHAVE_DADOS: z
     .base64()
     .refine((v) => Buffer.from(v, 'base64').length === 32, {

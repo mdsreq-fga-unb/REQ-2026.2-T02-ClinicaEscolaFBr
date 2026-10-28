@@ -18,6 +18,9 @@ const MAX_ORIGENS = 10_000;
 // Limita os envios da inscrição pública (RF1) por endereço de origem, para que
 // ninguém encha a fila com inscrições falsas. Conta só chaves de envio novas: o
 // reenvio da mesma inscrição, depois de perder a resposta, não gasta o limite.
+// A contagem fica na memória: zera quando a API reinicia e não é dividida entre
+// instâncias, o que basta enquanto a API roda numa instância só. Atrás de proxy,
+// configure SALTOS_DE_PROXY para a origem ser o visitante, e não o proxy.
 @Injectable()
 export class LimiteDeEnviosGuard implements CanActivate {
   private readonly envios = new Map<string, Map<string, number>>();

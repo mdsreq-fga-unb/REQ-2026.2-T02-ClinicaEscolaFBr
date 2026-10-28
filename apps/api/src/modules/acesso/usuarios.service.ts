@@ -18,7 +18,6 @@ import {
   ilike,
   inArray,
   isNull,
-  ne,
   or,
 } from 'drizzle-orm';
 import {
@@ -242,24 +241,27 @@ export class UsuariosService {
     if (usuario.situacao === 'desativado') {
       throw new ConflictException('Este usuário já está desativado.');
     }
-    if (usuario.perfil === 'coordenacao' && usuario.situacao === 'ativo') {
-      const outras = await this.db
-        .select({ id: usuarios.id })
-        .from(usuarios)
-        .where(
-          and(
-            eq(usuarios.perfil, 'coordenacao'),
-            eq(usuarios.situacao, 'ativo'),
-            ne(usuarios.id, id),
-          ),
-        );
-      if (outras.length === 0) {
-        throw new ConflictException(
-          'Esta é a única conta ativa da coordenação. Ative outra conta da coordenação antes de desativar esta.',
-        );
-      }
-    }
     await this.db.transaction(async (tx) => {
+      if (usuario.perfil === 'coordenacao' && usuario.situacao === 'ativo') {
+        // Trava as contas ativas da coordenação: duas desativações ao mesmo
+        // tempo não podem deixar a coordenação sem nenhuma conta ativa.
+        const ativas = await tx
+          .select({ id: usuarios.id })
+          .from(usuarios)
+          .where(
+            and(
+              eq(usuarios.perfil, 'coordenacao'),
+              eq(usuarios.situacao, 'ativo'),
+            ),
+          )
+          .orderBy(usuarios.id)
+          .for('update');
+        if (!ativas.some((conta) => conta.id !== id)) {
+          throw new ConflictException(
+            'Esta é a única conta ativa da coordenação. Ative outra conta da coordenação antes de desativar esta.',
+          );
+        }
+      }
       await tx
         .update(usuarios)
         .set({ situacao: 'desativado' })

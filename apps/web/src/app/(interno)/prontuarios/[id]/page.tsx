@@ -3,7 +3,7 @@ import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { Eye, Lock } from "lucide-react";
 import Link from "next/link";
 import { useParams } from "next/navigation";
-import { useState, type FormEvent } from "react";
+import { useEffect, useState, type FormEvent } from "react";
 import {
   dadosIniciaisSchema,
   evolucaoSchema,
@@ -325,8 +325,13 @@ function AcessoNegado({ voltar }: { voltar: string }) {
 export default function ProntuarioPage() {
   const { id } = useParams<{ id: string }>();
   const { data: sessao } = useSessao();
-  // Horário de referência para saber se a sessão já terminou.
-  const [agora] = useState(() => Date.now());
+  // Horário de referência para saber se a sessão já terminou, atualizado a cada
+  // minuto para o botão aparecer sem recarregar a página.
+  const [agora, setAgora] = useState(() => Date.now());
+  useEffect(() => {
+    const relogio = setInterval(() => setAgora(Date.now()), 60_000);
+    return () => clearInterval(relogio);
+  }, []);
   const consulta = useQuery({
     queryKey: ["prontuario", id],
     queryFn: () => api<Prontuario>(`/prontuarios/${id}`),

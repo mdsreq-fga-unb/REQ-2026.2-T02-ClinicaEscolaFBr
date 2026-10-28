@@ -1,11 +1,15 @@
 import { NestFactory } from '@nestjs/core';
+import type { NestExpressApplication } from '@nestjs/platform-express';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import cookieParser from 'cookie-parser';
 import helmet from 'helmet';
 import { AppModule } from './app.module';
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
+  const app = await NestFactory.create<NestExpressApplication>(AppModule);
+  // Atrás de proxy, o req.ip só é o do visitante se a API confiar nos saltos
+  // até ele; sem isso, o limite da inscrição valeria para todos juntos.
+  app.set('trust proxy', Number(process.env.SALTOS_DE_PROXY ?? 0));
   app.use(helmet());
   app.use(cookieParser());
   app.enableCors({ origin: process.env.WEB_URL, credentials: true });

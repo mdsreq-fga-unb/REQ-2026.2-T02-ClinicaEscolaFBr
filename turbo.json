@@ -8,7 +8,8 @@
     "SMTP_HOST",
     "SMTP_PORT",
     "CHAVE_DADOS",
-    "LIMITE_INSCRICOES_POR_ORIGEM"
+    "LIMITE_INSCRICOES_POR_ORIGEM",
+    "SALTOS_DE_PROXY"
   ],
   "tasks": {
     "build": {
