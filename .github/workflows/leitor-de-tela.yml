@@ -1,0 +1,53 @@
+name: Leitor de tela
+
+# Testes com o VoiceOver de verdade (RNF24), num runner macOS. Rodam toda semana e
+# quando as telas cobertas mudam. Não bloqueiam a PR: o resultado é a evidência do
+# D4.5, registrada na issue com /rnf.
+on:
+  schedule:
+    - cron: "0 9 * * 1"
+  workflow_dispatch:
+  pull_request:
+    branches: [main]
+    paths:
+      - "apps/web/src/app/(interno)/distribuicao/**"
+      - "apps/web/src/app/(interno)/meus-casos/**"
+      - "apps/web/src/components/comum/**"
+      - "apps/web/e2e/leitor-de-tela/**"
+      - "apps/web/playwright.leitor-de-tela.config.ts"
+      - ".github/workflows/leitor-de-tela.yml"
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  voiceover:
+    name: VoiceOver (RNF24)
+    runs-on: macos-latest
+    timeout-minutes: 40
+    env:
+      NEXT_PUBLIC_API_URL: http://localhost:3333
+    steps:
+      - uses: actions/checkout@v7
+      - uses: pnpm/action-setup@v6
+      - uses: actions/setup-node@v7
+        with:
+          node-version-file: .nvmrc
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      # guidepup/setup-action 0.21.0: libera o VoiceOver para ser controlado.
+      - uses: guidepup/setup-action@acf1a64cc26292ebe0db6a28d1341bd1bae93c65
+        with:
+          record: true
+      - run: pnpm --filter @clinica/web exec playwright install webkit
+      - run: pnpm turbo run build --filter=@clinica/web...
+      - run: pnpm --filter @clinica/web test:leitor-de-tela
+      - uses: actions/upload-artifact@v4
+        if: success() || failure()
+        with:
+          name: evidencias-leitor-de-tela
+          path: |
+            apps/web/test-results
+            recordings
+          if-no-files-found: ignore

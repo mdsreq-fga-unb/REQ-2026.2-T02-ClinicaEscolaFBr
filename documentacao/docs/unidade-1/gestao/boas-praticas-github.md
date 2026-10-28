@@ -241,6 +241,8 @@ test('inscrição sem violações WCAG 2.2 AA em 320px (RF1, RNF56, RNF58)', ...
 
 Um comentário pode registrar vários RNFs com a mesma evidência (`/rnf RNF56 RNF57 <link>`). O comando só vale de integrantes da equipe e precisa do link.
 
+**Testes com leitor de tela.** Os testes que usam o VoiceOver de verdade ficam em `apps/web/e2e/leitor-de-tela/` e rodam no workflow "Leitor de tela", num runner macOS, toda semana e quando as telas cobertas mudam. Eles seguem a mesma regra de nome, mas não entram no relatório automático, que lê só o CI. Com o workflow passando, registre a execução com `/rnf RNF24 <link da execução>` nas issues das features cobertas. Para rodar no seu computador, use `pnpm --filter @clinica/web test:leitor-de-tela`, que assume o controle do VoiceOver e do teclado enquanto roda.
+
 **3. O que acontece sozinho:**
 
 | Quando | O que o workflow faz |
