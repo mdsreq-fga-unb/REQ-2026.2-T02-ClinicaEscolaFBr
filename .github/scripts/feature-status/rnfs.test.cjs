@@ -200,6 +200,34 @@ test("o comentário traz a tabela, a marca para ser editado e como completar", (
   assert.ok(texto.includes(R.MARCA_RNFS));
 });
 
+test("o RNF24 só fica verificado com o teste do e2e e o do leitor de tela", () => {
+  const e2e = { nome: "teclado (RF20, RNF24)", origem: "e2e" };
+  const leitor = { nome: "VoiceOver (RF20, RNF24)", origem: "leitor-de-tela" };
+  const linha = (testes, registros = []) => ({
+    rnf: "RNF24",
+    testes,
+    registros,
+  });
+
+  assert.equal(R.todosVerificados([linha([e2e])]), false);
+  assert.equal(R.todosVerificados([linha([leitor])]), false);
+  assert.equal(R.todosVerificados([linha([e2e, leitor])]), true);
+  // O registro com /rnf é a verificação assumida por um integrante.
+  assert.equal(
+    R.todosVerificados([
+      linha([], [{ rnf: "RNF24", link: "https://x", autor: "a" }]),
+    ]),
+    true,
+  );
+
+  const texto = R.comentarioRnfs(
+    [linha([e2e])],
+    "https://github.com/x/actions/runs/1",
+  );
+  assert.match(texto, /\| RNF24 \| ⏳ falta o teste de: leitor-de-tela \|/);
+  assert.match(texto, /Falta evidência/);
+});
+
 test("intervalos de RNFs valem por todos os códigos entre eles", () => {
   assert.deepEqual(R.codigosRnf("transversal CP14 — RNF56 a RNF58"), [
     "RNF56",
