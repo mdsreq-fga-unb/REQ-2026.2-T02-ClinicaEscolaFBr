@@ -23,10 +23,16 @@ export default defineConfig({
   },
   webServer: [
     {
-      command: "pnpm --filter @clinica/api start:prod",
-      cwd: "../..",
+      // Roda de apps/api, onde a API acha o .env da raiz (../../.env).
+      command: "pnpm start:prod",
+      cwd: "../api",
       url: `${apiURL}/health`,
-      env: { API_PORT: apiPort, WEB_URL: webURL },
+      // Os testes mandam muitas inscrições da mesma origem (localhost).
+      env: {
+        API_PORT: apiPort,
+        WEB_URL: webURL,
+        LIMITE_INSCRICOES_POR_ORIGEM: "1000",
+      },
       reuseExistingServer: false,
       timeout: 60_000,
     },
