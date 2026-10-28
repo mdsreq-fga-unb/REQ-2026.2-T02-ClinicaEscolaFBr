@@ -9,6 +9,7 @@ export default defineConfig({
   test: {
     environment: "jsdom",
     include: ["src/**/*.test.{ts,tsx}"],
+    setupFiles: ["src/test/setup.ts"],
     // No CI (RELATORIO_TESTES=1), grava também o resultado de cada teste para o
     // relatório de RNFs (D4.5).
     reporters: process.env.RELATORIO_TESTES ? ["default", "json"] : ["default"],
