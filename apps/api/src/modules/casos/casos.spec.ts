@@ -518,6 +518,48 @@ describe('Distribuição de casos (RF18, RF20 e RF21)', () => {
         .expect(200);
     });
 
+    it('a resposta negada é a mesma com o prontuário vazio e com os dados iniciais preenchidos, sem indicar o que existe nele (RF66, RNF25)', async () => {
+      const vazio = (await vincular(await casoDaCarla('Paciente Vazio'), 'ana'))
+        .body.prontuarioId as string;
+      const preenchido = (
+        await vincular(await casoDaCarla('Paciente Preenchido'), 'ana')
+      ).body.prontuarioId as string;
+      // Só um dos dois recebe a anamnese e o contrato (RF69).
+      await http()
+        .post(`/prontuarios/${preenchido}/dados-iniciais`)
+        .set(como('ana'))
+        .send({
+          anamnese: 'Anamnese sigilosa',
+          contrato: 'Contrato sigiloso',
+          dataAssinaturaContrato: '2026-10-01',
+        })
+        .expect(201);
+      await http()
+        .get(`/prontuarios/${preenchido}`)
+        .set(como('ana'))
+        .expect(200)
+        .expect((res) => {
+          expect(JSON.stringify(res.body)).toContain('Anamnese sigilosa');
+        });
+
+      for (const quem of ['secretaria', 'joao', 'ricardo']) {
+        const [semDados, comDados] = await Promise.all(
+          [vazio, preenchido].map((id) =>
+            http().get(`/prontuarios/${id}`).set(como(quem)),
+          ),
+        );
+        expect(semDados.status).toBe(403);
+        expect(comDados.status).toBe(semDados.status);
+        expect(comDados.body).toEqual(semDados.body);
+        expect(comDados.headers['content-length']).toBe(
+          semDados.headers['content-length'],
+        );
+        expect(JSON.stringify(comDados.body)).not.toMatch(
+          /sigilos|Preenchido|anamnese/i,
+        );
+      }
+    });
+
     it('os acessos ao prontuário criado no vínculo, permitidos e negados, ficam registrados (RF66, RNF52)', async () => {
       const caso = await casoDaCarla();
       const { body } = await vincular(caso, 'ana').expect(201);
