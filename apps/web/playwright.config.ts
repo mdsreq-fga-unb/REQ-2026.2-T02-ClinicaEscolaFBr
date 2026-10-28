@@ -7,6 +7,8 @@ const apiURL = `http://localhost:${apiPort}`;
 
 export default defineConfig({
   testDir: "./e2e",
+  // Contas da equipe usadas pelo fluxo integrado (e2e/ciclo-3.spec.ts).
+  globalSetup: "./e2e/semente.ts",
   timeout: 90_000,
   workers: 2,
   // No CI (RELATORIO_TESTES=1), grava também o resultado de cada teste para o

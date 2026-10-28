@@ -103,6 +103,8 @@ jobs:
       # Chave apenas para dados fictícios deste job; nunca usada em produção.
       CHAVE_DADOS: AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=
       RELATORIO_TESTES: "1"
+      # Os testes mandam muitas inscrições da mesma origem (localhost).
+      LIMITE_INSCRICOES_POR_ORIGEM: "1000"
     steps:
       - uses: actions/checkout@v7
       - uses: pnpm/action-setup@v6
