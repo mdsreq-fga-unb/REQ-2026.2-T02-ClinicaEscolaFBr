@@ -209,7 +209,7 @@ describe('RF1/RF2: HTTP, transações e migrations oficiais', () => {
       responsavelLegal: 'Responsável Fictício',
     }).expect(201);
   });
-  it('cifra os três campos com a rotina oficial e audita sem conteúdo pessoal', async () => {
+  it('cifra os três campos com a rotina oficial e audita sem conteúdo pessoal (RF1, RNF51)', async () => {
     const dados = valido();
     const res = await enviar(dados).expect(201);
     const [registro] = await db.select().from(inscricoes);

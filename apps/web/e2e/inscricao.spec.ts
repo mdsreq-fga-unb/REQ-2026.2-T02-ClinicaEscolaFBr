@@ -102,7 +102,7 @@ async function verificarComprovante(page: Page) {
 }
 
 for (const largura of [320, 360, 768, 1024, 1366, 1920]) {
-  test(`fluxo real, e-mail único, revisão, impressão e WCAG em ${largura}px`, async ({
+  test(`fluxo real, e-mail único, revisão, impressão e WCAG em ${largura}px (RF1, RF2, RNF2, RNF56, RNF58)`, async ({
     page,
   }, info) => {
     await page.setViewportSize({ width: largura, height: 900 });
@@ -252,7 +252,7 @@ test("resposta perdida depois do commit: retry recupera o mesmo comprovante", as
   await verificarComprovante(page);
 });
 
-test("teclado percorre campos, links e botões com foco visível em 320px", async ({
+test("teclado percorre campos, links e botões com foco visível em 320px (RF1, RNF57)", async ({
   page,
 }) => {
   await page.setViewportSize({ width: 320, height: 900 });
