@@ -183,8 +183,8 @@ test("o comentário traz a tabela, a marca para ser editado e como completar", (
   const texto = R.comentarioRnfs(
     [
       {
-        rnf: "RNF52",
-        testes: [{ nome: "registro (RF55, RNF52)", origem: "api" }],
+        rnf: "RNF25",
+        testes: [{ nome: "negado (RF55, RNF25)", origem: "api" }],
         registros: [],
       },
       { rnf: "RNF53", testes: [], registros: [] },
@@ -193,7 +193,7 @@ test("o comentário traz a tabela, a marca para ser editado e como completar", (
   );
   assert.match(
     texto,
-    /\| RNF52 \| ✅ verificado \| teste "registro \(RF55, RNF52\)" \(api\) \|/,
+    /\| RNF25 \| ✅ verificado \| teste "negado \(RF55, RNF25\)" \(api\) \|/,
   );
   assert.match(texto, /\| RNF53 \| ⏳ sem evidência \| — \|/);
   assert.match(texto, /\/rnf RNF53/);
@@ -278,8 +278,39 @@ test("o RNF24 só fica verificado com o teste do e2e e o do leitor de tela", () 
     [linha([e2e])],
     "https://github.com/x/actions/runs/1",
   );
-  assert.match(texto, /\| RNF24 \| ⏳ falta o teste de: leitor-de-tela \|/);
+  assert.match(texto, /\| RNF24 \| ⏳ falta: teste de leitor-de-tela \|/);
   assert.match(texto, /Falta evidência/);
+});
+
+test("RNF51 e RNF52 exigem os testes e o registro da implantação", () => {
+  const api = { nome: "cifra (RF6, RNF51)", origem: "api" };
+  const registro = { rnf: "RNF51", link: "https://x/ata", autor: "a" };
+  const linha = (testes, registros = []) => ({
+    rnf: "RNF51",
+    testes,
+    registros,
+  });
+
+  // Só o teste da criptografia no banco não basta.
+  assert.equal(R.todosVerificados([linha([api])]), false);
+  // Só o registro também não: os testes continuam exigidos.
+  assert.equal(R.todosVerificados([linha([], [registro])]), false);
+  assert.equal(R.todosVerificados([linha([api], [registro])]), true);
+
+  const texto = R.comentarioRnfs([linha([api])], "https://x/runs/1");
+  assert.match(texto, /\| RNF51 \| ⏳ falta: registro com \/rnf \|/);
+  assert.match(
+    R.comentarioRnfs([linha([], [registro])], "https://x/runs/1"),
+    /\| RNF51 \| ⏳ falta: teste de api \|/,
+  );
+});
+
+test("RNF56 exige o axe do e2e e o leitor de tela", () => {
+  const e2e = { nome: "WCAG (RF1, RNF56)", origem: "e2e" };
+  const leitor = { nome: "VoiceOver (RF1, RNF56)", origem: "leitor-de-tela" };
+  const linha = (testes) => ({ rnf: "RNF56", testes, registros: [] });
+  assert.equal(R.todosVerificados([linha([e2e])]), false);
+  assert.equal(R.todosVerificados([linha([e2e, leitor])]), true);
 });
 
 test("intervalos de RNFs valem por todos os códigos entre eles", () => {
