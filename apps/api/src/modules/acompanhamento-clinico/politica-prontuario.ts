@@ -23,7 +23,7 @@ export class PoliticaProntuario {
     usuario: UsuarioAutenticado,
     prontuarioId: string,
     operacao: string,
-    modo: 'leitura' | 'escrita',
+    modo: 'leitura' | 'escrita' | 'registro_estagiario',
   ) {
     const [linha] = await this.db
       .select({
@@ -52,8 +52,12 @@ export class PoliticaProntuario {
       !!linha &&
       ((usuario.perfil === 'estagiario' && linha.estagiarioId === usuario.id) ||
         (usuario.perfil === 'supervisor' &&
-          linha.supervisorId === usuario.id) ||
-        (usuario.perfil === 'coordenacao' && modo === 'leitura'));
+          linha.supervisorId === usuario.id &&
+          modo !== 'registro_estagiario') ||
+        (usuario.perfil === 'coordenacao' && modo === 'leitura') ||
+        (usuario.perfil === 'estagiario' &&
+          modo === 'registro_estagiario' &&
+          linha.estagiarioId === usuario.id));
 
     await this.db.insert(acessosProntuario).values({
       prontuarioId: linha?.prontuario.id ?? null,

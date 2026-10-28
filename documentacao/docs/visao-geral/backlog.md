@@ -9,7 +9,7 @@ Esta é a lista única das features do produto e do backlog de construção, com
 
 **Status de cada feature:** é acompanhado na issue da feature e no [Project do repositório](https://github.com/orgs/mdsreq-fga-unb/projects/124), atualizado a cada marco do FDD. Esta página traz só o status dos ciclos, revisado ao fim de cada ciclo, para não manter duas fontes da mesma informação.
 
-_Última atualização do status dos ciclos: 27/10/2026._
+_Última atualização do status dos ciclos: 28/10/2026._
 
 ## Situação por ciclo
 

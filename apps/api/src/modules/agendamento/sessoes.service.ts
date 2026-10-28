@@ -8,7 +8,18 @@ import {
   UnprocessableEntityException,
 } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { aliasedTable, and, asc, eq, gt, ilike, lt, ne, or } from 'drizzle-orm';
+import {
+  aliasedTable,
+  and,
+  asc,
+  eq,
+  gt,
+  ilike,
+  inArray,
+  lt,
+  ne,
+  or,
+} from 'drizzle-orm';
 import {
   casos,
   inscricoes,
@@ -18,6 +29,7 @@ import {
   vinculosEstagiario,
   type Db,
 } from '@clinica/database';
+import { STATUS_QUE_OCUPAM_AGENDA } from '@clinica/shared';
 import type {
   Agendamento,
   BlocoAgenda,
@@ -149,7 +161,7 @@ export class SessoesService {
       .where(
         and(
           eq(sessoesAtendimento.estagiarioId, estagiarioId),
-          eq(sessoesAtendimento.status, 'agendada'),
+          inArray(sessoesAtendimento.status, STATUS_QUE_OCUPAM_AGENDA),
           lt(sessoesAtendimento.inicio, fim),
           gt(sessoesAtendimento.fimIntervaloAnotacoes, inicio),
         ),
@@ -422,7 +434,7 @@ export class SessoesService {
       .from(sessoesAtendimento)
       .where(
         and(
-          eq(sessoesAtendimento.status, 'agendada'),
+          inArray(sessoesAtendimento.status, STATUS_QUE_OCUPAM_AGENDA),
           or(
             eq(sessoesAtendimento.estagiarioId, estagiarioId),
             eq(sessoesAtendimento.casoId, casoId),
