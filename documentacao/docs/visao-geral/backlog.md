@@ -9,13 +9,13 @@ Esta é a lista única das features do produto e do backlog de construção, com
 
 **Status de cada feature:** é acompanhado na issue da feature e no [Project do repositório](https://github.com/orgs/mdsreq-fga-unb/projects/124), atualizado a cada marco do FDD. Esta página traz só o status dos ciclos, revisado ao fim de cada ciclo, para não manter duas fontes da mesma informação.
 
-_Última atualização do status dos ciclos: 25/10/2026._
+_Última atualização do status dos ciclos: 27/10/2026._
 
 ## Situação por ciclo
 
 | Ciclo | Período | Features | Status do ciclo |
 | --- | --- | --- | --- |
-| [Ciclo 3](#ciclo-3) | 14/10 a 27/10/2026 | 13 | Em andamento |
+| [Ciclo 3](#ciclo-3) | 14/10 a 27/10/2026 | 13 | Encerrado |
 | [Ciclo 4](#ciclo-4) | 28/10 a 10/11/2026 | 20 | Aguardando |
 | [Ciclo 5](#ciclo-5) | 11/11 a 17/11/2026 | 7 | Aguardando |
 | [Ciclo 6](#ciclo-6) | 18/11 a 01/12/2026 | 14 | Aguardando |
@@ -38,7 +38,9 @@ O backlog segue o processo **Planejar por Feature** do FDD:
 
 ## Backlog do MVP por ciclo
 
-### Ciclo 3 (14/10 a 27/10) · Em andamento { #ciclo-3 }
+### Ciclo 3 (14/10 a 27/10) · Encerrado { #ciclo-3 }
+
+O resultado de cada feature está no [fechamento do Ciclo 3](cronograma.md#ciclo-3-fechado-em-27102026).
 
 Antes das features, Gabriel preparou a base técnica do projeto (repositório, banco de dados, autenticação base, integração contínua, envio de e-mail e geração de PDF), da qual todas dependem. Ela foi concluída em 21/10/2026, no [PR #82](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/pull/82). O DoR e o [projeto das features do Ciclo 3](../unidade-3/projeto-features-ciclo-3.md) estão registrados nas issues.
 
@@ -78,7 +80,7 @@ Antes das features, Gabriel preparou a base técnica do projeto (repositório, b
 | 27 | [RF36](../unidade-2/requisitos/funcionais.md#rf36) — Emitir alerta de limite de faltas atingido | CP9 | [RF35](../unidade-2/requisitos/funcionais.md#rf35) | Gabriel | [#152](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/issues/152) |
 | 28 | [RF37](../unidade-2/requisitos/funcionais.md#rf37) — Desligar paciente por faltas e liberar vaga | CP9 | [RF36](../unidade-2/requisitos/funcionais.md#rf36) | Gabriel | [#153](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/issues/153) |
 | 29 | [RF38](../unidade-2/requisitos/funcionais.md#rf38) — Reverter desligamento de paciente por faltas | CP9 | [RF37](../unidade-2/requisitos/funcionais.md#rf37) | Gabriel | [#154](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/issues/154) |
-| 30 | [RF51](../unidade-2/requisitos/funcionais.md#rf51) — Encerrar sessão do usuário | CP12 | [RF50](../unidade-2/requisitos/funcionais.md#rf50) | Joaquim | [#46](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/issues/46) |
+| 30 | [RF51](../unidade-2/requisitos/funcionais.md#rf51) — Encerrar sessão do usuário (antecipada e integrada no Ciclo 3) | CP12 | [RF50](../unidade-2/requisitos/funcionais.md#rf50) | Joaquim | [#46](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/issues/46) |
 | 31 | [RF52](../unidade-2/requisitos/funcionais.md#rf52) — Verificar identidade do paciente ou responsável | CP12 | — | Joaquim | [#47](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/issues/47) |
 | 32 | [RF8](../unidade-2/requisitos/funcionais.md#rf8) — Consultar posição individual na fila | CP3 | [RF52](../unidade-2/requisitos/funcionais.md#rf52) | Jônatas | [#155](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/issues/155) |
 | 33 | [RF57](../unidade-2/requisitos/funcionais.md#rf57) — Registrar consentimento para tratamento de dados | CP12 | — | Jônatas | [#52](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/issues/52) |

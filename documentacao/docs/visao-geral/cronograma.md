@@ -6,7 +6,7 @@ O trabalho é organizado em **ciclos de 1 a 2 semanas**, e as unidades são marc
 
 **Status:** **Encerrado** (etapa concluída), **Em andamento** (etapa atual) ou **Aguardando** (etapa ainda não iniciada). O status é revisado ao fim de cada ciclo, conforme a [atualização do planejamento](../unidade-1/gestao/cronograma.md#63-atualizacao-do-planejamento).
 
-_Última atualização do status: 25/10/2026._
+_Última atualização do status: 27/10/2026._
 
 ## Entregas
 
@@ -24,7 +24,7 @@ _Última atualização do status: 25/10/2026._
 | Unidade 1 | 13/08 a 08/09/2026 | Encerrado | Concepção do projeto, antes dos ciclos | Prospecção e escolha do cliente, elicitação e descoberta com a Clínica Escola (entrevista de 26/08) e declaração da visão do produto. | Documento de visão publicado no site e apresentação da Unidade 1. | [Cronograma da Unidade 1 (6.1)](../unidade-1/gestao/cronograma.md#61-detalhamento-da-unidade-1) |
 | Ciclo 1 | 15/09 a 29/09/2026 | Encerrado | Construir a Lista de Features / Declarar Requisitos | Elicitação e descoberta (necessidades, regras e restrições das 14 CPs), declaração (features e critérios de aceitação por CP), representação (atualização do modelo de domínio) e verificação e validação (revisão interna e verificação cruzada em pares: avaliação dos requisitos da equipe Umbra e recebimento da avaliação da equipe Sem Requisitos). | Features e RFs/RNFs das 14 CPs declarados e revisados. | [Cronograma da Unidade 2, Ciclo 1](../unidade-2/gestao/cronograma.md#ciclo-1) |
 | Ciclo 2 | 29/09 a 13/10/2026 | Encerrado | Planejar por Feature | Análise e consenso (avaliação de valor de negócio com o cliente e de esforço técnico por RF, matriz 4×4 e priorização) e organização e atualização (DoR, DoD e rastreabilidade). | Escopo priorizado com o cliente (MVP validado em 08/10), DoR e DoD publicados e entrega da Unidade 2 em 13/10/2026. | [Cronograma da Unidade 2, Ciclo 2](../unidade-2/gestao/cronograma.md#ciclo-2) |
-| Ciclo 3 | 14/10 a 27/10/2026 | Em andamento | Projetar por Feature / Construir por Feature | Representação (modelo detalhado e diagramas) e verificação e validação (inspeção de design, código e demonstração, conforme o [processo de validação da seção 7.3](../unidade-1/gestao/equipe-comunicacao.md#73-processo-de-validacao)). | Base técnica do projeto (concluída em 21/10, [PR #82](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/pull/82)), DoR e [projeto das features](../unidade-3/projeto-features-ciclo-3.md) e incremento demonstrado com as 13 features do ciclo, começando pelos itens de base (acesso, inscrição, triagem e distribuição de casos). | [Cronograma da Unidade 3, Ciclo 3](../unidade-3/gestao/cronograma.md#ciclo-3) e [backlog do ciclo](backlog.md#ciclo-3) |
+| Ciclo 3 | 14/10 a 27/10/2026 | Encerrado | Projetar por Feature / Construir por Feature | Representação (modelo detalhado e diagramas) e verificação e validação (inspeção de design, código e demonstração, conforme o [processo de validação da seção 7.3](../unidade-1/gestao/equipe-comunicacao.md#73-processo-de-validacao)). | Base técnica do projeto (concluída em 21/10, [PR #82](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/pull/82)), DoR e [projeto das features](../unidade-3/projeto-features-ciclo-3.md) e incremento demonstrado com as 13 features do ciclo, começando pelos itens de base (acesso, inscrição, triagem e distribuição de casos). | [Cronograma da Unidade 3, Ciclo 3](../unidade-3/gestao/cronograma.md#ciclo-3) e [backlog do ciclo](backlog.md#ciclo-3) |
 | Ciclo 4 | 28/10 a 10/11/2026 | Aguardando | Projetar por Feature / Construir por Feature | Idem ao Ciclo 3, com organização e atualização da rastreabilidade e dos relatórios de progresso. | Incremento demonstrado com as 20 features do ciclo. | [Cronograma da Unidade 3, Ciclo 4](../unidade-3/gestao/cronograma.md#ciclo-4) e [backlog do ciclo](backlog.md#ciclo-4) |
 | Ciclo 5 | 11/11 a 17/11/2026 | Aguardando | Projetar por Feature / Construir por Feature | Idem ao Ciclo 3; consolidação dos incrementos construídos na Unidade 3. | Incremento com as 7 features do ciclo e todas as CPs do MVP com ao menos um incremento construído — entrega da Unidade 3 em 17/11/2026. | [Cronograma da Unidade 3, Ciclo 5](../unidade-3/gestao/cronograma.md#ciclo-5) e [backlog do ciclo](backlog.md#ciclo-5) |
 | Ciclo 6 | 18/11 a 01/12/2026 | Aguardando | Projetar por Feature / Construir por Feature / Integração | Idem ao Ciclo 3, aplicado aos itens do ciclo; verificação e validação das pendências apontadas nas demonstrações anteriores; organização e atualização da rastreabilidade entre requisitos, features e entregas. | Construção do MVP concluída até 01/12/2026, com as 14 features do ciclo, os incrementos integrados e as pendências dos Ciclos 3 a 5 corrigidas. | [Backlog do Ciclo 6](backlog.md#ciclo-6) |
@@ -32,7 +32,7 @@ _Última atualização do status: 25/10/2026._
 
 ## Previsto e realizado
 
-Compara o que cada etapa previa com o que foi entregue, a situação e o que ficou pendente. O Ciclo 3, em andamento, aparece marco a marco na tabela seguinte.
+Compara o que cada etapa previa com o que foi entregue, a situação e o que ficou pendente. O Ciclo 3 aparece marco a marco na tabela seguinte, e o resultado de cada feature está em [Fechamento dos ciclos](#fechamento-dos-ciclos).
 
 | Etapa | Previsto | Realizado | Situação | Pendências |
 | --- | --- | --- | --- | --- |
@@ -42,16 +42,16 @@ Compara o que cada etapa previa com o que foi entregue, a situação e o que fic
 
 ### Ciclo 3, marco a marco
 
-_Situação em 25/10/2026._
+_Situação em 27/10/2026, no fechamento do ciclo._
 
 | Marco | Previsto | Realizado | Situação | Pendências |
 | --- | --- | --- | --- | --- |
 | Planejamento e issues | 14/10 a 17/10 | Reunião de 15/10 e 14 issues de feature criadas; 13 depois da remoção do RF19 em 24/10 ([DF26](../unidade-2/requisitos/decisoes-fbr.md)) | Concluído no prazo | — |
 | Base técnica | 15/10 a 21/10 | Concluída em 21/10 ([PR #82](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/pull/82)) | Concluída no prazo | — |
-| DoR | 19/10 a 21/10 | R8.1 marcado em 6 das 13 features: RF50, RF1, RF2, RF53, RF54 e RF55 | Atrasado | DoR do RF4, do RF6 e do RF66 (Luís Henrique), do RF18, do RF20 e do RF21 (Maria Clara) e do RF10 (Nicolas) |
-| Design inspecionado (DoD 1) | 21/10 a 23/10 | Protótipos validados com a FBr em 23/10 e inspeção de design das 13 features em 24/10; "de acordo" do Líder registrado no RF50, no RF1 e no RF2 | Atrasado em 1 dia | "De acordo" dos demais Líderes; no RF53, no RF54 e no RF55, confirmação de outro integrante |
-| Construção (DoD 2 a 4) | 23/10 a 27/10 | Schema do Ciclo 3 em revisão ([PR #134](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/pull/134)); RF50 em revisão ([PR #136](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/pull/136)); RF53, RF54 e RF55 construídos ([PR #135](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/pull/135), em rascunho até o RF50 entrar) | Em andamento | 9 features sem PR em 25/10: RF1, RF2, RF4, RF6, RF10, RF18, RF20, RF21 e RF66 |
-| Fechamento | 27/10 | — | Aguardando | Registro do fechamento, feature a feature |
+| DoR | 19/10 a 21/10 | DoR aprovado e registrado em 8 das 13 features (RF1, RF2, RF10, RF50, RF53, RF54, RF55 e a RF51, antecipada); os registros do RF1, do RF2 e do RF10 foram preenchidos em 27/10 | Atrasado | DoR do RF4, do RF6 e do RF66 (Luís Henrique) e do RF18, do RF20 e do RF21 (Maria Clara), previstos para 27/10 |
+| Design inspecionado (DoD 1) | 21/10 a 23/10 | Protótipos validados com a FBr em 23/10; inspeção de design registrada nas 13 features em 24/10, com o "de acordo" fechado em 7 (RF1, RF2, RF10, RF50, RF53, RF54 e RF55) entre 24 e 26/10, e no RF51 em 25/10 | Atrasado em 1 a 3 dias | "De acordo" do RF4, do RF6, do RF18, do RF20, do RF21 e do RF66 |
+| Construção (DoD 2 a 4) | 23/10 a 27/10 | Schema do Ciclo 3 ([#134](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/pull/134)) e 8 features integradas à `main` entre 26 e 27/10: RF53, RF54 e RF55 ([#135](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/pull/135)), RF50 e RF51 ([#136](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/pull/136)), RF1 e RF2 ([#139](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/pull/139)) e RF10 ([#158](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/pull/158)) | Concluída para 8 features | RF4, RF6 e RF66 em revisão, com mudanças pedidas ([#163](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/pull/163)); RF18, RF20 e RF21 sem PR |
+| Fechamento | 27/10 | Fechamento registrado feature a feature em 27/10 | Concluído no prazo | — |
 
 ## Pontos de controle por feature
 
@@ -86,4 +86,29 @@ A carga vem da [escala de esforço](../unidade-2/requisitos/backlog.md#10212-esc
 
 Ao fim de cada ciclo de construção, a equipe registra aqui uma tabela com uma linha por feature prevista no ciclo: o Líder, o marco alcançado, se a feature foi concluída ou passou para o ciclo seguinte, o motivo e o impacto no planejamento. O status do ciclo é atualizado no mesmo momento.
 
-Os Ciclos 1 e 2 não tiveram features de construção: o resultado deles está em [Previsto e realizado](#previsto-e-realizado). O fechamento do Ciclo 3 é registrado em 27/10/2026.
+Os Ciclos 1 e 2 não tiveram features de construção: o resultado deles está em [Previsto e realizado](#previsto-e-realizado).
+
+### Ciclo 3 (fechado em 27/10/2026)
+
+Das 13 features previstas, 7 foram integradas à `main` até 27/10, e a RF51, antecipada do Ciclo 4, também. As outras 6 (RF4, RF6 e RF66, do Luís Henrique, e RF18, RF20 e RF21, da Maria Clara) ficam com o resultado registrado no fim do dia, conforme entrem ou não na `main`. A demonstração e o aceite das features integradas ficam para o Ciclo 4, como previsto nos [pontos de controle](#pontos-de-controle-por-feature). O marco de cada feature é o "Estado da feature" registrado na issue em 27/10.
+
+| Feature | Líder | Marco alcançado | Resultado | Motivo | Impacto no Ciclo 4 |
+| --- | --- | --- | --- | --- | --- |
+| [RF1](../unidade-2/requisitos/funcionais.md#rf1) [#88](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/issues/88) | Jônatas | Código concluído, integrado ([#139](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/pull/139)) | Integrada | Falta a conferência da revisora (D3.2 a D3.7) e a verificação dos RNFs (D4.5) | Demonstração e aceite no Ciclo 4 |
+| [RF2](../unidade-2/requisitos/funcionais.md#rf2) [#89](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/issues/89) | Jônatas | Código concluído, integrado ([#139](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/pull/139)) | Integrada | Mesmo do RF1 | Demonstração e aceite no Ciclo 4 |
+| [RF50](../unidade-2/requisitos/funcionais.md#rf50) [#45](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/issues/45) | Joaquim | Código inspecionado, integrado ([#136](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/pull/136)) | Integrada | Pendências: o RNF53 (cópia de segurança) no D4.5, a [#160](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/issues/160) e a [#161](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/issues/161) | Demonstração e aceite no Ciclo 4 |
+| [RF51](../unidade-2/requisitos/funcionais.md#rf51) [#46](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/issues/46) | Joaquim | Código inspecionado, integrado ([#136](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/pull/136)) | Integrada, antecipada do Ciclo 4 | O projeto do RF50 já previa a rota de saída, e a área interna da #135 já tinha o botão "Sair" | O Ciclo 4 do Joaquim fica com uma feature a menos |
+| [RF53](../unidade-2/requisitos/funcionais.md#rf53) [#48](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/issues/48) | Gabriel | Código inspecionado, integrado ([#135](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/pull/135)) | Integrada | Falta o D4.5 (RNF49 e RNF53) | Demonstração e aceite no Ciclo 4 |
+| [RF54](../unidade-2/requisitos/funcionais.md#rf54) [#49](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/issues/49) | Gabriel | Código inspecionado, integrado ([#135](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/pull/135)) | Integrada | Falta o D4.5 | Demonstração e aceite no Ciclo 4 |
+| [RF55](../unidade-2/requisitos/funcionais.md#rf55) [#50](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/issues/50) | Gabriel | Design inspecionado, código integrado ([#135](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/pull/135)) | Integrada, com um critério aberto | O critério da transferência de estagiário depende do [RF25](../unidade-2/requisitos/funcionais.md#rf25), do Ciclo 4 | O D2.1 fecha com o RF25; o teste de ponta a ponta depende do RF21 e do RF66 |
+| [RF10](../unidade-2/requisitos/funcionais.md#rf10) [#96](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/issues/96) | Nicolas | Código concluído, integrado ([#158](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/pull/158)) em 27/10 | Integrada | Falta a conferência da revisora (D3.2 a D3.7) e o D4.5 | Demonstração e aceite no Ciclo 4 |
+| [RF4](../unidade-2/requisitos/funcionais.md#rf4) [#90](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/issues/90) | Luís Henrique | Planejada; código na [#163](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/pull/163), com mudanças pedidas | Aguardando a confirmação do Líder em 27/10 | — | — |
+| [RF6](../unidade-2/requisitos/funcionais.md#rf6) [#91](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/issues/91) | Luís Henrique | Planejada; código na [#163](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/pull/163) | Aguardando a confirmação do Líder em 27/10 | — | — |
+| [RF66](../unidade-2/requisitos/funcionais.md#rf66) [#97](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/issues/97) | Luís Henrique | Planejada; código na [#163](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/pull/163) | Aguardando a confirmação do Líder em 27/10 | — | — |
+| [RF18](../unidade-2/requisitos/funcionais.md#rf18) [#92](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/issues/92) | Maria Clara | Planejada, sem PR | Aguardando a confirmação do Líder em 27/10 | — | — |
+| [RF20](../unidade-2/requisitos/funcionais.md#rf20) [#94](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/issues/94) | Maria Clara | Planejada, sem PR | Aguardando a confirmação do Líder em 27/10 | — | — |
+| [RF21](../unidade-2/requisitos/funcionais.md#rf21) [#95](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/issues/95) | Maria Clara | Planejada, sem PR | Aguardando a confirmação do Líder em 27/10 | — | — |
+
+**Carga do Ciclo 4.** Se alguma feature passar para o Ciclo 4, a redistribuição segue a regra de [Carga por Líder de Feature e ciclo](#carga-por-lider-de-feature-e-ciclo) e é decidida no planejamento do Ciclo 4.
+
+**Lição do ciclo.** O DoR e a inspeção de design ficaram para 24 e 25/10, perto do fim do ciclo, e o código do RF4, do RF6 e do RF66 veio antes deles. No Ciclo 4, a data-limite do DoR (27/10) e a da inspeção de design (31/10) valem para todas as features, inclusive as que passaram do Ciclo 3.
