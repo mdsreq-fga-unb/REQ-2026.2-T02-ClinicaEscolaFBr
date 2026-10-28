@@ -1,0 +1,25 @@
+name: Verificar implantação
+
+# Confere o sistema publicado (homologação ou produção) contra o RNF51: HTTP
+# redirecionado para HTTPS, TLS 1.2 ou superior e TLS 1.0 e 1.1 recusados. Rode
+# manualmente depois de cada implantação; o link da execução é a evidência
+# registrada com /rnf RNF51 nas issues.
+on:
+  workflow_dispatch:
+    inputs:
+      dominio:
+        description: "Domínio publicado, sem https:// (por exemplo, clinica.exemplo.br)"
+        required: true
+
+jobs:
+  https:
+    name: HTTPS e TLS (RNF51)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          sparse-checkout: scripts/implantacao
+      - name: Conferir HTTPS e TLS
+        env:
+          DOMINIO: ${{ inputs.dominio }}
+        run: bash scripts/implantacao/verificar-https.sh "$DOMINIO" | tee -a "$GITHUB_STEP_SUMMARY"

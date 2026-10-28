@@ -1,0 +1,9 @@
+# Busca de chaves e senhas no repositório (RNF51: nenhuma chave no código).
+# Usa as regras padrão do gitleaks, com as exceções abaixo.
+[extend]
+useDefault = true
+
+[[allowlists]]
+description = "Selo do modelo do NestJS no README da API: o token é o exemplo público do modelo, não uma chave."
+regexTarget = "line"
+regexes = ['''img\.shields\.io/circleci/build/github/nestjs/nest/master\?token=''']
