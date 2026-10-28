@@ -451,7 +451,7 @@ Para rodar os testes, abra **outro terminal** na pasta do projeto:
 pnpm test
 ```
 
-Testes de acessibilidade (abrem as páginas num navegador automático):
+Testes de ponta a ponta, com acessibilidade (abrem as páginas num navegador automático, sobem a API e o site e usam o banco do Passo 8):
 
 ```bash
 pnpm --filter @clinica/web exec playwright install --with-deps chromium
@@ -461,7 +461,7 @@ pnpm --filter @clinica/web exec playwright install --with-deps chromium
 pnpm --filter @clinica/web test:e2e
 ```
 
-O primeiro comando baixa o navegador de testes e só precisa ser rodado uma vez.
+O primeiro comando baixa o navegador de testes e só precisa ser rodado uma vez. Antes de rodar, pare o `pnpm dev` (os testes usam as portas 3000 e 3333) e rode `pnpm build`. O teste do fluxo do Ciclo 3 (`e2e/ciclo-3.spec.ts`) cria no banco quatro contas fictícias da equipe (`*.e2e@fbr.edu.br`), uma por perfil, e inscrições de teste.
 
 ---
 
@@ -524,7 +524,7 @@ Todos rodados na raiz do projeto:
 | `pnpm db:migrate`                     | Aplica as migrations no banco                                                           |
 | `pnpm db:generate`                    | Gera uma migration nova depois de alterar as tabelas em `packages/database/src/schema/` |
 | `pnpm docs:serve`                     | Abre o site de documentação localmente                                                  |
-| `pnpm --filter @clinica/web test:e2e` | Testes de acessibilidade no navegador                                                   |
+| `pnpm --filter @clinica/web test:e2e` | Testes de ponta a ponta no navegador, com acessibilidade                                |
 
 ---
 

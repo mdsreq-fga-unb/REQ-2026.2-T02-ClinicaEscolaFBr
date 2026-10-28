@@ -39,6 +39,7 @@ import {
   AuditoriaService,
   type Transacao,
 } from '../../auditoria/auditoria.service';
+import { escaparLike } from '../../common/busca';
 import { DB } from '../../database/database.module';
 import { EmailService } from '../../notificacoes/email.service';
 import { ParametrosService } from '../../parametros/parametros.service';
@@ -82,8 +83,8 @@ export class UsuariosService {
       filtro.situacao ? eq(usuarios.situacao, filtro.situacao) : undefined,
       filtro.busca
         ? or(
-            ilike(usuarios.nome, `%${filtro.busca}%`),
-            ilike(usuarios.email, `%${filtro.busca}%`),
+            ilike(usuarios.nome, `%${escaparLike(filtro.busca)}%`),
+            ilike(usuarios.email, `%${escaparLike(filtro.busca)}%`),
           )
         : undefined,
     ];
@@ -241,6 +242,26 @@ export class UsuariosService {
       throw new ConflictException('Este usuário já está desativado.');
     }
     await this.db.transaction(async (tx) => {
+      if (usuario.perfil === 'coordenacao' && usuario.situacao === 'ativo') {
+        // Trava as contas ativas da coordenação: duas desativações ao mesmo
+        // tempo não podem deixar a coordenação sem nenhuma conta ativa.
+        const ativas = await tx
+          .select({ id: usuarios.id })
+          .from(usuarios)
+          .where(
+            and(
+              eq(usuarios.perfil, 'coordenacao'),
+              eq(usuarios.situacao, 'ativo'),
+            ),
+          )
+          .orderBy(usuarios.id)
+          .for('update');
+        if (!ativas.some((conta) => conta.id !== id)) {
+          throw new ConflictException(
+            'Esta é a única conta ativa da coordenação. Ative outra conta da coordenação antes de desativar esta.',
+          );
+        }
+      }
       await tx
         .update(usuarios)
         .set({ situacao: 'desativado' })

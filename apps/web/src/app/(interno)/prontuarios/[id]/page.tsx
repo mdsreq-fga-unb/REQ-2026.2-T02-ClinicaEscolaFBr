@@ -3,30 +3,58 @@ import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { Eye, Lock } from "lucide-react";
 import Link from "next/link";
 import { useParams } from "next/navigation";
-import { useState, type FormEvent } from "react";
+import { useEffect, useState, type FormEvent } from "react";
+import {
+  dadosIniciaisSchema,
+  evolucaoSchema,
+  type DadosIniciais,
+  type Evolucao,
+} from "@clinica/shared";
 import { Aviso } from "@/components/comum/aviso";
+import { Campo } from "@/components/comum/campo";
 import { Dados } from "@/components/comum/dados";
 import { buttonVariants } from "@/components/ui/button";
 import { api, ErroApi } from "@/lib/api";
 import { dataBr, dataHoraBr, idade, NOMES_SITUACAO_CASO } from "@/lib/formato";
 import { useSessao } from "@/lib/sessao";
 
+type ErrosDe<T> = Partial<Record<keyof T, string>>;
+
+// Erros do esquema compartilhado, um por campo (RNF1).
+function errosPorCampo<T>(issues: { path: PropertyKey[]; message: string }[]) {
+  const erros: ErrosDe<T> = {};
+  for (const problema of issues) {
+    const campo = problema.path[0] as keyof T;
+    erros[campo] ??= problema.message;
+  }
+  return erros;
+}
+
 function FormularioDadosIniciais({ prontuarioId }: { prontuarioId: string }) {
   const cache = useQueryClient();
-  const [anamnese, setAnamnese] = useState("");
-  const [contrato, setContrato] = useState("");
-  const [dataAssinaturaContrato, setDataAssinaturaContrato] = useState("");
+  const [dados, setDados] = useState({
+    anamnese: "",
+    contrato: "",
+    dataAssinaturaContrato: "",
+  });
+  const [erros, setErros] = useState<ErrosDe<DadosIniciais>>({});
   const [erro, setErro] = useState<string | null>(null);
   const [salvando, setSalvando] = useState(false);
 
   async function salvar(evento: FormEvent<HTMLFormElement>) {
     evento.preventDefault();
     setErro(null);
+    const resultado = dadosIniciaisSchema.safeParse(dados);
+    if (!resultado.success) {
+      setErros(errosPorCampo<DadosIniciais>(resultado.error.issues));
+      return;
+    }
+    setErros({});
     setSalvando(true);
     try {
       await api(`/prontuarios/${prontuarioId}/dados-iniciais`, {
         method: "POST",
-        body: JSON.stringify({ anamnese, contrato, dataAssinaturaContrato }),
+        body: JSON.stringify(resultado.data),
       });
       await cache.invalidateQueries({ queryKey: ["prontuario", prontuarioId] });
     } catch (falha) {
@@ -40,43 +68,46 @@ function FormularioDadosIniciais({ prontuarioId }: { prontuarioId: string }) {
 
   return (
     <form
+      noValidate
       onSubmit={salvar}
       className="space-y-4 rounded-lg border border-border bg-card p-5"
     >
       <h3 className="font-semibold">Registrar dados iniciais</h3>
-      <label className="block space-y-1 text-sm" htmlFor="anamnese">
-        <span>Anamnese</span>
-        <textarea
-          id="anamnese"
-          required
-          value={anamnese}
-          onChange={(e) => setAnamnese(e.target.value)}
-          className="min-h-32 w-full rounded-md border border-border p-3"
-        />
-      </label>
-      <label className="block space-y-1 text-sm" htmlFor="contrato">
-        <span>Contrato terapêutico</span>
-        <textarea
-          id="contrato"
-          required
-          value={contrato}
-          onChange={(e) => setContrato(e.target.value)}
-          className="min-h-24 w-full rounded-md border border-border p-3"
-        />
-      </label>
-      <label className="block space-y-1 text-sm" htmlFor="data-assinatura">
-        <span>Data de assinatura</span>
-        <input
-          id="data-assinatura"
-          type="date"
-          required
-          value={dataAssinaturaContrato}
-          onChange={(e) => setDataAssinaturaContrato(e.target.value)}
-          className="rounded-md border border-border p-2"
-        />
-      </label>
+      <Campo rotulo="Anamnese" erro={erros.anamnese}>
+        {(props) => (
+          <textarea
+            {...props}
+            value={dados.anamnese}
+            onChange={(e) => setDados({ ...dados, anamnese: e.target.value })}
+            className="min-h-32 w-full rounded-md border border-input p-3 text-sm aria-[invalid=true]:border-destructive"
+          />
+        )}
+      </Campo>
+      <Campo rotulo="Contrato terapêutico" erro={erros.contrato}>
+        {(props) => (
+          <textarea
+            {...props}
+            value={dados.contrato}
+            onChange={(e) => setDados({ ...dados, contrato: e.target.value })}
+            className="min-h-24 w-full rounded-md border border-input p-3 text-sm aria-[invalid=true]:border-destructive"
+          />
+        )}
+      </Campo>
+      <Campo rotulo="Data de assinatura" erro={erros.dataAssinaturaContrato}>
+        {(props) => (
+          <input
+            {...props}
+            type="date"
+            value={dados.dataAssinaturaContrato}
+            onChange={(e) =>
+              setDados({ ...dados, dataAssinaturaContrato: e.target.value })
+            }
+            className="rounded-md border border-input p-2 text-sm aria-[invalid=true]:border-destructive"
+          />
+        )}
+      </Campo>
       {erro && (
-        <p role="alert" className="text-sm text-alerta">
+        <p role="alert" className="text-sm text-destructive">
           {erro}
         </p>
       )}
@@ -91,6 +122,8 @@ function FormularioDadosIniciais({ prontuarioId }: { prontuarioId: string }) {
   );
 }
 
+// Evolução da sessão realizada (RF28): os campos obrigatórios e os limites são
+// conferidos antes do envio, com o erro junto de cada campo.
 function FormularioEvolucao({
   prontuarioId,
   sessaoId,
@@ -101,16 +134,22 @@ function FormularioEvolucao({
   inicio: string;
 }) {
   const cache = useQueryClient();
-  const [queixa, setQueixa] = useState("");
-  const [planejamento, setPlanejamento] = useState("");
+  const [dados, setDados] = useState({ queixa: "", planejamento: "" });
+  const [erros, setErros] = useState<ErrosDe<Evolucao>>({});
   const [erro, setErro] = useState<string | null>(null);
   async function salvar(evento: FormEvent<HTMLFormElement>) {
     evento.preventDefault();
     setErro(null);
+    const resultado = evolucaoSchema.safeParse(dados);
+    if (!resultado.success) {
+      setErros(errosPorCampo<Evolucao>(resultado.error.issues));
+      return;
+    }
+    setErros({});
     try {
       await api(`/prontuarios/${prontuarioId}/sessoes/${sessaoId}/evolucoes`, {
         method: "POST",
-        body: JSON.stringify({ queixa, planejamento }),
+        body: JSON.stringify(resultado.data),
       });
       await cache.invalidateQueries({ queryKey: ["prontuario", prontuarioId] });
     } catch (falha) {
@@ -121,6 +160,7 @@ function FormularioEvolucao({
   }
   return (
     <form
+      noValidate
       onSubmit={salvar}
       className="mt-4 space-y-3 rounded-md border border-border p-4"
     >
@@ -129,31 +169,36 @@ function FormularioEvolucao({
       </h4>
       <p className="text-sm text-muted-foreground">
         O registro fica vinculado a esta sessão e não pode ser alterado depois
-        de salvo. Use até 10 linhas e 1.000 caracteres.
+        de salvo.
       </p>
-      <label className="block space-y-1 text-sm" htmlFor={`queixa-${sessaoId}`}>
-        <span>Evolução da queixa (até 10 linhas e 1.000 caracteres)</span>
-        <textarea
-          id={`queixa-${sessaoId}`}
-          required
-          maxLength={1000}
-          value={queixa}
-          onChange={(e) => setQueixa(e.target.value)}
-          className="min-h-28 w-full rounded-md border border-border p-3"
-        />
-      </label>
-      <label className="block space-y-1 text-sm" htmlFor={`plano-${sessaoId}`}>
-        <span>Planejamento da próxima sessão</span>
-        <textarea
-          id={`plano-${sessaoId}`}
-          required
-          value={planejamento}
-          onChange={(e) => setPlanejamento(e.target.value)}
-          className="min-h-20 w-full rounded-md border border-border p-3"
-        />
-      </label>
+      <Campo
+        rotulo="Evolução da queixa"
+        dica="Até 10 linhas e 1.000 caracteres."
+        erro={erros.queixa}
+      >
+        {(props) => (
+          <textarea
+            {...props}
+            value={dados.queixa}
+            onChange={(e) => setDados({ ...dados, queixa: e.target.value })}
+            className="min-h-28 w-full rounded-md border border-input p-3 text-sm aria-[invalid=true]:border-destructive"
+          />
+        )}
+      </Campo>
+      <Campo rotulo="Planejamento da próxima sessão" erro={erros.planejamento}>
+        {(props) => (
+          <textarea
+            {...props}
+            value={dados.planejamento}
+            onChange={(e) =>
+              setDados({ ...dados, planejamento: e.target.value })
+            }
+            className="min-h-20 w-full rounded-md border border-input p-3 text-sm aria-[invalid=true]:border-destructive"
+          />
+        )}
+      </Campo>
       {erro && (
-        <p role="alert" className="text-sm text-alerta">
+        <p role="alert" className="text-sm text-destructive">
           {erro}
         </p>
       )}
@@ -280,6 +325,13 @@ function AcessoNegado({ voltar }: { voltar: string }) {
 export default function ProntuarioPage() {
   const { id } = useParams<{ id: string }>();
   const { data: sessao } = useSessao();
+  // Horário de referência para saber se a sessão já terminou, atualizado a cada
+  // minuto para o botão aparecer sem recarregar a página.
+  const [agora, setAgora] = useState(() => Date.now());
+  useEffect(() => {
+    const relogio = setInterval(() => setAgora(Date.now()), 60_000);
+    return () => clearInterval(relogio);
+  }, []);
   const consulta = useQuery({
     queryKey: ["prontuario", id],
     queryFn: () => api<Prontuario>(`/prontuarios/${id}`),
@@ -437,11 +489,15 @@ export default function ProntuarioPage() {
                     inicio={atendimento.inicio}
                   />
                 ) : atendimento.estagiarioId === sessao?.id &&
-                  atendimento.status === "agendada" ? (
+                  atendimento.status === "agendada" &&
+                  new Date(atendimento.termino).getTime() <= agora ? (
                   <AcaoSessao prontuarioId={p.id} sessaoId={atendimento.id} />
                 ) : (
                   <p className="mt-2 text-sm text-muted-foreground">
-                    Evolução não registrada.
+                    {atendimento.status === "agendada" &&
+                    new Date(atendimento.termino).getTime() > agora
+                      ? "A sessão ainda não aconteceu."
+                      : "Evolução não registrada."}
                   </p>
                 )}
               </li>

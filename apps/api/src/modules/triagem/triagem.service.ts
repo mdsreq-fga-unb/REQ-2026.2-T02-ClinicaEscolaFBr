@@ -7,7 +7,7 @@ import {
   usuarios,
   type Db,
 } from '@clinica/database';
-import { asc, desc, eq, notExists, sql } from 'drizzle-orm';
+import { asc, desc, eq, notExists, sql, ne } from 'drizzle-orm';
 import { AuditoriaService } from '../../auditoria/auditoria.service';
 import { cifrar, decifrar } from '../../common/criptografia';
 import type { UsuarioAutenticado } from '../../auth/usuario-autenticado';
@@ -82,6 +82,9 @@ export class TriagemService {
       .from(decisoesPrioridade)
       .innerJoin(inscricoes, eq(inscricoes.id, decisoesPrioridade.inscricaoId))
       .innerJoin(usuarios, eq(usuarios.id, decisoesPrioridade.decididaPor))
+      // Casos encerrados saem da lista, para ela não crescer sem limite (RNF21).
+      .innerJoin(casos, eq(casos.inscricaoId, decisoesPrioridade.inscricaoId))
+      .where(ne(casos.situacao, 'encerrado'))
       .orderBy(
         asc(decisoesPrioridade.inscricaoId),
         desc(decisoesPrioridade.decididaEm),
