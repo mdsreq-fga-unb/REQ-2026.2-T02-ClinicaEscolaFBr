@@ -1,3 +1,4 @@
+import { writeFile } from "node:fs/promises";
 import type { VoiceOverPlaywright } from "@guidepup/playwright";
 import {
   expect,
@@ -72,14 +73,17 @@ export async function ouvirFoco(
   await falou(voiceOver, texto);
 }
 
-// Anexa ao resultado do teste tudo o que o VoiceOver falou, como evidência.
+// Grava tudo o que o VoiceOver falou na pasta de resultados do teste, que o
+// workflow publica como evidência, e anexa ao resultado.
 export async function anexarFala(
   info: TestInfo,
   voiceOver: VoiceOverPlaywright,
   nome: string,
 ) {
-  await info.attach(nome, {
-    body: JSON.stringify(await voiceOver.spokenPhraseLog(), null, 2),
-    contentType: "application/json",
-  });
+  const caminho = info.outputPath(nome);
+  await writeFile(
+    caminho,
+    JSON.stringify(await voiceOver.spokenPhraseLog(), null, 2),
+  );
+  await info.attach(nome, { path: caminho, contentType: "application/json" });
 }
