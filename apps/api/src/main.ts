@@ -10,14 +10,17 @@ async function bootstrap() {
   app.use(cookieParser());
   app.enableCors({ origin: process.env.WEB_URL, credentials: true });
 
-  const documento = SwaggerModule.createDocument(
-    app,
-    new DocumentBuilder()
-      .setTitle('Clínica Escola FBr — API')
-      .setVersion('0.1.0')
-      .build(),
-  );
-  SwaggerModule.setup('docs', app, documento);
+  // A documentação da API (/docs) fica só fora de produção.
+  if (process.env.NODE_ENV !== 'production') {
+    const documento = SwaggerModule.createDocument(
+      app,
+      new DocumentBuilder()
+        .setTitle('Clínica Escola FBr — API')
+        .setVersion('0.1.0')
+        .build(),
+    );
+    SwaggerModule.setup('docs', app, documento);
+  }
 
   await app.listen(process.env.API_PORT ?? 3333);
 }

@@ -302,6 +302,52 @@ describe('UsuariosService (RF53 e RF54)', () => {
     ).rejects.toMatchObject({ status: 403 });
   });
 
+  it('não deixa desativar a última conta ativa da coordenação (RF54)', async () => {
+    const [outra] = await db
+      .insert(usuarios)
+      .values({
+        nome: 'Roberto Lima',
+        email: 'roberto@fbr.edu.br',
+        perfil: 'coordenacao',
+        situacao: 'ativo',
+      })
+      .returning();
+    const autor = {
+      id: outra.id,
+      nome: outra.nome,
+      perfil: 'coordenacao' as const,
+    };
+    // Com duas contas ativas, uma pode desativar a outra.
+    await servico.desativar(coordenacao.id, autor);
+    // Restou só a conta de quem desativou; outra coordenação desativada não muda isso.
+    const [terceira] = await db
+      .insert(usuarios)
+      .values({
+        nome: 'Clara Nunes',
+        email: 'clara@fbr.edu.br',
+        perfil: 'coordenacao',
+        situacao: 'pendente_ativacao',
+      })
+      .returning();
+    await expect(
+      servico.desativar(outra.id, {
+        id: terceira.id,
+        nome: terceira.nome,
+        perfil: 'coordenacao',
+      }),
+    ).rejects.toMatchObject({ status: 409 });
+  });
+
+  it('na busca, % e _ valem como letras, e não como curingas (RF53)', async () => {
+    await servico.cadastrar(
+      { nome: 'Ana Costa', email: 'ana@fbr.edu.br', perfil: 'estagiario' },
+      coordenacao,
+    );
+    expect(await servico.listar({ busca: '%' })).toEqual([]);
+    expect(await servico.listar({ busca: '_na' })).toEqual([]);
+    expect(await servico.listar({ busca: 'Ana' })).toHaveLength(1);
+  });
+
   it('lista com busca e filtros, mostrando o convite pendente', async () => {
     await servico.cadastrar(
       { nome: 'Pedro Lima', email: 'pedro@fbr.edu.br', perfil: 'estagiario' },

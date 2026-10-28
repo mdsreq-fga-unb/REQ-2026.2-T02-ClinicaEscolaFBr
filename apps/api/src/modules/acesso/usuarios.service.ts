@@ -18,6 +18,7 @@ import {
   ilike,
   inArray,
   isNull,
+  ne,
   or,
 } from 'drizzle-orm';
 import {
@@ -39,6 +40,7 @@ import {
   AuditoriaService,
   type Transacao,
 } from '../../auditoria/auditoria.service';
+import { escaparLike } from '../../common/busca';
 import { DB } from '../../database/database.module';
 import { EmailService } from '../../notificacoes/email.service';
 import { ParametrosService } from '../../parametros/parametros.service';
@@ -82,8 +84,8 @@ export class UsuariosService {
       filtro.situacao ? eq(usuarios.situacao, filtro.situacao) : undefined,
       filtro.busca
         ? or(
-            ilike(usuarios.nome, `%${filtro.busca}%`),
-            ilike(usuarios.email, `%${filtro.busca}%`),
+            ilike(usuarios.nome, `%${escaparLike(filtro.busca)}%`),
+            ilike(usuarios.email, `%${escaparLike(filtro.busca)}%`),
           )
         : undefined,
     ];
@@ -239,6 +241,23 @@ export class UsuariosService {
     const usuario = await this.buscar(id);
     if (usuario.situacao === 'desativado') {
       throw new ConflictException('Este usuário já está desativado.');
+    }
+    if (usuario.perfil === 'coordenacao' && usuario.situacao === 'ativo') {
+      const outras = await this.db
+        .select({ id: usuarios.id })
+        .from(usuarios)
+        .where(
+          and(
+            eq(usuarios.perfil, 'coordenacao'),
+            eq(usuarios.situacao, 'ativo'),
+            ne(usuarios.id, id),
+          ),
+        );
+      if (outras.length === 0) {
+        throw new ConflictException(
+          'Esta é a única conta ativa da coordenação. Ative outra conta da coordenação antes de desativar esta.',
+        );
+      }
     }
     await this.db.transaction(async (tx) => {
       await tx

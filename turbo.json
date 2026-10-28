@@ -7,7 +7,8 @@
     "WEB_URL",
     "SMTP_HOST",
     "SMTP_PORT",
-    "CHAVE_DADOS"
+    "CHAVE_DADOS",
+    "LIMITE_INSCRICOES_POR_ORIGEM"
   ],
   "tasks": {
     "build": {

@@ -32,6 +32,7 @@ export class ProntuariosController {
 
   // Qualquer perfil pode tentar: a política decide e registra a tentativa.
   @Get('prontuarios/:id')
+  @Header('Cache-Control', 'no-store')
   consultar(
     @Param('id', ParseUUIDPipe) id: string,
     @UsuarioAtual() usuario: UsuarioAutenticado,
@@ -71,6 +72,7 @@ export class ProntuariosController {
   }
 
   @Get('pacientes/:casoId/dados-administrativos')
+  @Header('Cache-Control', 'no-store')
   @UseGuards(PerfisGuard)
   @Perfis('secretaria', 'coordenacao')
   dadosAdministrativos(

@@ -41,6 +41,7 @@ import type {
 } from '@clinica/shared';
 import type { UsuarioAutenticado } from '../../auth/usuario-autenticado';
 import { AuditoriaService } from '../../auditoria/auditoria.service';
+import { escaparLike } from '../../common/busca';
 import { DB } from '../../database/database.module';
 import { EmailService } from '../../notificacoes/email.service';
 import { ParametrosService } from '../../parametros/parametros.service';
@@ -121,7 +122,9 @@ export class SessoesService {
       .where(
         and(
           ne(casos.situacao, 'encerrado'),
-          busca ? ilike(inscricoes.nomeCompleto, `%${busca}%`) : undefined,
+          busca
+            ? ilike(inscricoes.nomeCompleto, `%${escaparLike(busca)}%`)
+            : undefined,
           usuario.perfil === 'estagiario'
             ? eq(vinculosEstagiario.estagiarioId, usuario.id)
             : undefined,
@@ -186,6 +189,11 @@ export class SessoesService {
     if (!paciente.estagiarioId || !paciente.estagiarioNome) {
       throw new UnprocessableEntityException(SEM_VINCULO);
     }
+    if (paciente.situacao !== 'em_atendimento') {
+      throw new UnprocessableEntityException(
+        'Só é possível agendar sessão para paciente em atendimento.',
+      );
+    }
     const estagiarioId = paciente.estagiarioId;
 
     const duracao = await this.parametros.numero('duracao_sessao_minutos');
@@ -223,6 +231,8 @@ export class SessoesService {
           .insert(sessoesAtendimento)
           .values({
             casoId: dados.casoId,
+            // A sessão pertence ao ciclo de atendimento do caso (RF28, RF66).
+            cicloAtendimento: paciente.cicloAtendimento,
             estagiarioId,
             inicio,
             termino,
@@ -339,6 +349,8 @@ export class SessoesService {
         email: inscricoes.email,
         celular: inscricoes.celular,
         canal: inscricoes.canalPreferencial,
+        situacao: casos.situacao,
+        cicloAtendimento: casos.cicloAtendimento,
         estagiarioId: estagiario.id,
         estagiarioNome: estagiario.nome,
       })
