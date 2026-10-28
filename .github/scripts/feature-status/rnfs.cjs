@@ -201,6 +201,12 @@ const ORIGENS_EXIGIDAS = {
   // Registros de acesso que não se alteram (testes) e as permissões do usuário da
   // aplicação no banco e a consulta do RF56, conferidas na implantação (registro).
   RNF52: ["api", "registro"],
+  // Auditoria de cada operação da sessão (testes) e a inspeção de que a
+  // interface não oferece meio de alterar nem apagar os registros (registro).
+  RNF10: ["api", "registro"],
+  // Respostas negadas sem conteúdo clínico (testes) e a inspeção da interface com
+  // registros completos e incompletos, antes e depois da transferência (registro).
+  RNF25: ["api", "registro"],
   // Teclado e contraste (e2e) e o leitor de tela de verdade.
   RNF24: ["e2e", "leitor-de-tela"],
   // Ferramenta automática (e2e) e a inspeção com teclado e leitor de tela.

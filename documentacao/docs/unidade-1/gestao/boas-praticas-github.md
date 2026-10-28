@@ -236,11 +236,15 @@ test('inscrição sem violações WCAG 2.2 AA em 320px (RF1, RNF56, RNF58)', ...
 
     | RNF | Evidências exigidas |
     | --- | --- |
+    | RNF10 | api (auditoria de cada operação) e registro (inspeção de que a interface não altera nem apaga os registros) |
     | RNF22 | e2e (as 3 interações) e registro (teste de tarefa com pessoas) |
     | RNF24 | e2e (teclado e contraste) e leitor de tela |
+    | RNF25 | api (respostas negadas sem conteúdo) e registro (inspeção da interface com registros completos e incompletos, antes e depois da transferência) |
     | RNF51 | api (criptografia no banco) e registro (HTTPS, TLS, chaves e troca de chave na implantação) |
     | RNF52 | api (registros que não se alteram) e registro (permissões do banco e consulta do RF56) |
     | RNF56 | e2e (axe) e leitor de tela |
+
+    Nos RNFs evolutivos, a evidência é a do patamar mínimo de lançamento, da [tabela do backlog](../../unidade-2/requisitos/backlog.md#patamar-minimo-de-lancamento-dos-rnfs-evolutivos). O RNF57, por exemplo, conta com o teste do contorno de pelo menos 2 px em todos os elementos interativos; o contraste de 3:1, o alto contraste e os tamanhos de texto são o refinamento posterior.
 
     Nos outros RNFs, um `/rnf` vale sozinho, como verificação assumida por um integrante. Nestes, o registro é a parte que os testes não cobrem, e os testes continuam exigidos.
 

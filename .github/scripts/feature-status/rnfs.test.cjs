@@ -183,8 +183,8 @@ test("o comentário traz a tabela, a marca para ser editado e como completar", (
   const texto = R.comentarioRnfs(
     [
       {
-        rnf: "RNF25",
-        testes: [{ nome: "negado (RF55, RNF25)", origem: "api" }],
+        rnf: "RNF49",
+        testes: [{ nome: "senha só em hash (RF53, RNF49)", origem: "api" }],
         registros: [],
       },
       { rnf: "RNF53", testes: [], registros: [] },
@@ -193,7 +193,7 @@ test("o comentário traz a tabela, a marca para ser editado e como completar", (
   );
   assert.match(
     texto,
-    /\| RNF25 \| ✅ verificado \| teste "negado \(RF55, RNF25\)" \(api\) \|/,
+    /\| RNF49 \| ✅ verificado \| teste "senha só em hash \(RF53, RNF49\)" \(api\) \|/,
   );
   assert.match(texto, /\| RNF53 \| ⏳ sem evidência \| — \|/);
   assert.match(texto, /\/rnf RNF53/);
@@ -303,6 +303,21 @@ test("RNF51 e RNF52 exigem os testes e o registro da implantação", () => {
     R.comentarioRnfs([linha([], [registro])], "https://x/runs/1"),
     /\| RNF51 \| ⏳ falta: teste de api \|/,
   );
+});
+
+test("RNF10 e RNF25 exigem os testes e o registro da inspeção", () => {
+  for (const rnf of ["RNF10", "RNF25"]) {
+    const api = { nome: `teste (RF10, ${rnf})`, origem: "api" };
+    const registro = { rnf, link: "https://x/ata", autor: "a" };
+    assert.equal(
+      R.todosVerificados([{ rnf, testes: [api], registros: [] }]),
+      false,
+    );
+    assert.equal(
+      R.todosVerificados([{ rnf, testes: [api], registros: [registro] }]),
+      true,
+    );
+  }
 });
 
 test("RNF56 exige o axe do e2e e o leitor de tela", () => {

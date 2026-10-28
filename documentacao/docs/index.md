@@ -94,7 +94,7 @@ Registro cronológico das versões e alterações do documento de visão e dos a
 | 27/10/2026 | 3.16 | Nova página "Plano de specs — Luís Henrique" na Unidade 3, com o escopo, as dependências e a validação das features do RF4, do RF6, do RF66, do RF69, do RF27 e do RF28 | Luís Henrique |
 | 28/10/2026 | 3.18 | Boas práticas de utilização do GitHub, Verificação dos RNFs (D4.5): testes com leitor de tela (VoiceOver) no workflow "Leitor de tela", que entram no D4.5 junto com os do CI | Gabriel da Cunha Barbaceli |
 | 28/10/2026 | 3.20 | Boas práticas de utilização do GitHub, Verificação dos RNFs (D4.5): RNFs que pedem mais de um tipo de verificação, como o RNF24 (teclado e contraste no e2e e leitor de tela) | Gabriel da Cunha Barbaceli |
-| 28/10/2026 | 3.21 | Boas práticas de utilização do GitHub, Verificação dos RNFs (D4.5): tabela das evidências exigidas por RNF (RNF22, RNF24, RNF51, RNF52 e RNF56), com o registro por /rnf como uma das origens | Gabriel da Cunha Barbaceli |
+| 28/10/2026 | 3.21 | Boas práticas de utilização do GitHub, Verificação dos RNFs (D4.5): tabela das evidências exigidas por RNF (RNF10, RNF22, RNF24, RNF25, RNF51, RNF52 e RNF56) e o patamar mínimo nos evolutivos, com o registro por /rnf como uma das origens | Gabriel da Cunha Barbaceli |
 
 A versão 1.6 está registrada com a data do commit (04/09/2026), posterior à da versão 1.7; a numeração foi mantida para preservar as referências já feitas a essas versões.
 
