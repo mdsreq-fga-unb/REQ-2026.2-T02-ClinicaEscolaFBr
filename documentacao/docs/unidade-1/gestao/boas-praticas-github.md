@@ -232,6 +232,7 @@ test('inscrição sem violações WCAG 2.2 AA em 320px (RF1, RNF56, RNF58)', ...
 - O RF pode estar no `describe` e o RNF no teste, ou os dois no mesmo nome.
 - O RF é obrigatório para que o teste de uma feature não sirva de evidência para outra que tem o mesmo RNF.
 - Só cite um RNF quando o teste verifica de fato a meta dele (ou o patamar mínimo, se for evolutivo). Um teste que só passa pela funcionalidade não é evidência do RNF.
+- **RNFs que pedem mais de um tipo de verificação** só contam com testes de todas as origens exigidas, listadas em `ORIGENS_EXIGIDAS`, no `rnfs.cjs`. O RNF24 pede o teste de teclado e contraste do e2e e o do leitor de tela de verdade (VoiceOver). Com só um dos dois, a tabela da issue mostra o que falta, e o D4.5 continua aberto.
 
 **2. Registre com `/rnf` o que não é teste automático.** Inspeção, relatório, teste manual ou teste de restauração da cópia de segurança entram por um comentário na issue da feature, com o link da evidência:
 
@@ -240,6 +241,8 @@ test('inscrição sem violações WCAG 2.2 AA em 320px (RF1, RNF56, RNF58)', ...
 ```
 
 Um comentário pode registrar vários RNFs com a mesma evidência (`/rnf RNF56 RNF57 <link>`). O comando só vale de integrantes da equipe e precisa do link.
+
+**Testes com leitor de tela.** Os testes que usam o VoiceOver de verdade ficam em `apps/web/e2e/leitor-de-tela/` e rodam no workflow "Leitor de tela", num runner macOS: toda semana, a cada merge que mexe nas telas cobertas e nas PRs que mexem nelas. Eles seguem a mesma regra de nome e entram no D4.5 sozinhos: o Feature Status junta o relatório desse workflow ao do CI, e a evidência leva o link da execução do VoiceOver. Para rodar no seu computador, use `pnpm --filter @clinica/web test:leitor-de-tela`, que assume o controle do VoiceOver e do teclado enquanto roda.
 
 **3. O que acontece sozinho:**
 
