@@ -1,6 +1,7 @@
 import { sql } from "drizzle-orm";
 import {
   check,
+  integer,
   index,
   pgEnum,
   pgTable,
@@ -23,6 +24,7 @@ export const sessoesAtendimento = pgTable(
     casoId: uuid("caso_id")
       .notNull()
       .references(() => casos.id),
+    cicloAtendimento: integer("ciclo_atendimento").notNull().default(1),
     estagiarioId: uuid("estagiario_id")
       .notNull()
       .references(() => usuarios.id),
@@ -51,6 +53,11 @@ export const sessoesAtendimento = pgTable(
     ),
     index("sessoes_estagiario_inicio").on(t.estagiarioId, t.inicio),
     index("sessoes_caso_inicio").on(t.casoId, t.inicio),
+    index("sessoes_caso_ciclo_inicio").on(
+      t.casoId,
+      t.cicloAtendimento,
+      t.inicio,
+    ),
   ],
 );
 

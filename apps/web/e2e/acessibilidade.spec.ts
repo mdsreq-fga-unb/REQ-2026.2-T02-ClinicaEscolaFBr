@@ -7,6 +7,7 @@ for (const pagina of [
   "/painel",
   "/entrar",
   "/agendar-sessao",
+  "/triagem",
   "/distribuicao",
   "/meus-casos",
 ]) {
