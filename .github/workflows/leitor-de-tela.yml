@@ -52,8 +52,10 @@ jobs:
         with:
           record: true
       # O preparo da versão do Guidepup do projeto: cria as preferências locais do
-      # VoiceOver, que a action acima (de uma versão anterior) não cria.
-      - run: pnpm --filter @clinica/web exec guidepup setup --ci --macos-record
+      # VoiceOver, que a action acima (de uma versão anterior) não cria. Sem
+      # --macos-record: a gravação usa o ffmpeg, que o pnpm não baixa, e a action
+      # já grava a tela.
+      - run: pnpm --filter @clinica/web exec guidepup setup --ci
       # Arquivos do VoiceOver da versão do Guidepup instalada no projeto.
       - run: pnpm --filter @clinica/web exec guidepup install voiceover
       - run: pnpm --filter @clinica/web exec playwright install webkit
