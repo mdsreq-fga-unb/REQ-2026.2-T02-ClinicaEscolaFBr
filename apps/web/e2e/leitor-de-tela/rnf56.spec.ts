@@ -24,8 +24,8 @@ test.describe("Leitor de tela na inscrição e no comprovante (RNF56)", () => {
     await voiceOver.navigateToWebContent();
 
     try {
-      await irAte(voiceOver, "Dados e contatos");
-      expect(await voiceOver.lastSpokenPhrase()).toMatch(/heading|título/i);
+      // O título da etapa, depois do indicador de etapas ("1 Dados e contatos").
+      await irAte(voiceOver, /heading.*Dados e contatos/i);
       // O VoiceOver lê o rótulo e, no item seguinte, o campo, que precisa ser
       // anunciado como campo de texto com o nome do rótulo.
       await irAte(voiceOver, "Nome completo");
@@ -48,8 +48,8 @@ test.describe("Leitor de tela na inscrição e no comprovante (RNF56)", () => {
           .filter({ hasText: "Confira os campos antes de continuar" }),
         "Confira os campos antes de continuar",
       );
-      await irAte(voiceOver, "CPF:");
-      expect(await voiceOver.lastSpokenPhrase()).toMatch(/link/i);
+      // Cada erro do resumo é um link para o campo ("link CPF : Preencha...").
+      await irAte(voiceOver, /link CPF\s*:/);
     } finally {
       await anexarFala(test.info(), voiceOver, "fala-inscricao.json");
     }

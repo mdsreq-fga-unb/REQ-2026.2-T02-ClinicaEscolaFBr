@@ -38,13 +38,19 @@ export async function simularRotas(
   });
 }
 
-// Avança o cursor do VoiceOver (VO + seta para a direita) até ele falar o texto.
-export async function irAte(voiceOver: VoiceOverPlaywright, texto: string) {
+// Avança o cursor do VoiceOver (VO + seta para a direita) até ele falar o texto
+// ou uma fala que combine com o padrão.
+export async function irAte(
+  voiceOver: VoiceOverPlaywright,
+  alvo: string | RegExp,
+) {
+  const chegou = (fala: string) =>
+    typeof alvo === "string" ? fala.includes(alvo) : alvo.test(fala);
   for (let i = 0; i < 80; i++) {
-    if ((await voiceOver.lastSpokenPhrase()).includes(texto)) return;
+    if (chegou(await voiceOver.lastSpokenPhrase())) return;
     await voiceOver.next();
   }
-  throw new Error(`O VoiceOver não chegou a "${texto}".`);
+  throw new Error(`O VoiceOver não chegou a "${alvo}".`);
 }
 
 // O VoiceOver falou o texto em algum momento (avisos ao vivo chegam com atraso).
