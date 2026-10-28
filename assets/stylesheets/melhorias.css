@@ -1,0 +1,1052 @@
+/* ==========================================================================
+   Clínica Escola FBr — ajustes de leitura das Unidades 1 e 2
+   Complementa extra.css e reading.css; usa os mesmos tokens (--fbr-*).
+
+   1. Tokens das decisões de MVP
+   2. Páginas das unidades: grupos de cards e cadeia de rastreabilidade
+   3. Números-chave e resumos (Cenário, Backlog, Análise do Feedback)
+   4. Etiquetas: feature, issue, MVP, classificação de RNF
+   5. Blocos recolhidos de histórico e notas de revisão
+   6. Matriz de priorização interativa
+   7. Tabelas empilhadas no celular
+   8. Expandir/recolher tudo e ampliação de figuras
+   9. Movimento: destaque do destino e abertura suave
+   ========================================================================== */
+
+/* 1. Tokens ------------------------------------------------------------------ */
+:root,
+[data-md-color-scheme="default"] {
+  --mvp-in-bg: var(--fbr-blue-600);
+  --mvp-in-ink: #ffffff;
+  --mvp-in-soft: var(--fbr-blue-100);
+  --mvp-in-soft-ink: var(--fbr-blue-800);
+  --mvp-later-bg: var(--fbr-orange-50);
+  --mvp-later-line: var(--fbr-orange-600);
+  --mvp-later-ink: #8a4300;
+  --mvp-partial-bg: #fff6e0;
+  --mvp-partial-ink: #6b4a00;
+  --quad-high: rgba(0, 101, 138, 0.045);
+  --quad-low: rgba(11, 26, 36, 0.02);
+}
+
+[data-md-color-scheme="slate"] {
+  --mvp-in-bg: #2f8fb8;
+  --mvp-in-ink: #ffffff;
+  --mvp-in-soft: rgba(95, 193, 230, 0.14);
+  --mvp-in-soft-ink: #9fdcf3;
+  --mvp-later-bg: rgba(255, 178, 74, 0.1);
+  --mvp-later-line: var(--fbr-orange-400);
+  --mvp-later-ink: #ffc977;
+  --mvp-partial-bg: rgba(255, 214, 102, 0.12);
+  --mvp-partial-ink: #ffe08a;
+  --quad-high: rgba(95, 193, 230, 0.06);
+  --quad-low: rgba(255, 255, 255, 0.015);
+}
+
+/* 2. Páginas das unidades ---------------------------------------------------- */
+
+/* Título de cada grupo de cards ("Visão do produto", "Requisitos"...) */
+.md-typeset h3 + .unit-cards {
+  margin-top: 0.6rem;
+}
+
+.md-typeset h2#conteudo-da-unidade + h3 {
+  margin-top: 0.8em;
+}
+
+/* Cadeia Problema → OG → OEs → CPs → Features → RFs/RNFs */
+.md-typeset .trace-chain > ol {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.6rem 1.4rem;
+  margin: 1rem 0 0.5rem;
+  padding: 0;
+  list-style: none;
+  counter-reset: chain;
+}
+
+.md-typeset .trace-chain > ol > li {
+  position: relative;
+  margin: 0;
+  counter-increment: chain;
+}
+
+/* Seta entre as etapas (exceto no fim de cada linha da grade) */
+@media screen and (min-width: 45em) {
+  .md-typeset .trace-chain > ol > li:not(:nth-child(3n)):not(:last-child)::after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    right: -1.05rem;
+    width: 0.7rem;
+    height: 0.7rem;
+    border-top: 2px solid var(--fbr-accent);
+    border-right: 2px solid var(--fbr-accent);
+    transform: translateY(-50%) rotate(45deg);
+  }
+}
+
+.md-typeset .trace-chain a {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  height: 100%;
+  box-sizing: border-box;
+  padding: 0.75rem 0.9rem;
+  border: 1px solid var(--fbr-line);
+  border-radius: var(--fbr-radius);
+  background: var(--fbr-surface);
+  box-shadow: var(--fbr-shadow-sm);
+  color: var(--fbr-ink-muted);
+  font-size: 0.72rem;
+  line-height: 1.45;
+  text-decoration: none;
+  transition: border-color var(--fbr-fast) ease, transform var(--fbr-fast) var(--fbr-ease), box-shadow var(--fbr-fast) ease;
+}
+
+.md-typeset .trace-chain a:hover,
+.md-typeset .trace-chain a:focus-visible {
+  border-color: var(--fbr-blue-300);
+  box-shadow: var(--fbr-shadow);
+  transform: translateY(-2px);
+}
+
+.md-typeset .trace-chain__step {
+  color: var(--fbr-ink-strong);
+  font-size: 0.82rem;
+  font-weight: 700;
+}
+
+.md-typeset .trace-chain__step::before {
+  content: counter(chain) " · ";
+  color: var(--fbr-accent-text);
+}
+
+@media screen and (max-width: 44.9375em) {
+  .md-typeset .trace-chain > ol {
+    grid-template-columns: 1fr;
+    gap: 0.9rem;
+  }
+
+  .md-typeset .trace-chain > ol > li:not(:last-child)::after {
+    content: "";
+    position: absolute;
+    bottom: -0.72rem;
+    left: 1.4rem;
+    width: 0.5rem;
+    height: 0.5rem;
+    border-top: 2px solid var(--fbr-accent);
+    border-right: 2px solid var(--fbr-accent);
+    transform: rotate(135deg);
+  }
+}
+
+/* 3. Números-chave e resumos ------------------------------------------------- */
+
+.md-typeset .key-figures > ul,
+.mvp-summary {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(8.5rem, 1fr));
+  gap: 0.6rem;
+}
+
+.md-typeset .key-figures > ul {
+  margin: 0.4rem 0 1.4rem;
+  padding: 0;
+  list-style: none;
+}
+
+.md-typeset .key-figures li,
+.mvp-summary__item {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+  margin: 0;
+  padding: 0.8rem 0.95rem;
+  border: 1px solid var(--fbr-line);
+  border-radius: var(--fbr-radius);
+  background: var(--fbr-surface);
+  color: var(--fbr-ink-muted);
+  font-size: 0.72rem;
+  line-height: 1.4;
+}
+
+.md-typeset .key-figures__value,
+.mvp-summary__value {
+  color: var(--fbr-ink-strong);
+  font-size: 1.45rem;
+  font-weight: 750;
+  letter-spacing: -0.02em;
+  line-height: 1.1;
+  font-variant-numeric: tabular-nums;
+}
+
+.mvp-summary {
+  margin: 0 0 1.6rem;
+}
+
+.mvp-summary__item.is-mvp .mvp-summary__value { color: var(--mvp-in-bg); }
+.mvp-summary__item.is-later .mvp-summary__value { color: var(--mvp-later-line); }
+
+.mvp-summary__bar,
+.decision-summary__bar {
+  display: flex;
+  grid-column: 1 / -1;
+  height: 0.5rem;
+  overflow: hidden;
+  border-radius: 999px;
+  background: var(--fbr-surface-2);
+}
+
+.mvp-summary__seg.is-mvp { background: var(--mvp-in-bg); }
+.mvp-summary__seg.is-later { background: var(--mvp-later-line); }
+
+/* Resumo das decisões da verificação cruzada */
+.decision-summary {
+  margin: 0.4rem 0 1rem;
+  padding: 0.9rem 1rem;
+  border: 1px solid var(--fbr-line);
+  border-radius: var(--fbr-radius);
+  background: var(--fbr-surface);
+}
+
+.md-typeset .decision-summary__title {
+  margin: 0 0 0.55rem;
+  color: var(--fbr-ink-strong);
+  font-weight: 700;
+}
+
+.decision-summary__bar {
+  gap: 2px;
+  background: transparent;
+}
+
+.decision-summary__seg {
+  border-radius: 2px;
+}
+
+.decision-summary__seg,
+.decision-summary__dot {
+  background: currentColor;
+}
+
+.md-typeset .decision-summary__list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem 1.1rem;
+  margin: 0.65rem 0 0;
+  padding: 0;
+  list-style: none;
+  font-size: 0.74rem;
+}
+
+.md-typeset .decision-summary__item {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  margin: 0;
+  color: var(--fbr-ink-muted);
+}
+
+.md-typeset .decision-summary__item strong {
+  color: var(--fbr-ink-strong);
+}
+
+.decision-summary__dot {
+  width: 0.6rem;
+  height: 0.6rem;
+  border-radius: 50%;
+}
+
+/* As classes .decision--* dão a cor de texto; a barra usa currentColor */
+.decision-summary .decision--na { color: var(--fbr-line-strong); }
+
+/* Categorias de RNF (10.2.3.1) */
+.md-typeset .category-grid > ul {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.6rem;
+  margin: 0.6rem 0 1.2rem;
+  padding: 0;
+  list-style: none;
+}
+
+.md-typeset .category-grid li {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.4rem;
+  margin: 0;
+  padding: 0.75rem 0.9rem;
+  border: 1px solid var(--fbr-line);
+  border-radius: var(--fbr-radius);
+  background: var(--fbr-surface);
+  font-size: 0.74rem;
+  line-height: 1.5;
+}
+
+@media screen and (max-width: 44.9375em) {
+  .md-typeset .category-grid > ul {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* 4. Etiquetas ---------------------------------------------------------------- */
+
+.mvp-tag,
+.rnf-class,
+.req__feature-tag,
+.md-typeset .issue-chip {
+  display: inline-flex;
+  align-items: center;
+  flex: none;
+  padding: 0.08rem 0.5rem;
+  border: 1px solid transparent;
+  border-radius: 999px;
+  font-size: 0.64rem;
+  font-weight: 650;
+  line-height: 1.5;
+  white-space: nowrap;
+}
+
+.mvp-tag--in { background: var(--mvp-in-soft); color: var(--mvp-in-soft-ink); }
+.mvp-tag--later { border: 1px dashed var(--mvp-later-line); background: var(--mvp-later-bg); color: var(--mvp-later-ink); }
+.mvp-tag--partial { background: var(--mvp-partial-bg); color: var(--mvp-partial-ink); }
+
+.rnf-class--required,
+.mvp-tag--required { background: var(--mvp-in-bg); color: var(--mvp-in-ink); }
+.rnf-class--linked,
+.mvp-tag--linked { background: var(--mvp-in-soft); color: var(--mvp-in-soft-ink); }
+.rnf-class--evolving,
+.mvp-tag--evolving { border-color: var(--fbr-blue-300); color: var(--fbr-link); }
+.rnf-class--na,
+.mvp-tag--na { border: 1px dashed var(--mvp-later-line); background: var(--mvp-later-bg); color: var(--mvp-later-ink); }
+
+/* Etiqueta dentro do resumo do card de requisito */
+.md-typeset details.req > summary .mvp-tag {
+  margin-left: 0.2rem;
+}
+
+.req__feature-tag {
+  padding-inline: 0.45rem;
+  background: var(--fbr-blue-800);
+  color: #ffffff;
+  font-size: 0.56rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+[data-md-color-scheme="slate"] .req__feature-tag {
+  background: #1e4a61;
+}
+
+/* Link da issue no título da feature */
+.md-typeset .issue-chip {
+  border-color: var(--fbr-line-strong);
+  color: var(--fbr-ink-muted);
+  text-decoration: none;
+  font-variant-numeric: tabular-nums;
+}
+
+.md-typeset .issue-chip:hover {
+  border-color: var(--fbr-link);
+  color: var(--fbr-link);
+}
+
+.md-typeset h4.feature-heading .issue-chip {
+  align-self: center;
+  margin-left: auto;
+}
+
+.md-typeset details.req > summary .issue-chip {
+  margin-left: auto;
+}
+
+.md-typeset details.req > summary .issue-chip ~ .mvp-tag {
+  margin-left: 0.2rem;
+}
+
+.md-typeset details.req > summary.req__summary:has(.issue-chip)::after {
+  margin-left: 0.4rem;
+}
+
+/* Feature com um único RF de mesmo nome: o título fica só como âncora */
+.md-typeset h4.feature-heading.feature-heading--merged {
+  height: 0;
+  margin: 0.9em 0 0;
+  padding: 0;
+  overflow: hidden;
+  border: 0;
+}
+
+.md-typeset h4.feature-heading--merged + details.req {
+  margin-top: 0.3rem;
+}
+
+/* Rótulo genérico das tabelas ("Tabela"): discreto, o título da seção já diz o assunto */
+.md-typeset .table-toggle__label--generic {
+  color: var(--fbr-ink-muted);
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+/* Título logo após uma tabela retrátil: aproxima do bloco anterior, que fechado é só uma barra */
+.md-typeset details.table-toggle + :is(h3, h4) {
+  margin-top: 1.4em;
+}
+
+/* 5. Notas de revisão e históricos recolhidos -------------------------------- */
+
+.md-typeset details.revision-note {
+  margin: 1rem 0 1.3rem;
+  padding: 0;
+  border: 1px solid var(--fbr-line);
+  border-left: 3px solid var(--fbr-accent);
+  border-radius: var(--fbr-radius-sm);
+  background: var(--fbr-orange-50);
+  box-shadow: none;
+  font-size: inherit;
+}
+
+[data-md-color-scheme="slate"] .md-typeset details.revision-note {
+  background: rgba(255, 178, 74, 0.06);
+}
+
+.md-typeset details.revision-note > summary {
+  margin: 0;
+  padding: 0.6rem 2.4rem 0.6rem 0.9rem;
+  background: transparent;
+  color: var(--fbr-ink-strong);
+  font-size: 0.78rem;
+  font-weight: 650;
+}
+
+.md-typeset details.revision-note > summary::before {
+  display: none;
+}
+
+.md-typeset details.revision-note > summary::after {
+  top: 50%;
+  margin-top: -0.5rem;
+}
+
+.md-typeset details.revision-note > :not(summary) {
+  margin-inline: 0.9rem;
+}
+
+.md-typeset details.revision-note > :last-child {
+  margin-bottom: 0.9rem;
+}
+
+/* 6. Matriz de priorização ----------------------------------------------------- */
+
+.prio-matrix {
+  margin: 1.2rem 0 0.6rem;
+  padding: 1rem;
+  border: 1px solid var(--fbr-line);
+  border-radius: var(--fbr-radius-lg);
+  background: var(--fbr-surface);
+  box-shadow: var(--fbr-shadow-sm);
+}
+
+.prio-matrix__tools {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.6rem;
+}
+
+.prio-matrix__filters {
+  display: inline-flex;
+  flex-wrap: wrap;
+  gap: 0.25rem;
+  padding: 0.2rem;
+  border-radius: 999px;
+  background: var(--fbr-surface-2);
+}
+
+.prio-matrix__filter {
+  padding: 0.3rem 0.8rem;
+  border-radius: 999px;
+  color: var(--fbr-ink-muted);
+  font: inherit;
+  font-size: 0.7rem;
+  font-weight: 650;
+  cursor: pointer;
+  transition: background var(--fbr-fast) ease, color var(--fbr-fast) ease;
+}
+
+.prio-matrix__filter:hover {
+  color: var(--fbr-ink-strong);
+}
+
+.prio-matrix__filter[aria-pressed="true"] {
+  background: var(--fbr-surface);
+  box-shadow: var(--fbr-shadow-sm);
+  color: var(--fbr-ink-strong);
+}
+
+.prio-matrix__select {
+  padding: 0.35rem 0.6rem;
+  border: 1px solid var(--fbr-line-strong);
+  border-radius: var(--fbr-radius-sm);
+  background: var(--fbr-surface);
+  color: var(--fbr-ink);
+  font: inherit;
+  font-size: 0.72rem;
+}
+
+.md-typeset .prio-matrix__legend {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.35rem;
+  margin: 0.7rem 0 0.4rem;
+  color: var(--fbr-ink-muted);
+  font-size: 0.7rem;
+}
+
+.prio-matrix__grid {
+  display: grid;
+  grid-template-columns: 3.6rem repeat(4, minmax(0, 1fr));
+  margin-top: 0.4rem;
+}
+
+.prio-matrix__quadrant {
+  display: flex;
+  align-items: baseline;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 0 0.4rem;
+  padding: 0.35rem 0.4rem;
+  color: var(--fbr-ink-muted);
+  font-size: 0.66rem;
+  text-align: center;
+}
+
+.prio-matrix__quadrant strong {
+  color: var(--fbr-ink-strong);
+  font-size: 0.76rem;
+  font-style: italic;
+}
+
+.prio-matrix__ylabel,
+.prio-matrix__xlabel {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  color: var(--fbr-ink-muted);
+  font-size: 0.62rem;
+  line-height: 1.25;
+}
+
+.prio-matrix__ylabel {
+  grid-column: 1;
+  padding-right: 0.5rem;
+  text-align: right;
+}
+
+.prio-matrix__xlabel {
+  align-items: center;
+  padding-top: 0.4rem;
+  text-align: center;
+}
+
+.prio-matrix__ylabel strong,
+.prio-matrix__xlabel strong {
+  color: var(--fbr-ink-strong);
+  font-size: 0.8rem;
+}
+
+.prio-matrix__axis {
+  color: var(--fbr-ink-subtle);
+  font-size: 0.6rem;
+  font-weight: 650;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.prio-matrix__axis--y {
+  align-self: end;
+  padding: 0 0.5rem 0.4rem 0;
+  text-align: right;
+}
+
+.prio-matrix__axis--x {
+  padding-top: 0.3rem;
+  text-align: center;
+}
+
+.prio-matrix__cell {
+  display: flex;
+  flex-wrap: wrap;
+  align-content: flex-start;
+  gap: 0.3rem;
+  min-height: 3.2rem;
+  padding: 0.5rem;
+  border-top: 1px solid var(--fbr-line);
+  border-left: 1px solid var(--fbr-line);
+}
+
+.prio-matrix__cell.is-high { background: var(--quad-high); }
+.prio-matrix__cell.is-low { background: var(--quad-low); }
+
+/* Divisões dos quadrantes, tracejadas como na matriz original */
+.prio-matrix__cell.is-split-x { border-left: 2px dashed var(--fbr-ink-subtle); }
+.prio-matrix__cell.is-split-y { border-top: 2px dashed var(--fbr-ink-subtle); }
+.prio-matrix__cell.is-last-col { border-right: 1px solid var(--fbr-line); }
+.prio-matrix__cell.is-last-row { border-bottom: 1px solid var(--fbr-line); }
+
+.prio-chip {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 2.6rem;
+  padding: 0.18rem 0.45rem;
+  border: 1.5px solid transparent;
+  border-radius: 999px;
+  font: inherit;
+  font-size: 0.66rem;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  line-height: 1.3;
+  cursor: pointer;
+  transition: transform var(--fbr-fast) var(--fbr-ease), opacity var(--fbr-base) ease, box-shadow var(--fbr-fast) ease;
+}
+
+.prio-chip.is-mvp {
+  background: var(--mvp-in-bg);
+  color: var(--mvp-in-ink);
+}
+
+.prio-chip.is-later {
+  border-style: dashed;
+  border-color: var(--mvp-later-line);
+  background: var(--mvp-later-bg);
+  color: var(--mvp-later-ink);
+}
+
+.prio-chip:hover,
+.prio-chip:focus-visible {
+  transform: translateY(-1px) scale(1.06);
+  box-shadow: var(--fbr-shadow);
+}
+
+.prio-chip:focus-visible {
+  outline: 2px solid var(--fbr-focus);
+  outline-offset: 2px;
+}
+
+.prio-chip.is-selected {
+  outline: 2px solid var(--fbr-ink-strong);
+  outline-offset: 2px;
+}
+
+.prio-chip.is-dimmed {
+  opacity: 0.16;
+  pointer-events: none;
+}
+
+.prio-chip--sample {
+  min-width: 0;
+  cursor: default;
+  pointer-events: none;
+}
+
+.prio-matrix__detail {
+  min-height: 3rem;
+  margin-top: 0.9rem;
+}
+
+.md-typeset .prio-matrix__hint,
+.md-typeset .prio-matrix__note {
+  margin: 0;
+  color: var(--fbr-ink-subtle);
+  font-size: 0.68rem;
+}
+
+.md-typeset .prio-matrix__note {
+  margin-top: 0.6rem;
+}
+
+.prio-matrix__card {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.25rem;
+  padding: 0.75rem 0.9rem;
+  border: 1px solid var(--fbr-line);
+  border-radius: var(--fbr-radius);
+  background: var(--fbr-bg);
+  font-size: 0.74rem;
+  animation: fbr-rise var(--fbr-base) var(--fbr-ease);
+}
+
+.prio-matrix__card-title {
+  color: var(--fbr-ink-strong);
+  font-size: 0.82rem;
+}
+
+.prio-matrix__card-meta,
+.prio-matrix__card-reason {
+  color: var(--fbr-ink-muted);
+}
+
+.prio-matrix__card-link {
+  margin-top: 0.2rem;
+  font-weight: 650;
+}
+
+.prio-matrix__tip {
+  position: fixed;
+  z-index: 10;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.2rem;
+  max-width: 18rem;
+  padding: 0.55rem 0.7rem;
+  border-radius: var(--fbr-radius-sm);
+  background: var(--fbr-blue-900);
+  box-shadow: var(--fbr-shadow-lg);
+  color: #e8f2f7;
+  font-size: 0.66rem;
+  line-height: 1.4;
+  pointer-events: none;
+}
+
+.prio-matrix__tip[hidden] {
+  display: none;
+}
+
+.prio-matrix__tip strong {
+  color: #ffffff;
+  font-size: 0.72rem;
+}
+
+.prio-matrix__tip-decision {
+  padding: 0.05rem 0.45rem;
+  border-radius: 999px;
+  font-size: 0.6rem;
+  font-weight: 700;
+}
+
+.prio-matrix__tip-decision.is-mvp { background: var(--mvp-in-bg); color: var(--mvp-in-ink); }
+.prio-matrix__tip-decision.is-later { border: 1px dashed var(--mvp-later-line); background: var(--mvp-later-bg); color: var(--mvp-later-ink); }
+.prio-matrix__tip .prio-matrix__tip-decision.is-later { background: #3a2a14; color: #ffc977; }
+
+.md-typeset details.prio-matrix__static {
+  margin: 0.6rem 0 1rem;
+  border: 0;
+  background: transparent;
+  box-shadow: none;
+  font-size: 0.74rem;
+}
+
+.md-typeset details.prio-matrix__static > summary {
+  display: inline-block;
+  padding: 0.2rem 0 0.2rem 1.4rem;
+  background: transparent;
+  color: var(--fbr-link);
+  font-weight: 600;
+}
+
+.md-typeset details.prio-matrix__static > summary::before {
+  display: none;
+}
+
+.md-typeset details.prio-matrix__static > summary::after {
+  top: 0.25rem;
+  right: auto;
+  left: 0;
+}
+
+@media screen and (max-width: 44.9375em) {
+  .prio-matrix {
+    margin-inline: -0.4rem;
+    padding: 0.7rem 0.5rem;
+  }
+
+  .prio-matrix__grid {
+    grid-template-columns: 2.1rem repeat(4, minmax(0, 1fr));
+  }
+
+  .prio-matrix__ylabel span,
+  .prio-matrix__quadrant span,
+  .prio-matrix__axis--y {
+    display: none;
+  }
+
+  .prio-matrix__cell {
+    gap: 0.2rem;
+    padding: 0.3rem 0.2rem;
+  }
+
+  .prio-chip {
+    min-width: 0;
+    padding: 0.12rem 0.3rem;
+    font-size: 0.58rem;
+  }
+}
+
+/* 7. Tabelas empilhadas no celular ---------------------------------------------- */
+
+@media screen and (max-width: 44.9375em) {
+  .md-typeset table[data-stack] {
+    display: block;
+    border: 0;
+  }
+
+  .md-typeset table[data-stack] thead {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+  }
+
+  .md-typeset table[data-stack] tbody,
+  .md-typeset table[data-stack] tr {
+    display: block;
+  }
+
+  .md-typeset table[data-stack] tr {
+    margin: 0 0 0.6rem;
+    padding: 0.5rem 0.75rem;
+    border: 1px solid var(--fbr-line);
+    border-radius: var(--fbr-radius-sm);
+    background: var(--fbr-surface);
+  }
+
+  .md-typeset table[data-stack] td {
+    display: grid;
+    grid-template-columns: 7rem minmax(0, 1fr);
+    gap: 0.6rem;
+    width: auto !important;
+    min-width: 0 !important;
+    padding: 0.3rem 0;
+    border: 0;
+    border-bottom: 1px solid var(--fbr-line);
+  }
+
+  .md-typeset table[data-stack] td:last-child {
+    border-bottom: 0;
+  }
+
+  .md-typeset table[data-stack] td::before {
+    content: attr(data-label);
+    min-width: 0;
+    overflow-wrap: anywhere;
+    color: var(--fbr-ink-subtle);
+    line-height: 1.35;
+    font-size: 0.62rem;
+    font-weight: 700;
+    letter-spacing: 0.03em;
+    text-transform: uppercase;
+  }
+
+  .md-typeset table[data-stack] td > .mvp-tag,
+  .md-typeset table[data-stack] td > .rnf-class,
+  .md-typeset table[data-stack] td > .decision {
+    justify-self: start;
+  }
+
+  .md-typeset .md-typeset__scrollwrap:has(table[data-stack]) {
+    overflow: visible;
+  }
+
+  .md-typeset .md-typeset__table:has(table[data-stack]) {
+    display: block;
+    padding: 0;
+  }
+
+  .md-typeset .table-scroll-hint:has(+ .md-typeset__scrollwrap table[data-stack]) {
+    display: none;
+  }
+}
+
+/* 8. Expandir/recolher tudo e ampliação ----------------------------------------- */
+
+.md-typeset .reading-meta--tools {
+  margin-top: -0.2em;
+}
+
+.md-typeset .fold-all {
+  margin-left: auto;
+  padding: 0.12rem 0.75rem;
+  border: 1px solid var(--fbr-line-strong);
+  border-radius: 999px;
+  background: var(--fbr-surface);
+  color: var(--fbr-ink-strong);
+  font: inherit;
+  font-size: 0.7rem;
+  font-weight: 650;
+  cursor: pointer;
+}
+
+.md-typeset .fold-all:hover {
+  border-color: var(--fbr-link);
+  color: var(--fbr-link);
+}
+
+.md-typeset .fold-all:focus-visible {
+  outline: 2px solid var(--fbr-focus);
+  outline-offset: 2px;
+}
+
+.fbr-lightbox {
+  width: min(96vw, 1400px);
+  max-height: 94vh;
+  padding: 0.8rem;
+  border: 0;
+  border-radius: var(--fbr-radius-lg);
+  background: var(--fbr-surface);
+  box-shadow: var(--fbr-shadow-lg);
+  color: var(--fbr-ink);
+}
+
+.fbr-lightbox::backdrop {
+  background: rgba(0, 20, 30, 0.72);
+}
+
+.fbr-lightbox[open] {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  animation: fbr-rise var(--fbr-base) var(--fbr-ease);
+}
+
+.fbr-lightbox__frame {
+  display: flex;
+  justify-content: center;
+  overflow: auto;
+  max-height: calc(94vh - 7rem);
+  border-radius: var(--fbr-radius);
+  background: #ffffff;
+}
+
+/* Inteira na tela por padrão; um clique alterna para a largura total (com rolagem) */
+.fbr-lightbox__img {
+  display: block;
+  max-width: 100%;
+  max-height: calc(94vh - 7rem);
+  height: auto;
+  cursor: zoom-in;
+}
+
+.fbr-lightbox.is-zoomed .fbr-lightbox__frame {
+  justify-content: flex-start;
+}
+
+.fbr-lightbox.is-zoomed .fbr-lightbox__img {
+  max-width: none;
+  max-height: none;
+  width: 200%;
+  cursor: zoom-out;
+}
+
+.fbr-lightbox__close {
+  align-self: flex-end;
+  padding: 0.3rem 0.9rem;
+  border: 1px solid var(--fbr-line-strong);
+  border-radius: 999px;
+  background: var(--fbr-surface);
+  color: var(--fbr-ink-strong);
+  font: inherit;
+  font-size: 0.75rem;
+  font-weight: 650;
+  cursor: pointer;
+}
+
+.fbr-lightbox__caption {
+  margin: 0;
+  color: var(--fbr-ink-muted);
+  font-size: 0.75rem;
+  text-align: center;
+}
+
+.fbr-lightbox__original {
+  align-self: center;
+  color: var(--fbr-link);
+  font-size: 0.72rem;
+  font-weight: 600;
+}
+
+.md-typeset .figure-media__zoom {
+  cursor: zoom-in;
+}
+
+/* 9. Movimento ------------------------------------------------------------------ */
+
+@keyframes fbr-rise {
+  from { opacity: 0; transform: translateY(4px); }
+  to { opacity: 1; transform: none; }
+}
+
+/* Ao seguir um link para #rf13, o destino ganha um destaque que esmaece */
+@keyframes fbr-target {
+  0%, 35% { box-shadow: 0 0 0 4px rgba(247, 147, 29, 0.45); background-color: var(--fbr-orange-50); }
+  100% { box-shadow: 0 0 0 0 rgba(247, 147, 29, 0); }
+}
+
+.md-typeset details.req:target,
+.md-typeset h3:target,
+.md-typeset h4:target + details.req {
+  animation: fbr-target 1.8s ease-out;
+}
+
+/* Abertura suave dos blocos (navegadores com suporte a interpolate-size) */
+@media (prefers-reduced-motion: no-preference) {
+  @supports (interpolate-size: allow-keywords) {
+    :root {
+      interpolate-size: allow-keywords;
+    }
+
+    .md-typeset details.req::details-content,
+    .md-typeset details.table-toggle::details-content,
+    .md-typeset details.feature-area::details-content,
+    .md-typeset details.cp-context::details-content,
+    .md-typeset details.revision-note::details-content,
+    .md-typeset details.prio-matrix__static::details-content {
+      block-size: 0;
+      overflow: hidden;
+      transition: block-size var(--fbr-base) var(--fbr-ease), content-visibility var(--fbr-base) allow-discrete;
+    }
+
+    .md-typeset details[open].req::details-content,
+    .md-typeset details[open].table-toggle::details-content,
+    .md-typeset details[open].feature-area::details-content,
+    .md-typeset details[open].cp-context::details-content,
+    .md-typeset details[open].revision-note::details-content,
+    .md-typeset details[open].prio-matrix__static::details-content {
+      block-size: auto;
+    }
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .md-typeset details.req:target,
+  .md-typeset h3:target,
+  .md-typeset h4:target + details.req,
+  .prio-matrix__card,
+  .fbr-lightbox[open] {
+    animation: none;
+  }
+
+  .prio-chip,
+  .md-typeset .trace-chain a {
+    transition: none;
+  }
+}
+
+@media print {
+  .prio-matrix__tools,
+  .prio-matrix__detail,
+  .fold-all,
+  .prio-matrix__tip {
+    display: none !important;
+  }
+}

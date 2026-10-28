@@ -1,0 +1,3497 @@
+
+<!doctype html>
+<html lang="pt" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Documentação do projeto Clínica Escola FBr para as entregas das Unidades 1 a 4.">
+      
+      
+      
+        <link rel="canonical" href="https://mdsreq-fga-unb.github.io/REQ-2026.2-T02-ClinicaEscolaFBr/unidade-3/projeto-features-ciclo-3/">
+      
+      
+        <link rel="prev" href="../">
+      
+      
+        <link rel="next" href="../prototipos-ciclo-3/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../assets/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.8.0">
+    
+    
+      
+        <title>Projeto das features do Ciclo 3 - Clínica Escola FBr - Documentação</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.57a0d79d.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.fb2fffe2.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,300..800;1,14..32,300..800&family=JetBrains+Mono:wght@400;500;600&display=swap">
+  <style>:root{--md-text-font:"Inter";--md-code-font:"JetBrains Mono"}</style>
+
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/extra.css">
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/reading.css">
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/melhorias.css">
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="custom" data-md-color-accent="custom">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#projeto-das-features-do-ciclo-3" class="md-skip">
+          Pular para conteúdo
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow md-header--lifted" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Cabeçalho">
+    <a href="../.." title="Clínica Escola FBr - Documentação" class="md-header__button md-logo" aria-label="Clínica Escola FBr - Documentação" data-md-component="logo">
+      <img class="fbr-logo fbr-logo--light" src="../../assets/images/logo-fbr.png" alt="" width="131" height="144">
+<img class="fbr-logo fbr-logo--dark" src="../../assets/images/logo-fbr-dark.png" alt="" width="131" height="144">
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Clínica Escola FBr - Documentação
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Projeto das features do Ciclo 3
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="custom" data-md-color-accent="custom"  aria-label="Alternar para modo escuro"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Alternar para modo escuro" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m17.75 4.09-2.53 1.94.91 3.06-2.63-1.81-2.63 1.81.91-3.06-2.53-1.94L12.44 4l1.06-3 1.06 3zm3.5 6.91-1.64 1.25.59 1.98-1.7-1.17-1.7 1.17.59-1.98L15.75 11l2.06-.05L18.5 9l.69 1.95zm-2.28 4.95c.83-.08 1.72 1.1 1.19 1.85-.32.45-.66.87-1.08 1.27C15.17 23 8.84 23 4.94 19.07c-3.91-3.9-3.91-10.24 0-14.14.4-.4.82-.76 1.27-1.08.75-.53 1.93.36 1.85 1.19-.27 2.86.69 5.83 2.89 8.02a9.96 9.96 0 0 0 8.02 2.89m-1.64 2.02a12.08 12.08 0 0 1-7.8-3.47c-2.17-2.19-3.33-5-3.49-7.82-2.81 3.14-2.7 7.96.31 10.98 3.02 3.01 7.84 3.12 10.98.31"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="custom" data-md-color-accent="custom"  aria-label="Alternar para modo claro"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Alternar para modo claro" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 7a5 5 0 0 1 5 5 5 5 0 0 1-5 5 5 5 0 0 1-5-5 5 5 0 0 1 5-5m0 2a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3m0-7 2.39 3.42C13.65 5.15 12.84 5 12 5s-1.65.15-2.39.42zM3.34 7l4.16-.35A7.2 7.2 0 0 0 5.94 8.5c-.44.74-.69 1.5-.83 2.29zm.02 10 1.76-3.77a7.131 7.131 0 0 0 2.38 4.14zM20.65 7l-1.77 3.79a7.02 7.02 0 0 0-2.38-4.15zm-.01 10-4.14.36c.59-.51 1.12-1.14 1.54-1.86.42-.73.69-1.5.83-2.29zM12 22l-2.41-3.44c.74.27 1.55.44 2.41.44.82 0 1.63-.17 2.37-.44z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Buscar" placeholder="Buscar" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Pesquisar">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Limpar" aria-label="Limpar" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Inicializando busca
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr" title="Ir para repositório" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 2A10 10 0 0 0 2 12c0 4.42 2.87 8.17 6.84 9.5.5.08.66-.23.66-.5v-1.69c-2.77.6-3.36-1.34-3.36-1.34-.46-1.16-1.11-1.47-1.11-1.47-.91-.62.07-.6.07-.6 1 .07 1.53 1.03 1.53 1.03.87 1.52 2.34 1.07 2.91.83.09-.65.35-1.09.63-1.34-2.22-.25-4.55-1.11-4.55-4.92 0-1.11.38-2 1.03-2.71-.1-.25-.45-1.29.1-2.64 0 0 .84-.27 2.75 1.02.79-.22 1.65-.33 2.5-.33s1.71.11 2.5.33c1.91-1.29 2.75-1.02 2.75-1.02.55 1.35.2 2.39.1 2.64.65.71 1.03 1.6 1.03 2.71 0 3.82-2.34 4.66-4.57 4.91.36.31.69.92.69 1.85V21c0 .27.16.59.67.5C19.14 20.16 22 16.42 22 12A10 10 0 0 0 12 2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    REQ-2026.2-T02-ClinicaEscolaFBr
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+    
+      
+<nav class="md-tabs" aria-label="Abas" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../.." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Início
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../visao-geral/cronograma/" class="md-tabs__link">
+          
+  
+  
+  Visão geral do projeto
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../unidade-1/" class="md-tabs__link">
+          
+  
+  
+  Unidade 1 — Visão e planejamento
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../unidade-2/" class="md-tabs__link">
+          
+  
+  
+  Unidade 2 — Requisitos e priorização
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../" class="md-tabs__link">
+          
+  
+  
+  Unidade 3 — Construção do MVP
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+    
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navegação" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="Clínica Escola FBr - Documentação" class="md-nav__button md-logo" aria-label="Clínica Escola FBr - Documentação" data-md-component="logo">
+      <img class="fbr-logo fbr-logo--light" src="../../assets/images/logo-fbr.png" alt="" width="131" height="144">
+<img class="fbr-logo fbr-logo--dark" src="../../assets/images/logo-fbr-dark.png" alt="" width="131" height="144">
+    </a>
+    Clínica Escola FBr - Documentação
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr" title="Ir para repositório" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 2A10 10 0 0 0 2 12c0 4.42 2.87 8.17 6.84 9.5.5.08.66-.23.66-.5v-1.69c-2.77.6-3.36-1.34-3.36-1.34-.46-1.16-1.11-1.47-1.11-1.47-.91-.62.07-.6.07-.6 1 .07 1.53 1.03 1.53 1.03.87 1.52 2.34 1.07 2.91.83.09-.65.35-1.09.63-1.34-2.22-.25-4.55-1.11-4.55-4.92 0-1.11.38-2 1.03-2.71-.1-.25-.45-1.29.1-2.64 0 0 .84-.27 2.75 1.02.79-.22 1.65-.33 2.5-.33s1.71.11 2.5.33c1.91-1.29 2.75-1.02 2.75-1.02.55 1.35.2 2.39.1 2.64.65.71 1.03 1.6 1.03 2.71 0 3.82-2.34 4.66-4.57 4.91.36.31.69.92.69 1.85V21c0 .27.16.59.67.5C19.14 20.16 22 16.42 22 12A10 10 0 0 0 12 2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    REQ-2026.2-T02-ClinicaEscolaFBr
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Início
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Visão geral do projeto
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Visão geral do projeto
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../visao-geral/cronograma/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Cronograma geral
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../visao-geral/backlog/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Features e backlog
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Unidade 1 — Visão e planejamento
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Unidade 1 — Visão e planejamento
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../unidade-1/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Início da unidade
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../unidade-1/cenario-atual/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    1. Cenário Atual
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../unidade-1/solucao-proposta/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    2. Solução Proposta
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../unidade-1/intervencao-social/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    3. Intervenção Social
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../unidade-1/estrategia-esw/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    4. Estratégia de ESW
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../unidade-1/engenharia-requisitos/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    5. Engenharia de Requisitos
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_7" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_7" id="__nav_3_7_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Gestão do Projeto
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_7">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Gestão do Projeto
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../unidade-1/gestao/cronograma/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    6. Cronograma e Entregas
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../unidade-1/gestao/equipe-comunicacao/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    7. Interação entre Equipe e Cliente
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../unidade-1/gestao/boas-praticas-github/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Boas práticas no GitHub
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../unidade-1/reunioes/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Reuniões
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_8" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_8" id="__nav_3_8_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Estudos e referências
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_8_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_8">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Estudos e referências
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../unidade-1/estudos/fdd/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Estudo de FDD
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../unidade-1/licoes-aprendidas/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Lições Aprendidas
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../unidade-1/referencias/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Referências
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Unidade 2 — Requisitos e priorização
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Unidade 2 — Requisitos e priorização
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../unidade-2/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Início da unidade
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_4_2" id="__nav_4_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    8. Requisitos de Software
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    8. Requisitos de Software
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../unidade-2/requisitos/funcionais/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    8.1 Requisitos Funcionais
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../unidade-2/requisitos/nao-funcionais/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    8.2 Requisitos Não Funcionais
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../unidade-2/requisitos/analise-feedback/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    8.3 Análise do Feedback
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../unidade-2/requisitos/decisoes-fbr/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    8.4 Registro de Decisões com a FBr
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../unidade-2/requisitos/dor-dod/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    9. DoR e DoD
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../unidade-2/requisitos/backlog/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    10. Backlog de Produto
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_4_5" id="__nav_4_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Gestão do Projeto
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Gestão do Projeto
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../unidade-2/gestao/cronograma/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Cronograma e Entregas
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../unidade-2/reunioes/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Reuniões
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_4_6" id="__nav_4_6_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Aprendizados e documentação
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Aprendizados e documentação
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../unidade-2/licoes-aprendidas/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Lições Aprendidas
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../analise-ux-capitulo-10/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Análise de UX do site
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Unidade 3 — Construção do MVP
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Unidade 3 — Construção do MVP
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Início da unidade
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Projeto das features do Ciclo 3
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Projeto das features do Ciclo 3
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Índice">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Índice
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#convencoes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Convenções
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#modelo-detalhado-do-ciclo-3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Modelo detalhado do Ciclo 3
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#acesso-e-seguranca-cp12" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Acesso e segurança (CP12)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Acesso e segurança (CP12)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#rf50-autenticar-usuario-institucional-45" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        RF50 — Autenticar usuário institucional (#45)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#rf53-cadastrar-usuario-institucional-com-perfil-de-acesso-48" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        RF53 — Cadastrar usuário institucional com perfil de acesso (#48)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#rf54-desativar-usuario-institucional-49" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        RF54 — Desativar usuário institucional (#49)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#rf55-restringir-acesso-ao-prontuario-do-paciente-50" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        RF55 — Restringir acesso ao prontuário do paciente (#50)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#inscricao-on-line-cp1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Inscrição on-line (CP1)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Inscrição on-line (CP1)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#rf1-registrar-solicitacao-de-atendimento-on-line-88" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        RF1 — Registrar solicitação de atendimento on-line (#88)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#rf2-emitir-comprovante-de-inscricao-89" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        RF2 — Emitir comprovante de inscrição (#89)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#triagem-cp2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Triagem (CP2)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Triagem (CP2)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#rf4-organizar-informacoes-da-inscricao-para-triagem-90" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        RF4 — Organizar informações da inscrição para triagem (#90)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#rf6-registrar-prioridade-clinica-do-inscrito-91" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        RF6 — Registrar prioridade clínica do inscrito (#91)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#distribuicao-de-casos-cp5" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Distribuição de casos (CP5)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Distribuição de casos (CP5)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#rf18-listar-casos-aguardando-distribuicao-92" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        RF18 — Listar casos aguardando distribuição (#92)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#rf19-registrar-areas-de-especialidade-do-supervisor-93" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        RF19 — Registrar áreas de especialidade do supervisor (#93)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#rf20-distribuir-caso-a-supervisor-94" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        RF20 — Distribuir caso a supervisor (#94)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#rf21-vincular-paciente-a-estagiario-responsavel-95" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        RF21 — Vincular paciente a estagiário responsável (#95)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#agendamento-cp4" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Agendamento (CP4)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Agendamento (CP4)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#rf10-agendar-sessao-do-paciente-96" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        RF10 — Agendar sessão do paciente (#96)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#prontuario-cp6" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Prontuário (CP6)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Prontuário (CP6)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#rf66-criar-e-inicializar-o-prontuario-do-paciente-97" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        RF66 — Criar e inicializar o prontuário do paciente (#97)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#roteiro-da-inspecao-de-design" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Roteiro da inspeção de design
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../prototipos-ciclo-3/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Protótipos do Ciclo 3
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+          
+          
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_5_4" id="__nav_5_4_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Gestão do Projeto
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_5_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Gestão do Projeto
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../gestao/cronograma/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Cronograma e Entregas
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../reunioes/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Reuniões
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+          
+          
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5_5" id="__nav_5_5_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Aprendizados
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_5_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Aprendizados
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../licoes-aprendidas/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Lições Aprendidas
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Índice">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Índice
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#convencoes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Convenções
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#modelo-detalhado-do-ciclo-3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Modelo detalhado do Ciclo 3
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#acesso-e-seguranca-cp12" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Acesso e segurança (CP12)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Acesso e segurança (CP12)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#rf50-autenticar-usuario-institucional-45" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        RF50 — Autenticar usuário institucional (#45)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#rf53-cadastrar-usuario-institucional-com-perfil-de-acesso-48" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        RF53 — Cadastrar usuário institucional com perfil de acesso (#48)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#rf54-desativar-usuario-institucional-49" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        RF54 — Desativar usuário institucional (#49)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#rf55-restringir-acesso-ao-prontuario-do-paciente-50" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        RF55 — Restringir acesso ao prontuário do paciente (#50)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#inscricao-on-line-cp1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Inscrição on-line (CP1)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Inscrição on-line (CP1)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#rf1-registrar-solicitacao-de-atendimento-on-line-88" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        RF1 — Registrar solicitação de atendimento on-line (#88)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#rf2-emitir-comprovante-de-inscricao-89" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        RF2 — Emitir comprovante de inscrição (#89)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#triagem-cp2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Triagem (CP2)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Triagem (CP2)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#rf4-organizar-informacoes-da-inscricao-para-triagem-90" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        RF4 — Organizar informações da inscrição para triagem (#90)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#rf6-registrar-prioridade-clinica-do-inscrito-91" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        RF6 — Registrar prioridade clínica do inscrito (#91)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#distribuicao-de-casos-cp5" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Distribuição de casos (CP5)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Distribuição de casos (CP5)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#rf18-listar-casos-aguardando-distribuicao-92" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        RF18 — Listar casos aguardando distribuição (#92)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#rf19-registrar-areas-de-especialidade-do-supervisor-93" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        RF19 — Registrar áreas de especialidade do supervisor (#93)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#rf20-distribuir-caso-a-supervisor-94" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        RF20 — Distribuir caso a supervisor (#94)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#rf21-vincular-paciente-a-estagiario-responsavel-95" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        RF21 — Vincular paciente a estagiário responsável (#95)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#agendamento-cp4" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Agendamento (CP4)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Agendamento (CP4)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#rf10-agendar-sessao-do-paciente-96" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        RF10 — Agendar sessão do paciente (#96)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#prontuario-cp6" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Prontuário (CP6)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Prontuário (CP6)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#rf66-criar-e-inicializar-o-prontuario-do-paciente-97" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        RF66 — Criar e inicializar o prontuário do paciente (#97)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#roteiro-da-inspecao-de-design" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Roteiro da inspeção de design
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+                
+
+
+
+  
+
+
+  <nav class="md-path" aria-label="Navegação" >
+    <ol class="md-path__list">
+      
+        
+  
+  
+    <li class="md-path__item">
+      <a href="../.." class="md-path__link">
+        
+  <span class="md-ellipsis">
+    Início
+  </span>
+
+      </a>
+    </li>
+  
+
+      
+      
+        
+  
+  
+    
+    
+      <li class="md-path__item">
+        <a href="../" class="md-path__link">
+          
+  <span class="md-ellipsis">
+    Unidade 3 — Construção do MVP
+  </span>
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ol>
+  </nav>
+
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="projeto-das-features-do-ciclo-3">Projeto das features do Ciclo 3<a class="headerlink" href="#projeto-das-features-do-ciclo-3" title="Link para esta seção">#</a></h1>
+<p>Esta página registra o processo <strong>Projetar por Feature</strong> do FDD para as 13 features do Ciclo 3 (o RF19 foi removido em 24/10/2026, por decisão da FBr): o modelo detalhado, os diagramas de sequência, as rotas da API, as regras ligadas aos critérios de aceitação e os dados de teste de cada feature. Ela é o material da <strong>inspeção de design</strong> (marco 1 do <a href="../../unidade-2/requisitos/dor-dod/#1-design-inspecionado">DoD</a>). O resultado da inspeção de cada feature é registrado na sua issue.</p>
+<p>Os requisitos de origem estão na <a href="../../unidade-2/requisitos/funcionais/">seção 8.1</a>, e os itens do ciclo, em <a href="../../visao-geral/backlog/#ciclo-3">Features e backlog</a>.</p>
+<h2 id="convencoes">Convenções<a class="headerlink" href="#convencoes" title="Link para esta seção">#</a></h2>
+<ul>
+<li><strong>API:</strong> NestJS, um módulo por área do FDD (<code>acesso</code>, <code>inscricao</code>, <code>triagem</code>, <code>casos</code>, <code>agendamento</code>, <code>acompanhamento-clinico</code>). As rotas internas exigem sessão e usam o <code>PerfisGuard</code> com o decorator <code>@Perfis(...)</code>. As rotas públicas (inscrição e ativação de conta) não exigem sessão.</li>
+<li><strong>Banco:</strong> PostgreSQL com Drizzle, em <code>packages/database</code>. Os nomes de tabela e coluna seguem o português sem acento, como as tabelas <code>usuarios</code> e <code>auditoria</code> da base técnica.</li>
+<li><strong>Validação:</strong> esquemas Zod em <code>packages/shared</code>, usados tanto pela API quanto pela interface.</li>
+<li><strong>Auditoria:</strong> toda operação que altera dados relevantes chama o <code>AuditoriaService</code>, que grava na tabela <code>auditoria</code> (somente inserção) o autor, a operação, a entidade, o estado anterior e o novo.</li>
+<li><strong>Datas:</strong> gravadas com fuso horário (<code>timestamptz</code>) e exibidas no horário de Brasília.</li>
+<li><strong>Criptografia em repouso (RNF51):</strong> os dados de saúde (queixa, percepção de urgência, histórico, prioridade clínica e dados iniciais do prontuário) ficam em colunas <code>*_cifrada</code>, cifradas com AES-256-GCM pela aplicação (<code>apps/api/src/common/criptografia.ts</code>). A chave fica na variável <code>CHAVE_DADOS</code>, fora do banco e do repositório. Como a cor fica cifrada, as listas ordenadas pela prioridade (RF18) são ordenadas na aplicação, depois de decifrar.</li>
+<li><strong>Dados de teste:</strong> sempre fictícios. Nenhum dado real de paciente entra no repositório, no banco de desenvolvimento ou em prints.</li>
+</ul>
+<h2 id="modelo-detalhado-do-ciclo-3">Modelo detalhado do Ciclo 3<a class="headerlink" href="#modelo-detalhado-do-ciclo-3" title="Link para esta seção">#</a></h2>
+<p>O diagrama reúne as classes usadas pelas 13 features e já reflete as decisões da reunião com a FBr de 23/10/2026 (<a href="../../unidade-2/requisitos/decisoes-fbr/">Registro de Decisões</a>). Ele detalha o <a href="../../unidade-2/requisitos/funcionais/">modelo de domínio</a> de cada CP no nível de implementação.</p>
+<pre class="mermaid"><code>classDiagram
+    direction LR
+    class Usuario {
+      +uuid id
+      +string nome
+      +string email
+      +Perfil perfil
+      +SituacaoUsuario situacao
+      +string senhaHash
+      +int tentativasFalhas
+      +datetime bloqueadoAte
+    }
+    class ConviteAtivacao {
+      +uuid id
+      +string tokenHash
+      +datetime expiraEm
+      +datetime usadoEm
+      +datetime invalidadoEm
+    }
+    class SessaoLogin {
+      +uuid id
+      +datetime criadaEm
+      +datetime expiraEm
+      +datetime revogadaEm
+    }
+    class Inscricao {
+      +uuid id
+      +string numero
+      +string nomeCompleto
+      +date dataNascimento
+      +string cpf
+      +string rg
+      +string endereco
+      +string estadoCivil
+      +string responsavelLegal
+      +string celular
+      +string email
+      +Canal canalPreferencial
+      +string queixaCifrada
+      +string percepcaoUrgenciaCifrada
+      +string historicoRelevanteCifrado
+      +datetime criadaEm
+    }
+    class DecisaoPrioridade {
+      +uuid id
+      +string corCifrada
+      +datetime decididaEm
+    }
+    class Caso {
+      +uuid id
+      +SituacaoCaso situacao
+      +int cicloAtendimento
+    }
+    class AtribuicaoSupervisor {
+      +uuid id
+      +datetime atribuidoEm
+      +bool vigente
+    }
+    class VinculoEstagiario {
+      +uuid id
+      +datetime vinculadoEm
+      +bool vigente
+    }
+    class Prontuario {
+      +uuid id
+      +int cicloAtendimento
+      +datetime criadoEm
+      +string anamneseCifrada
+      +string contratoCifrado
+      +date dataAssinaturaContrato
+    }
+    class SessaoAtendimento {
+      +uuid id
+      +datetime inicio
+      +datetime termino
+      +datetime fimIntervaloAnotacoes
+      +StatusSessao status
+      +datetime mensagemWhatsappEm
+    }
+    class LinkConfirmacao {
+      +uuid id
+      +string tokenHash
+      +datetime expiraEm
+    }
+    class Parametro {
+      +string chave
+      +string valor
+      +datetime alteradoEm
+    }
+
+    Usuario "1" --&gt; "0..*" ConviteAtivacao
+    Usuario "1" --&gt; "0..*" SessaoLogin
+    Inscricao "1" --&gt; "0..*" DecisaoPrioridade : histórico
+    DecisaoPrioridade "0..*" --&gt; "1" Usuario : decidida por
+    Inscricao "1" --&gt; "0..1" Caso
+    Caso "1" --&gt; "0..*" AtribuicaoSupervisor : histórico
+    AtribuicaoSupervisor "0..*" --&gt; "1" Usuario : supervisor
+    Caso "1" --&gt; "0..*" VinculoEstagiario : histórico
+    VinculoEstagiario "0..*" --&gt; "1" Usuario : estagiário
+    Caso "1" --&gt; "0..*" Prontuario : um por ciclo
+    Caso "1" --&gt; "0..*" SessaoAtendimento
+    SessaoAtendimento "0..*" --&gt; "1" Usuario : estagiário
+    SessaoAtendimento "1" --&gt; "1" LinkConfirmacao</code></pre>
+<p><strong>Valores dos tipos enumerados:</strong></p>
+<ul>
+<li><code>Perfil</code>: secretaria, estagiario, supervisor, coordenacao (já existe em <code>@clinica/shared</code>).</li>
+<li><code>SituacaoUsuario</code>: pendente_ativacao, ativo, desativado. Substitui a coluna booleana <code>ativo</code> da base técnica, que não representa o estado "pendente de ativação" do RF53.</li>
+<li><code>Canal</code>: email, whatsapp, ligacao. O SMS não é usado (<a href="../../unidade-2/requisitos/decisoes-fbr/">DF24</a>); WhatsApp e ligação exigem o celular.</li>
+<li><code>Cor</code>: vermelha, amarela, verde.</li>
+<li><code>SituacaoCaso</code>: aguardando_distribuicao, aguardando_vinculo, em_atendimento, encerrado.</li>
+<li><code>StatusSessao</code>: agendada (os demais status entram com o RF14, o RF15 e o RF16 no Ciclo 4).</li>
+</ul>
+<p><strong>Restrições de integridade no banco</strong> (RNF19, RNF9):</p>
+<ul>
+<li>Uma <code>AtribuicaoSupervisor</code> vigente por caso e um <code>VinculoEstagiario</code> vigente por caso, garantidos por índices únicos parciais <code>WHERE vigente</code>. A <code>DecisaoPrioridade</code> é somente inserção (RNF5), e a vigente é a mais recente da inscrição.</li>
+<li>Um <code>Prontuario</code> por caso e ciclo de atendimento: índice único em <code>(caso_id, ciclo_atendimento)</code>.</li>
+<li><code>SessaoAtendimento.termino</code> maior que <code>inicio</code> e <code>fimIntervaloAnotacoes</code> igual ou maior que <code>termino</code>, garantidos por restrições <code>CHECK</code>.</li>
+</ul>
+<p><strong>Parâmetros iniciais</strong> (tabela <code>parametros</code>, alterados pela coordenação):</p>
+<table>
+<thead>
+<tr>
+<th>Chave</th>
+<th>Valor padrão</th>
+<th>Usado em</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>duracao_sessao_minutos</code></td>
+<td>50</td>
+<td>RF10</td>
+</tr>
+<tr>
+<td><code>intervalo_anotacoes_minutos</code></td>
+<td>10</td>
+<td>RF10</td>
+</tr>
+<tr>
+<td><code>limite_casos_supervisor</code></td>
+<td>50</td>
+<td>RF20</td>
+</tr>
+<tr>
+<td><code>validade_convite_horas</code></td>
+<td>72</td>
+<td>RF53</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="acesso-e-seguranca-cp12">Acesso e segurança (CP12)<a class="headerlink" href="#acesso-e-seguranca-cp12" title="Link para esta seção">#</a></h2>
+<h3 id="rf50-autenticar-usuario-institucional-45">RF50 — Autenticar usuário institucional (<a href="https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/issues/45">#45</a>)<a class="headerlink" href="#rf50-autenticar-usuario-institucional-45" title="Link para esta seção">#</a></h3>
+<p><strong>Rotas:</strong>
+- <code>POST /auth/login</code> (pública): recebe e-mail e senha e devolve um cookie de sessão <code>httpOnly</code>.
+- <code>POST /auth/logout</code>.</p>
+<p>O <code>SessaoGuard</code> valida a sessão em cada requisição e preenche <code>req.usuario</code>, que o <code>PerfisGuard</code> já usa. A cada requisição válida, ele renova <code>expiraEm</code> para 30 minutos depois, e a sessão parada por 30 minutos expira (RNF50). O cookie é <code>httpOnly</code>, <code>Secure</code> e <code>SameSite=Lax</code>, e só o hash do token fica no banco.</p>
+<pre class="mermaid"><code>sequenceDiagram
+    actor U as Usuário institucional
+    participant W as Web
+    participant A as API (acesso)
+    participant DB as Banco
+    U-&gt;&gt;W: e-mail e senha
+    W-&gt;&gt;A: POST /auth/login
+    A-&gt;&gt;DB: busca usuário pelo e-mail
+    alt usuário inexistente, senha errada ou situação diferente de ativo
+        A-&gt;&gt;DB: soma tentativa falha (bloqueia por 15 min na 3ª, RNF49)
+        A--&gt;&gt;W: 401 com mensagem genérica
+    else credenciais corretas e conta ativa
+        A-&gt;&gt;DB: cria SessaoLogin e zera tentativas
+        A--&gt;&gt;W: cookie de sessão e perfil
+        W--&gt;&gt;U: menu só com as funções do perfil
+    end</code></pre>
+<table>
+<thead>
+<tr>
+<th>Regra</th>
+<th>Critério de aceitação</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>A senha é comparada com o hash (bcrypt ou Argon2), e a mesma mensagem é usada para qualquer falha</td>
+<td>E-mail ou senha incorretos negam o acesso sem indicar o campo</td>
+</tr>
+<tr>
+<td>Só a situação <code>ativo</code> autentica</td>
+<td>Usuário desativado (RF54) não entra; usuário pendente (RF53) também não</td>
+</tr>
+<tr>
+<td>Contador <code>tentativasFalhas</code> e <code>bloqueadoAte</code> no usuário (<a href="../../unidade-2/requisitos/decisoes-fbr/">DF25</a>)</td>
+<td>Na 3ª tentativa seguida com erro, o acesso fica bloqueado por 15 minutos</td>
+</tr>
+<tr>
+<td>O menu e as rotas são filtrados pelo perfil (<code>PerfisGuard</code>)</td>
+<td>Usuário ativo vê apenas as funcionalidades do seu perfil</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Dados de teste:</strong> um usuário de cada perfil, ativo; um desativado; um pendente de ativação; um com 2 tentativas falhas (para testar o bloqueio na 3ª).</p>
+<h3 id="rf53-cadastrar-usuario-institucional-com-perfil-de-acesso-48">RF53 — Cadastrar usuário institucional com perfil de acesso (<a href="https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/issues/48">#48</a>)<a class="headerlink" href="#rf53-cadastrar-usuario-institucional-com-perfil-de-acesso-48" title="Link para esta seção">#</a></h3>
+<p><strong>Rotas:</strong>
+- <code>POST /usuarios</code> (coordenação);
+- <code>POST /usuarios/:id/convite</code> (coordenação, para reenviar o convite);
+- <code>POST /ativacao</code> (pública): recebe o token e a nova senha.</p>
+<pre class="mermaid"><code>sequenceDiagram
+    actor C as Coordenação
+    participant A as API (acesso)
+    participant DB as Banco
+    participant M as E-mail
+    actor N as Novo usuário
+    C-&gt;&gt;A: POST /usuarios com nome, e-mail e perfil
+    alt e-mail já cadastrado
+        A--&gt;&gt;C: 409 e-mail já cadastrado
+    else e-mail novo
+        A-&gt;&gt;DB: cria usuário pendente_ativacao e convite com validade de 72 h
+        A-&gt;&gt;DB: auditoria do cadastro
+        A-&gt;&gt;M: envia link de ativação
+        A--&gt;&gt;C: 201 usuário pendente
+    end
+    N-&gt;&gt;A: POST /ativacao com token e senha
+    alt token usado, invalidado ou vencido
+        A--&gt;&gt;N: 410 pedir novo convite à coordenação
+    else token válido e senha conforme o RNF49
+        A-&gt;&gt;DB: grava hash da senha, situação ativo, marca convite como usado
+        A-&gt;&gt;DB: auditoria da ativação
+        A--&gt;&gt;N: conta ativa
+    end</code></pre>
+<table>
+<thead>
+<tr>
+<th>Regra</th>
+<th>Critério de aceitação</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>O token é guardado só como hash, é de uso único e vale 72 h (parâmetro)</td>
+<td>Link já usado ou com mais de 72 horas é recusado</td>
+</tr>
+<tr>
+<td>O reenvio marca o convite anterior como <code>invalidadoEm</code> e cria outro</td>
+<td>O reenvio invalida o link anterior</td>
+</tr>
+<tr>
+<td>Índice único no e-mail</td>
+<td>E-mail já cadastrado não pode ser cadastrado de novo</td>
+</tr>
+<tr>
+<td>Rota com <code>@Perfis('coordenacao')</code></td>
+<td>Usuário sem perfil de coordenação não cadastra</td>
+</tr>
+<tr>
+<td>O cadastro, o reenvio e a ativação chamam o <code>AuditoriaService</code></td>
+<td>Operações registradas com autor, usuário afetado e data/hora</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Dados de teste:</strong> um convite válido, um vencido (criado há 73 h) e um já usado. Em desenvolvimento, o e-mail chega ao Mailpit (<code>http://localhost:8025</code>).</p>
+<h3 id="rf54-desativar-usuario-institucional-49">RF54 — Desativar usuário institucional (<a href="https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/issues/49">#49</a>)<a class="headerlink" href="#rf54-desativar-usuario-institucional-49" title="Link para esta seção">#</a></h3>
+<p><strong>Rota:</strong> <code>POST /usuarios/:id/desativacao</code> (coordenação).</p>
+<pre class="mermaid"><code>sequenceDiagram
+    actor C as Coordenação
+    participant A as API (acesso)
+    participant DB as Banco
+    actor E as Estagiário desativado
+    C-&gt;&gt;A: POST /usuarios/:id/desativacao
+    A-&gt;&gt;DB: situação desativado e revoga as SessaoLogin abertas
+    A-&gt;&gt;DB: auditoria com quem desativou, o usuário e a data/hora
+    A--&gt;&gt;C: 204 usuário desativado
+    E-&gt;&gt;A: próxima requisição com a sessão antiga
+    A-&gt;&gt;DB: SessaoGuard encontra a sessão revogada
+    A--&gt;&gt;E: 401 sessão encerrada</code></pre>
+<table>
+<thead>
+<tr>
+<th>Regra</th>
+<th>Critério de aceitação</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Revogar as sessões e conferir a situação do usuário a cada requisição</td>
+<td>A próxima requisição do desativado é recusada, mesmo com sessão aberta</td>
+</tr>
+<tr>
+<td>Nada é apagado: os registros continuam ligados ao <code>usuarioId</code></td>
+<td>Registros anteriores continuam visíveis, com o nome de quem os fez</td>
+</tr>
+<tr>
+<td><code>@Perfis('coordenacao')</code></td>
+<td>Usuário sem perfil de coordenação não desativa</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Dados de teste:</strong> um estagiário ativo com sessão aberta e registros de auditoria em seu nome.</p>
+<h3 id="rf55-restringir-acesso-ao-prontuario-do-paciente-50">RF55 — Restringir acesso ao prontuário do paciente (<a href="https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/issues/50">#50</a>)<a class="headerlink" href="#rf55-restringir-acesso-ao-prontuario-do-paciente-50" title="Link para esta seção">#</a></h3>
+<p><strong>Escopo no Ciclo 3:</strong>
+- <strong>O que entra agora:</strong> a regra de acesso protege o prontuário criado pelo RF66; os dados iniciais (RF69) entram no Ciclo 4 sob a mesma regra.
+- <strong>O que entra depois:</strong> a mesma política passa a valer para a evolução (CP7, a partir do Ciclo 4). O critério da transferência entre estagiários é verificado quando a transferência (RF25) for construída, no Ciclo 4, e a política passa a proteger também o relatório final (RF33) no Ciclo 6.</p>
+<p><strong>Rotas:</strong>
+- <code>GET /prontuarios/:id</code>: estagiário responsável e supervisor do caso; coordenação, só leitura, em qualquer caso (<a href="../../unidade-2/requisitos/decisoes-fbr/">DF32</a>).
+- <code>GET /pacientes/:id/dados-administrativos</code>: secretaria e coordenação.</p>
+<pre class="mermaid"><code>sequenceDiagram
+    actor U as Usuário
+    participant A as API (acompanhamento clínico)
+    participant P as PoliticaProntuario
+    participant DB as Banco
+    U-&gt;&gt;A: GET /prontuarios/:id
+    A-&gt;&gt;P: pode acessar(usuário, prontuário)?
+    P-&gt;&gt;DB: vínculo vigente do caso (estagiário e supervisor)
+    alt coordenação, estagiário responsável ou supervisor do caso
+        P--&gt;&gt;A: permitido
+        A-&gt;&gt;DB: auditoria do acesso (RNF52)
+        A--&gt;&gt;U: conteúdo clínico
+    else secretaria, outro estagiário ou outro supervisor
+        P--&gt;&gt;A: negado
+        A-&gt;&gt;DB: auditoria do acesso negado (RNF52)
+        A--&gt;&gt;U: 403
+    end</code></pre>
+<table>
+<thead>
+<tr>
+<th>Regra</th>
+<th>Critério de aceitação</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>A verificação acontece na API (<code>PoliticaProntuario</code>), não só na interface</td>
+<td>Estagiário não responsável tem o acesso negado, inclusive com requisição direta ao servidor</td>
+</tr>
+<tr>
+<td>A coordenação consulta qualquer prontuário, sem vínculo com o caso, e o acesso fica registrado</td>
+<td>A coordenação vê o conteúdo clínico de um caso sem vínculo, e o acesso aparece no registro</td>
+</tr>
+<tr>
+<td>A rota administrativa devolve apenas nome, data de nascimento, contatos, responsável legal, situação do caso, sessões, faltas e contribuição</td>
+<td>A secretaria vê só os dados cadastrais e administrativos</td>
+</tr>
+<tr>
+<td>Os dados são criptografados em repouso e em trânsito (RNF51)</td>
+<td>Inspeção do banco e do HTTPS no ambiente de homologação</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Dados de teste:</strong> um caso com estagiário A e supervisor S; outro estagiário B; uma secretaria; uma coordenação.</p>
+<hr />
+<h2 id="inscricao-on-line-cp1">Inscrição on-line (CP1)<a class="headerlink" href="#inscricao-on-line-cp1" title="Link para esta seção">#</a></h2>
+<h3 id="rf1-registrar-solicitacao-de-atendimento-on-line-88">RF1 — Registrar solicitação de atendimento on-line (<a href="https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/issues/88">#88</a>)<a class="headerlink" href="#rf1-registrar-solicitacao-de-atendimento-on-line-88" title="Link para esta seção">#</a></h3>
+<p><strong>Rota:</strong> <code>POST /inscricoes</code> (pública), validada pelo esquema <code>inscricaoSchema</code> em <code>@clinica/shared</code>. A interface tem 3 etapas, com o aviso do CVV e do SAMU fixo em todas:
+1. dados e contatos;
+2. triagem (queixa, percepção de urgência e histórico relevante);
+3. revisão e confirmação.</p>
+<pre class="mermaid"><code>sequenceDiagram
+    actor I as Interessado
+    participant W as Web (formulário)
+    participant A as API (inscricao)
+    participant DB as Banco
+    I-&gt;&gt;W: preenche as etapas 1 e 2
+    W-&gt;&gt;W: valida os campos obrigatórios e o formato dos contatos (Zod)
+    alt campo obrigatório vazio ou menor de idade sem responsável legal
+        W--&gt;&gt;I: indica os campos pendentes e mantém o que já foi preenchido
+    else formulário completo
+        W--&gt;&gt;I: etapa 3 com a revisão dos dados
+        I-&gt;&gt;W: confirma o envio
+        W-&gt;&gt;A: POST /inscricoes com confirmado igual a true
+        A-&gt;&gt;A: valida de novo no servidor
+        A-&gt;&gt;DB: cifra a queixa, a urgência e o histórico, grava a inscrição e gera o número único
+        A--&gt;&gt;W: 201 com número, data e hora
+        W--&gt;&gt;I: confirmação e comprovante (RF2)
+    end</code></pre>
+<table>
+<thead>
+<tr>
+<th>Regra</th>
+<th>Critério de aceitação</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>O mesmo esquema Zod é usado na interface e na API</td>
+<td>Envio com campo obrigatório vazio é bloqueado, e os dados são mantidos</td>
+</tr>
+<tr>
+<td>A idade é calculada a partir da data de nascimento, e o responsável legal é obrigatório para menores de 18 anos</td>
+<td>Menor de idade sem responsável legal é bloqueado</td>
+</tr>
+<tr>
+<td>Pelo menos um contato (celular ou e-mail) e o canal preferencial (e-mail, WhatsApp ou ligação) são obrigatórios; WhatsApp e ligação exigem o celular</td>
+<td>Formato validado, um contato exigido e o preferencial registrado</td>
+</tr>
+<tr>
+<td>CPF com 11 números; RG como texto livre, como está no documento, sem órgão emissor e sem upload</td>
+<td>Nenhum envio de cópia do documento</td>
+</tr>
+<tr>
+<td>A API só grava com <code>confirmado: true</code></td>
+<td>Sem confirmação, a solicitação não é registrada</td>
+</tr>
+<tr>
+<td>Número no formato <code>AAAA-NNNNN</code>, com o ano do registro e a sequência <code>inscricoes_numero_seq</code>, que não reinicia a cada ano</td>
+<td>Cada inscrição recebe um número único, como "2026-00487"</td>
+</tr>
+<tr>
+<td>Queixa, urgência e histórico são cifrados antes de gravar (RNF51)</td>
+<td>Nenhum desses campos aparece legível no banco</td>
+</tr>
+<tr>
+<td>A interface só mostra a confirmação após a resposta 201</td>
+<td>Nenhuma confirmação sem registro efetivo</td>
+</tr>
+<tr>
+<td>Componente <code>AvisoEmergencia</code> fixo no layout do formulário</td>
+<td>Aviso do CVV e do SAMU em todas as etapas</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Dados de teste:</strong> um adulto com e-mail como canal preferencial; um menor com responsável legal, só celular e WhatsApp como canal; uma inscrição com ligação como canal e sem celular (recusada); uma inscrição com CPF em formato inválido; um RG com letra ("12.345.678-X").</p>
+<h3 id="rf2-emitir-comprovante-de-inscricao-89">RF2 — Emitir comprovante de inscrição (<a href="https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/issues/89">#89</a>)<a class="headerlink" href="#rf2-emitir-comprovante-de-inscricao-89" title="Link para esta seção">#</a></h3>
+<p>O comprovante é montado na interface a partir da resposta do <code>POST /inscricoes</code> (número, data e hora) e pode ser impresso ou salvo em PDF pelo navegador. Não há rota pública para consultar um comprovante por número, o que evita a enumeração de inscrições.</p>
+<pre class="mermaid"><code>sequenceDiagram
+    actor I as Interessado
+    participant W as Web
+    participant A as API (inscricao)
+    W-&gt;&gt;A: POST /inscricoes
+    alt inscrição registrada
+        A--&gt;&gt;W: 201 com número, data e hora
+        W--&gt;&gt;I: comprovante com número, data, hora e aviso de que não garante vaga
+    else erro no registro
+        A--&gt;&gt;W: erro
+        W--&gt;&gt;I: mensagem de erro, sem comprovante
+    end</code></pre>
+<table>
+<thead>
+<tr>
+<th>Regra</th>
+<th>Critério de aceitação</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>O comprovante só existe a partir da resposta 201</td>
+<td>Nenhum comprovante para inscrição não concluída</td>
+</tr>
+<tr>
+<td>O componente recebe apenas o número, a data e a hora</td>
+<td>O comprovante não contém a queixa nem dados clínicos</td>
+</tr>
+<tr>
+<td>Texto fixo sobre triagem e vagas</td>
+<td>Informa que o atendimento depende da triagem e das vagas</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="triagem-cp2">Triagem (CP2)<a class="headerlink" href="#triagem-cp2" title="Link para esta seção">#</a></h2>
+<h3 id="rf4-organizar-informacoes-da-inscricao-para-triagem-90">RF4 — Organizar informações da inscrição para triagem (<a href="https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/issues/90">#90</a>)<a class="headerlink" href="#rf4-organizar-informacoes-da-inscricao-para-triagem-90" title="Link para esta seção">#</a></h3>
+<p><strong>Rota:</strong> <code>GET /triagem/inscricoes</code> (supervisor e coordenação). Devolve as inscrições sem decisão de prioridade vigente, com o campo calculado <code>diasAguardando</code> (dias desde <code>criadaEm</code>), e aceita ordenação por esse campo. A FBr não adota prazo de triagem (<a href="../../unidade-2/requisitos/decisoes-fbr/">DF19</a>), então não há sinal de "além do prazo".</p>
+<pre class="mermaid"><code>sequenceDiagram
+    actor S as Supervisor ou coordenação
+    participant A as API (triagem)
+    participant DB as Banco
+    S-&gt;&gt;A: GET /triagem/inscricoes
+    A-&gt;&gt;DB: inscrições sem decisão vigente
+    A-&gt;&gt;A: calcula diasAguardando e deixa os campos vazios como ausentes
+    alt não há inscrições aguardando
+        A--&gt;&gt;S: lista vazia, e a tela informa que não há pendências
+    else há inscrições
+        A--&gt;&gt;S: número, queixa, urgência, histórico (como declaração do interessado) e os dias aguardando
+    end</code></pre>
+<table>
+<thead>
+<tr>
+<th>Regra</th>
+<th>Critério de aceitação</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>@Perfis('supervisor','coordenacao')</code></td>
+<td>Usuários sem autorização não veem as respostas</td>
+</tr>
+<tr>
+<td>Campo vazio é enviado como <code>null</code>, e a interface mostra "não informado"</td>
+<td>Campo sem resposta aparece como ausente</td>
+</tr>
+<tr>
+<td>As respostas aparecem num bloco "Declarado pelo interessado", separado da decisão da equipe</td>
+<td>Declaração separada da avaliação da equipe</td>
+</tr>
+<tr>
+<td><code>diasAguardando</code> calculado a partir de <code>criadaEm</code></td>
+<td>Cada inscrição mostra há quantos dias aguarda, sem sinal de prazo</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Dados de teste:</strong> uma inscrição de hoje; uma de 8 dias atrás sem triagem (aparece com 8 dias aguardando, sem sinal de prazo); uma inscrição legada com o histórico vazio.</p>
+<h3 id="rf6-registrar-prioridade-clinica-do-inscrito-91">RF6 — Registrar prioridade clínica do inscrito (<a href="https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/issues/91">#91</a>)<a class="headerlink" href="#rf6-registrar-prioridade-clinica-do-inscrito-91" title="Link para esta seção">#</a></h3>
+<p><strong>Rota:</strong> <code>POST /triagem/inscricoes/:id/prioridade</code> (supervisor e coordenação). Recebe a cor. A primeira decisão cria o <code>Caso</code> com a situação <code>aguardando_distribuicao</code>.</p>
+<pre class="mermaid"><code>sequenceDiagram
+    actor S as Supervisor ou coordenação
+    participant A as API (triagem)
+    participant DB as Banco
+    S-&gt;&gt;A: POST prioridade com a cor
+    A-&gt;&gt;DB: transação
+    A-&gt;&gt;DB: nova DecisaoPrioridade com autor e data/hora (a anterior não é alterada)
+    A-&gt;&gt;DB: cria o Caso na primeira decisão
+    A-&gt;&gt;DB: auditoria (RNF5)
+    A--&gt;&gt;S: prioridade registrada</code></pre>
+<table>
+<thead>
+<tr>
+<th>Regra</th>
+<th>Critério de aceitação</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Histórico somente inserção, com trava no banco; a vigente é a mais recente (RNF5)</td>
+<td>A alteração mantém a decisão anterior no histórico, sem alterá-la</td>
+</tr>
+<tr>
+<td>A tela mostra a referência vermelha/amarela/verde como texto, sem cor pré-selecionada</td>
+<td>Nenhuma sugestão automática de cor</td>
+</tr>
+<tr>
+<td>Sem decisão vigente, a fila e a distribuição tratam o caso como pendente</td>
+<td>Inscrição sem classificação aparece como pendente</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Dados de teste:</strong> uma inscrição sem decisão; uma com decisão amarela que muda para vermelha; uma secretaria tentando registrar (recebe 403).</p>
+<hr />
+<h2 id="distribuicao-de-casos-cp5">Distribuição de casos (CP5)<a class="headerlink" href="#distribuicao-de-casos-cp5" title="Link para esta seção">#</a></h2>
+<h3 id="rf18-listar-casos-aguardando-distribuicao-92">RF18 — Listar casos aguardando distribuição (<a href="https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/issues/92">#92</a>)<a class="headerlink" href="#rf18-listar-casos-aguardando-distribuicao-92" title="Link para esta seção">#</a></h3>
+<p><strong>Rota:</strong> <code>GET /casos/aguardando-distribuicao</code> (coordenação e supervisor). Devolve os casos com a situação <code>aguardando_distribuicao</code>, ordenados pela cor (vermelha, amarela, verde, decifrada na aplicação) e pela data da inscrição, da mais antiga para a mais recente. Cada item traz só o número da inscrição, o nome, a cor e a data.</p>
+<pre class="mermaid"><code>sequenceDiagram
+    actor C as Coordenação ou supervisor
+    participant A as API (casos)
+    participant DB as Banco
+    C-&gt;&gt;A: GET /casos/aguardando-distribuicao
+    A-&gt;&gt;DB: casos sem supervisor vigente, ordenados por cor e data da inscrição
+    alt nenhum caso
+        A--&gt;&gt;C: lista vazia, e a tela informa que não há casos aguardando
+    else há casos
+        A--&gt;&gt;C: número, nome, prioridade clínica e data, sem a queixa
+    end</code></pre>
+<p><strong>Dados de teste:</strong> casos vermelho, amarelo e verde, com datas diferentes; dois casos vermelhos para testar o desempate; um caso já distribuído (não aparece).</p>
+<h3 id="rf19-registrar-areas-de-especialidade-do-supervisor-93">RF19 — Registrar áreas de especialidade do supervisor (<a href="https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/issues/93">#93</a>)<a class="headerlink" href="#rf19-registrar-areas-de-especialidade-do-supervisor-93" title="Link para esta seção">#</a></h3>
+<p><strong>Removido em 24/10/2026.</strong> A FBr não divide os atendimentos por área de especialidade (<a href="../../unidade-2/requisitos/decisoes-fbr/">DF26</a>). Não há rotas nem tabelas de áreas no Ciclo 3.</p>
+<h3 id="rf20-distribuir-caso-a-supervisor-94">RF20 — Distribuir caso a supervisor (<a href="https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/issues/94">#94</a>)<a class="headerlink" href="#rf20-distribuir-caso-a-supervisor-94" title="Link para esta seção">#</a></h3>
+<p><strong>Rotas:</strong>
+- <code>GET /supervisores/disponibilidade</code> (coordenação): devolve os supervisores ativos com a contagem de casos ativos (com atribuição vigente e situação diferente de <code>encerrado</code>) e o parâmetro <code>limite_casos_supervisor</code> (padrão de 50).
+- <code>POST /casos/:id/supervisor</code> (coordenação): recebe o supervisor.</p>
+<pre class="mermaid"><code>sequenceDiagram
+    actor C as Coordenação
+    participant A as API (casos)
+    participant DB as Banco
+    C-&gt;&gt;A: GET /supervisores/disponibilidade
+    A--&gt;&gt;C: supervisores com "casos ativos de limite"
+    C-&gt;&gt;A: POST /casos/:id/supervisor
+    A-&gt;&gt;DB: busca a atribuição vigente e conta os casos ativos do supervisor
+    alt o caso já tem supervisor
+        A--&gt;&gt;C: 409 use a transferência de caso (RF25)
+    else supervisor no limite de casos
+        A--&gt;&gt;C: 422 limite de casos atingido
+    else supervisor abaixo do limite
+        A-&gt;&gt;DB: AtribuicaoSupervisor vigente com autor e data e situação aguardando_vinculo
+        A-&gt;&gt;DB: auditoria (RNF18)
+        A--&gt;&gt;C: caso distribuído
+    end</code></pre>
+<table>
+<thead>
+<tr>
+<th>Regra</th>
+<th>Critério de aceitação</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>A contagem e a atribuição acontecem na mesma transação, com bloqueio da linha do supervisor</td>
+<td>Supervisor no limite não recebe novo caso, mesmo com duas distribuições simultâneas</td>
+</tr>
+<tr>
+<td>Limite vindo do parâmetro <code>limite_casos_supervisor</code> (<a href="../../unidade-2/requisitos/decisoes-fbr/">DF17</a>)</td>
+<td>A lista mostra "12 de 50" e o motivo quando o supervisor está no limite</td>
+</tr>
+<tr>
+<td><code>@Perfis('coordenacao')</code></td>
+<td>Usuário sem perfil de coordenação não distribui casos</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Dados de teste:</strong> um supervisor com 12 casos; um supervisor com 50 casos (no limite); todos os supervisores no limite (mensagem de nenhum disponível); um caso já distribuído.</p>
+<h3 id="rf21-vincular-paciente-a-estagiario-responsavel-95">RF21 — Vincular paciente a estagiário responsável (<a href="https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/issues/95">#95</a>)<a class="headerlink" href="#rf21-vincular-paciente-a-estagiario-responsavel-95" title="Link para esta seção">#</a></h3>
+<p><strong>Rota:</strong> <code>POST /casos/:id/estagiario</code> (supervisor responsável pelo caso). Mostra como opções apenas estagiários com a situação <code>ativo</code>, cada um com a quantidade de pacientes em atendimento, como no protótipo. O vínculo e a criação do prontuário (RF66) acontecem na mesma transação. O caso tem um único estagiário responsável vigente, garantido por índice único parcial; os estagiários de apoio só observam e não são vinculados (<a href="../../unidade-2/requisitos/decisoes-fbr/">DF27</a>).</p>
+<pre class="mermaid"><code>sequenceDiagram
+    actor S as Supervisor
+    participant A as API (casos)
+    participant DB as Banco
+    S-&gt;&gt;A: GET estagiários disponíveis
+    alt nenhum estagiário ativo
+        A--&gt;&gt;S: não há estagiários disponíveis para vínculo
+    end
+    S-&gt;&gt;A: POST /casos/:id/estagiario
+    A-&gt;&gt;DB: confere se o supervisor é o responsável vigente do caso
+    alt não é o supervisor do caso
+        A--&gt;&gt;S: 403
+    else é o supervisor do caso
+        A-&gt;&gt;DB: transação com VinculoEstagiario vigente (autor e data) e situação em_atendimento
+        A-&gt;&gt;DB: cria o Prontuario do ciclo (RF66)
+        A-&gt;&gt;DB: auditoria (RNF18)
+        A--&gt;&gt;S: estagiário vinculado
+    end</code></pre>
+<p><strong>Dados de teste:</strong> um caso distribuído ao supervisor S; um supervisor T tentando vincular (recebe 403); um estagiário desativado, que não aparece nas opções.</p>
+<hr />
+<h2 id="agendamento-cp4">Agendamento (CP4)<a class="headerlink" href="#agendamento-cp4" title="Link para esta seção">#</a></h2>
+<h3 id="rf10-agendar-sessao-do-paciente-96">RF10 — Agendar sessão do paciente (<a href="https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/issues/96">#96</a>)<a class="headerlink" href="#rf10-agendar-sessao-do-paciente-96" title="Link para esta seção">#</a></h3>
+<p><strong>Rota:</strong> <code>POST /sessoes</code> (secretaria, ou o estagiário responsável pelo caso). Recebe o caso, o início e, opcionalmente, o término. Sem término, ele é calculado com o parâmetro <code>duracao_sessao_minutos</code> (padrão de 50). O fim do intervalo para anotações é <code>termino + intervalo_anotacoes_minutos</code> (padrão de 10) (<a href="../../unidade-2/requisitos/decisoes-fbr/">DF18</a>).</p>
+<p><strong>Escopo no Ciclo 3:</strong> o agendamento gera o link de confirmação. Com e-mail como canal preferencial, a API envia o link por e-mail; com WhatsApp ou ligação, a resposta traz a mensagem pronta e o endereço <code>https://wa.me/55&lt;celular&gt;?text=&lt;mensagem&gt;</code>, e a interface mostra o botão "Enviar pelo WhatsApp", que chama <code>POST /sessoes/:id/whatsapp</code> para registrar <code>mensagemWhatsappEm</code> (<a href="../../unidade-2/requisitos/decisoes-fbr/">DF24</a>). O SMS não é usado. A página que confirma a presença entra com o RF14, no Ciclo 4.</p>
+<pre class="mermaid"><code>sequenceDiagram
+    actor U as Secretaria ou estagiário responsável
+    participant A as API (agendamento)
+    participant DB as Banco
+    participant M as E-mail
+    U-&gt;&gt;A: POST /sessoes com caso, início e término opcional
+    A-&gt;&gt;DB: confere o perfil, o vínculo vigente e o estagiário responsável
+    alt sem estagiário vinculado, ou usuário sem permissão
+        A--&gt;&gt;U: 403 ou 422 com o motivo
+    else término menor ou igual ao início
+        A--&gt;&gt;U: 422 término deve ser posterior ao início
+    else sobreposição com sessão do estagiário ou do paciente
+        A--&gt;&gt;U: 409 conflito de horário
+    else horário livre
+        A-&gt;&gt;DB: SessaoAtendimento agendada e LinkConfirmacao
+        A-&gt;&gt;DB: auditoria (RNF10)
+        alt canal preferencial e-mail
+            A-&gt;&gt;M: envia o link de confirmação de presença
+            A--&gt;&gt;U: sessão agendada, link enviado por e-mail
+        else canal WhatsApp ou ligação
+            A--&gt;&gt;U: sessão agendada, com a mensagem pronta e o endereço do WhatsApp
+        end
+    end</code></pre>
+<p><strong>Garantia no banco (RNF9):</strong> além da verificação na API, duas restrições de exclusão na tabela <code>sessoes_atendimento</code> impedem a sobreposição mesmo com duas requisições simultâneas; a API traduz a violação em 409.</p>
+<p><strong>Regra de sobreposição:</strong> para o mesmo estagiário, existe conflito quando outra sessão <code>agendada</code> tem <code>inicio &lt; novoFimIntervalo</code> e <code>fimIntervaloAnotacoes &gt; novoInicio</code>; para o mesmo paciente, quando <code>inicio &lt; novoTermino</code> e <code>termino &gt; novoInicio</code>. Como as desigualdades são estritas, uma sessão do estagiário das 14h00 às 14h50, com anotações até as 15h00, não conflita com outra que começa às 15h00.</p>
+<p><strong>Dados de teste:</strong> uma sessão existente das 14h00 às 14h50, com anotações até as 15h00, e as tentativas do mesmo estagiário às 14h50 (bloqueada) e às 15h00 (permitida); um paciente com e-mail e outro com WhatsApp como canal; um paciente sem estagiário; um estagiário que não é o responsável; um término anterior ao início.</p>
+<hr />
+<h2 id="prontuario-cp6">Prontuário (CP6)<a class="headerlink" href="#prontuario-cp6" title="Link para esta seção">#</a></h2>
+<h3 id="rf66-criar-e-inicializar-o-prontuario-do-paciente-97">RF66 — Criar e inicializar o prontuário do paciente (<a href="https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/issues/97">#97</a>)<a class="headerlink" href="#rf66-criar-e-inicializar-o-prontuario-do-paciente-97" title="Link para esta seção">#</a></h3>
+<p><strong>Criação:</strong> automática, na mesma transação do vínculo (RF21). Não há rota própria: o prontuário nasce com a identificação do paciente, do caso, do ciclo de atendimento, do estagiário responsável e do supervisor.</p>
+<p><strong>Fora do Ciclo 3:</strong> o registro da anamnese e do contrato terapêutico foi separado no <a href="../../unidade-2/requisitos/funcionais/#rf69">RF69</a> em 24/10/2026 e entra no Ciclo 4, depois que a FBr enviar os modelos. No Ciclo 3, a tela do prontuário mostra a identificação e o espaço dos dados iniciais ainda vazio.</p>
+<table>
+<thead>
+<tr>
+<th>Regra</th>
+<th>Critério de aceitação</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>A criação acontece só dentro da transação do RF21</td>
+<td>Caso sem estagiário vinculado não tem prontuário</td>
+</tr>
+<tr>
+<td>Índice único em <code>(caso_id, ciclo_atendimento)</code></td>
+<td>Não é criado um segundo prontuário no mesmo ciclo</td>
+</tr>
+<tr>
+<td>A criação guarda a data/hora e o vínculo que a originou</td>
+<td>O prontuário mostra quando e por qual vínculo foi criado</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Dados de teste:</strong> um caso recém-vinculado; uma tentativa de vincular de novo no mesmo ciclo.</p>
+<hr />
+<h2 id="roteiro-da-inspecao-de-design">Roteiro da inspeção de design<a class="headerlink" href="#roteiro-da-inspecao-de-design" title="Link para esta seção">#</a></h2>
+<p>A inspeção é feita pelo Líder de Feature com o revisor da issue, que nunca pode ser o autor do design. Para cada feature, o resultado é registrado num comentário da issue, usando os itens abaixo:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>Inspeção de design — &lt;feature&gt; (#NN)
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>Data: &lt;dd/mm/aaaa&gt;    Participantes: &lt;Líder&gt;, &lt;revisor&gt;
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>D1.1 Modelo, diagrama de sequência, rotas e regras revisados: sim | não
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>D1.2 Classes e relacionamentos usados: &lt;lista&gt;  — consistentes com o modelo de domínio: sim | não
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>D1.3 Viabilidade técnica: &lt;tecnologias e integrações&gt; · dados de teste: &lt;ok&gt; · riscos: &lt;lista ou "nenhum"&gt;
+<a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>D1.4 Acessibilidade (RNF56–RNF58, quando houver tela pública): &lt;resultado&gt;
+<a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>D1.5 Segurança e LGPD (RNFs da CP12 aplicáveis): &lt;resultado&gt;
+<a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>D1.6 Normas do CRP consideradas: &lt;resultado&gt;
+<a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>D1.7 Modalidade presencial considerada: &lt;resultado&gt;
+<a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>Resultado: aprovado | aprovado com ajustes | reprovado
+<a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>Apontamentos: &lt;lista&gt;
+</code></pre></div>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Voltar para o topo
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    
+      
+      <nav class="md-footer__inner md-grid" aria-label="Rodapé" >
+        
+          
+          <a href="../" class="md-footer__link md-footer__link--prev" aria-label="Anterior: Início da unidade">
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+            </div>
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Anterior
+              </span>
+              <div class="md-ellipsis">
+                Início da unidade
+              </div>
+            </div>
+          </a>
+        
+        
+          
+          <a href="../prototipos-ciclo-3/" class="md-footer__link md-footer__link--next" aria-label="Próximo: Protótipos do Ciclo 3">
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Próximo
+              </span>
+              <div class="md-ellipsis">
+                Protótipos do Ciclo 3
+              </div>
+            </div>
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11z"/></svg>
+            </div>
+          </a>
+        
+      </nav>
+    
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      Clínica Escola FBr · Documentação acadêmica do projeto · 2026
+    </div>
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.tabs", "navigation.tabs.sticky", "navigation.sections", "navigation.path", "navigation.top", "navigation.footer", "navigation.tracking", "toc.follow", "search.suggest", "search.highlight", "content.code.copy"], "search": "../../assets/javascripts/workers/search.a7633da7.min.js", "tags": null, "translations": {"clipboard.copied": "Copiado para \u00e1rea de transfer\u00eancia", "clipboard.copy": "Copiar para \u00e1rea de transfer\u00eancia", "search.result.more.one": "mais 1 nesta p\u00e1gina", "search.result.more.other": "# mais nesta p\u00e1gina", "search.result.none": "Nenhum documento encontrado", "search.result.one": "1 documento encontrado", "search.result.other": "# documentos encontrados", "search.result.placeholder": "Digite para iniciar a busca", "search.result.term.missing": "Ausente", "select.version": "Selecione a vers\u00e3o"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.c21346df.min.js"></script>
+      
+        <script src="../../assets/javascripts/extra.js"></script>
+      
+        <script src="../../assets/javascripts/reading.js"></script>
+      
+        <script src="../../assets/javascripts/matriz.js"></script>
+      
+        <script src="../../assets/javascripts/melhorias.js"></script>
+      
+    
+  </body>
+</html>
