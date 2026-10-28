@@ -8,6 +8,8 @@ for (const pagina of [
   "/entrar",
   "/agendar-sessao",
   "/triagem",
+  "/distribuicao",
+  "/meus-casos",
 ]) {
   test(`sem violações WCAG AA em ${pagina}`, async ({ page }) => {
     await page.goto(pagina);
