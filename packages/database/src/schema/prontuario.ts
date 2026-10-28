@@ -10,6 +10,7 @@ import {
 } from "drizzle-orm/pg-core";
 import { perfilEnum, usuarios } from "./base";
 import { casos, vinculosEstagiario } from "./casos";
+import { sessoesAtendimento } from "./agendamento";
 
 // Prontuário (RF66): criado na mesma transação do vínculo (RF21), um por caso e ciclo.
 // Os dados iniciais (anamnese e contrato) são do RF69, no Ciclo 4, e ficam cifrados (RNF51).
@@ -48,6 +49,26 @@ export const acessosProntuario = pgTable("acessos_prontuario", {
   operacao: text("operacao").notNull(),
   permitido: boolean("permitido").notNull(),
   criadoEm: timestamp("criado_em", { withTimezone: true })
+    .notNull()
+    .defaultNow(),
+});
+
+// RF28: o original é imutável e cada sessão possui no máximo uma evolução inicial.
+export const evolucoes = pgTable("evolucoes", {
+  id: uuid("id").primaryKey().defaultRandom(),
+  prontuarioId: uuid("prontuario_id")
+    .notNull()
+    .references(() => prontuarios.id),
+  sessaoId: uuid("sessao_id")
+    .notNull()
+    .unique()
+    .references(() => sessoesAtendimento.id),
+  queixaCifrada: text("queixa_cifrada").notNull(),
+  planejamentoCifrado: text("planejamento_cifrado").notNull(),
+  registradaPor: uuid("registrada_por")
+    .notNull()
+    .references(() => usuarios.id),
+  registradaEm: timestamp("registrada_em", { withTimezone: true })
     .notNull()
     .defaultNow(),
 });

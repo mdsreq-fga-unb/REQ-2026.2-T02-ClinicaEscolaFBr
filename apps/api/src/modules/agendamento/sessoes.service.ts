@@ -8,7 +8,18 @@ import {
   UnprocessableEntityException,
 } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { aliasedTable, and, asc, eq, gt, ilike, lt, ne, or } from 'drizzle-orm';
+import {
+  aliasedTable,
+  and,
+  asc,
+  eq,
+  gt,
+  ilike,
+  inArray,
+  lt,
+  ne,
+  or,
+} from 'drizzle-orm';
 import {
   casos,
   inscricoes,
@@ -18,6 +29,7 @@ import {
   vinculosEstagiario,
   type Db,
 } from '@clinica/database';
+import { STATUS_QUE_OCUPAM_AGENDA } from '@clinica/shared';
 import type {
   Agendamento,
   BlocoAgenda,
@@ -29,6 +41,7 @@ import type {
 } from '@clinica/shared';
 import type { UsuarioAutenticado } from '../../auth/usuario-autenticado';
 import { AuditoriaService } from '../../auditoria/auditoria.service';
+import { escaparLike } from '../../common/busca';
 import { DB } from '../../database/database.module';
 import { EmailService } from '../../notificacoes/email.service';
 import { ParametrosService } from '../../parametros/parametros.service';
@@ -109,7 +122,9 @@ export class SessoesService {
       .where(
         and(
           ne(casos.situacao, 'encerrado'),
-          busca ? ilike(inscricoes.nomeCompleto, `%${busca}%`) : undefined,
+          busca
+            ? ilike(inscricoes.nomeCompleto, `%${escaparLike(busca)}%`)
+            : undefined,
           usuario.perfil === 'estagiario'
             ? eq(vinculosEstagiario.estagiarioId, usuario.id)
             : undefined,
@@ -149,7 +164,7 @@ export class SessoesService {
       .where(
         and(
           eq(sessoesAtendimento.estagiarioId, estagiarioId),
-          eq(sessoesAtendimento.status, 'agendada'),
+          inArray(sessoesAtendimento.status, STATUS_QUE_OCUPAM_AGENDA),
           lt(sessoesAtendimento.inicio, fim),
           gt(sessoesAtendimento.fimIntervaloAnotacoes, inicio),
         ),
@@ -173,6 +188,11 @@ export class SessoesService {
     }
     if (!paciente.estagiarioId || !paciente.estagiarioNome) {
       throw new UnprocessableEntityException(SEM_VINCULO);
+    }
+    if (paciente.situacao !== 'em_atendimento') {
+      throw new UnprocessableEntityException(
+        'Só é possível agendar sessão para paciente em atendimento.',
+      );
     }
     const estagiarioId = paciente.estagiarioId;
 
@@ -211,6 +231,8 @@ export class SessoesService {
           .insert(sessoesAtendimento)
           .values({
             casoId: dados.casoId,
+            // A sessão pertence ao ciclo de atendimento do caso (RF28, RF66).
+            cicloAtendimento: paciente.cicloAtendimento,
             estagiarioId,
             inicio,
             termino,
@@ -327,6 +349,8 @@ export class SessoesService {
         email: inscricoes.email,
         celular: inscricoes.celular,
         canal: inscricoes.canalPreferencial,
+        situacao: casos.situacao,
+        cicloAtendimento: casos.cicloAtendimento,
         estagiarioId: estagiario.id,
         estagiarioNome: estagiario.nome,
       })
@@ -422,7 +446,7 @@ export class SessoesService {
       .from(sessoesAtendimento)
       .where(
         and(
-          eq(sessoesAtendimento.status, 'agendada'),
+          inArray(sessoesAtendimento.status, STATUS_QUE_OCUPAM_AGENDA),
           or(
             eq(sessoesAtendimento.estagiarioId, estagiarioId),
             eq(sessoesAtendimento.casoId, casoId),

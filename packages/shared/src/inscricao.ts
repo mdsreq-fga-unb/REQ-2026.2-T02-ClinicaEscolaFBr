@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { hojeEmBrasilia } from "./datas";
 import { CANAIS } from "./dominio-ciclo-3";
 
 export const ESTADOS_CIVIS = [
@@ -16,14 +17,7 @@ const obrigatorio = (max: number) =>
     .min(1, "Preencha este campo.")
     .max(max, `Use no máximo ${max} caracteres.`);
 
-export function hojeEmBrasilia(agora = new Date()): string {
-  return new Intl.DateTimeFormat("en-CA", {
-    timeZone: "America/Sao_Paulo",
-    year: "numeric",
-    month: "2-digit",
-    day: "2-digit",
-  }).format(agora);
-}
+export { hojeEmBrasilia };
 
 export function menorDeIdade(
   nascimento: string,

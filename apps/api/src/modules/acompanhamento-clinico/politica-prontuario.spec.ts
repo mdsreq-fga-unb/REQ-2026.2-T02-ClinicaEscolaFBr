@@ -1,11 +1,15 @@
+import { TriagemService } from '../triagem/triagem.service';
 import { ConfigService } from '@nestjs/config';
 import { eq } from 'drizzle-orm';
 import {
   acessosProntuario,
   atribuicoesSupervisor,
   casos,
+  decisoesPrioridade,
+  evolucoes,
   inscricoes,
   prontuarios,
+  sessoesAtendimento,
   usuarios,
   vinculosEstagiario,
   type Db,
@@ -18,6 +22,7 @@ import {
 } from '../../test-utils/banco-de-teste';
 import { PoliticaProntuario } from './politica-prontuario';
 import { ProntuariosService } from './prontuarios.service';
+import { AuditoriaService } from '../../auditoria/auditoria.service';
 
 describe('Restrição de acesso ao prontuário (RF55)', () => {
   let db: Db;
@@ -115,6 +120,7 @@ describe('Restrição de acesso ao prontuário (RF55)', () => {
       db,
       politica,
       new ConfigService({ CHAVE_DADOS: CHAVE_TESTE }),
+      new AuditoriaService(db),
     );
   });
 
@@ -251,11 +257,138 @@ describe('Restrição de acesso ao prontuário (RF55)', () => {
     expect(daSecretaria).not.toHaveProperty('prontuarioId');
   });
 
+  it('RF69 cifra os dados iniciais e não permite substituir o primeiro registro', async () => {
+    await db
+      .update(prontuarios)
+      .set({ anamneseCifrada: null })
+      .where(eq(prontuarios.id, prontuarioId));
+    await expect(
+      servico.registrarDadosIniciais(
+        prontuarioId,
+        {
+          anamnese: 'Relato de teste protegido',
+          contrato: 'Contrato de teste protegido',
+          dataAssinaturaContrato: '2026-10-27',
+        },
+        pessoas.estagiarioA,
+      ),
+    ).resolves.toEqual({ registrado: true });
+    const [linha] = await db
+      .select()
+      .from(prontuarios)
+      .where(eq(prontuarios.id, prontuarioId));
+    expect(linha.anamneseCifrada).not.toContain('Relato de teste protegido');
+    await expect(
+      servico.registrarDadosIniciais(
+        prontuarioId,
+        {
+          anamnese: 'Substituição proibida',
+          contrato: 'Substituição proibida',
+          dataAssinaturaContrato: '2026-10-27',
+        },
+        pessoas.estagiarioA,
+      ),
+    ).rejects.toMatchObject({ status: 409 });
+  });
+
+  it('RF28 exige sessão realizada do ciclo e mantém a evolução original cifrada e imutável', async () => {
+    const inicio = new Date(Date.now() - 3_600_000);
+    const termino = new Date(Date.now() - 1_800_000);
+    const fimIntervaloAnotacoes = new Date(Date.now() - 1_200_000);
+    const [sessao] = await db
+      .insert(sessoesAtendimento)
+      .values({
+        casoId,
+        cicloAtendimento: 1,
+        estagiarioId: pessoas.estagiarioA.id,
+        inicio,
+        termino,
+        fimIntervaloAnotacoes,
+        agendadaPor: pessoas.supervisor.id,
+      })
+      .returning();
+    await servico.marcarSessaoRealizada(
+      prontuarioId,
+      sessao.id,
+      pessoas.estagiarioA,
+    );
+    await expect(
+      servico.registrarEvolucao(
+        prontuarioId,
+        sessao.id,
+        {
+          queixa: 'Evolução confidencial',
+          planejamento: 'Planejamento confidencial',
+        },
+        pessoas.estagiarioA,
+      ),
+    ).resolves.toMatchObject({ registrada: true });
+    const [linha] = await db
+      .select()
+      .from(evolucoes)
+      .where(eq(evolucoes.sessaoId, sessao.id));
+    expect(linha.queixaCifrada).not.toContain('Evolução confidencial');
+    await expect(
+      servico.consultar(prontuarioId, pessoas.estagiarioA),
+    ).resolves.toMatchObject({
+      sessoes: [
+        expect.objectContaining({
+          status: 'realizada',
+          evolucao: expect.objectContaining({
+            queixa: 'Evolução confidencial',
+          }),
+        }),
+      ],
+    });
+    await expect(
+      servico.registrarEvolucao(
+        prontuarioId,
+        sessao.id,
+        {
+          queixa: 'Segunda evolução',
+          planejamento: 'Segundo plano',
+        },
+        pessoas.estagiarioA,
+      ),
+    ).rejects.toMatchObject({ status: 409 });
+    await expect(
+      db.update(evolucoes).set({ queixaCifrada: 'alteração' }),
+    ).rejects.toThrow();
+  });
+
   it('o registro de acessos não pode ser alterado nem apagado (RNF52)', async () => {
     await servico.consultar(prontuarioId, pessoas.estagiarioA);
     await expect(
       db.update(acessosProntuario).set({ permitido: false }),
     ).rejects.toThrow();
     await expect(db.delete(acessosProntuario)).rejects.toThrow();
+  });
+  it('RF6 mantém a nova prioridade vigente mesmo se a decisão anterior tiver horário adiantado', async () => {
+    const [caso] = await db.select().from(casos).where(eq(casos.id, casoId));
+    await db.insert(decisoesPrioridade).values({
+      inscricaoId: caso.inscricaoId,
+      corCifrada: cifrar('verde', CHAVE_TESTE),
+      decididaPor: pessoas.supervisor.id,
+      decididaEm: new Date('2099-01-01T00:00:00Z'),
+    });
+    const triagem = new TriagemService(
+      db,
+      new ConfigService({ CHAVE_DADOS: CHAVE_TESTE }),
+      new AuditoriaService(db),
+    );
+    await triagem.registrarPrioridade(
+      caso.inscricaoId,
+      'vermelha',
+      pessoas.supervisor,
+    );
+    expect(await triagem.listarClassificadas()).toEqual([
+      expect.objectContaining({
+        prioridade: 'vermelha',
+        historico: [
+          expect.objectContaining({ prioridade: 'vermelha' }),
+          expect.objectContaining({ prioridade: 'verde' }),
+        ],
+      }),
+    ]);
   });
 });
