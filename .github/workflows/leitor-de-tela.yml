@@ -51,6 +51,9 @@ jobs:
       - uses: guidepup/setup-action@acf1a64cc26292ebe0db6a28d1341bd1bae93c65
         with:
           record: true
+      # O preparo da versão do Guidepup do projeto: cria as preferências locais do
+      # VoiceOver, que a action acima (de uma versão anterior) não cria.
+      - run: pnpm --filter @clinica/web exec guidepup setup --ci --macos-record
       # Arquivos do VoiceOver da versão do Guidepup instalada no projeto.
       - run: pnpm --filter @clinica/web exec guidepup install voiceover
       - run: pnpm --filter @clinica/web exec playwright install webkit
