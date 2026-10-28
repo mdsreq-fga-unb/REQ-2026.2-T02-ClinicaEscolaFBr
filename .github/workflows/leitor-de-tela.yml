@@ -1,6 +1,6 @@
 name: Leitor de tela
 
-# Testes com o VoiceOver de verdade (RNF24), num runner macOS. Rodam toda semana e
+# Testes com o VoiceOver de verdade (RNF24 e RNF56), num runner macOS. Rodam toda semana e
 # quando as telas cobertas mudam. Não bloqueiam a PR. Na main, o relatório dos
 # testes (rnfs-leitor-de-tela) entra no D4.5 das features pelo Feature Status.
 on:
@@ -13,6 +13,9 @@ on:
       - "apps/web/src/app/(interno)/distribuicao/**"
       - "apps/web/src/app/(interno)/meus-casos/**"
       - "apps/web/src/components/comum/**"
+      - "apps/web/src/components/inscricao/**"
+      - "apps/web/src/app/(publico)/**"
+      - "apps/web/e2e/apoio-inscricao.ts"
       - "apps/web/e2e/leitor-de-tela/**"
       - "apps/web/playwright.leitor-de-tela.config.ts"
       - ".github/workflows/leitor-de-tela.yml"
@@ -22,6 +25,9 @@ on:
       - "apps/web/src/app/(interno)/distribuicao/**"
       - "apps/web/src/app/(interno)/meus-casos/**"
       - "apps/web/src/components/comum/**"
+      - "apps/web/src/components/inscricao/**"
+      - "apps/web/src/app/(publico)/**"
+      - "apps/web/e2e/apoio-inscricao.ts"
       - "apps/web/e2e/leitor-de-tela/**"
       - "apps/web/playwright.leitor-de-tela.config.ts"
       - ".github/workflows/leitor-de-tela.yml"
@@ -32,7 +38,7 @@ concurrency:
 
 jobs:
   voiceover:
-    name: VoiceOver (RNF24)
+    name: VoiceOver (RNF24 e RNF56)
     runs-on: macos-latest
     timeout-minutes: 40
     env:

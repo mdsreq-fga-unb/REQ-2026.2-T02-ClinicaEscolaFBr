@@ -4,6 +4,7 @@ import { Test } from '@nestjs/testing';
 import { and, eq } from 'drizzle-orm';
 import request from 'supertest';
 import {
+  acessosProntuario,
   atribuicoesSupervisor,
   auditoria,
   casos,
@@ -18,13 +19,14 @@ import {
 import type { Cor } from '@clinica/shared';
 import { AuditoriaModule } from '../../auditoria/auditoria.module';
 import type { UsuarioAutenticado } from '../../auth/usuario-autenticado';
-import { cifrar } from '../../common/criptografia';
+import { cifrar, decifrar } from '../../common/criptografia';
 import { DB } from '../../database/database.module';
 import { ParametrosModule } from '../../parametros/parametros.module';
 import {
   CHAVE_TESTE,
   criarBancoDeTeste,
 } from '../../test-utils/banco-de-teste';
+import { AcompanhamentoClinicoModule } from '../acompanhamento-clinico/acompanhamento-clinico.module';
 import { CasosModule } from './casos.module';
 
 // Distribuição de casos (CP5). O usuário da sessão (RF50) é simulado pelo
@@ -58,6 +60,7 @@ describe('Distribuição de casos (RF18, RF20 e RF21)', () => {
         AuditoriaModule,
         ParametrosModule,
         CasosModule,
+        AcompanhamentoClinicoModule,
       ],
     }).compile();
     app = modulo.createNestApplication();
@@ -469,6 +472,75 @@ describe('Distribuição de casos (RF18, RF20 e RF21)', () => {
         await vincular(caso, 'ana', quem).expect(403);
       }
       expect(await db.select().from(vinculosEstagiario)).toEqual([]);
+    });
+
+    it('o prontuário criado no vínculo não copia dado de saúde em texto legível: a queixa segue cifrada na inscrição (RF66, RNF51)', async () => {
+      const caso = await casoDaCarla();
+      const { body } = await vincular(caso, 'ana').expect(201);
+      const [prontuario] = await db
+        .select()
+        .from(prontuarios)
+        .where(eq(prontuarios.id, body.prontuarioId));
+      expect(JSON.stringify(prontuario)).not.toContain('queixa sigilosa');
+      expect(prontuario).toMatchObject({
+        anamneseCifrada: null,
+        contratoCifrado: null,
+      });
+      const [inscricao] = await db
+        .select({ queixaCifrada: inscricoes.queixaCifrada })
+        .from(inscricoes)
+        .innerJoin(casos, eq(casos.inscricaoId, inscricoes.id))
+        .where(eq(casos.id, caso));
+      expect(inscricao.queixaCifrada).not.toContain('queixa sigilosa');
+      expect(decifrar(inscricao.queixaCifrada!, CHAVE_TESTE)).toBe(
+        'queixa sigilosa',
+      );
+    });
+
+    it('o prontuário criado no vínculo nega o acesso como se não existisse, sem o nome do paciente (RF66, RNF25)', async () => {
+      const caso = await casoDaCarla('Paciente Sigiloso Teste');
+      const { body } = await vincular(caso, 'ana').expect(201);
+      for (const quem of ['secretaria', 'joao', 'ricardo']) {
+        const negado = await http()
+          .get(`/prontuarios/${body.prontuarioId}`)
+          .set(como(quem));
+        const inexistente = await http()
+          .get('/prontuarios/00000000-0000-4000-8000-000000000000')
+          .set(como(quem));
+        expect(negado.status).toBe(403);
+        expect(negado.status).toBe(inexistente.status);
+        expect(negado.body).toEqual(inexistente.body);
+        expect(JSON.stringify(negado.body)).not.toContain('Sigiloso');
+      }
+      await http()
+        .get(`/prontuarios/${body.prontuarioId}`)
+        .set(como('ana'))
+        .expect(200);
+    });
+
+    it('os acessos ao prontuário criado no vínculo, permitidos e negados, ficam registrados (RF66, RNF52)', async () => {
+      const caso = await casoDaCarla();
+      const { body } = await vincular(caso, 'ana').expect(201);
+      await http()
+        .get(`/prontuarios/${body.prontuarioId}`)
+        .set(como('ana'))
+        .expect(200);
+      await http()
+        .get(`/prontuarios/${body.prontuarioId}`)
+        .set(como('secretaria'))
+        .expect(403);
+      const registros = await db
+        .select()
+        .from(acessosProntuario)
+        .where(eq(acessosProntuario.prontuarioId, body.prontuarioId));
+      expect(
+        registros.map((r) => [r.usuarioId, r.perfil, r.permitido]).sort(),
+      ).toEqual(
+        [
+          [pessoas.ana.id, 'estagiario', true],
+          [pessoas.secretaria.id, 'secretaria', false],
+        ].sort(),
+      );
     });
 
     it('o caso tem um único estagiário responsável vigente e um único prontuário no ciclo (RF21, RF66, RNF19)', async () => {

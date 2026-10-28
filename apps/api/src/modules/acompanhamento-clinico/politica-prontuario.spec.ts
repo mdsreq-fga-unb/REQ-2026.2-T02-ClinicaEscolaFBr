@@ -257,7 +257,7 @@ describe('Restrição de acesso ao prontuário (RF55)', () => {
     expect(daSecretaria).not.toHaveProperty('prontuarioId');
   });
 
-  it('RF69 cifra os dados iniciais e não permite substituir o primeiro registro', async () => {
+  it('RF69 cifra os dados iniciais e não permite substituir o primeiro registro (RNF51)', async () => {
     await db
       .update(prontuarios)
       .set({ anamneseCifrada: null })
