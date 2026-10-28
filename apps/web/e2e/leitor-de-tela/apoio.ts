@@ -55,15 +55,17 @@ export async function falou(voiceOver: VoiceOverPlaywright, texto: string) {
     .toContain(texto);
 }
 
-// Confere que o elemento recebeu o foco e pede ao VoiceOver que descreva o item
-// com o foco do teclado, para conferir o que ele lê ali, mesmo que a fala
-// espontânea da troca de foco não tenha sido captada.
+// Confere que o elemento recebeu o foco, leva o cursor do VoiceOver até ele (a
+// navegação seguinte parte dali) e pede que descreva o item com o foco do
+// teclado, para conferir o que ele lê, mesmo que a fala espontânea da troca de
+// foco não tenha sido captada.
 export async function ouvirFoco(
   voiceOver: VoiceOverPlaywright,
   alvo: Locator,
   texto: string,
 ) {
   await expect(alvo).toBeFocused();
+  await voiceOver.perform(voiceOver.keyboardCommands.moveCursorToKeyboardFocus);
   await voiceOver.perform(
     voiceOver.keyboardCommands.describeItemWithKeyboardFocus,
   );
