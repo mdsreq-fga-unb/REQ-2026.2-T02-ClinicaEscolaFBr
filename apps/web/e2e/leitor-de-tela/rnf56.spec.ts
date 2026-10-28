@@ -26,10 +26,17 @@ test.describe("Leitor de tela na inscrição e no comprovante (RNF56)", () => {
     try {
       await irAte(voiceOver, "Dados e contatos");
       expect(await voiceOver.lastSpokenPhrase()).toMatch(/heading|título/i);
+      // O VoiceOver lê o rótulo e, no item seguinte, o campo, que precisa ser
+      // anunciado como campo de texto com o nome do rótulo.
       await irAte(voiceOver, "Nome completo");
-      expect(await voiceOver.lastSpokenPhrase()).toMatch(
-        /edit text|text field|campo/i,
-      );
+      const campo = /edit text|text field|campo de texto/i;
+      for (let i = 0; i < 3; i++) {
+        if (campo.test(await voiceOver.lastSpokenPhrase())) break;
+        await voiceOver.next();
+      }
+      const falaDoCampo = await voiceOver.lastSpokenPhrase();
+      expect(falaDoCampo).toMatch(campo);
+      expect(falaDoCampo).toContain("Nome completo");
 
       // Continuar sem preencher: o resumo dos erros recebe o foco e é lido.
       await irAte(voiceOver, "Continuar");
