@@ -1,7 +1,7 @@
 // Teste de carga do cenário de referência do RNF12 e do RNF21: 30 pessoas da
 // equipe usando o sistema ao mesmo tempo por 10 minutos, sobre a massa de dois
 // semestres criada por apps/api/src/scripts/semear-carga.ts. Mede o percentil
-// 95 do tempo de resposta de cada grupo de operações:
+// 95 do tempo de resposta de cada operação, com o limite do seu RNF:
 //   RNF12 (até 2 s): agendar sessão (RF10). Remarcar, confirmar e cancelar
 //     entram quando forem construídos (Ciclo 4).
 //   RNF21 (até 3 s): listar casos, distribuir (RF18, RF20) e vincular (RF21).
@@ -17,22 +17,73 @@ const DOMINIO = "carga.fbr.edu.br";
 // Cada pessoa simulada usa a sua conta (semear-carga cria 10 de cada papel).
 const conta = (papel) => `${papel}${1 + Math.floor((__VU - 1) / 3)}@${DOMINIO}`;
 
+const USUARIOS = Number(__ENV.USUARIOS || 30);
+const DURACAO = __ENV.DURACAO || "10m";
+
+// Operações medidas, com o limite do percentil 95 do RNF de cada uma. O RNF só
+// passa se todas as operações dele passarem e tiverem acontecido.
+const RNFS = {
+  RNF12: {
+    limite: 2000,
+    rfs: "RF10",
+    descricao: "busca de paciente e agendamento",
+    operacoes: ["buscar_paciente", "agendar"],
+  },
+  RNF21: {
+    limite: 3000,
+    rfs: "RF18, RF20, RF21",
+    descricao: "listagens de casos, distribuição e vínculo",
+    operacoes: [
+      "listar_pendentes",
+      "disponibilidade",
+      "distribuir",
+      "meus_casos",
+      "estagiarios_disponiveis",
+      "vincular",
+    ],
+  },
+};
+
+const limites = {};
+for (const { limite, operacoes } of Object.values(RNFS)) {
+  for (const operacao of operacoes) {
+    limites[`http_req_duration{operacao:${operacao}}`] = [`p(95)<${limite}`];
+    limites[`http_reqs{operacao:${operacao}}`] = ["count>0"];
+  }
+}
+
 export const options = {
   // Cada pessoa simulada entra uma vez e mantém a sessão, como no uso real.
   noCookiesReset: true,
   scenarios: {
-    equipe: {
-      executor: "constant-vus",
-      vus: Number(__ENV.USUARIOS || 30),
-      duration: __ENV.DURACAO || "10m",
-    },
+    equipe: { executor: "constant-vus", vus: USUARIOS, duration: DURACAO },
   },
-  thresholds: {
-    "http_req_duration{rnf:RNF12}": ["p(95)<2000"],
-    "http_req_duration{rnf:RNF21}": ["p(95)<3000"],
-    checks: ["rate>0.99"],
-  },
+  thresholds: { ...limites, checks: ["rate>0.99"] },
 };
+
+// "10m", "90s" ou "1m30s" em segundos.
+const segundos = (texto) =>
+  [...texto.matchAll(/(\d+)(h|m|s)/g)].reduce(
+    (total, [, n, u]) => total + Number(n) * { h: 3600, m: 60, s: 1 }[u],
+    0,
+  );
+
+// Ritmo das gravações: os 160 casos pendentes da massa são distribuídos aos
+// poucos, para a fila durar a carga inteira, e os vínculos seguem o mesmo ritmo.
+// Cada pessoa da coordenação (e cada supervisor) grava no máximo uma vez por
+// intervalo, começando num momento diferente das outras.
+const POR_PAPEL = Math.ceil(USUARIOS / 3);
+const INTERVALO_GRAVACAO = (segundos(DURACAO) * 1000 * POR_PAPEL) / 150;
+let proximaGravacao = null;
+function podeGravar() {
+  const agora = Date.now();
+  if (proximaGravacao === null) {
+    proximaGravacao = agora + Math.random() * INTERVALO_GRAVACAO;
+  }
+  if (agora < proximaGravacao) return false;
+  proximaGravacao += INTERVALO_GRAVACAO;
+  return true;
+}
 
 const json = { headers: { "Content-Type": "application/json" } };
 const medir = (rnf, operacao) => ({ ...json, tags: { rnf, operacao } });
@@ -69,7 +120,7 @@ function coordenacao() {
     disponiveis.status === 200
       ? disponiveis.json().filter((s) => !s.noLimite)
       : [];
-  if (casos.length && livres.length) {
+  if (casos.length && livres.length && podeGravar()) {
     const caso = casos[Math.floor(Math.random() * casos.length)];
     const supervisor = livres[Math.floor(Math.random() * livres.length)];
     const res = http.post(
@@ -89,7 +140,7 @@ function supervisor() {
   check(meus, { "meus casos": (r) => r.status === 200 });
   const semEstagiario =
     meus.status === 200 ? meus.json().filter((c) => !c.estagiario) : [];
-  if (semEstagiario.length) {
+  if (semEstagiario.length && podeGravar()) {
     const opcoes = http.get(
       `${API}/estagiarios/disponiveis`,
       medir("RNF21", "estagiarios_disponiveis"),
@@ -146,46 +197,47 @@ export default function () {
 
 // Resultado no formato dos relatórios de teste do CI, para o D4.5 das features.
 export function handleSummary(dados) {
-  const limite = (metrica) =>
-    Object.values(dados.metrics[metrica]?.thresholds ?? {}).every((t) => t.ok);
-  const p95 = (metrica) =>
-    Math.round(dados.metrics[metrica]?.values?.["p(95)"] ?? NaN);
-  const usuarios = Number(__ENV.USUARIOS || 30);
-  const resultado = {
-    testResults: [
-      {
-        assertionResults: [
-          {
-            fullName: `Carga: agendamento com ${usuarios} usuários simultâneos em até 2 s no percentil 95 (RF10, RNF12)`,
-            status: limite("http_req_duration{rnf:RNF12}")
-              ? "passed"
-              : "failed",
-          },
-          {
-            fullName: `Carga: listagens de casos, distribuição e vínculo com ${usuarios} usuários simultâneos em até 3 s no percentil 95 (RF18, RF20, RF21, RNF21)`,
-            status: limite("http_req_duration{rnf:RNF21}")
-              ? "passed"
-              : "failed",
-          },
-        ],
-      },
-    ],
-  };
+  const metrica = (nome) => dados.metrics[nome];
+  const passou = (nome) =>
+    Boolean(metrica(nome)) &&
+    Object.values(metrica(nome).thresholds ?? {}).every((t) => t.ok);
+  const linhas = [];
+  const assertionResults = [];
+  for (const [rnf, { limite, rfs, descricao, operacoes }] of Object.entries(
+    RNFS,
+  )) {
+    let todas = true;
+    for (const operacao of operacoes) {
+      const duracao = `http_req_duration{operacao:${operacao}}`;
+      const pedidos = `http_reqs{operacao:${operacao}}`;
+      const ok = passou(duracao) && passou(pedidos);
+      todas &&= ok;
+      const p95 = Math.round(metrica(duracao)?.values?.["p(95)"] ?? NaN);
+      const n = metrica(pedidos)?.values?.count ?? 0;
+      linhas.push(
+        `| ${rnf} | ${operacao} | ${n} | ${p95} ms | ${limite} ms | ${ok ? "✅" : "❌"} |`,
+      );
+    }
+    assertionResults.push({
+      fullName: `Carga: ${descricao} com ${USUARIOS} usuários simultâneos por ${DURACAO}, cada operação em até ${limite / 1000} s no percentil 95 (${rfs}, ${rnf})`,
+      status: todas ? "passed" : "failed",
+    });
+  }
   const resumo = [
-    `## Teste de carga (RNF12 e RNF21)`,
+    "## Teste de carga (RNF12 e RNF21)",
     "",
-    `| Grupo | Percentil 95 | Limite | Resultado |`,
-    `| --- | --- | --- | --- |`,
-    `| RNF12 (agendamento) | ${p95("http_req_duration{rnf:RNF12}")} ms | 2000 ms | ${limite("http_req_duration{rnf:RNF12}") ? "✅" : "❌"} |`,
-    `| RNF21 (listagens, distribuição e vínculo) | ${p95("http_req_duration{rnf:RNF21}")} ms | 3000 ms | ${limite("http_req_duration{rnf:RNF21}") ? "✅" : "❌"} |`,
+    "| RNF | Operação | Requisições | Percentil 95 | Limite | Resultado |",
+    "| --- | --- | --- | --- | --- | --- |",
+    ...linhas,
     "",
-    `Usuários simultâneos: ${usuarios}. Requisições: ${dados.metrics.http_reqs?.values?.count ?? 0}. Verificações aprovadas: ${Math.round((dados.metrics.checks?.values?.rate ?? 0) * 100)}%.`,
+    `Usuários simultâneos: ${USUARIOS}. Duração: ${DURACAO}. Requisições: ${metrica("http_reqs")?.values?.count ?? 0}. Verificações aprovadas: ${Math.round((metrica("checks")?.values?.rate ?? 0) * 100)}%.`,
     "",
   ].join("\n");
   return {
     stdout: resumo,
-    [__ENV.RELATORIO || "relatorio-testes/carga.json"]:
-      JSON.stringify(resultado),
+    [__ENV.RELATORIO || "relatorio-testes/carga.json"]: JSON.stringify({
+      testResults: [{ assertionResults }],
+    }),
     [__ENV.RESUMO || "relatorio-testes/carga.md"]: resumo,
   };
 }

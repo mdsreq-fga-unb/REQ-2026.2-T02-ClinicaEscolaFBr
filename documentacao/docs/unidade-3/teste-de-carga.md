@@ -8,6 +8,8 @@ Procedimento do teste de desempenho do [RNF12](../unidade-2/requisitos/nao-funci
 - **Massa de dados:** dois semestres de operação, com 360 inscrições, 200 pacientes em atendimento e 4.000 sessões, criados pelo `semear-carga`.
 - **Ambiente:** a homologação, com a mesma configuração do servidor de produção.
 
+Cada operação tem o seu limite: o RNF só passa se **todas** as operações dele ficarem abaixo do limite no percentil 95 e tiverem acontecido durante a carga. As gravações seguem um ritmo calculado pela duração, para os 160 casos pendentes durarem os 10 minutos inteiros: cada pessoa da coordenação distribui no máximo um caso por intervalo, e cada supervisor vincula no mesmo ritmo.
+
 As operações medidas são as que existem hoje:
 
 - **RNF12:** buscar paciente e agendar sessão (RF10). Remarcar, confirmar presença e cancelar entram quando forem construídos (Ciclo 4).
@@ -33,14 +35,27 @@ As operações medidas são as que existem hoje:
 3. **Rode o workflow "Carga"** na `main` (aba Actions, "Run workflow"):
     - em "api", o endereço da API da homologação;
     - marque "homologacao".
-4. **Confira o resultado.** O resumo da execução mostra o percentil 95 de cada grupo. Se os dois limites passarem, o Feature Status marca o RNF12 no RF10 (#96) e o RNF21 no RF18 (#92), com o link da execução.
+4. **Confira o resultado.** O resumo da execução mostra, para cada operação, a quantidade de requisições e o percentil 95. Quando a execução conta como evidência, a duração é sempre 10 minutos, seja qual for a escolhida. Se os dois limites passarem, o Feature Status marca o RNF12 no RF10 (#96) e o RNF21 no RF18 (#92), com o link da execução.
 
 Uma execução no runner, sem endereço, nunca conta como evidência, porque o runner não é igual ao servidor de produção. Ela serve para avisar cedo se uma mudança deixou alguma operação lenta.
 
 ## Resultado local de referência
 
-Na massa de dois semestres, com 30 pessoas por 3 minutos num computador de desenvolvimento, o percentil 95 ficou em 25 ms no agendamento e em 20 ms nas listagens, na distribuição e no vínculo, com todas as verificações aprovadas. Não é evidência, mas mostra uma folga grande em relação às metas.
+Na massa de dois semestres, com 30 pessoas por 10 minutos num computador de desenvolvimento, todas as verificações foram aprovadas, e a fila de pendentes durou até o fim (14 casos ainda aguardavam distribuição):
+
+| RNF | Operação | Requisições | Percentil 95 |
+| --- | --- | --- | --- |
+| RNF12 | Buscar paciente | 2.909 | 15 ms |
+| RNF12 | Agendar | 2.909 | 25 ms |
+| RNF21 | Listar pendentes | 2.900 | 27 ms |
+| RNF21 | Disponibilidade dos supervisores | 2.900 | 11 ms |
+| RNF21 | Distribuir | 147 | 21 ms |
+| RNF21 | Meus casos | 2.905 | 18 ms |
+| RNF21 | Estagiários disponíveis | 124 | 13 ms |
+| RNF21 | Vincular | 124 | 19 ms |
+
+Não é evidência, mas mostra uma folga grande em relação às metas.
 
 ## Observação da carga sobre a entrada no sistema
 
-Com a mesma conta entrando 3 ou mais vezes **ao mesmo tempo**, algumas tentativas recebem "Acesso bloqueado por 15 minutos", mesmo com a senha certa. O motivo é a proteção do RNF49: cada tentativa é contada antes de a senha ser conferida, para que tentativas simultâneas não passem do limite de 3. O bloqueio dura até a primeira entrada certa terminar. No uso real, só acontece se a mesma pessoa entrar de vários aparelhos no mesmo instante. Por isso, o teste de carga usa uma conta por pessoa. Fica para a equipe decidir se vale ajustar.
+Com a mesma conta entrando 3 ou mais vezes **ao mesmo tempo**, algumas tentativas recebem "Acesso bloqueado por 15 minutos", mesmo com a senha certa. O motivo é a proteção do RNF49: cada tentativa é contada antes de a senha ser conferida, para que tentativas simultâneas não passem do limite de 3. O bloqueio dura até a primeira entrada certa terminar. No uso real, só acontece se a mesma pessoa entrar de vários aparelhos no mesmo instante. Por isso, o teste de carga usa uma conta por pessoa. A correção está na issue [#176](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/issues/176).

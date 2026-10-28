@@ -15,7 +15,7 @@ on:
         required: false
         default: ""
       duracao:
-        description: "Duração da carga"
+        description: "Duração da carga (ignorada quando conta como evidência: sempre 10m)"
         required: false
         default: "10m"
       homologacao:
@@ -58,6 +58,9 @@ jobs:
       SENHA_CARGA: ${{ secrets.SENHA_CARGA || 'senha-so-do-teste-de-carga-1' }}
       API_ALVO: ${{ inputs.api }}
       EVIDENCIA: ${{ inputs.homologacao && inputs.api != '' }}
+      # A evidência do D4.5 é sempre o cenário de referência completo (10 minutos);
+      # a duração escolhida só vale para as execuções que não contam.
+      DURACAO: ${{ (inputs.homologacao && inputs.api != '') && '10m' || inputs.duracao || '10m' }}
     steps:
       - uses: actions/checkout@v7
       # k6 2.3.0, conferido pelo SHA-256 publicado na versão.
@@ -88,7 +91,7 @@ jobs:
           mkdir -p relatorio-testes
           ./k6 run --quiet \
             -e API="${API_ALVO:-http://localhost:3333}" \
-            -e DURACAO="${{ inputs.duracao || '10m' }}" \
+            -e DURACAO="$DURACAO" \
             -e RELATORIO=relatorio-testes/carga.json \
             -e RESUMO=relatorio-testes/carga.md \
             scripts/carga/rnf12-rnf21.js
