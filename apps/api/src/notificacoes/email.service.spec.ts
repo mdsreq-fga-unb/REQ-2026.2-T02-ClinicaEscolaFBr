@@ -20,6 +20,7 @@ describe('Envio de e-mail', () => {
       host: 'localhost',
       port: 1025,
       secure: false,
+      requireTLS: false,
       auth: undefined,
     });
     await servico.enviar('ana@fbr.edu.br', 'Assunto', '<p>Oi</p>');
@@ -46,6 +47,7 @@ describe('Envio de e-mail', () => {
       host: 'smtp-relay.gmail.com',
       port: 587,
       secure: false,
+      requireTLS: true,
       name: 'fbr.edu.br',
       auth: undefined,
     });
@@ -74,6 +76,7 @@ describe('Envio de e-mail', () => {
       host: 'smtp.gmail.com',
       port: 465,
       secure: true,
+      requireTLS: false,
       auth: { user: 'clinica@fbr.edu.br', pass: 'senha-de-app' },
     });
     await servico.enviar('ana@fbr.edu.br', 'Assunto', '<p>Oi</p>');

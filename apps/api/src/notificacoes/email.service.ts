@@ -15,11 +15,14 @@ export class EmailService {
     // No desenvolvimento, o Mailpit aceita sem usuário. Na implantação, o relay
     // SMTP do Google Workspace da FBr autoriza pelo IP do servidor e pede que a
     // conexão se apresente com o domínio (SMTP_EHLO); com uma conta própria, o
-    // Google pede usuário e senha de app. TLS direto na 465, STARTTLS na 587.
+    // Google pede usuário e senha de app. TLS direto na 465 e STARTTLS
+    // obrigatório na 587: sem ele, quem estiver no caminho poderia tirar o TLS e
+    // ler os convites e os códigos. O Mailpit (1025) fica sem TLS.
     this.transporter = nodemailer.createTransport({
       host: config.getOrThrow<string>('SMTP_HOST'),
       port,
       secure: port === 465,
+      requireTLS: port === 587,
       name: config.get<string>('SMTP_EHLO') || undefined,
       auth: user ? { user, pass: config.get<string>('SMTP_PASS') } : undefined,
     });
