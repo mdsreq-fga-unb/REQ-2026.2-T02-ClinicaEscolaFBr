@@ -1,0 +1,98 @@
+name: Implantação
+# Compila as imagens da API e da web, publica no GHCR e pede o deploy ao Coolify
+# da FBr: a main vai para a produção e a development, para a validação. Cada
+# ambiente do GitHub (producao, validacao) guarda o UUID do recurso no Coolify e
+# os valores que entram no build da web. Procedimento:
+# documentacao/docs/unidade-3/implantacao.md
+on:
+  push:
+    branches: [main, development]
+  workflow_dispatch:
+
+# Uma implantação por branch de cada vez, sem cancelar a que já começou.
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+  packages: write
+
+env:
+  REGISTRO: ghcr.io/mdsreq-fga-unb
+
+jobs:
+  implantar:
+    name: Implantar (${{ github.ref_name == 'main' && 'produção' || 'validação' }})
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    environment:
+      name: ${{ github.ref_name == 'main' && 'producao' || 'validacao' }}
+      url: ${{ vars.WEB_URL }}
+    # As actions de terceiros ficam fixadas no commit (o Dependabot as atualiza),
+    # porque este job tem o token de deploy e escreve no GHCR.
+    steps:
+      - uses: actions/checkout@v7
+      - uses: docker/setup-buildx-action@8d2750c68a42422c14e847fe6c8ac0403b4cbd6f # v3.12.0
+      - uses: docker/login-action@c94ce9fb468520275223c153574b00df6fe4bcc9 # v3.7.0
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Imagem da API
+        uses: docker/build-push-action@10e90e3645eae34f1e60eeb005ba3a3d33f178e8 # v6.19.2
+        with:
+          context: .
+          file: apps/api/Dockerfile
+          push: true
+          build-args: VERSAO=${{ github.sha }}
+          tags: |
+            ${{ env.REGISTRO }}/clinica-api:${{ github.ref_name }}
+            ${{ env.REGISTRO }}/clinica-api:${{ github.ref_name }}-${{ github.sha }}
+          cache-from: type=gha,scope=api
+          cache-to: type=gha,scope=api,mode=max
+
+      # O endereço da API e o nome do ambiente entram no build do Next.
+      - name: Imagem da web
+        uses: docker/build-push-action@10e90e3645eae34f1e60eeb005ba3a3d33f178e8 # v6.19.2
+        with:
+          context: .
+          file: apps/web/Dockerfile
+          push: true
+          build-args: |
+            NEXT_PUBLIC_API_URL=${{ vars.NEXT_PUBLIC_API_URL }}
+            NEXT_PUBLIC_AMBIENTE=${{ vars.NEXT_PUBLIC_AMBIENTE }}
+          tags: |
+            ${{ env.REGISTRO }}/clinica-web:${{ github.ref_name }}
+            ${{ env.REGISTRO }}/clinica-web:${{ github.ref_name }}-${{ github.sha }}
+          cache-from: type=gha,scope=web-${{ github.ref_name }}
+          cache-to: type=gha,scope=web-${{ github.ref_name }},mode=max
+
+      # O Coolify sobe o compose do ambiente: baixa as imagens novas (pull_policy:
+      # always), roda o migrador e troca os contêineres da API e da web.
+      - name: Deploy no Coolify
+        env:
+          COOLIFY_URL: ${{ vars.COOLIFY_URL }}
+          COOLIFY_TOKEN: ${{ secrets.COOLIFY_TOKEN }}
+          COOLIFY_UUID: ${{ vars.COOLIFY_UUID }}
+        run: |
+          curl -fsS -H "Authorization: Bearer $COOLIFY_TOKEN" \
+            "$COOLIFY_URL/api/v1/deploy?uuid=$COOLIFY_UUID&force=false"
+
+      # O deploy só termina quando a API publicada responde com o commit desta
+      # execução; se o migrador falhar, a API velha continua e o job falha aqui.
+      - name: Esperar a versão nova no ar
+        env:
+          API_URL: ${{ vars.NEXT_PUBLIC_API_URL }}
+        run: |
+          for _ in $(seq 1 60); do
+            versao=$(curl -fsS "$API_URL/health" 2>/dev/null | jq -r '.versao // empty' || true)
+            if [ "$versao" = "$GITHUB_SHA" ]; then
+              echo "API no ar com o commit $GITHUB_SHA." | tee -a "$GITHUB_STEP_SUMMARY"
+              exit 0
+            fi
+            sleep 10
+          done
+          echo "::error::A API não respondeu com o commit $GITHUB_SHA em 10 minutos (última versão: ${versao:-nenhuma})."
+          exit 1

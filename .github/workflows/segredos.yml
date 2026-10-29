@@ -4,9 +4,9 @@ name: Segredos
 # nenhuma chave no código), com o gitleaks e as exceções do .gitleaks.toml.
 on:
   pull_request:
-    branches: [main]
+    branches: [main, development]
   push:
-    branches: [main]
+    branches: [main, development]
   schedule:
     - cron: "0 10 * * 1"
 

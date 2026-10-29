@@ -3,6 +3,7 @@ import { inscricaoSchema, type Inscricao } from '@clinica/shared';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
 import { LimiteDeEnviosGuard } from '../../common/limite-de-envios.guard';
 import { ZodValidationPipe } from '../../common/zod-validation.pipe';
+import { InscricaoAbertaGuard } from './inscricao-aberta.guard';
 import { InscricaoService } from './inscricao.service';
 
 @ApiTags('Inscrições')
@@ -11,7 +12,7 @@ export class InscricaoController {
   constructor(private readonly inscricao: InscricaoService) {}
 
   @Post()
-  @UseGuards(LimiteDeEnviosGuard)
+  @UseGuards(InscricaoAbertaGuard, LimiteDeEnviosGuard)
   @Header('Cache-Control', 'no-store')
   @ApiOperation({
     summary:
