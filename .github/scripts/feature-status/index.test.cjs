@@ -232,6 +232,17 @@ test("PR mesclada na main marca o D4.3 e leva a Em Validação", async () => {
   assert.ok(comentarios[0].body.includes(L.MARCA_ROBO));
 });
 
+test("PR mesclada na development também marca o D4.3, citando a branch", async () => {
+  item = { Status: "Em Construção" };
+  await rodar("pull_request", {
+    action: "closed",
+    pull_request: pr({ merged: true, base: { ref: "development" } }),
+  });
+  assert.match(issue.body, /- \[x\] D4\.3/);
+  assert.equal(item.Status, "Em Validação");
+  assert.match(comentarios[0].body, /mesclada na `development`/);
+});
+
 test("PR só de documentação não marca nada, mesmo citando a issue", async () => {
   arquivos = ["documentacao/docs/unidade-2/requisitos/backlog.md"];
   item = { Status: "Em Design" };
@@ -365,7 +376,7 @@ test("a execução diária acompanha só as issues de feature", async () => {
   assert.equal(item.Status, "Em Design");
 });
 
-// Relatório dos testes da main, como o gerado por coletar-rnfs.cjs.
+// Relatório dos testes da development, como o gerado por coletar-rnfs.cjs.
 const comRelatorio = (testes) => {
   const arquivo = join(mkdtempSync(join(tmpdir(), "rnfs-")), "rnfs.json");
   writeFileSync(arquivo, JSON.stringify({ testes }));
@@ -386,7 +397,7 @@ const integrada = () => {
 const tabela = () =>
   comentarios.filter((c) => c.body.includes("<!-- feature-status:rnfs -->"));
 
-test("CI da main: testes que citam o RF e o RNF viram evidência na tabela do D4.5", async () => {
+test("CI da development: testes que citam o RF e o RNF viram evidência na tabela do D4.5", async () => {
   integrada();
   comRelatorio([
     testeRnf("inscrição (RF1) › recusa o envio sem contato (RNF1)"),
@@ -448,7 +459,7 @@ test("/rnf sem link pede a evidência", async () => {
   assert.equal(tabela().length, 0);
 });
 
-test("CI da main com falha não avalia os RNFs", async () => {
+test("CI da development com falha não avalia os RNFs", async () => {
   integrada();
   comRelatorio([testeRnf("inscrição (RF1) › erros (RNF1)")]);
   await rodar("workflow_run", { workflow_run: { conclusion: "failure" } });
