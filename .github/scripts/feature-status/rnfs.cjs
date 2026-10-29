@@ -244,7 +244,7 @@ function comentarioRnfs(linhas, execucao) {
   return [
     "**Verificação dos RNFs (D4.5)**, atualizada automaticamente",
     "",
-    `Testes da versão integrada: ${execucao ? `[execução do CI da \`main\`](${execucao})` : "sem relatório da `main`"}.`,
+    `Testes da versão integrada: ${execucao ? `[execução do CI da \`development\`](${execucao})` : "sem relatório da `development`"}.`,
     "",
     "| RNF | Situação | Evidência |",
     "| --- | --- | --- |",
@@ -252,7 +252,7 @@ function comentarioRnfs(linhas, execucao) {
     "",
     completo
       ? "Todos os RNFs da feature têm evidência: D4.5 marcado."
-      : 'Falta evidência para algum RNF. Um teste conta quando passa na `main` e cita no nome o RNF e o RF da feature, por exemplo "(RF55, RNF52)". Para o que não é teste automático, comente `/rnf RNF53 <link da evidência>`.',
+      : 'Falta evidência para algum RNF. Um teste conta quando passa na `development` e cita no nome o RNF e o RF da feature, por exemplo "(RF55, RNF52)". Para o que não é teste automático, comente `/rnf RNF53 <link da evidência>`.',
     "",
     MARCA_RNFS,
     MARCA_ROBO,

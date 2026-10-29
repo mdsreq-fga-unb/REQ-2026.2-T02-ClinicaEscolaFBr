@@ -7,14 +7,19 @@
     "WEB_URL",
     "SMTP_HOST",
     "SMTP_PORT",
+    "SMTP_USER",
+    "SMTP_PASS",
+    "SMTP_FROM",
+    "SMTP_EHLO",
     "CHAVE_DADOS",
     "LIMITE_INSCRICOES_POR_ORIGEM",
+    "INSCRICAO_ABERTA",
     "SALTOS_DE_PROXY"
   ],
   "tasks": {
     "build": {
       "dependsOn": ["^build"],
-      "env": ["NEXT_PUBLIC_API_URL"],
+      "env": ["NEXT_PUBLIC_API_URL", "NEXT_PUBLIC_AMBIENTE"],
       "outputs": ["dist/**", ".next/**", "!.next/cache/**"]
     },
     "dev": { "dependsOn": ["^build"], "cache": false, "persistent": true },
