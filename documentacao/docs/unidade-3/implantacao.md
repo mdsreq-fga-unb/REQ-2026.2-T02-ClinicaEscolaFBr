@@ -11,7 +11,7 @@ A web e a API de cada ambiente ficam no mesmo site (`fbr.edu.br`), que é a cond
 
 ## Fluxo das branches
 
-1. As PRs de feature, correção e documentação vão para a `development` ([Boas práticas de utilização do GitHub](../unidade-1/gestao/boas-praticas-github.md#branch-de-destino)). O merge implanta a validação, onde a equipe e a FBr conferem a mudança.
+1. As PRs de feature, correção e documentação vão para a `development` ([Boas práticas de utilização do GitHub](../unidade-1/gestao/boas-praticas-github.md#branch-de-destino)). O merge implanta a validação, onde a equipe e a FBr conferem a mudança. A `development` é a versão integrada: o merge marca o D4.3 da feature, e os testes que passam nela contam para o D4.5.
 2. Quando a validação estiver conferida, alguém abre a PR `main <- development`. O merge dela implanta a produção.
 
 As duas branches têm as mesmas regras de proteção: PR com aprovação de outro integrante e os checks obrigatórios do CI.
@@ -55,7 +55,9 @@ Um ambiente novo começa sem usuários. A primeira conta da coordenação é cri
 NOME="Nome da coordenadora" EMAIL=coordenacao@fbr.edu.br node dist/scripts/primeira-coordenacao.js
 ```
 
-A pessoa recebe o convite por e-mail e cria a própria senha. Os demais usuários são cadastrados por ela (RF53). O script recusa o pedido se o ambiente já tiver uma conta da coordenação. Se o e-mail não sair, ele mostra o link do convite para quem rodou o comando repassar.
+A pessoa recebe o convite por e-mail e cria a própria senha. Os demais usuários são cadastrados por ela (RF53). O script recusa o pedido se o ambiente já tiver uma conta da coordenação. Se o e-mail não sair, ele mostra o link do convite para quem rodou o comando repassar. Esse link dá acesso à conta da coordenação. Por isso, repasse só por um canal privado, direto à pessoa, e confirme que ela ativou a conta logo depois. O link vale uma vez só e expira no prazo dos convites (parâmetro `validade_convite_horas`).
+
+**Mesma VPS.** A produção e a validação dividem a VPS, e com ela a CPU. Testes de carga, como os do RNF12 e do RNF21, só rodam contra a validação fora do horário de uso da clínica, para não pesar na produção.
 
 ## Pendências
 

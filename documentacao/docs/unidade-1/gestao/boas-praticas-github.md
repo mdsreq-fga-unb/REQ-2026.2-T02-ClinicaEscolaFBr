@@ -212,7 +212,7 @@ Os demais critérios continuam sendo marcados por quem tem a evidência. A PR de
 
 ### Verificação dos RNFs (D4.5)
 
-O D4.5 pede que cada RNF que restringe a feature esteja verificado no patamar exigido: a meta completa ou, para os RNFs evolutivos, o [patamar mínimo de lançamento](../../unidade-2/requisitos/backlog.md#patamar-minimo-de-lancamento-dos-rnfs-evolutivos). O Feature Status monta essa verificação sozinho a partir dos testes que passam na `main` e dos registros feitos com `/rnf`.
+O D4.5 pede que cada RNF que restringe a feature esteja verificado no patamar exigido: a meta completa ou, para os RNFs evolutivos, o [patamar mínimo de lançamento](../../unidade-2/requisitos/backlog.md#patamar-minimo-de-lancamento-dos-rnfs-evolutivos). O Feature Status monta essa verificação sozinho a partir dos testes que passam na `development` e dos registros feitos com `/rnf`.
 
 **1. Cite o RF e o RNF no nome do teste.** Um teste é evidência de um RNF quando o nome completo dele (o `describe` mais o `it` ou o `test`) cita o código do RNF e o código do RF da feature, entre parênteses:
 
@@ -247,7 +247,7 @@ Um comentário pode registrar vários RNFs com a mesma evidência (`/rnf RNF56 R
 | Quando | O que o workflow faz |
 | --- | --- |
 | Em toda PR de código | O job "Relatório de RNFs" do CI lista, no resumo da execução, os RNFs verificados pelos testes que passaram. |
-| O CI da `main` termina com sucesso | Em cada feature integrada (D4.3 marcado), o Feature Status cria ou atualiza o comentário "Verificação dos RNFs (D4.5)", com a situação e a evidência de cada RNF. |
+| O CI da `development` termina com sucesso | Em cada feature integrada (D4.3 marcado), o Feature Status cria ou atualiza o comentário "Verificação dos RNFs (D4.5)", com a situação e a evidência de cada RNF. |
 | Alguém comenta `/rnf` | A tabela da feature é atualizada na hora. Se a feature ainda não foi integrada, o registro fica guardado para a avaliação depois do D4.3. |
 | Todos os RNFs da feature têm evidência | O D4.5 é marcado. |
 
