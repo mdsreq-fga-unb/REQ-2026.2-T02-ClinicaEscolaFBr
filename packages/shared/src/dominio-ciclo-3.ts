@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { hojeEmBrasilia } from "./datas";
 
 // Valores dos tipos enumerados do modelo detalhado do Ciclo 3
 // (Projeto das features do Ciclo 3, seção "Modelo detalhado").
@@ -18,7 +19,12 @@ export const prioridadeSchema = z.object({ cor: corSchema });
 export const dadosIniciaisSchema = z.object({
   anamnese: z.string().trim().min(1, "Informe a anamnese."),
   contrato: z.string().trim().min(1, "Informe o contrato terapêutico."),
-  dataAssinaturaContrato: z.iso.date(),
+  dataAssinaturaContrato: z.iso
+    .date("Informe a data de assinatura do contrato.")
+    .refine(
+      (data) => data <= hojeEmBrasilia(),
+      "A data de assinatura não pode estar no futuro.",
+    ),
 });
 export type DadosIniciais = z.infer<typeof dadosIniciaisSchema>;
 
@@ -26,13 +32,16 @@ export const evolucaoSchema = z.object({
   queixa: z
     .string()
     .trim()
-    .min(1)
-    .max(1000)
+    .min(1, "Escreva a evolução da queixa.")
+    .max(1000, "Use no máximo 1.000 caracteres.")
     .refine(
       (texto) => texto.split(/\r?\n/).length <= 10,
       "Use no máximo 10 linhas.",
     ),
-  planejamento: z.string().trim().min(1),
+  planejamento: z
+    .string()
+    .trim()
+    .min(1, "Escreva o planejamento da próxima sessão."),
 });
 export type Evolucao = z.infer<typeof evolucaoSchema>;
 

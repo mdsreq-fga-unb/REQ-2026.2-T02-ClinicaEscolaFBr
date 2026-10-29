@@ -220,6 +220,27 @@ describe('Triagem e prioridade clínica (RF4 e RF6)', () => {
     expect(lista.body).toEqual([]);
   });
 
+  it('as prioridades registradas deixam de listar os casos encerrados (RF6)', async () => {
+    const aberta = await inscrever(diasAtras(2));
+    const encerrada = await inscrever(diasAtras(3));
+    for (const inscricao of [aberta, encerrada]) {
+      await http()
+        .post(`/triagem/inscricoes/${inscricao}/prioridade`)
+        .set(como('supervisor'))
+        .send({ cor: 'verde' })
+        .expect(201);
+    }
+    await db
+      .update(casos)
+      .set({ situacao: 'encerrado' })
+      .where(eq(casos.inscricaoId, encerrada));
+    const res = await http()
+      .get('/triagem/inscricoes/classificadas')
+      .set(como('supervisor'))
+      .expect(200);
+    expect(res.body.map((i: { id: string }) => i.id)).toEqual([aberta]);
+  });
+
   it('a nova decisão preserva o histórico e passa a valer, sem um segundo caso (RF6, RNF5)', async () => {
     const inscricao = await inscrever(diasAtras(1));
     for (const cor of ['verde', 'amarela']) {

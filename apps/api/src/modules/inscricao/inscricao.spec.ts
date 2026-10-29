@@ -128,7 +128,11 @@ describe('RF1/RF2: HTTP, transações e migrations oficiais', () => {
           isGlobal: true,
           ignoreEnvFile: true,
           load: [
-            () => ({ CHAVE_DADOS: chave, WEB_URL: 'http://localhost:3000' }),
+            () => ({
+              CHAVE_DADOS: chave,
+              WEB_URL: 'http://localhost:3000',
+              LIMITE_INSCRICOES_POR_ORIGEM: 1000,
+            }),
           ],
         }),
         Infra,

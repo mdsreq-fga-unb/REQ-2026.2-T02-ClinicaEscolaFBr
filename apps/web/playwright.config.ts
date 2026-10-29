@@ -7,6 +7,10 @@ const apiURL = `http://localhost:${apiPort}`;
 
 export default defineConfig({
   testDir: "./e2e",
+  // Os testes com leitor de tela têm configuração e workflow próprios.
+  testIgnore: "leitor-de-tela/**",
+  // Contas da equipe usadas pelo fluxo integrado (e2e/ciclo-3.spec.ts).
+  globalSetup: "./e2e/semente.ts",
   timeout: 90_000,
   workers: 2,
   // No CI (RELATORIO_TESTES=1), grava também o resultado de cada teste para o
@@ -21,10 +25,16 @@ export default defineConfig({
   },
   webServer: [
     {
-      command: "pnpm --filter @clinica/api start:prod",
-      cwd: "../..",
+      // Roda de apps/api, onde a API acha o .env da raiz (../../.env).
+      command: "pnpm start:prod",
+      cwd: "../api",
       url: `${apiURL}/health`,
-      env: { API_PORT: apiPort, WEB_URL: webURL },
+      // Os testes mandam muitas inscrições da mesma origem (localhost).
+      env: {
+        API_PORT: apiPort,
+        WEB_URL: webURL,
+        LIMITE_INSCRICOES_POR_ORIGEM: "1000",
+      },
       reuseExistingServer: false,
       timeout: 60_000,
     },

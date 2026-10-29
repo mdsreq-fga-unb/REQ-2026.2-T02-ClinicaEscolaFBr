@@ -456,4 +456,32 @@ describe('Agendamento de sessão (RF10)', () => {
       .set(como('pedro'))
       .expect(403);
   });
+  it('a sessão fica no ciclo de atendimento do caso (RF10, RF28)', async () => {
+    await db
+      .update(casos)
+      .set({ cicloAtendimento: 2 })
+      .where(eq(casos.id, pacientes.sergio));
+    const { body } = await agendar('secretaria', {
+      casoId: pacientes.sergio,
+      inicio: as('10:00'),
+    }).expect(201);
+    const [sessao] = await db
+      .select()
+      .from(sessoesAtendimento)
+      .where(eq(sessoesAtendimento.id, body.id));
+    expect(sessao.cicloAtendimento).toBe(2);
+  });
+
+  it('caso que não está em atendimento não recebe sessão, mesmo com vínculo vigente (RF10)', async () => {
+    await db
+      .update(casos)
+      .set({ situacao: 'encerrado' })
+      .where(eq(casos.id, pacientes.sergio));
+    const res = await agendar('secretaria', {
+      casoId: pacientes.sergio,
+      inicio: as('10:00'),
+    }).expect(422);
+    expect(res.body.message).toContain('paciente em atendimento');
+    expect(await db.select().from(sessoesAtendimento)).toEqual([]);
+  });
 });

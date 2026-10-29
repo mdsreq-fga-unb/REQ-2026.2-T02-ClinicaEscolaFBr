@@ -13,6 +13,8 @@ for (const pagina of [
 ]) {
   test(`sem violações WCAG AA em ${pagina}`, async ({ page }) => {
     await page.goto(pagina);
+    // Sem login, as páginas internas levam à entrada: mede depois que a página assenta.
+    await page.waitForLoadState("networkidle");
     const resultado = await new AxeBuilder({ page })
       .withTags(["wcag2a", "wcag2aa", "wcag21aa", "wcag22aa"])
       .analyze();
