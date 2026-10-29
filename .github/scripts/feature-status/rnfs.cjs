@@ -100,6 +100,20 @@ function resumoMarkdown(verificados) {
   ].join("\n");
 }
 
+// Junta os relatórios de mais de um workflow (o CI e o do leitor de tela). Cada
+// teste guarda o link da execução de onde veio, para a evidência apontar para ela.
+function juntarRelatorios(fontes) {
+  const presentes = fontes.filter((f) => f.relatorio);
+  return {
+    arquivos: presentes.flatMap((f) => f.relatorio.arquivos ?? []),
+    testes: presentes.flatMap((f) =>
+      (f.relatorio.testes ?? []).map((t) =>
+        f.execucao ? { ...t, execucao: f.execucao } : t,
+      ),
+    ),
+  };
+}
+
 const SECAO = "#{2,3} ";
 
 // Texto das seções com esses títulos, juntas.
@@ -176,8 +190,33 @@ function avaliarRnfs({ rnfs, rfs, testes, registros }) {
   }));
 }
 
+// RNFs cuja meta pede mais de um tipo de verificação: só contam como verificados
+// com testes de todas estas origens (o nome do relatório: "e2e" é o Playwright do
+// CI, "leitor-de-tela" é o workflow do VoiceOver). O RNF24 pede navegação por
+// teclado e contraste (e2e) e o leitor de tela de verdade.
+const ORIGENS_EXIGIDAS = {
+  RNF24: ["e2e", "leitor-de-tela"],
+};
+
+// Origens exigidas que ainda não têm teste passando para o RNF.
+const origensFaltando = (linha) =>
+  (ORIGENS_EXIGIDAS[linha.rnf] ?? []).filter(
+    (origem) => !linha.testes.some((t) => t.origem === origem),
+  );
+
+// Um registro com /rnf conta sozinho: é a verificação feita e assumida por um
+// integrante, com o link da evidência.
 const verificado = (linha) =>
-  linha.testes.length > 0 || linha.registros.length > 0;
+  linha.registros.length > 0 ||
+  (linha.testes.length > 0 && origensFaltando(linha).length === 0);
+
+function situacao(linha) {
+  if (verificado(linha)) return "✅ verificado";
+  if (linha.testes.length > 0) {
+    return `⏳ falta o teste de: ${origensFaltando(linha).join(", ")}`;
+  }
+  return "⏳ sem evidência";
+}
 const todosVerificados = (linhas) =>
   linhas.length > 0 && linhas.every(verificado);
 
@@ -191,16 +230,21 @@ const limitar = (lista, n) =>
 function comentarioRnfs(linhas, execucao) {
   const tabela = linhas.map((l) => {
     const evidencias = [
-      ...l.testes.map((t) => `teste "${t.nome}" (${t.origem})`),
+      ...l.testes.map((t) =>
+        // O teste de outro workflow traz o link da própria execução.
+        t.execucao && t.execucao !== execucao
+          ? `teste "${t.nome}" ([${t.origem}](${t.execucao}))`
+          : `teste "${t.nome}" (${t.origem})`,
+      ),
       ...l.registros.map((r) => `[registro de @${r.autor}](${r.link})`),
     ];
-    return `| ${l.rnf} | ${verificado(l) ? "✅ verificado" : "⏳ sem evidência"} | ${limitar(evidencias, 3).join("<br>") || "—"} |`;
+    return `| ${l.rnf} | ${situacao(l)} | ${limitar(evidencias, 3).join("<br>") || "—"} |`;
   });
   const completo = todosVerificados(linhas);
   return [
     "**Verificação dos RNFs (D4.5)**, atualizada automaticamente",
     "",
-    `Testes da versão integrada: ${execucao ? `[execução do CI da \`main\`](${execucao})` : "sem relatório da `main`"}.`,
+    `Testes da versão integrada: ${execucao ? `[execução do CI da \`development\`](${execucao})` : "sem relatório da `development`"}.`,
     "",
     "| RNF | Situação | Evidência |",
     "| --- | --- | --- |",
@@ -208,7 +252,7 @@ function comentarioRnfs(linhas, execucao) {
     "",
     completo
       ? "Todos os RNFs da feature têm evidência: D4.5 marcado."
-      : 'Falta evidência para algum RNF. Um teste conta quando passa na `main` e cita no nome o RNF e o RF da feature, por exemplo "(RF55, RNF52)". Para o que não é teste automático, comente `/rnf RNF53 <link da evidência>`.',
+      : 'Falta evidência para algum RNF. Um teste conta quando passa na `development` e cita no nome o RNF e o RF da feature, por exemplo "(RF55, RNF52)". Para o que não é teste automático, comente `/rnf RNF53 <link da evidência>`.',
     "",
     MARCA_RNFS,
     MARCA_ROBO,
@@ -217,11 +261,13 @@ function comentarioRnfs(linhas, execucao) {
 
 module.exports = {
   MARCA_RNFS,
+  ORIGENS_EXIGIDAS,
   codigosRnf,
   codigosRf,
   lerRelatorio,
   resumirTestes,
   resumoMarkdown,
+  juntarRelatorios,
   rnfsDaFeature,
   rfsDaFeature,
   lerComandoRnf,

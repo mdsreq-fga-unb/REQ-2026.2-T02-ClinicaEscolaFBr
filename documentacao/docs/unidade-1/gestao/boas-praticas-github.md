@@ -10,12 +10,12 @@ O FDD não determina uma convenção específica de branches, mensagens de commi
 
 ## Branch de destino
 
-As alterações devem ser integradas à branch de desenvolvimento mais atualizada:
+As alterações são integradas à branch `development`, que é implantada no ambiente de validação. A `main` recebe as versões que vão para a produção, por uma PR da `development` para a `main` (detalhes em [Implantação](../../unidade-3/implantacao.md)):
 
-1. Use `develop` quando ela existir no repositório.
-2. Caso `develop` não exista, use `main`.
+1. Abra as PRs de feature, correção e documentação para a `development`.
+2. Quando a validação estiver conferida, alguém abre a PR `main <- development`, e o merge implanta a produção.
 
-Não faça alterações diretamente em `develop` ou `main`, mesmo quando a mudança for apenas na documentação ou no GitHub Pages.
+Não faça alterações diretamente em `development` ou `main`, mesmo quando a mudança for apenas na documentação ou no GitHub Pages.
 
 > Importante: a branch `gh-pages` é a branch de publicação do site do MkDocs no GitHub Pages. Ela não deve ser alterada manualmente, deletada, force-push, reescrita ou usada como branch de desenvolvimento. O conteúdo do site deve ser gerado a partir da branch de trabalho e publicado pelo fluxo do GitHub Pages, sem edição direta na `gh-pages`.
 
@@ -27,11 +27,9 @@ Antes de criar uma branch, confirme que sua cópia local está atualizada:
 
 ```bash
 git fetch origin
-git switch develop       # use main se develop não existir
-git pull origin develop
+git switch development
+git pull origin development
 ```
-
-Quando o destino for `main`, substitua `develop` por `main` nos comandos.
 
 ### 2. Criar uma branch por alteração
 
@@ -80,7 +78,7 @@ Esse comando configura o Git para usar o hook versionado em `.githooks/commit-ms
 
 ### 3.2 Validação no GitHub Actions
 
-O workflow `.github/workflows/validate-commits.yaml` valida automaticamente as mensagens dos commits enviados para uma pull request e para as branches `main` e `develop`. Essa validação no servidor é a regra oficial e continua funcionando mesmo quando o hook local não estiver configurado.
+O workflow `.github/workflows/validate-commits.yaml` valida automaticamente as mensagens dos commits enviados para uma pull request e para as branches `main` e `development`. Essa validação no servidor é a regra oficial e continua funcionando mesmo quando o hook local não estiver configurado.
 
 ### 4. Revisar os arquivos antes do commit
 
@@ -149,7 +147,7 @@ Envie a branch para o repositório remoto:
 git push -u origin nome-da-branch
 ```
 
-Depois, abra uma pull request para `develop` ou, se ela não existir, para `main`. A PR deve:
+Depois, abra uma pull request para `development`. A PR deve:
 
 - seguir o template de PR do repositório;
 - usar o título no padrão: `branch de destino <- branch com alterações | descrição breve`;
@@ -161,9 +159,9 @@ Depois, abra uma pull request para `develop` ou, se ela não existir, para `main
 Exemplos válidos de título:
 
 ```text
-develop <- feature/123-cadastro-paciente | adiciona cadastro de paciente
-develop <- docs/152-boas-praticas-github | atualiza guia do GitHub
-main <- fix/145-validacao-agendamento | corrige validação de agendamento
+development <- feature/123-cadastro-paciente | adiciona cadastro de paciente
+development <- docs/152-boas-praticas-github | atualiza guia do GitHub
+main <- development | versão 1.2 para a produção
 ```
 
 O título deve manter a ordem `destino <- origem | resumo`. Em outras palavras, a primeira parte indica a branch alvo e a segunda identifica a branch que contém as alterações, seguida de uma descrição curta do conteúdo da PR.
@@ -194,7 +192,7 @@ O workflow **Feature Status** mantém o campo "Estado da feature (FDD)" de cada 
 | D1 completo (inspeção de design) | Estado "Design inspecionado" | Em Construção |
 | PR que declara a issue aberta | — | Em Construção |
 | PR aprovada por outro integrante da equipe | D3.1 marcado, com o link da revisão | Em Construção |
-| PR mesclada na `main` | D4.3 marcado, com o link da PR | Em Validação |
+| PR mesclada na `development` ou na `main` | D4.3 marcado, com o link da PR | Em Validação |
 | D6.1 marcado (aceite da FBr) | Estado "Aceita" | Concluído, e o Project fecha a issue |
 
 As três linhas de PR só valem quando:
@@ -214,7 +212,7 @@ Os demais critérios continuam sendo marcados por quem tem a evidência. A PR de
 
 ### Verificação dos RNFs (D4.5)
 
-O D4.5 pede que cada RNF que restringe a feature esteja verificado no patamar exigido: a meta completa ou, para os RNFs evolutivos, o [patamar mínimo de lançamento](../../unidade-2/requisitos/backlog.md#patamar-minimo-de-lancamento-dos-rnfs-evolutivos). O Feature Status monta essa verificação sozinho a partir dos testes que passam na `main` e dos registros feitos com `/rnf`.
+O D4.5 pede que cada RNF que restringe a feature esteja verificado no patamar exigido: a meta completa ou, para os RNFs evolutivos, o [patamar mínimo de lançamento](../../unidade-2/requisitos/backlog.md#patamar-minimo-de-lancamento-dos-rnfs-evolutivos). O Feature Status monta essa verificação sozinho a partir dos testes que passam na `development` e dos registros feitos com `/rnf`.
 
 **1. Cite o RF e o RNF no nome do teste.** Um teste é evidência de um RNF quando o nome completo dele (o `describe` mais o `it` ou o `test`) cita o código do RNF e o código do RF da feature, entre parênteses:
 
@@ -232,6 +230,7 @@ test('inscrição sem violações WCAG 2.2 AA em 320px (RF1, RNF56, RNF58)', ...
 - O RF pode estar no `describe` e o RNF no teste, ou os dois no mesmo nome.
 - O RF é obrigatório para que o teste de uma feature não sirva de evidência para outra que tem o mesmo RNF.
 - Só cite um RNF quando o teste verifica de fato a meta dele (ou o patamar mínimo, se for evolutivo). Um teste que só passa pela funcionalidade não é evidência do RNF.
+- **RNFs que pedem mais de um tipo de verificação** só contam com testes de todas as origens exigidas, listadas em `ORIGENS_EXIGIDAS`, no `rnfs.cjs`. O RNF24 pede o teste de teclado e contraste do e2e e o do leitor de tela de verdade (VoiceOver). Com só um dos dois, a tabela da issue mostra o que falta, e o D4.5 continua aberto.
 
 **2. Registre com `/rnf` o que não é teste automático.** Inspeção, relatório, teste manual ou teste de restauração da cópia de segurança entram por um comentário na issue da feature, com o link da evidência:
 
@@ -241,12 +240,14 @@ test('inscrição sem violações WCAG 2.2 AA em 320px (RF1, RNF56, RNF58)', ...
 
 Um comentário pode registrar vários RNFs com a mesma evidência (`/rnf RNF56 RNF57 <link>`). O comando só vale de integrantes da equipe e precisa do link.
 
+**Testes com leitor de tela.** Os testes que usam o VoiceOver de verdade ficam em `apps/web/e2e/leitor-de-tela/` e rodam no workflow "Leitor de tela", num runner macOS: toda semana, a cada merge que mexe nas telas cobertas e nas PRs que mexem nelas. Eles seguem a mesma regra de nome e entram no D4.5 sozinhos: o Feature Status junta o relatório desse workflow ao do CI, e a evidência leva o link da execução do VoiceOver. Para rodar no seu computador, use `pnpm --filter @clinica/web test:leitor-de-tela`, que assume o controle do VoiceOver e do teclado enquanto roda.
+
 **3. O que acontece sozinho:**
 
 | Quando | O que o workflow faz |
 | --- | --- |
 | Em toda PR de código | O job "Relatório de RNFs" do CI lista, no resumo da execução, os RNFs verificados pelos testes que passaram. |
-| O CI da `main` termina com sucesso | Em cada feature integrada (D4.3 marcado), o Feature Status cria ou atualiza o comentário "Verificação dos RNFs (D4.5)", com a situação e a evidência de cada RNF. |
+| O CI da `development` termina com sucesso | Em cada feature integrada (D4.3 marcado), o Feature Status cria ou atualiza o comentário "Verificação dos RNFs (D4.5)", com a situação e a evidência de cada RNF. |
 | Alguém comenta `/rnf` | A tabela da feature é atualizada na hora. Se a feature ainda não foi integrada, o registro fica guardado para a avaliação depois do D4.3. |
 | Todos os RNFs da feature têm evidência | O D4.5 é marcado. |
 
@@ -254,7 +255,7 @@ Os RNFs de cada feature vêm da seção "RNFs que restringem a feature" da issue
 
 ## Checklist rápido
 
-- [ ] A branch foi criada a partir de `develop` atualizada ou de `main` atualizada.
+- [ ] A branch foi criada a partir da `development` atualizada.
 - [ ] A alteração está concentrada em uma funcionalidade, correção ou tarefa coerente.
 - [ ] Código e documentação foram validados.
 - [ ] O stage não contém `.venv/`, `node_modules/`, segredos ou arquivos gerados.

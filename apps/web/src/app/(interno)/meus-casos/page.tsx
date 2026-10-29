@@ -187,6 +187,7 @@ export default function MeusCasosPage() {
       {mensagem && (
         <Aviso
           tipo="sucesso"
+          focar
           titulo={`${mensagem.estagiario} agora é responsável pelo caso ${mensagem.numero}.`}
         >
           O prontuário do caso foi criado.

@@ -14,11 +14,12 @@ on:
     types: [opened, reopened, ready_for_review, edited, closed]
   pull_request_review:
     types: [submitted]
-  # CI da main concluído: o relatório dos testes reavalia o D4.5 das features.
+  # CI ou testes com leitor de tela concluídos na development, a versão integrada:
+  # o relatório dos testes reavalia o D4.5 das features.
   workflow_run:
-    workflows: [CI]
+    workflows: [CI, Leitor de tela]
     types: [completed]
-    branches: [main]
+    branches: [development]
   schedule:
     # Todo dia às 8h de Brasília: alinha as features que mudaram sem evento.
     - cron: "0 11 * * *"
@@ -26,7 +27,7 @@ on:
 
 permissions:
   contents: read
-  # Para baixar o relatório de RNFs gerado pelo CI da main.
+  # Para baixar o relatório de RNFs gerado pelo CI da development.
   actions: read
 
 # Uma execução por issue ou PR de cada vez, para as edições não se cruzarem.
@@ -37,14 +38,20 @@ concurrency:
 jobs:
   acompanhar:
     name: Acompanhar features
-    # Comentários em PR não interessam; o resto passa pelo script.
-    if: github.event_name != 'issue_comment' || !github.event.issue.pull_request
+    # Comentários em PR não interessam; o resto passa pelo script. Do workflow_run,
+    # só conta o push na development deste repositório: uma PR de fork com uma
+    # branch chamada development também dispara o CI, e o relatório dela não vale.
+    if: >-
+      (github.event_name != 'issue_comment' || !github.event.issue.pull_request) &&
+      (github.event_name != 'workflow_run' ||
+        (github.event.workflow_run.event == 'push' &&
+         github.event.workflow_run.head_repository.full_name == github.repository))
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v7
         with:
           sparse-checkout: .github/scripts
-      - name: Baixar o relatório de RNFs da main
+      - name: Baixar os relatórios de RNFs da development
         if: >-
           github.event_name == 'workflow_run' || github.event_name == 'schedule' ||
           github.event_name == 'workflow_dispatch' ||
@@ -52,18 +59,35 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
           EXECUCAO: ${{ github.event.workflow_run.id }}
+          WORKFLOW: ${{ github.event.workflow_run.name }}
         run: |
-          # Na conclusão do CI, o relatório daquela execução; nos demais eventos, o
-          # mais recente da main. Sem relatório (PR só de documentação), segue sem ele.
-          if [ -z "$EXECUCAO" ]; then
-            EXECUCAO=$(gh api "repos/$GITHUB_REPOSITORY/actions/artifacts?name=rnfs-verificados&per_page=30" \
-              --jq '[.artifacts[] | select(.workflow_run.head_branch == "main" and (.expired | not))][0].workflow_run.id // empty')
+          # Um relatório do CI e um dos testes com leitor de tela. Do workflow que
+          # acabou de concluir, o daquela execução; do outro, o mais recente da development.
+          # Sem nenhum relatório (PR só de documentação), segue sem ele. Só valem
+          # execuções da development deste repositório, nunca a de um fork.
+          ultimo() {
+            gh api "repos/$GITHUB_REPOSITORY/actions/artifacts?name=$1&per_page=30" \
+              --jq '[.artifacts[] | select(.workflow_run.head_branch == "development" and .workflow_run.head_repository_id == .workflow_run.repository_id and (.expired | not))][0].workflow_run.id // empty'
+          }
+          CI=""; LEITOR=""
+          if [ "$WORKFLOW" = "CI" ]; then CI="$EXECUCAO"; fi
+          if [ "$WORKFLOW" = "Leitor de tela" ]; then LEITOR="$EXECUCAO"; fi
+          [ -n "$CI" ] || CI=$(ultimo rnfs-verificados)
+          [ -n "$LEITOR" ] || LEITOR=$(ultimo rnfs-leitor-de-tela)
+          RUNS="$GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs"
+          FONTES=()
+          if [ -n "$CI" ] && gh run download "$CI" -R "$GITHUB_REPOSITORY" -n rnfs-verificados -D "$RUNNER_TEMP/ci"; then
+            FONTES+=("$RUNNER_TEMP/ci/rnfs-verificados.json" "$RUNS/$CI")
+            echo "EXECUCAO_RNFS=$RUNS/$CI" >> "$GITHUB_ENV"
           fi
-          if [ -n "$EXECUCAO" ] && gh run download "$EXECUCAO" -R "$GITHUB_REPOSITORY" -n rnfs-verificados -D "$RUNNER_TEMP/rnfs"; then
-            echo "RELATORIO_RNFS=$RUNNER_TEMP/rnfs/rnfs-verificados.json" >> "$GITHUB_ENV"
-            echo "EXECUCAO_RNFS=$GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$EXECUCAO" >> "$GITHUB_ENV"
+          if [ -n "$LEITOR" ] && gh run download "$LEITOR" -R "$GITHUB_REPOSITORY" -n rnfs-leitor-de-tela -D "$RUNNER_TEMP/leitor"; then
+            FONTES+=("$RUNNER_TEMP/leitor/rnfs-verificados.json" "$RUNS/$LEITOR")
+          fi
+          if [ ${#FONTES[@]} -gt 0 ]; then
+            node .github/scripts/feature-status/juntar-rnfs.cjs "$RUNNER_TEMP/rnfs-verificados.json" "${FONTES[@]}"
+            echo "RELATORIO_RNFS=$RUNNER_TEMP/rnfs-verificados.json" >> "$GITHUB_ENV"
           else
-            echo "::notice::Sem relatório de RNFs da main: o D4.5 não foi avaliado nesta execução."
+            echo "::notice::Sem relatório de RNFs da development: o D4.5 não foi avaliado nesta execução."
           fi
       - uses: actions/github-script@v9
         env:

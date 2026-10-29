@@ -1,7 +1,7 @@
 import { randomUUID } from "node:crypto";
-import AxeBuilder from "@axe-core/playwright";
-import { expect, test, type Browser, type Page } from "@playwright/test";
-import { EQUIPE, SENHA_EQUIPE, type PerfilEquipe } from "./equipe";
+import { expect, test } from "@playwright/test";
+import { API, entrar, semViolacoes } from "./apoio";
+import { EQUIPE } from "./equipe";
 
 // Integração das features do Ciclo 3, de ponta a ponta, com a API e o banco reais:
 // inscrição (RF1) → triagem e prioridade (RF4, RF6) → distribuição (RF18, RF20) →
@@ -9,29 +9,9 @@ import { EQUIPE, SENHA_EQUIPE, type PerfilEquipe } from "./equipe";
 // → acesso ao prontuário por perfil (RF55). Cada tela interna passa também pela
 // verificação de WCAG 2.2 AA com a pessoa logada (RNF56).
 
-const API = `http://localhost:${process.env.E2E_API_PORT || "3333"}`;
 const paciente = `Paciente Integração ${Date.now()}`;
 let numero = "";
 let prontuarioId = "";
-
-async function semViolacoes(page: Page) {
-  const resultado = await new AxeBuilder({ page })
-    .withTags(["wcag2a", "wcag2aa", "wcag21aa", "wcag22aa"])
-    .analyze();
-  expect(resultado.violations).toEqual([]);
-}
-
-// Entra com a conta do perfil (RF50) e devolve a página já na área interna.
-async function entrar(browser: Browser, perfil: PerfilEquipe) {
-  const contexto = await browser.newContext();
-  const page = await contexto.newPage();
-  await page.goto("/entrar");
-  await page.getByLabel("E-mail").fill(EQUIPE[perfil].email);
-  await page.getByLabel("Senha", { exact: true }).fill(SENHA_EQUIPE);
-  await page.getByRole("button", { name: "Entrar", exact: true }).click();
-  await page.waitForURL((url) => !url.pathname.startsWith("/entrar"));
-  return page;
-}
 
 // Dia útil daqui a algumas semanas, no formato AAAA-MM-DD, para não colidir com
 // sessões de execuções anteriores no mesmo banco.

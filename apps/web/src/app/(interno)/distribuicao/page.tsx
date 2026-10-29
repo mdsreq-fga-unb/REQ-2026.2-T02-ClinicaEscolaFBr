@@ -249,7 +249,7 @@ export default function DistribuicaoPage() {
         </Aviso>
       )}
       {mensagem && (
-        <Aviso tipo="sucesso" titulo="Caso distribuído.">
+        <Aviso tipo="sucesso" focar titulo="Caso distribuído.">
           {mensagem.numero} · {mensagem.paciente} agora está com{" "}
           {mensagem.supervisor}.
         </Aviso>
