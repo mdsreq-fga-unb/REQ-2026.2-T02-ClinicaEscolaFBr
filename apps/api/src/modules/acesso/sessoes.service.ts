@@ -21,9 +21,10 @@ import {
 // Bloqueio na 3ª tentativa seguida com erro, por 15 minutos (RNF49, DF25).
 export const TENTATIVAS_ATE_BLOQUEIO = 3;
 const MINUTOS_BLOQUEIO = 15;
-// Entradas simultâneas esperam uma vaga por até 5 segundos (50 × 100 ms), e uma
-// reserva com mais de 30 segundos é descartada (#176).
-const ESPERAS_POR_VAGA = 50;
+// Entradas simultâneas esperam uma vaga por até 5 segundos, conferindo de 100 em
+// 100 ms. Uma reserva com mais de 30 segundos é descartada, caso o processo da
+// API tenha caído no meio da conferência (#176).
+export const ESPERA_MAXIMA_MS = 5_000;
 const ESPERA_MS = 100;
 const SEGUNDOS_RESERVA = 30;
 // A sessão parada por 30 minutos expira (RNF50).
@@ -40,7 +41,11 @@ const hashDeComparacao = () =>
 // Limite de e-mails desconhecidos guardados em memória.
 const MAX_DESCONHECIDOS = 10_000;
 
-type Tentativas = { tentativas: number; bloqueadoAte: Date | null };
+type Tentativas = {
+  tentativas: number;
+  bloqueadoAte: Date | null;
+  emCurso: number;
+};
 
 @Injectable()
 export class SessoesService {
@@ -49,69 +54,81 @@ export class SessoesService {
     private readonly auditoria: AuditoriaService,
   ) {}
 
-  // Tentativas com e-mails que não existem. Eles também chegam ao bloqueio,
-  // para a resposta não revelar quais e-mails têm conta.
+  // Tentativas com e-mails que não existem. Eles seguem a mesma regra da conta
+  // real, com as mesmas esperas, para a resposta e o tempo dela não revelarem
+  // quais e-mails têm conta.
   private readonly desconhecidos = new Map<string, Tentativas>();
 
   // Entrada com e-mail e senha (RF50). Qualquer falha devolve a mesma mensagem.
   async entrar({ email, senha }: Login) {
-    const agora = new Date();
     const usuario = await this.reservarEntrada(email);
-    if (!usuario) return this.falharDesconhecido(email, senha, agora);
+    if (!usuario) return this.entrarDesconhecido(email, senha);
 
-    const senhaConfere = await conferirSenha(
-      senha,
-      usuario.senhaHash ?? (await hashDeComparacao()),
-    );
-    if (!usuario.senhaHash || !senhaConfere || usuario.situacao !== 'ativo') {
-      // Só a senha errada conta como erro: na 3ª seguida, bloqueia (RNF49).
-      const ate = minutos(MINUTOS_BLOQUEIO, agora);
-      const vaiBloquear = sql`${usuarios.tentativasFalhas} + 1 >= ${TENTATIVAS_ATE_BLOQUEIO}`;
-      const [depois] = await this.db
-        .update(usuarios)
-        .set({
-          entradasEmCurso: sql`greatest(${usuarios.entradasEmCurso} - 1, 0)`,
-          tentativasFalhas: sql`CASE WHEN ${vaiBloquear} THEN 0 ELSE ${usuarios.tentativasFalhas} + 1 END`,
-          bloqueadoAte: sql`CASE WHEN ${vaiBloquear} THEN ${ate.toISOString()}::timestamptz ELSE ${usuarios.bloqueadoAte} END`,
-        })
-        .where(eq(usuarios.id, usuario.id))
-        .returning({ bloqueadoAte: usuarios.bloqueadoAte });
-      if (depois?.bloqueadoAte && depois.bloqueadoAte > agora) {
-        throw this.bloqueio(depois.bloqueadoAte);
-      }
-      throw new UnauthorizedException(MENSAGEM_CREDENCIAIS);
-    }
-
-    const { token, hash } = gerarToken();
-    await this.db.transaction(async (tx) => {
-      await tx
-        .update(usuarios)
-        .set({
-          tentativasFalhas: 0,
-          bloqueadoAte: null,
-          entradasEmCurso: sql`greatest(${usuarios.entradasEmCurso} - 1, 0)`,
-        })
-        .where(eq(usuarios.id, usuario.id));
-      await tx.insert(sessoesLogin).values({
-        usuarioId: usuario.id,
-        tokenHash: hash,
-        expiraEm: minutos(MINUTOS_INATIVIDADE, agora),
-      });
-      await this.auditoria.registrar(
-        {
-          usuarioId: usuario.id,
-          operacao: 'entrar',
-          entidade: 'sessoes_login',
-        },
-        tx,
+    // A vaga reservada volta mesmo se der erro no meio do caminho: senão, ela
+    // ficaria presa e as entradas seguintes esperariam por ela.
+    let devolvida = false;
+    try {
+      const senhaConfere = await conferirSenha(
+        senha,
+        usuario.senhaHash ?? (await hashDeComparacao()),
       );
-    });
-    const autenticado: UsuarioAutenticado = {
-      id: usuario.id,
-      nome: usuario.nome,
-      perfil: usuario.perfil,
-    };
-    return { token, usuario: autenticado };
+      if (!usuario.senhaHash || !senhaConfere || usuario.situacao !== 'ativo') {
+        // Só a senha errada conta como erro: na 3ª seguida, bloqueia (RNF49).
+        const ate = minutos(MINUTOS_BLOQUEIO);
+        const vaiBloquear = sql`${usuarios.tentativasFalhas} + 1 >= ${TENTATIVAS_ATE_BLOQUEIO}`;
+        const [depois] = await this.db
+          .update(usuarios)
+          .set({
+            entradasEmCurso: sql`greatest(${usuarios.entradasEmCurso} - 1, 0)`,
+            tentativasFalhas: sql`CASE WHEN ${vaiBloquear} THEN 0 ELSE ${usuarios.tentativasFalhas} + 1 END`,
+            bloqueadoAte: sql`CASE WHEN ${vaiBloquear} THEN ${ate.toISOString()}::timestamptz ELSE ${usuarios.bloqueadoAte} END`,
+          })
+          .where(eq(usuarios.id, usuario.id))
+          .returning({ bloqueadoAte: usuarios.bloqueadoAte });
+        devolvida = true;
+        // Compara com a hora de agora, e não com a do início da entrada: um
+        // bloqueio antigo que venceu durante a espera não vale mais.
+        if (depois?.bloqueadoAte && depois.bloqueadoAte > new Date()) {
+          throw this.bloqueio(depois.bloqueadoAte);
+        }
+        throw new UnauthorizedException(MENSAGEM_CREDENCIAIS);
+      }
+
+      const { token, hash } = gerarToken();
+      await this.db.transaction(async (tx) => {
+        await tx
+          .update(usuarios)
+          .set({
+            tentativasFalhas: 0,
+            bloqueadoAte: null,
+            entradasEmCurso: sql`greatest(${usuarios.entradasEmCurso} - 1, 0)`,
+          })
+          .where(eq(usuarios.id, usuario.id));
+        await tx.insert(sessoesLogin).values({
+          usuarioId: usuario.id,
+          tokenHash: hash,
+          expiraEm: minutos(MINUTOS_INATIVIDADE),
+        });
+        await this.auditoria.registrar(
+          {
+            usuarioId: usuario.id,
+            operacao: 'entrar',
+            entidade: 'sessoes_login',
+          },
+          tx,
+        );
+      });
+      devolvida = true;
+      const autenticado: UsuarioAutenticado = {
+        id: usuario.id,
+        nome: usuario.nome,
+        perfil: usuario.perfil,
+      };
+      return { token, usuario: autenticado };
+    } finally {
+      // Com rollback na transação, a devolução dentro dela também é desfeita.
+      if (!devolvida) await this.devolverVaga(usuario.id);
+    }
   }
 
   // Reserva a conferência de uma entrada, numa única operação: os erros somados
@@ -119,21 +136,21 @@ export class SessoesService {
   // driblarem o bloqueio (RNF49). Quando as 3 vagas estão ocupadas por entradas
   // em curso, espera uma vaga, em vez de bloquear: entradas simultâneas com a
   // senha certa são todas aceitas (#176). Devolve null se o e-mail não tem conta.
-  private async reservarEntrada(email: string) {
-    const emCurso = sql`CASE WHEN ${usuarios.emCursoDesde} > now() - interval '${sql.raw(String(SEGUNDOS_RESERVA))} seconds' THEN ${usuarios.entradasEmCurso} ELSE 0 END`;
-    for (let vez = 0; vez < ESPERAS_POR_VAGA; vez++) {
+  // As horas vêm todas do relógio da API, para não misturar com o do banco.
+  private reservarEntrada(email: string) {
+    return this.esperarVaga(async () => {
+      const agora = new Date();
+      const limite = new Date(agora.getTime() - SEGUNDOS_RESERVA * 1_000);
+      const emCurso = sql`CASE WHEN ${usuarios.emCursoDesde} > ${limite.toISOString()}::timestamptz THEN ${usuarios.entradasEmCurso} ELSE 0 END`;
       const [usuario] = await this.db
         .update(usuarios)
-        .set({
-          entradasEmCurso: sql`${emCurso} + 1`,
-          emCursoDesde: sql`now()`,
-        })
+        .set({ entradasEmCurso: sql`${emCurso} + 1`, emCursoDesde: agora })
         .where(
           and(
             eq(usuarios.email, email),
             or(
               isNull(usuarios.bloqueadoAte),
-              lte(usuarios.bloqueadoAte, sql`now()`),
+              lte(usuarios.bloqueadoAte, agora),
             ),
             sql`${usuarios.tentativasFalhas} + ${emCurso} < ${TENTATIVAS_ATE_BLOQUEIO}`,
           ),
@@ -146,9 +163,33 @@ export class SessoesService {
         .from(usuarios)
         .where(eq(usuarios.email, email));
       if (!conta) return null;
-      if (conta.bloqueadoAte && conta.bloqueadoAte > new Date()) {
+      if (conta.bloqueadoAte && conta.bloqueadoAte > agora) {
         throw this.bloqueio(conta.bloqueadoAte);
       }
+      return undefined;
+    });
+  }
+
+  // Devolve a vaga de uma entrada que terminou com erro inesperado.
+  private async devolverVaga(usuarioId: string) {
+    await this.db
+      .update(usuarios)
+      .set({
+        entradasEmCurso: sql`greatest(${usuarios.entradasEmCurso} - 1, 0)`,
+      })
+      .where(eq(usuarios.id, usuarioId));
+  }
+
+  // Repete a tentativa de reservar até ela devolver algo diferente de undefined
+  // (sem vaga), por até 5 segundos contados no relógio, e não em voltas.
+  private async esperarVaga<T>(
+    tentar: () => Promise<T | undefined>,
+  ): Promise<T> {
+    const inicio = Date.now();
+    for (;;) {
+      const reserva = await tentar();
+      if (reserva !== undefined) return reserva;
+      if (Date.now() - inicio >= ESPERA_MAXIMA_MS) break;
       await new Promise((pronto) => setTimeout(pronto, ESPERA_MS));
     }
     throw new HttpException(
@@ -207,41 +248,57 @@ export class SessoesService {
   }
 
   // E-mail sem conta: confere um hash falso e conta a tentativa em memória,
-  // com o mesmo bloqueio de uma conta real.
-  private async falharDesconhecido(
+  // com a mesma reserva, a mesma espera e o mesmo bloqueio de uma conta real.
+  private async entrarDesconhecido(
     email: string,
     senha: string,
-    agora: Date,
   ): Promise<never> {
-    const atual = this.desconhecidos.get(email);
-    if (atual?.bloqueadoAte && atual.bloqueadoAte > agora) {
-      throw this.bloqueio(atual.bloqueadoAte);
+    const tentativa = await this.esperarVaga(async () => {
+      const agora = new Date();
+      const atual = this.desconhecidos.get(email) ?? {
+        tentativas: 0,
+        bloqueadoAte: null,
+        emCurso: 0,
+      };
+      if (atual.bloqueadoAte && atual.bloqueadoAte > agora) {
+        throw this.bloqueio(atual.bloqueadoAte);
+      }
+      if (atual.bloqueadoAte) {
+        atual.tentativas = 0;
+        atual.bloqueadoAte = null;
+      }
+      if (atual.tentativas + atual.emCurso >= TENTATIVAS_ATE_BLOQUEIO) {
+        return undefined;
+      }
+      atual.emCurso += 1;
+      if (!this.desconhecidos.has(email)) this.liberarEspaco(agora);
+      this.desconhecidos.set(email, atual);
+      return atual;
+    });
+
+    try {
+      await conferirSenha(senha, await hashDeComparacao());
+    } finally {
+      tentativa.emCurso -= 1;
     }
-    // Como na conta real, a tentativa é reservada antes de qualquer espera:
-    // tentativas simultâneas também não passam de 3.
-    const tentativas = (atual?.bloqueadoAte ? 0 : (atual?.tentativas ?? 0)) + 1;
-    const ate =
-      tentativas >= TENTATIVAS_ATE_BLOQUEIO
-        ? minutos(MINUTOS_BLOQUEIO, agora)
-        : null;
-    this.liberarEspaco(agora);
-    this.desconhecidos.set(
-      email,
-      ate
-        ? { tentativas: 0, bloqueadoAte: ate }
-        : { tentativas, bloqueadoAte: null },
-    );
-    await conferirSenha(senha, await hashDeComparacao());
-    if (ate) throw this.bloqueio(ate);
+    tentativa.tentativas += 1;
+    if (tentativa.tentativas >= TENTATIVAS_ATE_BLOQUEIO) {
+      tentativa.tentativas = 0;
+      tentativa.bloqueadoAte = minutos(MINUTOS_BLOQUEIO);
+      this.desconhecidos.set(email, tentativa);
+      throw this.bloqueio(tentativa.bloqueadoAte);
+    }
+    this.desconhecidos.set(email, tentativa);
     throw new UnauthorizedException(MENSAGEM_CREDENCIAIS);
   }
 
-  // Com a lista cheia, sai primeiro quem não está bloqueado, do mais antigo
-  // para o mais novo, para um bloqueio ativo não ser apagado antes da hora.
+  // Com a lista cheia, sai primeiro quem não está bloqueado nem conferindo, do
+  // mais antigo para o mais novo, para um bloqueio ativo não ser apagado antes
+  // da hora.
   private liberarEspaco(agora: Date) {
     if (this.desconhecidos.size < MAX_DESCONHECIDOS) return;
     for (const [email, t] of this.desconhecidos) {
-      if (!t.bloqueadoAte || t.bloqueadoAte <= agora)
+      if ((!t.bloqueadoAte || t.bloqueadoAte <= agora) && t.emCurso === 0)
         this.desconhecidos.delete(email);
       if (this.desconhecidos.size < MAX_DESCONHECIDOS) return;
     }
