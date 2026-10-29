@@ -95,6 +95,9 @@ jobs:
           --health-retries 10
     env:
       NEXT_PUBLIC_API_URL: http://localhost:3333
+      # Web compilada como a da validação: a faixa do ambiente aparece em todas as
+      # páginas e passa pelo axe junto com elas (RNF56).
+      NEXT_PUBLIC_AMBIENTE: validacao
       DATABASE_URL: postgresql://clinica:clinica@localhost:5432/clinica
       API_PORT: 3333
       WEB_URL: http://localhost:3000
