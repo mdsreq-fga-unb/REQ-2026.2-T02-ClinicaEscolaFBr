@@ -1,14 +1,14 @@
 name: Leitor de tela
 
 # Testes com o VoiceOver de verdade (RNF24 e RNF56), num runner macOS. Rodam toda semana e
-# quando as telas cobertas mudam. Não bloqueiam a PR. Na main, o relatório dos
+# quando as telas cobertas mudam. Não bloqueiam a PR. Na development, o relatório dos
 # testes (rnfs-leitor-de-tela) entra no D4.5 das features pelo Feature Status.
 on:
   schedule:
     - cron: "0 9 * * 1"
   workflow_dispatch:
   push:
-    branches: [main]
+    branches: [main, development]
     paths:
       - "apps/web/src/app/(interno)/distribuicao/**"
       - "apps/web/src/app/(interno)/meus-casos/**"
@@ -20,7 +20,7 @@ on:
       - "apps/web/playwright.leitor-de-tela.config.ts"
       - ".github/workflows/leitor-de-tela.yml"
   pull_request:
-    branches: [main]
+    branches: [main, development]
     paths:
       - "apps/web/src/app/(interno)/distribuicao/**"
       - "apps/web/src/app/(interno)/meus-casos/**"

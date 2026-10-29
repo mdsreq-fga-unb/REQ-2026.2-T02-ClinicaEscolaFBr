@@ -18,6 +18,7 @@ import {
   ilike,
   inArray,
   isNull,
+  ne,
   or,
 } from 'drizzle-orm';
 import {
@@ -186,6 +187,58 @@ export class UsuariosService {
       this.logger.error(`Convite não enviado para ${usuario.id}`, erro);
     }
     return { id: usuario.id, situacao: usuario.situacao, conviteEnviado };
+  }
+
+  // Primeira conta da coordenação de um ambiente novo (implantação), criada pelo
+  // script primeira-coordenacao, sem autor: só vale se nenhuma conta da
+  // coordenação existir ainda. Se o convite não sair por e-mail, o link volta
+  // para quem rodou o script repassar.
+  async cadastrarPrimeiraCoordenacao(dados: { nome: string; email: string }) {
+    const horas = await this.parametros.numero('validade_convite_horas');
+    const { usuario, token } = await this.db.transaction(async (tx) => {
+      const [existente] = await tx
+        .select({ id: usuarios.id })
+        .from(usuarios)
+        .where(
+          and(
+            eq(usuarios.perfil, 'coordenacao'),
+            ne(usuarios.situacao, 'desativado'),
+          ),
+        );
+      if (existente) {
+        throw new ConflictException(
+          'Este ambiente já tem uma conta da coordenação. Os próximos usuários são cadastrados por ela.',
+        );
+      }
+      const [usuario] = await tx
+        .insert(usuarios)
+        .values({
+          ...dados,
+          perfil: 'coordenacao',
+          situacao: 'pendente_ativacao',
+        })
+        .returning();
+      const token = await this.criarConvite(tx, usuario.id, horas);
+      await this.auditoria.registrar(
+        {
+          usuarioId: null,
+          operacao: 'cadastrar_primeira_coordenacao',
+          entidade: 'usuarios',
+          entidadeId: usuario.id,
+          dadosNovos: dados,
+        },
+        tx,
+      );
+      return { usuario, token };
+    });
+    try {
+      await this.enviarConvite(usuario, token, horas);
+      return { id: usuario.id, conviteEnviado: true as const };
+    } catch (erro) {
+      this.logger.error(`Convite não enviado para ${usuario.id}`, erro);
+      const link = `${this.config.getOrThrow<string>('WEB_URL')}/ativacao/${token}`;
+      return { id: usuario.id, conviteEnviado: false as const, link };
+    }
   }
 
   // Reenvio do convite: o anterior deixa de valer (RF53).
