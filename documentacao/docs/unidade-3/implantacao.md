@@ -12,7 +12,7 @@ A web e a API de cada ambiente ficam no mesmo site (`fbr.edu.br`), que é a cond
 ## Fluxo das branches
 
 1. As PRs de feature, correção e documentação vão para a `development` ([Boas práticas de utilização do GitHub](../unidade-1/gestao/boas-praticas-github.md#branch-de-destino)). O merge implanta a validação, onde a equipe e a FBr conferem a mudança. A `development` é a versão integrada: o merge marca o D4.3 da feature, e os testes que passam nela contam para o D4.5.
-2. Quando a validação estiver conferida, alguém abre a PR `main <- development`. O merge dela implanta a produção.
+2. Quando a validação estiver conferida, alguém abre a PR `main <- development`. Depois do merge, o deploy da produção espera a aprovação do Joaquim ou do Gabriel no ambiente `producao` do GitHub, na execução do workflow, e só então sobe.
 
 As duas branches têm as mesmas regras de proteção: PR com aprovação de outro integrante e os checks obrigatórios do CI.
 
@@ -38,7 +38,7 @@ Nenhum segredo fica no repositório. Os valores ficam no GitHub e no Coolify:
 | GitHub, variável do repositório | `COOLIFY_URL` |
 | GitHub, segredo do repositório | `COOLIFY_TOKEN`: token do Coolify que só pode pedir deploy |
 | GitHub, ambientes `producao` e `validacao` | `COOLIFY_UUID` (o recurso no Coolify), `NEXT_PUBLIC_API_URL`, `NEXT_PUBLIC_AMBIENTE` e `WEB_URL` |
-| Coolify, variáveis de cada ambiente | `SENHA_BANCO`, `SENHA_CLINICA_APP`, `DATABASE_URL_API`, `WEB_URL`, `CHAVE_DADOS`, `SMTP_HOST`, `SMTP_PORT`, `SMTP_FROM`, `SMTP_EHLO` e `SALTOS_DE_PROXY` |
+| Coolify, variáveis de cada ambiente | `SENHA_BANCO`, `SENHA_CLINICA_APP`, `DATABASE_URL_API`, `WEB_URL`, `CHAVE_DADOS`, `SMTP_HOST`, `SMTP_PORT`, `SMTP_FROM`, `SMTP_EHLO`, `SALTOS_DE_PROXY` e, só na validação, `INSCRICAO_ABERTA=true` |
 | Cloudflare, zona `fbr.edu.br` | Os quatro registros dos endereços acima, apontando para a VPS. Só o `clinica.fbr.edu.br` passa pelo proxy do Cloudflare: o certificado gratuito dele cobre um nível de subdomínio (`*.fbr.edu.br`), então os outros três vão direto à VPS, e o certificado deles é do Let's Encrypt, emitido pelo proxy do Coolify, como no `api.sistema.fbr.edu.br`. Nos dois caminhos, o TLS mínimo é o 1.2 |
 
 Cada ambiente tem a sua `CHAVE_DADOS` ([RNF51](../unidade-2/requisitos/nao-funcionais.md#rnf51)). Sem ela, os dados de saúde ficam ilegíveis, inclusive nas cópias de segurança. Por isso, guarde uma cópia de cada uma fora da VPS, no cofre de senhas da coordenação.
@@ -46,6 +46,8 @@ Cada ambiente tem a sua `CHAVE_DADOS` ([RNF51](../unidade-2/requisitos/nao-funci
 **E-mail.** Os convites (RF53) e os códigos de verificação (RF52) saem pelo relay SMTP do Google Workspace da FBr (`smtp-relay.gmail.com`), o mesmo do sistema da FBr. Ele aceita o envio pelo IP da VPS, sem usuário e senha, e pede que a conexão se apresente com o domínio (`SMTP_EHLO`). O remetente é um endereço `@fbr.edu.br`.
 
 **Proxy.** Na frente da API fica só o proxy do Coolify, por isso `SALTOS_DE_PROXY=1`. Assim, o limite de inscrições por origem (RF1) vale para cada visitante, e não para todos juntos, e ninguém consegue se passar por outra origem mandando o próprio `X-Forwarded-For`. Se a API passar a ficar atrás do Cloudflare, o valor vira 2.
+
+**Inscrição pública.** A inscrição coleta dados de saúde e só abre ao público com o termo de consentimento (RF57), do Ciclo 4. Até lá, a produção sobe sem `INSCRICAO_ABERTA`, e a inscrição fica fechada: a API recusa as inscrições novas, e a página de inscrição mostra só o aviso e os contatos de emergência. A entrada da equipe funciona normalmente. A validação tem `INSCRICAO_ABERTA=true`, com dados fictícios. Quando o RF57 entrar na produção, basta pôr `INSCRICAO_ABERTA=true` no ambiente `production` do Coolify e reiniciar o recurso, sem compilar as imagens de novo.
 
 ## Primeira conta da coordenação
 
