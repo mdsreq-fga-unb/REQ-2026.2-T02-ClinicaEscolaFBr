@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import type { ReactNode } from "react";
+import { FaixaAmbiente } from "@/components/layout/faixa-ambiente";
 import "./globals.css";
 import { Providers } from "./providers";
 
@@ -20,6 +21,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
   return (
     <html lang="pt-BR" className={inter.variable}>
       <body>
+        <FaixaAmbiente />
         <Providers>{children}</Providers>
       </body>
     </html>
