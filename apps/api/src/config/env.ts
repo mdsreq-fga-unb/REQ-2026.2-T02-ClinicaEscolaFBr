@@ -6,6 +6,15 @@ const envSchema = z.object({
   WEB_URL: z.url(),
   SMTP_HOST: z.string(),
   SMTP_PORT: z.coerce.number(),
+  // Só na implantação: remetente, nome de apresentação (EHLO) do relay do Google
+  // Workspace e, com uma conta própria, usuário e senha de app.
+  SMTP_EHLO: z.string().optional(),
+  SMTP_USER: z.string().optional(),
+  SMTP_PASS: z.string().optional(),
+  SMTP_FROM: z.string().optional(),
+  // Inscrição pública aberta (RF1). Fica false na produção até o termo de
+  // consentimento (RF57) entrar.
+  INSCRICAO_ABERTA: z.stringbool().default(true),
   // Inscrições públicas novas por origem a cada 10 minutos (RF1).
   LIMITE_INSCRICOES_POR_ORIGEM: z.coerce.number().int().positive().default(20),
   // Proxies à frente da API na implantação, para o req.ip ser o do visitante.

@@ -251,3 +251,15 @@ describe("Formulário RF1/RF2", () => {
     }
   });
 });
+
+describe("Inscrição fechada até o termo de consentimento (RF1, RF57)", () => {
+  afterEach(cleanup);
+
+  it("mantém os contatos de emergência e não mostra o formulário", () => {
+    render(<FormularioInscricao aberta={false} />);
+    expect(screen.getByText(/ainda não estão abertas/)).toBeInTheDocument();
+    expect(screen.getByRole("link", { name: "CVV (188)" })).toBeInTheDocument();
+    expect(document.querySelector("form")).toBeNull();
+    expect(screen.queryByRole("button", { name: "Continuar" })).toBeNull();
+  });
+});

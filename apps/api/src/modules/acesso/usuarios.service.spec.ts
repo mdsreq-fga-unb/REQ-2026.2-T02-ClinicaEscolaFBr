@@ -359,4 +359,55 @@ describe('UsuariosService (RF53 e RF54)', () => {
     expect(await servico.listar({ busca: 'helena' })).toHaveLength(1);
     expect(await servico.listar({ perfil: 'supervisor' })).toHaveLength(0);
   });
+
+  it('cria a primeira conta da coordenação de um ambiente novo, sem autor, e envia o convite (RF53)', async () => {
+    await db.delete(usuarios);
+    const resultado = await servico.cadastrarPrimeiraCoordenacao({
+      nome: 'Marta Souza',
+      email: 'marta@fbr.edu.br',
+    });
+    expect(resultado.conviteEnviado).toBe(true);
+    expect(emails).toHaveLength(1);
+    expect(emails[0].para).toBe('marta@fbr.edu.br');
+    expect(emails[0].html).toContain('Coordenação');
+    const [marta] = await db
+      .select()
+      .from(usuarios)
+      .where(eq(usuarios.id, resultado.id));
+    expect(marta).toMatchObject({
+      perfil: 'coordenacao',
+      situacao: 'pendente_ativacao',
+    });
+    const [registro] = await db
+      .select()
+      .from(auditoria)
+      .where(eq(auditoria.entidadeId, resultado.id));
+    expect(registro).toMatchObject({
+      usuarioId: null,
+      operacao: 'cadastrar_primeira_coordenacao',
+    });
+  });
+
+  it('a primeira conta da coordenação é recusada se o ambiente já tem uma (RF53)', async () => {
+    await expect(
+      servico.cadastrarPrimeiraCoordenacao({
+        nome: 'Marta Souza',
+        email: 'marta@fbr.edu.br',
+      }),
+    ).rejects.toMatchObject({ status: 409 });
+    expect(emails).toEqual([]);
+  });
+
+  it('se o convite da primeira conta não sair, devolve o link para quem rodou o script (RF53)', async () => {
+    await db.delete(usuarios);
+    falharEmail = true;
+    const resultado = await servico.cadastrarPrimeiraCoordenacao({
+      nome: 'Marta Souza',
+      email: 'marta@fbr.edu.br',
+    });
+    expect(resultado).toMatchObject({ conviteEnviado: false });
+    expect(resultado.conviteEnviado === false && resultado.link).toMatch(
+      /^http:\/\/localhost:3000\/ativacao\/[\w-]+$/,
+    );
+  });
 });
