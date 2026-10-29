@@ -24,7 +24,7 @@ O workflow `.github/workflows/implantacao.yml` roda a cada push na `main` ou na 
 2. Pede o deploy ao Coolify, que sobe o compose do ambiente ([`implantacao/docker-compose.yml`](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/blob/main/implantacao/docker-compose.yml)):
     - **banco:** Postgres 17, sem porta exposta, com os dados num volume;
     - **migrador:** a mesma imagem da API, que aplica as migrations com o dono do banco e sai. A API só sobe se ele terminar sem erro;
-    - **api** e **web:** atrás do proxy do Coolify, com HTTPS.
+    - **api** e **web:** atrás do proxy do Coolify, com HTTPS. A API escuta na porta 3333 e a web na 3000, e o domínio de cada uma no Coolify leva essa porta (`https://api.clinica.fbr.edu.br:3333`), que o proxy usa e que não aparece no endereço.
 3. Espera a API publicada responder no `/health` com o commit da execução. Se o migrador falhar, a API anterior continua no ar, e o workflow falha.
 
 O resumo da execução, na aba Actions, mostra o commit que entrou no ar.
@@ -39,6 +39,7 @@ Nenhum segredo fica no repositório. Os valores ficam no GitHub e no Coolify:
 | GitHub, segredo do repositório | `COOLIFY_TOKEN`: token do Coolify que só pode pedir deploy |
 | GitHub, ambientes `producao` e `validacao` | `COOLIFY_UUID` (o recurso no Coolify), `NEXT_PUBLIC_API_URL`, `NEXT_PUBLIC_AMBIENTE` e `WEB_URL` |
 | Coolify, variáveis de cada ambiente | `SENHA_BANCO`, `SENHA_CLINICA_APP`, `DATABASE_URL_API`, `WEB_URL`, `CHAVE_DADOS`, `SMTP_HOST`, `SMTP_PORT`, `SMTP_FROM`, `SMTP_EHLO`, `SALTOS_DE_PROXY` e, só na validação, `INSCRICAO_ABERTA=true` |
+| VPS, Docker do `root` | Login no GHCR (`docker login ghcr.io`) com um token clássico só de leitura de pacotes (`read:packages`), porque as imagens são privadas. Quando o token expirar, o Coolify deixa de baixar as imagens novas, e o deploy falha até alguém fazer o login de novo |
 | Cloudflare, zona `fbr.edu.br` | Os quatro registros dos endereços acima, apontando para a VPS. Só o `clinica.fbr.edu.br` passa pelo proxy do Cloudflare: o certificado gratuito dele cobre um nível de subdomínio (`*.fbr.edu.br`), então os outros três vão direto à VPS, e o certificado deles é do Let's Encrypt, emitido pelo proxy do Coolify, como no `api.sistema.fbr.edu.br`. Nos dois caminhos, o TLS mínimo é o 1.2 |
 
 Cada ambiente tem a sua `CHAVE_DADOS` ([RNF51](../unidade-2/requisitos/nao-funcionais.md#rnf51)). Sem ela, os dados de saúde ficam ilegíveis, inclusive nas cópias de segurança. Por isso, guarde uma cópia de cada uma fora da VPS, no cofre de senhas da coordenação.
