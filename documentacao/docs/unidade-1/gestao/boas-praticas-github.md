@@ -210,6 +210,16 @@ Comandos em comentário, aceitos só de integrantes da equipe:
 
 Os demais critérios continuam sendo marcados por quem tem a evidência. A PR de feature (título `feat:`) precisa declarar a issue da feature; sem isso, o check "PR cita a issue da feature" falha. O workflow usa o segredo `PROJECT_TOKEN` do repositório; sem ele, apenas avisa e não altera nada.
 
+### Milestones dos ciclos
+
+Cada ciclo tem um milestone, com a data de fim do ciclo. O milestone marca o **prazo de construção** do ciclo, não o ciclo de vida da feature: pelo DoD, a demonstração e o aceite da FBr (D5 e D6) acontecem depois, em geral no ciclo seguinte, e a issue só fecha com o aceite. Por isso:
+
+1. **No fim do ciclo**, o fechamento é registrado no [Cronograma geral](../../visao-geral/cronograma.md), com o marco alcançado por cada feature, e o milestone é **fechado**, mesmo com issues abertas.
+2. **As issues abertas continuam no milestone** do ciclo em que foram construídas. Elas fecham com o aceite da FBr (D6), e o andamento delas segue no "Estado da feature" e no Status do Project.
+3. **Feature que não chegou a ser construída** e passa para o ciclo seguinte muda de milestone, com o motivo registrado no fechamento do ciclo.
+
+Fechar um milestone não fecha as issues nem tira o milestone delas, e o Feature Status continua lendo o ciclo pelo título dele.
+
 ### Verificação dos RNFs (D4.5)
 
 O D4.5 pede que cada RNF que restringe a feature esteja verificado no patamar exigido: a meta completa ou, para os RNFs evolutivos, o [patamar mínimo de lançamento](../../unidade-2/requisitos/backlog.md#patamar-minimo-de-lancamento-dos-rnfs-evolutivos). O Feature Status monta essa verificação sozinho a partir dos testes que passam na `development` e dos registros feitos com `/rnf`.
