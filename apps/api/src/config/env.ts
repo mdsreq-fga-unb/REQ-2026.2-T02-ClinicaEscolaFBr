@@ -12,6 +12,9 @@ const envSchema = z.object({
   SMTP_USER: z.string().optional(),
   SMTP_PASS: z.string().optional(),
   SMTP_FROM: z.string().optional(),
+  // Inscrição pública aberta (RF1). Fica false na produção até o termo de
+  // consentimento (RF57) entrar.
+  INSCRICAO_ABERTA: z.stringbool().default(true),
   // Inscrições públicas novas por origem a cada 10 minutos (RF1).
   LIMITE_INSCRICOES_POR_ORIGEM: z.coerce.number().int().positive().default(20),
   // Proxies à frente da API na implantação, para o req.ip ser o do visitante.

@@ -48,6 +48,8 @@ services:
       SMTP_FROM: ${SMTP_FROM:?}
       SMTP_EHLO: ${SMTP_EHLO:-}
       SALTOS_DE_PROXY: ${SALTOS_DE_PROXY:-1}
+      # Inscrição pública fechada até o termo de consentimento (RF57).
+      INSCRICAO_ABERTA: ${INSCRICAO_ABERTA:-false}
     depends_on:
       migrador:
         condition: service_completed_successfully
@@ -58,6 +60,7 @@ services:
     pull_policy: always
     environment:
       PORT: 80
+      INSCRICAO_ABERTA: ${INSCRICAO_ABERTA:-false}
     depends_on:
       - api
     restart: unless-stopped

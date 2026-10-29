@@ -13,6 +13,7 @@
     "SMTP_EHLO",
     "CHAVE_DADOS",
     "LIMITE_INSCRICOES_POR_ORIGEM",
+    "INSCRICAO_ABERTA",
     "SALTOS_DE_PROXY"
   ],
   "tasks": {
