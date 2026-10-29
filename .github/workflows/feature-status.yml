@@ -14,12 +14,12 @@ on:
     types: [opened, reopened, ready_for_review, edited, closed]
   pull_request_review:
     types: [submitted]
-  # CI ou testes com leitor de tela concluídos na main: o relatório dos testes
-  # reavalia o D4.5 das features.
+  # CI ou testes com leitor de tela concluídos na development, a versão integrada:
+  # o relatório dos testes reavalia o D4.5 das features.
   workflow_run:
     workflows: [CI, Leitor de tela]
     types: [completed]
-    branches: [main]
+    branches: [development]
   schedule:
     # Todo dia às 8h de Brasília: alinha as features que mudaram sem evento.
     - cron: "0 11 * * *"
@@ -27,7 +27,7 @@ on:
 
 permissions:
   contents: read
-  # Para baixar o relatório de RNFs gerado pelo CI da main.
+  # Para baixar o relatório de RNFs gerado pelo CI da development.
   actions: read
 
 # Uma execução por issue ou PR de cada vez, para as edições não se cruzarem.
@@ -45,7 +45,7 @@ jobs:
       - uses: actions/checkout@v7
         with:
           sparse-checkout: .github/scripts
-      - name: Baixar os relatórios de RNFs da main
+      - name: Baixar os relatórios de RNFs da development
         if: >-
           github.event_name == 'workflow_run' || github.event_name == 'schedule' ||
           github.event_name == 'workflow_dispatch' ||
@@ -56,11 +56,11 @@ jobs:
           WORKFLOW: ${{ github.event.workflow_run.name }}
         run: |
           # Um relatório do CI e um dos testes com leitor de tela. Do workflow que
-          # acabou de concluir, o daquela execução; do outro, o mais recente da main.
+          # acabou de concluir, o daquela execução; do outro, o mais recente da development.
           # Sem nenhum relatório (PR só de documentação), segue sem ele.
           ultimo() {
             gh api "repos/$GITHUB_REPOSITORY/actions/artifacts?name=$1&per_page=30" \
-              --jq '[.artifacts[] | select(.workflow_run.head_branch == "main" and (.expired | not))][0].workflow_run.id // empty'
+              --jq '[.artifacts[] | select(.workflow_run.head_branch == "development" and (.expired | not))][0].workflow_run.id // empty'
           }
           CI=""; LEITOR=""
           if [ "$WORKFLOW" = "CI" ]; then CI="$EXECUCAO"; fi
@@ -80,7 +80,7 @@ jobs:
             node .github/scripts/feature-status/juntar-rnfs.cjs "$RUNNER_TEMP/rnfs-verificados.json" "${FONTES[@]}"
             echo "RELATORIO_RNFS=$RUNNER_TEMP/rnfs-verificados.json" >> "$GITHUB_ENV"
           else
-            echo "::notice::Sem relatório de RNFs da main: o D4.5 não foi avaliado nesta execução."
+            echo "::notice::Sem relatório de RNFs da development: o D4.5 não foi avaliado nesta execução."
           fi
       - uses: actions/github-script@v9
         env:

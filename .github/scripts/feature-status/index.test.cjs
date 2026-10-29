@@ -376,7 +376,7 @@ test("a execução diária acompanha só as issues de feature", async () => {
   assert.equal(item.Status, "Em Design");
 });
 
-// Relatório dos testes da main, como o gerado por coletar-rnfs.cjs.
+// Relatório dos testes da development, como o gerado por coletar-rnfs.cjs.
 const comRelatorio = (testes) => {
   const arquivo = join(mkdtempSync(join(tmpdir(), "rnfs-")), "rnfs.json");
   writeFileSync(arquivo, JSON.stringify({ testes }));
@@ -397,7 +397,7 @@ const integrada = () => {
 const tabela = () =>
   comentarios.filter((c) => c.body.includes("<!-- feature-status:rnfs -->"));
 
-test("CI da main: testes que citam o RF e o RNF viram evidência na tabela do D4.5", async () => {
+test("CI da development: testes que citam o RF e o RNF viram evidência na tabela do D4.5", async () => {
   integrada();
   comRelatorio([
     testeRnf("inscrição (RF1) › recusa o envio sem contato (RNF1)"),
@@ -459,7 +459,7 @@ test("/rnf sem link pede a evidência", async () => {
   assert.equal(tabela().length, 0);
 });
 
-test("CI da main com falha não avalia os RNFs", async () => {
+test("CI da development com falha não avalia os RNFs", async () => {
   integrada();
   comRelatorio([testeRnf("inscrição (RF1) › erros (RNF1)")]);
   await rodar("workflow_run", { workflow_run: { conclusion: "failure" } });

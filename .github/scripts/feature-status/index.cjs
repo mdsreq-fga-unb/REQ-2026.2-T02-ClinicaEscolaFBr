@@ -25,7 +25,7 @@ module.exports = async ({ github, context, core }) => {
     return;
   }
 
-  // Relatório dos testes da main, baixado pelo workflow (coletar-rnfs.cjs).
+  // Relatório dos testes da development, baixado pelo workflow (coletar-rnfs.cjs).
   const arquivoRnfs = process.env.RELATORIO_RNFS;
   const relatorio =
     arquivoRnfs && existsSync(arquivoRnfs)
@@ -103,7 +103,7 @@ module.exports = async ({ github, context, core }) => {
     }
   };
 
-  // Verificação dos RNFs (D4.5), só depois da integração (D4.3): os testes da main
+  // Verificação dos RNFs (D4.5), só depois da integração (D4.3): os testes da development
   // e os registros /rnf viram uma tabela num comentário, que é editado a cada
   // avaliação. Devolve a issue atualizada, ou null se ela não foi avaliada.
   const verificarRnfs = async (issue) => {
@@ -209,7 +209,7 @@ module.exports = async ({ github, context, core }) => {
       } else {
         await comentar(
           issue.number,
-          `Verificação de ${rnf.rnfs.join(", ")} registrada por @${autor}. O D4.5 é avaliado depois que a feature for integrada na \`main\` (D4.3) e o CI da \`main\` gerar o relatório dos testes.`,
+          `Verificação de ${rnf.rnfs.join(", ")} registrada por @${autor}. O D4.5 é avaliado depois que a feature for integrada na \`development\` (D4.3) e o CI da \`development\` gerar o relatório dos testes.`,
         );
       }
       return;
@@ -305,7 +305,7 @@ module.exports = async ({ github, context, core }) => {
     return;
   }
 
-  // CI da main concluído: reavalia os RNFs das features integradas.
+  // CI da development concluído: reavalia os RNFs das features integradas.
   if (evento === "workflow_run") {
     if (carga.workflow_run.conclusion !== "success") return;
     for (const issue of await featuresAbertas()) {
