@@ -38,8 +38,14 @@ concurrency:
 jobs:
   acompanhar:
     name: Acompanhar features
-    # Comentários em PR não interessam; o resto passa pelo script.
-    if: github.event_name != 'issue_comment' || !github.event.issue.pull_request
+    # Comentários em PR não interessam; o resto passa pelo script. Do workflow_run,
+    # só conta o push na development deste repositório: uma PR de fork com uma
+    # branch chamada development também dispara o CI, e o relatório dela não vale.
+    if: >-
+      (github.event_name != 'issue_comment' || !github.event.issue.pull_request) &&
+      (github.event_name != 'workflow_run' ||
+        (github.event.workflow_run.event == 'push' &&
+         github.event.workflow_run.head_repository.full_name == github.repository))
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v7
@@ -57,10 +63,11 @@ jobs:
         run: |
           # Um relatório do CI e um dos testes com leitor de tela. Do workflow que
           # acabou de concluir, o daquela execução; do outro, o mais recente da development.
-          # Sem nenhum relatório (PR só de documentação), segue sem ele.
+          # Sem nenhum relatório (PR só de documentação), segue sem ele. Só valem
+          # execuções da development deste repositório, nunca a de um fork.
           ultimo() {
             gh api "repos/$GITHUB_REPOSITORY/actions/artifacts?name=$1&per_page=30" \
-              --jq '[.artifacts[] | select(.workflow_run.head_branch == "development" and (.expired | not))][0].workflow_run.id // empty'
+              --jq '[.artifacts[] | select(.workflow_run.head_branch == "development" and .workflow_run.head_repository_id == .workflow_run.repository_id and (.expired | not))][0].workflow_run.id // empty'
           }
           CI=""; LEITOR=""
           if [ "$WORKFLOW" = "CI" ]; then CI="$EXECUCAO"; fi
