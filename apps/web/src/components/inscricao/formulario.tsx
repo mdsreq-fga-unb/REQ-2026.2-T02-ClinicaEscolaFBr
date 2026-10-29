@@ -152,7 +152,9 @@ function CampoFormulario({
   );
 }
 
-export function FormularioInscricao() {
+// Com `aberta` falso (produção antes do termo de consentimento, RF57), a página
+// mantém o cabeçalho e os contatos de emergência, mas não mostra o formulário.
+export function FormularioInscricao({ aberta = true }: { aberta?: boolean }) {
   const [etapa, setEtapa] = useState(0);
   const [valores, setValores] = useState<Valores>(vazio);
   const [erros, setErros] = useState<Record<string, string>>({});
@@ -300,7 +302,15 @@ export function FormularioInscricao() {
         </p>
       </aside>
       <main id="conteudo-inscricao" className={styles.conteudo}>
-        {comprovante ? (
+        {!aberta ? (
+          <div>
+            <h1>Inscrição para atendimento</h1>
+            <p className={styles.lead}>
+              As inscrições pela internet ainda não estão abertas. Para pedir
+              atendimento, procure a secretaria da Clínica Escola FBr.
+            </p>
+          </div>
+        ) : comprovante ? (
           <>
             <div className={styles.sucesso} aria-hidden="true">
               ✓

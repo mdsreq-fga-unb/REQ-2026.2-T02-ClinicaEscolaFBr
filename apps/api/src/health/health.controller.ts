@@ -7,9 +7,11 @@ import { DB } from '../database/database.module';
 export class HealthController {
   constructor(@Inject(DB) private readonly db: Db) {}
 
+  // A versão é o commit da imagem (VERSAO, gravada no build da implantação): o
+  // workflow "Implantação" espera por ela para saber que o deploy entrou.
   @Get()
   async verificar() {
     await this.db.execute(sql`select 1`);
-    return { status: 'ok' };
+    return { status: 'ok', versao: process.env.VERSAO ?? 'local' };
   }
 }
