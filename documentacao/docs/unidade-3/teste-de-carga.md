@@ -32,7 +32,7 @@ As operações medidas são as que existem hoje:
     ```
 
 2. **Configure o segredo `SENHA_CARGA`** no repositório (Settings → Secrets → Actions), com a mesma senha.
-3. **Rode o workflow "Carga"** na `main` (aba Actions, "Run workflow"):
+3. **Rode o workflow "Carga"** na `development` (aba Actions, "Run workflow"):
     - em "api", o endereço da API da homologação;
     - marque "homologacao".
 4. **Confira o resultado.** O resumo da execução mostra, para cada operação, a quantidade de requisições e o percentil 95. Quando a execução conta como evidência, a duração é sempre 10 minutos, seja qual for a escolhida. Se os dois limites passarem, o Feature Status marca o RNF12 no RF10 (#96) e o RNF21 no RF18 (#92), com o link da execução.

@@ -62,7 +62,7 @@ Cada feature passa pelos marcos do FDD, registrados no checklist do [DoR e do Do
 | DoR aprovado | Checklist do DoR e registro da avaliação | 21/10 | 27/10 (avaliado no fechamento do Ciclo 3) | 10/11 | 17/11 |
 | Design inspecionado (DoD 1) | Comentário da inspeção com o "de acordo" do Líder e do revisor | 23/10 | 31/10 | 12/11 | 21/11 |
 | Código concluído e inspecionado (DoD 2 e 3) | PR aprovado por outro integrante, com os testes passando | 26/10 | 07/11 | 15/11 | 28/11 |
-| Promovido para a versão integrada (DoD 4) | PR mesclado na `main` | 27/10 | 09/11 | 16/11 | 30/11 |
+| Promovido para a versão integrada (DoD 4) | PR mesclado na `development` | 27/10 | 09/11 | 16/11 | 30/11 |
 | Demonstrada (DoD 5) | Registro da reunião com a FBr | 28/10 a 10/11, com os incrementos do Ciclo 4 | 10/11 | 17/11 | 01/12 |
 
 ## Carga por Líder de Feature e ciclo

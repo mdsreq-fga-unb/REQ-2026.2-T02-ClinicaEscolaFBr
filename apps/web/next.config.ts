@@ -1,7 +1,11 @@
+import path from "node:path";
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  /* config options here */
+  // Imagem da implantação (apps/web/Dockerfile): só o servidor e as dependências
+  // usadas, a partir da raiz do monorepo.
+  output: "standalone",
+  outputFileTracingRoot: path.join(__dirname, "../.."),
   cacheComponents: true,
   partialPrefetching: true,
   turbopack: {

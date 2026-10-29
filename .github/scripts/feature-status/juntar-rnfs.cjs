@@ -1,7 +1,7 @@
 // Junta os relatórios de RNFs de mais de um workflow num só, para o Feature Status
 // avaliar o D4.5 com todos os testes: o do CI e o do leitor de tela.
 // Uso: node juntar-rnfs.cjs <saída> [<relatório> <link da execução>]...
-// Relatório que não existe é ignorado (workflow sem execução na main).
+// Relatório que não existe é ignorado (workflow sem execução na development).
 
 const { existsSync, readFileSync, writeFileSync } = require("node:fs");
 const R = require("./rnfs.cjs");
