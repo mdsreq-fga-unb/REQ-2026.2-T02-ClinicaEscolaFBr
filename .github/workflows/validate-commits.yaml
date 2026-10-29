@@ -7,6 +7,7 @@ on:
     branches:
       - main
       - develop
+      - development
 
 permissions:
   contents: read

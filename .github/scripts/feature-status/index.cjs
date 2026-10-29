@@ -10,6 +10,7 @@ const P = require("./projeto.cjs");
 const R = require("./rnfs.cjs");
 
 const MEMBROS = ["OWNER", "MEMBER", "COLLABORATOR"];
+const BRANCHES_DE_INTEGRACAO = ["development", "main"];
 const { ehFeature } = L;
 
 module.exports = async ({ github, context, core }) => {
@@ -263,15 +264,19 @@ module.exports = async ({ github, context, core }) => {
 
   if (evento === "pull_request") {
     const pr = carga.pull_request;
+    // A development é a branch de integração (implantada na validação); a main
+    // recebe as versões que vão para a produção.
     const integrada =
-      carga.action === "closed" && pr.merged && pr.base.ref === "main";
+      carga.action === "closed" &&
+      pr.merged &&
+      BRANCHES_DE_INTEGRACAO.includes(pr.base.ref);
     if (carga.action === "closed" && !integrada) return;
     for (const issue of await featuresDaPr(pr)) {
       if (integrada) {
         const atualizada = await marcar(issue, ["D4.3"]);
         await comentar(
           issue.number,
-          `D4.3 marcado: a PR #${pr.number} foi mesclada na \`main\`. Testes e build: ${pr.html_url}/checks.`,
+          `D4.3 marcado: a PR #${pr.number} foi mesclada na \`${pr.base.ref}\`. Testes e build: ${pr.html_url}/checks.`,
         );
         await sincronizar(atualizada, "Em Validação");
       } else {

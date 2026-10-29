@@ -232,6 +232,17 @@ test("PR mesclada na main marca o D4.3 e leva a Em Validação", async () => {
   assert.ok(comentarios[0].body.includes(L.MARCA_ROBO));
 });
 
+test("PR mesclada na development também marca o D4.3, citando a branch", async () => {
+  item = { Status: "Em Construção" };
+  await rodar("pull_request", {
+    action: "closed",
+    pull_request: pr({ merged: true, base: { ref: "development" } }),
+  });
+  assert.match(issue.body, /- \[x\] D4\.3/);
+  assert.equal(item.Status, "Em Validação");
+  assert.match(comentarios[0].body, /mesclada na `development`/);
+});
+
 test("PR só de documentação não marca nada, mesmo citando a issue", async () => {
   arquivos = ["documentacao/docs/unidade-2/requisitos/backlog.md"];
   item = { Status: "Em Design" };

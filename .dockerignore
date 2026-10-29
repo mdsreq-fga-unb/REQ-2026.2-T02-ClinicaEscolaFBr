@@ -1,0 +1,17 @@
+**/node_modules
+**/dist
+**/.next
+**/.turbo
+**/coverage
+**/playwright-report
+**/test-results
+**/relatorio-testes
+**/*.tsbuildinfo
+.git
+.env
+.env.*
+!.env.example
+.venv
+documentacao
+site
+copias

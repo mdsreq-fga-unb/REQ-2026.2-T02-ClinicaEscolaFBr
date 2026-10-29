@@ -8,7 +8,7 @@ on:
     - cron: "0 9 * * 1"
   workflow_dispatch:
   push:
-    branches: [main]
+    branches: [main, development]
     paths:
       - "apps/web/src/app/(interno)/distribuicao/**"
       - "apps/web/src/app/(interno)/meus-casos/**"
@@ -17,7 +17,7 @@ on:
       - "apps/web/playwright.leitor-de-tela.config.ts"
       - ".github/workflows/leitor-de-tela.yml"
   pull_request:
-    branches: [main]
+    branches: [main, development]
     paths:
       - "apps/web/src/app/(interno)/distribuicao/**"
       - "apps/web/src/app/(interno)/meus-casos/**"
