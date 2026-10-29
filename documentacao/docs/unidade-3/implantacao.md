@@ -35,7 +35,7 @@ Nenhum segredo fica no repositório. Os valores ficam no GitHub e no Coolify:
 
 | Onde | O quê |
 | --- | --- |
-| GitHub, variável do repositório | `COOLIFY_URL` |
+| GitHub, variáveis do repositório | `COOLIFY_URL` e `COOLIFY_IP`, o IP da VPS: o pedido de deploy vai direto a ela, porque o Cloudflare na frente do painel barra os IPs do GitHub Actions |
 | GitHub, segredo do repositório | `COOLIFY_TOKEN`: token do Coolify que só pode pedir deploy |
 | GitHub, ambientes `producao` e `validacao` | `COOLIFY_UUID` (o recurso no Coolify), `NEXT_PUBLIC_API_URL`, `NEXT_PUBLIC_AMBIENTE` e `WEB_URL` |
 | Coolify, variáveis de cada ambiente | `SENHA_BANCO`, `SENHA_CLINICA_APP`, `DATABASE_URL_API`, `WEB_URL`, `CHAVE_DADOS`, `SMTP_HOST`, `SMTP_PORT`, `SMTP_FROM`, `SMTP_EHLO`, `SALTOS_DE_PROXY` e, só na validação, `INSCRICAO_ABERTA=true` |
