@@ -45,7 +45,7 @@ services:
       SMTP_PORT: ${SMTP_PORT:?}
       SMTP_USER: ${SMTP_USER:-}
       SMTP_PASS: ${SMTP_PASS:-}
-      SMTP_FROM: ${SMTP_FROM:-}
+      SMTP_FROM: ${SMTP_FROM:?}
       SMTP_EHLO: ${SMTP_EHLO:-}
       SALTOS_DE_PROXY: ${SALTOS_DE_PROXY:-1}
     depends_on:
