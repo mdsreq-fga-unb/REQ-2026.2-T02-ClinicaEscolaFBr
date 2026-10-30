@@ -1,0 +1,113 @@
+name: Carga
+
+# Teste de carga do cenário de referência do RNF12 e do RNF21: 30 pessoas da
+# equipe por 10 minutos, sobre a massa de dois semestres (semear-carga).
+# - Sem "api": sobe a API e o banco no próprio runner. Serve de alerta antecipado,
+#   mas não é evidência, porque o RNF pede um ambiente igual ao de produção.
+# - Com "api" e "homologacao": roda contra a homologação, e o resultado entra no
+#   D4.5 das features pelo Feature Status (artefato rnfs-carga).
+# Procedimento: documentacao/docs/unidade-3/teste-de-carga.md
+on:
+  workflow_dispatch:
+    inputs:
+      api:
+        description: "Endereço da API da homologação (vazio: sobe no runner)"
+        required: false
+        default: ""
+      duracao:
+        description: "Duração da carga (ignorada quando conta como evidência: sempre 10m)"
+        required: false
+        default: "10m"
+      homologacao:
+        description: "Contar como evidência do D4.5 (só contra a homologação)"
+        type: boolean
+        default: false
+  schedule:
+    # Todo dia 1º, como alerta antecipado de desempenho.
+    - cron: "0 11 1 * *"
+
+concurrency:
+  group: ${{ github.workflow }}
+  cancel-in-progress: false
+
+jobs:
+  carga:
+    name: Carga (RNF12 e RNF21)
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    services:
+      postgres:
+        image: postgres:17
+        env:
+          POSTGRES_USER: clinica
+          POSTGRES_PASSWORD: clinica
+          POSTGRES_DB: clinica
+        ports: ["5432:5432"]
+        options: >-
+          --health-cmd "pg_isready -U clinica"
+          --health-interval 5s
+          --health-retries 10
+    env:
+      DATABASE_URL: postgresql://clinica:clinica@localhost:5432/clinica
+      API_PORT: 3333
+      WEB_URL: http://localhost:3000
+      SMTP_HOST: localhost
+      SMTP_PORT: 1025
+      # Chaves só deste job, para dados fictícios; nunca usadas em produção.
+      CHAVE_DADOS: AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=
+      SENHA_CARGA: ${{ secrets.SENHA_CARGA || 'senha-so-do-teste-de-carga-1' }}
+      API_ALVO: ${{ inputs.api }}
+      EVIDENCIA: ${{ inputs.homologacao && inputs.api != '' }}
+      # A evidência do D4.5 é sempre o cenário de referência completo (10 minutos);
+      # a duração escolhida só vale para as execuções que não contam.
+      DURACAO: ${{ (inputs.homologacao && inputs.api != '') && '10m' || inputs.duracao || '10m' }}
+    steps:
+      - uses: actions/checkout@v7
+      # k6 2.3.0, conferido pelo SHA-256 publicado na versão.
+      - name: Instalar o k6
+        run: |
+          curl -sSfL -o k6.tar.gz https://github.com/grafana/k6/releases/download/v2.3.0/k6-v2.3.0-linux-amd64.tar.gz
+          echo "39c3117b6af817592dcd0ce4242105c0a7af10948c2a425306f0be8f7a8a8ab1  k6.tar.gz" | sha256sum --check
+          tar -xzf k6.tar.gz --strip-components=1 k6-v2.3.0-linux-amd64/k6
+      - uses: pnpm/action-setup@v6
+        if: env.API_ALVO == ''
+      - uses: actions/setup-node@v7
+        if: env.API_ALVO == ''
+        with:
+          node-version-file: .nvmrc
+          cache: pnpm
+      - name: Subir a API com a massa de dois semestres
+        if: env.API_ALVO == ''
+        run: |
+          pnpm install --frozen-lockfile
+          pnpm turbo run build --filter=@clinica/api...
+          pnpm db:migrate
+          cd apps/api
+          AMBIENTE_DE_TESTE=sim node dist/scripts/semear-carga.js
+          node dist/main &
+          for i in $(seq 1 30); do curl -sf http://localhost:3333/health && break; sleep 1; done
+      - name: Rodar a carga
+        run: |
+          mkdir -p relatorio-testes
+          ./k6 run --quiet \
+            -e API="${API_ALVO:-http://localhost:3333}" \
+            -e DURACAO="$DURACAO" \
+            -e RELATORIO=relatorio-testes/carga.json \
+            -e RESUMO=relatorio-testes/carga.md \
+            scripts/carga/rnf12-rnf21.js
+      - name: Resumo
+        if: success() || failure()
+        run: |
+          cat relatorio-testes/carga.md >> "$GITHUB_STEP_SUMMARY" || true
+          if [ "$EVIDENCIA" != "true" ]; then
+            echo "Execução no runner: alerta antecipado, sem contar como evidência do D4.5." >> "$GITHUB_STEP_SUMMARY"
+          fi
+      # Só a execução contra a homologação vira evidência do D4.5.
+      - name: Relatório de RNFs da homologação
+        if: (success() || failure()) && env.EVIDENCIA == 'true'
+        run: node .github/scripts/feature-status/coletar-rnfs.cjs relatorio-testes rnfs-verificados.json
+      - uses: actions/upload-artifact@v4
+        if: (success() || failure()) && env.EVIDENCIA == 'true'
+        with:
+          name: rnfs-carga
+          path: rnfs-verificados.json
