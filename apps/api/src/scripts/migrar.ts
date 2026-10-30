@@ -6,7 +6,8 @@ import { migrate } from 'drizzle-orm/node-postgres/migrator';
 // Migrations da implantação, rodadas pelo serviço "migrador" antes de a API subir,
 // com o dono do banco (a API se conecta com o clinica_app, que não altera o
 // esquema). Depois das migrations, aplica as permissões do clinica_app
-// (packages/database/sql/usuario-da-aplicacao.sql) e, na primeira vez, a senha dele.
+// (packages/database/sql/usuario-da-aplicacao.sql) e redefine a senha dele com a
+// CLINICA_APP_SENHA, a cada execução.
 //   DATABASE_URL=<dono do banco> CLINICA_APP_SENHA=... node dist/scripts/migrar.js
 // As mesmas migrations do `pnpm db:migrate`, registradas na mesma tabela.
 // A raiz do pacote @clinica/database, um nível acima do dist/index.js dele.
@@ -25,19 +26,26 @@ async function principal() {
     });
     console.log('Migrations aplicadas.');
 
+    // Sem o script, a API perderia as permissões do clinica_app no próximo
+    // deploy sem ninguém perceber: a falta dele é erro.
     const permissoes = resolve(PACOTE_DATABASE, 'sql/usuario-da-aplicacao.sql');
-    if (existsSync(permissoes)) {
-      await db.$client.query(readFileSync(permissoes, 'utf8'));
-      const senha = process.env.CLINICA_APP_SENHA;
-      if (senha) {
-        const { rows } = await db.$client.query<{ comando: string }>(
-          "select format('alter role clinica_app password %L', $1::text) as comando",
-          [senha],
-        );
-        await db.$client.query(rows[0].comando);
-      }
-      console.log('Permissões do clinica_app aplicadas.');
+    if (!existsSync(permissoes)) {
+      throw new Error(`Script de permissões não encontrado: ${permissoes}`);
     }
+    await db.$client.query(readFileSync(permissoes, 'utf8'));
+    const senha = process.env.CLINICA_APP_SENHA;
+    if (senha) {
+      const { rows } = await db.$client.query<{ comando: string }>(
+        "select format('alter role clinica_app password %L', $1::text) as comando",
+        [senha],
+      );
+      await db.$client.query(rows[0].comando);
+    } else {
+      console.warn(
+        'CLINICA_APP_SENHA vazia: a senha do clinica_app não foi definida nem alterada.',
+      );
+    }
+    console.log('Permissões do clinica_app aplicadas.');
   } finally {
     await db.$client.end();
   }

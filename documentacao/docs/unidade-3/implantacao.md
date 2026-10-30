@@ -64,5 +64,5 @@ A pessoa recebe o convite por e-mail e cria a própria senha. Os demais usuário
 
 ## Pendências
 
-- **Usuário da aplicação no banco (RNF52):** quando a [#174](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/pull/174) entrar, o migrador passa a aplicar as permissões do `clinica_app` com a `SENHA_CLINICA_APP`. A partir daí, a `DATABASE_URL_API` passa a usar esse usuário, e não o dono do banco.
+- **Usuário da aplicação no banco (RNF52):** quando a [#174](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/pull/174) entrar, o migrador passa a aplicar as permissões do `clinica_app` com a `SENHA_CLINICA_APP`. A partir daí, a `DATABASE_URL_API` passa a usar esse usuário, e não o dono do banco, seguindo a virada descrita em [Segurança da implantação](seguranca-da-implantacao.md#usuario-da-aplicacao-no-banco-rnf52).
 - **Cópia de segurança (RNF53):** seguindo a página [Cópia de segurança e restauração](copia-de-seguranca.md), falta criar o par de chaves das cópias, agendar a cópia diária de cada banco na VPS e definir com a FBr o destino fora do servidor e quem guarda as chaves.

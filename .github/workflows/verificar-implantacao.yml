@@ -1,0 +1,54 @@
+name: Verificar implantação
+
+# Confere o sistema publicado contra o RNF51: HTTP redirecionado para HTTPS no
+# mesmo endereço, TLS 1.2 ou superior e TLS 1.0 e 1.1 recusados, nos endereços
+# do site e da API de cada ambiente. Rode manualmente depois de cada implantação;
+# o link da execução é a evidência registrada com /rnf RNF51 nas issues. Numa PR
+# que muda a verificação, ela roda contra a validação.
+on:
+  workflow_dispatch:
+    inputs:
+      ambiente:
+        description: Ambiente a conferir
+        type: choice
+        options: [validacao, producao, ambos]
+        default: validacao
+  pull_request:
+    branches: [main, development]
+    paths:
+      - scripts/implantacao/**
+      - .github/workflows/verificar-implantacao.yml
+
+permissions:
+  contents: read
+
+defaults:
+  run:
+    # bash com pipefail: sem ele, o "| tee" esconde a falha do script.
+    shell: bash
+
+jobs:
+  https:
+    name: HTTPS e TLS (RNF51) — ${{ matrix.dominio }}
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        dominio: >-
+          ${{ fromJSON(
+            (inputs.ambiente == 'producao' && '["clinica.fbr.edu.br","api.clinica.fbr.edu.br"]') ||
+            (inputs.ambiente == 'ambos' && '["clinica.fbr.edu.br","api.clinica.fbr.edu.br","validacao.clinica.fbr.edu.br","api.validacao.clinica.fbr.edu.br"]') ||
+            '["validacao.clinica.fbr.edu.br","api.validacao.clinica.fbr.edu.br"]') }}
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          sparse-checkout: scripts/implantacao
+      # Sem isso, a recusa do TLS 1.0 e 1.1 poderia ser do próprio cliente.
+      - name: Conferir que o cliente negocia TLS 1.0 e 1.1
+        run: bash scripts/implantacao/verificar-https.sh --autoteste | tee -a "$GITHUB_STEP_SUMMARY"
+      - name: Conferir HTTPS e TLS
+        env:
+          DOMINIO: ${{ matrix.dominio }}
+        run: |
+          echo "### $DOMINIO" >> "$GITHUB_STEP_SUMMARY"
+          bash scripts/implantacao/verificar-https.sh "$DOMINIO" | tee -a "$GITHUB_STEP_SUMMARY"
