@@ -1,6 +1,6 @@
 import { randomUUID } from "node:crypto";
 import { expect, test } from "@playwright/test";
-import { API, entrar, semViolacoes } from "./apoio";
+import { API, entrar, fecharContextos, semViolacoes } from "./apoio";
 import { EQUIPE } from "./equipe";
 
 // Integração das features do Ciclo 3, de ponta a ponta, com a API e o banco reais:
@@ -22,6 +22,8 @@ function diaDaSessao() {
   }
   return dia.toISOString().slice(0, 10);
 }
+
+test.afterEach(fecharContextos);
 
 test.describe.serial("Integração do Ciclo 3", () => {
   test("a inscrição pública entra na API com número e data (RF1, RF2)", async ({
