@@ -186,7 +186,7 @@ describe('Restrição de acesso ao prontuário (RF55)', () => {
   });
 
   it.each(['estagiarioB', 'outroSupervisor', 'secretaria'])(
-    '%s tem o acesso negado na API, e a tentativa é registrada',
+    '%s tem o acesso negado na API, e a tentativa é registrada (RNF25)',
     async (quem) => {
       await expect(
         servico.consultar(prontuarioId, pessoas[quem]),
@@ -201,7 +201,7 @@ describe('Restrição de acesso ao prontuário (RF55)', () => {
     },
   );
 
-  it('prontuário inexistente recebe a mesma resposta negada, sem revelar que não existe', async () => {
+  it('prontuário inexistente recebe a mesma resposta negada, sem revelar que não existe (RNF25)', async () => {
     await expect(
       servico.consultar(
         '00000000-0000-4000-8000-000000000000',
@@ -222,7 +222,7 @@ describe('Restrição de acesso ao prontuário (RF55)', () => {
     ).rejects.toMatchObject({ status: 403 });
   });
 
-  it('os dados administrativos não trazem conteúdo clínico', async () => {
+  it('os dados administrativos não trazem conteúdo clínico (RNF25)', async () => {
     const dados = await servico.dadosAdministrativos(
       casoId,
       pessoas.secretaria,
