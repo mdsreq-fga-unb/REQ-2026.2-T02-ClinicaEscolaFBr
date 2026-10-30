@@ -6,7 +6,8 @@ import { migrate } from 'drizzle-orm/node-postgres/migrator';
 // Migrations da implantação, rodadas pelo serviço "migrador" antes de a API subir,
 // com o dono do banco (a API se conecta com o clinica_app, que não altera o
 // esquema). Depois das migrations, aplica as permissões do clinica_app
-// (packages/database/sql/usuario-da-aplicacao.sql) e, na primeira vez, a senha dele.
+// (packages/database/sql/usuario-da-aplicacao.sql) e redefine a senha dele com a
+// CLINICA_APP_SENHA, a cada execução.
 //   DATABASE_URL=<dono do banco> CLINICA_APP_SENHA=... node dist/scripts/migrar.js
 // As mesmas migrations do `pnpm db:migrate`, registradas na mesma tabela.
 // A raiz do pacote @clinica/database, um nível acima do dist/index.js dele.

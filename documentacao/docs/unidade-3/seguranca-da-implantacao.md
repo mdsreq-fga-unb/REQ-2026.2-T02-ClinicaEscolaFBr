@@ -57,20 +57,22 @@ O mesmo script roda no terminal, com o OpenSSL 3: `bash scripts/implantacao/veri
 - **Onde fica a chave:** a `CHAVE_DADOS` de cada ambiente fica só nas variáveis do Coolify e numa cópia fora da VPS, nunca no repositório (o workflow "Segredos" confere) e nunca no banco. **Quem guarda a cópia fora da VPS ainda precisa ser decidido com a FBr:** um cofre da coordenação, com pelo menos duas pessoas, garante que a chave não se perca, e acesso só do responsável técnico designado pela FBr reduz quem pode ler os dados. A pergunta vai para a reunião de 06/11.
 - **Troca:** pelo menos uma vez por ano, e na hora se houver suspeita de vazamento. Faça na validação antes da produção. O contêiner da API só tem a URL do `clinica_app`, que não pode desligar os gatilhos, e parar o recurso inteiro no Coolify derruba também o banco. Por isso, a troca roda num contêiner avulso da imagem da API, com o dono do banco e com só a API parada:
     1. Gere a chave nova com o comando do Passo 7 do README (`node -e "console.log(require('crypto').randomBytes(32).toString('base64'))"`).
-    2. Na VPS, pare só o contêiner da API, para nada ser gravado durante a troca: `docker stop api-<uuid>`. O site continua no ar, mas sem conseguir entrar.
+    2. Na VPS, pare só o contêiner da API, para nada ser gravado durante a troca: `docker stop api-<uuid>`. O site continua no ar, mas sem conseguir entrar. **Não mescle nada na branch do ambiente até o passo 4:** um deploy no meio da troca subiria a API de novo, com a chave antiga.
     3. Leia as chaves e a senha do banco sem deixá-las no histórico do shell, e rode a troca na rede do recurso (o UUID do recurso no Coolify), com a imagem da API em uso:
 
         ```bash
-        read -rs CHAVE_DADOS_ANTIGA && read -rs CHAVE_DADOS_NOVA && read -rs SENHA_BANCO
+        read -rsp 'Chave antiga: ' CHAVE_DADOS_ANTIGA; echo
+        read -rsp 'Chave nova: ' CHAVE_DADOS_NOVA; echo
+        read -rsp 'Senha do banco (SENHA_BANCO): ' SENHA_BANCO; echo
         export CHAVE_DADOS_ANTIGA CHAVE_DADOS_NOVA
         export DATABASE_URL="postgresql://clinica:${SENHA_BANCO}@banco:5432/clinica"
         docker run --rm --network <uuid> \
           -e DATABASE_URL -e CHAVE_DADOS_ANTIGA -e CHAVE_DADOS_NOVA -e RESPONSAVEL="Nome" \
-          "$(docker inspect -f '{{.Config.Image}}' api-<uuid>)" node dist/scripts/trocar-chave-dados.js
+          "$(docker inspect -f '{{.Image}}' api-<uuid>)" node dist/scripts/trocar-chave-dados.js
         unset CHAVE_DADOS_ANTIGA CHAVE_DADOS_NOVA SENHA_BANCO DATABASE_URL
         ```
 
-        Antes de mexer no banco, o script recusa uma chave que não tenha 32 bytes, uma chave nova igual à antiga e a troca com a API ainda conectada. A troca é feita numa transação só: se algum valor não decifrar com a chave antiga, nada é alterado. Ela fica registrada na auditoria (`trocar_chave_dados`), com a data, o responsável, as colunas e a quantidade de valores, sem nenhum dado.
+        O `{{.Image}}` é o identificador da imagem em execução, e não a etiqueta, que pode já apontar para uma versão mais nova. Antes de mexer no banco, o script recusa uma chave que não tenha 32 bytes, uma chave nova igual à antiga e a troca com qualquer outra conexão aberta no banco, como a da API, esteja ela com o dono ou com o `clinica_app`. A troca é feita numa transação só: se algum valor não decifrar com a chave antiga, nada é alterado. Ela fica registrada na auditoria (`trocar_chave_dados`), com a data, o responsável, as colunas e a quantidade de valores, sem nenhum dado.
     4. No Coolify, troque a `CHAVE_DADOS` do ambiente pela nova e faça o redeploy. Entre no sistema e abra um prontuário para conferir que os dados continuam legíveis.
     5. Guarde a chave nova junto da cópia das chaves fora da VPS. As cópias de segurança anteriores continuam com a chave antiga: guarde-a até a última delas expirar.
 

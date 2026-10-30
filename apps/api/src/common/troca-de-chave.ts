@@ -36,14 +36,17 @@ export async function trocarChaveDados(
   }
   return db.transaction(async (tx) => {
     // Com a API conectada, o que ela gravar durante a troca sai com a chave
-    // antiga e fica ilegível com a nova.
+    // antiga e fica ilegível com a nova. Conta qualquer outra conexão de cliente
+    // neste banco: até a virada para o clinica_app, a API usa o dono do banco.
     const { rows: conexoes } = (await tx.execute(sql`
       select count(*)::int as total from pg_stat_activity
-      where usename = 'clinica_app' and pid <> pg_backend_pid()
+      where datname = current_database()
+        and backend_type = 'client backend'
+        and pid <> pg_backend_pid()
     `)) as unknown as { rows: { total: number }[] };
     if (conexoes[0]?.total) {
       throw new Error(
-        'A API ainda está conectada ao banco (clinica_app). Pare o contêiner da API antes da troca.',
+        'Há outra conexão aberta no banco, provavelmente a API. Pare o contêiner da API antes da troca.',
       );
     }
     const { rows: colunas } = (await tx.execute(sql`
