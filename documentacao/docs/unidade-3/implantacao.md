@@ -25,7 +25,9 @@ O workflow `.github/workflows/implantacao.yml` roda a cada push na `main` ou na 
     - **banco:** Postgres 17, sem porta exposta, com os dados num volume;
     - **migrador:** a mesma imagem da API, que aplica as migrations com o dono do banco e sai. A API só sobe se ele terminar sem erro;
     - **api** e **web:** atrás do proxy do Coolify, com HTTPS. A API escuta na porta 3333 e a web na 3000, e o domínio de cada uma no Coolify leva essa porta (`https://api.clinica.fbr.edu.br:3333`), que o proxy usa e que não aparece no endereço.
-3. Espera a API publicada responder no `/health` com o commit da execução. Se o migrador falhar, a API anterior continua no ar, e o workflow falha.
+3. Espera a API publicada responder no `/health` com o commit da execução.
+
+O Coolify recria todos os contêineres do ambiente a cada deploy (`docker compose up --force-recreate`), então o sistema fica fora do ar por alguns segundos. Se o migrador falhar, a API nova não sobe e a anterior já foi parada: o ambiente fica fora do ar, e o workflow falha. Para voltar, corrija o erro ou reverta a PR na branch do ambiente, e o merge implanta de novo.
 
 O resumo da execução, na aba Actions, mostra o commit que entrou no ar.
 
