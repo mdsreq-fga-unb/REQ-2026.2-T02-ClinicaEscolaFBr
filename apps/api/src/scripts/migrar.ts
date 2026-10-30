@@ -25,19 +25,26 @@ async function principal() {
     });
     console.log('Migrations aplicadas.');
 
+    // Sem o script, a API perderia as permissões do clinica_app no próximo
+    // deploy sem ninguém perceber: a falta dele é erro.
     const permissoes = resolve(PACOTE_DATABASE, 'sql/usuario-da-aplicacao.sql');
-    if (existsSync(permissoes)) {
-      await db.$client.query(readFileSync(permissoes, 'utf8'));
-      const senha = process.env.CLINICA_APP_SENHA;
-      if (senha) {
-        const { rows } = await db.$client.query<{ comando: string }>(
-          "select format('alter role clinica_app password %L', $1::text) as comando",
-          [senha],
-        );
-        await db.$client.query(rows[0].comando);
-      }
-      console.log('Permissões do clinica_app aplicadas.');
+    if (!existsSync(permissoes)) {
+      throw new Error(`Script de permissões não encontrado: ${permissoes}`);
     }
+    await db.$client.query(readFileSync(permissoes, 'utf8'));
+    const senha = process.env.CLINICA_APP_SENHA;
+    if (senha) {
+      const { rows } = await db.$client.query<{ comando: string }>(
+        "select format('alter role clinica_app password %L', $1::text) as comando",
+        [senha],
+      );
+      await db.$client.query(rows[0].comando);
+    } else {
+      console.warn(
+        'CLINICA_APP_SENHA vazia: a senha do clinica_app não foi definida nem alterada.',
+      );
+    }
+    console.log('Permissões do clinica_app aplicadas.');
   } finally {
     await db.$client.end();
   }

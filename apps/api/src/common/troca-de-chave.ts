@@ -19,7 +19,33 @@ export async function trocarChaveDados(
   if (!responsavel.trim()) {
     throw new Error('Informe o responsável pela troca da chave.');
   }
+  // As duas chaves são conferidas antes de tudo: com o banco vazio, uma chave
+  // nova inválida passaria e ficaria registrada como troca feita.
+  for (const [nome, chave] of [
+    ['antiga', chaveAntiga],
+    ['nova', chaveNova],
+  ] as const) {
+    if (Buffer.from(chave, 'base64').length !== 32) {
+      throw new Error(`A chave ${nome} deve ter 32 bytes em base64.`);
+    }
+  }
+  if (
+    Buffer.from(chaveAntiga, 'base64').equals(Buffer.from(chaveNova, 'base64'))
+  ) {
+    throw new Error('A chave nova é igual à antiga.');
+  }
   return db.transaction(async (tx) => {
+    // Com a API conectada, o que ela gravar durante a troca sai com a chave
+    // antiga e fica ilegível com a nova.
+    const { rows: conexoes } = (await tx.execute(sql`
+      select count(*)::int as total from pg_stat_activity
+      where usename = 'clinica_app' and pid <> pg_backend_pid()
+    `)) as unknown as { rows: { total: number }[] };
+    if (conexoes[0]?.total) {
+      throw new Error(
+        'A API ainda está conectada ao banco (clinica_app). Pare o contêiner da API antes da troca.',
+      );
+    }
     const { rows: colunas } = (await tx.execute(sql`
       select table_name as tabela, column_name as coluna
       from information_schema.columns

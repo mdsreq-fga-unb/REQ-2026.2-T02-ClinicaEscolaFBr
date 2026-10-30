@@ -125,4 +125,22 @@ describe('Troca da chave dos dados de saúde (RF1 e RF6)', () => {
       'queixa sigilosa',
     );
   });
+
+  it('recusa uma chave nova inválida ou igual à antiga antes de mexer no banco, mesmo com o banco vazio (RF1, RNF51)', async () => {
+    await banco.limpar();
+    await expect(
+      trocarChaveDados(banco.db, CHAVE_TESTE, 'curta', 'Responsável'),
+    ).rejects.toThrow('A chave nova deve ter 32 bytes em base64.');
+    await expect(
+      trocarChaveDados(banco.db, 'curta', CHAVE_NOVA, 'Responsável'),
+    ).rejects.toThrow('A chave antiga deve ter 32 bytes em base64.');
+    await expect(
+      trocarChaveDados(banco.db, CHAVE_TESTE, CHAVE_TESTE, 'Responsável'),
+    ).rejects.toThrow('A chave nova é igual à antiga.');
+    const trocas = await banco.db
+      .select()
+      .from(auditoria)
+      .where(eq(auditoria.operacao, 'trocar_chave_dados'));
+    expect(trocas).toEqual([]);
+  });
 });
