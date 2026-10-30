@@ -98,9 +98,9 @@ jobs:
             "$IMAGEM_POSTGRES" bash /scripts/copia-de-seguranca/fazer-copia.sh)
           echo "ARQUIVO=$ARQUIVO" >> "$GITHUB_ENV"
           ls -la "$RUNNER_TEMP/copias"
-          # Só o dono lê a cópia e o log.
+          # Só o dono (root, no contêiner) lê a cópia e o log; daqui, só com sudo.
           [ "$(stat -c %a "$RUNNER_TEMP/copias/$(basename "$ARQUIVO")")" = 600 ]
-          grep -q " ok $(basename "$ARQUIVO")" "$RUNNER_TEMP/copias/copias-teste.log"
+          sudo grep -q " ok $(basename "$ARQUIVO")" "$RUNNER_TEMP/copias/copias-teste.log"
       - name: Restaurar num banco vazio, cronometrando
         run: |
           docker run --rm --network host -e PGPASSWORD=clinica "$IMAGEM_POSTGRES" \
