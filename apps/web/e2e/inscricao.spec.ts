@@ -1,38 +1,12 @@
 import AxeBuilder from "@axe-core/playwright";
 import { expect, test, type Page, type TestInfo } from "@playwright/test";
+import {
+  continuar,
+  enviar,
+  preencherDados,
+  preencherTriagem,
+} from "./apoio-inscricao";
 
-async function preencherDados(page: Page, menor = false) {
-  await page.locator("#nomeCompleto").fill("Pessoa Fictícia E2E");
-  await page
-    .locator("#dataNascimento")
-    .fill(menor ? "2020-01-01" : "1994-08-22");
-  await page.locator("#cpf").fill("11144477735");
-  await page.locator("#rg").fill("MG-12.345.678 SSP/MG");
-  await page.locator("#endereco").fill("Rua Fictícia, 10, Brasília DF");
-  await page.locator("#estadoCivil").selectOption("Solteiro(a)");
-  if (menor) {
-    await page.locator("#celular").fill("61999999999");
-    await page.locator("#canalPreferencial").selectOption("whatsapp");
-  } else {
-    await page.locator("#email").fill("ficticio@example.com");
-    await page.locator("#canalPreferencial").selectOption("email");
-  }
-}
-async function preencherTriagem(page: Page) {
-  await page
-    .locator("#queixa")
-    .fill("Declaração clínica fictícia sigilosa E2E");
-  await page
-    .locator("#percepcaoUrgencia")
-    .fill("Urgência fictícia sigilosa E2E");
-  await page
-    .locator("#historicoRelevante")
-    .fill("Histórico fictício sigiloso E2E");
-}
-const continuar = (page: Page) =>
-  page.getByRole("button", { name: "Continuar" }).click();
-const enviar = (page: Page) =>
-  page.getByRole("button", { name: "Confirmar e enviar inscrição" }).click();
 async function revisar(page: Page) {
   await page.goto("/inscricao");
   await preencherDados(page);
@@ -297,6 +271,37 @@ test("teclado percorre campos, links e botões com foco visível em 320px (RF1, 
     visitados.add(foco.nome);
   }
   expect([...visitados]).toEqual(previstos);
+});
+
+test("no comprovante, o teclado percorre os controles com foco visível de pelo menos 2 px (RF2, RNF57)", async ({
+  page,
+}) => {
+  await page.setViewportSize({ width: 320, height: 900 });
+  await revisar(page);
+  await page.getByRole("checkbox").check();
+  await enviar(page);
+  await expect(
+    page.getByRole("heading", { name: "Inscrição recebida" }),
+  ).toBeVisible();
+  const visitados: string[] = [];
+  for (let i = 0; i < 30; i++) {
+    await page.keyboard.press("Tab");
+    const foco = await page.evaluate(() => {
+      const el = document.activeElement as HTMLElement;
+      const estilo = getComputedStyle(el);
+      return {
+        nome: el.getAttribute("aria-label") || el.textContent!.trim() || el.id,
+        tag: el.tagName,
+        largura: estilo.outlineWidth,
+        estilo: estilo.outlineStyle,
+      };
+    });
+    if (foco.tag === "BODY" || visitados.includes(foco.nome)) break;
+    expect(foco.estilo, foco.nome).not.toBe("none");
+    expect(parseFloat(foco.largura), foco.nome).toBeGreaterThanOrEqual(2);
+    visitados.push(foco.nome);
+  }
+  expect(visitados).toContain("Imprimir ou salvar em PDF");
 });
 
 test("offline preserva o envio até a conexão voltar", async ({

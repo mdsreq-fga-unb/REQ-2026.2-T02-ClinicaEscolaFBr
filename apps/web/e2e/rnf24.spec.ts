@@ -1,57 +1,25 @@
-import { randomUUID } from "node:crypto";
 import { expect, test, type Page } from "@playwright/test";
-import { API, entrar, focoVisivel, semViolacoes, tabAte } from "./apoio";
-import { EQUIPE, SENHA_EQUIPE } from "./equipe";
+import {
+  criarCasoTriado,
+  entrar,
+  fecharContextos,
+  focoVisivel,
+  semViolacoes,
+  tabAte,
+} from "./apoio";
+import { EQUIPE } from "./equipe";
 
 // Acessibilidade das telas de distribuição e vínculo (RNF24): a distribuição
 // (RF18, RF20) e o vínculo do estagiário (RF21) feitos só pelo teclado, com foco
 // visível, nomes e papéis expostos ao leitor de tela, resultado anunciado e WCAG
 // 2.2 AA (axe) no computador e no celular. A consulta de responsáveis (RF22) entra
-// aqui quando for construída. A escuta com um leitor de tela de verdade continua
-// manual, registrada na issue com /rnf.
+// aqui quando for construída. A escuta com o VoiceOver de verdade está em
+// e2e/leitor-de-tela/rnf24.spec.ts.
 
 const paciente = `Paciente Teclado ${Date.now()}`;
 
-// Caso com prioridade registrada e sem supervisor, criado pela API.
 test.beforeAll(async ({ playwright }) => {
-  const api = await playwright.request.newContext({ baseURL: API });
-  const inscricao = await api.post("/inscricoes", {
-    data: {
-      nomeCompleto: paciente,
-      dataNascimento: "1988-03-15",
-      cpf: String(Date.now() + 7)
-        .slice(-11)
-        .padStart(11, "2"),
-      rg: "7654321",
-      endereco: "Rua Fictícia, 200, Gama",
-      estadoCivil: "Solteiro(a)",
-      responsavelLegal: "",
-      celular: "",
-      email: "paciente.teclado@example.com",
-      canalPreferencial: "email",
-      queixa: "Queixa fictícia de acessibilidade",
-      percepcaoUrgencia: "Urgência fictícia",
-      historicoRelevante: "Histórico fictício",
-      confirmado: true,
-      chaveEnvio: randomUUID(),
-    },
-  });
-  expect(inscricao.status()).toBe(201);
-  const { numero } = (await inscricao.json()) as { numero: string };
-
-  await api.post("/auth/login", {
-    data: { email: EQUIPE.coordenacao.email, senha: SENHA_EQUIPE },
-  });
-  const pendentes = (await (await api.get("/triagem/inscricoes")).json()) as {
-    id: string;
-    numero: string;
-  }[];
-  const { id } = pendentes.find((i) => i.numero === numero)!;
-  const prioridade = await api.post(`/triagem/inscricoes/${id}/prioridade`, {
-    data: { cor: "amarela" },
-  });
-  expect(prioridade.ok()).toBe(true);
-  await api.dispose();
+  await criarCasoTriado(playwright, paciente);
 });
 
 // Marca pelo teclado a opção do grupo cujo nome contém o texto: as setas
@@ -72,6 +40,8 @@ async function escolherPeloTeclado(page: Page, grupo: string, opcao: string) {
   await expect(alvo).toBeFocused();
   await focoVisivel(alvo);
 }
+
+test.afterEach(fecharContextos);
 
 test.describe
   .serial("Acessibilidade da distribuição e do vínculo (RNF24)", () => {
