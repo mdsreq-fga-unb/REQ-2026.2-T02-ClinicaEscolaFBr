@@ -201,6 +201,9 @@ export function handleSummary(dados) {
   const passou = (nome) =>
     Boolean(metrica(nome)) &&
     Object.values(metrica(nome).thresholds ?? {}).every((t) => t.ok);
+  // Respostas de erro rápidas entram no percentil 95 e o puxam para baixo: o RNF
+  // só conta como verificado se as respostas também estiverem certas (checks).
+  const respostasCertas = passou("checks");
   const linhas = [];
   const assertionResults = [];
   for (const [rnf, { limite, rfs, descricao, operacoes }] of Object.entries(
@@ -220,7 +223,7 @@ export function handleSummary(dados) {
     }
     assertionResults.push({
       fullName: `Carga: ${descricao} com ${USUARIOS} usuários simultâneos por ${DURACAO}, cada operação em até ${limite / 1000} s no percentil 95 (${rfs}, ${rnf})`,
-      status: todas ? "passed" : "failed",
+      status: todas && respostasCertas ? "passed" : "failed",
     });
   }
   const resumo = [
@@ -230,7 +233,7 @@ export function handleSummary(dados) {
     "| --- | --- | --- | --- | --- | --- |",
     ...linhas,
     "",
-    `Usuários simultâneos: ${USUARIOS}. Duração: ${DURACAO}. Requisições: ${metrica("http_reqs")?.values?.count ?? 0}. Verificações aprovadas: ${Math.round((metrica("checks")?.values?.rate ?? 0) * 100)}%.`,
+    `Usuários simultâneos: ${USUARIOS}. Duração: ${DURACAO}. Requisições: ${metrica("http_reqs")?.values?.count ?? 0}. Verificações aprovadas: ${Math.round((metrica("checks")?.values?.rate ?? 0) * 100)}% ${respostasCertas ? "✅" : "❌ (mínimo de 99%; sem isso, nenhum RNF conta como verificado)"}.`,
     "",
   ].join("\n");
   return {

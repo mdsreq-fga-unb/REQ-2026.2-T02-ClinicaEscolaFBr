@@ -8,7 +8,7 @@ Procedimento do teste de desempenho do [RNF12](../unidade-2/requisitos/nao-funci
 - **Massa de dados:** dois semestres de operação, com 360 inscrições, 200 pacientes em atendimento e 4.000 sessões, criados pelo `semear-carga`.
 - **Ambiente:** a homologação, com a mesma configuração do servidor de produção.
 
-Cada operação tem o seu limite: o RNF só passa se **todas** as operações dele ficarem abaixo do limite no percentil 95 e tiverem acontecido durante a carga. As gravações seguem um ritmo calculado pela duração, para os 160 casos pendentes durarem os 10 minutos inteiros: cada pessoa da coordenação distribui no máximo um caso por intervalo, e cada supervisor vincula no mesmo ritmo.
+Cada operação tem o seu limite: o RNF só passa se **todas** as operações dele ficarem abaixo do limite no percentil 95 e tiverem acontecido durante a carga, e se pelo menos 99% das verificações das respostas passarem. Sem essa última condição, respostas de erro rápidas puxariam o percentil 95 para baixo. As gravações seguem um ritmo calculado pela duração, para os 160 casos pendentes durarem os 10 minutos inteiros: cada pessoa da coordenação distribui no máximo um caso por intervalo, e cada supervisor vincula no mesmo ritmo.
 
 As operações medidas são as que existem hoje:
 
@@ -35,7 +35,7 @@ As operações medidas são as que existem hoje:
 3. **Rode o workflow "Carga"** na `development` (aba Actions, "Run workflow"):
     - em "api", o endereço da API da homologação;
     - marque "homologacao".
-4. **Confira o resultado.** O resumo da execução mostra, para cada operação, a quantidade de requisições e o percentil 95. Quando a execução conta como evidência, a duração é sempre 10 minutos, seja qual for a escolhida. Se os dois limites passarem, o Feature Status marca o RNF12 no RF10 (#96) e o RNF21 no RF18 (#92), com o link da execução.
+4. **Confira o resultado.** O resumo da execução mostra, para cada operação, a quantidade de requisições e o percentil 95. Quando a execução conta como evidência, a duração é sempre 10 minutos, seja qual for a escolhida. Se os dois limites e as verificações das respostas passarem, o Feature Status marca o RNF12 no RF10 (#96) e o RNF21 no RF18 (#92), com o link da execução.
 
 Uma execução no runner, sem endereço, nunca conta como evidência, porque o runner não é igual ao servidor de produção. Ela serve para avisar cedo se uma mudança deixou alguma operação lenta.
 
