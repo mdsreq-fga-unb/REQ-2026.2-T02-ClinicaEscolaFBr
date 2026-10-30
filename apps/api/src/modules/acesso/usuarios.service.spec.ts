@@ -176,7 +176,8 @@ describe('UsuariosService (RF53 e RF54)', () => {
     await expect(servico.conviteValido(token)).rejects.toMatchObject({
       status: 410,
     });
-  });
+    // Um hash e uma conferência com o bcrypt, que é lento no runner do CI.
+  }, 30_000);
 
   it('dois envios simultâneos do mesmo link: só o primeiro ativa a conta', async () => {
     const { id } = await servico.cadastrar(
@@ -196,7 +197,9 @@ describe('UsuariosService (RF53 e RF54)', () => {
     const vencedora =
       resultados[0].status === 'fulfilled' ? 'primeira1' : 'segunda22';
     await expect(conferirSenha(vencedora, ana.senhaHash!)).resolves.toBe(true);
-  });
+    // Dois hashes ao mesmo tempo e uma conferência com o bcrypt: no runner do
+    // CI, passam dos 5 segundos do limite padrão.
+  }, 30_000);
 
   it('a desativação feita durante a ativação prevalece', async () => {
     const { id } = await servico.cadastrar(
