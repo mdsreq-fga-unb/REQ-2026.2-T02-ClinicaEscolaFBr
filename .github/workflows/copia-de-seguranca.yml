@@ -1,9 +1,11 @@
 name: Cópia de segurança
 
 # Teste de restauração da cópia de segurança (RNF53): enche o banco com o e2e, faz
-# a cópia cifrada, restaura num banco vazio, confere tabela a tabela e sobe a API
-# com o banco restaurado. Roda toda semana, quando os scripts ou as migrations
-# mudam e manualmente. Procedimento: documentacao/docs/unidade-3/copia-de-seguranca.md
+# a cópia cifrada, restaura num banco vazio, confere tabela a tabela, reaplica as
+# migrations e as permissões e sobe a API com o banco restaurado. Roda quando os
+# scripts ou as migrations mudam, manualmente e toda semana. O agendamento semanal
+# só vale a partir da main (o GitHub roda o schedule pela branch padrão).
+# Procedimento: documentacao/docs/unidade-3/copia-de-seguranca.md
 on:
   schedule:
     - cron: "0 10 * * 1"
@@ -21,6 +23,14 @@ on:
       - "packages/database/drizzle/**"
       - ".github/workflows/copia-de-seguranca.yml"
 
+permissions:
+  contents: read
+
+defaults:
+  run:
+    # bash com pipefail: sem ele, o "| tee" esconde a falha do script.
+    shell: bash
+
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
@@ -32,7 +42,7 @@ jobs:
     timeout-minutes: 30
     services:
       postgres:
-        image: postgres:17
+        image: postgres:17.10
         env:
           POSTGRES_USER: clinica
           POSTGRES_PASSWORD: clinica
@@ -50,9 +60,10 @@ jobs:
       WEB_URL: http://localhost:3000
       SMTP_HOST: localhost
       SMTP_PORT: 1025
-      # Chaves só deste job, para dados fictícios; nunca usadas em produção.
+      # Chave só deste job, para dados fictícios; nunca usada em produção.
       CHAVE_DADOS: AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=
-      CHAVE_COPIAS: senha-so-do-teste-de-restauracao
+      # A mesma imagem do serviço acima: o pg_dump é da versão do servidor.
+      IMAGEM_POSTGRES: postgres:17.10
       LIMITE_INSCRICOES_POR_ORIGEM: "1000"
     steps:
       - uses: actions/checkout@v7
@@ -69,25 +80,37 @@ jobs:
       - name: Encher o banco com o e2e
         run: pnpm --filter @clinica/web test:e2e
 
-      # A imagem do Postgres 17 tem o pg_dump da versão do servidor, o gpg e o sha256sum.
+      # Chaves do gpg só deste job, sem senha. Na implantação, o servidor tem só a
+      # chave pública, e a privada fica fora dele.
+      - name: Criar as chaves das cópias
+        run: |
+          mkdir -p "$RUNNER_TEMP/gnupg" "$RUNNER_TEMP/copias"
+          chmod 700 "$RUNNER_TEMP/gnupg"
+          docker run --rm -v "$RUNNER_TEMP/gnupg:/gnupg" -e GNUPGHOME=/gnupg "$IMAGEM_POSTGRES" \
+            gpg --batch --quiet --passphrase '' --quick-gen-key 'Teste de restauração <copias@teste.invalid>' default default never
+      # A senha do banco vai pela variável PGPASSWORD, e não na linha de comando.
       - name: Fazer a cópia cifrada
         run: |
-          mkdir -p "$RUNNER_TEMP/copias"
           ARQUIVO=$(docker run --rm --network host \
-            -v "$PWD/scripts:/scripts:ro" -v "$RUNNER_TEMP/copias:/copias" \
-            -e DATABASE_URL -e CHAVE_COPIAS -e DESTINO_COPIAS=/copias \
-            postgres:17 bash /scripts/copia-de-seguranca/fazer-copia.sh)
+            -v "$PWD/scripts:/scripts:ro" -v "$RUNNER_TEMP/copias:/copias" -v "$RUNNER_TEMP/gnupg:/gnupg" \
+            -e GNUPGHOME=/gnupg -e PGHOST=localhost -e PGPASSWORD=clinica \
+            -e AMBIENTE=teste -e DESTINATARIO_COPIAS=copias@teste.invalid -e DESTINO_COPIAS=/copias \
+            "$IMAGEM_POSTGRES" bash /scripts/copia-de-seguranca/fazer-copia.sh)
           echo "ARQUIVO=$ARQUIVO" >> "$GITHUB_ENV"
           ls -la "$RUNNER_TEMP/copias"
+          # Só o dono lê a cópia e o log.
+          [ "$(stat -c %a "$RUNNER_TEMP/copias/$(basename "$ARQUIVO")")" = 600 ]
+          grep -q " ok $(basename "$ARQUIVO")" "$RUNNER_TEMP/copias/copias-teste.log"
       - name: Restaurar num banco vazio, cronometrando
         run: |
-          docker run --rm --network host postgres:17 \
-            psql "$DATABASE_URL" -c "create database clinica_restaurada"
+          docker run --rm --network host -e PGPASSWORD=clinica "$IMAGEM_POSTGRES" \
+            psql -h localhost -U clinica -d clinica -c "create database clinica_restaurada"
           inicio=$(date +%s)
           docker run --rm --network host \
-            -v "$PWD/scripts:/scripts:ro" -v "$RUNNER_TEMP/copias:/copias" \
-            -e DATABASE_URL="$RESTAURADO_URL" -e CHAVE_COPIAS \
-            postgres:17 bash /scripts/copia-de-seguranca/restaurar-copia.sh "$ARQUIVO"
+            -v "$PWD/scripts:/scripts:ro" -v "$RUNNER_TEMP/copias:/copias" -v "$RUNNER_TEMP/gnupg:/gnupg" \
+            -e GNUPGHOME=/gnupg -e PGHOST=localhost -e PGPASSWORD=clinica \
+            -e PGDATABASE=clinica_restaurada -e AMBIENTE=teste \
+            "$IMAGEM_POSTGRES" bash /scripts/copia-de-seguranca/restaurar-copia.sh "$ARQUIVO"
           segundos=$(( $(date +%s) - inicio ))
           echo "Restauração em $segundos s (limite do RNF53: 8 horas)." | tee -a "$GITHUB_STEP_SUMMARY"
           [ "$segundos" -le 28800 ]
@@ -95,15 +118,19 @@ jobs:
         run: |
           echo "## Conferência da restauração" >> "$GITHUB_STEP_SUMMARY"
           docker run --rm --network host -v "$PWD/scripts:/scripts:ro" \
+            -e PGHOST=localhost -e PGPASSWORD=clinica \
             -e TABELAS_COM_DADOS="public.usuarios public.sessoes_login public.inscricoes public.decisoes_prioridade public.casos public.atribuicoes_supervisor public.vinculos_estagiario public.prontuarios public.acessos_prontuario public.sessoes_atendimento public.auditoria" \
-            postgres:17 bash /scripts/copia-de-seguranca/conferir-restauracao.sh "$DATABASE_URL" "$RESTAURADO_URL" |
+            "$IMAGEM_POSTGRES" bash /scripts/copia-de-seguranca/conferir-restauracao.sh clinica clinica_restaurada |
             tee -a "$GITHUB_STEP_SUMMARY"
-      - name: Migrations da versão atual no banco restaurado
-        run: DATABASE_URL="$RESTAURADO_URL" pnpm db:migrate
+      # O mesmo passo do migrador da implantação: as permissões não voltam com a
+      # cópia (--no-privileges), e quem as reaplica é ele.
+      - name: Migrations e permissões da versão atual no banco restaurado
+        run: DATABASE_URL="$RESTAURADO_URL" CLINICA_APP_SENHA=clinica_app node apps/api/dist/scripts/migrar.js
       # Sem a CHAVE_DADOS certa, a cópia volta, mas os dados de saúde ficam ilegíveis.
       - name: Decifrar um dado de saúde restaurado com a CHAVE_DADOS
         run: |
-          VALOR=$(docker run --rm --network host postgres:17 psql "$RESTAURADO_URL" -tAc \
+          VALOR=$(docker run --rm --network host -e PGPASSWORD=clinica "$IMAGEM_POSTGRES" \
+            psql -h localhost -U clinica -d clinica_restaurada -tAc \
             "select queixa_cifrada from inscricoes where queixa_cifrada is not null limit 1")
           VALOR="$VALOR" node -e '
             const { decifrar } = require("./apps/api/dist/common/criptografia.js");
@@ -111,11 +138,19 @@ jobs:
             if (!texto) process.exit(1);
             console.log("Queixa restaurada decifrada:", texto.length, "caracteres.");
           '
+      # Com o usuário da aplicação (#174), a API sobe como na implantação: se a
+      # restauração perdesse as permissões dele, a entrada falharia.
       - name: Subir a API com o banco restaurado e entrar
         working-directory: apps/api
         run: |
-          DATABASE_URL="$RESTAURADO_URL" node dist/main &
-          for i in $(seq 1 30); do curl -sf http://localhost:3333/health && break; sleep 1; done
+          URL_API="$RESTAURADO_URL"
+          if docker run --rm --network host -e PGPASSWORD=clinica "$IMAGEM_POSTGRES" \
+            psql -h localhost -U clinica -d clinica_restaurada -tAc "select 1 from pg_roles where rolname = 'clinica_app'" | grep -q 1; then
+            URL_API="postgresql://clinica_app:clinica_app@localhost:5432/clinica_restaurada"
+            echo "A API sobe como clinica_app." | tee -a "$GITHUB_STEP_SUMMARY"
+          fi
+          DATABASE_URL="$URL_API" node dist/main &
+          for _ in $(seq 1 30); do curl -sf http://localhost:3333/health && break; sleep 1; done
           curl -sf -X POST http://localhost:3333/auth/login \
             -H "Content-Type: application/json" \
             -d '{"email":"coordenacao.e2e@fbr.edu.br","senha":"Equipe2026e2e"}' -o /dev/null

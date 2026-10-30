@@ -1,24 +1,26 @@
 #!/usr/bin/env bash
 # Confere se o banco restaurado tem os mesmos dados do banco de origem (RNF53):
 # para cada tabela, o número de linhas e um hash do conteúdo. Usado no teste de
-# restauração do CI e depois de cada teste de restauração da implantação.
+# restauração do CI e no teste de restauração da implantação, com os dois bancos
+# no mesmo servidor (por exemplo, clinica e clinica_restaurada).
 #
-# Uso: conferir-restauracao.sh <url do banco de origem> <url do banco restaurado>
+# Uso: conferir-restauracao.sh <banco de origem> <banco restaurado>
 # TABELAS_COM_DADOS (opcional): tabelas que precisam ter linhas, separadas por
 # espaço, para o teste não passar com um banco vazio.
+# Acesso ao servidor: o descrito em comum.sh (na VPS, CONTEINER_BANCO).
 set -euo pipefail
+source "$(dirname "$0")/comum.sh"
 
-origem="${1:?Uso: conferir-restauracao.sh <origem> <restaurado>}"
-restaurado="${2:?Uso: conferir-restauracao.sh <origem> <restaurado>}"
+origem="${1:?Uso: conferir-restauracao.sh <banco de origem> <banco restaurado>}"
+restaurado="${2:?Uso: conferir-restauracao.sh <banco de origem> <banco restaurado>}"
 
-tabelas=$(psql "$origem" -tAc "select table_schema || '.' || table_name
-  from information_schema.tables
-  where table_type = 'BASE TABLE'
-    and table_schema not in ('pg_catalog', 'information_schema')
+tabelas=$(no_banco psql -d "$origem" -tAc "select schemaname || '.' || tablename
+  from pg_tables
+  where schemaname not in ('pg_catalog', 'information_schema')
   order by 1")
 
 resumo() {
-  psql "$1" -tAc "select count(*) || ' ' || coalesce(md5(string_agg(t::text, '|' order by t::text)), '-')
+  no_banco psql -d "$1" -tAc "select count(*) || ' ' || coalesce(md5(string_agg(t::text, '|' order by t::text)), '-')
     from $2 t"
 }
 
@@ -32,7 +34,7 @@ for tabela in $tabelas; do
 done
 
 for tabela in ${TABELAS_COM_DADOS:-}; do
-  linhas=$(psql "$origem" -tAc "select count(*) from $tabela")
+  linhas=$(no_banco psql -d "$origem" -tAc "select count(*) from $tabela")
   if [ "$linhas" = "0" ]; then
     echo "A tabela $tabela está vazia na origem: o teste não cobre os dados dela." >&2
     falhas=$((falhas + 1))
