@@ -80,6 +80,7 @@ O sistema deve permitir que o interessado realize uma solicitação de atendimen
 - O formulário deve exigir, como campos obrigatórios — confirmados pela Clínica Escola na reunião de 26/08/2026 ([ata](../../unidade-1/reunioes.md)) —, os seguintes: nome completo, data de nascimento, CPF, RG, endereço, estado civil e a queixa (motivo da busca pelo atendimento); quando o interessado for menor de idade, o formulário deve exigir também o nome do responsável legal.
 - Para viabilizar os lembretes e a verificação de identidade previstos nos RF13 e RF52, o interessado deve informar pelo menos um canal de contato válido entre telefone celular e e-mail e indicar o canal preferencial: **e-mail**, **WhatsApp** ou **ligação** (os dois últimos exigem o celular). Quem escolhe e-mail recebe as mensagens automáticas do sistema; quem escolhe WhatsApp ou ligação é contatado pela secretaria. O SMS não é usado.
 - O formulário também deve coletar, para a triagem, a percepção de urgência e um campo de histórico relevante informado pelo interessado, ambos como declarações do próprio solicitante.
+- O formulário também deve coletar os dados da ficha de identificação da Clínica Escola que os campos acima não cobrem ([DF43](decisoes-fbr.md)): sexo, profissão, escolaridade, bairro, cidade, CEP, WhatsApp, contato de emergência e, para menor de idade, o CPF e o documento que comprova a responsabilidade legal. Até a FBr definir a obrigatoriedade desses dados, eles são opcionais; essa regra é uma proposta da equipe.
 - O CPF e o RG são coletados apenas como texto informado pelo próprio interessado — a Clínica Escola não exige, nem o sistema deve solicitar, o envio de cópia digitalizada desses documentos.
 - O sistema deve validar o formato dos dados de contato, verificar os campos obrigatórios e solicitar a confirmação do interessado antes de registrar a inscrição.
 - O formulário deve exibir, de forma fixa e sempre visível, um aviso textual com os contatos de emergência do CVV (188) e do SAMU (192), conforme solicitado pela Clínica Escola FBr na validação do MVP ([10.2.4](backlog.md#1024-validacao-do-mvp-com-o-cliente)) — condição vinculada ao adiamento da sinalização automática de pontos de atenção (RF5) para uma entrega posterior.
@@ -110,7 +111,7 @@ _Critérios de aceitação:_
 
 - Para interessado menor de idade, calculado pela data de nascimento, o envio sem o nome do responsável legal é bloqueado e o campo é indicado.
 
-_Rastreabilidade:_ Feature "Registrar solicitação de atendimento on-line" → CP1 — Inscrição on-line → OE1/OE4. Restrição transversal: CP12 — Segurança, sigilo e controle de acesso. Origem: [DF02](decisoes-fbr.md), [DF07](decisoes-fbr.md), [DF24](decisoes-fbr.md).
+_Rastreabilidade:_ Feature "Registrar solicitação de atendimento on-line" → CP1 — Inscrição on-line → OE1/OE4. Restrição transversal: CP12 — Segurança, sigilo e controle de acesso. Origem: [DF02](decisoes-fbr.md), [DF07](decisoes-fbr.md), [DF24](decisoes-fbr.md), [DF43](decisoes-fbr.md).
 
 #### Feature — Emitir comprovante de inscrição [#89](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/issues/89)
 
@@ -285,7 +286,7 @@ _Critérios de aceitação:_
 
 - Após mudanças de prioridade ou de situação que alterem a fila, uma nova consulta autorizada mostra a posição atualizada.
 
-_Rastreabilidade:_ Feature "Consultar posição individual na fila" → CP3 — Fila de espera e consulta de posição → OE4/OE7 → IS03 — Expectativa sobre a fila. Dependência: RF52 — Verificar identidade do paciente ou responsável (CP12).
+_Rastreabilidade:_ Feature "Consultar posição individual na fila" → CP3 — Fila de espera e consulta de posição → OE4/OE7 → IS03 — Expectativa sobre a fila. Dependência: RF52 — Verificar identidade do paciente ou responsável (CP12). Origem: [DF40](decisoes-fbr.md).
 
 #### Feature — Manter e informar condições gerais da fila
 
@@ -330,7 +331,7 @@ Os canais de contato com o paciente (e-mail, WhatsApp e ligação, sem SMS), a d
 | Duração padrão da sessão                   | 50 minutos                            | Coordenação                   | RF10, RF12   |
 | Intervalo para anotações após a sessão     | 10 minutos                            | Coordenação                   | RF10, RF12   |
 | Antecedência do lembrete                   | 24 horas antes do início da sessão    | Coordenação                   | RF13         |
-| Prazo de confirmação de presença           | até 12 horas antes do início da sessão | Coordenação                  | RF14         |
+| Prazo de confirmação de presença           | até 24 horas antes do início da sessão | Coordenação                  | RF14         |
 | Antecedência mínima para cancelamento sem falta | 1 hora antes do início da sessão | Coordenação                  | RF15, RF35   |
 
 #### Feature — Agendar sessão do paciente [#96](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/issues/96)
@@ -414,18 +415,18 @@ _Rastreabilidade:_ Feature "Enviar lembrete de sessão agendada" → CP4 — Age
 
 **RF14 — Confirmar presença em sessão agendada**{ #rf14 }
 
-O sistema deve permitir que o paciente confirme presença em uma sessão agendada até o prazo de confirmação, definido pelo parâmetro "prazo de confirmação de presença" (padrão: até 12 horas antes do início da sessão), configurável pela coordenação. Ao confirmar, o sistema deve atualizar o status da sessão para "confirmada" e gerar o registro de auditoria do RNF10. Sessões não confirmadas até o fim do prazo devem ser sinalizadas para a secretaria, para contato ativo com o paciente. A ausência de confirmação não é, por si só, uma falta: a falta só é registrada quando o paciente não comparece à sessão (RF34).
+O sistema deve permitir que o paciente confirme presença em uma sessão agendada até o prazo de confirmação, definido pelo parâmetro "prazo de confirmação de presença" (padrão: até 24 horas antes do início da sessão, confirmado pela Clínica Escola em 31/10/2026), configurável pela coordenação. Ao confirmar, o sistema deve atualizar o status da sessão para "confirmada" e gerar o registro de auditoria do RNF10. Sessões não confirmadas até o fim do prazo devem ser sinalizadas para a secretaria, para contato ativo com o paciente. A ausência de confirmação não é, por si só, uma falta: a falta só é registrada quando o paciente não comparece à sessão (RF34).
 
 O link de confirmação de presença chega ao paciente no momento em que a sessão é agendada (RF10), pelo canal de contato preferencial informado na inscrição (RF1) — por e-mail automático ou pela mensagem de WhatsApp enviada por quem agendou —, e segue as condições de usabilidade do RNF15 e as proteções de segurança do RNF59. O envio **automático e antecipado** de um lembrete adicional antes da sessão — com antecedência configurável — é tratado pelo RF13, que fica para uma entrega posterior; enquanto RF13 não estiver disponível, o link enviado no momento do agendamento é o único canal de confirmação, e o RF14 não depende do RF13 para funcionar.
 
 _Critérios de aceitação:_
 
-- Com sessão às 14h00 e prazo de confirmação de 12 horas, a confirmação do paciente até as 2h00 muda o status para "confirmada" e gera o registro de auditoria do RNF10.
-- Na mesma sessão, confirmação após as 2h00 é recusada e o paciente é orientado a procurar a secretaria.
+- Com sessão às 14h00 e prazo de confirmação de 24 horas, a confirmação do paciente até as 14h00 do dia anterior muda o status para "confirmada" e gera o registro de auditoria do RNF10.
+- Na mesma sessão, confirmação após as 14h00 do dia anterior é recusada e o paciente é orientado a procurar a secretaria.
 - Sessão sem confirmação ao fim do prazo é sinalizada para a secretaria, sem registro de falta.
 - Sessão já cancelada não pode ser confirmada.
 
-_Rastreabilidade:_ Feature "Confirmar presença em sessão agendada" → CP4 — Agendamento, confirmação e remarcação → OE3. Dependência: RF10; integração: RF13 (lembrete automático adicional, entrega posterior). Origem: [DF24](decisoes-fbr.md).
+_Rastreabilidade:_ Feature "Confirmar presença em sessão agendada" → CP4 — Agendamento, confirmação e remarcação → OE3. Dependência: RF10; integração: RF13 (lembrete automático adicional, entrega posterior). Origem: [DF24](decisoes-fbr.md), [DF45](decisoes-fbr.md).
 
 #### Feature — Registrar cancelamento de sessão pelo paciente [#143](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/issues/143)
 
@@ -643,18 +644,18 @@ _Rastreabilidade:_ Feature "Criar e inicializar o prontuário do paciente" → C
 
 **RF69 — Registrar anamnese e contrato terapêutico do paciente**{ #rf69 }
 
-O sistema deve permitir que somente o estagiário responsável pelo caso registre, no prontuário criado pelo RF66, a anamnese e o contrato terapêutico (ou documento equivalente) que formalizam o início do acompanhamento. A anamnese segue a "Ficha de anamnese" que a Clínica Escola enviou em 30/10/2026, com seis seções: (I) queixa principal; (II) história do problema atual; (III) histórico familiar; (IV) desenvolvimento (infantil e adolescente); (V) histórico médico; e (VI) aspectos psicossociais. A queixa principal vem preenchida com a queixa informada na inscrição (RF1), e o estagiário pode completá-la. Até a FBr definir a obrigatoriedade, só a queixa principal é obrigatória, e as seções em branco aparecem como "não informado"; essa regra é uma proposta da equipe. O modelo do contrato terapêutico ainda não foi enviado ([Pendências de validação com a FBr](analise-feedback.md#pendencias-de-validacao-com-a-fbr)): até lá, o contrato é registrado como texto livre, com a data de assinatura, e, quando o modelo chegar, os campos passam a segui-lo, sem alterar os registros já feitos. Esta feature foi separada do RF66 em 24/10/2026, porque a criação automática do prontuário e o registro dos dados iniciais têm gatilhos, atores e condições diferentes. O sigilo dos dados iniciais segue o RNF25 e o acesso, a restrição do RF55.
+O sistema deve permitir que somente o estagiário responsável pelo caso registre, no prontuário criado pelo RF66, a anamnese e o contrato terapêutico (ou documento equivalente) que formalizam o início do acompanhamento. A anamnese segue a "Ficha de anamnese" que a Clínica Escola enviou em 30/10/2026, com seis seções: (I) queixa principal; (II) história do problema atual; (III) histórico familiar; (IV) desenvolvimento (infantil e adolescente); (V) histórico médico; e (VI) aspectos psicossociais. A queixa principal vem preenchida com a queixa informada na inscrição (RF1), e o estagiário pode completá-la. Até a FBr definir a obrigatoriedade, só a queixa principal é obrigatória, e as seções em branco aparecem como "não informado"; essa regra é uma proposta da equipe. O contrato terapêutico segue o "Contrato de Prestação de Serviço" da Clínica Escola, indicado em 31/10/2026 ([DF41](decisoes-fbr.md)): o contrato é assinado em papel na primeira sessão, e o estagiário registra no prontuário a data de assinatura, o aceite do termo de consentimento livre e esclarecido para pesquisa, que é opcional, e a guarda da via assinada. As regras de desmarcação e de faltas do contrato divergem da DF20 e estão nas [pendências de validação com a FBr](analise-feedback.md#pendencias-de-validacao-com-a-fbr); até a resposta, valem as da DF20. Esta feature foi separada do RF66 em 24/10/2026, porque a criação automática do prontuário e o registro dos dados iniciais têm gatilhos, atores e condições diferentes. O sigilo dos dados iniciais segue o RNF25 e o acesso, a restrição do RF55.
 
 _Critérios de aceitação:_
 
 - A anamnese e o contrato terapêutico registrados pelo estagiário responsável ficam armazenados como dados iniciais do prontuário, com autor e data/hora.
 - A anamnese é registrada nas seis seções da ficha da Clínica Escola, com a queixa principal preenchida a partir da inscrição.
 - Anamnese sem queixa principal não é salva; as demais seções em branco aparecem como "não informado".
-- O contrato terapêutico registra a data de assinatura.
+- O contrato terapêutico registra a data de assinatura e se o paciente aceitou o termo de consentimento para pesquisa.
 - Usuário que não é o estagiário responsável pelo caso não consegue registrar a anamnese nem o contrato.
 - Caso sem prontuário criado (RF66) não aceita o registro de anamnese nem de contrato.
 
-_Rastreabilidade:_ Feature "Registrar anamnese e contrato terapêutico do paciente" → CP6 — Prontuário eletrônico → OE5/OE6. Dependência: RF66; integração: RF1 (queixa da inscrição). Restrição transversal: CP12 — Segurança, sigilo e controle de acesso. Origem: [DF37](decisoes-fbr.md).
+_Rastreabilidade:_ Feature "Registrar anamnese e contrato terapêutico do paciente" → CP6 — Prontuário eletrônico → OE5/OE6. Dependência: RF66; integração: RF1 (queixa da inscrição). Restrição transversal: CP12 — Segurança, sigilo e controle de acesso. Origem: [DF37](decisoes-fbr.md), [DF41](decisoes-fbr.md).
 
 #### Feature — Consultar prontuário do paciente [#148](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/issues/148)
 
@@ -814,9 +815,9 @@ A CP8 foi decomposta em uma feature: a geração do relatório final de evoluç�
 
 **RF33 — Gerar relatório final de evolução**{ #rf33 }
 
-O sistema deve permitir que o estagiário responsável elabore o relatório final do ciclo de atendimento a partir das evoluções registradas e o submeta ao supervisor responsável. O relatório deve conter, no mínimo: identificação do paciente e do ciclo; identificação do estagiário autor e do supervisor; período e sessões consideradas; síntese da condição inicial relatada; síntese da evolução ao longo do acompanhamento; orientações de continuidade; identificação dos registros de origem; número da versão; data de geração; e estado `rascunho`, `em revisão`, `devolvido para ajustes` ou `aprovado`. O sistema deve permitir verificar a correspondência entre o conteúdo consolidado e o histórico do prontuário e não deve completar lacunas clínicas por inferência.
+O sistema deve permitir que o estagiário responsável elabore o relatório final do ciclo de atendimento a partir das evoluções registradas e o submeta ao supervisor responsável. O relatório segue o modelo de relatório psicológico da Clínica Escola ([DF42](decisoes-fbr.md)), com as seções: (1) identificação, com o paciente, o solicitante, o estagiário autor, o supervisor com o número do CRP e a finalidade do relatório; (2) descrição da demanda, com o início do acompanhamento; (3) procedimentos; (4) análise; (5) conclusão; e o local e a data, seguidos das assinaturas do estagiário e do supervisor. O sistema guarda também, fora do texto impresso, o ciclo e as sessões consideradas, os registros de origem, o número da versão, a data de geração e o estado `rascunho`, `em revisão`, `devolvido para ajustes` ou `aprovado`. O sistema deve permitir verificar a correspondência entre o conteúdo consolidado e o histórico do prontuário e não deve completar lacunas clínicas por inferência.
 
-O supervisor deve poder aprovar o relatório ou devolvê-lo ao estagiário com observações obrigatórias. Cada nova submissão deve gerar versão distinguível, preservando as versões e decisões anteriores. A Clínica Escola confirmou esse fluxo de revisão e a entrega impressa depois da assinatura do supervisor em 30/10/2026. Os campos mínimos acima continuam uma proposta da equipe: o modelo recebido na mesma data é o do relatório de estágio do aluno, que é um documento acadêmico e fica fora do escopo, e o modelo do relatório entregue ao paciente está nas [pendências de validação com a FBr](analise-feedback.md#pendencias-de-validacao-com-a-fbr). Somente uma versão aprovada, com identificação do supervisor e data/hora da aprovação, pode ser finalizada em PDF para impressão; o documento deve conter campo para assinatura manuscrita do supervisor. A secretaria deve poder imprimir exclusivamente a versão aprovada e, antes de registrar a entrega presencial ao paciente ou ao responsável legal, deve confirmar no sistema que a via foi assinada. O sistema deve registrar a data e o responsável pela impressão e pela entrega e não deve disponibilizar o relatório para download ou envio por e-mail ao paciente.
+O supervisor deve poder aprovar o relatório ou devolvê-lo ao estagiário com observações obrigatórias. Cada nova submissão deve gerar versão distinguível, preservando as versões e decisões anteriores. A Clínica Escola confirmou esse fluxo de revisão e a entrega impressa depois da assinatura do supervisor em 30/10/2026. O modelo recebido nessa data era o do relatório de estágio do aluno, que é um documento acadêmico e fica fora do escopo; o modelo do relatório entregue ao paciente chegou em 31/10/2026. Somente uma versão aprovada, com identificação do supervisor e data/hora da aprovação, pode ser finalizada em PDF para impressão; o documento deve conter campos para as assinaturas manuscritas do estagiário e do supervisor. A secretaria deve poder imprimir exclusivamente a versão aprovada e, antes de registrar a entrega presencial ao paciente ou ao responsável legal, deve confirmar no sistema que a via foi assinada. O sistema deve registrar a data e o responsável pela impressão e pela entrega e não deve disponibilizar o relatório para download ou envio por e-mail ao paciente.
 
 A referência institucional é o encerramento de um ciclo de 8 a 10 sessões. Se o ciclo for encerrado fora dessa faixa, o estagiário deve registrar a justificativa no relatório antes de submetê-lo à revisão.
 
@@ -834,7 +835,7 @@ _Critérios de aceitação:_
 - A secretaria imprime apenas a versão aprovada e, antes de registrar quem entregou e quando, confirma que a via foi assinada; não há download nem envio por e-mail ao destinatário.
 - Ciclo encerrado com menos de 8 ou mais de 10 sessões exige justificativa da exceção na submissão do relatório.
 
-_Rastreabilidade:_ Feature "Gerar relatório final de evolução" → CP8 — Geração do relatório final de evolução → OE5/OE6. Dependência: RF28, RF32 (CP7); restrição transversal: RF55 (CP12). Origem: [DF04](decisoes-fbr.md), [DF12](decisoes-fbr.md), [DF23](decisoes-fbr.md), [DF36](decisoes-fbr.md).
+_Rastreabilidade:_ Feature "Gerar relatório final de evolução" → CP8 — Geração do relatório final de evolução → OE5/OE6. Dependência: RF28, RF32 (CP7); restrição transversal: RF55 (CP12). Origem: [DF04](decisoes-fbr.md), [DF12](decisoes-fbr.md), [DF23](decisoes-fbr.md), [DF36](decisoes-fbr.md), [DF42](decisoes-fbr.md).
 
 #### Modelo de domínio da CP8
 
@@ -1243,7 +1244,7 @@ _Critérios de aceitação:_
 - Novo código pedido menos de 60 segundos após o anterior é recusado, informando o tempo restante.
 - Depois de 3 códigos enviados ao mesmo CPF em 60 minutos, um quarto pedido é recusado e o bloqueio dura 60 minutos.
 
-_Rastreabilidade:_ Feature "Verificar identidade do paciente ou responsável" → CP12 — Segurança, sigilo e controle de acesso → OE7/OE5. Atende à verificação de acesso exigida pela feature "Consultar posição individual na fila" (CP3) e pelas features de declaração da CP10. Origem: [DF24](decisoes-fbr.md).
+_Rastreabilidade:_ Feature "Verificar identidade do paciente ou responsável" → CP12 — Segurança, sigilo e controle de acesso → OE7/OE5. Atende à verificação de acesso exigida pela feature "Consultar posição individual na fila" (CP3) e pelas features de declaração da CP10. Origem: [DF24](decisoes-fbr.md), [DF40](decisoes-fbr.md).
 
 #### Feature — Cadastrar usuário institucional com perfil de acesso [#48](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/issues/48)
 
@@ -1318,7 +1319,7 @@ _Rastreabilidade:_ Feature "Consultar registro de acessos ao prontuário" → CP
 
 **RF57 — Registrar consentimento para tratamento de dados**{ #rf57 }
 
-O sistema deve apresentar, antes da conclusão da inscrição (CP1), um termo que informe, em linguagem simples, quais dados pessoais e de saúde são coletados, para que finalidade, quem terá acesso a eles, por quanto tempo serão guardados e como o consentimento pode ser revogado (RF65), e deve exigir a concordância do interessado para concluir a inscrição. Para crianças e adolescentes, a concordância deve ser dada pelo responsável legal (LGPD, art. 14). O sistema deve registrar a versão do termo aceita e a data/hora do aceite. O texto do termo é aprovado pela FBr; cada nova versão aprovada passa a valer para as inscrições seguintes, sem alterar o registro dos aceites anteriores.
+O sistema deve apresentar, antes da conclusão da inscrição (CP1), um termo que informe, em linguagem simples, quais dados pessoais e de saúde são coletados, para que finalidade, quem terá acesso a eles, por quanto tempo serão guardados e como o consentimento pode ser revogado (RF65), e deve exigir a concordância do interessado para concluir a inscrição. Para crianças e adolescentes, a concordância deve ser dada pelo responsável legal (LGPD, art. 14). O sistema deve registrar a versão do termo aceita e a data/hora do aceite. A FBr não tinha termo próprio: a equipe redige o texto, e a FBr o revisa e aprova ([DF44](decisoes-fbr.md)); cada nova versão aprovada passa a valer para as inscrições seguintes, sem alterar o registro dos aceites anteriores.
 
 **Base legal (pendente de validação com a FBr).** A LGPD admite duas bases legais para o tratamento de dados de saúde neste contexto: o consentimento específico e destacado do titular (art. 11, I) ou a tutela da saúde em procedimento realizado por profissionais de saúde (art. 11, II, "f"). A definição cabe à FBr, como controladora dos dados. Até essa validação, o sistema adota o cenário mais restritivo: trata o aceite como consentimento específico e destacado e permite a sua revogação (RF65). Os demais direitos do titular previstos no art. 18 da LGPD (confirmação, acesso, correção, informação sobre compartilhamento etc.) serão atendidos pelo canal institucional da FBr e ficam fora do escopo atual do sistema, até que a FBr indique quais deles devem ser atendidos pela ferramenta.
 
@@ -1331,7 +1332,7 @@ _Critérios de aceitação:_
 
 O aceite on-line não substitui a autorização e o termo de responsabilidade assinados presencialmente pelo responsável legal, que continuam exigidos pela clínica para o atendimento de crianças e adolescentes ([ata de 26/08/2026](../../unidade-1/reunioes.md)).
 
-_Rastreabilidade:_ Feature "Registrar consentimento para tratamento de dados" → CP12 — Segurança, sigilo e controle de acesso → OE7. Complementa a feature "Registrar solicitação de atendimento on-line" da CP1.
+_Rastreabilidade:_ Feature "Registrar consentimento para tratamento de dados" → CP12 — Segurança, sigilo e controle de acesso → OE7. Complementa a feature "Registrar solicitação de atendimento on-line" da CP1. Origem: [DF44](decisoes-fbr.md).
 
 #### Feature — Registrar revogação do consentimento
 
