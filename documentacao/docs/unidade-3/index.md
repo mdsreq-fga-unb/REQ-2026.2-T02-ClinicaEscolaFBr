@@ -36,6 +36,7 @@ Os itens de cada ciclo, com o Líder de Feature e as dependências, estão em [F
 - [:material-sitemap-outline: **Projeto das features do Ciclo 4** Modelo detalhado e diagramas das features do Ciclo 4, começando pelo RF52.](projeto-features-ciclo-4.md)
 - [:material-cellphone-link: **Protótipos do Ciclo 4** Telas das features do Ciclo 4.](prototipos-ciclo-4.md)
 - [:material-server-network: **Implantação** Ambientes de produção e de validação no Coolify da FBr e como o deploy acontece.](implantacao.md)
+- [:material-backup-restore: **Cópia de segurança e restauração** Procedimento do RNF53, com os scripts e o teste de restauração.](copia-de-seguranca.md)
 - [:material-shield-lock-outline: **Segurança da implantação** HTTPS, usuário da aplicação no banco e troca da chave dos dados (RNF51 e RNF52).](seguranca-da-implantacao.md)
 - [:material-speedometer: **Teste de carga** Cenário de referência do RNF12 e do RNF21, com a massa de dois semestres.](teste-de-carga.md)
 - [:material-check-decagram-outline: **9. DoR e DoD** Critérios de entrada na construção e de feature pronta.](../unidade-2/requisitos/dor-dod.md)
