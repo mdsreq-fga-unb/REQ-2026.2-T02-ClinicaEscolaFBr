@@ -1,7 +1,11 @@
 version: 2
+# O Dependabot lê esta configuração da branch padrão (main), mas as PRs vão para
+# a development, a versão integrada, como as da equipe. A main só recebe o que já
+# foi validado, pela PR main <- development.
 updates:
   - package-ecosystem: npm
     directory: /
+    target-branch: development
     schedule: { interval: weekly }
     # Mensagens de commit no padrão do projeto (ex.: "build: bump zod from 4.1.0 to 4.2.0")
     commit-message:
@@ -22,6 +26,7 @@ updates:
         update-types: [version-update:semver-major]
   - package-ecosystem: github-actions
     directory: /
+    target-branch: development
     schedule: { interval: weekly }
     commit-message:
       prefix: ci
