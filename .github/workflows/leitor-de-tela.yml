@@ -61,7 +61,7 @@ jobs:
       - run: pnpm --filter @clinica/web exec playwright install webkit
       - run: pnpm turbo run build --filter=@clinica/web...
       - run: pnpm --filter @clinica/web test:leitor-de-tela
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         if: success() || failure()
         with:
           name: evidencias-leitor-de-tela
@@ -71,7 +71,7 @@ jobs:
           if-no-files-found: ignore
       - run: node .github/scripts/feature-status/coletar-rnfs.cjs apps/web/relatorio-testes rnfs-verificados.json
         if: (success() || failure()) && hashFiles('apps/web/relatorio-testes/*.json') != ''
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         if: success() || failure()
         with:
           name: rnfs-leitor-de-tela
