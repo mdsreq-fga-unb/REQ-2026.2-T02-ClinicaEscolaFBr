@@ -643,16 +643,18 @@ _Rastreabilidade:_ Feature "Criar e inicializar o prontuário do paciente" → C
 
 **RF69 — Registrar anamnese e contrato terapêutico do paciente**{ #rf69 }
 
-O sistema deve permitir que somente o estagiário responsável pelo caso registre, no prontuário criado pelo RF66, a anamnese e o contrato terapêutico (ou documento equivalente) que formalizam o início do acompanhamento. Até a FBr fornecer os modelos de anamnese e de contrato usados pela clínica ([Pendências de validação com a FBr](analise-feedback.md#pendencias-de-validacao-com-a-fbr)), cada um é registrado como texto livre, e o contrato inclui a data de assinatura. Quando os modelos forem recebidos, os campos passam a seguir os modelos, sem alterar os registros já feitos. Esta feature foi separada do RF66 em 24/10/2026, porque a criação automática do prontuário e o registro dos dados iniciais têm gatilhos, atores e condições diferentes. O sigilo dos dados iniciais segue o RNF25 e o acesso, a restrição do RF55.
+O sistema deve permitir que somente o estagiário responsável pelo caso registre, no prontuário criado pelo RF66, a anamnese e o contrato terapêutico (ou documento equivalente) que formalizam o início do acompanhamento. A anamnese segue a "Ficha de anamnese" que a Clínica Escola enviou em 30/10/2026, com seis seções: (I) queixa principal; (II) história do problema atual; (III) histórico familiar; (IV) desenvolvimento (infantil e adolescente); (V) histórico médico; e (VI) aspectos psicossociais. A queixa principal vem preenchida com a queixa informada na inscrição (RF1), e o estagiário pode completá-la. Até a FBr definir a obrigatoriedade, só a queixa principal é obrigatória, e as seções em branco aparecem como "não informado"; essa regra é uma proposta da equipe. O modelo do contrato terapêutico ainda não foi enviado ([Pendências de validação com a FBr](analise-feedback.md#pendencias-de-validacao-com-a-fbr)): até lá, o contrato é registrado como texto livre, com a data de assinatura, e, quando o modelo chegar, os campos passam a segui-lo, sem alterar os registros já feitos. Esta feature foi separada do RF66 em 24/10/2026, porque a criação automática do prontuário e o registro dos dados iniciais têm gatilhos, atores e condições diferentes. O sigilo dos dados iniciais segue o RNF25 e o acesso, a restrição do RF55.
 
 _Critérios de aceitação:_
 
 - A anamnese e o contrato terapêutico registrados pelo estagiário responsável ficam armazenados como dados iniciais do prontuário, com autor e data/hora.
+- A anamnese é registrada nas seis seções da ficha da Clínica Escola, com a queixa principal preenchida a partir da inscrição.
+- Anamnese sem queixa principal não é salva; as demais seções em branco aparecem como "não informado".
 - O contrato terapêutico registra a data de assinatura.
 - Usuário que não é o estagiário responsável pelo caso não consegue registrar a anamnese nem o contrato.
 - Caso sem prontuário criado (RF66) não aceita o registro de anamnese nem de contrato.
 
-_Rastreabilidade:_ Feature "Registrar anamnese e contrato terapêutico do paciente" → CP6 — Prontuário eletrônico → OE5/OE6. Dependência: RF66. Restrição transversal: CP12 — Segurança, sigilo e controle de acesso.
+_Rastreabilidade:_ Feature "Registrar anamnese e contrato terapêutico do paciente" → CP6 — Prontuário eletrônico → OE5/OE6. Dependência: RF66; integração: RF1 (queixa da inscrição). Restrição transversal: CP12 — Segurança, sigilo e controle de acesso. Origem: [DF37](decisoes-fbr.md).
 
 #### Feature — Consultar prontuário do paciente [#148](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/issues/148)
 
@@ -673,7 +675,7 @@ _Rastreabilidade:_ Feature "Consultar prontuário do paciente" → CP6 — Pront
 
 - **Paciente e caso:** o paciente pode ter mais de um ciclo de atendimento; cada caso mantém os vínculos clínicos vigentes e anteriores definidos na CP5.
 - **Prontuário:** criado quando o caso é vinculado ao estagiário responsável (RF66), um por ciclo de atendimento; reúne os registros clínicos do paciente, separados por ciclo e acessíveis apenas aos responsáveis clínicos autorizados; reúne as evoluções declaradas na CP7 e o relatório final declarado na CP8.
-- **Dados iniciais:** anamnese e contrato terapêutico (ou documento equivalente) registrados no início do acompanhamento, com autor e data/hora (RF69).
+- **Dados iniciais:** anamnese, nas seis seções da ficha da Clínica Escola, e contrato terapêutico (ou documento equivalente), registrados no início do acompanhamento, com autor e data/hora (RF69).
 
 ### Registro de evolução por sessão (CP7)
 
@@ -681,24 +683,25 @@ A CP7 foi decomposta em sete features: registro da evolução de uma sessão rea
 
 O registro de evolução depende de uma sessão já realizada (CP4) e do vínculo entre paciente e estagiário responsável (CP5). O acesso ao conteúdo registrado é restrito ao estagiário responsável, ao seu supervisor e, para consulta, à coordenação, conforme os perfis definidos na CP12 — Segurança, sigilo e controle de acesso. A evolução registrada alimenta o prontuário eletrônico (CP6) e, ao fim do ciclo, o relatório final de evolução (CP8).
 
-O prazo de correção (RF29) e a possibilidade de complementos (RF30) já foram confirmados pela Clínica Escola. O conteúdo clínico obrigatório de um registro de evolução ainda depende de definição com a FBr ([Pendências](analise-feedback.md#pendencias-de-validacao-com-a-fbr)). Como referência para essa definição, a FBr descreveu, na reunião de 26/08/2026 ([ata](../../unidade-1/reunioes.md)), que a evolução esperada é um resumo objetivo da sessão ("um resuminho"), e não uma transcrição integral do atendimento — o que orienta o formato, mas não substitui a definição formal dos campos obrigatórios.
+O prazo de correção (RF29) e a possibilidade de complementos (RF30) já foram confirmados pela Clínica Escola. O conteúdo do registro de evolução segue a ficha "Registro de evolução" que a Clínica Escola enviou em 30/10/2026 ([DF38](decisoes-fbr.md)); quais campos são obrigatórios ainda está nas [pendências](analise-feedback.md#pendencias-de-validacao-com-a-fbr). Como orientação de formato, a FBr descreveu, na reunião de 26/08/2026 ([ata](../../unidade-1/reunioes.md)), que a evolução esperada é um resumo objetivo da sessão ("um resuminho"), e não uma transcrição integral do atendimento.
 
 #### Feature — Registrar evolução da sessão realizada [#149](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/issues/149)
 
 **RF28 — Registrar evolução da sessão realizada**{ #rf28 }
 
-O sistema deve permitir que o estagiário responsável registre a evolução de uma sessão já realizada, vinculando o registro ao paciente, ao ciclo de atendimento e à sessão de origem. Os campos obrigatórios, definidos pela Clínica Escola, são a data da sessão, a evolução da queixa (até 10 linhas, limitada a 1.000 caracteres) e o planejamento da próxima sessão. A cada 10 sessões realizadas no ciclo, o sistema sinaliza ao estagiário e ao supervisor que é hora do fechamento avaliativo, que é registrado no relatório final (RF33). Cada registro deve identificar o autor e o momento do registro. O sistema deve impedir que uma evolução seja registrada para sessão de outro paciente ou por estagiário sem vínculo vigente com o caso, e deve impedir o registro de evolução para sessão que ainda não foi realizada.
+O sistema deve permitir que o estagiário responsável registre a evolução de uma sessão já realizada, vinculando o registro ao paciente, ao ciclo de atendimento e à sessão de origem. O registro segue a ficha "Registro de evolução" da Clínica Escola: humor e aparência do paciente, conteúdo trabalhado, técnicas utilizadas, intervenções e encaminhamentos, e plano para a próxima sessão. O número da sessão no ciclo, a data, o horário e o comparecimento vêm da própria sessão (CP4) e não são digitados de novo: como só a sessão realizada aceita evolução, o comparecimento é sempre "sim", e a falta segue o RF34. O estagiário e o supervisor que assinam a ficha são os do vínculo vigente do caso. Até a FBr definir a obrigatoriedade, são obrigatórios humor e aparência, conteúdo trabalhado, técnicas utilizadas e plano para a próxima sessão; intervenções e encaminhamentos pode ficar em branco, porque nem toda sessão tem; e cada campo aceita até 1.000 caracteres. Essa obrigatoriedade e o limite são uma proposta da equipe, registrada nas [pendências de validação com a FBr](analise-feedback.md#pendencias-de-validacao-com-a-fbr). A cada 10 sessões realizadas no ciclo, o sistema sinaliza ao estagiário e ao supervisor que é hora do fechamento avaliativo, que é registrado no relatório final (RF33). Cada registro deve identificar o autor e o momento do registro. O sistema deve impedir que uma evolução seja registrada para sessão de outro paciente ou por estagiário sem vínculo vigente com o caso, e deve impedir o registro de evolução para sessão que ainda não foi realizada.
 
 _Critérios de aceitação:_
 
 - Evolução válida registrada pelo estagiário responsável para sessão realizada fica associada à sessão, ao paciente e ao ciclo, com autor e data/hora.
 - Não é possível registrar evolução em sessão de outro paciente nem sem vínculo vigente com o caso.
 - Sessão não realizada (agendada, confirmada, cancelada ou com falta) não aceita registro de evolução.
-- Evolução sem data, sem evolução da queixa ou sem planejamento não é salva, e os campos são indicados.
-- Evolução da queixa com mais de 1.000 caracteres é recusada, com a indicação do limite.
+- O registro mostra o número da sessão no ciclo, a data, o horário e o comparecimento da sessão de origem, sem que o estagiário os digite.
+- Evolução sem humor e aparência, sem conteúdo trabalhado, sem técnicas utilizadas ou sem plano para a próxima sessão não é salva, e os campos são indicados; intervenções e encaminhamentos pode ficar em branco.
+- Campo com mais de 1.000 caracteres é recusado, com a indicação do limite.
 - Ao completar a 10ª sessão realizada no ciclo, o estagiário e o supervisor veem o aviso de fechamento avaliativo.
 
-_Rastreabilidade:_ Feature "Registrar evolução da sessão realizada" → CP7 — Registro de evolução por sessão → OE5/OE2. Dependência: RF10 (CP4, sessão agendada e realizada), RF21 (CP5, vínculo estagiário-paciente); restrição transversal: CP12 — Segurança, sigilo e controle de acesso. Origem: [DF23](decisoes-fbr.md).
+_Rastreabilidade:_ Feature "Registrar evolução da sessão realizada" → CP7 — Registro de evolução por sessão → OE5/OE2. Dependência: RF10 (CP4, sessão agendada e realizada), RF21 (CP5, vínculo estagiário-paciente); restrição transversal: CP12 — Segurança, sigilo e controle de acesso. Origem: [DF38](decisoes-fbr.md) (campos) e [DF23](decisoes-fbr.md) (fechamento avaliativo).
 
 #### Feature — Corrigir evolução registrada
 
@@ -751,7 +754,7 @@ _Rastreabilidade:_ Feature "Validar evolução pelo supervisor" → CP7 — Regi
 
 O sistema deve permitir que o estagiário responsável, com confirmação do supervisor do caso, registre o encerramento do acompanhamento por alta, informando a data e o motivo. O encerramento por alta preserva todo o histórico do caso (sessões, evoluções e prontuário) e libera a vaga do paciente, de forma equivalente ao desligamento por faltas (RF37), mas com motivo e fluxo próprios: o encerramento por alta não deve ser registrado nem apresentado como desligamento por falta. Um caso encerrado por alta não deve receber novo agendamento (RF10) nem nova evolução (RF28), salvo reabertura pela coordenação.
 
-**Reabertura.** Somente a coordenação reabre um caso encerrado por alta, a pedido do estagiário ou do supervisor do caso, informando o motivo. A reabertura registra quem pediu, quem reabriu, a data/hora e o motivo, e preserva o registro do encerramento. Ela só é possível no mesmo semestre e no mesmo ciclo de atendimento: o caso volta à situação "em atendimento", com o mesmo prontuário, e volta a ocupar uma vaga. Se o estagiário responsável não estiver mais ativo, o caso volta a aguardar vínculo (RF21), com o supervisor mantido. Em semestre posterior, o retorno do paciente exige uma nova inscrição (RF1). Essas regras de reabertura são uma proposta da equipe, registrada nas [pendências de validação com a FBr](analise-feedback.md#pendencias-de-validacao-com-a-fbr).
+**Reabertura.** Somente a coordenação reabre um caso encerrado por alta, a pedido do estagiário ou do supervisor do caso, informando o motivo. A reabertura registra quem pediu, quem reabriu, a data/hora e o motivo, e preserva o registro do encerramento. Ela só é possível no mesmo semestre e no mesmo ciclo de atendimento: o caso volta à situação "em atendimento", com o mesmo prontuário, e volta a ocupar uma vaga. Se o estagiário responsável não estiver mais ativo, o caso volta a aguardar vínculo (RF21), com o supervisor mantido. Em semestre posterior, o retorno do paciente exige uma nova inscrição (RF1), porque todo semestre exige inscrição nova. A Clínica Escola confirmou o fluxo da alta e essas regras de reabertura em 30/10/2026.
 
 A preservação do registro de encerramento (autor, confirmação do supervisor, data e motivo) segue o RNF27.
 
@@ -765,7 +768,7 @@ _Critérios de aceitação:_
 - O histórico do caso identifica o encerramento como alta, distinto do desligamento por faltas (RF37).
 - O encerramento por alta só é concluído após a confirmação do supervisor.
 
-_Rastreabilidade:_ Feature "Encerrar caso por alta" → CP7 — Registro de evolução por sessão → OE5/OE2. Dependência: RF28; integração: RF21 (CP5), RF37 (CP9).
+_Rastreabilidade:_ Feature "Encerrar caso por alta" → CP7 — Registro de evolução por sessão → OE5/OE2. Dependência: RF28; integração: RF21 (CP5), RF37 (CP9). Origem: [DF34](decisoes-fbr.md), [DF35](decisoes-fbr.md).
 
 #### Feature — Consultar evolução de uma sessão específica
 
@@ -796,7 +799,7 @@ _Rastreabilidade:_ Feature "Consultar histórico de evolução do paciente" → 
 
 #### Modelo de domínio da CP7
 
-- **Evolução:** entidade vinculada a Sessão, Paciente e Ciclo de atendimento; atributos: conteúdo, autor, data/hora de criação; pode ter versões (original + correções) e complementos cronológicos.
+- **Evolução:** entidade vinculada a Sessão, Paciente e Ciclo de atendimento; atributos: humor e aparência, conteúdo trabalhado, técnicas utilizadas, intervenções e encaminhamentos, plano para a próxima sessão, autor e data/hora de criação; o número da sessão, a data, o horário e o comparecimento vêm da Sessão; pode ter versões (original + correções) e complementos cronológicos.
 - **Relação:** Evolução (N) — Sessão (1) — uma sessão pode ter um registro de evolução original, sujeito a correção (RF29) e a um ou mais complementos (RF30), conforme confirmado pela Clínica Escola.
 - **Correção:** sub-registro ou versão de Evolução, preservando o conteúdo anterior, autor e motivo da alteração.
 - **Complemento:** informação adicional vinculada à evolução, com autor e data/hora próprios, sem substituir o conteúdo original nem suas correções.
@@ -813,7 +816,7 @@ A CP8 foi decomposta em uma feature: a geração do relatório final de evoluç�
 
 O sistema deve permitir que o estagiário responsável elabore o relatório final do ciclo de atendimento a partir das evoluções registradas e o submeta ao supervisor responsável. O relatório deve conter, no mínimo: identificação do paciente e do ciclo; identificação do estagiário autor e do supervisor; período e sessões consideradas; síntese da condição inicial relatada; síntese da evolução ao longo do acompanhamento; orientações de continuidade; identificação dos registros de origem; número da versão; data de geração; e estado `rascunho`, `em revisão`, `devolvido para ajustes` ou `aprovado`. O sistema deve permitir verificar a correspondência entre o conteúdo consolidado e o histórico do prontuário e não deve completar lacunas clínicas por inferência.
 
-O supervisor deve poder aprovar o relatório ou devolvê-lo ao estagiário com observações obrigatórias. Cada nova submissão deve gerar versão distinguível, preservando as versões e decisões anteriores. Somente uma versão aprovada, com identificação do supervisor e data/hora da aprovação, pode ser finalizada em PDF para impressão; o documento deve conter campo para assinatura manuscrita do supervisor. A secretaria deve poder imprimir exclusivamente a versão aprovada e, antes de registrar a entrega presencial ao paciente ou ao responsável legal, deve confirmar no sistema que a via foi assinada. O sistema deve registrar a data e o responsável pela impressão e pela entrega e não deve disponibilizar o relatório para download ou envio por e-mail ao paciente.
+O supervisor deve poder aprovar o relatório ou devolvê-lo ao estagiário com observações obrigatórias. Cada nova submissão deve gerar versão distinguível, preservando as versões e decisões anteriores. A Clínica Escola confirmou esse fluxo de revisão e a entrega impressa depois da assinatura do supervisor em 30/10/2026. Os campos mínimos acima continuam uma proposta da equipe: o modelo recebido na mesma data é o do relatório de estágio do aluno, que é um documento acadêmico e fica fora do escopo, e o modelo do relatório entregue ao paciente está nas [pendências de validação com a FBr](analise-feedback.md#pendencias-de-validacao-com-a-fbr). Somente uma versão aprovada, com identificação do supervisor e data/hora da aprovação, pode ser finalizada em PDF para impressão; o documento deve conter campo para assinatura manuscrita do supervisor. A secretaria deve poder imprimir exclusivamente a versão aprovada e, antes de registrar a entrega presencial ao paciente ou ao responsável legal, deve confirmar no sistema que a via foi assinada. O sistema deve registrar a data e o responsável pela impressão e pela entrega e não deve disponibilizar o relatório para download ou envio por e-mail ao paciente.
 
 A referência institucional é o encerramento de um ciclo de 8 a 10 sessões. Se o ciclo for encerrado fora dessa faixa, o estagiário deve registrar a justificativa no relatório antes de submetê-lo à revisão.
 
@@ -831,7 +834,7 @@ _Critérios de aceitação:_
 - A secretaria imprime apenas a versão aprovada e, antes de registrar quem entregou e quando, confirma que a via foi assinada; não há download nem envio por e-mail ao destinatário.
 - Ciclo encerrado com menos de 8 ou mais de 10 sessões exige justificativa da exceção na submissão do relatório.
 
-_Rastreabilidade:_ Feature "Gerar relatório final de evolução" → CP8 — Geração do relatório final de evolução → OE5/OE6. Dependência: RF28, RF32 (CP7); restrição transversal: RF55 (CP12). Origem: [DF04](decisoes-fbr.md), [DF12](decisoes-fbr.md), [DF23](decisoes-fbr.md).
+_Rastreabilidade:_ Feature "Gerar relatório final de evolução" → CP8 — Geração do relatório final de evolução → OE5/OE6. Dependência: RF28, RF32 (CP7); restrição transversal: RF55 (CP12). Origem: [DF04](decisoes-fbr.md), [DF12](decisoes-fbr.md), [DF23](decisoes-fbr.md), [DF36](decisoes-fbr.md).
 
 #### Modelo de domínio da CP8
 

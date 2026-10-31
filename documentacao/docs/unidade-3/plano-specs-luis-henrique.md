@@ -159,6 +159,9 @@ Um PR por issue, com dependências explícitas. S05 pode precisar de um PR inici
 
 ## S04 — RF69 / #130: dados iniciais
 
+!!! note "Atualização de 31/10/2026"
+    A FBr enviou a ficha de anamnese em 30/10/2026 ([DF37](../unidade-2/requisitos/decisoes-fbr.md)). O RF69 passou a pedir as seis seções da ficha, com a queixa principal preenchida a partir da inscrição. O texto livre continua só para o contrato terapêutico, cujo modelo ainda não chegou.
+
 **Resultado:** estagiário responsável registra anamnese, contrato e data de assinatura, com autor e instante.
 
 **Contrato proposto:** `POST /prontuarios/:id/dados-iniciais`, com `anamnese`, `contrato` e `dataAssinaturaContrato`. Validar textos e data no contrato compartilhado; definir limites de tamanho e possibilidade de gravação separada na inspeção, pois o RF não os especifica.
@@ -195,6 +198,9 @@ Um PR por issue, com dependências explícitas. S05 pode precisar de um PR inici
 **Integrações:** RF69, RF28, RF29/RF30 (correções/complementos), RF67 (validação), RF68 (alta), RF33 e fluxo de revisão do relatório, além de sessões e transferência RF25. A leitura pode evoluir por incrementos, mas placeholders não bastam para declarar RF27 concluído. Não implementar essas operações de escrita dentro de #148. Resolver R2.7 e R3.5 com Maria Clara na inspeção. RNFs: RNF25 e RNF52.
 
 ## S06 — RF28 / #149: evolução por sessão
+
+!!! note "Atualização de 31/10/2026"
+    A FBr enviou a ficha de registro de evolução em 30/10/2026 ([DF38](../unidade-2/requisitos/decisoes-fbr.md)), que substitui os campos da DF23. O RF28 passou a pedir humor e aparência, conteúdo trabalhado, técnicas utilizadas, intervenções e encaminhamentos e plano para a próxima sessão; número, data, horário e comparecimento vêm da sessão. O contrato proposto abaixo, com "evolução da queixa" e "planejamento", e o código que já está na `main` precisam seguir os campos novos.
 
 **Resultado:** estagiário responsável registra evolução de sessão realizada no paciente/ciclo correto.
 
