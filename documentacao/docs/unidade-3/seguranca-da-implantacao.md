@@ -19,7 +19,7 @@ A cópia de segurança (RNF53) tem a sua própria página, "Cópia de segurança
 
 As migrations rodam com o dono do banco. A API se conecta com outro usuário, o `clinica_app`, que lê e grava os dados, mas só **insere e consulta** as tabelas com o gatilho que impede alterar ou apagar o registro: os acessos ao prontuário, a auditoria, as evoluções e as decisões de prioridade. Uma tabela nova com esse gatilho entra sozinha.
 
-Na VPS, nada disso é feito à mão: a cada deploy, o serviço **migrador** aplica as migrations, roda o `packages/database/sql/usuario-da-aplicacao.sql` e define a senha do `clinica_app` com a `SENHA_CLINICA_APP` do Coolify. Se o script faltar na imagem, o migrador falha, e a API anterior continua no ar.
+Na VPS, nada disso é feito à mão: a cada deploy, o serviço **migrador** aplica as migrations, roda o `packages/database/sql/usuario-da-aplicacao.sql` e define a senha do `clinica_app` com a `SENHA_CLINICA_APP` do Coolify. Se o script faltar na imagem, o migrador falha, e a API não sobe: o ambiente fica fora do ar até um deploy que passe ([Implantação](implantacao.md#como-o-deploy-acontece)).
 
 **Virada de cada ambiente para o `clinica_app`**, uma vez só, depois que esta mudança entrar:
 
