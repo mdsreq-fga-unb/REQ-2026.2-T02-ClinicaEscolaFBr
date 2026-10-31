@@ -69,7 +69,7 @@ jobs:
       - run: pnpm turbo run build --filter=@clinica/database...
       - run: pnpm db:migrate
       - run: pnpm turbo run lint typecheck test build
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         if: success() || failure()
         with:
           name: relatorio-testes-verificar
@@ -117,12 +117,12 @@ jobs:
       - run: pnpm turbo run build --filter=@clinica/web... --filter=@clinica/api...
       - run: pnpm db:migrate
       - run: pnpm --filter @clinica/web test:e2e
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         if: failure()
         with:
           name: evidencias-e2e
           path: apps/web/test-results
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         if: success() || failure()
         with:
           name: relatorio-testes-e2e
@@ -149,7 +149,7 @@ jobs:
           pattern: relatorio-testes-*
           path: relatorio-testes
       - run: node .github/scripts/feature-status/coletar-rnfs.cjs relatorio-testes rnfs-verificados.json
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         with:
           name: rnfs-verificados
           path: rnfs-verificados.json
