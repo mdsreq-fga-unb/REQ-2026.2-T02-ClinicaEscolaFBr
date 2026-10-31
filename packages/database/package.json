@@ -28,7 +28,7 @@
   "devDependencies": {
     "@repo/typescript-config": "workspace:*",
     "@types/pg": "^8.23.1",
-    "dotenv": "^18.0.8",
+    "dotenv": "^18.0.9",
     "drizzle-kit": "^0.31.11",
     "tsup": "^9.0.0",
     "typescript": "^5.9.3"
