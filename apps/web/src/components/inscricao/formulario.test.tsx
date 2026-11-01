@@ -52,7 +52,7 @@ describe("Formulário RF1/RF2", () => {
     vi.unstubAllGlobals();
     vi.unstubAllEnvs();
   });
-  it("associa erros aos campos, foca resumo e preserva valores válidos", () => {
+  it("associa erros aos campos, foca resumo e preserva valores válidos (RF1, RNF1)", () => {
     render(<FormularioInscricao />);
     preencher("nomeCompleto", "Nome preservado");
     continuar();

@@ -99,6 +99,9 @@ jobs:
       # páginas e passa pelo axe junto com elas (RNF56).
       NEXT_PUBLIC_AMBIENTE: validacao
       DATABASE_URL: postgresql://clinica:clinica@localhost:5432/clinica
+      # A API do e2e se conecta como na implantação, com o clinica_app, para pegar
+      # regressões de permissão (RNF52). As sementes dos testes usam o dono.
+      DATABASE_URL_API: postgresql://clinica_app:clinica_app@localhost:5432/clinica
       API_PORT: 3333
       WEB_URL: http://localhost:3000
       SMTP_HOST: localhost
@@ -119,6 +122,11 @@ jobs:
       - run: pnpm --filter @clinica/web exec playwright install --with-deps chromium
       - run: pnpm turbo run build --filter=@clinica/web... --filter=@clinica/api...
       - run: pnpm db:migrate
+      # O mesmo passo do migrador da implantação: permissões e senha do clinica_app.
+      - name: Criar o usuário da aplicação no banco
+        run: node apps/api/dist/scripts/migrar.js
+        env:
+          CLINICA_APP_SENHA: clinica_app
       - run: pnpm --filter @clinica/web test:e2e
       - uses: actions/upload-artifact@v4
         if: failure()

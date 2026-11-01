@@ -28,6 +28,11 @@ export const usuarios = pgTable("usuarios", {
   // Bloqueio de 15 minutos na 3ª tentativa seguida com erro (RF50, DF25).
   tentativasFalhas: integer("tentativas_falhas").notNull().default(0),
   bloqueadoAte: timestamp("bloqueado_ate", { withTimezone: true }),
+  // Entradas sendo conferidas agora: somadas aos erros, não passam de 3, para
+  // tentativas simultâneas não driblarem o bloqueio (RNF49). Uma reserva com
+  // mais de 30 segundos é descartada, caso a conferência tenha sido interrompida.
+  entradasEmCurso: integer("entradas_em_curso").notNull().default(0),
+  emCursoDesde: timestamp("em_curso_desde", { withTimezone: true }),
   criadoEm: timestamp("criado_em", { withTimezone: true })
     .notNull()
     .defaultNow(),

@@ -1,8 +1,5 @@
-import {
-  voiceOverTest as test,
-  type VoiceOverPlaywright,
-} from "@guidepup/playwright";
-import { expect, type Page, type Route } from "@playwright/test";
+import { voiceOverTest as test } from "@guidepup/playwright";
+import { expect, type Page } from "@playwright/test";
 import type {
   CasoAguardando,
   CasoDoSupervisor,
@@ -12,13 +9,13 @@ import type {
   ResultadoVinculo,
   SupervisorDisponivel,
 } from "@clinica/shared";
+import { anexarFala, falou, irAte, ouvirFoco, simularRotas } from "./apoio";
 
 // RNF24 com o VoiceOver de verdade: a distribuição (RF18, RF20) e o vínculo do
 // estagiário (RF21) feitos com os comandos do leitor de tela, conferindo o que ele
 // fala em cada passo. A API é simulada com os tipos de @clinica/shared, para o
 // teste não depender de banco no macOS.
 
-const API = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3333";
 const PACIENTE = "Paciente Leitor de Tela";
 const SUPERVISOR = "Carla Mendes";
 const ESTAGIARIO = "Bruno Lima";
@@ -92,67 +89,7 @@ async function simularApi(page: Page, perfil: Perfil) {
       return vinculado;
     },
   };
-  await page.route(`${API}/**`, async (route: Route) => {
-    const pedido = route.request();
-    const cors = {
-      "Access-Control-Allow-Origin": new URL(page.url()).origin,
-      "Access-Control-Allow-Credentials": "true",
-      "Access-Control-Allow-Headers": "Content-Type",
-      "Access-Control-Allow-Methods": "GET, POST, PATCH, DELETE",
-    };
-    if (pedido.method() === "OPTIONS") {
-      return route.fulfill({ status: 204, headers: cors });
-    }
-    const chave = `${pedido.method()} ${new URL(pedido.url()).pathname}`;
-    const resposta = respostas[chave];
-    return route.fulfill(
-      resposta
-        ? { status: 200, headers: cors, json: resposta() }
-        : { status: 404, headers: cors, json: { message: "Não simulado." } },
-    );
-  });
-}
-
-// Avança o cursor do VoiceOver (VO + seta para a direita) até ele falar o texto.
-async function irAte(voiceOver: VoiceOverPlaywright, texto: string) {
-  for (let i = 0; i < 80; i++) {
-    if ((await voiceOver.lastSpokenPhrase()).includes(texto)) return;
-    await voiceOver.next();
-  }
-  throw new Error(`O VoiceOver não chegou a "${texto}".`);
-}
-
-// O VoiceOver falou o texto em algum momento (avisos ao vivo chegam com atraso).
-async function falou(voiceOver: VoiceOverPlaywright, texto: string) {
-  await expect
-    .poll(async () => (await voiceOver.spokenPhraseLog()).join(" | "), {
-      timeout: 10_000,
-    })
-    .toContain(texto);
-}
-
-// Depois de confirmar, o aviso de sucesso recebe o foco. Pede ao VoiceOver que
-// descreva o item com o foco do teclado, para conferir o que ele lê ali, mesmo
-// que a fala espontânea da troca de foco não tenha sido captada.
-async function ouvirAviso(
-  page: Page,
-  voiceOver: VoiceOverPlaywright,
-  texto: string,
-) {
-  await expect(
-    page.getByRole("status").filter({ hasText: texto }),
-  ).toBeFocused();
-  await voiceOver.perform(
-    voiceOver.keyboardCommands.describeItemWithKeyboardFocus,
-  );
-  await falou(voiceOver, texto);
-}
-
-async function anexarFala(voiceOver: VoiceOverPlaywright, nome: string) {
-  await test.info().attach(nome, {
-    body: JSON.stringify(await voiceOver.spokenPhraseLog(), null, 2),
-    contentType: "application/json",
-  });
+  await simularRotas(page, respostas);
 }
 
 test.describe("Leitor de tela na distribuição e no vínculo (RNF24)", () => {
@@ -180,10 +117,14 @@ test.describe("Leitor de tela na distribuição e no vínculo (RNF24)", () => {
 
       await irAte(voiceOver, "Confirmar distribuição");
       await voiceOver.act();
-      await ouvirAviso(page, voiceOver, "Caso distribuído");
+      await ouvirFoco(
+        voiceOver,
+        page.getByRole("status").filter({ hasText: "Caso distribuído" }),
+        "Caso distribuído",
+      );
       await falou(voiceOver, `agora está com ${SUPERVISOR}`);
     } finally {
-      await anexarFala(voiceOver, "fala-distribuicao.json");
+      await anexarFala(test.info(), voiceOver, "fala-distribuicao.json");
     }
   });
 
@@ -211,9 +152,15 @@ test.describe("Leitor de tela na distribuição e no vínculo (RNF24)", () => {
 
       await irAte(voiceOver, "Confirmar vínculo");
       await voiceOver.act();
-      await ouvirAviso(page, voiceOver, "O prontuário do caso foi criado");
+      await ouvirFoco(
+        voiceOver,
+        page
+          .getByRole("status")
+          .filter({ hasText: "O prontuário do caso foi criado" }),
+        "O prontuário do caso foi criado",
+      );
     } finally {
-      await anexarFala(voiceOver, "fala-vinculo.json");
+      await anexarFala(test.info(), voiceOver, "fala-vinculo.json");
     }
   });
 });

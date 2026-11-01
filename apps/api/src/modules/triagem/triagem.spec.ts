@@ -181,7 +181,7 @@ describe('Triagem e prioridade clínica (RF4 e RF6)', () => {
     expect(res.body).toEqual([]);
   });
 
-  it('secretaria e estagiário não veem as respostas da inscrição (RF4, RF55)', async () => {
+  it('secretaria e estagiário não veem as respostas da inscrição (RF4, RF55, RNF3)', async () => {
     await inscrever(diasAtras(1));
     for (const quem of ['secretaria', 'estagiario']) {
       const res = await http()

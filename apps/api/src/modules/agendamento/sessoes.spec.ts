@@ -195,7 +195,7 @@ describe('Agendamento de sessão (RF10)', () => {
     await request(app.getHttpServer()).get('/sessoes/pacientes').expect(401);
   });
 
-  it('a secretaria agenda informando só o início: término pela duração padrão, status agendada, auditoria e link por e-mail', async () => {
+  it('a secretaria agenda informando só o início: término pela duração padrão, status agendada, auditoria e link por e-mail (RF10, RNF10)', async () => {
     const { body } = await agendar('secretaria', {
       casoId: pacientes.sergio,
       inicio: as('10:00'),
@@ -228,7 +228,13 @@ describe('Agendamento de sessão (RF10)', () => {
       operacao: 'agendar_sessao',
       entidade: 'sessoes_atendimento',
     });
-    expect(registro.dadosNovos).toMatchObject({ status: 'agendada' });
+    // RNF10: quem agendou, quando, o novo estado e a data e o horário da sessão.
+    expect(registro.criadoEm).toBeInstanceOf(Date);
+    expect(registro.dadosNovos).toMatchObject({
+      status: 'agendada',
+      inicio: sessao.inicio.toISOString(),
+      termino: sessao.termino.toISOString(),
+    });
 
     expect(emails).toHaveLength(1);
     expect(emails[0].para).toBe('sergio@exemplo.com');

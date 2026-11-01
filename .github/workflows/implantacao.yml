@@ -70,14 +70,19 @@ jobs:
           cache-to: type=gha,scope=web-${{ github.ref_name }},mode=max
 
       # O Coolify sobe o compose do ambiente: baixa as imagens novas (pull_policy:
-      # always), roda o migrador e troca os contêineres da API e da web.
+      # always), roda o migrador e troca os contêineres da API e da web. O painel
+      # fica atrás do Cloudflare, cujo Bot Fight Mode desafia os IPs do GitHub
+      # Actions; por isso o pedido vai direto à VPS (--resolve), com o mesmo nome
+      # e o certificado do Let's Encrypt do painel.
       - name: Deploy no Coolify
         env:
           COOLIFY_URL: ${{ vars.COOLIFY_URL }}
+          COOLIFY_IP: ${{ vars.COOLIFY_IP }}
           COOLIFY_TOKEN: ${{ secrets.COOLIFY_TOKEN }}
           COOLIFY_UUID: ${{ vars.COOLIFY_UUID }}
         run: |
-          curl -fsS -H "Authorization: Bearer $COOLIFY_TOKEN" \
+          curl -fsS -X POST --resolve "${COOLIFY_URL#https://}:443:$COOLIFY_IP" \
+            -H "Authorization: Bearer $COOLIFY_TOKEN" \
             "$COOLIFY_URL/api/v1/deploy?uuid=$COOLIFY_UUID&force=false"
 
       # O deploy só termina quando a API publicada responde com o commit desta

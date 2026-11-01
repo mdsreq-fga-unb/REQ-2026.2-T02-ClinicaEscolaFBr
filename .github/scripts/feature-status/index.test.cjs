@@ -421,10 +421,13 @@ test("/rnf completa as evidências, marca o D4.5 e edita a mesma tabela", async 
       "inscrição (RF1) › sem violações WCAG (RNF56, RNF57, RNF58)",
       "e2e",
     ),
+    // O RNF56 também exige o leitor de tela (ORIGENS_EXIGIDAS).
+    testeRnf("inscrição (RF1) › com o VoiceOver (RNF56)", "leitor-de-tela"),
   ]);
   await rodar("workflow_run", { workflow_run: { conclusion: "success" } });
+  // O RNF51 exige, além do teste, o registro da implantação.
   const pedido = comentario(
-    "/rnf RNF53 https://github.com/x/actions/runs/1",
+    "/rnf RNF51 RNF53 https://github.com/x/actions/runs/1",
     "gabriel",
   );
   comentarios.push(pedido);

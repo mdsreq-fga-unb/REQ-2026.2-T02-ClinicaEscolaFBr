@@ -31,6 +31,10 @@ export default defineConfig({
       url: `${apiURL}/health`,
       // Os testes mandam muitas inscrições da mesma origem (localhost).
       env: {
+        // No CI, a API usa o usuário da aplicação (clinica_app), como na implantação.
+        ...(process.env.DATABASE_URL_API && {
+          DATABASE_URL: process.env.DATABASE_URL_API,
+        }),
         API_PORT: apiPort,
         WEB_URL: webURL,
         LIMITE_INSCRICOES_POR_ORIGEM: "1000",

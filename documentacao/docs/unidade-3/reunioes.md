@@ -165,3 +165,68 @@ Foram apresentadas e aprovadas pela FBr as telas de inscrição (desktop e mobil
 ### Encerramento
 
 O protótipo de alta fidelidade do Ciclo 3 foi validado pela FBr, com ajustes pontuais a aplicar antes do desenvolvimento. A coordenação de Psicologia enviará os modelos de anamnese e contrato terapêutico, além dos arquivos de triagem. Gabriel atualizará o protótipo, enviará um vídeo demonstrativo para aprovação final e dará sequência à implementação, com entrega das funcionalidades prevista para 27/10.
+
+## Reunião de fechamento do Ciclo 3, planejamento do Ciclo 4 e deploy automático
+
+**Data:** 29/10/2026
+**Local:** Reunião on-line (Google Meet)
+**Participantes:** Gabriel da Cunha Barbaceli; Maria Clara Canuto; Luís Henrique Luna; Joaquim José da Fonseca Viana; Nicolas Lopes da Costa.
+
+![Registro da reunião de fechamento do Ciclo 3, planejamento do Ciclo 4 e deploy automático](../assets/reuniao-9.jpeg)
+
+_Figura 17 — Registro da reunião de fechamento do Ciclo 3, planejamento do Ciclo 4 e deploy automático, realizada em 29/10/2026._
+
+[Consultar ata completa em PDF](../assets/atas-reunioes/Ata_Reuniao_Ciclo_3_Fechamento_Ciclo_4_Deploy_29-10-2026.pdf)
+
+!!! note "Correção de 29/10/2026"
+    Conferido com a transcrição da reunião, o resumo abaixo corrige dois pontos da ata em PDF: a #165 é uma pull request, e não uma issue, e o que o token do GitHub dá acesso são as imagens privadas do sistema no GitHub Container Registry (GHCR), e não pacotes do Turborepo.
+
+### Resumo
+
+A reunião teve como objetivo consolidar as pendências do Ciclo 3, alinhar o novo fluxo de deploy e organizar o planejamento e as atividades do Ciclo 4.
+
+### 1. Fechamento do Ciclo 3
+
+- As features previstas foram entregues dentro do prazo de 27/10. Ficaram pendentes a inspeção de código de parte das features, as evidências dos requisitos não funcionais e alguns registros nas issues.
+- Cinco pull requests abertas automatizam o registro das evidências dos requisitos não funcionais nas issues. Depois da aprovação delas, as evidências são adicionadas sozinhas.
+- A demonstração das features e o aceite pela Clínica Escola FBr estão previstos para a reunião de 06/11.
+- Situação das features: as de Gabriel e Joaquim estão com o design e o código inspecionados; as de Jônatas e Nicolas, com o código inspecionado; as de Luís têm uma feature com o código inspecionado e outra com o código concluído; as de Maria Clara estão com o código concluído, faltando marcar alguns itens.
+
+### 2. Pull requests e pendências
+
+- Luís fará a inspeção de código das features construídas por Gabriel, já que o autor do código não pode inspecioná-lo. Gabriel enviará no grupo exemplos de inspeções de código já registradas, como referência.
+- Nas issues em que Gabriel fez a inspeção de design, o Líder da feature registra o `/de-acordo` ou aponta o que precisa ser corrigido. Esse registro permite que a automação marque os itens pendentes.
+- Nicolas revisará de novo a pull request #165, que trava outras PRs, depois dos ajustes feitos por Gabriel.
+- Gabriel já corrigiu os apontamentos de Joaquim na #177 e corrigirá os das outras duas PRs ainda no dia da reunião ou no sábado.
+- Ajustes de interface percebidos nos testes, como o destaque da entrada no sistema, devem se resolver com as features dos próximos ciclos. Mudanças de design são feitas primeiro no protótipo e só vão para o código depois de aceitas.
+
+### 3. Deploy e fluxo de validação
+
+- As novas alterações vão por pull request para a branch `development`. O merge nela publica automaticamente no ambiente de validação.
+- Depois da validação, incluindo a apresentação e o aceite da FBr, a equipe combina com a clínica quando publicar em produção. O merge na `main` publica na produção.
+- O ambiente de validação está na VPS da FBr, com subdomínios criados no DNS da clínica. O envio de e-mails usa o SMTP do Google Workspace da FBr, e a recuperação de senha por código e a entrada no sistema foram testadas nesse ambiente.
+- As imagens do sistema no GHCR continuam privadas, porque tornar pacotes públicos depende de uma configuração da organização. O servidor as baixa com um token do GitHub somente de leitura.
+
+### 4. Planejamento do Ciclo 4
+
+- O Ciclo 4 vai de 28/10 a 10/11, com 20 features no planejamento e 19 a construir. A divisão detalhada será enviada no grupo.
+- O planejamento inicial do backlog já foi feito, mas ainda há itens do DoR a completar antes do início da construção.
+- Os protótipos de todas as features do Ciclo 4 ficarão num único projeto, a partir do protótipo já feito por Joaquim, com o link, as imagens e o PDF publicados no GitHub Pages, como no Ciclo 3.
+
+### 5. Próximos passos e responsabilidades
+
+- **Gabriel:** enviar o cronograma e os exemplos de inspeção no grupo; concluir os ajustes das revisões; testar manualmente todas as funcionalidades no fim de semana; preparar o roteiro da reunião com a FBr e enviar a ela o link da validação depois dos testes.
+- **Luís:** fazer a inspeção de código das features construídas por Gabriel e registrar o `/de-acordo` nas próprias issues.
+- **Nicolas:** revisar a pull request #165.
+- **Joaquim:** preparar os protótipos de todas as features do Ciclo 4 e publicá-los no GitHub Pages; cobrar da FBr as respostas pendentes.
+- **Equipe:** concluir os itens pendentes do DoR e os registros de inspeção e de evidências, e avisar no grupo se surgir alguma dificuldade com prazos ou com a implementação.
+
+### 6. Reunião com a FBr e datas
+
+- **06/11/2026, às 14h30:** reunião com a FBr para demonstrar as funcionalidades do Ciclo 3 no ambiente de validação e validar os protótipos do Ciclo 4. Todos os participantes desta reunião (Gabriel, Maria Clara, Luís, Joaquim e Nicolas) confirmaram presença.
+- **10/11/2026:** término previsto do Ciclo 4.
+- **17/11/2026:** fechamento da Unidade 3. As poucas issues ainda abertas pelo professor podem ser tratadas até essa data.
+
+### Encerramento
+
+O Ciclo 3 foi entregue no prazo, restando inspeções, evidências e a validação com a FBr. O fluxo de deploy automático para a validação e a produção foi alinhado, e o Ciclo 4 segue com a conclusão do DoR, a preparação dos protótipos e a construção das 19 features previstas.

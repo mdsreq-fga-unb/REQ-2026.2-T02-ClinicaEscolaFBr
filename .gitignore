@@ -11,3 +11,4 @@ relatorio-testes/
 .env
 .env.local
 *.tsbuildinfo
+copias/

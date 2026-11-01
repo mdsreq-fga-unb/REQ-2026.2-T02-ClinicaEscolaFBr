@@ -154,6 +154,16 @@ describe('Rotas de acesso: perfis e sessão', () => {
       .expect(410);
   });
 
+  it.each(['curta1', 'semnumeros', '12345678'])(
+    'a ativação recusa a senha "%s", fora das regras (RF53, RNF49)',
+    async (senha) => {
+      await request(app.getHttpServer())
+        .post('/ativacao')
+        .send({ token: 'qualquer', senha, confirmacao: senha })
+        .expect(400);
+    },
+  );
+
   it('a secretaria consulta os dados administrativos, e o estagiário não (403)', async () => {
     const id = '00000000-0000-4000-8000-000000000000';
     await request(app.getHttpServer())

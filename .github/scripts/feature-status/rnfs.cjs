@@ -191,29 +191,58 @@ function avaliarRnfs({ rnfs, rfs, testes, registros }) {
 }
 
 // RNFs cuja meta pede mais de um tipo de verificação: só contam como verificados
-// com testes de todas estas origens (o nome do relatório: "e2e" é o Playwright do
-// CI, "leitor-de-tela" é o workflow do VoiceOver). O RNF24 pede navegação por
-// teclado e contraste (e2e) e o leitor de tela de verdade.
+// com evidência de todas estas origens. Uma origem é o nome do relatório dos
+// testes ("api", "web", "e2e" ou "leitor-de-tela", do workflow do VoiceOver) ou
+// "registro", um /rnf com a evidência do que teste nenhum cobre.
 const ORIGENS_EXIGIDAS = {
+  // Criptografia no banco (testes) e HTTPS, TLS, chaves fora do repositório e
+  // troca de chave, conferidos na implantação (registro).
+  RNF51: ["api", "registro"],
+  // Registros de acesso que não se alteram (testes) e as permissões do usuário da
+  // aplicação no banco e a consulta do RF56, conferidas na implantação (registro).
+  RNF52: ["api", "registro"],
+  // Auditoria de cada operação da sessão (testes) e a inspeção de que a
+  // interface não oferece meio de alterar nem apagar os registros (registro).
+  RNF10: ["api", "registro"],
+  // Respostas negadas sem conteúdo clínico (testes) e a inspeção da interface com
+  // registros completos e incompletos, antes e depois da transferência (registro).
+  RNF25: ["api", "registro"],
+  // Teclado e contraste (e2e) e o leitor de tela de verdade.
   RNF24: ["e2e", "leitor-de-tela"],
+  // Ferramenta automática (e2e) e a inspeção com teclado e leitor de tela.
+  RNF56: ["e2e", "leitor-de-tela"],
+  // As 3 interações (e2e) e o teste de tarefa com pessoas (registro).
+  RNF22: ["e2e", "registro"],
 };
 
-// Origens exigidas que ainda não têm teste passando para o RNF.
-const origensFaltando = (linha) =>
-  (ORIGENS_EXIGIDAS[linha.rnf] ?? []).filter(
-    (origem) => !linha.testes.some((t) => t.origem === origem),
-  );
+const temOrigem = (linha, origem) =>
+  origem === "registro"
+    ? linha.registros.length > 0
+    : linha.testes.some((t) => t.origem === origem);
 
-// Um registro com /rnf conta sozinho: é a verificação feita e assumida por um
-// integrante, com o link da evidência.
-const verificado = (linha) =>
-  linha.registros.length > 0 ||
-  (linha.testes.length > 0 && origensFaltando(linha).length === 0);
+// Origens exigidas que ainda não têm evidência para o RNF.
+const origensFaltando = (linha) =>
+  (ORIGENS_EXIGIDAS[linha.rnf] ?? []).filter((o) => !temOrigem(linha, o));
+
+// Um registro com /rnf conta sozinho, como verificação feita e assumida por um
+// integrante, a não ser que o registro seja uma das origens exigidas: aí ele é a
+// parte que os testes não cobrem, e os testes continuam exigidos.
+const verificado = (linha) => {
+  const exigidas = ORIGENS_EXIGIDAS[linha.rnf] ?? [];
+  if (linha.registros.length > 0 && !exigidas.includes("registro")) return true;
+  return (
+    (linha.testes.length > 0 || linha.registros.length > 0) &&
+    origensFaltando(linha).length === 0
+  );
+};
 
 function situacao(linha) {
   if (verificado(linha)) return "✅ verificado";
-  if (linha.testes.length > 0) {
-    return `⏳ falta o teste de: ${origensFaltando(linha).join(", ")}`;
+  if (linha.testes.length > 0 || linha.registros.length > 0) {
+    const falta = origensFaltando(linha).map((o) =>
+      o === "registro" ? "registro com /rnf" : `teste de ${o}`,
+    );
+    return `⏳ falta: ${falta.join(", ")}`;
   }
   return "⏳ sem evidência";
 }

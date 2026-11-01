@@ -2,6 +2,9 @@
 # main, e validacao, da development), cada um com este compose. As imagens vêm
 # do GHCR, compiladas pelo workflow "Implantação"; os valores ficam nas variáveis
 # de cada ambiente no Coolify. Procedimento: documentacao/docs/unidade-3/implantacao.md
+# A API escuta na 3333 e a web na 3000, as portas das imagens; no Coolify, o
+# domínio de cada uma leva a porta (https://api.clinica.fbr.edu.br:3333), que
+# vira a porta do proxy e não aparece no endereço.
 services:
   banco:
     image: postgres:17-alpine
@@ -37,8 +40,6 @@ services:
     environment:
       NODE_ENV: production
       DATABASE_URL: ${DATABASE_URL_API:?}
-      # A API e a web escutam na 80, a porta que o Coolify usa para os domínios.
-      API_PORT: 80
       WEB_URL: ${WEB_URL:?}
       CHAVE_DADOS: ${CHAVE_DADOS:?}
       SMTP_HOST: ${SMTP_HOST:?}
@@ -59,7 +60,6 @@ services:
     image: ${IMAGEM_WEB:?}
     pull_policy: always
     environment:
-      PORT: 80
       INSCRICAO_ABERTA: ${INSCRICAO_ABERTA:-false}
     depends_on:
       - api
