@@ -104,6 +104,7 @@ Registro cronológico das versões e alterações do documento de visão e dos a
 | 29/10/2026 | 3.26 | Boas práticas de utilização do GitHub, Acompanhamento automático das features: milestones dos ciclos, fechados no fim do ciclo com as issues que aguardam a demonstração e o aceite da FBr | Gabriel da Cunha Barbaceli |
 | 29/10/2026 | 3.27 | Reuniões da Unidade 3: ata da reunião de fechamento do Ciclo 3, planejamento do Ciclo 4 e deploy automático (29/10/2026), com o registro da reunião (Figura 17), a ata em PDF, o resumo por tema, as responsabilidades de cada integrante, as datas até o fechamento da Unidade 3 e uma nota com as correções da ata conferidas com a transcrição | Gabriel da Cunha Barbaceli |
 | 30/10/2026 | 3.28 | Implantação e Segurança da implantação: o Coolify recria todos os contêineres a cada deploy, então, se o migrador falhar, a API anterior não continua no ar, e o ambiente fica fora do ar até um deploy que passe | Joaquim José da Fonseca Viana |
+| 02/11/2026 | 3.33 | Protótipos do Ciclo 4: telas das 18 features do ciclo (RF7, RF8, RF11, RF14, RF15, RF16, RF22, RF23, RF25, RF27, RF28, RF34 a RF38, RF57 e RF69), organizadas pelo fluxo, com os estados de cada tela, o prazo de confirmação de 24 horas definido pela FBr, os valores provisórios e as propostas para validar na reunião de 06/11/2026, o projeto de design e o PDF | Joaquim José da Fonseca Viana |
 
 
 A versão 1.6 está registrada com a data do commit (04/09/2026), posterior à da versão 1.7; a numeração foi mantida para preservar as referências já feitas a essas versões.
