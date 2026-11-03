@@ -28,8 +28,8 @@ Os protótipos também podem ser abertos no projeto de design, onde é possível
 
 - **maior de idade:** termo e caixa de concordância antes de "Concluir inscrição";
 - **erro sem aceite:** a inscrição não é concluída, com o resumo no topo e a mensagem junto da caixa;
-- **menor de idade:** o responsável legal concorda, informa o CPF e vê o aviso de que o aceite on-line não substitui a autorização assinada na clínica;
-- **erro do menor de idade:** CPF do responsável em branco e caixa desmarcada, cada mensagem junto do seu campo.
+- **menor de idade:** o responsável legal vê o nome e o CPF dele, informados na etapa 1, só para leitura, concorda e vê o aviso de que o aceite on-line não substitui a autorização assinada na clínica;
+- **erro do menor de idade:** CPF do responsável não informado na etapa 1, com a orientação de voltar e corrigir, e caixa desmarcada, cada mensagem junto do seu item.
 
 **No computador**
 
@@ -169,7 +169,7 @@ Os protótipos também podem ser abertos no projeto de design, onde é possível
 
 ### RF27 — Consultar prontuário do paciente { #rf27 }
 
-[RF27](../unidade-2/requisitos/funcionais.md#rf27) · issue [#148](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/issues/148). O prontuário, nas seções do modelo da clínica, para o estagiário, o supervisor e a coordenação (só leitura, com o acesso registrado). Aparecem também o prontuário sem registros, o histórico depois de uma transferência e o acesso negado, que não sugere a existência de conteúdo clínico. As evoluções e o histórico de responsáveis começam fechados, as seções sem registro ocupam uma linha e a barra "Ir para" fica fixa no topo ao rolar. O contrato aparece como no Ciclo 3: data de assinatura, termo de consentimento para pesquisa e via assinada.
+[RF27](../unidade-2/requisitos/funcionais.md#rf27) · issue [#148](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/issues/148). O prontuário, nas seções do modelo da clínica, para o estagiário, o supervisor e a coordenação (só leitura, com o acesso registrado). Aparecem também o prontuário sem registros, o histórico depois de uma transferência e o acesso negado, que não sugere a existência de conteúdo clínico. As evoluções e o histórico de responsáveis começam fechados, as seções sem registro ocupam uma linha e a barra "Ir para" fica fixa no topo ao rolar. Em "Sessões do ciclo", a sessão que já terminou mostra à estagiária responsável a ação "Marcar sessão como realizada", como o sistema já faz. O contrato aparece como no Ciclo 3: data de assinatura, termo de consentimento para pesquisa e via assinada.
 
 [![Consultar prontuário: estagiária, supervisor, coordenação só leitura, seções sem registro, depois de transferência e acesso negado](../assets/prototipos-ciclo-4/5-1-prontuario.webp)](../assets/prototipos-ciclo-4/5-1-prontuario.webp){ target="_blank" }
 
@@ -181,9 +181,9 @@ Os protótipos também podem ser abertos no projeto de design, onde é possível
 
 ### RF28 — Registrar evolução da sessão realizada { #rf28 }
 
-[RF28](../unidade-2/requisitos/funcionais.md#rf28) · issue [#149](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/issues/149). O estagiário registra a evolução de uma sessão realizada, que depois de salva não pode ser editada. A sessão já foi marcada como realizada pelo próprio estagiário responsável, no prontuário, depois que ela terminou, como o sistema já faz. Aparecem os erros, o aviso de fechamento avaliativo na 10ª sessão, o bloqueio da sessão não realizada e o acesso negado.
+[RF28](../unidade-2/requisitos/funcionais.md#rf28) · issue [#149](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/issues/149). O estagiário registra a evolução pelo prontuário, na seção "Sessões do ciclo", como o sistema já faz: depois que a sessão termina, ele a marca como realizada, e então a ação "Registrar evolução" abre o formulário. Depois de salva, a evolução não pode ser editada. Na agenda, a sessão realizada leva ao prontuário. Aparecem os erros, a evolução salva, o aviso de fechamento avaliativo na 10ª sessão, as ações de cada sessão no prontuário (sem "Registrar evolução" antes de a sessão ser marcada como realizada) e o acesso negado.
 
-[![Registrar evolução: formulário, erros, evolução salva, aviso de fechamento avaliativo, sessão não realizada e acesso negado](../assets/prototipos-ciclo-4/5-3-evolucao.webp)](../assets/prototipos-ciclo-4/5-3-evolucao.webp){ target="_blank" }
+[![Registrar evolução: formulário, erros, evolução salva, aviso de fechamento avaliativo, ações da sessão no prontuário e acesso negado](../assets/prototipos-ciclo-4/5-3-evolucao.webp)](../assets/prototipos-ciclo-4/5-3-evolucao.webp){ target="_blank" }
 
 ## 6. Coordenação: fila de espera
 
