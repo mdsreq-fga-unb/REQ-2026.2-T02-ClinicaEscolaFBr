@@ -51,3 +51,14 @@ export const MENU_POR_PERFIL: Record<Perfil, ItemMenu[]> = {
 // Página inicial de cada perfil depois da entrada: o primeiro item do menu (RF50).
 export const inicioDoPerfil = (perfil: Perfil) =>
   MENU_POR_PERFIL[perfil][0].href;
+
+// Título do cabeçalho no celular: o item do menu da página aberta ou, nas páginas
+// que não estão no menu, o nome da página.
+export function tituloDaPagina(perfil: Perfil, caminho: string) {
+  const item = MENU_POR_PERFIL[perfil].find(
+    ({ href }) => caminho === href || caminho.startsWith(`${href}/`),
+  );
+  if (item) return item.rotulo;
+  if (caminho.startsWith("/prontuarios")) return "Prontuário";
+  return "Clínica Escola";
+}

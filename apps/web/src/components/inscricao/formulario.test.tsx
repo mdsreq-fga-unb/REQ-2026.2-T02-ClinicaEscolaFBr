@@ -10,8 +10,13 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { FormularioInscricao } from "./formulario";
 
 const recibo = { numero: "2026-00042", criadaEm: "2026-10-25T18:00:00.000Z" };
+// O canal preferencial é um grupo de opções; os outros campos recebem o texto.
 const preencher = (id: string, value: string) =>
-  fireEvent.change(document.getElementById(id)!, { target: { value } });
+  id === "canalPreferencial"
+    ? fireEvent.click(
+        document.querySelector(`input[name="${id}"][value="${value}"]`)!,
+      )
+    : fireEvent.change(document.getElementById(id)!, { target: { value } });
 const continuar = () =>
   fireEvent.click(screen.getByRole("button", { name: "Continuar" }));
 function dados(menor = false) {
@@ -83,7 +88,11 @@ describe("Formulário RF1/RF2", () => {
     );
     preencher("responsavelLegal", "Responsável Fictício");
     continuar();
-    expect(screen.getByRole("heading", { name: "Triagem" })).toHaveFocus();
+    expect(
+      screen.getByRole("heading", {
+        name: "Sobre o atendimento que você procura",
+      }),
+    ).toHaveFocus();
   });
   it("mostra os dados do responsável só para menor e revisa a ficha de identificação (DF43)", () => {
     render(<FormularioInscricao />);
@@ -114,7 +123,11 @@ describe("Formulário RF1/RF2", () => {
     preencher("cpfResponsavel", "5299822");
     preencher("dataNascimento", "1990-01-01");
     continuar();
-    expect(screen.getByRole("heading", { name: "Triagem" })).toHaveFocus();
+    expect(
+      screen.getByRole("heading", {
+        name: "Sobre o atendimento que você procura",
+      }),
+    ).toHaveFocus();
   });
   it("não envia os dados do responsável quando a data é corrigida para a de um adulto (DF43, LGPD)", async () => {
     const fetch = vi.fn().mockResolvedValue(response());
@@ -162,7 +175,9 @@ describe("Formulário RF1/RF2", () => {
       preencher("canalPreferencial", "email");
       continuar();
       expect(
-        screen.getByRole("heading", { name: "Triagem" }),
+        screen.getByRole("heading", {
+          name: "Sobre o atendimento que você procura",
+        }),
       ).toBeInTheDocument();
     },
   );

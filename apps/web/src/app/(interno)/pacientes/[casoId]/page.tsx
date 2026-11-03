@@ -7,7 +7,6 @@ import { Dados } from "@/components/comum/dados";
 import { buttonVariants } from "@/components/ui/button";
 import { api } from "@/lib/api";
 import { useSessao } from "@/lib/sessao";
-import { cn } from "@/lib/utils";
 import {
   dataBr,
   dataHoraBr,
@@ -51,14 +50,13 @@ export default function PacientePage() {
     return <Aviso tipo="erro" titulo="Não foi possível abrir o paciente." />;
   const d = consulta.data;
   return (
-    <div className="mx-auto max-w-5xl space-y-6">
-      <nav aria-label="Trilha" className="text-sm">
-        <Link href="/pacientes" className="text-primary underline">
-          Pacientes
-        </Link>{" "}
-        › {d.nome}
+    <div className="flex flex-col gap-6">
+      <nav aria-label="Você está em" className="ui-trilha">
+        <Link href="/pacientes">Pacientes</Link>
+        <span aria-hidden>›</span>
+        <span aria-current="page">{d.nome}</span>
       </nav>
-      <h1 className="text-2xl font-semibold text-marca">{d.nome}</h1>
+      <h1 className="ui-titulo">{d.nome}</h1>
       {d.prontuarioId === undefined && (
         <Aviso
           tipo="info"
@@ -68,12 +66,9 @@ export default function PacientePage() {
           estagiário responsável, ao seu supervisor e à coordenação.
         </Aviso>
       )}
-      <div className="grid gap-4 md:grid-cols-2">
-        <section
-          aria-labelledby="cadastrais"
-          className="rounded-lg border border-border bg-card p-5"
-        >
-          <h2 id="cadastrais" className="mb-4 font-semibold text-marca">
+      <div className="grid items-start gap-5 md:grid-cols-2">
+        <section aria-labelledby="cadastrais" className="ui-cartao">
+          <h2 id="cadastrais" className="ui-h2">
             Dados cadastrais
           </h2>
           <Dados
@@ -88,17 +83,22 @@ export default function PacientePage() {
             ]}
           />
         </section>
-        <section
-          aria-labelledby="administrativos"
-          className="rounded-lg border border-border bg-card p-5"
-        >
-          <h2 id="administrativos" className="mb-4 font-semibold text-marca">
+        <section aria-labelledby="administrativos" className="ui-cartao">
+          <h2 id="administrativos" className="ui-h2">
             Dados administrativos
           </h2>
           <Dados
             colunas={2}
             itens={[
-              ["Situação do caso", NOMES_SITUACAO_CASO[d.situacao]],
+              [
+                "Situação do caso",
+                <span
+                  key="situacao"
+                  className="ui-selo border-[#a3d4b3] bg-[#e5f4ea] text-[#1b5e33]"
+                >
+                  {NOMES_SITUACAO_CASO[d.situacao]}
+                </span>,
+              ],
               [
                 "Ciclo de atendimento",
                 d.vinculadoEm ? `Desde ${dataBr(d.vinculadoEm)}` : "—",
@@ -114,7 +114,7 @@ export default function PacientePage() {
         {d.prontuarioId && (
           <Link
             href={`/prontuarios/${d.prontuarioId}`}
-            className={buttonVariants({ size: "lg" })}
+            className={buttonVariants()}
           >
             Ver prontuário
           </Link>
@@ -122,10 +122,7 @@ export default function PacientePage() {
         {sessao?.perfil === "secretaria" && (
           <Link
             href={`/agendar-sessao?caso=${d.casoId}`}
-            className={cn(
-              buttonVariants({ variant: "outline", size: "lg" }),
-              "border-primary text-primary",
-            )}
+            className={buttonVariants({ variant: "outline" })}
           >
             Agendar sessão
           </Link>

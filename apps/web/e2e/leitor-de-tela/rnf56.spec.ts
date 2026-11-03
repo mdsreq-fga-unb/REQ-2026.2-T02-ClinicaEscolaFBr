@@ -20,12 +20,12 @@ test.describe("Leitor de tela na inscrição e no comprovante (RNF56)", () => {
     voiceOver,
   }) => {
     await page.goto("/inscricao", { waitUntil: "load" });
-    await page.getByRole("heading", { name: "Dados e contatos" }).waitFor();
+    await page.getByRole("heading", { name: "Seus dados" }).waitFor();
     await voiceOver.navigateToWebContent();
 
     try {
-      // O título da etapa, depois do indicador de etapas ("1 Dados e contatos").
-      await irAte(voiceOver, /heading.*Dados e contatos/i);
+      // O título do cartão da etapa, depois do indicador de etapas.
+      await irAte(voiceOver, /heading.*Seus dados/i);
       // O VoiceOver lê o rótulo e, no item seguinte, o campo, que precisa ser
       // anunciado como campo de texto com o nome do rótulo.
       await irAte(voiceOver, "Nome completo");

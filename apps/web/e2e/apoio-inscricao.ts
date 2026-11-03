@@ -12,10 +12,10 @@ export async function preencherDados(page: Page, menor = false) {
   await page.locator("#estadoCivil").selectOption("Solteiro(a)");
   if (menor) {
     await page.locator("#celular").fill("61999999999");
-    await page.locator("#canalPreferencial").selectOption("whatsapp");
+    await page.getByRole("radio", { name: "WhatsApp" }).check();
   } else {
     await page.locator("#email").fill("ficticio@example.com");
-    await page.locator("#canalPreferencial").selectOption("email");
+    await page.getByRole("radio", { name: "E-mail" }).check();
   }
 }
 export async function preencherTriagem(page: Page) {

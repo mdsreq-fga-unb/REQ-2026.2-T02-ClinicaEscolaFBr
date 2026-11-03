@@ -65,10 +65,10 @@ function BuscaPaciente({
 
   if (selecionado) {
     return (
-      <div className="space-y-1">
-        <p className="text-sm font-semibold">Paciente</p>
-        <div className="flex flex-wrap items-center justify-between gap-2 rounded-md border border-input bg-card px-3 py-2">
-          <span className="text-sm font-semibold">{selecionado.nome}</span>
+      <div className="flex flex-col gap-1.5">
+        <p className="ui-rotulo">Paciente</p>
+        <div className="flex flex-wrap items-center justify-between gap-2 rounded-lg border-[1.5px] border-input bg-white py-1 pr-1 pl-3">
+          <span className="text-[15px] font-semibold">{selecionado.nome}</span>
           <Button
             type="button"
             variant="outline"
@@ -82,7 +82,7 @@ function BuscaPaciente({
   }
 
   return (
-    <div className="space-y-2">
+    <div className="flex flex-col gap-2">
       <Campo
         rotulo="Paciente"
         dica="Digite o nome para buscar. Só é possível agendar para pacientes com estagiário vinculado."
@@ -103,24 +103,24 @@ function BuscaPaciente({
         <Aviso tipo="erro" titulo="Não foi possível buscar os pacientes." />
       )}
       {lista.data && lista.data.length === 0 && (
-        <p role="status" className="text-sm text-muted-foreground">
+        <p role="status" className="ui-dica">
           Nenhum paciente encontrado.
         </p>
       )}
       {lista.data && lista.data.length > 0 && (
         <ul
           aria-label="Pacientes encontrados"
-          className="max-h-60 divide-y divide-border overflow-y-auto rounded-md border border-border bg-card"
+          className="max-h-60 divide-y divide-border overflow-y-auto rounded-lg border border-[#c3cfd8] bg-white shadow-[0_8px_24px_rgba(0,42,61,0.12)]"
         >
           {lista.data.map((p) => (
             <li key={p.casoId}>
               <button
                 type="button"
                 onClick={() => aoSelecionar(p)}
-                className="w-full px-3 py-2 text-left text-sm hover:bg-muted focus-visible:bg-muted"
+                className="min-h-11 w-full px-3.5 py-2 text-left text-[15px] hover:bg-muted focus-visible:bg-muted"
               >
                 <span className="block font-semibold">{p.nome}</span>
-                <span className="block text-xs text-muted-foreground">
+                <span className="block text-[13px] text-muted-foreground">
                   {p.estagiario
                     ? `Estagiário: ${p.estagiario.nome}`
                     : "Sem estagiário vinculado"}
@@ -155,21 +155,16 @@ function AgendaDoDia({
   const titulo = `Agenda de ${estagiario.nome} em ${dataBr(data).slice(0, 5)}`;
 
   return (
-    <aside
-      aria-label={titulo}
-      className="space-y-3 rounded-lg border border-border bg-card p-5"
-    >
-      <h2 className="text-lg font-semibold text-marca">{titulo}</h2>
+    <aside aria-label={titulo} className="ui-cartao gap-3.5">
+      <h2 className="ui-h2">{titulo}</h2>
       {agenda.isPending && <p role="status">Carregando a agenda…</p>}
       {agenda.isError && (
         <Aviso tipo="erro" titulo="Não foi possível carregar a agenda." />
       )}
       {agenda.data && (
-        <ul className="space-y-2">
+        <ul className="flex flex-col gap-2">
           {agenda.data.length === 0 && !nova && (
-            <li className="text-sm text-muted-foreground">
-              Nenhuma sessão agendada neste dia.
-            </li>
+            <li className="ui-dica">Nenhuma sessão agendada neste dia.</li>
           )}
           {agenda.data.map((b) => {
             const inicio = horaBr(new Date(b.inicio));
@@ -177,14 +172,14 @@ function AgendaDoDia({
             return (
               <li
                 key={b.inicio}
-                className="flex gap-3 rounded-md border border-border bg-muted/40 px-3 py-2 text-sm"
+                className="flex items-center gap-3 rounded-lg border border-border bg-muted px-3 py-2.5 text-sm"
               >
                 <b className="min-w-24 tabular-nums">
                   {inicio}–{fim}
                 </b>
                 <span>
                   Sessão agendada
-                  <span className="block text-xs text-muted-foreground">
+                  <span className="block text-[13px] text-muted-foreground">
                     Sessão {inicio}–{horaBr(new Date(b.termino))} · anotações
                     até {fim}
                   </span>
@@ -193,13 +188,13 @@ function AgendaDoDia({
             );
           })}
           {nova && (
-            <li className="flex gap-3 rounded-md border border-primary bg-info-fundo px-3 py-2 text-sm font-semibold">
+            <li className="flex items-center gap-3 rounded-lg border border-primary bg-accent px-3 py-2.5 text-sm font-semibold">
               <b className="min-w-24 tabular-nums">
                 {nova.inicio}–{somarMinutos(nova.termino, ANOTACOES)}
               </b>
               <span>
                 Nova sessão ({primeiroNome(nova.paciente)})
-                <span className="block text-xs font-normal text-muted-foreground">
+                <span className="block text-[13px] font-normal text-muted-foreground">
                   Sessão {nova.inicio}–{nova.termino} · anotações até{" "}
                   {somarMinutos(nova.termino, ANOTACOES)}
                 </span>
@@ -208,7 +203,7 @@ function AgendaDoDia({
           )}
         </ul>
       )}
-      <p className="text-xs text-muted-foreground">
+      <p className="ui-dica">
         Cada sessão ocupa a agenda até o fim das anotações. Os nomes de outros
         pacientes não são exibidos aqui.
       </p>
@@ -235,10 +230,7 @@ function SessaoAgendada({
   const nomeCanal = resultado.canal === "ligacao" ? "ligação" : "WhatsApp";
 
   return (
-    <section
-      aria-label="Sessão agendada"
-      className="max-w-2xl space-y-5 rounded-lg border border-border bg-card p-6"
-    >
+    <section aria-label="Sessão agendada" className="ui-cartao max-w-[640px]">
       {resultado.canal === "email" &&
         (resultado.linkEnviadoPorEmail ? (
           <Aviso tipo="sucesso" titulo="Sessão agendada.">
@@ -277,10 +269,10 @@ function SessaoAgendada({
       />
       {whatsapp && (
         <div>
-          <p className="mb-1 text-xs font-semibold text-muted-foreground">
+          <p className="mb-1.5 text-[13px] font-semibold text-muted-foreground">
             Mensagem pronta
           </p>
-          <p className="rounded-md border border-border bg-muted/40 p-3 text-sm whitespace-pre-line [overflow-wrap:anywhere]">
+          <p className="rounded-[10px] border border-border bg-muted px-4 py-3.5 text-sm leading-[1.55] whitespace-pre-line [overflow-wrap:anywhere]">
             {whatsapp.mensagem}
           </p>
         </div>
@@ -290,7 +282,7 @@ function SessaoAgendada({
           A mensagem foi aberta, mas o horário do envio não ficou registrado.
         </Aviso>
       )}
-      <div className="flex flex-wrap gap-2">
+      <div className="flex flex-wrap gap-3">
         {whatsapp && (
           <a
             href={whatsapp.url}
@@ -299,7 +291,6 @@ function SessaoAgendada({
             onClick={() => registro.mutate()}
             className={cn(
               buttonVariants({
-                size: "lg",
                 variant: enviadaEm ? "outline" : "default",
               }),
             )}
@@ -313,11 +304,11 @@ function SessaoAgendada({
         )}
         <Link
           href="/agenda"
-          className={cn(buttonVariants({ size: "lg", variant: "outline" }))}
+          className={cn(buttonVariants({ variant: "outline" }))}
         >
           Ver na agenda
         </Link>
-        <Button size="lg" variant="outline" onClick={aoAgendarOutra}>
+        <Button variant="outline" onClick={aoAgendarOutra}>
           Agendar outra sessão
         </Button>
       </div>
@@ -396,8 +387,8 @@ export default function AgendarSessaoPage() {
 
   if (resultado) {
     return (
-      <div className="mx-auto max-w-6xl space-y-6">
-        <h1 className="text-2xl font-semibold text-marca">Agendar sessão</h1>
+      <div className="flex flex-col gap-6">
+        <h1 className="ui-titulo">Agendar sessão</h1>
         <SessaoAgendada resultado={resultado} aoAgendarOutra={recomecar} />
       </div>
     );
@@ -444,10 +435,10 @@ export default function AgendarSessaoPage() {
   const erroGeral = erroNosCampos ? null : agendamento.error;
 
   return (
-    <div className="mx-auto max-w-6xl space-y-6">
+    <div className="flex flex-col gap-6">
       <div>
-        <h1 className="text-2xl font-semibold text-marca">Agendar sessão</h1>
-        <p className="text-sm text-muted-foreground">
+        <h1 className="ui-titulo">Agendar sessão</h1>
+        <p className="ui-subtitulo">
           Atendimento presencial na clínica: {DURACAO} minutos de sessão e{" "}
           {ANOTACOES} minutos de anotações. O paciente recebe um link para
           confirmar a sessão pelo canal preferencial.
@@ -455,11 +446,7 @@ export default function AgendarSessaoPage() {
       </div>
 
       <div className="grid items-start gap-6 lg:grid-cols-[minmax(0,1fr)_340px]">
-        <form
-          noValidate
-          onSubmit={enviar}
-          className="space-y-5 rounded-lg border border-border bg-card p-6"
-        >
+        <form noValidate onSubmit={enviar} className="ui-cartao">
           <BuscaPaciente
             selecionado={paciente}
             erro={erros.paciente}
@@ -480,18 +467,16 @@ export default function AgendarSessaoPage() {
           )}
 
           {paciente?.estagiario && (
-            <div className="space-y-1">
-              <p className="text-sm font-semibold">Estagiário responsável</p>
-              <p className="flex items-center gap-2 rounded-md border border-dashed border-input bg-muted/40 px-3 py-2 text-sm font-semibold">
+            <div className="flex flex-col gap-1.5">
+              <p className="ui-rotulo">Estagiário responsável</p>
+              <p className="flex h-11 items-center gap-2 rounded-lg border border-dashed border-[#c3cfd8] bg-muted px-3 text-[15px] font-semibold">
                 <UserRound
                   aria-hidden
                   className="size-4 text-muted-foreground"
                 />
                 {paciente.estagiario.nome}
               </p>
-              <p className="text-xs text-muted-foreground">
-                Preenchido pelo vínculo do caso.
-              </p>
+              <p className="ui-dica">Preenchido pelo vínculo do caso.</p>
             </div>
           )}
 
@@ -548,7 +533,7 @@ export default function AgendarSessaoPage() {
               )}
             </Campo>
           </div>
-          <p className="-mt-2 text-xs text-muted-foreground">
+          <p className="ui-dica -mt-2">
             O término é calculado automaticamente (início + {DURACAO} minutos).
             Você pode alterá-lo. Depois do término, a agenda reserva mais{" "}
             {ANOTACOES} minutos para as anotações do estagiário.
@@ -562,18 +547,12 @@ export default function AgendarSessaoPage() {
             </Aviso>
           )}
 
-          <div className="flex justify-end gap-2">
-            <Button
-              type="button"
-              size="lg"
-              variant="outline"
-              onClick={recomecar}
-            >
+          <div className="flex justify-end gap-3">
+            <Button type="button" variant="outline" onClick={recomecar}>
               Cancelar
             </Button>
             <Button
               type="submit"
-              size="lg"
               disabled={agendamento.isPending || semVinculo}
             >
               {agendamento.isPending ? "Agendando…" : "Agendar sessão"}

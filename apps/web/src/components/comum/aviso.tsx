@@ -3,24 +3,25 @@ import { AlertCircle, CheckCircle2, Info, TriangleAlert } from "lucide-react";
 import { useEffect, useId, useRef, type ReactNode } from "react";
 import { cn } from "@/lib/utils";
 
+// Cores dos avisos do protótipo aprovado (sucesso, erro, alerta e informação).
 const estilos = {
   sucesso: {
-    classe: "bg-sucesso-fundo border-sucesso/30",
+    classe: "bg-sucesso-fundo border-[#a3d4b3]",
     Icone: CheckCircle2,
     cor: "text-sucesso",
   },
   erro: {
-    classe: "bg-erro-fundo border-destructive/40",
+    classe: "bg-erro-fundo border-[#efb4ad]",
     Icone: AlertCircle,
     cor: "text-destructive",
   },
   alerta: {
-    classe: "bg-alerta-fundo border-alerta/30",
+    classe: "bg-alerta-fundo border-[#f0cf9f]",
     Icone: TriangleAlert,
-    cor: "text-alerta",
+    cor: "text-[#a85400]",
   },
   info: {
-    classe: "bg-info-fundo border-primary/30",
+    classe: "bg-info-fundo border-[#a9cfe0]",
     Icone: Info,
     cor: "text-primary",
   },
@@ -62,18 +63,18 @@ export function Aviso({
       }
       role={tipo === "erro" ? "alert" : "status"}
       className={cn(
-        "flex gap-3 rounded-lg border p-4 text-sm",
+        "flex gap-3 rounded-[12px] border px-4 py-3.5 text-[15px] leading-[1.45] text-foreground",
         classe,
         className,
       )}
     >
-      <Icone aria-hidden className={cn("mt-0.5 size-5 shrink-0", cor)} />
-      <div>
-        <p id={`${id}-titulo`} className="font-semibold text-foreground">
+      <Icone aria-hidden className={cn("mt-px size-5 shrink-0", cor)} />
+      <div className="min-w-0">
+        <p id={`${id}-titulo`} className="font-bold">
           {titulo}
         </p>
         {children && (
-          <div id={`${id}-texto`} className="mt-1 text-foreground">
+          <div id={`${id}-texto`} className="mt-0.5">
             {children}
           </div>
         )}

@@ -11,9 +11,13 @@ import {
   type Evolucao,
 } from "@clinica/shared";
 import { Aviso } from "@/components/comum/aviso";
-import { Campo } from "@/components/comum/campo";
+import {
+  Campo,
+  classeTextoLongo,
+  classeEntrada,
+} from "@/components/comum/campo";
 import { Dados } from "@/components/comum/dados";
-import { buttonVariants } from "@/components/ui/button";
+import { Button, buttonVariants } from "@/components/ui/button";
 import { api, ErroApi } from "@/lib/api";
 import { dataBr, dataHoraBr, idade, NOMES_SITUACAO_CASO } from "@/lib/formato";
 import { useSessao } from "@/lib/sessao";
@@ -67,19 +71,14 @@ function FormularioDadosIniciais({ prontuarioId }: { prontuarioId: string }) {
   }
 
   return (
-    <form
-      noValidate
-      onSubmit={salvar}
-      className="space-y-4 rounded-lg border border-border bg-card p-5"
-    >
-      <h3 className="font-semibold">Registrar dados iniciais</h3>
+    <form noValidate onSubmit={salvar} className="flex flex-col gap-5">
       <Campo rotulo="Anamnese" erro={erros.anamnese}>
         {(props) => (
           <textarea
             {...props}
             value={dados.anamnese}
             onChange={(e) => setDados({ ...dados, anamnese: e.target.value })}
-            className="min-h-32 w-full rounded-md border border-input p-3 text-sm aria-[invalid=true]:border-destructive"
+            className={classeTextoLongo}
           />
         )}
       </Campo>
@@ -89,11 +88,15 @@ function FormularioDadosIniciais({ prontuarioId }: { prontuarioId: string }) {
             {...props}
             value={dados.contrato}
             onChange={(e) => setDados({ ...dados, contrato: e.target.value })}
-            className="min-h-24 w-full rounded-md border border-input p-3 text-sm aria-[invalid=true]:border-destructive"
+            className={classeTextoLongo}
           />
         )}
       </Campo>
-      <Campo rotulo="Data de assinatura" erro={erros.dataAssinaturaContrato}>
+      <Campo
+        rotulo="Data de assinatura do contrato"
+        erro={erros.dataAssinaturaContrato}
+        className="max-w-[280px]"
+      >
         {(props) => (
           <input
             {...props}
@@ -102,22 +105,16 @@ function FormularioDadosIniciais({ prontuarioId }: { prontuarioId: string }) {
             onChange={(e) =>
               setDados({ ...dados, dataAssinaturaContrato: e.target.value })
             }
-            className="rounded-md border border-input p-2 text-sm aria-[invalid=true]:border-destructive"
+            className={classeEntrada}
           />
         )}
       </Campo>
-      {erro && (
-        <p role="alert" className="text-sm text-destructive">
-          {erro}
-        </p>
-      )}
-      <button
-        type="submit"
-        disabled={salvando}
-        className={buttonVariants({ size: "lg" })}
-      >
-        {salvando ? "Salvando…" : "Salvar dados iniciais"}
-      </button>
+      {erro && <Aviso tipo="erro" titulo={erro} />}
+      <div className="flex justify-end">
+        <Button type="submit" disabled={salvando}>
+          {salvando ? "Salvando…" : "Salvar dados iniciais"}
+        </Button>
+      </div>
     </form>
   );
 }
@@ -162,12 +159,12 @@ function FormularioEvolucao({
     <form
       noValidate
       onSubmit={salvar}
-      className="mt-4 space-y-3 rounded-md border border-border p-4"
+      className="mt-4 flex flex-col gap-4 rounded-[12px] border border-border bg-muted p-4"
     >
-      <h4 className="font-medium">
+      <h4 className="text-[15px] font-bold text-marca">
         Registrar evolução · sessão de {dataHoraBr(inicio)}
       </h4>
-      <p className="text-sm text-muted-foreground">
+      <p className="ui-dica">
         O registro fica vinculado a esta sessão e não pode ser alterado depois
         de salvo.
       </p>
@@ -181,7 +178,7 @@ function FormularioEvolucao({
             {...props}
             value={dados.queixa}
             onChange={(e) => setDados({ ...dados, queixa: e.target.value })}
-            className="min-h-28 w-full rounded-md border border-input p-3 text-sm aria-[invalid=true]:border-destructive"
+            className={classeTextoLongo}
           />
         )}
       </Campo>
@@ -193,18 +190,14 @@ function FormularioEvolucao({
             onChange={(e) =>
               setDados({ ...dados, planejamento: e.target.value })
             }
-            className="min-h-20 w-full rounded-md border border-input p-3 text-sm aria-[invalid=true]:border-destructive"
+            className={classeTextoLongo}
           />
         )}
       </Campo>
-      {erro && (
-        <p role="alert" className="text-sm text-destructive">
-          {erro}
-        </p>
-      )}
-      <button className={buttonVariants({ size: "lg" })} type="submit">
-        Salvar evolução
-      </button>
+      {erro && <Aviso tipo="erro" titulo={erro} />}
+      <div className="flex justify-end">
+        <Button type="submit">Salvar evolução</Button>
+      </div>
     </form>
   );
 }
@@ -235,18 +228,10 @@ function AcaoSessao({
   }
   return (
     <div className="mt-3">
-      {erro && (
-        <p role="alert" className="text-sm text-alerta">
-          {erro}
-        </p>
-      )}
-      <button
-        type="button"
-        onClick={marcar}
-        className={buttonVariants({ size: "lg" })}
-      >
+      {erro && <Aviso tipo="alerta" titulo={erro} className="mb-3" />}
+      <Button type="button" onClick={marcar}>
         Marcar sessão como realizada
-      </button>
+      </Button>
     </div>
   );
 }
@@ -294,26 +279,29 @@ type Prontuario = {
 };
 
 // Acesso negado: a mesma tela para qualquer recusa, sem o nome do paciente (RNF25).
-function AcessoNegado({ voltar }: { voltar: string }) {
+function AcessoNegado({
+  voltar,
+  rotuloVoltar,
+}: {
+  voltar: string;
+  rotuloVoltar: string;
+}) {
   const [registradoEm] = useState(() => new Date().toISOString());
   return (
-    <div className="mx-auto max-w-lg space-y-4 py-16 text-center">
-      <Lock
-        aria-hidden
-        className="mx-auto size-12 rounded-full bg-alerta-fundo p-3 text-alerta"
-      />
-      <h1 className="text-2xl font-semibold text-marca">
-        Você não tem acesso a este prontuário
-      </h1>
-      <p className="text-sm">
+    <div className="mx-auto mt-10 flex max-w-[640px] flex-col items-center gap-3.5 px-4 py-10 text-center md:px-10 md:py-[72px]">
+      <span aria-hidden className="ui-vazio-icone">
+        <Lock className="size-7" />
+      </span>
+      <h1 className="ui-titulo">Você não tem acesso a este prontuário</h1>
+      <p className="text-base">
         O prontuário só pode ser aberto pelo estagiário responsável pelo caso,
         pelo supervisor dele e pela coordenação. Se você acha que deveria ter
         acesso, fale com o supervisor do caso.
       </p>
-      <Link href={voltar} className={buttonVariants({ size: "lg" })}>
-        Voltar
+      <Link href={voltar} className={buttonVariants()}>
+        Voltar para {rotuloVoltar.toLowerCase()}
       </Link>
-      <p className="text-xs text-muted-foreground">
+      <p className="ui-meta">
         Tentativa registrada em {dataHoraBr(registradoEm)}.
       </p>
     </div>
@@ -345,45 +333,44 @@ export default function ProntuarioPage() {
         : "/pacientes";
 
   if (consulta.isPending) return <p role="status">Carregando prontuário…</p>;
+  const rotuloVoltar =
+    sessao?.perfil === "supervisor"
+      ? "Meus casos"
+      : sessao?.perfil === "estagiario"
+        ? "Meus pacientes"
+        : "Pacientes";
   if (consulta.error instanceof ErroApi && consulta.error.status === 403)
-    return <AcessoNegado voltar={voltar} />;
+    return <AcessoNegado voltar={voltar} rotuloVoltar={rotuloVoltar} />;
   if (consulta.isError || !consulta.data)
     return <Aviso tipo="erro" titulo="Não foi possível abrir o prontuário." />;
 
   const p = consulta.data;
   const { anamnese, contrato, dataAssinaturaContrato, registradoEm } =
     p.dadosIniciais;
+  const cartao = "ui-cartao";
   return (
-    <div className="mx-auto max-w-5xl space-y-6">
-      <nav aria-label="Trilha" className="text-sm">
-        <Link href={voltar} className="text-primary underline">
-          {sessao?.perfil === "supervisor"
-            ? "Meus casos"
-            : sessao?.perfil === "estagiario"
-              ? "Meus pacientes"
-              : "Pacientes"}
-        </Link>{" "}
-        › Prontuário
+    <div className="flex flex-col gap-6">
+      <nav aria-label="Você está em" className="ui-trilha">
+        <Link href={voltar}>{rotuloVoltar}</Link>
+        <span aria-hidden>›</span>
+        <span aria-current="page">Prontuário</span>
       </nav>
-      <div className="flex flex-wrap items-center gap-3">
-        <h1 className="text-2xl font-semibold text-marca">
-          Prontuário · {p.nome}
-        </h1>
-        <span className="inline-flex items-center gap-1 rounded-full bg-info-fundo px-2 py-0.5 text-xs font-semibold text-primary">
-          <Lock aria-hidden className="size-3" /> Conteúdo clínico restrito
-        </span>
+      <div className="flex flex-col gap-2">
+        <div className="flex flex-wrap items-center gap-3.5">
+          <h1 className="ui-titulo">Prontuário · {p.nome}</h1>
+          <span className="ui-selo border-[#a9cfe0] bg-accent text-marca">
+            <Lock aria-hidden className="size-3.5" /> Conteúdo clínico restrito
+          </span>
+        </div>
+        {sessao?.perfil === "coordenacao" && (
+          <p className="flex items-center gap-2 text-sm text-muted-foreground">
+            <Eye aria-hidden className="size-4" /> Seu acesso fica registrado no
+            registro de acessos ao prontuário.
+          </p>
+        )}
       </div>
-      {sessao?.perfil === "coordenacao" && (
-        <p className="flex items-center gap-2 text-sm text-muted-foreground">
-          <Eye aria-hidden className="size-4" /> Seu acesso fica registrado no
-          registro de acessos ao prontuário.
-        </p>
-      )}
-      <section
-        aria-labelledby="identificacao"
-        className="rounded-lg border border-border bg-card p-5"
-      >
-        <h2 id="identificacao" className="mb-4 font-semibold text-marca">
+      <section aria-labelledby="identificacao" className={cartao}>
+        <h2 id="identificacao" className="ui-h2">
           Identificação
         </h2>
         <Dados
@@ -398,55 +385,72 @@ export default function ProntuarioPage() {
               "Ciclo de atendimento",
               `Ciclo ${p.cicloAtendimento} · desde ${dataBr(p.vinculadoEm ?? p.criadoEm)}`,
             ],
-            ["Situação", NOMES_SITUACAO_CASO[p.situacao]],
+            [
+              "Situação",
+              <span
+                key="situacao"
+                className="ui-selo border-[#a3d4b3] bg-[#e5f4ea] text-[#1b5e33]"
+              >
+                {NOMES_SITUACAO_CASO[p.situacao]}
+              </span>,
+            ],
             ["Estagiário responsável", p.estagiario],
             ["Supervisor", p.supervisor],
             ["Prontuário criado em", dataHoraBr(p.criadoEm)],
           ]}
         />
       </section>
-      <section
-        aria-labelledby="historico-responsaveis"
-        className="rounded-lg border border-border bg-card p-5"
-      >
-        <h2
-          id="historico-responsaveis"
-          className="mb-4 font-semibold text-marca"
-        >
-          Histórico de responsáveis
+      <section aria-labelledby="dados-iniciais" className={cartao}>
+        <h2 id="dados-iniciais" className="ui-h2">
+          Dados iniciais
         </h2>
-        <div className="grid gap-5 sm:grid-cols-2">
-          {(
-            [
-              ["Estagiários", p.historicoResponsaveis.estagiarios],
-              ["Supervisores", p.historicoResponsaveis.supervisores],
-            ] as const
-          ).map(([titulo, responsaveis]) => (
-            <div key={titulo}>
-              <h3 className="font-medium">{titulo}</h3>
-              {responsaveis.length ? (
-                <ol className="mt-2 space-y-2 text-sm">
-                  {responsaveis.map((responsavel, indice) => (
-                    <li key={`${responsavel.desde}-${indice}`}>
-                      {responsavel.nome} · desde {dataHoraBr(responsavel.desde)}
-                      {responsavel.vigente ? " · vigente" : " · encerrado"}
-                    </li>
-                  ))}
-                </ol>
-              ) : (
-                <p className="mt-2 text-sm text-muted-foreground">
-                  Não registrado.
+        {anamnese || contrato ? (
+          <>
+            {(
+              [
+                ["Anamnese", anamnese ?? "Não registrada."],
+                ["Contrato terapêutico", contrato ?? "Não registrado."],
+              ] as const
+            ).map(([rotulo, texto]) => (
+              <div key={rotulo} className="flex flex-col gap-1.5">
+                <h3 className="ui-rotulo">{rotulo}</h3>
+                <p className="rounded-lg border border-border bg-muted p-3 text-[15px] leading-[1.55] whitespace-pre-wrap">
+                  {texto}
                 </p>
-              )}
+                <p className="ui-meta">
+                  Registrado por{" "}
+                  {p.dadosIniciais.registradoPor ??
+                    "responsável não identificado"}{" "}
+                  em {dataHoraBr(registradoEm)}
+                </p>
+              </div>
+            ))}
+            <div className="max-w-[320px]">
+              <Dados
+                colunas={2}
+                itens={[
+                  [
+                    "Data de assinatura do contrato",
+                    dataBr(dataAssinaturaContrato),
+                  ],
+                ]}
+              />
             </div>
-          ))}
-        </div>
+          </>
+        ) : (
+          <>
+            <Aviso
+              tipo="info"
+              titulo="A anamnese e o contrato terapêutico ainda não foram registrados."
+            />
+            {sessao?.perfil === "estagiario" && (
+              <FormularioDadosIniciais prontuarioId={p.id} />
+            )}
+          </>
+        )}
       </section>
-      <section
-        aria-labelledby="sessoes-ciclo"
-        className="rounded-lg border border-border bg-card p-5"
-      >
-        <h2 id="sessoes-ciclo" className="mb-4 font-semibold text-marca">
+      <section aria-labelledby="sessoes-ciclo" className={cartao}>
+        <h2 id="sessoes-ciclo" className="ui-h2">
           Sessões do ciclo {p.cicloAtendimento}
         </h2>
         {p.fechamentoAvaliativoPendente && (
@@ -458,17 +462,20 @@ export default function ProntuarioPage() {
           </Aviso>
         )}
         {p.sessoes.length ? (
-          <ol className="space-y-4">
+          <ol className="flex flex-col">
             {p.sessoes.map((atendimento) => (
-              <li key={atendimento.id} className="border-b border-border pb-4">
-                <h3 className="font-medium">
+              <li
+                key={atendimento.id}
+                className="border-b border-border py-4 first:pt-0 last:border-b-0 last:pb-0"
+              >
+                <h3 className="text-[15px] font-bold">
                   {dataHoraBr(atendimento.inicio)} ·{" "}
                   {atendimento.status === "realizada"
                     ? "Realizada"
                     : "Agendada"}
                 </h3>
                 {atendimento.evolucao ? (
-                  <div className="mt-2 space-y-2 text-sm">
+                  <div className="mt-2 flex flex-col gap-2 text-[15px]">
                     <p>
                       <strong>Evolução:</strong> {atendimento.evolucao.queixa}
                     </p>
@@ -476,8 +483,8 @@ export default function ProntuarioPage() {
                       <strong>Planejamento:</strong>{" "}
                       {atendimento.evolucao.planejamento}
                     </p>
-                    <p className="text-muted-foreground">
-                      Registrada por {atendimento.evolucao.registradaPor} ·{" "}
+                    <p className="ui-meta">
+                      Registrada por {atendimento.evolucao.registradaPor} em{" "}
                       {dataHoraBr(atendimento.evolucao.registradaEm)}
                     </p>
                   </div>
@@ -493,7 +500,7 @@ export default function ProntuarioPage() {
                   new Date(atendimento.termino).getTime() <= agora ? (
                   <AcaoSessao prontuarioId={p.id} sessaoId={atendimento.id} />
                 ) : (
-                  <p className="mt-2 text-sm text-muted-foreground">
+                  <p className="ui-dica mt-1">
                     {atendimento.status === "agendada" &&
                     new Date(atendimento.termino).getTime() > agora
                       ? "A sessão ainda não aconteceu."
@@ -504,59 +511,60 @@ export default function ProntuarioPage() {
             ))}
           </ol>
         ) : (
-          <p className="text-sm text-muted-foreground">
-            Não há sessões registradas neste ciclo.
-          </p>
+          <p className="ui-dica">Não há sessões registradas neste ciclo.</p>
         )}
       </section>
-      <section className="rounded-lg border border-border bg-card p-5">
-        <h2 className="font-semibold text-marca">Alta</h2>
-        <p className="mt-2 text-sm text-muted-foreground">
-          {p.alta ? `${p.alta.data} · ${p.alta.motivo}` : "Não registrada."}
-        </p>
-      </section>
-      <section className="rounded-lg border border-border bg-card p-5">
-        <h2 className="font-semibold text-marca">Relatório final</h2>
-        <p className="mt-2 text-sm text-muted-foreground">
-          {p.relatorioFinal?.estado ?? "Não registrado."}
-        </p>
-      </section>
-      <section
-        aria-labelledby="dados-iniciais"
-        className="space-y-3 rounded-lg border border-border bg-card p-5"
-      >
-        <h2 id="dados-iniciais" className="font-semibold text-marca">
-          Dados iniciais
+      <section aria-labelledby="historico-responsaveis" className={cartao}>
+        <h2 id="historico-responsaveis" className="ui-h2">
+          Histórico de responsáveis
         </h2>
-        {anamnese || contrato ? (
-          <>
-            <h3 className="text-sm font-semibold">Anamnese</h3>
-            <p className="text-sm whitespace-pre-wrap">
-              {anamnese ?? "Não registrada."}
-            </p>
-            <h3 className="text-sm font-semibold">Contrato terapêutico</h3>
-            <p className="text-sm whitespace-pre-wrap">
-              {contrato ?? "Não registrado."}
-            </p>
-            <p className="text-xs text-muted-foreground">
-              Registrado por{" "}
-              {p.dadosIniciais.registradoPor ?? "responsável não identificado"}{" "}
-              · assinado em {dataBr(dataAssinaturaContrato)} · registrado em{" "}
-              {dataHoraBr(registradoEm)}
-            </p>
-          </>
-        ) : (
-          <>
-            <Aviso
-              tipo="info"
-              titulo="A anamnese e o contrato terapêutico ainda não foram registrados."
-            />
-            {sessao?.perfil === "estagiario" && (
-              <FormularioDadosIniciais prontuarioId={p.id} />
-            )}
-          </>
-        )}
+        <div className="grid gap-5 sm:grid-cols-2">
+          {(
+            [
+              ["Estagiários", p.historicoResponsaveis.estagiarios],
+              ["Supervisores", p.historicoResponsaveis.supervisores],
+            ] as const
+          ).map(([titulo, responsaveis]) => (
+            <div key={titulo}>
+              <h3 className="ui-rotulo">{titulo}</h3>
+              {responsaveis.length ? (
+                <ol className="mt-2 flex flex-col gap-2 text-[15px]">
+                  {responsaveis.map((responsavel, indice) => (
+                    <li key={`${responsavel.desde}-${indice}`}>
+                      {responsavel.nome}
+                      <span className="ui-meta">
+                        {" "}
+                        · desde {dataHoraBr(responsavel.desde)}
+                        {responsavel.vigente ? " · vigente" : " · encerrado"}
+                      </span>
+                    </li>
+                  ))}
+                </ol>
+              ) : (
+                <p className="ui-dica mt-2">Não registrado.</p>
+              )}
+            </div>
+          ))}
+        </div>
       </section>
+      <div className="grid gap-6 sm:grid-cols-2">
+        <section aria-labelledby="alta" className={cartao}>
+          <h2 id="alta" className="ui-h2">
+            Alta
+          </h2>
+          <p className="ui-dica">
+            {p.alta ? `${p.alta.data} · ${p.alta.motivo}` : "Não registrada."}
+          </p>
+        </section>
+        <section aria-labelledby="relatorio" className={cartao}>
+          <h2 id="relatorio" className="ui-h2">
+            Relatório final
+          </h2>
+          <p className="ui-dica">
+            {p.relatorioFinal?.estado ?? "Não registrado."}
+          </p>
+        </section>
+      </div>
     </div>
   );
 }

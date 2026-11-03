@@ -32,10 +32,22 @@ export class TriagemController {
     return this.triagem.listarPendentes(ordem);
   }
 
+  @Get('inscricoes/total')
+  @Header('Cache-Control', 'no-store')
+  contar() {
+    return this.triagem.contarPendentes();
+  }
+
   @Get('inscricoes/classificadas')
   @Header('Cache-Control', 'no-store')
   listarClassificadas() {
     return this.triagem.listarClassificadas();
+  }
+
+  @Get('inscricoes/:id')
+  @Header('Cache-Control', 'no-store')
+  detalhar(@Param('id', ParseUUIDPipe) id: string) {
+    return this.triagem.detalhar(id);
   }
 
   @Post('inscricoes/:id/prioridade')
