@@ -4,17 +4,18 @@ Esta página reúne os protótipos das telas do Ciclo 4, uma seção por feature
 
 Os protótipos seguem as cores, a tipografia e os componentes das telas aprovadas pela FBr no [Ciclo 3](prototipos-ciclo-3.md). A revisão de cada tela faz parte da inspeção de design da feature, registrada na sua issue, e a validação com a FBr é feita na reunião de 06/11/2026.
 
+Para reduzir a rolagem, as telas mostram aberto só o que é usado na hora. O conteúdo de consulta começa fechado e abre com um botão, por exemplo os blocos de dados na revisão da inscrição, os tópicos do termo e as evoluções e o histórico de responsáveis no prontuário. As seções sem registro ocupam uma linha só. Campos com erro ficam sempre à vista.
+
 Os protótipos também podem ser abertos no projeto de design, onde é possível navegar entre as telas, e em PDF, em alta resolução.
 
 [:material-palette-outline: Abrir o projeto de design](https://claude.ai/artifact/46j4XDcdd3JK7Dev5ixcDW){ .md-button .md-button--primary target="_blank" rel="noopener" }
-[:material-file-pdf-box: Abrir em PDF (14 MB)](../assets/prototipos-ciclo-4/prototipos-ciclo-4.pdf){ .md-button target="_blank" rel="noopener" }
+[:material-file-pdf-box: Abrir em PDF (13 MB)](../assets/prototipos-ciclo-4/prototipos-ciclo-4.pdf){ .md-button target="_blank" rel="noopener" }
 
 !!! info "Valores definidos pela FBr e valores provisórios"
-    O prazo de confirmação de presença é de **24 horas antes da sessão**, como a FBr definiu em 31/10/2026. Continuam provisórios, e aparecem assim nas telas: o texto do termo de consentimento (RF57), que a equipe redigiu e a FBr ainda aprova; os campos obrigatórios e o limite de 1.000 caracteres da anamnese (RF69) e da evolução (RF28); e o modelo do contrato terapêutico, que fica no linktr.ee da clínica.
+    O prazo de confirmação de presença é de **24 horas antes da sessão**, como a FBr definiu em 31/10/2026. Continuam provisórios, e aparecem assim nas telas: o texto do termo de consentimento (RF57), que a equipe redigiu e a FBr ainda aprova; e os campos obrigatórios e o limite de 1.000 caracteres da anamnese (RF69) e da evolução (RF28).
 
 !!! question "Propostas para validar com a FBr"
     - **Itens novos no menu:** "Agenda" para o supervisor (agenda dos seus estagiários, RF11) e "Fila de espera" para a coordenação (RF7). Os dois estão marcados como proposta nas telas.
-    - **Sessão realizada:** nenhum requisito do Ciclo 4 diz quem marca a sessão como realizada. As telas da agenda (RF11), da evolução (RF28) e da falta (RF34) partem de sessões já marcadas assim.
     - **Fila (RF8):** o inscrito vê uma de três situações, "Aguardando triagem", "Na fila de espera" (com a posição na fila inteira) e "Em atendimento".
     - **Reversão do desligamento (RF38):** a coordenação escolhe, no diálogo, quais faltas deixam de contar.
     - **Transferência (RF25):** a coordenação pode escolher um supervisor que já está no limite de 50 casos, com aviso.
@@ -23,7 +24,7 @@ Os protótipos também podem ser abertos no projeto de design, onde é possível
 
 ### RF57 — Registrar consentimento para tratamento de dados { #rf57 }
 
-[RF57](../unidade-2/requisitos/funcionais.md#rf57) · issue [#52](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/issues/52). O termo fica na etapa 3 da inscrição, destacado do resumo da revisão, com a versão, o que é coletado, para que, quem tem acesso, o prazo de guarda de 5 anos e como revogar. A caixa de concordância começa desmarcada. São quatro estados:
+[RF57](../unidade-2/requisitos/funcionais.md#rf57) · issue [#52](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/issues/52). O termo fica na etapa 3 da inscrição, depois do resumo da revisão. No resumo, cada bloco de dados ocupa uma linha e pode ser aberto. O termo traz a versão e cinco tópicos que a pessoa abre para ler: o que é coletado, para que, quem tem acesso, o prazo de guarda de 5 anos e como revogar. A caixa de concordância fica sempre à vista e começa desmarcada. São quatro estados:
 
 - **maior de idade:** termo e caixa de concordância antes de "Concluir inscrição";
 - **erro sem aceite:** a inscrição não é concluída, com o resumo no topo e a mensagem junto da caixa;
@@ -168,19 +169,19 @@ Os protótipos também podem ser abertos no projeto de design, onde é possível
 
 ### RF27 — Consultar prontuário do paciente { #rf27 }
 
-[RF27](../unidade-2/requisitos/funcionais.md#rf27) · issue [#148](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/issues/148). O prontuário, nas seções do modelo da clínica, para o estagiário, o supervisor e a coordenação (só leitura, com o acesso registrado). Aparecem também o prontuário sem registros, o histórico depois de uma transferência e o acesso negado, que não sugere a existência de conteúdo clínico.
+[RF27](../unidade-2/requisitos/funcionais.md#rf27) · issue [#148](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/issues/148). O prontuário, nas seções do modelo da clínica, para o estagiário, o supervisor e a coordenação (só leitura, com o acesso registrado). Aparecem também o prontuário sem registros, o histórico depois de uma transferência e o acesso negado, que não sugere a existência de conteúdo clínico. As evoluções e o histórico de responsáveis começam fechados, as seções sem registro ocupam uma linha e a barra "Ir para" fica fixa no topo ao rolar. O contrato aparece como no Ciclo 3: data de assinatura, termo de consentimento para pesquisa e via assinada.
 
 [![Consultar prontuário: estagiária, supervisor, coordenação só leitura, seções sem registro, depois de transferência e acesso negado](../assets/prototipos-ciclo-4/5-1-prontuario.webp)](../assets/prototipos-ciclo-4/5-1-prontuario.webp){ target="_blank" }
 
 ### RF69 — Registrar anamnese e contrato terapêutico do paciente { #rf69 }
 
-[RF69](../unidade-2/requisitos/funcionais.md#rf69) · issue [#130](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/issues/130). O estagiário registra a anamnese, com a queixa trazida da inscrição, e o contrato terapêutico com a data de assinatura. Aparecem os erros de campo obrigatório e de limite de caracteres, o registro salvo, a leitura pelo supervisor e o bloqueio do caso sem prontuário.
+[RF69](../unidade-2/requisitos/funcionais.md#rf69) · issue [#130](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/issues/130). O estagiário registra a anamnese, com a queixa trazida da inscrição, e o contrato terapêutico. O contrato é o "Contrato de Prestação de Serviço" da Clínica Escola, assinado em papel na primeira sessão. No sistema ficam a data de assinatura, o aceite do termo de consentimento para pesquisa (opcional) e a guarda da via assinada na clínica (obrigatória). Aparecem os erros de campo obrigatório, de limite de caracteres e de via assinada não marcada, o registro salvo, a leitura pelo supervisor e o bloqueio do caso sem prontuário.
 
 [![Anamnese e contrato terapêutico: formulário, erros, registro salvo, leitura do supervisor e caso sem prontuário](../assets/prototipos-ciclo-4/5-2-dados-iniciais.webp)](../assets/prototipos-ciclo-4/5-2-dados-iniciais.webp){ target="_blank" }
 
 ### RF28 — Registrar evolução da sessão realizada { #rf28 }
 
-[RF28](../unidade-2/requisitos/funcionais.md#rf28) · issue [#149](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/issues/149). O estagiário registra a evolução de uma sessão realizada, que depois de salva não pode ser editada. Aparecem os erros, o aviso de fechamento avaliativo na 10ª sessão, o bloqueio da sessão não realizada e o acesso negado.
+[RF28](../unidade-2/requisitos/funcionais.md#rf28) · issue [#149](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/issues/149). O estagiário registra a evolução de uma sessão realizada, que depois de salva não pode ser editada. A sessão já foi marcada como realizada pelo próprio estagiário responsável, no prontuário, depois que ela terminou, como o sistema já faz. Aparecem os erros, o aviso de fechamento avaliativo na 10ª sessão, o bloqueio da sessão não realizada e o acesso negado.
 
 [![Registrar evolução: formulário, erros, evolução salva, aviso de fechamento avaliativo, sessão não realizada e acesso negado](../assets/prototipos-ciclo-4/5-3-evolucao.webp)](../assets/prototipos-ciclo-4/5-3-evolucao.webp){ target="_blank" }
 
