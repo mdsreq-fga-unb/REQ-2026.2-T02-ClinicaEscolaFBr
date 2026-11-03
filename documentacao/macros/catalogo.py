@@ -320,6 +320,9 @@ class Catalogo:
             decisao = d["decisao"]
             if d.get("substituida_por"):
                 decisao = f"**Substituída pela {self.link(d['substituida_por'])}.** {decisao}"
+            elif d.get("substituida_em_parte_por"):
+                decisao = (f"**Substituída em parte pela {self.link(d['substituida_em_parte_por'])}**, "
+                           f"{d['parte_substituida']}. {decisao}")
             reqs = []
             for c in self.requisitos_da_decisao(d["id"]):
                 reqs.append(self.link(c) + (" (removido)" if self.por_codigo[c].get("removido") else ""))

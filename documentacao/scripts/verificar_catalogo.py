@@ -141,8 +141,9 @@ def main():
             if df not in dfs:
                 erro(f"{r['id']}: Origem cita {df}, que não está no Registro de Decisões")
     for d in dados["decisoes"]:
-        if d.get("substituida_por") and d["substituida_por"] not in dfs:
-            erro(f"{d['id']}: substituída por {d['substituida_por']}, que não existe")
+        for campo in ("substituida_por", "substituida_em_parte_por"):
+            if d.get(campo) and d[campo] not in dfs:
+                erro(f"{d['id']}: {campo} cita {d[campo]}, que não existe")
 
     # ---- Conjuntos de features --------------------------------------------
     nos_conjuntos = [x for c in dados["conjuntos"] for x in c["rfs"]]

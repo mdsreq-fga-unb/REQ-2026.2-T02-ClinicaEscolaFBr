@@ -72,7 +72,7 @@ rfs:
   lider: Jônatas
   issue: 88
   estado: Código inspecionado
-  origem: [DF02, DF07, DF24]
+  origem: [DF02, DF07, DF24, DF35, DF43]
 
 - id: RF2
   nome: Emitir comprovante de inscrição
@@ -166,6 +166,7 @@ rfs:
   depende: [RF52]
   issue: 155
   estado: Planejada
+  origem: [DF40]
 
 - id: RF9
   nome: Manter e informar condições gerais da fila
@@ -224,7 +225,7 @@ rfs:
   esforco: [4, 4, 4]
   mvp: false
   lider: Nicolas
-  origem: [DF06, DF21, DF24]
+  origem: [DF06, DF21, DF24, DF40]
 
 - id: RF14
   nome: Confirmar presença em sessão agendada
@@ -239,7 +240,7 @@ rfs:
   depende: [RF10]
   issue: 142
   estado: Planejada
-  origem: [DF24]
+  origem: [DF24, DF45]
 
 - id: RF15
   nome: Registrar cancelamento de sessão pelo paciente
@@ -443,6 +444,7 @@ rfs:
   depende: [RF66]
   issue: 130
   estado: Planejada
+  origem: [DF20, DF37, DF41]
 
 - id: RF28
   nome: Registrar evolução da sessão realizada
@@ -457,7 +459,7 @@ rfs:
   depende: [RF10, RF21]
   issue: 149
   estado: Planejada
-  origem: [DF23]
+  origem: [DF23, DF38]
 
 - id: RF29
   nome: Corrigir evolução registrada
@@ -511,6 +513,7 @@ rfs:
   lider: Luís Henrique
   depende: [RF28]
   estado: Planejada
+  origem: [DF34, DF35]
 
 - id: RF31
   nome: Consultar evolução de uma sessão específica
@@ -554,7 +557,7 @@ rfs:
   depende: [RF28, RF32]
   issue: 131
   estado: Planejada
-  origem: [DF04, DF12, DF23]
+  origem: [DF04, DF12, DF23, DF36, DF42]
 
 - id: RF34
   nome: Registrar falta do paciente na sessão
@@ -835,7 +838,7 @@ rfs:
   lider: Joaquim
   issue: 47
   estado: Planejada
-  origem: [DF24]
+  origem: [DF24, DF40]
 
 - id: RF53
   nome: Cadastrar usuário institucional com perfil de acesso
@@ -905,6 +908,7 @@ rfs:
   lider: Jônatas
   issue: 52
   estado: Planejada
+  origem: [DF44]
 
 - id: RF65
   nome: Registrar revogação do consentimento
@@ -1349,6 +1353,7 @@ rnfs:
   classificacao: Obrigatório para o MVP
   relacionado: Transversal
   justificativa: Requisito mínimo de continuidade operacional e preservação dos registros.
+  origem: [DF46]
 
 - id: RNF54
   nome: Auditoria das decisões de continuidade
@@ -1512,6 +1517,8 @@ decisoes:
 - id: DF23
   data: 23/10/2026
   fonte: validação do protótipo
+  substituida_em_parte_por: DF38
+  parte_substituida: nos campos da evolução; o fechamento avaliativo a cada 10 sessões continua valendo
   decisao: A evolução tem como campos obrigatórios a data, a evolução da queixa (até 10 linhas) e o planejamento da próxima sessão, com um fechamento avaliativo a cada 10 sessões.
 
 - id: DF24
@@ -1565,6 +1572,73 @@ decisoes:
   data: 23/10/2026
   fonte: validação do protótipo
   decisao: Quem perde a vaga por falta de pagamento volta para a fila com a mesma prioridade clínica, mas com a data em que voltou para a fila, e não com a da inscrição original. Enquanto os 10 dias correm, continua bloqueado o agendamento da 2ª sessão em diante. O ponto não consta da ata em PDF e foi registrado pela equipe em 24/10/2026.
+
+- id: DF34
+  data: 30/10/2026
+  fonte: respostas da FBr
+  decisao: O estagiário responsável registra a alta com a data e o motivo, e o caso só é encerrado depois da confirmação do supervisor.
+
+- id: DF35
+  data: 30/10/2026
+  fonte: respostas da FBr
+  decisao: Só a coordenação reabre um caso encerrado por alta, com justificativa, no mesmo semestre e ciclo de atendimento. Todo semestre exige uma nova inscrição.
+
+- id: DF36
+  data: 30/10/2026
+  fonte: respostas da FBr
+  decisao: O supervisor aprova o relatório final ou o devolve com observações, e as versões anteriores são preservadas. O relatório é entregue impresso ao paciente depois da assinatura do supervisor.
+
+- id: DF37
+  data: 30/10/2026
+  fonte: respostas da FBr
+  decisao: 'A anamnese segue a ficha da Clínica Escola, com seis seções: queixa principal, história do problema atual, histórico familiar, desenvolvimento (infantil e adolescente), histórico médico e aspectos psicossociais.'
+
+- id: DF38
+  data: 30/10/2026
+  fonte: respostas da FBr
+  decisao: 'O registro de evolução segue a ficha da Clínica Escola: paciente, data, horário, número da sessão, comparecimento, humor e aparência, conteúdo trabalhado, técnicas utilizadas, intervenções e encaminhamentos, plano para a próxima sessão, estagiário e supervisor. Substitui os campos da DF23.'
+
+- id: DF39
+  data: 30/10/2026
+  fonte: respostas da FBr
+  decisao: O coordenador de Psicologia, Robson Araújo, representa a FBr na demonstração das features e registra o aceite em ata.
+  outros: ['[DoD](dor-dod.md) (D5 e D6)']
+
+- id: DF40
+  data: 31/10/2026
+  fonte: respostas da FBr
+  decisao: A consulta da posição na fila e a declaração de comparecimento ficam só no site, com o código por e-mail, como na DF24. A FBr não vai usar serviço pago de mensagens, como a API oficial do WhatsApp. O telefone continua sendo coletado, para contatos extraordinários.
+
+- id: DF41
+  data: 31/10/2026
+  fonte: respostas da FBr
+  decisao: O contrato terapêutico segue o "Contrato de Prestação de Serviço" da Clínica Escola, com o termo de consentimento livre e esclarecido para pesquisa. O contrato tem as cláusulas de atendimento, sigilo e desmarcações e faltas, e é assinado pelo paciente, pelo coordenador do curso e pelo estagiário.
+
+- id: DF42
+  data: 31/10/2026
+  fonte: respostas da FBr
+  decisao: 'O relatório entregue ao paciente segue o modelo de relatório psicológico da Clínica Escola: identificação (paciente, solicitante, estagiário, supervisor com o CRP e finalidade), descrição da demanda, procedimentos, análise, conclusão, local e data, e as assinaturas do estagiário e do supervisor.'
+
+- id: DF43
+  data: 31/10/2026
+  fonte: respostas da FBr
+  decisao: Os dados da ficha de identificação da Clínica Escola que a inscrição ainda não pedia já podem ser coletados na inscrição.
+
+- id: DF44
+  data: 31/10/2026
+  fonte: respostas da FBr
+  decisao: A FBr não tem termo de consentimento para o uso dos dados. A equipe redige um modelo, com a finalidade, o prazo de guarda e como revogar, e a FBr revisa.
+
+- id: DF45
+  data: 31/10/2026
+  fonte: respostas da FBr
+  decisao: O paciente confirma a presença até 24 horas antes do início da sessão. O prazo foi sugerido por Thiago Viana e aprovado por Robson Araújo, no lugar das 12 horas propostas pela equipe.
+
+- id: DF46
+  data: 31/10/2026
+  fonte: respostas da FBr
+  decisao: A FBr, que hospeda o sistema no próprio servidor, cuida das cópias de segurança e de onde elas ficam guardadas.
+
 
 conjuntos:
 - area: Inscrição no atendimento

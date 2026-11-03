@@ -58,9 +58,9 @@ import {
 
 const estagiario = aliasedTable(usuarios, 'estagiario');
 
-// O link de confirmação vale até o prazo de confirmação do RF14 (padrão de 12 horas
-// antes do início). O parâmetro e a página de confirmação entram com o RF14, no Ciclo 4.
-const PRAZO_CONFIRMACAO_HORAS = 12;
+// O link de confirmação vale até o prazo de confirmação do RF14 (24 horas antes do
+// início, DF45). O parâmetro e a página de confirmação entram com o RF14, no Ciclo 4.
+const PRAZO_CONFIRMACAO_HORAS = 24;
 
 const SEM_VINCULO =
   'Este paciente ainda não tem estagiário vinculado. Não é possível agendar sessão para ele agora. O vínculo é feito pelo supervisor do caso.';
