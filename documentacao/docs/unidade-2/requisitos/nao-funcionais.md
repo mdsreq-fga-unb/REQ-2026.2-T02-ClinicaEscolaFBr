@@ -686,7 +686,7 @@ O sistema deve fazer cópia de segurança completa dos dados pelo menos uma vez 
 A conformidade deve ser verificada por inspeção do histórico de cópias (uma cópia por dia) e por um teste de restauração em ambiente separado, cronometrado do início do procedimento até o sistema voltar a atender, confirmando que o tempo total fica em até 8 horas e que os dados restaurados correspondem aos da última cópia.
 
 Classificação: confiabilidade (URPS+).
-Rastreabilidade: CP12 — Segurança, sigilo e controle de acesso (transversal às features); responde ao risco IS05 — Dependência tecnológica da intervenção social (Seção 3).
+Rastreabilidade: CP12 — Segurança, sigilo e controle de acesso (transversal às features); responde ao risco IS05 — Dependência tecnológica da intervenção social (Seção 3). Origem: [DF46](decisoes-fbr.md), pela qual a FBr, que hospeda o sistema, cuida das cópias e de onde elas ficam guardadas.
 
 ### Continuidade de casos entre semestres (CP13)
 
