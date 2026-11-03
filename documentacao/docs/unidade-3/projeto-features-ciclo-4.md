@@ -6,7 +6,7 @@ Cada Líder de Feature acrescenta aqui a seção da sua feature, agrupada pela C
 
 ## Convenções
 
-Valem as [convenções do Ciclo 3](projeto-features-ciclo-3.md#convencoes), com um acréscimo:
+Valem as [convenções do Ciclo 3](projeto-features-ciclo-3.md#convencoes), inclusive a de citar o RF e a DF em vez de repetir a regra de negócio, com um acréscimo:
 
 - **Rotas públicas do paciente:** o paciente e o responsável legal não têm conta (critério R6.2 do DoR). As rotas que mostram dados de uma inscrição, como a consulta da fila (RF8) e as declarações da CP10, usam o `VerificacaoGuard` do RF52, que só libera a inscrição cuja identidade foi verificada.
 
@@ -58,7 +58,7 @@ classDiagram
 
 ### RF52 — Verificar identidade do paciente ou responsável ([#47](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/issues/47))
 
-O RF52 não mostra dados por conta própria: ele confirma a identidade e entrega às outras features uma verificação ligada a uma única inscrição. Quem usa a verificação é a consulta da posição na fila (RF8, [#155](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/issues/155)) e, mais adiante, as declarações de comparecimento da CP10 (RF44 a RF46). O código vai só por e-mail ([DF24](../unidade-2/requisitos/decisoes-fbr.md)).
+O RF52 não mostra dados por conta própria: ele confirma a identidade e entrega às outras features uma verificação ligada a uma única inscrição. Quem usa a verificação é a consulta da posição na fila (RF8, [#155](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/issues/155)) e, mais adiante, as declarações de comparecimento da CP10 (RF44 a RF46). O código vai só por e-mail ([DF24](../unidade-2/requisitos/decisoes-fbr.md#df24)).
 
 **Rotas** (módulo `acesso`, todas públicas):
 
