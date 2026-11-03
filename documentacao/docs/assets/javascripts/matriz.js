@@ -1,11 +1,13 @@
 /*
  * Clínica Escola FBr — matriz de priorização interativa e resumo do MVP.
  *
- * Fonte única dos dados: as próprias tabelas da página do Backlog
- * (10.2.1.4 Tabela consolidada e 10.2.3 Definição do MVP). Nenhum requisito,
- * valor, esforço ou decisão é digitado aqui: se as duas tabelas não
- * concordarem entre si (código, CP ou valor), a matriz interativa não é
- * desenhada e a imagem original continua sendo exibida.
+ * Fonte dos dados: as tabelas da página do Backlog (10.2.1.4 Tabela
+ * consolidada e 10.2.3 Definição do MVP), geradas no build a partir do
+ * catálogo de requisitos (documentacao/dados/requisitos.yml). Nenhum
+ * requisito, valor, esforço ou decisão é digitado aqui: se as duas tabelas
+ * não concordarem entre si (código, CP ou valor), a matriz interativa não é
+ * desenhada e a matriz em tabela, também gerada do catálogo, continua sendo
+ * exibida. Requisitos removidos ficam fora da matriz e das contagens.
  *
  * Também expõe window.FBRPriorizacao para que as páginas de RFs e RNFs
  * mostrem a decisão de MVP de cada requisito (lida da página do Backlog).
@@ -15,6 +17,7 @@
 
   var VALUE_NAMES = { 4: "Must have", 3: "Should have", 2: "Could have", 1: "Won't have now" };
   var EFFORT_NAMES = { 1: "baixo", 2: "moderado", 3: "alto", 4: "muito alto" };
+  var RNF_CLASSES = ["Obrigatório para o MVP", "Associado a RF do MVP", "Evolutivo", "Não aplicável ao MVP"];
 
   function text(node) {
     return (node.textContent || "").replace(/\s+/g, " ").trim();
@@ -56,8 +59,13 @@
 
     var titles = {};
     var problems = [];
+    var removed = {};
+    rowsOf(mvp).forEach(function (c) {
+      if (/^removido/i.test(text(c["No MVP?"]))) removed[text(c["Código"])] = true;
+    });
     rowsOf(cons).forEach(function (c) {
       var code = text(c["Código"]);
+      if (removed[code]) return;
       titles[code] = {
         title: text(c["Requisito"]),
         cp: text(c["CP"]),
@@ -66,7 +74,9 @@
       };
     });
 
-    var rfs = rowsOf(mvp).map(function (c) {
+    var rfs = rowsOf(mvp).filter(function (c) {
+      return !removed[text(c["Código"])];
+    }).map(function (c) {
       var code = text(c["Código"]);
       var info = titles[code];
       var item = {
@@ -112,7 +122,10 @@
       [String(inside), "RFs no MVP", "is-mvp"],
       [String(data.rfs.length - inside), "RFs para uma versão posterior", "is-later"]
     ];
-    var rnfEntries = Object.keys(data.rnfs);
+    // Removidos e consolidados não entram nas contagens.
+    var rnfEntries = Object.keys(data.rnfs).filter(function (code) {
+      return RNF_CLASSES.indexOf(data.rnfs[code]) !== -1;
+    });
     var rnfOutside = rnfEntries.filter(function (code) {
       return data.rnfs[code] === "Não aplicável ao MVP";
     }).length;
@@ -138,8 +151,7 @@
 
   /* ---- Matriz ---- */
   function renderMatrix(root, data) {
-    var img = root.querySelector('img[src*="matriz-priorizacao"]');
-    var figure = img && img.closest("p");
+    var figure = root.querySelector(".prio-matrix-estatica");
     if (!figure || root.querySelector(".prio-matrix")) return;
 
     var reqPage = "../funcionais/";
@@ -326,10 +338,10 @@
     });
     cpSelect.addEventListener("change", function () { state.cp = cpSelect.value; apply(); });
 
-    /* A imagem original continua disponível, recolhida, logo abaixo */
+    /* A matriz em tabela continua disponível, recolhida, logo abaixo */
     figure.before(section);
     var keep = el("details", "prio-matrix__static");
-    keep.appendChild(el("summary", "", "Ver a imagem estática da matriz (PNG)"));
+    keep.appendChild(el("summary", "", "Ver a matriz em tabela"));
     section.after(keep);
     keep.appendChild(figure);
   }
@@ -373,7 +385,7 @@
     var root = document.querySelector(".md-content__inner");
     if (!root || root.dataset.fbrMatrix) return;
     root.dataset.fbrMatrix = "1";
-    if (!root.querySelector('img[src*="matriz-priorizacao"]')) return;
+    if (!root.querySelector(".prio-matrix-estatica")) return;
     var data = parseBacklog(root);
     if (!data) return;
     renderSummary(root, data);

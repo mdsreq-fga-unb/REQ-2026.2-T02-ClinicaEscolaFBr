@@ -79,7 +79,7 @@ A oportunidade, portanto, é digitalizar as etapas do processo que hoje dependem
 >
 > Isso **não significa** que a Clínica Escola deva oferecer atendimento on-line: a instituição pode ter restrições pedagógicas, operacionais, contratuais ou regulatórias próprias que limitem essa modalidade no contexto de estágio supervisionado.
 >
-> **Decisão já tomada:** a Clínica Escola confirmou, na reunião de 26/08/2026, que o atendimento psicológico do estágio é exclusivamente presencial ([DF01](../unidade-2/requisitos/decisoes-fbr.md)). Os requisitos da CP4 seguem essa decisão, e o projeto não prevê atendimento on-line.
+> **Decisão já tomada:** a Clínica Escola confirmou, na reunião de 26/08/2026, que o atendimento psicológico do estágio é exclusivamente presencial ([DF01](../unidade-2/requisitos/decisoes-fbr.md#df01)). Os requisitos da CP4 seguem essa decisão, e o projeto não prevê atendimento on-line.
 >
 > **Referência normativa ainda pendente:** falta a FBr indicar a norma que fundamenta essa restrição, registrada nas [pendências de validação com a FBr](../unidade-2/requisitos/analise-feedback.md#pendencias-de-validacao-com-a-fbr):
 >

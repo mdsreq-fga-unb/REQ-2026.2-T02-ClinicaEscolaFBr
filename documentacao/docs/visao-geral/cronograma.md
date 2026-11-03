@@ -46,7 +46,7 @@ _Situação em 28/10/2026, no fechamento do ciclo._
 
 | Marco | Previsto | Realizado | Situação | Pendências |
 | --- | --- | --- | --- | --- |
-| Planejamento e issues | 14/10 a 17/10 | Reunião de 15/10 e 14 issues de feature criadas; 13 depois da remoção do RF19 em 24/10 ([DF26](../unidade-2/requisitos/decisoes-fbr.md)) | Concluído no prazo | — |
+| Planejamento e issues | 14/10 a 17/10 | Reunião de 15/10 e 14 issues de feature criadas; 13 depois da remoção do RF19 em 24/10 ([DF26](../unidade-2/requisitos/decisoes-fbr.md#df26)) | Concluído no prazo | — |
 | Base técnica | 15/10 a 21/10 | Concluída em 21/10 ([PR #82](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/pull/82)) | Concluída no prazo | — |
 | DoR | 19/10 a 21/10 | DoR registrado nas 13 features e na RF51 até 28/10; no RF4, no RF6 e no RF66, o registro veio depois do código, com o revisor a confirmar pelo Líder | Atrasado | Confirmação do registro pelo Líder no RF4, no RF6 e no RF66 |
 | Design inspecionado (DoD 1) | 21/10 a 23/10 | Protótipos validados com a FBr em 23/10; inspeção de design registrada nas 13 features em 24/10, com o "de acordo" fechado em 10 delas e na RF51 entre 24 e 28/10 | Atrasado | "De acordo" do Líder no RF4, no RF6 e no RF66 |

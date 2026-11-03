@@ -84,12 +84,12 @@
           child.classList.add("req__label");
           var list = child.nextElementSibling;
           if (list && /^(UL|OL)$/.test(list.tagName)) list.classList.add("req__criteria");
-        } else if (/^Rastreabilidade:?$/.test(lead)) {
+        } else if (/^(Rastreabilidade|Prioridade|Entrega e situação):?$/.test(lead)) {
           child.classList.add("req__trace");
           first.classList.add("req__tag");
-        } else if (/^(Classificação|Rastreabilidade):/.test(body)) {
+        } else if (/^(Classificação|Rastreabilidade|Prioridade|Entrega e situação):/.test(body)) {
           child.classList.add("req__meta");
-          labelLines(child, /(^|\n)(Classificação|Rastreabilidade):/g);
+          labelLines(child, /(^|\n)(Classificação|Rastreabilidade|Prioridade|Entrega e situação):/g);
         }
       });
     });

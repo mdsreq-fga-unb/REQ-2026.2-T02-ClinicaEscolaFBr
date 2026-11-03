@@ -1,0 +1,1679 @@
+# Catálogo integrado dos requisitos (AUD-30).
+#
+# É a fonte única dos atributos de cada requisito: CP, valor de negócio, esforço,
+# decisão de MVP, ciclo, Líder de Feature, dependências, issue, estado da feature
+# e origem nas decisões com a FBr (DF). A declaração e os critérios de aceitação
+# continuam nas páginas 8.1 e 8.2; as tabelas de priorização, MVP, backlog, os
+# índices, as contagens e a coluna "Requisitos" do Registro de Decisões são
+# geradas a partir daqui no build do site (documentacao/macros/catalogo.py).
+#
+# Como atualizar: mude o requisito aqui, na mesma PR em que mudar o texto dele.
+# O estado (estado da feature no FDD, igual ao da issue) é atualizado na PR que
+# muda o estado da feature. O docs-check confere o catálogo contra as páginas
+# (documentacao/scripts/verificar_catalogo.py).
+#
+# Campos dos RFs:
+#   esforco: [esforço, complexidade, lacuna de capacidade], escalas da seção 10.2.1.2
+#   mvp: true/false; removido: data em que o requisito foi removido
+#   motivo_mvp: só quando o motivo não é o da regra da seção 10.2.3
+#   ciclo, ordem: ciclo de construção e ordem no backlog do MVP
+#   depende: dependências obrigatórias (coluna "Depende de" do backlog)
+#   estado: Planejada, Em design, Design inspecionado, Código concluído,
+#           Código inspecionado, Promovida para a versão integrada, Demonstrada, Aceita
+#   entrega: observação sobre a entrega (por exemplo, entrega parcial)
+#   origem: decisões com a FBr (DF) que fundamentam o requisito
+
+atualizado_em: 03/11/2026
+
+cps:
+  CP1: Inscrição on-line
+  CP2: Triagem e sinalização de casos
+  CP3: Fila de espera e consulta de posição
+  CP4: Agendamento, confirmação e remarcação
+  CP5: Distribuição de casos entre supervisores e estagiários
+  CP6: Prontuário eletrônico
+  CP7: Registro de evolução por sessão
+  CP8: Geração do relatório final de evolução
+  CP9: Controle de assiduidade e alertas
+  CP10: Registros administrativos do atendimento
+  CP11: Indicadores e relatórios institucionais
+  CP12: Segurança, sigilo e controle de acesso
+  CP13: Continuidade de casos entre semestres
+  CP14: Acessibilidade e usabilidade
+
+ciclos:
+- numero: 3
+  periodo: 14/10 a 27/10/2026
+  status: Encerrado
+- numero: 4
+  periodo: 28/10 a 10/11/2026
+  status: Aguardando
+- numero: 5
+  periodo: 11/11 a 17/11/2026
+  status: Aguardando
+- numero: 6
+  periodo: 18/11 a 01/12/2026
+  status: Aguardando
+- numero: 7
+  periodo: 02/12 a 10/12/2026
+  status: Aguardando
+
+rfs:
+
+- id: RF1
+  nome: Registrar solicitação de atendimento on-line
+  cp: CP1
+  valor: 4
+  justificativa: Ponto de entrada de todo o fluxo; sem isso nada começa
+  esforco: [4, 2, 2]
+  mvp: true
+  ciclo: 3
+  ordem: 1
+  lider: Jônatas
+  issue: 88
+  estado: Código inspecionado
+  origem: [DF02, DF07, DF24]
+
+- id: RF2
+  nome: Emitir comprovante de inscrição
+  cp: CP1
+  valor: 3
+  justificativa: Importante pro paciente, mas dá pra suprir manualmente no início
+  esforco: [2, 1, 1]
+  mvp: true
+  ciclo: 3
+  ordem: 2
+  lider: Jônatas
+  depende: [RF1]
+  issue: 89
+  estado: Promovida para a versão integrada
+
+- id: RF3
+  nome: Registrar inscrição assistida
+  cp: CP1
+  valor: 2
+  justificativa: Atende exclusão digital, mas por ora a recepção pode preencher o próprio formulário on-line (RF1) pelo interessado
+  esforco: [2, 2, 2]
+  mvp: false
+  lider: Jônatas
+  origem: [DF13]
+
+- id: RF4
+  nome: Organizar informações da inscrição para triagem
+  cp: CP2
+  valor: 4
+  justificativa: Base para a supervisão fazer a triagem
+  esforco: [2, 2, 2]
+  mvp: true
+  ciclo: 3
+  ordem: 3
+  lider: Luís Henrique
+  depende: [RF1]
+  issue: 90
+  estado: Código inspecionado
+  origem: [DF19]
+
+- id: RF5
+  nome: Sinalizar pontos de atenção da inscrição
+  cp: CP2
+  valor: 3
+  justificativa: Ajuda a triagem, mas dá pra ler as informações manualmente
+  esforco: [4, 4, 3]
+  mvp: false
+  lider: Luís Henrique
+
+- id: RF6
+  nome: Registrar prioridade clínica do inscrito
+  cp: CP2
+  valor: 4
+  justificativa: Alimenta a ordenação da fila (CP3); sem isso a fila não tem critério
+  esforco: [3, 3, 2]
+  mvp: true
+  ciclo: 3
+  ordem: 4
+  lider: Luís Henrique
+  depende: [RF4]
+  apoio: [RF5]
+  issue: 91
+  estado: Promovida para a versão integrada
+  origem: [DF03, DF26]
+
+- id: RF7
+  nome: Ordenar inscritos na fila de espera
+  cp: CP3
+  valor: 4
+  justificativa: Núcleo de como o paciente entra no atendimento
+  esforco: [3, 3, 2]
+  mvp: true
+  ciclo: 4
+  ordem: 14
+  lider: Jônatas
+  depende: [RF6]
+  issue: 140
+  estado: Planejada
+  origem: [DF16, DF33]
+
+- id: RF8
+  nome: Consultar posição individual na fila
+  cp: CP3
+  valor: 4
+  justificativa: Melhora a experiência, mas a fila funciona sem essa consulta
+  esforco: [2, 3, 2]
+  mvp: true
+  ciclo: 4
+  ordem: 32
+  lider: Jônatas
+  depende: [RF52]
+  issue: 155
+  estado: Planejada
+
+- id: RF9
+  nome: Manter e informar condições gerais da fila
+  cp: CP3
+  valor: 2
+  justificativa: Informação geral, não bloqueia a operação
+  esforco: [3, 2, 2]
+  mvp: false
+  lider: Jônatas
+
+- id: RF10
+  nome: Agendar sessão do paciente
+  cp: CP4
+  valor: 3
+  justificativa: Núcleo do agendamento
+  esforco: [4, 3, 2]
+  mvp: true
+  motivo_mvp: 'Should have com esforço alto, mas promovido ao MVP por dependência: RF11, RF14, RF15, RF16, RF17 e RF43 (todos no MVP) pressupõem uma sessão já agendada — sem RF10 esses RFs não têm sobre o que operar, quebrando o fluxo mínimo de uso.'
+  ciclo: 3
+  ordem: 11
+  lider: Nicolas
+  depende: [RF21]
+  issue: 96
+  estado: Código inspecionado
+  origem: [DF01, DF18, DF24]
+  entrega: 'parcial no Ciclo 3: o link de confirmação de presença já é gerado e enviado no agendamento, mas a página que o recebe só chega com o RF14, no Ciclo 4'
+
+- id: RF11
+  nome: Consultar agenda de sessões do estagiário
+  cp: CP4
+  valor: 4
+  justificativa: Estagiário precisa disso pra atuar no dia a dia
+  esforco: [2, 2, 1]
+  mvp: true
+  ciclo: 4
+  ordem: 15
+  lider: Nicolas
+  depende: [RF10, RF21]
+  issue: 141
+  estado: Planejada
+
+- id: RF12
+  nome: Reagendar sessão do paciente
+  cp: CP4
+  valor: 3
+  justificativa: Importante, mas no início dá pra cancelar e agendar de novo, sem contar falta
+  esforco: [4, 4, 2]
+  mvp: false
+  lider: Nicolas
+
+- id: RF13
+  nome: Enviar lembrete de sessão agendada
+  cp: CP4
+  valor: 3
+  justificativa: Reduz falta, mas não é essencial pra operação existir
+  esforco: [4, 4, 4]
+  mvp: false
+  lider: Nicolas
+  origem: [DF06, DF21, DF24]
+
+- id: RF14
+  nome: Confirmar presença em sessão agendada
+  cp: CP4
+  valor: 4
+  justificativa: Alimenta assiduidade (CP9), mas dá pra registrar manualmente
+  esforco: [3, 3, 3]
+  mvp: true
+  ciclo: 4
+  ordem: 16
+  lider: Nicolas
+  depende: [RF10]
+  issue: 142
+  estado: Planejada
+  origem: [DF24]
+
+- id: RF15
+  nome: Registrar cancelamento de sessão pelo paciente
+  cp: CP4
+  valor: 4
+  justificativa: Sem registrar o aviso do paciente, a ausência conta como falta e pode até desligá-lo indevidamente
+  esforco: [3, 3, 2]
+  mvp: true
+  ciclo: 4
+  ordem: 17
+  lider: Nicolas
+  depende: [RF10]
+  issue: 143
+  estado: Planejada
+  origem: [DF10, DF20, DF24]
+
+- id: RF16
+  nome: Registrar cancelamento de sessão pelo estagiário
+  cp: CP4
+  valor: 3
+  justificativa: Mesma lógica do RF15
+  esforco: [2, 2, 1]
+  mvp: true
+  ciclo: 4
+  ordem: 18
+  lider: Nicolas
+  depende: [RF10, RF21]
+  issue: 144
+  estado: Planejada
+  origem: [DF10]
+
+- id: RF17
+  nome: Notificar paciente sobre ausência do estagiário
+  cp: CP4
+  valor: 3
+  justificativa: Comunicação útil, não bloqueia o fluxo
+  esforco: [2, 2, 2]
+  mvp: true
+  ciclo: 5
+  ordem: 34
+  lider: Nicolas
+  depende: [RF16]
+  estado: Planejada
+  origem: [DF24]
+
+- id: RF18
+  nome: Listar casos aguardando distribuição
+  cp: CP5
+  valor: 4
+  justificativa: Visibilidade operacional essencial
+  esforco: [2, 2, 1]
+  mvp: true
+  ciclo: 3
+  ordem: 5
+  lider: Maria Clara
+  depende: [RF6]
+  issue: 92
+  estado: Código concluído
+  origem: [DF16]
+
+- id: RF19
+  nome: Registrar áreas de especialidade do supervisor
+  cp: CP5
+  valor: 4
+  justificativa: Necessário pra lógica de distribuição funcionar
+  esforco: [2, 1, 1]
+  removido: 24/10/2026
+  motivo_mvp: 'Removido em 24/10/2026: a FBr não divide os atendimentos por área de especialidade ([DF26](decisoes-fbr.md#df26)).'
+  origem: [DF26]
+
+- id: RF20
+  nome: Distribuir caso a supervisor
+  cp: CP5
+  valor: 4
+  justificativa: Lógica central de distribuição
+  esforco: [3, 3, 2]
+  mvp: true
+  ciclo: 3
+  ordem: 6
+  lider: Maria Clara
+  depende: [RF18, RF6]
+  issue: 94
+  estado: Código concluído
+  origem: [DF17, DF26]
+
+- id: RF21
+  nome: Vincular paciente a estagiário responsável
+  cp: CP5
+  valor: 4
+  justificativa: Base pra tudo que depende de responsável (prontuário, evolução)
+  esforco: [3, 3, 2]
+  mvp: true
+  ciclo: 3
+  ordem: 10
+  lider: Maria Clara
+  depende: [RF20, RF53, RF54]
+  issue: 95
+  estado: Código concluído
+  origem: [DF17, DF27]
+
+- id: RF22
+  nome: Consultar responsáveis pelo caso
+  cp: CP5
+  valor: 2
+  justificativa: Consulta útil, mas inferível de outras telas no início
+  esforco: [1, 1, 1]
+  mvp: true
+  ciclo: 4
+  ordem: 19
+  lider: Maria Clara
+  depende: [RF21]
+  issue: 145
+  estado: Planejada
+
+- id: RF23
+  nome: Consultar casos sob responsabilidade do estagiário ou supervisor
+  cp: CP5
+  valor: 4
+  justificativa: Necessário pro trabalho diário de estagiários/supervisores
+  esforco: [2, 2, 1]
+  mvp: true
+  ciclo: 4
+  ordem: 20
+  lider: Maria Clara
+  depende: [RF21]
+  issue: 146
+  estado: Planejada
+
+- id: RF24
+  nome: Visualizar distribuição de casos por supervisor
+  cp: CP5
+  valor: 1
+  justificativa: Visão gerencial; pode ficar para uma versão posterior
+  esforco: [2, 1, 1]
+  mvp: false
+  lider: Maria Clara
+
+- id: RF25
+  nome: Transferir caso para outro estagiário ou supervisor
+  cp: CP5
+  valor: 4
+  justificativa: Se um estagiário sai ou adoece, o paciente fica travado e se perde o histórico de quem acessou o prontuário
+  esforco: [4, 4, 3]
+  mvp: true
+  ciclo: 4
+  ordem: 21
+  lider: Maria Clara
+  depende: [RF21]
+  issue: 147
+  estado: Planejada
+  origem: [DF08, DF09, DF28]
+
+- id: RF26
+  nome: Consultar histórico de responsáveis do caso
+  cp: CP5
+  valor: 1
+  justificativa: Auditoria/histórico, valioso mas não bloqueia
+  esforco: [2, 3, 2]
+  mvp: false
+  lider: Maria Clara
+
+- id: RF27
+  nome: Consultar prontuário do paciente
+  cp: CP6
+  valor: 4
+  justificativa: Razão de existir do sistema
+  esforco: [4, 4, 3]
+  mvp: true
+  ciclo: 4
+  ordem: 22
+  lider: Luís Henrique
+  depende: [RF66, RF21]
+  issue: 148
+  estado: Planejada
+  origem: [DF32]
+
+- id: RF66
+  nome: Criar e inicializar o prontuário do paciente
+  cp: CP6
+  valor: 4
+  justificativa: Sem isso o prontuário não chega a existir formalmente nem pode receber os dados iniciais (anamnese e contrato, RF69)
+  esforco: [2, 2, 1]
+  mvp: true
+  ciclo: 3
+  ordem: 12
+  lider: Luís Henrique
+  depende: [RF21]
+  issue: 97
+  estado: Código concluído
+
+- id: RF69
+  nome: Registrar anamnese e contrato terapêutico do paciente
+  cp: CP6
+  valor: 4
+  justificativa: Dados iniciais do prontuário (anamnese, contrato); avaliação herdada do RF66, do qual foi separado em 24/10/2026
+  esforco: [2, 2, 1]
+  mvp: true
+  ciclo: 4
+  ordem: 23
+  lider: Luís Henrique
+  depende: [RF66]
+  issue: 130
+  estado: Planejada
+
+- id: RF28
+  nome: Registrar evolução da sessão realizada
+  cp: CP7
+  valor: 4
+  justificativa: Registro clínico central
+  esforco: [3, 2, 2]
+  mvp: true
+  ciclo: 4
+  ordem: 24
+  lider: Luís Henrique
+  depende: [RF10, RF21]
+  issue: 149
+  estado: Planejada
+  origem: [DF23]
+
+- id: RF29
+  nome: Corrigir evolução registrada
+  cp: CP7
+  valor: 3
+  justificativa: Importante pra qualidade do dado; a correção precisa guardar a versão original
+  esforco: [2, 2, 2]
+  mvp: true
+  ciclo: 5
+  ordem: 35
+  lider: Luís Henrique
+  depende: [RF28]
+  estado: Planejada
+  origem: [DF11]
+
+- id: RF30
+  nome: Registrar complemento de evolução da sessão
+  cp: CP7
+  valor: 3
+  justificativa: Novo (resposta da FBr); complementa o registro principal, não o substitui
+  esforco: [2, 2, 2]
+  mvp: true
+  ciclo: 6
+  ordem: 41
+  lider: Luís Henrique
+  depende: [RF28]
+  estado: Planejada
+
+- id: RF67
+  nome: Validar evolução pelo supervisor
+  cp: CP7
+  valor: 3
+  justificativa: Conferência mínima de qualidade pelo supervisor; o fluxo clínico opera sem ela no primeiro momento
+  esforco: [1, 1, 1]
+  mvp: true
+  ciclo: 6
+  ordem: 45
+  lider: Luís Henrique
+  depende: [RF28]
+  estado: Planejada
+
+- id: RF68
+  nome: Encerrar caso por alta
+  cp: CP7
+  valor: 4
+  justificativa: Fecha o ciclo de atendimento dos casos que não vão continuar, além do desligamento por faltas
+  esforco: [2, 2, 1]
+  mvp: true
+  ciclo: 6
+  ordem: 46
+  lider: Luís Henrique
+  depende: [RF28]
+  estado: Planejada
+
+- id: RF31
+  nome: Consultar evolução de uma sessão específica
+  cp: CP7
+  valor: 4
+  justificativa: Necessário pra continuidade do acompanhamento
+  esforco: [3, 2, 2]
+  mvp: true
+  ciclo: 6
+  ordem: 42
+  lider: Luís Henrique
+  depende: [RF28, RF29, RF30]
+  estado: Planejada
+  origem: [DF32]
+
+- id: RF32
+  nome: Consultar histórico de evolução do paciente
+  cp: CP7
+  valor: 4
+  justificativa: Necessário pra supervisão e continuidade
+  esforco: [3, 3, 2]
+  mvp: true
+  ciclo: 6
+  ordem: 43
+  lider: Luís Henrique
+  depende: [RF27, RF28, RF29, RF30]
+  estado: Planejada
+  origem: [DF32]
+
+- id: RF33
+  nome: Gerar relatório final de evolução
+  cp: CP8
+  valor: 3
+  justificativa: Entregável importante, mas pode ser compilado manualmente na primeira versão
+  esforco: [4, 4, 3]
+  mvp: true
+  motivo_mvp: Should have com esforço alto, incluído no MVP em 24/10/2026 porque a FBr pediu o relatório final pronto antes do fim do semestre ([10.2.4](#1024-validacao-do-mvp-com-o-cliente)); construção no Ciclo 6, até 01/12/2026.
+  ciclo: 6
+  ordem: 44
+  lider: Gabriel
+  depende: [RF28, RF32]
+  issue: 131
+  estado: Planejada
+  origem: [DF04, DF12, DF23]
+
+- id: RF34
+  nome: Registrar falta do paciente na sessão
+  cp: CP9
+  valor: 4
+  justificativa: Dado base para toda a política de faltas
+  esforco: [2, 2, 1]
+  mvp: true
+  ciclo: 4
+  ordem: 25
+  lider: Gabriel
+  depende: [RF10, RF14, RF15]
+  issue: 150
+  estado: Planejada
+
+- id: RF35
+  nome: Contabilizar faltas do paciente no ciclo
+  cp: CP9
+  valor: 4
+  justificativa: Necessário para disparar a política de duas faltas
+  esforco: [2, 2, 2]
+  mvp: true
+  ciclo: 4
+  ordem: 26
+  lider: Gabriel
+  depende: [RF15, RF34]
+  issue: 151
+  estado: Planejada
+  origem: [DF20]
+
+- id: RF36
+  nome: Emitir alerta de limite de faltas atingido
+  cp: CP9
+  valor: 4
+  justificativa: Comportamento central da política de assiduidade do paciente
+  esforco: [2, 2, 1]
+  mvp: true
+  ciclo: 4
+  ordem: 27
+  lider: Gabriel
+  depende: [RF35]
+  issue: 152
+  estado: Planejada
+
+- id: RF37
+  nome: Desligar paciente por faltas e liberar vaga
+  cp: CP9
+  valor: 4
+  justificativa: Fecha o ciclo da política e libera a vaga para reaproveitamento
+  esforco: [4, 4, 3]
+  mvp: true
+  ciclo: 4
+  ordem: 28
+  lider: Gabriel
+  depende: [RF36]
+  issue: 153
+  estado: Planejada
+
+- id: RF38
+  nome: Reverter desligamento de paciente por faltas
+  cp: CP9
+  valor: 4
+  justificativa: Regra de exceção confirmada pela FBr; exige preservar histórico e tratar vaga já realocada
+  esforco: [4, 4, 3]
+  mvp: true
+  ciclo: 4
+  ordem: 29
+  lider: Gabriel
+  depende: [RF37]
+  issue: 154
+  estado: Planejada
+
+- id: RF39
+  nome: Consolidar faltas do estagiário para a supervisão
+  cp: CP9
+  valor: 3
+  justificativa: Consulta de apoio à supervisão; não bloqueia o fluxo clínico principal
+  esforco: [2, 2, 1]
+  mvp: true
+  ciclo: 5
+  ordem: 36
+  lider: Nicolas
+  depende: [RF16]
+  estado: Planejada
+
+- id: RF40
+  nome: Contabilizar faltas do estagiário no semestre
+  cp: CP9
+  valor: 4
+  justificativa: Base para a regra institucional de reprovação por três faltas
+  esforco: [2, 2, 2]
+  mvp: true
+  ciclo: 6
+  ordem: 47
+  lider: Nicolas
+  depende: [RF16, RF39]
+  estado: Planejada
+
+- id: RF63
+  nome: Sinalizar reprovação do estagiário por faltas
+  cp: CP9
+  valor: 4
+  justificativa: Novo requisito derivado da regra confirmada de três faltas; valor de negócio alinhado ao RF40 conforme orientação da equipe
+  esforco: [3, 2, 2]
+  mvp: true
+  ciclo: 6
+  ordem: 48
+  lider: Nicolas
+  depende: [RF40]
+  estado: Planejada
+  origem: [DF12]
+
+- id: RF64
+  nome: Registrar decisão institucional sobre a reprovação do estagiário
+  cp: CP9
+  valor: 4
+  justificativa: Completa o fluxo da reprovação do estagiário; valor de negócio alinhado ao RF40 conforme orientação da equipe
+  esforco: [3, 2, 2]
+  mvp: true
+  ciclo: 6
+  ordem: 49
+  lider: Nicolas
+  depende: [RF63]
+  estado: Planejada
+  origem: [DF12]
+
+- id: RF41
+  nome: Registrar pagamento da contribuição social do paciente
+  cp: CP10
+  valor: 4
+  justificativa: Controle administrativo necessário para a regra institucional da contribuição
+  esforco: [3, 2, 2]
+  mvp: true
+  ciclo: 5
+  ordem: 37
+  lider: Joaquim
+  issue: 43
+  estado: Planejada
+  origem: [DF05, DF15]
+
+- id: RF42
+  nome: Consultar situação da contribuição social dos pacientes
+  cp: CP10
+  valor: 4
+  justificativa: Dá visibilidade da situação da contribuição aos perfis autorizados
+  esforco: [3, 2, 2]
+  mvp: true
+  ciclo: 6
+  ordem: 50
+  lider: Joaquim
+  issue: 44
+  estado: Planejada
+
+- id: RF43
+  nome: Bloquear agendamento por contribuição social pendente
+  cp: CP10
+  valor: 4
+  justificativa: Regra de negócio dependente do registro e consulta da contribuição; exige integração com agendamento
+  esforco: [3, 3, 2]
+  mvp: true
+  ciclo: 6
+  ordem: 51
+  lider: Joaquim
+  depende: [RF41, RF42]
+  estado: Planejada
+  origem: [DF15, DF33]
+
+- id: RF44
+  nome: Listar sessões com comparecimento registrado do paciente
+  cp: CP10
+  valor: 3
+  justificativa: Apoia a emissão da declaração de comparecimento
+  esforco: [2, 2, 2]
+  mvp: true
+  ciclo: 5
+  ordem: 38
+  lider: Maria Clara
+  depende: [RF52]
+  estado: Planejada
+
+- id: RF45
+  nome: Emitir declaração de comparecimento do paciente
+  cp: CP10
+  valor: 4
+  justificativa: Entregável externo recorrente e concreto para o paciente
+  esforco: [4, 3, 2]
+  mvp: true
+  ciclo: 6
+  ordem: 52
+  lider: Maria Clara
+  depende: [RF52]
+  estado: Planejada
+
+- id: RF46
+  nome: Reemitir declaração de comparecimento
+  cp: CP10
+  valor: 2
+  justificativa: Suporte útil; a emissão inicial (RF45) já atende a necessidade principal
+  esforco: [2, 2, 1]
+  mvp: false
+  lider: Maria Clara
+
+- id: RF47
+  nome: Validar autenticidade da declaração
+  cp: CP10
+  valor: 2
+  justificativa: Controle antifraude útil, mas não bloqueia o lançamento inicial
+  esforco: [3, 3, 2]
+  mvp: false
+  lider: Maria Clara
+
+- id: RF48
+  nome: Consultar indicadores operacionais
+  cp: CP11
+  valor: 4
+  justificativa: Necessário para os relatórios institucionais que a FBr presta ao MEC
+  esforco: [4, 4, 3]
+  mvp: true
+  ciclo: 5
+  ordem: 39
+  lider: Gabriel
+  depende: [RF37, RF38, RF21]
+  issue: 22
+  estado: Planejada
+
+- id: RF49
+  nome: Exportar relatório institucional em PDF
+  cp: CP11
+  valor: 3
+  justificativa: Exportação usada nos relatórios institucionais da FBr ao MEC
+  esforco: [3, 2, 2]
+  mvp: true
+  ciclo: 6
+  ordem: 53
+  lider: Gabriel
+  depende: [RF48]
+  issue: 23
+  estado: Planejada
+
+- id: RF50
+  nome: Autenticar usuário institucional
+  cp: CP12
+  valor: 4
+  justificativa: Base de segurança para todas as funcionalidades internas
+  esforco: [3, 2, 2]
+  mvp: true
+  ciclo: 3
+  ordem: 7
+  lider: Joaquim
+  issue: 45
+  estado: Código inspecionado
+  origem: [DF25]
+
+- id: RF51
+  nome: Encerrar sessão do usuário
+  cp: CP12
+  valor: 4
+  justificativa: Controle básico de segurança e sessão
+  esforco: [1, 1, 1]
+  mvp: true
+  ciclo: 4
+  ordem: 30
+  lider: Joaquim
+  depende: [RF50]
+  nota_backlog: antecipada e integrada no Ciclo 3
+  issue: 46
+  estado: Código inspecionado
+
+- id: RF52
+  nome: Verificar identidade do paciente ou responsável
+  cp: CP12
+  valor: 4
+  justificativa: Necessário para acesso seguro a informações pessoais sem login institucional
+  esforco: [4, 4, 3]
+  mvp: true
+  ciclo: 4
+  ordem: 31
+  lider: Joaquim
+  issue: 47
+  estado: Planejada
+  origem: [DF24]
+
+- id: RF53
+  nome: Cadastrar usuário institucional com perfil de acesso
+  cp: CP12
+  valor: 4
+  justificativa: Necessário para provisionar contas e perfis institucionais
+  esforco: [4, 3, 3]
+  mvp: true
+  ciclo: 3
+  ordem: 8
+  lider: Gabriel
+  issue: 48
+  estado: Código inspecionado
+  origem: [DF30]
+
+- id: RF54
+  nome: Desativar usuário institucional
+  cp: CP12
+  valor: 4
+  justificativa: Necessário para revogar acesso de usuários que deixam a clínica/estágio
+  esforco: [2, 2, 2]
+  mvp: true
+  ciclo: 3
+  ordem: 9
+  lider: Gabriel
+  issue: 49
+  estado: Código inspecionado
+
+- id: RF55
+  nome: Restringir acesso ao prontuário do paciente
+  cp: CP12
+  valor: 4
+  justificativa: Obrigação de sigilo e proteção de dados de saúde
+  esforco: [4, 4, 3]
+  mvp: true
+  ciclo: 3
+  ordem: 13
+  lider: Gabriel
+  depende: [RF21, RF66]
+  issue: 50
+  estado: Design inspecionado
+  origem: [DF32]
+
+- id: RF56
+  nome: Consultar registro de acessos ao prontuário
+  cp: CP12
+  valor: 4
+  justificativa: Trilha de auditoria importante para segurança e conformidade
+  esforco: [3, 3, 2]
+  mvp: true
+  ciclo: 5
+  ordem: 40
+  lider: Jônatas
+  issue: 51
+  estado: Planejada
+  origem: [DF29]
+
+- id: RF57
+  nome: Registrar consentimento para tratamento de dados
+  cp: CP12
+  valor: 4
+  justificativa: Base de privacidade/compliance para tratamento de dados no cenário adotado pelo projeto
+  esforco: [3, 3, 3]
+  mvp: true
+  ciclo: 4
+  ordem: 33
+  lider: Jônatas
+  issue: 52
+  estado: Planejada
+
+- id: RF65
+  nome: Registrar revogação do consentimento
+  cp: CP12
+  valor: 4
+  justificativa: Complementa o fluxo de consentimento e privacidade; valor de negócio alinhado ao RF57 conforme orientação da equipe
+  esforco: [4, 4, 3]
+  mvp: true
+  ciclo: 6
+  ordem: 54
+  lider: Jônatas
+  depende: [RF57, RF52]
+  estado: Planejada
+
+- id: RF58
+  nome: Listar casos elegíveis para continuidade entre semestres
+  cp: CP13
+  valor: 3
+  justificativa: Apoia a virada de semestre; depende de critérios e calendário institucional
+  esforco: [3, 3, 2]
+  mvp: false
+  lider: Gabriel
+
+- id: RF59
+  nome: Registrar decisão de continuidade do caso
+  cp: CP13
+  valor: 3
+  justificativa: Registra decisão institucional e suas versões; depende do fluxo de continuidade
+  esforco: [4, 4, 3]
+  mvp: false
+  lider: Gabriel
+
+- id: RF60
+  nome: Vincular caso a novo estagiário na continuidade
+  cp: CP13
+  valor: 3
+  justificativa: Efetiva a continuidade com preservação de histórico e troca de responsável
+  esforco: [3, 3, 2]
+  mvp: false
+  lider: Gabriel
+
+- id: RF61
+  nome: Ativar modo de alto contraste
+  cp: CP14
+  valor: 2
+  justificativa: Recurso específico de acessibilidade; a acessibilidade geral já é obrigatória pelo RNF56
+  esforco: [2, 2, 2]
+  mvp: false
+  lider: Gabriel
+  issue: 24
+
+- id: RF62
+  nome: Ajustar tamanho do texto
+  cp: CP14
+  valor: 2
+  justificativa: Recurso específico de acessibilidade complementar ao RNF56
+  esforco: [3, 3, 2]
+  mvp: false
+  lider: Gabriel
+  issue: 25
+
+rnfs:
+
+- id: RNF1
+  nome: Identificação e recuperação de erros no formulário
+  cp: CP1
+  classificacao: Associado a RF do MVP
+  relacionado: RF1
+  justificativa: Aplica-se diretamente à inscrição on-line e evita perda dos dados válidos durante correções.
+
+- id: RNF2
+  nome: Proteção das informações no comprovante de inscrição
+  cp: CP1
+  classificacao: Associado a RF do MVP
+  relacionado: RF2
+  justificativa: RF2 está no recorte do MVP (Should have de esforço baixo); o comprovante de inscrição existe desde a primeira versão e sua proteção deve acompanhar o requisito.
+
+- id: RNF3
+  nome: Sigilo das informações de triagem
+  cp: CP2
+  classificacao: Obrigatório para o MVP
+  relacionado: CP2
+  justificativa: Protege dados sensíveis de triagem e é condição mínima de privacidade.
+
+- id: RNF4
+  nome: Rastreabilidade das regras de sinalização
+  cp: CP2
+  classificacao: Não aplicável ao MVP
+  relacionado: RF5
+  justificativa: Depende da sinalização automática de pontos de atenção; RF5 fica fora do MVP. Reavaliar se RF5 for incorporado.
+
+- id: RNF5
+  nome: Integridade e auditoria das decisões de prioridade
+  cp: CP2
+  classificacao: Obrigatório para o MVP
+  relacionado: RF6
+  justificativa: A prioridade clínica afeta a fila e precisa preservar autoria, histórico e integridade.
+
+- id: RNF6
+  nome: Privacidade e controle de acesso à consulta da fila
+  cp: CP3
+  classificacao: Obrigatório para o MVP
+  relacionado: RF8, RF52
+  justificativa: A consulta individual envolve dado pessoal e exige verificação de identidade.
+
+- id: RNF7
+  nome: Compreensibilidade das informações sobre a posição na fila
+  cp: CP3
+  classificacao: Associado a RF do MVP
+  relacionado: RF8
+  justificativa: Acompanha a consulta de posição e evita interpretação da posição como garantia de prazo.
+
+- id: RNF8
+  nome: Confiabilidade das informações institucionais da fila
+  cp: CP3
+  classificacao: Não aplicável ao MVP
+  relacionado: RF9
+  justificativa: Relaciona-se às informações gerais da fila; RF9 fica fora do MVP. Reavaliar se RF9 for incorporado.
+
+- id: RNF9
+  nome: Integridade do agendamento
+  cp: CP4
+  classificacao: Obrigatório para o MVP
+  relacionado: CP4
+  justificativa: Evita conflitos de agenda e estados incompatíveis; condição operacional mínima, reforçada pela promoção de RF10 ao MVP.
+
+- id: RNF10
+  nome: Auditoria das operações sobre a sessão
+  cp: CP4
+  classificacao: Associado a RF do MVP
+  relacionado: RF10, RF14, RF15, RF16
+  justificativa: Acompanha agendamento, confirmação de presença e cancelamento (pelo paciente e pelo estagiário) — todos no MVP — preservando rastreabilidade das alterações; a parte da meta referente ao reagendamento (RF12) entra no escopo quando o requisito for incorporado.
+
+- id: RNF11
+  nome: Confiabilidade do envio de lembretes
+  cp: CP4
+  classificacao: Não aplicável ao MVP
+  relacionado: RF13
+  justificativa: Depende do lembrete automático; RF13 fica fora do MVP (o link de confirmação do RF14 é enviado no próprio agendamento, RF10). Reavaliar se RF13 for incorporado.
+  origem: [DF24]
+
+- id: RNF12
+  nome: Tempo de resposta nas operações de agendamento
+  cp: CP4
+  classificacao: Evolutivo
+  relacionado: CP4
+  justificativa: Meta quantitativa de desempenho que pode ser calibrada com testes de carga após o fluxo mínimo (RF10, RF11, RF14–RF17) estar em produção.
+  origem: [DF22]
+
+- id: RNF13
+  nome: Minimização de dados na agenda
+  cp: CP4
+  classificacao: Obrigatório para o MVP
+  relacionado: RF11
+  justificativa: Reduz exposição de dados e atende ao princípio de minimização.
+
+- id: RNF14
+  nome: Disponibilidade do módulo de agendamento
+  cp: CP4
+  classificacao: Evolutivo
+  relacionado: CP4
+  justificativa: Meta formal de disponibilidade depende de infraestrutura e monitoramento, a formalizar após o MVP.
+
+- id: RNF15
+  nome: Usabilidade da confirmação de presença pelo paciente
+  cp: CP4
+  classificacao: Associado a RF do MVP
+  relacionado: RF14
+  justificativa: Acompanha a confirmação de presença pelo público atendido.
+
+- id: RNF16
+  nome: Autorização para distribuição, vínculo e transferência de casos
+  cp: CP5
+  classificacao: Obrigatório para o MVP
+  relacionado: RF20, RF21, RF25
+  justificativa: Alterações de responsabilidade clínica, inclusive a transferência de caso, exigem autorização por perfil.
+
+- id: RNF17
+  nome: Privacidade dos dados nas telas de distribuição e consulta
+  cp: CP5
+  classificacao: Obrigatório para o MVP
+  relacionado: CP5
+  justificativa: As telas de distribuição não devem expor dados além do necessário.
+  origem: [DF16]
+
+- id: RNF18
+  nome: Auditoria de atribuições, vínculos e transferências
+  cp: CP5
+  classificacao: Associado a RF do MVP
+  relacionado: RF20, RF21, RF25
+  justificativa: Acompanha distribuição, vínculo e transferência de responsáveis, preservando rastreabilidade de todas elas.
+
+- id: RNF19
+  nome: Integridade dos vínculos de responsabilidade
+  cp: CP5
+  classificacao: Obrigatório para o MVP
+  relacionado: RF20, RF21
+  justificativa: Impede vínculos incompatíveis e preserva consistência de responsabilidade.
+
+- id: RNF20
+  nome: Continuidade do histórico na troca de responsável
+  cp: CP5
+  classificacao: Associado a RF do MVP
+  relacionado: RF25
+  justificativa: Acompanha a transferência de caso e preserva o histórico na troca de responsável.
+
+- id: RNF21
+  nome: Desempenho das listagens e operações de vínculo
+  cp: CP5
+  classificacao: Evolutivo
+  relacionado: CP5
+  justificativa: Meta de desempenho a refinar com massa de dados representativa.
+  origem: [DF22]
+
+- id: RNF22
+  nome: Usabilidade da distribuição e do vínculo de casos
+  cp: CP5
+  classificacao: Evolutivo
+  relacionado: RF20, RF21
+  justificativa: Meta específica de usabilidade que pode ser refinada após validação do fluxo.
+
+- id: RNF23
+  nome: Modificabilidade do cadastro de áreas de especialidade
+  cp: CP5
+  classificacao: Não aplicável ao MVP
+  relacionado: RF19 (removido)
+  justificativa: Removido em 24/10/2026, junto com o RF19 ([DF26](decisoes-fbr.md#df26)).
+  removido: 24/10/2026
+  origem: [DF26]
+
+- id: RNF24
+  nome: Acessibilidade das telas de distribuição e consulta
+  cp: CP5
+  classificacao: Obrigatório para o MVP
+  relacionado: CP5
+  justificativa: Acessibilidade mínima das interfaces internas deve existir desde a primeira versão utilizável.
+
+- id: RNF25
+  nome: Sigilo do conteúdo clínico nas respostas negadas
+  cp: CP6
+  classificacao: Obrigatório para o MVP
+  relacionado: RF27, RF28, RF55, RF66, RF69
+  justificativa: 'O prontuário contém dados de saúde e exige proteção desde qualquer versão utilizável: a identificação registrada na criação do prontuário (RF66) e os dados iniciais, anamnese e contrato, registrados pelo RF69.'
+  origem: [DF32]
+
+- id: RNF26
+  nome: Sigilo do conteúdo da evolução
+  cp: CP7
+  classificacao: Obrigatório para o MVP
+  relacionado: RF28, RF55
+  justificativa: Consolidado no RNF25 em 24/10/2026; a classificação acompanha a do RNF25.
+  consolidado_em: RNF25
+
+- id: RNF27
+  nome: Integridade e proveniência dos registros de evolução
+  cp: CP7
+  classificacao: Obrigatório para o MVP
+  relacionado: RF28, RF31, RF32, RF67, RF68
+  justificativa: Registros clínicos precisam preservar autor, sessão, paciente e histórico, inclusive a validação do supervisor (RF67) e o encerramento por alta (RF68).
+
+- id: RNF28
+  nome: Auditoria das correções de evolução
+  cp: CP7
+  classificacao: Associado a RF do MVP
+  relacionado: RF29
+  justificativa: Acompanha a correção de evolução e preserva a versão original, condição mínima de confiabilidade do dado clínico.
+
+- id: RNF29
+  nome: Desempenho do registro e da consulta de evolução
+  cp: CP7
+  classificacao: Evolutivo
+  relacionado: CP7
+  justificativa: Meta quantitativa de desempenho a aferir após implementação do fluxo funcional.
+  origem: [DF22]
+
+- id: RNF30
+  nome: Usabilidade do registro de evolução
+  cp: CP7
+  classificacao: Evolutivo
+  relacionado: RF28
+  justificativa: Meta de tempo/interações que pode ser refinada com testes de estagiários.
+
+- id: RNF31
+  nome: Fidelidade e rastreabilidade do relatório final
+  cp: CP8
+  classificacao: Associado a RF do MVP
+  relacionado: RF33
+  justificativa: Acompanha o relatório final de evolução, incluído no MVP em 24/10/2026.
+  origem: [DF04]
+
+- id: RNF32
+  nome: Integridade e auditoria da contagem de faltas
+  cp: CP9
+  classificacao: Obrigatório para o MVP
+  relacionado: RF34–RF38
+  justificativa: A política de faltas pode gerar desligamento; contagem e decisões precisam ser íntegras e auditáveis.
+
+- id: RNF33
+  nome: Visibilidade do alerta de limite de faltas
+  cp: CP9
+  classificacao: Associado a RF do MVP
+  relacionado: RF36
+  justificativa: Acompanha o alerta e garante percepção também sem dependência exclusiva de cor.
+
+- id: RNF34
+  nome: Tempo de liberação da vaga após desligamento
+  cp: CP9
+  classificacao: Associado a RF do MVP
+  relacionado: RF37
+  justificativa: Acompanha a liberação de vaga e evita ociosidade indevida.
+
+- id: RNF35
+  nome: Privacidade dos dados de faltas do estagiário
+  cp: CP9
+  classificacao: Obrigatório para o MVP
+  relacionado: RF39, RF40, RF63, RF64
+  justificativa: Abrange consulta, contagem, sinalização e decisão sobre faltas do estagiário.
+
+- id: RNF36
+  nome: Auditoria dos registros de contribuição social
+  cp: CP10
+  classificacao: Associado a RF do MVP
+  relacionado: RF41
+  justificativa: Acompanha registro/correção da contribuição e alteração do parâmetro de valor.
+
+- id: RNF37
+  nome: Privacidade dos dados na declaração
+  cp: CP10
+  classificacao: Associado a RF do MVP
+  relacionado: RF45
+  justificativa: Evita inclusão de dados clínicos desnecessários no documento.
+
+- id: RNF38
+  nome: Autorização para emissão e consulta
+  cp: CP10
+  classificacao: Obrigatório para o MVP
+  relacionado: RF45, RF50, RF52
+  justificativa: Emissão/consulta envolvem dados pessoais e exigem perfis e identidade verificada.
+
+- id: RNF39
+  nome: Auditoria de emissões e reemissões
+  cp: CP10
+  classificacao: Associado a RF do MVP
+  relacionado: RF45
+  justificativa: Acompanha a emissão, registrando autoria e operação; a reemissão (RF46) fica fora por ora, e a parte da meta referente a ela entra no escopo de auditoria quando for incorporada.
+
+- id: RNF40
+  nome: Tempo de geração da declaração
+  cp: CP10
+  classificacao: Evolutivo
+  relacionado: RF45
+  justificativa: Meta de desempenho que pode ser calibrada após o fluxo de emissão.
+
+- id: RNF41
+  nome: Usabilidade da emissão
+  cp: CP10
+  classificacao: Evolutivo
+  relacionado: RF45
+  justificativa: Meta de interações/taxa de sucesso a aperfeiçoar em testes posteriores.
+
+- id: RNF42
+  nome: Formato e compatibilidade do documento
+  cp: CP10
+  classificacao: Associado a RF do MVP
+  relacionado: RF45
+  justificativa: Acompanha a emissão e garante PDF A4 legível para uso externo.
+
+- id: RNF43
+  nome: Acessibilidade da tela de emissão
+  cp: CP10
+  classificacao: Obrigatório para o MVP
+  relacionado: RF44, RF45
+  justificativa: A interface de emissão deve atender requisitos mínimos de acessibilidade.
+
+- id: RNF44
+  nome: Integridade do conteúdo da declaração
+  cp: CP10
+  classificacao: Associado a RF do MVP
+  relacionado: RF45
+  justificativa: Garante coerência entre o documento emitido e o registro de origem; a coerência da reemissão (RF46) entra no escopo quando o requisito for incorporado.
+
+- id: RNF45
+  nome: Segurança da consulta pública de autenticidade
+  cp: CP10
+  classificacao: Não aplicável ao MVP
+  relacionado: RF47
+  justificativa: É exclusiva da validação pública de autenticidade; RF47 fica fora do MVP.
+
+- id: RNF46
+  nome: Atualização dos indicadores operacionais
+  cp: CP11
+  classificacao: Associado a RF do MVP
+  relacionado: RF48
+  justificativa: Acompanha a consulta de indicadores operacionais usada nos relatórios institucionais.
+
+- id: RNF47
+  nome: Tempo de geração do relatório institucional
+  cp: CP11
+  classificacao: Associado a RF do MVP
+  relacionado: RF48, RF49
+  justificativa: Acompanha a consulta de indicadores e a exportação do relatório institucional.
+
+- id: RNF48
+  nome: Auditoria de relatórios institucionais
+  cp: CP11
+  classificacao: Associado a RF do MVP
+  relacionado: RF49
+  justificativa: Acompanha a exportação do relatório institucional, registrando autoria e operação.
+
+- id: RNF49
+  nome: Proteção das credenciais de acesso
+  cp: CP12
+  classificacao: Obrigatório para o MVP
+  relacionado: RF50, RF53
+  justificativa: Senha, hash e bloqueio contra tentativas são controles mínimos de autenticação.
+  origem: [DF25]
+
+- id: RNF50
+  nome: Expiração da sessão por inatividade
+  cp: CP12
+  classificacao: Obrigatório para o MVP
+  relacionado: RF50, RF51
+  justificativa: Reduz exposição de dados em computadores compartilhados.
+
+- id: RNF51
+  nome: Criptografia dos dados
+  cp: CP12
+  classificacao: Obrigatório para o MVP
+  relacionado: Transversal
+  justificativa: Protege dados sensíveis em trânsito e em repouso; condição de segurança e privacidade.
+
+- id: RNF52
+  nome: Trilha de auditoria de acessos ao prontuário
+  cp: CP12
+  classificacao: Obrigatório para o MVP
+  relacionado: RF55, RF56
+  justificativa: Acesso ao prontuário exige rastreabilidade de acessos permitidos e negados.
+
+- id: RNF53
+  nome: Cópia de segurança e recuperação dos dados
+  cp: CP12
+  classificacao: Obrigatório para o MVP
+  relacionado: Transversal
+  justificativa: Requisito mínimo de continuidade operacional e preservação dos registros.
+
+- id: RNF54
+  nome: Auditoria das decisões de continuidade
+  cp: CP13
+  classificacao: Não aplicável ao MVP
+  relacionado: RF59
+  justificativa: Depende do fluxo de continuidade entre semestres; toda a CP13 (RF58–RF60) fica fora do MVP.
+
+- id: RNF55
+  nome: Integridade do histórico na continuidade
+  cp: CP13
+  classificacao: Não aplicável ao MVP
+  relacionado: RF60
+  justificativa: Aplica-se à continuidade/transferência entre semestres; RF60 fica fora do MVP.
+
+- id: RNF56
+  nome: Conformidade com WCAG 2.2 nível AA
+  cp: CP14
+  classificacao: Obrigatório para o MVP
+  relacionado: CP14 / páginas externas
+  justificativa: Acessibilidade foi confirmada como mandatória pela FBr/MEC e deve existir desde o MVP, mesmo com RF61 e RF62 fora do recorte do MVP.
+
+- id: RNF57
+  nome: Aparência reforçada do indicador de foco
+  cp: CP14
+  classificacao: Evolutivo
+  relacionado: RF61, RF62 / páginas externas
+  justificativa: Exigência adicional de nível AAA; RF61 e RF62 ficam fora do MVP, mas a meta AA do RNF56 permanece obrigatória.
+
+- id: RNF58
+  nome: Responsividade da interface
+  cp: CP14
+  classificacao: Obrigatório para o MVP
+  relacionado: Páginas externas
+  justificativa: A solução é web responsiva e precisa funcionar entre 320 e 1920 px sem perda funcional.
+
+- id: RNF59
+  nome: Segurança do link de confirmação de presença
+  cp: CP4
+  classificacao: Obrigatório para o MVP
+  relacionado: RF14
+  justificativa: O link dispensa login e dá acesso a dados da sessão; a proteção contra uso por terceiros é condição mínima de segurança, separada da usabilidade do mesmo fluxo (RNF15) em 24/10/2026.
+
+decisoes:
+
+- id: DF01
+  data: 26/08/2026
+  fonte: reunião de levantamento
+  decisao: O atendimento psicológico do estágio é exclusivamente presencial.
+  outros: [CP4]
+
+- id: DF02
+  data: 26/08/2026
+  fonte: reunião de levantamento
+  decisao: 'Campos obrigatórios da inscrição: nome completo, data de nascimento, CPF, RG, endereço, estado civil e queixa; para menor de idade, também o responsável legal.'
+
+- id: DF03
+  data: 26/08/2026
+  fonte: reunião de levantamento
+  decisao: 'Referência da prioridade clínica: vermelha (quadro caracterizado), amarela (sofrimento pontual) e verde (desenvolvimento pessoal, atendido só com vaga sobrando).'
+
+- id: DF04
+  data: 26/08/2026
+  fonte: reunião de levantamento
+  decisao: O relatório final aprovado é entregue impresso ao paciente pela secretaria.
+
+- id: DF05
+  data: 26/08/2026
+  fonte: reunião de levantamento
+  decisao: A contribuição social é de R$ 35,00.
+
+- id: DF06
+  data: 02/10/2026
+  fonte: validação do MVP
+  decisao: O RF15 e o RF25 entram no MVP; o RF5, o RF13, o RF24 e o RF26 podem ficar para depois.
+  outros: ['[Backlog 10.2](backlog.md#102-priorizacao-e-recorte-do-mvp)']
+
+- id: DF07
+  data: 02/10/2026
+  fonte: validação do MVP
+  decisao: O formulário de inscrição exibe um aviso fixo com os contatos do CVV (188) e do SAMU (192).
+
+- id: DF08
+  data: 02/10/2026
+  fonte: validação do MVP
+  decisao: A transferência de caso registra quem passou o caso, para quem, quando e por quê.
+
+- id: DF09
+  data: 02/10/2026
+  fonte: validação do MVP
+  decisao: A continuidade entre semestres é tratada caso a caso, pela transferência de caso.
+  outros: ['CP13 (RF58 a RF60, fora do MVP)']
+
+- id: DF10
+  data: 07/10/2026
+  fonte: validação do MVP
+  decisao: O cancelamento para remarcar não conta falta do paciente nem do estagiário.
+
+- id: DF11
+  data: 07/10/2026
+  fonte: validação do MVP
+  decisao: A correção de evolução guarda a versão original.
+
+- id: DF12
+  data: 07/10/2026
+  fonte: validação do MVP
+  decisao: O relatório final e a reprovação do estagiário ficam prontos antes do fim do semestre.
+
+- id: DF13
+  data: 07/10/2026
+  fonte: validação do MVP
+  decisao: O apoio manual à inscrição é a recepção preenchendo o mesmo formulário do sistema.
+
+- id: DF14
+  data: 07/10/2026
+  fonte: validação do MVP
+  substituida_por: DF19
+  decisao: O prazo da triagem seria um parâmetro definido pela coordenação.
+  requisitos_anteriores: [RF4]
+
+- id: DF15
+  data: 23/10/2026
+  fonte: validação do protótipo
+  decisao: O paciente tem 10 dias para pagar a contribuição social, contados do vínculo com o estagiário; sem pagamento, perde a vaga e volta para a fila. O início da contagem foi esclarecido pela equipe em 24/10/2026.
+
+- id: DF16
+  data: 23/10/2026
+  fonte: validação do protótipo
+  decisao: Na mesma prioridade clínica, o desempate é pela data de inscrição, da mais antiga para a mais recente.
+
+- id: DF17
+  data: 23/10/2026
+  fonte: validação do protótipo
+  decisao: Cada supervisor acompanha até 50 casos; o estagiário não tem limite fixo de casos.
+
+- id: DF18
+  data: 23/10/2026
+  fonte: validação do protótipo
+  decisao: A sessão tem 50 minutos de atendimento, seguidos de 10 minutos para anotações.
+
+- id: DF19
+  data: 23/10/2026
+  fonte: validação do protótipo
+  decisao: 'A clínica não tem prazo de triagem: a inscrição aguarda conforme as vagas, e só é chamada quando alguém sai.'
+
+- id: DF20
+  data: 23/10/2026
+  fonte: validação do protótipo
+  decisao: O paciente pode cancelar até 1 hora antes da sessão, com justificativa. O desligamento continua com 2 faltas no ciclo, consecutivas ou não, como esclarecido pela equipe em 24/10/2026.
+
+- id: DF21
+  data: 23/10/2026
+  fonte: validação do protótipo
+  decisao: O lembrete de sessão é enviado com 24 horas de antecedência.
+
+- id: DF22
+  data: 23/10/2026
+  fonte: validação do protótipo
+  decisao: O pico de uso estimado é de 30 usuários simultâneos.
+
+- id: DF23
+  data: 23/10/2026
+  fonte: validação do protótipo
+  decisao: A evolução tem como campos obrigatórios a data, a evolução da queixa (até 10 linhas) e o planejamento da próxima sessão, com um fechamento avaliativo a cada 10 sessões.
+
+- id: DF24
+  data: 23/10/2026
+  fonte: validação do protótipo
+  decisao: O contato com o paciente é por e-mail, WhatsApp ou ligação; o SMS foi descartado. Quem escolhe e-mail recebe as mensagens automáticas; quem escolhe celular é contatado pela secretaria, por WhatsApp ou ligação. A ata em PDF registra também o e-mail como descartado, mas a gravação da reunião mostra que a escolha entre e-mail e celular foi mantida; a correção foi registrada pela equipe em 24/10/2026. Pela mesma regra, o código de verificação de identidade vai só por e-mail, e quem informou só o celular consulta a fila e pede a declaração na secretaria.
+
+- id: DF25
+  data: 23/10/2026
+  fonte: validação do protótipo
+  decisao: O acesso é bloqueado por 15 minutos depois de 3 tentativas de login incorretas.
+
+- id: DF26
+  data: 23/10/2026
+  fonte: validação do protótipo
+  decisao: 'Não há divisão por área de especialidade: todo atendimento é de psicologia clínica geral.'
+
+- id: DF27
+  data: 23/10/2026
+  fonte: validação do protótipo
+  decisao: Cada caso tem um estagiário responsável; os estagiários de apoio do semestre básico só observam as sessões.
+
+- id: DF28
+  data: 23/10/2026
+  fonte: validação do protótipo
+  decisao: Um caso pode ser transferido entre supervisores.
+
+- id: DF29
+  data: 23/10/2026
+  fonte: validação do protótipo
+  decisao: A coordenação consulta as tentativas de acesso negado ao prontuário.
+
+- id: DF30
+  data: 23/10/2026
+  fonte: validação do protótipo
+  decisao: O convite de ativação da conta vale 72 horas.
+
+- id: DF31
+  data: 23/10/2026
+  fonte: validação do protótipo
+  decisao: Os protótipos das features do Ciclo 3 foram aprovados, com a remoção da área de especialidade e o ajuste dos canais de contato.
+  outros: ['[Protótipos do Ciclo 3](../../unidade-3/prototipos-ciclo-3.md)']
+
+- id: DF32
+  data: 23/10/2026
+  fonte: validação do protótipo
+  decisao: A coordenação consulta o conteúdo clínico de todos os prontuários, sem precisar de vínculo com o caso. A consulta é só de leitura e fica no registro de acessos. O ponto não consta da ata em PDF e foi registrado pela equipe em 24/10/2026.
+  outros: [CP12]
+
+- id: DF33
+  data: 23/10/2026
+  fonte: validação do protótipo
+  decisao: Quem perde a vaga por falta de pagamento volta para a fila com a mesma prioridade clínica, mas com a data em que voltou para a fila, e não com a da inscrição original. Enquanto os 10 dias correm, continua bloqueado o agendamento da 2ª sessão em diante. O ponto não consta da ata em PDF e foi registrado pela equipe em 24/10/2026.
+
+conjuntos:
+- area: Inscrição no atendimento
+  conjunto: Inscrição on-line
+  rfs: [RF1, RF2, RF3]
+  lider: Jônatas
+  conclusao: Ciclo 3
+- area: Triagem clínica
+  conjunto: Triagem e sinalização de casos
+  rfs: [RF4, RF6, RF5]
+  lider: Luís Henrique
+  conclusao: Ciclo 3
+- area: Gestão da fila de espera
+  conjunto: Fila de espera e consulta de posição
+  rfs: [RF7, RF8, RF9]
+  lider: Jônatas
+  conclusao: Ciclo 4
+- area: Agendamento e acompanhamento de sessões
+  conjunto: Agendamento
+  rfs: [RF10, RF11, RF12]
+  lider: Nicolas
+  conclusao: Ciclo 4
+- area: Agendamento e acompanhamento de sessões
+  conjunto: Confirmação e lembrete
+  rfs: [RF14, RF13]
+  lider: Nicolas
+  conclusao: Ciclo 4
+- area: Agendamento e acompanhamento de sessões
+  conjunto: Cancelamento
+  rfs: [RF15, RF16, RF17]
+  lider: Nicolas
+  conclusao: Ciclo 5
+- area: Gestão de casos
+  conjunto: Distribuição entre supervisores
+  rfs: [RF18, RF20, RF19]
+  lider: Maria Clara
+  conclusao: Ciclo 3
+- area: Gestão de casos
+  conjunto: Vinculação a estagiário
+  rfs: [RF21, RF22, RF23]
+  lider: Maria Clara
+  conclusao: Ciclo 4
+- area: Gestão de casos
+  conjunto: Acompanhamento e reorganização
+  rfs: [RF25, RF24, RF26]
+  lider: Maria Clara
+  conclusao: Ciclo 4
+- area: Acompanhamento clínico
+  conjunto: Prontuário
+  rfs: [RF66, RF69, RF27]
+  lider: Luís Henrique
+  conclusao: Ciclo 4
+- area: Acompanhamento clínico
+  conjunto: Registro de evolução por sessão
+  rfs: [RF28, RF29, RF30, RF67, RF31, RF32]
+  lider: Luís Henrique
+  conclusao: Ciclo 6
+- area: Acompanhamento clínico
+  conjunto: Encerramento do ciclo
+  rfs: [RF68, RF33]
+  lider: Luís Henrique e Gabriel
+  conclusao: Ciclo 6
+- area: Assiduidade e alertas
+  conjunto: Controle de faltas do paciente
+  rfs: [RF34, RF35, RF36, RF37, RF38]
+  lider: Gabriel
+  conclusao: Ciclo 4
+- area: Assiduidade e alertas
+  conjunto: Controle de faltas do estagiário
+  rfs: [RF39, RF40, RF63, RF64]
+  lider: Nicolas
+  conclusao: Ciclo 6
+- area: Registros administrativos do atendimento
+  conjunto: Contribuição social
+  rfs: [RF41, RF42, RF43]
+  lider: Joaquim
+  conclusao: Ciclo 6
+- area: Registros administrativos do atendimento
+  conjunto: Declaração de comparecimento
+  rfs: [RF44, RF45, RF46, RF47]
+  lider: Maria Clara
+  conclusao: Ciclo 6
+- area: Gestão institucional
+  conjunto: Indicadores e relatórios institucionais
+  rfs: [RF48, RF49]
+  lider: Gabriel
+  conclusao: Ciclo 6
+- area: Acesso e segurança
+  conjunto: Autenticação
+  rfs: [RF50, RF51, RF52]
+  lider: Joaquim
+  conclusao: Ciclo 4
+- area: Acesso e segurança
+  conjunto: Controle de acesso por perfil
+  rfs: [RF53, RF54, RF55]
+  lider: Gabriel
+  conclusao: Ciclo 3
+- area: Acesso e segurança
+  conjunto: Proteção de dados
+  rfs: [RF56, RF57, RF65]
+  lider: Jônatas
+  conclusao: Ciclo 6
+- area: Continuidade do atendimento
+  conjunto: Continuidade de casos entre semestres
+  rfs: [RF58, RF59, RF60]
+  lider: Gabriel
+  conclusao: null
+- area: Acessibilidade e usabilidade
+  conjunto: Personalização de exibição
+  rfs: [RF61, RF62]
+  lider: Gabriel
+  conclusao: null
