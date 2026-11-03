@@ -18,7 +18,8 @@ export const inscricoesNumeroSeq = pgSequence("inscricoes_numero_seq");
 
 // Inscrição on-line (RF1). Queixa, percepção de urgência e histórico são declarações
 // do interessado (RF4) e dados de saúde: ficam cifrados no banco (RNF51). Pelo menos um contato é obrigatório, e WhatsApp ou ligação
-// exigem o celular (DF24).
+// exigem o celular (DF24). Os dados da ficha de identificação da Clínica Escola são
+// opcionais (DF43).
 export const inscricoes = pgTable(
   "inscricoes",
   {
@@ -29,10 +30,22 @@ export const inscricoes = pgTable(
     cpf: text("cpf").notNull(),
     rg: text("rg").notNull(),
     endereco: text("endereco").notNull(),
+    bairro: text("bairro"),
+    cidadeUf: text("cidade_uf"),
+    cep: text("cep"),
     estadoCivil: text("estado_civil").notNull(),
+    sexo: text("sexo"),
+    profissao: text("profissao"),
+    escolaridade: text("escolaridade"),
     responsavelLegal: text("responsavel_legal"),
+    cpfResponsavel: text("cpf_responsavel"),
+    documentoResponsavel: text("documento_responsavel"),
     celular: text("celular"),
+    whatsapp: text("whatsapp"),
     email: text("email"),
+    contatoEmergenciaNome: text("contato_emergencia_nome"),
+    contatoEmergenciaParentesco: text("contato_emergencia_parentesco"),
+    contatoEmergenciaTelefone: text("contato_emergencia_telefone"),
     canalPreferencial: canalEnum("canal_preferencial").notNull(),
     // Campos nullable para suportar inscrições legadas importadas sem resposta;
     // novas inscrições continuam validadas como obrigatórias na API RF1.
@@ -53,5 +66,13 @@ export const inscricoes = pgTable(
       sql`(${t.canalPreferencial} = 'email' and ${t.email} is not null) or (${t.canalPreferencial} in ('whatsapp', 'ligacao') and ${t.celular} is not null)`,
     ),
     check("inscricoes_cpf_11_digitos", sql`${t.cpf} ~ '^[0-9]{11}$'`),
+    check(
+      "inscricoes_cpf_responsavel_11_digitos",
+      sql`${t.cpfResponsavel} is null or ${t.cpfResponsavel} ~ '^[0-9]{11}$'`,
+    ),
+    check(
+      "inscricoes_cep_8_digitos",
+      sql`${t.cep} is null or ${t.cep} ~ '^[0-9]{8}$'`,
+    ),
   ],
 );

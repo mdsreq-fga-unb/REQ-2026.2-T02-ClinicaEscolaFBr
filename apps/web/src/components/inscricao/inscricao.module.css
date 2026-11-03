@@ -159,6 +159,15 @@
 .largo {
   grid-column: 1 / -1;
 }
+.secao {
+  grid-column: 1 / -1;
+  padding-top: 16px;
+  border-top: 1px solid #e2e8ee;
+}
+.secao:first-child {
+  padding-top: 0;
+  border-top: 0;
+}
 .campo {
   display: flex;
   flex-direction: column;

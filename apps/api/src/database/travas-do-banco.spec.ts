@@ -127,6 +127,24 @@ describe('Travas do banco no schema do Ciclo 3', () => {
         'inscricoes_cpf_11_digitos',
       );
     });
+
+    it('exige 11 números no CPF do responsável e 8 no CEP, quando informados (DF43)', async () => {
+      await recusada(
+        db
+          .insert(inscricoes)
+          .values({ ...dadosInscricao(), cpfResponsavel: '529.982.247-25' }),
+        'inscricoes_cpf_responsavel_11_digitos',
+      );
+      await recusada(
+        db.insert(inscricoes).values({ ...dadosInscricao(), cep: '72500-000' }),
+        'inscricoes_cep_8_digitos',
+      );
+      await db.insert(inscricoes).values({
+        ...dadosInscricao(),
+        cpfResponsavel: '52998224725',
+        cep: '72500000',
+      });
+    });
   });
 
   describe('vigência única na distribuição (RF20, RF21)', () => {
