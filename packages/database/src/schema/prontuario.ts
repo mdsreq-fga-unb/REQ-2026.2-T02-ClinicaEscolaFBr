@@ -13,7 +13,10 @@ import { casos, vinculosEstagiario } from "./casos";
 import { sessoesAtendimento } from "./agendamento";
 
 // Prontuário (RF66): criado na mesma transação do vínculo (RF21), um por caso e ciclo.
-// Os dados iniciais (anamnese e contrato) são do RF69, no Ciclo 4, e ficam cifrados (RNF51).
+// Os dados iniciais (anamnese e contrato) são do RF69, no Ciclo 4, e a anamnese fica
+// cifrada (RNF51). O contrato é o da Clínica Escola, assinado em papel (DF41): o
+// prontuário guarda a data, o aceite do termo para pesquisa e a guarda da via. O
+// texto livre do contrato fica só nos registros feitos antes da DF41.
 export const prontuarios = pgTable(
   "prontuarios",
   {
@@ -31,6 +34,8 @@ export const prontuarios = pgTable(
     anamneseCifrada: text("anamnese_cifrada"),
     contratoCifrado: text("contrato_cifrado"),
     dataAssinaturaContrato: date("data_assinatura_contrato"),
+    aceiteTclePesquisa: boolean("aceite_tcle_pesquisa"),
+    viaContratoGuardada: boolean("via_contrato_guardada"),
     dadosIniciaisPor: uuid("dados_iniciais_por").references(() => usuarios.id),
     dadosIniciaisEm: timestamp("dados_iniciais_em", { withTimezone: true }),
   },

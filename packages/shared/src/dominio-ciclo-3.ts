@@ -16,9 +16,15 @@ export const corSchema = z.enum(CORES);
 export type Cor = z.infer<typeof corSchema>;
 export const prioridadeSchema = z.object({ cor: corSchema });
 
+// O contrato terapêutico é o "Contrato de Prestação de Serviço" da Clínica Escola,
+// assinado em papel na primeira sessão; o prontuário guarda a data de assinatura,
+// o aceite do termo de consentimento para pesquisa e a guarda da via (DF41).
 export const dadosIniciaisSchema = z.object({
   anamnese: z.string().trim().min(1, "Informe a anamnese."),
-  contrato: z.string().trim().min(1, "Informe o contrato terapêutico."),
+  aceiteTclePesquisa: z.boolean().default(false),
+  viaContratoGuardada: z.literal(true, {
+    error: "Confirme que a via assinada do contrato está guardada na clínica.",
+  }),
   dataAssinaturaContrato: z.iso
     .date("Informe a data de assinatura do contrato.")
     .refine(

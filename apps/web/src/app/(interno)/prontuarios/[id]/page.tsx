@@ -38,8 +38,9 @@ function FormularioDadosIniciais({ prontuarioId }: { prontuarioId: string }) {
   const cache = useQueryClient();
   const [dados, setDados] = useState({
     anamnese: "",
-    contrato: "",
     dataAssinaturaContrato: "",
+    aceiteTclePesquisa: false,
+    viaContratoGuardada: false,
   });
   const [erros, setErros] = useState<ErrosDe<DadosIniciais>>({});
   const [erro, setErro] = useState<string | null>(null);
@@ -82,33 +83,71 @@ function FormularioDadosIniciais({ prontuarioId }: { prontuarioId: string }) {
           />
         )}
       </Campo>
-      <Campo rotulo="Contrato terapêutico" erro={erros.contrato}>
-        {(props) => (
-          <textarea
-            {...props}
-            value={dados.contrato}
-            onChange={(e) => setDados({ ...dados, contrato: e.target.value })}
-            className={classeTextoLongo}
-          />
-        )}
-      </Campo>
-      <Campo
-        rotulo="Data de assinatura do contrato"
-        erro={erros.dataAssinaturaContrato}
-        className="max-w-[280px]"
-      >
-        {(props) => (
+      <fieldset className="flex min-w-0 flex-col gap-4 rounded-[12px] border border-border bg-muted p-4">
+        <legend className="ui-rotulo px-1">Contrato terapêutico</legend>
+        <p className="ui-dica">
+          O contrato é o “Contrato de Prestação de Serviço” da Clínica Escola,
+          assinado em papel na primeira sessão. Registre aqui a assinatura e a
+          guarda da via.
+        </p>
+        <Campo
+          rotulo="Data de assinatura do contrato"
+          erro={erros.dataAssinaturaContrato}
+          className="max-w-[280px]"
+        >
+          {(props) => (
+            <input
+              {...props}
+              type="date"
+              value={dados.dataAssinaturaContrato}
+              onChange={(e) =>
+                setDados({ ...dados, dataAssinaturaContrato: e.target.value })
+              }
+              className={classeEntrada}
+            />
+          )}
+        </Campo>
+        <label className="flex cursor-pointer items-start gap-3 text-[15px]">
           <input
-            {...props}
-            type="date"
-            value={dados.dataAssinaturaContrato}
+            type="checkbox"
+            checked={dados.aceiteTclePesquisa}
             onChange={(e) =>
-              setDados({ ...dados, dataAssinaturaContrato: e.target.value })
+              setDados({ ...dados, aceiteTclePesquisa: e.target.checked })
             }
-            className={classeEntrada}
+            className="mt-0.5 size-5 shrink-0 accent-primary"
           />
-        )}
-      </Campo>
+          <span>
+            O paciente aceitou o termo de consentimento livre e esclarecido para
+            pesquisa
+            <span className="ui-meta"> (opcional)</span>
+          </span>
+        </label>
+        <div className="flex flex-col gap-1.5">
+          <label className="flex cursor-pointer items-start gap-3 text-[15px]">
+            <input
+              type="checkbox"
+              checked={dados.viaContratoGuardada}
+              aria-invalid={erros.viaContratoGuardada ? true : undefined}
+              aria-describedby={
+                erros.viaContratoGuardada ? "via-guardada-erro" : undefined
+              }
+              onChange={(e) =>
+                setDados({ ...dados, viaContratoGuardada: e.target.checked })
+              }
+              className="mt-0.5 size-5 shrink-0 accent-primary"
+            />
+            <span>A via assinada do contrato está guardada na clínica</span>
+          </label>
+          {erros.viaContratoGuardada && (
+            <p
+              id="via-guardada-erro"
+              className="text-sm font-semibold text-destructive"
+            >
+              {erros.viaContratoGuardada}
+            </p>
+          )}
+        </div>
+      </fieldset>
       {erro && <Aviso tipo="erro" titulo={erro} />}
       <div className="flex justify-end">
         <Button type="submit" disabled={salvando}>
@@ -251,6 +290,8 @@ type Prontuario = {
     anamnese: string | null;
     contrato: string | null;
     dataAssinaturaContrato: string | null;
+    aceiteTclePesquisa: boolean | null;
+    viaContratoGuardada: boolean | null;
     registradoEm: string | null;
     registradoPor: string | null;
   };
@@ -404,38 +445,50 @@ export default function ProntuarioPage() {
         <h2 id="dados-iniciais" className="ui-h2">
           Dados iniciais
         </h2>
-        {anamnese || contrato ? (
+        {anamnese || dataAssinaturaContrato ? (
           <>
-            {(
-              [
-                ["Anamnese", anamnese ?? "Não registrada."],
-                ["Contrato terapêutico", contrato ?? "Não registrado."],
-              ] as const
-            ).map(([rotulo, texto]) => (
-              <div key={rotulo} className="flex flex-col gap-1.5">
-                <h3 className="ui-rotulo">{rotulo}</h3>
+            <div className="flex flex-col gap-1.5">
+              <h3 className="ui-rotulo">Anamnese</h3>
+              <p className="rounded-lg border border-border bg-muted p-3 text-[15px] leading-[1.55] whitespace-pre-wrap">
+                {anamnese ?? "Não registrada."}
+              </p>
+            </div>
+            <div className="flex flex-col gap-3">
+              <h3 className="ui-rotulo">Contrato terapêutico</h3>
+              {/* Registros anteriores à DF41 têm o contrato em texto livre. */}
+              {contrato && (
                 <p className="rounded-lg border border-border bg-muted p-3 text-[15px] leading-[1.55] whitespace-pre-wrap">
-                  {texto}
+                  {contrato}
                 </p>
-                <p className="ui-meta">
-                  Registrado por{" "}
-                  {p.dadosIniciais.registradoPor ??
-                    "responsável não identificado"}{" "}
-                  em {dataHoraBr(registradoEm)}
-                </p>
-              </div>
-            ))}
-            <div className="max-w-[320px]">
+              )}
               <Dados
-                colunas={2}
                 itens={[
                   [
                     "Data de assinatura do contrato",
                     dataBr(dataAssinaturaContrato),
                   ],
+                  [
+                    "Termo de consentimento para pesquisa",
+                    p.dadosIniciais.aceiteTclePesquisa === null
+                      ? "Não informado"
+                      : p.dadosIniciais.aceiteTclePesquisa
+                        ? "Aceito"
+                        : "Não aceito",
+                  ],
+                  [
+                    "Via assinada",
+                    p.dadosIniciais.viaContratoGuardada
+                      ? "Guardada na clínica"
+                      : "Não informado",
+                  ],
                 ]}
               />
             </div>
+            <p className="ui-meta">
+              Registrado por{" "}
+              {p.dadosIniciais.registradoPor ?? "responsável não identificado"}{" "}
+              em {dataHoraBr(registradoEm)}
+            </p>
           </>
         ) : (
           <>
