@@ -105,8 +105,9 @@ jobs:
 
   issue-da-feature:
     name: PR cita a issue da feature
-    # PRs de feature precisam declarar a issue (por exemplo, "Refs #48").
-    if: github.event_name == 'pull_request' && github.event.action != 'closed' && startsWith(github.event.pull_request.title, 'feat')
+    # PRs de feature precisam declarar a issue (por exemplo, "Refs #48"). O título
+    # pode já vir com o prefixo "destino <- origem | " do Padronizar título.
+    if: github.event_name == 'pull_request' && github.event.action != 'closed' && (startsWith(github.event.pull_request.title, 'feat') || contains(github.event.pull_request.title, '| feat'))
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v7
