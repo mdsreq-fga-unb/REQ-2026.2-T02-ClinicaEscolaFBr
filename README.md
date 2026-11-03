@@ -547,7 +547,7 @@ source .venv/bin/activate
 ```
 
 ```bash
-pip install mkdocs-material pymdown-extensions
+pip install -r documentacao/requirements.txt
 ```
 
 </details>
@@ -564,7 +564,7 @@ py -m venv .venv
 ```
 
 ```powershell
-pip install mkdocs-material pymdown-extensions
+pip install -r documentacao/requirements.txt
 ```
 
 </details>
@@ -579,16 +579,26 @@ pip install mkdocs-material pymdown-extensions
 
 Nas próximas vezes, basta ativar o ambiente (`source .venv/bin/activate` ou `.venv\Scripts\Activate.ps1`) e rodar `pnpm docs:serve`.
 
-O site publicado é atualizado **automaticamente** quando uma alteração em `documentacao/` chega à branch `main`.
+O site publicado é atualizado **automaticamente** quando uma alteração em `documentacao/` chega à branch `main`. Como as PRs vão para a `development`, a documentação integrada chega ao site quando a `development` é promovida para a `main`, ao fim de cada ciclo; o rodapé do site mostra a data da última publicação. Detalhes em [Publicação da documentação](https://mdsreq-fga-unb.github.io/REQ-2026.2-T02-ClinicaEscolaFBr/unidade-1/gestao/boas-praticas-github/#publicacao-da-documentacao).
+
+As tabelas de priorização, MVP e backlog, os índices e as contagens de requisitos são geradas do catálogo `documentacao/dados/requisitos.yml`. Antes de abrir a PR, confira o catálogo e o site como o docs-check faz:
+
+```bash
+python documentacao/scripts/verificar_catalogo.py
+```
+
+```bash
+mkdocs build --strict --config-file documentacao/mkdocs.yml
+```
 
 ---
 
 ## Como contribuir
 
-1. **Nunca faça commit direto na `main`.** Crie uma branch a partir da `main` atualizada:
+1. **Nunca faça commit direto na `main` nem na `development`.** Crie uma branch a partir da `development` atualizada:
 
    ```bash
-   git checkout main
+   git checkout development
    ```
 
    ```bash
@@ -615,7 +625,7 @@ O site publicado é atualizado **automaticamente** quando uma alteração em `do
    git push -u origin tipo/descricao-curta
    ```
 
-4. **Abra um Pull Request** para a `main` preenchendo o template. O CI verifica automaticamente o código e as mensagens de commit; a PR só entra depois da revisão de outro integrante.
+4. **Abra um Pull Request** para a `development` preenchendo o template. O CI verifica automaticamente o código e as mensagens de commit; a PR só entra depois da revisão de outro integrante.
 
 **Onde fica cada coisa ao construir uma feature:**
 

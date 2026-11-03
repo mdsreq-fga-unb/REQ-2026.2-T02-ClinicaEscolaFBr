@@ -19,6 +19,18 @@ Não faça alterações diretamente em `development` ou `main`, mesmo quando a m
 
 > Importante: a branch `gh-pages` é a branch de publicação do site do MkDocs no GitHub Pages. Ela não deve ser alterada manualmente, deletada, force-push, reescrita ou usada como branch de desenvolvimento. O conteúdo do site deve ser gerado a partir da branch de trabalho e publicado pelo fluxo do GitHub Pages, sem edição direta na `gh-pages`.
 
+## Publicação da documentação { #publicacao-da-documentacao }
+
+O site de documentação (GitHub Pages) é gerado da `main` pelo workflow `.github/workflows/deploy-docs.yaml`, a cada merge que muda `documentacao/`. As PRs de documentação vão para a `development`, como as demais, e chegam ao site quando a `development` é promovida para a `main`:
+
+1. **Ao fim de cada ciclo**, junto com o fechamento do ciclo no [Cronograma geral](../../visao-geral/cronograma.md), alguém abre a PR `main <- development`. Ela leva para o site a documentação integrada no ciclo e, depois da aprovação no ambiente `producao`, implanta a mesma versão do sistema ([Implantação](../../unidade-3/implantacao.md#fluxo-das-branches)).
+2. **Antes de cada entrega de unidade**, a promoção é feita mesmo que o ciclo não tenha terminado, para que o professor e a FBr vejam no site a versão entregue.
+3. Fora desses momentos, a documentação nova fica visível na `development` e nas PRs. Se uma correção na documentação precisar ir antes para o site, ela segue o mesmo caminho, numa PR `main <- development`.
+
+O rodapé de todas as páginas mostra a data da última publicação, que é a data do commit da `main` publicado. Se ela estiver mais antiga que o fim do último ciclo, a promoção não foi feita.
+
+O docs-check (`.github/workflows/docs-check.yml`) roda nas PRs para a `development` e para a `main` que mudam `documentacao/`. Ele confere o [catálogo de requisitos](../../unidade-2/requisitos/backlog.md#catalogo-de-requisitos) e compila o site com `mkdocs build --strict`, com as versões fixadas em `documentacao/requirements.txt`. No modo estrito, uma página que não está no menu (`nav` do `mkdocs.yml`), um link para uma página inexistente ou uma âncora inválida impedem o merge.
+
 ## Fluxo de trabalho
 
 ### 1. Atualizar a branch de destino
@@ -60,11 +72,15 @@ Durante o trabalho:
 - execute os testes, verificações e a documentação local antes de abrir a PR;
 - não inclua segredos, credenciais, dados pessoais ou arquivos gerados.
 
-Para a documentação MkDocs, valide a construção localmente:
+Para a documentação MkDocs, confira o catálogo de requisitos e valide a construção localmente, como o docs-check faz:
 
 ```bash
-mkdocs build --strict
+pip install -r documentacao/requirements.txt
+python documentacao/scripts/verificar_catalogo.py
+mkdocs build --strict --config-file documentacao/mkdocs.yml
 ```
+
+Página nova entra no `nav` do `mkdocs.yml` na mesma PR; sem isso, o build estrito falha. Mudança no nome, no valor, no esforço, no ciclo, no estado ou na origem de um requisito é feita no catálogo `documentacao/dados/requisitos.yml`, e não nas tabelas, que são geradas a partir dele.
 
 ### 3.1 Configurar a validação local de commits
 
