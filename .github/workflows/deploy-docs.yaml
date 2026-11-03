@@ -1,9 +1,11 @@
 name: Deploy MkDocs Documentation
 
+# O site é publicado a partir da development, a versão integrada: cada merge que
+# muda a documentação aparece no GitHub Pages, sem esperar a PR main <- development.
 on:
   push:
     branches:
-      - main
+      - development
     paths:
       - "documentacao/**"
       - ".github/workflows/deploy-docs.yaml"
@@ -11,6 +13,11 @@ on:
 
 permissions:
   contents: write
+
+# Dois merges seguidos não publicam ao mesmo tempo na gh-pages; vale o mais recente.
+concurrency:
+  group: deploy-docs
+  cancel-in-progress: true
 
 jobs:
   deploy:

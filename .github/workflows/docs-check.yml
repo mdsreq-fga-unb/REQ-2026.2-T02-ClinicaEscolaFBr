@@ -1,6 +1,6 @@
 # Confere o catálogo de requisitos e compila o site de documentação nas PRs que
 # mexem em documentacao/, para que erros apareçam antes do merge (o deploy em si
-# continua no deploy-docs.yaml, só na main). O build é estrito: páginas fora do
+# continua no deploy-docs.yaml, a cada merge na development). O build é estrito: páginas fora do
 # menu, links quebrados e âncoras inválidas falham a verificação.
 name: Docs Check
 

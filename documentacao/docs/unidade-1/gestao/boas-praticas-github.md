@@ -21,13 +21,9 @@ Não faça alterações diretamente em `development` ou `main`, mesmo quando a m
 
 ## Publicação da documentação { #publicacao-da-documentacao }
 
-O site de documentação (GitHub Pages) é gerado da `main` pelo workflow `.github/workflows/deploy-docs.yaml`, a cada merge que muda `documentacao/`. As PRs de documentação vão para a `development`, como as demais, e chegam ao site quando a `development` é promovida para a `main`:
+O site de documentação (GitHub Pages) é gerado da `development` pelo workflow `.github/workflows/deploy-docs.yaml`, a cada merge que muda `documentacao/`. As PRs de documentação vão para a `development`, como as demais, e aparecem no site logo depois do merge, sem depender da PR `main <- development`, que continua servindo só para levar o sistema à produção ([Implantação](../../unidade-3/implantacao.md#fluxo-das-branches)).
 
-1. **Ao fim de cada ciclo**, junto com o fechamento do ciclo no [Cronograma geral](../../visao-geral/cronograma.md), alguém abre a PR `main <- development`. Ela leva para o site a documentação integrada no ciclo e, depois da aprovação no ambiente `producao`, implanta a mesma versão do sistema ([Implantação](../../unidade-3/implantacao.md#fluxo-das-branches)).
-2. **Antes de cada entrega de unidade**, a promoção é feita mesmo que o ciclo não tenha terminado, para que o professor e a FBr vejam no site a versão entregue.
-3. Fora desses momentos, a documentação nova fica visível na `development` e nas PRs. Se uma correção na documentação precisar ir antes para o site, ela segue o mesmo caminho, numa PR `main <- development`.
-
-O rodapé de todas as páginas mostra a data da última publicação, que é a data do commit da `main` publicado. Se ela estiver mais antiga que o fim do último ciclo, a promoção não foi feita.
+O rodapé de todas as páginas mostra a data da última publicação, que é a data do commit da `development` publicado. Se a publicação falhar, a data não muda, e o erro aparece na execução do workflow "Deploy MkDocs Documentation", na aba Actions.
 
 O docs-check (`.github/workflows/docs-check.yml`) roda nas PRs para a `development` e para a `main` que mudam `documentacao/`. Ele confere o [catálogo de requisitos](../../unidade-2/requisitos/backlog.md#catalogo-de-requisitos) e compila o site com `mkdocs build --strict`, com as versões fixadas em `documentacao/requirements.txt`. No modo estrito, uma página que não está no menu (`nav` do `mkdocs.yml`), um link para uma página inexistente ou uma âncora inválida impedem o merge.
 
