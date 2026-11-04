@@ -38,8 +38,20 @@ describe('Validação da evolução e dos dados iniciais', () => {
     ).toContain('Use no máximo 10 linhas.');
   });
 
+  it('o contrato da clínica exige confirmar a guarda da via assinada, e o aceite do termo para pesquisa é opcional (RF69, DF41)', () => {
+    const base = { anamnese: 'a', dataAssinaturaContrato: '2026-10-01' };
+    expect(mensagens(dadosIniciaisSchema.safeParse(base))).toContain(
+      'Confirme que a via assinada do contrato está guardada na clínica.',
+    );
+    const ok = dadosIniciaisSchema.parse({
+      ...base,
+      viaContratoGuardada: true,
+    });
+    expect(ok.aceiteTclePesquisa).toBe(false);
+  });
+
   it('a data de assinatura do contrato não pode estar no futuro (RF69)', () => {
-    const dados = { anamnese: 'a', contrato: 'c' };
+    const dados = { anamnese: 'a', viaContratoGuardada: true };
     expect(
       dadosIniciaisSchema.safeParse({
         ...dados,

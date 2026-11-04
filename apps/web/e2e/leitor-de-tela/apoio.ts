@@ -39,13 +39,18 @@ export async function simularRotas(
 }
 
 // Avança o cursor do VoiceOver (VO + seta para a direita) até ele falar o texto
-// ou uma fala que combine com o padrão.
+// ou uma fala que combine com o padrão. O texto é comparado sem diferenciar
+// maiúsculas: rótulos com text-transform são falados como aparecem na tela.
 export async function irAte(
   voiceOver: VoiceOverPlaywright,
   alvo: string | RegExp,
 ) {
   const chegou = (fala: string) =>
-    typeof alvo === "string" ? fala.includes(alvo) : alvo.test(fala);
+    typeof alvo === "string"
+      ? fala
+          .toLocaleLowerCase("pt-BR")
+          .includes(alvo.toLocaleLowerCase("pt-BR"))
+      : alvo.test(fala);
   for (let i = 0; i < 80; i++) {
     if (chegou(await voiceOver.lastSpokenPhrase())) return;
     await voiceOver.next();

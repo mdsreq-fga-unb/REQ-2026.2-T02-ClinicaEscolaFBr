@@ -58,15 +58,24 @@ test.describe.serial("Integração do Ciclo 3", () => {
   }) => {
     const page = await entrar(browser, "coordenacao");
     await page.goto("/triagem");
-    const inscricao = page
-      .getByRole("listitem")
-      .filter({ hasText: `Inscrição ${numero}` });
-    await expect(inscricao).toContainText("declarado pelo interessado");
-    await expect(inscricao).toContainText("Queixa fictícia de integração");
     await semViolacoes(page);
-    await inscricao.getByRole("button", { name: /^Vermelha/ }).click();
+    await page
+      .getByRole("link", { name: `Abrir inscrição ${numero}` })
+      .first()
+      .click();
+    const declaracao = page.getByRole("region", {
+      name: "Declarado pelo interessado",
+    });
+    await expect(declaracao).toContainText("Queixa fictícia de integração");
+    await semViolacoes(page);
+    await page
+      .getByRole("link", { name: "Registrar prioridade clínica" })
+      .click();
+    await page.getByRole("radio", { name: "Vermelha" }).check();
+    await semViolacoes(page);
+    await page.getByRole("button", { name: "Registrar prioridade" }).click();
     await expect(
-      page.getByText("Decisão de prioridade registrada."),
+      page.getByText("Prioridade Vermelha registrada."),
     ).toBeVisible();
   });
 

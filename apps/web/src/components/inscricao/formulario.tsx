@@ -13,39 +13,110 @@ import {
 } from "@clinica/shared";
 import styles from "./inscricao.module.css";
 
+// A ordem dos rótulos é a ordem da revisão.
 const rotulos = {
   nomeCompleto: "Nome completo",
   dataNascimento: "Data de nascimento",
+  estadoCivil: "Estado civil",
+  sexo: "Sexo",
+  profissao: "Profissão",
+  escolaridade: "Escolaridade",
   cpf: "CPF",
   rg: "RG",
-  endereco: "Endereço completo",
-  estadoCivil: "Estado civil",
+  endereco: "Endereço",
+  bairro: "Bairro",
+  cidadeUf: "Cidade/UF",
+  cep: "CEP",
   responsavelLegal: "Nome do responsável legal",
+  cpfResponsavel: "CPF do responsável",
+  documentoResponsavel: "Documento que comprova a responsabilidade",
   celular: "Telefone celular com DDD",
+  whatsapp: "WhatsApp com DDD",
   email: "E-mail",
-  canalPreferencial: "Como prefere ser contatado?",
+  canalPreferencial: "Por qual canal prefere receber nosso contato?",
+  contatoEmergenciaNome: "Nome do contato de emergência",
+  contatoEmergenciaParentesco: "Grau de parentesco",
+  contatoEmergenciaTelefone: "Telefone do contato de emergência",
   queixa: "O que motivou sua busca por atendimento?",
   percepcaoUrgencia: "Como você percebe a urgência do atendimento?",
   historicoRelevante: "Histórico relevante",
 };
 type Campo = keyof typeof rotulos;
 type Valores = Record<Campo, string>;
-const vazio: Valores = {
-  nomeCompleto: "",
-  dataNascimento: "",
-  cpf: "",
-  rg: "",
-  endereco: "",
-  estadoCivil: "",
-  responsavelLegal: "",
-  celular: "",
-  email: "",
-  canalPreferencial: "",
-  queixa: "",
-  percepcaoUrgencia: "",
-  historicoRelevante: "",
+const vazio = Object.fromEntries(
+  Object.keys(rotulos).map((campo) => [campo, ""]),
+) as Valores;
+// Contatos e dados da ficha de identificação da Clínica Escola (DF43).
+const opcionais: Campo[] = [
+  "celular",
+  "email",
+  "sexo",
+  "profissao",
+  "escolaridade",
+  "bairro",
+  "cidadeUf",
+  "cep",
+  "cpfResponsavel",
+  "documentoResponsavel",
+  "whatsapp",
+  "contatoEmergenciaNome",
+  "contatoEmergenciaParentesco",
+  "contatoEmergenciaTelefone",
+];
+const responsavel: string[] = [
+  "responsavelLegal",
+  "cpfResponsavel",
+  "documentoResponsavel",
+];
+const tamanhos: Partial<Record<Campo, number>> = {
+  endereco: 500,
+  cpf: 11,
+  cpfResponsavel: 11,
+  rg: 30,
+  celular: 22,
+  whatsapp: 22,
+  contatoEmergenciaTelefone: 22,
+  email: 254,
+  cep: 9,
+  sexo: 50,
+  contatoEmergenciaParentesco: 50,
+  profissao: 100,
+  escolaridade: 100,
+  bairro: 100,
+  cidadeUf: 100,
+};
+const preenchimento: Partial<Record<Campo, string>> = {
+  nomeCompleto: "name",
+  celular: "tel-national",
+  whatsapp: "tel-national",
+  dataNascimento: "bday",
+  email: "email",
+  cep: "postal-code",
+  endereco: "street-address",
+  bairro: "address-level3",
+  cidadeUf: "address-level2",
 };
 const etapas = ["Dados e contatos", "Triagem", "Revisão e envio"];
+// Título e orientação do cartão de cada etapa, como no protótipo.
+const cartoes = [
+  {
+    titulo: "Seus dados",
+    dica: "Todos os campos são obrigatórios, a não ser quando indicado.",
+  },
+  {
+    titulo: "Sobre o atendimento que você procura",
+    dica: "As respostas abaixo são a sua declaração, com as suas palavras. Elas serão lidas pela equipe na triagem e não substituem uma avaliação profissional. Não há resposta certa ou errada. Todos os campos são obrigatórios.",
+  },
+  {
+    titulo: "Revise suas informações",
+    dica: "Confira tudo antes de enviar. Você pode voltar e corrigir qualquer campo.",
+  },
+];
+const CANAIS_CONTATO = [
+  ["email", "E-mail"],
+  ["whatsapp", "WhatsApp"],
+  ["ligacao", "Ligação"],
+] as const;
 
 function CampoFormulario({
   campo,
@@ -68,7 +139,7 @@ function CampoFormulario({
     id: campo,
     name: campo,
     value: valor,
-    required: !["email", "celular"].includes(campo),
+    required: !opcionais.includes(campo),
     "aria-invalid": !!erro,
     "aria-describedby":
       [dica ? `${campo}-dica` : "", erro ? `${campo}-erro` : ""]
@@ -80,24 +151,65 @@ function CampoFormulario({
       >,
     ) => alterar(campo, event.target.value),
   };
+  const dicaEErro = erro && (
+    <p className={styles.erroCampo} id={`${campo}-erro`}>
+      {erro}
+    </p>
+  );
+  // Canal preferencial: três opções lado a lado, como no protótipo. O grupo
+  // leva o aria-invalid, que o radio sozinho não aceita.
+  if (campo === "canalPreferencial") {
+    return (
+      <fieldset
+        role="radiogroup"
+        className={`${styles.campo} ${styles.largo}`}
+        aria-describedby={props["aria-describedby"]}
+        aria-invalid={props["aria-invalid"]}
+        aria-required
+      >
+        <legend className={styles.legenda}>{rotulos[campo]}</legend>
+        <div className={styles.opcoes}>
+          {CANAIS_CONTATO.map(([valorCanal, nome], indice) => (
+            <label
+              key={valorCanal}
+              className={`${styles.opcao} ${valor === valorCanal ? styles.marcada : ""} ${erro ? styles.opcaoErro : ""}`}
+            >
+              <input
+                type="radio"
+                id={indice === 0 ? campo : undefined}
+                name={campo}
+                value={valorCanal}
+                checked={valor === valorCanal}
+                onChange={() => alterar(campo, valorCanal)}
+              />
+              {nome}
+            </label>
+          ))}
+        </div>
+        {dicaEErro}
+      </fieldset>
+    );
+  }
   return (
     <div className={`${styles.campo} ${longo ? styles.largo : ""}`}>
       <label htmlFor={campo}>
-        {rotulos[campo]} {props.required && <span aria-hidden="true">*</span>}
+        {rotulos[campo]}
+        {/* Celular e e-mail: um dos dois é obrigatório, como diz a seção. */}
+        {!props.required && !["celular", "email"].includes(campo) && (
+          <span className={styles.opcional}> (opcional)</span>
+        )}
       </label>
+      {dica && (
+        <p className={styles.dica} id={`${campo}-dica`}>
+          {dica}
+        </p>
+      )}
       {campo === "estadoCivil" ? (
         <select {...props}>
           <option value="">Selecione</option>
           {ESTADOS_CIVIS.map((estado) => (
             <option key={estado}>{estado}</option>
           ))}
-        </select>
-      ) : campo === "canalPreferencial" ? (
-        <select {...props}>
-          <option value="">Selecione</option>
-          <option value="email">E-mail</option>
-          <option value="whatsapp">WhatsApp</option>
-          <option value="ligacao">Ligação telefônica</option>
         </select>
       ) : ["queixa", "percepcaoUrgencia", "historicoRelevante"].includes(
           campo,
@@ -111,43 +223,16 @@ function CampoFormulario({
         <input
           {...props}
           type={tipo}
-          inputMode={campo === "cpf" ? "numeric" : undefined}
-          autoComplete={
-            campo === "nomeCompleto"
-              ? "name"
-              : campo === "celular"
-                ? "tel-national"
-                : campo === "dataNascimento"
-                  ? "bday"
-                  : campo === "email"
-                    ? "email"
-                    : "off"
+          inputMode={
+            ["cpf", "cpfResponsavel", "cep"].includes(campo)
+              ? "numeric"
+              : undefined
           }
-          maxLength={
-            campo === "endereco"
-              ? 500
-              : campo === "cpf"
-                ? 11
-                : campo === "rg"
-                  ? 30
-                  : campo === "celular"
-                    ? 22
-                    : campo === "email"
-                      ? 254
-                      : 200
-          }
+          autoComplete={preenchimento[campo] ?? "off"}
+          maxLength={tamanhos[campo] ?? 200}
         />
       )}
-      {dica && (
-        <p className={styles.dica} id={`${campo}-dica`}>
-          {dica}
-        </p>
-      )}
-      {erro && (
-        <p className={styles.erroCampo} id={`${campo}-erro`}>
-          {erro}
-        </p>
-      )}
+      {dicaEErro}
     </div>
   );
 }
@@ -196,10 +281,20 @@ export function FormularioInscricao({ aberta = true }: { aberta?: boolean }) {
     event.preventDefault();
     if (emCurso.current) return;
     setFalha("");
-    const conteudo = JSON.stringify(valores);
+    // Os campos do responsável somem da tela quando a data deixa de ser de
+    // menor; o que foi digitado neles não é validado nem enviado.
+    const dados = menor
+      ? valores
+      : {
+          ...valores,
+          responsavelLegal: "",
+          cpfResponsavel: "",
+          documentoResponsavel: "",
+        };
+    const conteudo = JSON.stringify(dados);
     if (!envio.current || envio.current.conteudo !== conteudo)
       envio.current = { chave: crypto.randomUUID(), conteudo };
-    const payload = { ...valores, confirmado, chaveEnvio: envio.current.chave };
+    const payload = { ...dados, confirmado, chaveEnvio: envio.current.chave };
     const schema =
       etapa === 0
         ? dadosInscricaoSchema
@@ -320,8 +415,8 @@ export function FormularioInscricao({ aberta = true }: { aberta?: boolean }) {
                 Inscrição recebida
               </h1>
               <p className={styles.lead}>
-                Recebemos sua solicitação de atendimento na Clínica Escola FBr.
-                Guarde este comprovante.
+                Recebemos a sua inscrição para atendimento psicológico na
+                Clínica Escola. Guarde este comprovante.
               </p>
             </div>
             <section
@@ -332,6 +427,9 @@ export function FormularioInscricao({ aberta = true }: { aberta?: boolean }) {
                 <div>
                   <dt>Número da inscrição</dt>
                   <dd className={styles.numero}>{comprovante.numero}</dd>
+                  <dd className={styles.dica}>
+                    Informe este número se entrar em contato com a clínica.
+                  </dd>
                 </div>
                 <div>
                   <dt>Data e hora do registro</dt>
@@ -351,7 +449,8 @@ export function FormularioInscricao({ aberta = true }: { aberta?: boolean }) {
               <p>
                 O atendimento depende da triagem feita pela equipe e da
                 disponibilidade de vagas. Este comprovante não confirma o início
-                do atendimento psicológico.
+                do atendimento psicológico. Se houver vaga, a clínica entrará em
+                contato pelo canal que você escolheu.
               </p>
             </div>
             <p className={styles.naoImprimir}>
@@ -373,12 +472,13 @@ export function FormularioInscricao({ aberta = true }: { aberta?: boolean }) {
         ) : (
           <>
             <div>
-              <h1>Inscrição para atendimento</h1>
+              <h1>Inscrição para atendimento psicológico</h1>
               <p className={styles.lead}>
-                Dê o primeiro passo. Preencha seus dados para solicitar
-                atendimento psicológico presencial.
+                Preencha em 3 etapas. O atendimento é presencial, na clínica.
+                Você pode voltar e corrigir antes de enviar.
               </p>
             </div>
+            <p className={styles.etapaAtual}>Etapa {etapa + 1} de 3</p>
             <ol className={styles.etapas} aria-label="Etapas da inscrição">
               {etapas.map((nome, indice) => (
                 <li
@@ -394,12 +494,11 @@ export function FormularioInscricao({ aberta = true }: { aberta?: boolean }) {
             <form onSubmit={continuar} noValidate>
               <div className={styles.cartao}>
                 <div>
-                  <p className={styles.dica}>Etapa {etapa + 1} de 3</p>
                   <h2 ref={titulo} tabIndex={-1}>
-                    {etapas[etapa]}
+                    {cartoes[etapa].titulo}
                   </h2>
-                  <p className={styles.dica}>
-                    Os campos com * são obrigatórios.
+                  <p className={`${styles.dica} ${styles.dicaCartao}`}>
+                    {cartoes[etapa].dica}
                   </p>
                 </div>
                 {!!Object.keys(erros).length && (
@@ -425,8 +524,10 @@ export function FormularioInscricao({ aberta = true }: { aberta?: boolean }) {
                               } else document.getElementById(nome)?.focus();
                             }}
                           >
-                            {rotulos[nome as Campo] || "Confirmação"}:{" "}
-                            {mensagem}
+                            {nome === "canalPreferencial"
+                              ? "Canal preferencial"
+                              : rotulos[nome as Campo] || "Confirmação"}
+                            : {mensagem}
                           </a>
                         </li>
                       ))}
@@ -438,46 +539,88 @@ export function FormularioInscricao({ aberta = true }: { aberta?: boolean }) {
                     {campo("nomeCompleto", { longo: true })}
                     {campo("dataNascimento", { tipo: "date" })}
                     {campo("estadoCivil")}
+                    {campo("sexo")}
+                    {campo("profissao")}
+                    {campo("escolaridade", {
+                      dica: "Exemplo: ensino médio completo.",
+                    })}
                     {campo("cpf", {
                       dica: "Digite os 11 números, sem pontos nem traço.",
                     })}
                     {campo("rg", {
                       dica: "Não é necessário enviar foto ou cópia do documento.",
                     })}
-                    {campo("endereco", {
-                      longo: true,
-                      dica: "Rua, número, complemento, bairro, cidade, UF e CEP.",
-                    })}
-                    {menor &&
-                      campo("responsavelLegal", {
+                    <fieldset className={styles.grupo}>
+                      <legend className={styles.secao}>
+                        <h3>Endereço</h3>
+                      </legend>
+                      {campo("endereco", {
                         longo: true,
-                        dica: "Obrigatório para pessoas menores de 18 anos.",
+                        dica: "Rua, número e complemento.",
                       })}
-                    <div className={`${styles.info} ${styles.largo}`}>
-                      <strong>Como podemos falar com você?</strong>
-                      <p>
-                        Informe pelo menos um contato: celular ou e-mail.
-                        Escolha e-mail, WhatsApp ou ligação como canal
-                        preferencial.
+                      {campo("bairro")}
+                      {campo("cidadeUf", { dica: "Exemplo: Brasília/DF." })}
+                      {campo("cep", { dica: "Exemplo: 72500-000." })}
+                    </fieldset>
+                    {menor && (
+                      <fieldset className={styles.grupo}>
+                        <legend className={styles.secao}>
+                          <h3>Responsável legal</h3>
+                        </legend>
+                        {campo("responsavelLegal", {
+                          longo: true,
+                          dica: "Obrigatório para pessoas menores de 18 anos.",
+                        })}
+                        {campo("cpfResponsavel", {
+                          dica: "Digite os 11 números, sem pontos nem traço.",
+                        })}
+                        {campo("documentoResponsavel", {
+                          dica: "Exemplo: certidão de nascimento ou termo de guarda. Não é necessário enviar cópia.",
+                        })}
+                      </fieldset>
+                    )}
+                    <fieldset
+                      className={styles.grupo}
+                      aria-describedby="contatos-dica"
+                    >
+                      <legend className={styles.secao}>
+                        <h3>Contatos</h3>
+                      </legend>
+                      <p
+                        className={`${styles.dica} ${styles.dicaSecao}`}
+                        id="contatos-dica"
+                      >
+                        Informe pelo menos um contato: celular e/ou e-mail.
                       </p>
-                    </div>
-                    {campo("celular", {
-                      tipo: "tel",
-                      dica: "Exemplo: (61) 99999-9999.",
-                    })}
-                    {campo("email", {
-                      tipo: "email",
-                      dica: "Exemplo: nome@exemplo.com.br.",
-                    })}
-                    {campo("canalPreferencial")}
+                      {campo("celular", {
+                        tipo: "tel",
+                        dica: "Exemplo: (61) 99999-9999.",
+                      })}
+                      {campo("whatsapp", {
+                        tipo: "tel",
+                        dica: "Só se for diferente do celular. Por enquanto, as mensagens da clínica pelo WhatsApp vão para o celular informado acima.",
+                      })}
+                      {campo("email", {
+                        tipo: "email",
+                        dica: "Exemplo: nome@exemplo.com.br.",
+                      })}
+                      {campo("canalPreferencial")}
+                    </fieldset>
+                    <fieldset className={styles.grupo}>
+                      <legend className={styles.secao}>
+                        <h3>Contato de emergência</h3>
+                      </legend>
+                      {campo("contatoEmergenciaNome", { longo: true })}
+                      {campo("contatoEmergenciaParentesco")}
+                      {campo("contatoEmergenciaTelefone", {
+                        tipo: "tel",
+                        dica: "Exemplo: (61) 99999-9999.",
+                      })}
+                    </fieldset>
                   </div>
                 )}
                 {etapa === 1 && (
                   <div className={styles.grade}>
-                    <div className={`${styles.info} ${styles.largo}`}>
-                      Estas informações são declarações suas e ajudarão a equipe
-                      na triagem. Não substituem uma avaliação profissional.
-                    </div>
                     {campo("queixa", {
                       longo: true,
                       dica: "Conte, com suas palavras, o motivo da procura.",
@@ -494,10 +637,6 @@ export function FormularioInscricao({ aberta = true }: { aberta?: boolean }) {
                 )}
                 {etapa === 2 && (
                   <>
-                    <p>
-                      Confira as informações. Você pode voltar para corrigir
-                      qualquer campo antes de enviar.
-                    </p>
                     {[0, 1].map((grupo) => (
                       <section
                         key={grupo}
@@ -520,11 +659,15 @@ export function FormularioInscricao({ aberta = true }: { aberta?: boolean }) {
                               ([nome]) =>
                                 (grupo === 1) ===
                                   nome in triagemInscricaoSchema.shape &&
-                                (nome !== "responsavelLegal" || menor),
+                                (!responsavel.includes(nome) || menor),
                             )
                             .map(([nome, rotulo]) => (
                               <div key={nome}>
-                                <dt>{rotulo}</dt>
+                                <dt>
+                                  {nome === "canalPreferencial"
+                                    ? "Canal preferencial"
+                                    : rotulo}
+                                </dt>
                                 <dd>
                                   {nome === "canalPreferencial"
                                     ? valores[nome] === "email"

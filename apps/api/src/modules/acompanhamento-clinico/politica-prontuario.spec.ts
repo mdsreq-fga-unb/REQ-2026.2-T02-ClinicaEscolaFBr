@@ -267,7 +267,8 @@ describe('Restrição de acesso ao prontuário (RF55)', () => {
         prontuarioId,
         {
           anamnese: 'Relato de teste protegido',
-          contrato: 'Contrato de teste protegido',
+          aceiteTclePesquisa: true,
+          viaContratoGuardada: true,
           dataAssinaturaContrato: '2026-10-27',
         },
         pessoas.estagiarioA,
@@ -283,7 +284,8 @@ describe('Restrição de acesso ao prontuário (RF55)', () => {
         prontuarioId,
         {
           anamnese: 'Substituição proibida',
-          contrato: 'Substituição proibida',
+          aceiteTclePesquisa: false,
+          viaContratoGuardada: true,
           dataAssinaturaContrato: '2026-10-27',
         },
         pessoas.estagiarioA,

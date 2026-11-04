@@ -126,6 +126,8 @@ export class ProntuariosService {
         anamnese: abrir(prontuario.anamneseCifrada),
         contrato: abrir(prontuario.contratoCifrado),
         dataAssinaturaContrato: prontuario.dataAssinaturaContrato,
+        aceiteTclePesquisa: prontuario.aceiteTclePesquisa,
+        viaContratoGuardada: prontuario.viaContratoGuardada,
         registradoEm: prontuario.dadosIniciaisEm,
         registradoPor: autorDadosIniciais?.nome ?? null,
       },
@@ -296,8 +298,9 @@ export class ProntuariosService {
         .update(prontuarios)
         .set({
           anamneseCifrada: cifrar(dados.anamnese, chave),
-          contratoCifrado: cifrar(dados.contrato, chave),
           dataAssinaturaContrato: dados.dataAssinaturaContrato,
+          aceiteTclePesquisa: dados.aceiteTclePesquisa,
+          viaContratoGuardada: dados.viaContratoGuardada,
           dadosIniciaisPor: usuario.id,
           dadosIniciaisEm: new Date(),
         })
@@ -305,7 +308,7 @@ export class ProntuariosService {
           and(
             eq(prontuarios.id, id),
             isNull(prontuarios.anamneseCifrada),
-            isNull(prontuarios.contratoCifrado),
+            isNull(prontuarios.dataAssinaturaContrato),
           ),
         )
         .returning({ id: prontuarios.id });

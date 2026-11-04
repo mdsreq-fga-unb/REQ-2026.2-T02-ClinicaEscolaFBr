@@ -233,13 +233,21 @@ test("teclado percorre campos, links e botões com foco visível em 320px (RF1, 
   await page.goto("/inscricao");
   // Espera a hidratação e seu foco inicial antes de começar a sequência de Tab.
   await expect(
-    page.getByRole("heading", { name: "Dados e contatos", exact: true }),
+    page.getByRole("heading", { name: "Seus dados", exact: true }),
   ).toBeFocused();
   await page.getByRole("link", { name: "Ir para o conteúdo" }).focus();
   const previstos = await page
     .locator("a, input, select, textarea, button")
     .evaluateAll((els) =>
-      els.slice(1).map((el) => el.id || el.textContent!.trim()),
+      els
+        .slice(1)
+        // O Tab entra uma vez em cada grupo de opções, pela primeira opção.
+        .filter(
+          (el) =>
+            !(el instanceof HTMLInputElement && el.type === "radio") ||
+            el.id !== "",
+        )
+        .map((el) => el.id || el.textContent!.trim()),
     );
   const visitados = new Set<string>();
   for (let i = 0; i < 40 && visitados.size < previstos.length; i++) {
@@ -367,7 +375,7 @@ test("a raiz mantém entrada institucional e cadastro público não libera área
   await page.goto("/inscricao");
   await expect(
     page.getByRole("heading", {
-      name: "Inscrição para atendimento",
+      name: "Inscrição para atendimento psicológico",
       exact: true,
     }),
   ).toBeVisible();

@@ -7,7 +7,18 @@ import {
   usuarios,
   type Db,
 } from '@clinica/database';
-import { asc, desc, eq, notExists, sql, ne } from 'drizzle-orm';
+import {
+  and,
+  asc,
+  count,
+  desc,
+  eq,
+  exists,
+  ne,
+  notExists,
+  or,
+  sql,
+} from 'drizzle-orm';
 import { AuditoriaService } from '../../auditoria/auditoria.service';
 import { cifrar, decifrar } from '../../common/criptografia';
 import type { UsuarioAutenticado } from '../../auth/usuario-autenticado';
@@ -21,6 +32,24 @@ export class TriagemService {
     private readonly auditoria: AuditoriaService,
   ) {}
 
+  private semDecisao() {
+    return notExists(
+      this.db
+        .select({ id: decisoesPrioridade.id })
+        .from(decisoesPrioridade)
+        .where(eq(decisoesPrioridade.inscricaoId, inscricoes.id)),
+    );
+  }
+
+  // Só o número de inscrições aguardando triagem, para o menu, sem as respostas.
+  async contarPendentes() {
+    const [{ total }] = await this.db
+      .select({ total: count() })
+      .from(inscricoes)
+      .where(this.semDecisao());
+    return { total };
+  }
+
   async listarPendentes(ordem: 'antigas' | 'recentes' = 'antigas') {
     const chave = this.config.getOrThrow<string>('CHAVE_DADOS');
     const linhas = await this.db
@@ -33,14 +62,7 @@ export class TriagemService {
         historicoRelevante: inscricoes.historicoRelevanteCifrado,
       })
       .from(inscricoes)
-      .where(
-        notExists(
-          this.db
-            .select({ id: decisoesPrioridade.id })
-            .from(decisoesPrioridade)
-            .where(eq(decisoesPrioridade.inscricaoId, inscricoes.id)),
-        ),
-      )
+      .where(this.semDecisao())
       .orderBy(
         ordem === 'recentes'
           ? desc(inscricoes.criadaEm)
@@ -66,6 +88,79 @@ export class TriagemService {
           : null,
       },
     }));
+  }
+
+  // Uma inscrição da triagem, com a declaração do interessado e o histórico de
+  // decisões de prioridade, para a tela da inscrição aberta (RF4, RF6). Vale o
+  // mesmo recorte das duas listas: aguardando triagem ou com prioridade e caso
+  // ainda não encerrado (RNF21).
+  async detalhar(inscricaoId: string) {
+    const chave = this.config.getOrThrow<string>('CHAVE_DADOS');
+    const [linha] = await this.db
+      .select({
+        id: inscricoes.id,
+        numero: inscricoes.numero,
+        criadaEm: inscricoes.criadaEm,
+        queixa: inscricoes.queixaCifrada,
+        percepcaoUrgencia: inscricoes.percepcaoUrgenciaCifrada,
+        historicoRelevante: inscricoes.historicoRelevanteCifrado,
+      })
+      .from(inscricoes)
+      .where(
+        and(
+          eq(inscricoes.id, inscricaoId),
+          or(
+            this.semDecisao(),
+            exists(
+              this.db
+                .select({ id: casos.id })
+                .from(casos)
+                .where(
+                  and(
+                    eq(casos.inscricaoId, inscricoes.id),
+                    ne(casos.situacao, 'encerrado'),
+                  ),
+                ),
+            ),
+          ),
+        ),
+      );
+    if (!linha) throw new NotFoundException('Inscrição não encontrada.');
+    const decisoes = await this.db
+      .select({
+        corCifrada: decisoesPrioridade.corCifrada,
+        decididaEm: decisoesPrioridade.decididaEm,
+        decisor: usuarios.nome,
+        perfilDecisor: usuarios.perfil,
+      })
+      .from(decisoesPrioridade)
+      .innerJoin(usuarios, eq(usuarios.id, decisoesPrioridade.decididaPor))
+      .where(eq(decisoesPrioridade.inscricaoId, inscricaoId))
+      .orderBy(
+        desc(decisoesPrioridade.decididaEm),
+        desc(decisoesPrioridade.id),
+      );
+    const abrir = (valor: string | null) =>
+      valor ? decifrar(valor, chave) : null;
+    return {
+      id: linha.id,
+      numero: linha.numero,
+      criadaEm: linha.criadaEm.toISOString(),
+      diasAguardando: Math.floor(
+        (Date.now() - linha.criadaEm.getTime()) / 86_400_000,
+      ),
+      declaracaoInteressado: {
+        queixa: abrir(linha.queixa),
+        percepcaoUrgencia: abrir(linha.percepcaoUrgencia),
+        historicoRelevante: abrir(linha.historicoRelevante),
+      },
+      historico: decisoes.map((decisao) => ({
+        prioridade: decifrar(decisao.corCifrada, chave),
+        decisor: decisao.decisor,
+        perfilDecisor: decisao.perfilDecisor,
+        decididaEm: decisao.decididaEm.toISOString(),
+      })),
+    };
   }
 
   async listarClassificadas() {

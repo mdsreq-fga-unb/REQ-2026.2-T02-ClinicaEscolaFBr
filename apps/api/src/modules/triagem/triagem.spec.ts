@@ -173,6 +173,99 @@ describe('Triagem e prioridade clínica (RF4 e RF6)', () => {
     ]);
   });
 
+  it('a inscrição aberta traz a declaração do interessado e o histórico de prioridades, da mais recente para a mais antiga (RF4, RF6)', async () => {
+    const inscricao = await inscrever(diasAtras(4));
+    const sem = await http()
+      .get(`/triagem/inscricoes/${inscricao}`)
+      .set(como('supervisor'))
+      .expect(200);
+    expect(sem.body).toMatchObject({
+      id: inscricao,
+      diasAguardando: 4,
+      declaracaoInteressado: { queixa: 'Queixa fictícia' },
+      historico: [],
+    });
+    for (const [quem, cor] of [
+      ['supervisor', 'verde'],
+      ['coordenacao', 'vermelha'],
+    ]) {
+      await http()
+        .post(`/triagem/inscricoes/${inscricao}/prioridade`)
+        .set(como(quem))
+        .send({ cor })
+        .expect(201);
+    }
+    const com = await http()
+      .get(`/triagem/inscricoes/${inscricao}`)
+      .set(como('coordenacao'))
+      .expect(200);
+    expect(
+      com.body.historico.map(
+        (d: { prioridade: string; perfilDecisor: string }) => [
+          d.prioridade,
+          d.perfilDecisor,
+        ],
+      ),
+    ).toEqual([
+      ['vermelha', 'coordenacao'],
+      ['verde', 'supervisor'],
+    ]);
+  });
+
+  it('a inscrição aberta não existe para quem não é da equipe clínica, nem para um id desconhecido (RF4)', async () => {
+    const inscricao = await inscrever(diasAtras(1));
+    await http()
+      .get(`/triagem/inscricoes/${inscricao}`)
+      .set(como('secretaria'))
+      .expect(403);
+    await http()
+      .get('/triagem/inscricoes/00000000-0000-4000-8000-000000000000')
+      .set(como('supervisor'))
+      .expect(404);
+  });
+
+  it('o total do menu conta só as inscrições aguardando triagem, sem trazer as respostas (RF4)', async () => {
+    const triada = await inscrever(diasAtras(2));
+    await inscrever(diasAtras(1));
+    await inscrever(diasAtras(1));
+    await http()
+      .post(`/triagem/inscricoes/${triada}/prioridade`)
+      .set(como('supervisor'))
+      .send({ cor: 'verde' })
+      .expect(201);
+    const res = await http()
+      .get('/triagem/inscricoes/total')
+      .set(como('coordenacao'))
+      .expect(200);
+    expect(res.body).toEqual({ total: 2 });
+    await http()
+      .get('/triagem/inscricoes/total')
+      .set(como('secretaria'))
+      .expect(403);
+  });
+
+  it('a inscrição de um caso encerrado não abre na triagem, como nas listas (RF4, RNF21)', async () => {
+    const inscricao = await inscrever(diasAtras(3));
+    await http()
+      .post(`/triagem/inscricoes/${inscricao}/prioridade`)
+      .set(como('supervisor'))
+      .send({ cor: 'verde' })
+      .expect(201);
+    await http()
+      .get(`/triagem/inscricoes/${inscricao}`)
+      .set(como('supervisor'))
+      .expect(200);
+    await db
+      .update(casos)
+      .set({ situacao: 'encerrado' })
+      .where(eq(casos.inscricaoId, inscricao));
+    const res = await http()
+      .get(`/triagem/inscricoes/${inscricao}`)
+      .set(como('supervisor'))
+      .expect(404);
+    expect(JSON.stringify(res.body)).not.toContain('fictíci');
+  });
+
   it('sem inscrições aguardando triagem, a lista vem vazia (RF4)', async () => {
     const res = await http()
       .get('/triagem/inscricoes')

@@ -1,4 +1,4 @@
-import { expect, test, type Page } from "@playwright/test";
+import { expect, test, type Locator, type Page } from "@playwright/test";
 import {
   criarCasoTriado,
   entrar,
@@ -41,6 +41,28 @@ async function escolherPeloTeclado(page: Page, grupo: string, opcao: string) {
   await focoVisivel(alvo);
 }
 
+// Abre o diálogo pelo Enter no botão e o fecha só pelo teclado: pelo Esc, pelo
+// X do topo ou pelo botão de desistir do rodapé ("Cancelar", ou "Fechar" quando
+// não há opção). O foco tem de voltar ao botão que o abriu.
+async function fecharDevolvendoFoco(
+  page: Page,
+  abrir: Locator,
+  dialogo: Locator,
+  como: "Esc" | "X" | "rodapé",
+) {
+  await expect(abrir).toBeFocused();
+  await page.keyboard.press("Enter");
+  await expect(dialogo).toBeVisible();
+  if (como === "Esc") await page.keyboard.press("Escape");
+  else {
+    const botoes = dialogo.getByRole("button", { name: /^(Cancelar|Fechar)$/ });
+    await tabAte(page, como === "X" ? botoes.first() : botoes.last());
+    await page.keyboard.press("Enter");
+  }
+  await expect(dialogo).toBeHidden();
+  await expect(abrir).toBeFocused();
+}
+
 test.afterEach(fecharContextos);
 
 test.describe
@@ -68,13 +90,11 @@ test.describe
     await tabAte(page, abrir);
     await focoVisivel(abrir);
 
-    // O Esc fecha o diálogo e devolve o foco a quem o abriu.
-    await page.keyboard.press("Enter");
+    // O Esc, o Cancelar e o X fecham o diálogo e devolvem o foco a quem o abriu.
     const dialogo = page.getByRole("dialog", { name: "Distribuir caso" });
-    await expect(dialogo).toBeVisible();
-    await page.keyboard.press("Escape");
-    await expect(dialogo).toBeHidden();
-    await expect(abrir).toBeFocused();
+    await fecharDevolvendoFoco(page, abrir, dialogo, "Esc");
+    await fecharDevolvendoFoco(page, abrir, dialogo, "rodapé");
+    await fecharDevolvendoFoco(page, abrir, dialogo, "X");
 
     await page.keyboard.press("Enter");
     await expect(dialogo).toBeVisible();
@@ -105,9 +125,9 @@ test.describe
     });
     await tabAte(page, abrir);
     await focoVisivel(abrir);
-    await page.keyboard.press("Enter");
-
     const dialogo = page.getByRole("dialog", { name: "Vincular estagiário" });
+    await fecharDevolvendoFoco(page, abrir, dialogo, "rodapé");
+    await page.keyboard.press("Enter");
     await expect(dialogo).toBeVisible();
     await escolherPeloTeclado(page, "Estagiário ativo", EQUIPE.estagiario.nome);
     const confirmar = dialogo.getByRole("button", {

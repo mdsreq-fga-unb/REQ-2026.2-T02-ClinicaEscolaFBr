@@ -1,16 +1,23 @@
 import { AlertCircle } from "lucide-react";
 import { useId, type ReactNode } from "react";
+import { cn } from "@/lib/utils";
 
 // Campo com rótulo, dica e erro ligados ao controle por aria-describedby (RNF1).
+// Nas páginas públicas (`publico`), o rótulo e o campo seguem o tamanho maior do
+// protótipo.
 export function Campo({
   rotulo,
   dica,
   erro,
+  publico = false,
+  className,
   children,
 }: {
   rotulo: string;
   dica?: string;
   erro?: string;
+  publico?: boolean;
+  className?: string;
   children: (props: {
     id: string;
     "aria-describedby"?: string;
@@ -24,15 +31,18 @@ export function Campo({
     .filter(Boolean)
     .join(" ");
   return (
-    <div className="space-y-1">
+    <div className={cn("flex flex-col gap-1.5", className)}>
       <label
         htmlFor={id}
-        className="block text-sm font-semibold text-foreground"
+        className={cn(
+          "font-semibold text-foreground",
+          publico ? "text-base" : "text-[15px]",
+        )}
       >
         {rotulo}
       </label>
       {dica && (
-        <p id={idDica} className="text-xs text-muted-foreground">
+        <p id={idDica} className="ui-dica">
           {dica}
         </p>
       )}
@@ -44,9 +54,9 @@ export function Campo({
       {erro && (
         <p
           id={idErro}
-          className="flex items-start gap-1 text-xs font-medium text-destructive"
+          className="flex items-start gap-1.5 text-sm leading-[1.4] font-semibold text-destructive"
         >
-          <AlertCircle aria-hidden className="mt-px size-3.5 shrink-0" />
+          <AlertCircle aria-hidden className="mt-0.5 size-4 shrink-0" />
           {erro}
         </p>
       )}
@@ -54,5 +64,9 @@ export function Campo({
   );
 }
 
-export const classeEntrada =
-  "h-10 w-full rounded-md border border-input bg-card px-3 text-sm text-foreground aria-[invalid=true]:border-destructive";
+const base =
+  "w-full min-w-0 rounded-lg border-[1.5px] border-input bg-white text-foreground aria-[invalid=true]:border-2 aria-[invalid=true]:border-destructive";
+
+export const classeEntrada = `${base} h-11 px-3 text-[15px]`;
+export const classeEntradaPublica = `${base} h-12 px-3.5 text-base`;
+export const classeTextoLongo = `${base} min-h-[140px] p-3 text-[15px] leading-[1.55]`;

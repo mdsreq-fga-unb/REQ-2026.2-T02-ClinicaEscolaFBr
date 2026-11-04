@@ -530,7 +530,7 @@ describe('Distribuição de casos (RF18, RF20 e RF21)', () => {
         .set(como('ana'))
         .send({
           anamnese: 'Anamnese sigilosa',
-          contrato: 'Contrato sigiloso',
+          viaContratoGuardada: true,
           dataAssinaturaContrato: '2026-10-01',
         })
         .expect(201);
