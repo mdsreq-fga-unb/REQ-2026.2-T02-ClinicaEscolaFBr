@@ -877,15 +877,17 @@ _Rastreabilidade:_ Feature "Registrar falta do paciente na sessão" → CP9 — 
 
 **RF35 — Contabilizar faltas do paciente no ciclo**{ #rf35 }
 
-O sistema deve manter, por paciente, a contagem cumulativa de faltas no ciclo de atendimento atual, consecutivas ou não, consumindo dois eventos: a falta registrada na sessão (RF34) e o cancelamento fora do prazo (RF15), isto é, feito com antecedência menor que o mínimo configurado na CP4. Cancelamentos no prazo e cancelamentos administrativos para remarcação (RF15) não incrementam a contagem. A ausência de confirmação de presença (RF14) não conta como falta. Conforme confirmado pela Clínica Escola, o desligamento é acionado ao atingir 2 faltas no ciclo, consecutivas ou não; por isso a contagem nunca é zerada por uma sessão realizada, e só recomeça em um novo ciclo de atendimento. A falta pode ser marcada como justificada, conforme o RF34; essa classificação orienta a comunicação ao paciente e a análise de uma reversão de desligamento (RF38), mas não altera a contagem.
+O sistema deve manter, por paciente, a contagem cumulativa de faltas no ciclo de atendimento atual, consecutivas ou não, consumindo dois eventos: a falta registrada na sessão (RF34) e o cancelamento fora do prazo (RF15), isto é, feito com antecedência menor que o mínimo configurado na CP4. Cancelamentos no prazo e cancelamentos administrativos para remarcação (RF15) não incrementam a contagem. A ausência de confirmação de presença (RF14) não conta como falta. Conforme confirmado pela Clínica Escola, o desligamento é acionado ao atingir 2 faltas no ciclo, consecutivas ou não; por isso a contagem nunca é zerada por uma sessão realizada, e só recomeça em um novo ciclo de atendimento. Quando a contagem chega a uma falta, o sistema avisa a secretaria e o estagiário responsável de que uma nova falta resultará em desligamento. A falta pode ser marcada como justificada, conforme o RF34; essa classificação orienta a comunicação ao paciente e a análise de uma reversão de desligamento (RF38), mas não altera a contagem. Quando a coordenação reverte um desligamento feito por engano (RF38), ela indica quais faltas do ciclo deixam de contar; a contagem passa a ser a das faltas mantidas, e todas continuam no histórico, com a indicação de quem as retirou da contagem e quando. Essa regra é uma proposta da equipe, registrada nas [pendências de validação com a FBr](analise-feedback.md#pendencias-de-validacao-com-a-fbr).
 
 _Critérios de aceitação:_
 
 - A primeira falta do ciclo (RF34) ou o primeiro cancelamento fora do prazo (RF15) eleva a contagem para uma unidade e avisa a secretaria e o estagiário responsável de que uma nova falta resultará em desligamento.
 - Uma nova falta, mesmo com sessões realizadas desde a anterior, eleva a contagem para duas unidades e dispara o alerta de limite (RF36).
+- Cancelamento no prazo e cancelamento administrativo para remarcação (RF15) não alteram a contagem.
 - Paciente que não confirmou a sessão no prazo (RF14), mas compareceu, não tem a contagem de faltas incrementada.
 - Falta marcada como justificada (RF34) continua contando para o limite de 2 faltas.
-- A reversão de desligamento feito por engano (RF38) ajusta a contagem de faltas conforme a decisão registrada, preservando o histórico de cada evento para auditoria.
+- Em um novo ciclo de atendimento do mesmo paciente, a contagem começa em zero.
+- Na reversão de desligamento feito por engano (RF38), as faltas que a coordenação indicar deixam de contar, e a contagem passa a ser a das faltas mantidas (por exemplo, de duas faltas com uma retirada, a contagem volta a uma); todas as faltas continuam no histórico, com autor e data/hora da retirada.
 
 _Rastreabilidade:_ Feature "Contabilizar faltas do paciente no ciclo" → CP9 — Controle de assiduidade e alertas → OE4/OE3. Dependência: RF15 (CP4), RF34. Origem: [DF20](decisoes-fbr.md).
 
