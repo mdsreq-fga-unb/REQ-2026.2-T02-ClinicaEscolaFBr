@@ -1,6 +1,6 @@
 "use client";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { Eye, ListFilter, Lock } from "lucide-react";
+import { Check, Lock } from "lucide-react";
 import { useState } from "react";
 import type {
   CasoAguardando,
@@ -20,8 +20,9 @@ const ORDEM =
   "Ordenado por prioridade clínica (Vermelha, Amarela, Verde) e, na mesma prioridade, pela data da inscrição.";
 
 // Escolha do supervisor responsável pela coordenação (RF20): casos ativos de cada
-// um em relação ao limite, sem deixar escolher quem já está no limite.
-function DistribuirCaso({
+// um em relação ao limite, sem deixar escolher quem já está no limite. Devolve o
+// corpo e o rodapé do diálogo, com o botão principal fixo no rodapé.
+function useDistribuirCaso({
   caso,
   aoConcluir,
   aoFechar,
@@ -54,31 +55,32 @@ function DistribuirCaso({
       ? (erro.corpo as unknown as CasoJaDistribuido)
       : null;
 
-  return (
-    <div className="space-y-4">
-      <dl className="grid grid-cols-2 gap-3 rounded-md bg-muted p-3 text-sm">
-        <div>
-          <dt className="text-xs text-muted-foreground">Inscrição</dt>
-          <dd className="font-semibold">{caso.numero}</dd>
-        </div>
-        <div>
-          <dt className="text-xs text-muted-foreground">Nome</dt>
-          <dd className="font-semibold">{caso.nome}</dd>
-        </div>
-        <div>
-          <dt className="text-xs text-muted-foreground">Prioridade clínica</dt>
-          <dd>
-            <Prioridade cor={caso.prioridade} />
-          </dd>
-        </div>
-        <div>
-          <dt className="text-xs text-muted-foreground">Data da inscrição</dt>
-          <dd className="font-semibold">{dataBr(caso.dataInscricao)}</dd>
-        </div>
-      </dl>
+  const formulario = `distribuir-${caso.casoId}`;
+  return {
+    corpo: (
+      <>
+        <dl className="ui-resumo-caso max-md:grid-cols-1">
+          <div>
+            <dt>Inscrição</dt>
+            <dd className="ui-numero">{caso.numero}</dd>
+          </div>
+          <div>
+            <dt>Nome</dt>
+            <dd>{caso.nome}</dd>
+          </div>
+          <div>
+            <dt>Prioridade clínica</dt>
+            <dd>
+              <Prioridade cor={caso.prioridade} />
+            </dd>
+          </div>
+          <div>
+            <dt>Data da inscrição</dt>
+            <dd>{dataBr(caso.dataInscricao)}</dd>
+          </div>
+        </dl>
 
-      {jaDistribuido ? (
-        <>
+        {jaDistribuido ? (
           <Aviso
             tipo="info"
             titulo={`Este caso já tem supervisor: ${jaDistribuido.supervisor}.`}
@@ -86,108 +88,115 @@ function DistribuirCaso({
             Ele foi distribuído em {dataBr(jaDistribuido.desde)}. Para mudar o
             supervisor, use a transferência de caso.
           </Aviso>
-          <div className="flex justify-end">
-            <Button variant="outline" onClick={aoFechar}>
-              Fechar
-            </Button>
-          </div>
-        </>
-      ) : (
-        <form
-          onSubmit={(evento) => {
-            evento.preventDefault();
-            if (escolhido) distribuicao.mutate(escolhido);
-          }}
-          className="space-y-4"
-        >
-          {supervisores.isPending && (
-            <p role="status">Carregando supervisores…</p>
-          )}
-          {supervisores.isError && (
-            <Aviso
-              tipo="erro"
-              titulo="Não foi possível carregar os supervisores."
-            />
-          )}
-          {supervisores.data && lista.length === 0 && (
-            <Aviso tipo="alerta" titulo="Não há supervisores ativos.">
-              Cadastre ou ative um supervisor em Usuários para distribuir o
-              caso.
-            </Aviso>
-          )}
-          {todosNoLimite && (
-            <Aviso
-              tipo="alerta"
-              titulo="Todos os supervisores estão no limite de casos."
-            >
-              Cada supervisor já tem {limite} casos ativos. O caso continua na
-              lista de casos aguardando distribuição até que alguém tenha vaga.
-            </Aviso>
-          )}
-          {lista.length > 0 && (
-            <fieldset>
-              <legend className="text-sm font-semibold">Supervisor</legend>
-              <p className="text-xs text-muted-foreground">
-                Casos ativos de cada supervisor. O limite é de {limite} casos.
-              </p>
-              <div className="mt-2 space-y-2">
+        ) : (
+          <form
+            id={formulario}
+            onSubmit={(evento) => {
+              evento.preventDefault();
+              if (escolhido) distribuicao.mutate(escolhido);
+            }}
+            className="flex flex-col gap-[18px]"
+          >
+            {supervisores.isPending && (
+              <p role="status">Carregando supervisores…</p>
+            )}
+            {supervisores.isError && (
+              <Aviso
+                tipo="erro"
+                titulo="Não foi possível carregar os supervisores."
+              />
+            )}
+            {supervisores.data && lista.length === 0 && (
+              <Aviso tipo="alerta" titulo="Não há supervisores ativos.">
+                Cadastre ou ative um supervisor em Usuários para distribuir o
+                caso.
+              </Aviso>
+            )}
+            {todosNoLimite && (
+              <Aviso
+                tipo="alerta"
+                titulo="Todos os supervisores estão no limite de casos."
+              >
+                Cada supervisor já tem {limite} casos ativos. O caso continua na
+                lista de casos aguardando distribuição até que alguém tenha
+                vaga.
+              </Aviso>
+            )}
+            {lista.length > 0 && (
+              <fieldset
+                disabled={todosNoLimite}
+                className="flex min-w-0 flex-col gap-2"
+              >
+                <legend className="ui-rotulo mb-1.5">Supervisor</legend>
+                <p className="ui-dica -mt-1">
+                  Casos ativos de cada supervisor. O limite é de {limite} casos.
+                </p>
                 {lista.map((s) => (
-                  <label
-                    key={s.id}
-                    className={
-                      s.noLimite
-                        ? "flex cursor-not-allowed items-start gap-3 rounded-md border border-dashed border-input bg-muted px-3 py-2 text-sm text-muted-foreground"
-                        : "flex cursor-pointer items-start gap-3 rounded-md border border-input px-3 py-2 text-sm has-checked:border-primary has-checked:bg-accent"
-                    }
-                  >
+                  <label key={s.id} className="ui-opcao">
                     <input
                       type="radio"
                       name="supervisor"
                       value={s.id}
-                      className="mt-1"
                       disabled={s.noLimite}
+                      aria-describedby={
+                        s.noLimite ? `limite-${s.id}` : undefined
+                      }
                       checked={escolhido === s.id}
                       onChange={() => setEscolhido(s.id)}
                     />
-                    <span className="flex-1">
-                      <span className="block font-semibold">{s.nome}</span>
+                    <span className="min-w-0 flex-1">
+                      <span className="flex w-full items-center justify-between gap-3">
+                        <b>{s.nome}</b>
+                        <span className="font-bold whitespace-nowrap text-marca tabular-nums">
+                          {s.casosAtivos} de {s.limite}
+                          <span className="sr-only"> casos ativos</span>
+                        </span>
+                      </span>
                       {s.noLimite && (
-                        <span className="mt-0.5 flex items-center gap-1 text-xs">
-                          <Lock aria-hidden className="size-3.5" />
+                        <span
+                          id={`limite-${s.id}`}
+                          className="mt-0.5 flex items-center gap-1.5 text-sm font-semibold"
+                        >
+                          <Lock aria-hidden className="size-4" />
                           Limite de {s.limite} casos atingido
                         </span>
                       )}
                     </span>
-                    <span className="font-semibold">
-                      {s.casosAtivos} de {s.limite}
-                    </span>
                   </label>
                 ))}
-              </div>
-            </fieldset>
-          )}
-          {erro && !jaDistribuido && (
-            <Aviso tipo="erro" titulo="Não foi possível distribuir o caso.">
-              {erro.status === 422 || erro.status === 409
-                ? erro.message
-                : "Tente novamente em instantes."}
-            </Aviso>
-          )}
-          <div className="flex justify-end gap-2">
-            <Button type="button" variant="outline" onClick={aoFechar}>
-              {todosNoLimite ? "Fechar" : "Cancelar"}
-            </Button>
-            <Button
-              type="submit"
-              disabled={!escolhido || todosNoLimite || distribuicao.isPending}
-            >
-              Confirmar distribuição
-            </Button>
-          </div>
-        </form>
-      )}
-    </div>
-  );
+              </fieldset>
+            )}
+            {erro && !jaDistribuido && (
+              <Aviso tipo="erro" titulo="Não foi possível distribuir o caso.">
+                {erro.status === 422 || erro.status === 409
+                  ? erro.message
+                  : "Tente novamente em instantes."}
+              </Aviso>
+            )}
+          </form>
+        )}
+      </>
+    ),
+    rodape: jaDistribuido ? (
+      <Button variant="outline" onClick={aoFechar}>
+        Fechar
+      </Button>
+    ) : (
+      <>
+        <Button type="button" variant="outline" onClick={aoFechar}>
+          {todosNoLimite ? "Fechar" : "Cancelar"}
+        </Button>
+        <Button
+          type="submit"
+          form={formulario}
+          data-principal
+          disabled={!escolhido || todosNoLimite || distribuicao.isPending}
+        >
+          Confirmar distribuição
+        </Button>
+      </>
+    ),
+  };
 }
 
 // Casos aguardando distribuição (RF18) e distribuição a supervisor (RF20). A
@@ -216,9 +225,10 @@ export default function DistribuicaoPage() {
     );
   }
 
-  const botao = (caso: CasoAguardando) => (
+  const botao = (caso: CasoAguardando, largo = false) => (
     <Button
       aria-label={`Distribuir ${caso.nome}`}
+      className={largo ? "w-full" : undefined}
       onClick={() => {
         setMensagem(null);
         setAberto(caso);
@@ -229,23 +239,18 @@ export default function DistribuicaoPage() {
   );
 
   return (
-    <div className="mx-auto max-w-6xl space-y-6">
+    <div className="flex flex-col gap-6">
       <div>
-        <h1 className="text-2xl font-semibold text-marca">
-          Casos aguardando distribuição
-        </h1>
-        <p className="text-sm text-muted-foreground">
+        <h1 className="ui-titulo">Casos aguardando distribuição</h1>
+        <p className="ui-subtitulo">
           Casos com prioridade clínica registrada e ainda sem supervisor.
         </p>
       </div>
 
       {sessao?.perfil === "supervisor" && (
         <Aviso tipo="info" titulo="Somente consulta.">
-          <span className="flex items-start gap-1">
-            <Eye aria-hidden className="mt-0.5 size-4 shrink-0" />A distribuição
-            dos casos é feita pela coordenação. Os casos atribuídos a você
-            aparecem em &quot;Meus casos&quot;.
-          </span>
+          A distribuição dos casos é feita pela coordenação. Os casos atribuídos
+          a você aparecem em “Meus casos”.
         </Aviso>
       )}
       {mensagem && (
@@ -260,95 +265,111 @@ export default function DistribuicaoPage() {
         <Aviso tipo="erro" titulo="Não foi possível carregar os casos." />
       )}
       {lista.data && lista.data.length === 0 && (
-        <Aviso tipo="sucesso" titulo="Não há casos aguardando distribuição.">
-          Os casos aparecem aqui depois que a prioridade clínica é registrada na
-          triagem.
-        </Aviso>
-      )}
-      {lista.data && lista.data.length > 0 && (
-        <div className="overflow-hidden rounded-lg border border-border bg-card">
-          <p className="flex items-center gap-2 border-b border-border px-4 py-3 text-xs text-muted-foreground">
-            <ListFilter aria-hidden className="size-4" />
-            {ORDEM}
-          </p>
-          <table className="hidden w-full text-sm md:table">
-            <caption className="sr-only">Casos aguardando distribuição</caption>
-            <thead className="text-left text-xs text-muted-foreground">
-              <tr>
-                <th scope="col" className="px-4 py-3 font-semibold">
-                  Nº da inscrição
-                </th>
-                <th scope="col" className="px-4 py-3 font-semibold">
-                  Nome
-                </th>
-                <th scope="col" className="px-4 py-3 font-semibold">
-                  Prioridade clínica
-                </th>
-                <th scope="col" className="px-4 py-3 font-semibold">
-                  Data da inscrição
-                </th>
-                {coordena && (
-                  <th scope="col" className="px-4 py-3">
-                    <span className="sr-only">Ações</span>
-                  </th>
-                )}
-              </tr>
-            </thead>
-            <tbody>
-              {lista.data.map((caso) => (
-                <tr key={caso.casoId} className="border-t border-border">
-                  <td className="px-4 py-3 font-semibold">{caso.numero}</td>
-                  <td className="px-4 py-3">{caso.nome}</td>
-                  <td className="px-4 py-3">
-                    <Prioridade cor={caso.prioridade} />
-                  </td>
-                  <td className="px-4 py-3">{dataBr(caso.dataInscricao)}</td>
-                  {coordena && (
-                    <td className="px-4 py-3 text-right">{botao(caso)}</td>
-                  )}
-                </tr>
-              ))}
-            </tbody>
-          </table>
-          <ul className="divide-y divide-border md:hidden">
-            {lista.data.map((caso) => (
-              <li key={caso.casoId} className="space-y-2 p-4">
-                <div className="flex items-center justify-between gap-2">
-                  <span className="text-sm font-semibold">{caso.numero}</span>
-                  <Prioridade cor={caso.prioridade} />
-                </div>
-                <p className="font-semibold">{caso.nome}</p>
-                <p className="text-xs text-muted-foreground">
-                  Inscrição em {dataBr(caso.dataInscricao)}
-                </p>
-                {coordena && (
-                  <div className="[&>button]:w-full">{botao(caso)}</div>
-                )}
-              </li>
-            ))}
-          </ul>
+        <div className="ui-painel">
+          <div className="ui-vazio">
+            <span aria-hidden className="ui-vazio-icone">
+              <Check className="size-7" />
+            </span>
+            <h2 className="ui-h2">Não há casos aguardando distribuição.</h2>
+            <p className="ui-subtitulo m-0 max-w-[460px]">
+              Os casos aparecem aqui depois que a prioridade clínica é
+              registrada na triagem.
+            </p>
+          </div>
         </div>
       )}
+      {lista.data && lista.data.length > 0 && (
+        <>
+          <div className="ui-painel max-md:hidden">
+            <p className="ui-ordem">{ORDEM}</p>
+            <table className="ui-tabela">
+              <caption className="sr-only">
+                Casos aguardando distribuição
+              </caption>
+              <thead>
+                <tr>
+                  <th scope="col">Nº da inscrição</th>
+                  <th scope="col">Nome</th>
+                  <th scope="col">Prioridade clínica</th>
+                  <th scope="col">Data da inscrição</th>
+                  {coordena && (
+                    <th scope="col">
+                      <span className="sr-only">Ações</span>
+                    </th>
+                  )}
+                </tr>
+              </thead>
+              <tbody>
+                {lista.data.map((caso) => (
+                  <tr key={caso.casoId}>
+                    <td className="ui-numero">{caso.numero}</td>
+                    <td className="font-semibold">{caso.nome}</td>
+                    <td>
+                      <Prioridade cor={caso.prioridade} />
+                    </td>
+                    <td>{dataBr(caso.dataInscricao)}</td>
+                    {coordena && <td className="text-right">{botao(caso)}</td>}
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+          <div className="flex flex-col gap-3.5 md:hidden">
+            <p className="ui-dica">
+              Por prioridade clínica e data da inscrição.
+            </p>
+            <ul className="ui-lista-celular">
+              {lista.data.map((caso) => (
+                <li key={caso.casoId} className="ui-item-celular">
+                  <div className="flex items-center justify-between gap-2">
+                    <span className="ui-numero">{caso.numero}</span>
+                    <Prioridade cor={caso.prioridade} />
+                  </div>
+                  <p className="text-[17px] font-semibold">{caso.nome}</p>
+                  <p className="text-sm text-muted-foreground">
+                    Inscrição em {dataBr(caso.dataInscricao)}
+                  </p>
+                  {coordena && botao(caso, true)}
+                </li>
+              ))}
+            </ul>
+          </div>
+        </>
+      )}
 
-      <Dialogo
-        aberto={!!aberto}
-        aoFechar={() => setAberto(null)}
-        titulo="Distribuir caso"
-      >
-        {aberto && (
-          <DistribuirCaso
-            key={aberto.casoId}
-            caso={aberto}
-            aoFechar={() => setAberto(null)}
-            aoConcluir={(resultado) => {
-              setAberto(null);
-              setMensagem(resultado);
-              void cliente.invalidateQueries({ queryKey: ["casos"] });
-              void cliente.invalidateQueries({ queryKey: ["supervisores"] });
-            }}
-          />
-        )}
-      </Dialogo>
+      {aberto && (
+        <DialogoDistribuir
+          key={aberto.casoId}
+          caso={aberto}
+          aoFechar={() => setAberto(null)}
+          aoConcluir={(resultado) => {
+            setAberto(null);
+            setMensagem(resultado);
+            void cliente.invalidateQueries({ queryKey: ["casos"] });
+            void cliente.invalidateQueries({ queryKey: ["supervisores"] });
+          }}
+        />
+      )}
     </div>
+  );
+}
+
+function DialogoDistribuir(props: {
+  caso: CasoAguardando;
+  aoConcluir: (resultado: ResultadoDistribuicao) => void;
+  aoFechar: () => void;
+}) {
+  const { corpo, rodape } = useDistribuirCaso(props);
+  return (
+    <Dialogo
+      aberto
+      lateral
+      aoFechar={props.aoFechar}
+      titulo="Distribuir caso"
+      subtitulo="Escolha o supervisor responsável."
+      rodape={rodape}
+    >
+      {corpo}
+    </Dialogo>
   );
 }

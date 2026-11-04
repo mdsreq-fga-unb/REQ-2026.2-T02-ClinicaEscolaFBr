@@ -1,23 +1,25 @@
 "use client";
-import { useQueryClient } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { LogOut, Menu, X } from "lucide-react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { useEffect, useState, type ReactNode } from "react";
+import { useEffect, useRef, useState, type ReactNode } from "react";
 import { api, ErroApi } from "@/lib/api";
-import { NOMES_PERFIL, useSessao } from "@/lib/sessao";
+import { NOMES_PERFIL, useSessao, type UsuarioDaSessao } from "@/lib/sessao";
 import { cn } from "@/lib/utils";
-import { MENU_POR_PERFIL } from "./menu";
+import { MENU_POR_PERFIL, tituloDaPagina } from "./menu";
 
 function Marca() {
   return (
     <div className="flex items-center gap-3">
-      <span className="grid size-9 place-items-center rounded-md bg-white text-sm font-bold text-marca">
+      <span className="grid size-10 shrink-0 place-items-center rounded-[10px] bg-white text-sm font-extrabold text-primary">
         FBr
       </span>
       <span className="leading-tight">
-        <span className="block text-sm font-semibold">Clínica Escola</span>
-        <span className="block text-xs text-white/80">de Psicologia · FBr</span>
+        <span className="block text-[15px] font-bold">Clínica Escola</span>
+        <span className="block text-[13px] text-[#cfe3ec]">
+          de Psicologia · FBr
+        </span>
       </span>
     </div>
   );
@@ -32,20 +34,134 @@ const iniciais = (nome: string) =>
     .join("")
     .toUpperCase();
 
-// Área interna da equipe: menu lateral por perfil e menu recolhível no celular.
+// Inscrições aguardando triagem, no item "Triagem" do menu, como no protótipo.
+// A rota devolve só o total, sem as respostas das inscrições.
+function useTriagemPendente(usuario: UsuarioDaSessao | undefined) {
+  const clinico =
+    usuario?.perfil === "supervisor" || usuario?.perfil === "coordenacao";
+  const consulta = useQuery({
+    queryKey: ["triagem", "total"],
+    queryFn: () => api<{ total: number }>("/triagem/inscricoes/total"),
+    enabled: clinico,
+  });
+  return clinico ? consulta.data?.total : undefined;
+}
+
+// Menu da área interna: itens do perfil, pessoa da sessão e saída (RF51).
+function Navegacao({
+  usuario,
+  caminho,
+  pendentes,
+  aoNavegar,
+  sair,
+  saindo,
+  falhaNaSaida,
+}: {
+  usuario: UsuarioDaSessao;
+  caminho: string;
+  pendentes?: number;
+  aoNavegar?: () => void;
+  sair: () => void;
+  saindo: boolean;
+  falhaNaSaida: boolean;
+}) {
+  return (
+    <>
+      <nav aria-label="Menu principal">
+        <ul className="flex flex-col gap-1">
+          {MENU_POR_PERFIL[usuario.perfil].map(({ rotulo, href, Icone }) => {
+            const atual = caminho === href || caminho.startsWith(`${href}/`);
+            return (
+              <li key={href}>
+                <Link
+                  href={href}
+                  onClick={aoNavegar}
+                  aria-current={atual ? "page" : undefined}
+                  className={cn(
+                    "flex min-h-11 items-center gap-3 rounded-lg px-3 text-[15px] focus-visible:outline-white focus-visible:-outline-offset-[3px]",
+                    atual
+                      ? "bg-sidebar-primary font-bold text-white"
+                      : "font-medium text-[#d6e6ee] hover:bg-sidebar-accent",
+                  )}
+                >
+                  <Icone aria-hidden className="size-5 shrink-0" />
+                  {rotulo}
+                  {href === "/triagem" && !!pendentes && (
+                    <span className="ml-auto rounded-full bg-[#e4f2f8] px-2 py-px text-xs font-bold text-marca">
+                      {pendentes}
+                      <span className="sr-only"> inscrições</span>
+                    </span>
+                  )}
+                </Link>
+              </li>
+            );
+          })}
+        </ul>
+      </nav>
+      <div className="mt-auto flex flex-col gap-3 border-t border-sidebar-border pt-4">
+        <div className="flex items-center gap-3">
+          <span
+            aria-hidden
+            className="grid size-10 shrink-0 place-items-center rounded-full bg-[#e4f2f8] text-sm font-bold text-marca"
+          >
+            {iniciais(usuario.nome)}
+          </span>
+          <span className="min-w-0 leading-tight">
+            <span className="block text-[15px] font-semibold break-words text-white">
+              {usuario.nome}
+            </span>
+            <span className="block text-[13px] text-[#cfe3ec]">
+              Perfil: {NOMES_PERFIL[usuario.perfil]}
+            </span>
+          </span>
+        </div>
+        {falhaNaSaida && (
+          <p
+            role="alert"
+            className="rounded-lg bg-erro-fundo p-2 text-[13px] text-foreground"
+          >
+            Não foi possível sair: a sessão continua aberta. Verifique a conexão
+            e tente de novo.
+          </p>
+        )}
+        <button
+          type="button"
+          onClick={sair}
+          disabled={saindo}
+          className="flex min-h-11 items-center justify-center gap-2 rounded-lg border-[1.5px] border-[#6f8fa0] text-[15px] font-semibold text-white hover:bg-sidebar-accent focus-visible:outline-white disabled:opacity-60"
+        >
+          <LogOut aria-hidden className="size-5" />
+          {saindo ? "Saindo…" : falhaNaSaida ? "Tentar sair de novo" : "Sair"}
+        </button>
+      </div>
+    </>
+  );
+}
+
+// Área interna da equipe: menu lateral fixo por perfil no computador e menu em
+// gaveta no celular, como no protótipo aprovado.
 export function AreaInterna({ children }: { children: ReactNode }) {
   const { data: usuario, error, isPending } = useSessao();
   const caminho = usePathname();
   const router = useRouter();
   const queryClient = useQueryClient();
+  const gaveta = useRef<HTMLDialogElement>(null);
   const [menuAberto, setMenuAberto] = useState(false);
   const [saindo, setSaindo] = useState(false);
   const [falhaNaSaida, setFalhaNaSaida] = useState(false);
+  const pendentes = useTriagemPendente(usuario);
 
   useEffect(() => {
     if (error instanceof ErroApi && error.status === 401)
       router.replace("/entrar");
   }, [error, router]);
+
+  useEffect(() => {
+    const dialogo = gaveta.current;
+    if (!dialogo) return;
+    if (menuAberto && !dialogo.open) dialogo.showModal();
+    if (!menuAberto && dialogo.open) dialogo.close();
+  }, [menuAberto]);
 
   if (isPending || !usuario) {
     return (
@@ -73,105 +189,85 @@ export function AreaInterna({ children }: { children: ReactNode }) {
     router.replace("/entrar");
   };
 
-  const navegacao = (
-    <nav aria-label="Menu principal" className="flex h-full flex-col gap-1 p-4">
-      <div className="mb-6 hidden md:block">
-        <Marca />
-      </div>
-      <ul className="space-y-1">
-        {MENU_POR_PERFIL[usuario.perfil].map(({ rotulo, href, Icone }) => {
-          const atual = caminho === href || caminho.startsWith(`${href}/`);
-          return (
-            <li key={href}>
-              <Link
-                href={href}
-                onClick={() => setMenuAberto(false)}
-                aria-current={atual ? "page" : undefined}
-                className={cn(
-                  "flex items-center gap-3 rounded-md px-3 py-2.5 text-sm",
-                  atual
-                    ? "bg-sidebar-primary font-semibold"
-                    : "hover:bg-sidebar-accent",
-                )}
-              >
-                <Icone aria-hidden className="size-4" />
-                {rotulo}
-              </Link>
-            </li>
-          );
-        })}
-      </ul>
-      <div className="mt-auto border-t border-sidebar-border pt-4">
-        <div className="mb-3 flex items-center gap-3">
-          <span
-            aria-hidden
-            className="grid size-9 place-items-center rounded-full bg-white text-xs font-bold text-marca"
-          >
-            {iniciais(usuario.nome)}
-          </span>
-          <span className="leading-tight">
-            <span className="block text-sm font-semibold">{usuario.nome}</span>
-            <span className="block text-xs text-white/80">
-              Perfil: {NOMES_PERFIL[usuario.perfil]}
-            </span>
-          </span>
-        </div>
-        {falhaNaSaida && (
-          <p
-            role="alert"
-            className="mb-3 rounded-md bg-erro-fundo p-2 text-xs text-foreground"
-          >
-            Não foi possível sair: a sessão continua aberta. Verifique a conexão
-            e tente de novo.
-          </p>
-        )}
-        <button
-          type="button"
-          onClick={sair}
-          disabled={saindo}
-          className="flex w-full items-center justify-center gap-2 rounded-md border border-white/60 py-2 text-sm hover:bg-sidebar-accent disabled:opacity-60"
-        >
-          <LogOut aria-hidden className="size-4" />
-          {saindo ? "Saindo…" : falhaNaSaida ? "Tentar sair de novo" : "Sair"}
-        </button>
-      </div>
-    </nav>
-  );
+  const propsNavegacao = {
+    usuario,
+    caminho,
+    pendentes,
+    sair,
+    saindo,
+    falhaNaSaida,
+  };
 
   return (
-    <div className="min-h-dvh md:flex">
-      <header className="flex items-center justify-between bg-marca px-4 py-3 text-white md:hidden">
+    <div className="min-h-[calc(100dvh-var(--altura-faixa,0px))] md:flex">
+      <header className="flex min-h-14 items-center gap-1 bg-marca px-1.5 text-white md:hidden">
         <button
           type="button"
-          aria-expanded={menuAberto}
-          aria-controls="menu-celular"
-          onClick={() => setMenuAberto((v) => !v)}
-          className="flex items-center gap-2 rounded-md p-1"
+          aria-label="Abrir menu"
+          aria-haspopup="dialog"
+          onClick={() => setMenuAberto(true)}
+          className="grid size-11 place-items-center rounded-lg focus-visible:outline-white"
         >
-          {menuAberto ? (
-            <X aria-hidden className="size-5" />
-          ) : (
-            <Menu aria-hidden className="size-5" />
-          )}
-          <span>{menuAberto ? "Fechar menu" : "Abrir menu"}</span>
+          <Menu aria-hidden className="size-5" />
         </button>
-        <span
-          aria-hidden
-          className="grid size-8 place-items-center rounded-full bg-white text-xs font-bold text-marca"
+        <span className="flex-1 text-base font-bold">
+          {tituloDaPagina(usuario.perfil, caminho)}
+        </span>
+        <button
+          type="button"
+          aria-label={`${usuario.nome}, ${NOMES_PERFIL[usuario.perfil]}: abrir menu`}
+          aria-haspopup="dialog"
+          onClick={() => setMenuAberto(true)}
+          className="grid size-11 place-items-center rounded-full bg-[#e4f2f8] text-sm font-bold text-marca focus-visible:outline-white"
         >
           {iniciais(usuario.nome)}
-        </span>
+        </button>
       </header>
-      <aside
-        id="menu-celular"
-        className={cn(
-          "bg-sidebar text-sidebar-foreground md:sticky md:top-0 md:block md:h-dvh md:w-64 md:shrink-0",
-          menuAberto ? "block" : "hidden",
-        )}
+      <dialog
+        ref={gaveta}
+        aria-label="Menu principal"
+        onClose={() => setMenuAberto(false)}
+        onClick={(evento) => {
+          // Tocar fora da gaveta, no fundo escurecido, fecha o menu. O conteúdo
+          // ocupa a gaveta toda, então um toque dentro dela nunca tem o próprio
+          // <dialog> como alvo.
+          if (evento.target === gaveta.current) setMenuAberto(false);
+        }}
+        className="m-0 h-dvh max-h-none w-[300px] max-w-[85vw] bg-sidebar p-0 text-white backdrop:bg-[rgba(0,26,38,0.55)] open:flex md:hidden"
       >
-        {navegacao}
+        {menuAberto && (
+          <div className="flex h-full w-full flex-col gap-6 overflow-y-auto px-3.5 pt-3 pb-5">
+            <div className="flex items-center justify-between">
+              <Marca />
+              <button
+                type="button"
+                aria-label="Fechar menu"
+                onClick={() => setMenuAberto(false)}
+                className="grid size-11 place-items-center rounded-lg focus-visible:outline-white"
+              >
+                <X aria-hidden className="size-5" />
+              </button>
+            </div>
+            <Navegacao
+              {...propsNavegacao}
+              aoNavegar={() => setMenuAberto(false)}
+            />
+          </div>
+        )}
+      </dialog>
+      <aside
+        aria-label="Menu lateral"
+        className="hidden w-[264px] shrink-0 flex-col gap-7 overflow-y-auto bg-sidebar px-3.5 py-5 text-sidebar-foreground md:sticky md:top-[var(--altura-faixa,0px)] md:flex md:h-[calc(100dvh-var(--altura-faixa,0px))]"
+      >
+        <div className="px-1.5">
+          <Marca />
+        </div>
+        <Navegacao {...propsNavegacao} />
       </aside>
-      <main id="conteudo" className="min-w-0 flex-1 p-4 md:p-8">
+      <main
+        id="conteudo"
+        className="min-w-0 flex-1 px-4 pt-5 pb-8 md:px-10 md:py-8"
+      >
         {children}
       </main>
     </div>

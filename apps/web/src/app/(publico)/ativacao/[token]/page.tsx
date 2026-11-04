@@ -6,7 +6,7 @@ import { useParams } from "next/navigation";
 import { useState } from "react";
 import { REGRAS_SENHA, ativacaoSchema, type Perfil } from "@clinica/shared";
 import { Aviso } from "@/components/comum/aviso";
-import { Campo, classeEntrada } from "@/components/comum/campo";
+import { Campo, classeEntradaPublica } from "@/components/comum/campo";
 import { PaginaEquipe } from "@/components/layout/pagina-equipe";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { api, ErroApi } from "@/lib/api";
@@ -29,14 +29,14 @@ function CampoSenha({
 }) {
   const [visivel, setVisivel] = useState(false);
   return (
-    <Campo rotulo={rotulo} erro={erro} dica={dica}>
+    <Campo publico rotulo={rotulo} erro={erro} dica={dica}>
       {(props) => (
         <div className="flex gap-2">
           <input
             {...props}
             type={visivel ? "text" : "password"}
             autoComplete="new-password"
-            className={classeEntrada}
+            className={classeEntradaPublica}
             value={valor}
             onChange={(e) => aoMudar(e.target.value)}
           />
@@ -44,7 +44,7 @@ function CampoSenha({
             type="button"
             variant="outline"
             size="lg"
-            className="h-10"
+            className="px-3.5"
             aria-pressed={visivel}
             onClick={() => setVisivel((v) => !v)}
           >
@@ -60,20 +60,22 @@ function CampoSenha({
 
 function LinkInvalido() {
   return (
-    <div className="space-y-4">
-      <Clock
+    <>
+      <span
         aria-hidden
-        className="size-10 rounded-full bg-alerta-fundo p-2 text-alerta"
-      />
-      <h1 className="text-xl font-semibold text-marca">
+        className="grid size-16 place-items-center rounded-full border-2 border-[#f0cf9f] bg-alerta-fundo text-[#a85400]"
+      >
+        <Clock className="size-[30px]" />
+      </span>
+      <h1 className="text-2xl leading-[1.25] font-bold text-marca md:text-[28px]">
         Este link de ativação não é mais válido
       </h1>
-      <p className="text-sm">
+      <p>
         O link vence 72 horas depois do envio do convite e só pode ser usado uma
         vez.
       </p>
-      <div className="rounded-md bg-info-fundo p-4 text-sm">
-        <p className="font-semibold">O que fazer</p>
+      <div className="rounded-[12px] border border-[#a9cfe0] bg-info-fundo px-[18px] py-4 text-[15px]">
+        <p className="mb-1 font-bold">O que fazer</p>
         <p>
           Peça um novo convite à coordenação da clínica. Se você já ativou sua
           conta, entre com seu e-mail e senha.
@@ -85,7 +87,7 @@ function LinkInvalido() {
       >
         Ir para a página de entrada
       </Link>
-    </div>
+    </>
   );
 }
 
@@ -156,7 +158,7 @@ export default function AtivacaoPage() {
   if (ativacao.isSuccess) {
     return (
       <PaginaEquipe>
-        <div className="space-y-4">
+        <>
           <Aviso tipo="sucesso" titulo="Conta ativada.">
             Agora você já pode entrar no sistema com seu e-mail e senha.
           </Aviso>
@@ -166,7 +168,7 @@ export default function AtivacaoPage() {
           >
             Ir para a página de entrada
           </Link>
-        </div>
+        </>
       </PaginaEquipe>
     );
   }
@@ -174,12 +176,16 @@ export default function AtivacaoPage() {
   const { nome, email, perfil } = convite.data;
   return (
     <PaginaEquipe>
-      <h1 className="text-xl font-semibold text-marca">Ative sua conta</h1>
-      <p className="mt-1 text-sm text-muted-foreground">
-        Você recebeu um convite da coordenação. Crie sua senha para entrar no
-        sistema.
-      </p>
-      <dl className="mt-4 grid grid-cols-[auto_1fr] gap-x-4 gap-y-1 rounded-md bg-muted p-3 text-sm">
+      <div>
+        <h1 className="text-2xl leading-[1.25] font-bold text-marca md:text-[28px]">
+          Ative sua conta
+        </h1>
+        <p className="mt-2">
+          Você recebeu um convite da coordenação. Crie sua senha para entrar no
+          sistema.
+        </p>
+      </div>
+      <dl className="grid grid-cols-[auto_1fr] gap-x-3 gap-y-1 rounded-lg border border-border bg-muted px-3.5 py-3 text-[15px]">
         <dt className="text-muted-foreground">Nome</dt>
         <dd className="font-semibold">{nome}</dd>
         <dt className="text-muted-foreground">E-mail</dt>
@@ -187,7 +193,7 @@ export default function AtivacaoPage() {
         <dt className="text-muted-foreground">Perfil</dt>
         <dd className="font-semibold">{NOMES_PERFIL[perfil]}</dd>
       </dl>
-      <form noValidate onSubmit={enviar} className="mt-5 space-y-4">
+      <form noValidate onSubmit={enviar} className="flex flex-col gap-5">
         <CampoSenha
           rotulo="Nova senha"
           valor={senha}
@@ -196,7 +202,7 @@ export default function AtivacaoPage() {
         />
         <ul
           aria-label="Regras da senha"
-          className="space-y-1 rounded-md bg-muted p-3 text-xs"
+          className="-mt-3.5 flex flex-col gap-1.5 rounded-lg border border-border bg-muted px-3.5 py-3 text-[15px]"
         >
           {REGRAS_SENHA.map((regra) => {
             const ok = regra.teste(senha);
@@ -205,14 +211,14 @@ export default function AtivacaoPage() {
                 key={regra.id}
                 className={
                   ok
-                    ? "flex items-center gap-1.5 text-sucesso"
-                    : "flex items-center gap-1.5 text-muted-foreground"
+                    ? "flex items-center gap-2 font-semibold text-sucesso"
+                    : "flex items-center gap-2 text-muted-foreground"
                 }
               >
                 {ok ? (
-                  <Check aria-hidden className="size-3.5" />
+                  <Check aria-hidden className="size-4" />
                 ) : (
-                  <Circle aria-hidden className="size-3.5" />
+                  <Circle aria-hidden className="size-4" />
                 )}
                 {regra.texto}
                 <span className="sr-only">
@@ -242,7 +248,7 @@ export default function AtivacaoPage() {
         >
           Ativar conta
         </Button>
-        <p className="text-xs text-muted-foreground">
+        <p className="ui-dica">
           Este link vale por 72 horas a partir do envio do convite e só pode ser
           usado uma vez.
         </p>

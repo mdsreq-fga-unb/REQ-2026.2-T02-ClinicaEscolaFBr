@@ -6,7 +6,7 @@ import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { loginSchema } from "@clinica/shared";
 import { Aviso } from "@/components/comum/aviso";
-import { Campo, classeEntrada } from "@/components/comum/campo";
+import { Campo, classeEntradaPublica } from "@/components/comum/campo";
 import { inicioDoPerfil } from "@/components/layout/menu";
 import { PaginaEquipe } from "@/components/layout/pagina-equipe";
 import { Button } from "@/components/ui/button";
@@ -84,65 +84,57 @@ export default function EntrarPage() {
   const falhaInesperada = entrada.isError && status !== 401 && status !== 423;
 
   return (
-    <PaginaEquipe>
-      <h1 className="text-xl font-semibold text-marca">Entrar no sistema</h1>
-      <p className="mt-1 text-sm text-muted-foreground">
-        Acesso da equipe da clínica: secretaria, estagiários, supervisores e
-        coordenação.
-      </p>
+    <PaginaEquipe centralizada>
+      <div>
+        <h1 className="text-[26px] leading-[1.25] font-bold text-marca">
+          Entrar no sistema
+        </h1>
+        <p className="ui-dica mt-1.5">
+          Acesso da equipe da clínica: secretaria, estagiários, supervisores e
+          coordenação.
+        </p>
+      </div>
 
       {credenciaisIncorretas && (
-        <Aviso
-          tipo="erro"
-          titulo="E-mail ou senha incorretos."
-          className="mt-4"
-        >
+        <Aviso tipo="erro" titulo="E-mail ou senha incorretos.">
           Confira os dados e tente novamente.
         </Aviso>
       )}
       {bloqueadoAte && (
-        <Aviso
-          tipo="alerta"
-          titulo="Acesso bloqueado por 15 minutos."
-          className="mt-4"
-        >
+        <Aviso tipo="alerta" titulo="Acesso bloqueado por 15 minutos.">
           Houve 3 tentativas de entrada sem sucesso. Tente novamente a partir
           das {horaBr(bloqueadoAte)}. Se não lembra a senha, procure a
           coordenação.
         </Aviso>
       )}
       {falhaInesperada && (
-        <Aviso
-          tipo="erro"
-          titulo="Não foi possível entrar agora."
-          className="mt-4"
-        >
+        <Aviso tipo="erro" titulo="Não foi possível entrar agora.">
           Tente novamente em instantes.
         </Aviso>
       )}
 
-      <form noValidate onSubmit={enviar} className="mt-5 space-y-4">
-        <Campo rotulo="E-mail" erro={erros.email}>
+      <form noValidate onSubmit={enviar} className="flex flex-col gap-5">
+        <Campo publico rotulo="E-mail" erro={erros.email}>
           {(props) => (
             <input
               {...props}
               type="email"
               autoComplete="email"
               autoFocus
-              className={classeEntrada}
+              className={classeEntradaPublica}
               value={email}
               onChange={(e) => setEmail(e.target.value)}
             />
           )}
         </Campo>
-        <Campo rotulo="Senha" erro={erros.senha}>
+        <Campo publico rotulo="Senha" erro={erros.senha}>
           {(props) => (
             <div className="flex gap-2">
               <input
                 {...props}
                 type={senhaVisivel ? "text" : "password"}
                 autoComplete="current-password"
-                className={classeEntrada}
+                className={classeEntradaPublica}
                 value={senha}
                 onChange={(e) => setSenha(e.target.value)}
               />
@@ -150,7 +142,7 @@ export default function EntrarPage() {
                 type="button"
                 variant="outline"
                 size="lg"
-                className="h-10"
+                className="px-3.5"
                 aria-pressed={senhaVisivel}
                 onClick={() => setSenhaVisivel((v) => !v)}
               >
@@ -175,7 +167,7 @@ export default function EntrarPage() {
         </Button>
       </form>
 
-      <p className="mt-6 border-t border-border pt-4 text-sm text-muted-foreground">
+      <p className="border-t border-border pt-4 text-sm text-muted-foreground">
         Quer atendimento psicológico?{" "}
         <Link
           href="/inscricao"

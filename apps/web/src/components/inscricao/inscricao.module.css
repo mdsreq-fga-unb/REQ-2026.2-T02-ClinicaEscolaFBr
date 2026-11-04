@@ -24,8 +24,15 @@
 }
 .pagina h2 {
   color: #002a3d;
-  font-size: 22px;
+  font-size: 20px;
+  line-height: 1.3;
   font-weight: 700;
+}
+/* O título que recebe o foco ao trocar de etapa não mostra o contorno: ele não
+   é um controle, e o leitor de tela já anuncia a etapa. */
+.pagina [tabindex="-1"]:focus:not(:focus-visible),
+.pagina h2[tabindex="-1"]:focus {
+  outline: none;
 }
 .pagina h3 {
   font-size: 18px;
@@ -38,6 +45,7 @@
 }
 .pagina :is(input, select, textarea, button, a, [tabindex]) {
   scroll-margin-top: 130px;
+  scroll-margin-bottom: 24px;
 }
 .cabecalho {
   background: #002a3d;
@@ -45,7 +53,7 @@
   display: flex;
   gap: 12px;
   align-items: center;
-  padding: 16px max(24px, calc((100vw - 1100px) / 2));
+  padding: 16px 48px;
 }
 .cabecalho strong,
 .cabecalho span:not(.marca) {
@@ -73,7 +81,7 @@
   display: flex;
   align-items: center;
   gap: 12px;
-  padding: 12px max(24px, calc((100vw - 1100px) / 2));
+  padding: 12px 48px;
   background: #fff4e6;
   border-bottom: 1px solid #f0cf9f;
 }
@@ -96,7 +104,7 @@
 .conteudo {
   max-width: 928px;
   margin: auto;
-  padding: 40px 24px 64px;
+  padding: 40px 24px 56px;
   display: flex;
   flex-direction: column;
   gap: 28px;
@@ -116,6 +124,7 @@
 .etapas li {
   flex: 1;
   border-top: 6px solid #d5dee5;
+  border-radius: 3px 3px 0 0;
   padding-top: 12px;
   color: #52616d;
   display: flex;
@@ -159,12 +168,102 @@
 .largo {
   grid-column: 1 / -1;
 }
+/* Cada seção da etapa 1 é um grupo (fieldset), com o título na legenda, para o
+   leitor de tela anunciar a seção de cada campo. A legenda flutuante vira uma
+   linha da grade, em vez de ficar sobre a borda. */
+.grupo {
+  grid-column: 1 / -1;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 24px;
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+.grupo > legend {
+  float: left;
+  width: 100%;
+  padding-right: 0;
+  padding-left: 0;
+}
 .secao {
   grid-column: 1 / -1;
-  padding-top: 16px;
+  padding-top: 24px;
   border-top: 1px solid #e2e8ee;
+  color: #002a3d;
+  font-size: 20px;
+  font-weight: 700;
 }
-.secao:first-child {
+.secao h3 {
+  font-size: 20px;
+}
+.dicaSecao {
+  grid-column: 1 / -1;
+  margin-top: -20px !important;
+}
+.etapaAtual {
+  margin-bottom: -16px !important;
+  color: #52616d;
+  font-size: 15px;
+  font-weight: 600;
+}
+.dicaCartao {
+  margin-top: 4px !important;
+}
+.opcional {
+  color: #52616d;
+  font-size: 14px;
+  font-weight: 400;
+}
+.legenda {
+  margin-bottom: 4px;
+  padding: 0;
+  font-weight: 600;
+}
+.opcoes {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+.opcao {
+  display: flex;
+  flex: 1;
+  min-width: 140px;
+  min-height: 48px;
+  cursor: pointer;
+  align-items: center;
+  gap: 12px;
+  border: 1.5px solid #75848f;
+  border-radius: 8px;
+  background: white;
+  padding: 10px 14px;
+  line-height: 1.4;
+}
+.campo .opcao input {
+  width: 20px;
+  height: 20px;
+  min-height: 0;
+  padding: 0;
+  border: 0;
+  margin: 0;
+  flex: none;
+  accent-color: #00658a;
+}
+.opcao.opcaoErro {
+  border: 2px solid #b42318;
+}
+.opcao.marcada {
+  border-color: #00658a;
+  background: #e4f2f8;
+}
+fieldset.campo {
+  margin: 0;
+  border: 0;
+  padding: 0;
+  min-width: 0;
+}
+.grade > .grupo:first-child > .secao {
   padding-top: 0;
   border-top: 0;
 }
@@ -332,10 +431,25 @@
   font-weight: 400;
   color: #52616d;
 }
-.numero {
+.comprovante dt {
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+.comprovante dd.numero {
+  margin-top: 4px;
   color: #002a3d;
   overflow-wrap: anywhere;
-  font-family: ui-monospace, monospace;
+  font-size: 30px;
+  font-weight: 800;
+  line-height: 1.2;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.01em;
+}
+.comprovante dd.dica {
+  margin-top: 4px;
+  font-size: 14px;
+  font-weight: 400;
 }
 .rodape {
   border-top: 1px solid #e2e8ee;
@@ -376,6 +490,7 @@
     padding: 22px 16px;
   }
   .grade,
+  .grupo,
   .revisao dl {
     grid-template-columns: minmax(0, 1fr);
   }

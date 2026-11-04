@@ -1,35 +1,53 @@
 import type { ReactNode } from "react";
+import { cn } from "@/lib/utils";
 
-// Moldura das páginas públicas da equipe (ativação e entrada).
-export function PaginaEquipe({ children }: { children: ReactNode }) {
+// Moldura das páginas públicas da equipe, como no protótipo: na entrada, o
+// cartão fica no centro da tela; na ativação, no alto, com o rodapé da clínica.
+export function PaginaEquipe({
+  children,
+  centralizada = false,
+}: {
+  children: ReactNode;
+  centralizada?: boolean;
+}) {
   return (
-    <div className="flex min-h-dvh flex-col">
-      <header className="bg-marca px-4 py-4 text-white md:px-8">
-        <div className="flex items-center gap-3">
-          <span className="grid size-9 place-items-center rounded-md bg-white text-sm font-bold text-marca">
-            FBr
+    <div className="flex min-h-[calc(100dvh-var(--altura-faixa,0px))] flex-col">
+      <header className="flex items-center gap-3 bg-marca px-4 py-3 text-white md:px-12 md:py-4">
+        <span className="grid size-11 shrink-0 place-items-center rounded-[10px] bg-white text-[15px] font-extrabold text-primary">
+          FBr
+        </span>
+        <span className="leading-tight">
+          <span className="block text-base font-bold">
+            Clínica Escola de Psicologia
           </span>
-          <span className="leading-tight">
-            <span className="block text-sm font-semibold">
-              Clínica Escola de Psicologia
-            </span>
-            <span className="block text-xs text-white/80">
-              Sistema da equipe
-            </span>
+          <span className="block text-[13px] text-[#cfe3ec]">
+            Sistema da equipe
           </span>
-        </div>
+        </span>
       </header>
       <main
         id="conteudo"
-        className="flex flex-1 items-start justify-center px-4 py-10"
+        className={cn(
+          "flex flex-1 justify-center px-4",
+          centralizada
+            ? "items-center py-8"
+            : "items-start pt-6 pb-10 md:pt-14 md:pb-[72px]",
+        )}
       >
-        <div className="w-full max-w-md rounded-lg border border-border bg-card p-6 shadow-sm">
+        <div
+          className={cn(
+            "flex w-full flex-col gap-5 rounded-[12px] border border-border bg-card px-4 py-5 md:p-8",
+            centralizada ? "max-w-[440px]" : "max-w-[520px]",
+          )}
+        >
           {children}
         </div>
       </main>
-      <footer className="border-t border-border px-4 py-4 text-xs text-muted-foreground md:px-8">
-        Clínica Escola de Psicologia da Faculdade Brasília
-      </footer>
+      {!centralizada && (
+        <footer className="border-t border-border px-4 py-4 text-sm text-muted-foreground md:px-12 md:py-5">
+          Clínica Escola de Psicologia da Faculdade Brasília
+        </footer>
+      )}
     </div>
   );
 }
