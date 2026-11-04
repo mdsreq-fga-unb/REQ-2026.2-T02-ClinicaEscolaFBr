@@ -31,9 +31,21 @@ export class InscricaoService {
     } = dados;
     const pessoais = {
       ...cadastro,
-      celular: cadastro.celular || null,
-      email: cadastro.email || null,
+      bairro: cadastro.bairro || null,
+      cidadeUf: cadastro.cidadeUf || null,
+      cep: cadastro.cep || null,
+      sexo: cadastro.sexo || null,
+      profissao: cadastro.profissao || null,
+      escolaridade: cadastro.escolaridade || null,
       responsavelLegal: cadastro.responsavelLegal || null,
+      cpfResponsavel: cadastro.cpfResponsavel || null,
+      documentoResponsavel: cadastro.documentoResponsavel || null,
+      celular: cadastro.celular || null,
+      whatsapp: cadastro.whatsapp || null,
+      email: cadastro.email || null,
+      contatoEmergenciaNome: cadastro.contatoEmergenciaNome || null,
+      contatoEmergenciaParentesco: cadastro.contatoEmergenciaParentesco || null,
+      contatoEmergenciaTelefone: cadastro.contatoEmergenciaTelefone || null,
     };
     try {
       const chave = this.config.getOrThrow<string>('CHAVE_DADOS');

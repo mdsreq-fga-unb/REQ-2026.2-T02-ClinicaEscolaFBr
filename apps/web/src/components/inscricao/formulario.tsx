@@ -13,37 +13,88 @@ import {
 } from "@clinica/shared";
 import styles from "./inscricao.module.css";
 
+// A ordem dos rótulos é a ordem da revisão.
 const rotulos = {
   nomeCompleto: "Nome completo",
   dataNascimento: "Data de nascimento",
+  estadoCivil: "Estado civil",
+  sexo: "Sexo",
+  profissao: "Profissão",
+  escolaridade: "Escolaridade",
   cpf: "CPF",
   rg: "RG",
-  endereco: "Endereço completo",
-  estadoCivil: "Estado civil",
+  endereco: "Endereço",
+  bairro: "Bairro",
+  cidadeUf: "Cidade/UF",
+  cep: "CEP",
   responsavelLegal: "Nome do responsável legal",
+  cpfResponsavel: "CPF do responsável",
+  documentoResponsavel: "Documento que comprova a responsabilidade",
   celular: "Telefone celular com DDD",
+  whatsapp: "WhatsApp com DDD",
   email: "E-mail",
   canalPreferencial: "Como prefere ser contatado?",
+  contatoEmergenciaNome: "Nome do contato de emergência",
+  contatoEmergenciaParentesco: "Grau de parentesco",
+  contatoEmergenciaTelefone: "Telefone do contato de emergência",
   queixa: "O que motivou sua busca por atendimento?",
   percepcaoUrgencia: "Como você percebe a urgência do atendimento?",
   historicoRelevante: "Histórico relevante",
 };
 type Campo = keyof typeof rotulos;
 type Valores = Record<Campo, string>;
-const vazio: Valores = {
-  nomeCompleto: "",
-  dataNascimento: "",
-  cpf: "",
-  rg: "",
-  endereco: "",
-  estadoCivil: "",
-  responsavelLegal: "",
-  celular: "",
-  email: "",
-  canalPreferencial: "",
-  queixa: "",
-  percepcaoUrgencia: "",
-  historicoRelevante: "",
+const vazio = Object.fromEntries(
+  Object.keys(rotulos).map((campo) => [campo, ""]),
+) as Valores;
+// Contatos e dados da ficha de identificação da Clínica Escola (DF43).
+const opcionais: Campo[] = [
+  "celular",
+  "email",
+  "sexo",
+  "profissao",
+  "escolaridade",
+  "bairro",
+  "cidadeUf",
+  "cep",
+  "cpfResponsavel",
+  "documentoResponsavel",
+  "whatsapp",
+  "contatoEmergenciaNome",
+  "contatoEmergenciaParentesco",
+  "contatoEmergenciaTelefone",
+];
+const responsavel: string[] = [
+  "responsavelLegal",
+  "cpfResponsavel",
+  "documentoResponsavel",
+];
+const tamanhos: Partial<Record<Campo, number>> = {
+  endereco: 500,
+  cpf: 11,
+  cpfResponsavel: 11,
+  rg: 30,
+  celular: 22,
+  whatsapp: 22,
+  contatoEmergenciaTelefone: 22,
+  email: 254,
+  cep: 9,
+  sexo: 50,
+  contatoEmergenciaParentesco: 50,
+  profissao: 100,
+  escolaridade: 100,
+  bairro: 100,
+  cidadeUf: 100,
+};
+const preenchimento: Partial<Record<Campo, string>> = {
+  nomeCompleto: "name",
+  celular: "tel-national",
+  whatsapp: "tel-national",
+  dataNascimento: "bday",
+  email: "email",
+  cep: "postal-code",
+  endereco: "street-address",
+  bairro: "address-level3",
+  cidadeUf: "address-level2",
 };
 const etapas = ["Dados e contatos", "Triagem", "Revisão e envio"];
 
@@ -68,7 +119,7 @@ function CampoFormulario({
     id: campo,
     name: campo,
     value: valor,
-    required: !["email", "celular"].includes(campo),
+    required: !opcionais.includes(campo),
     "aria-invalid": !!erro,
     "aria-describedby":
       [dica ? `${campo}-dica` : "", erro ? `${campo}-erro` : ""]
@@ -111,31 +162,13 @@ function CampoFormulario({
         <input
           {...props}
           type={tipo}
-          inputMode={campo === "cpf" ? "numeric" : undefined}
-          autoComplete={
-            campo === "nomeCompleto"
-              ? "name"
-              : campo === "celular"
-                ? "tel-national"
-                : campo === "dataNascimento"
-                  ? "bday"
-                  : campo === "email"
-                    ? "email"
-                    : "off"
+          inputMode={
+            ["cpf", "cpfResponsavel", "cep"].includes(campo)
+              ? "numeric"
+              : undefined
           }
-          maxLength={
-            campo === "endereco"
-              ? 500
-              : campo === "cpf"
-                ? 11
-                : campo === "rg"
-                  ? 30
-                  : campo === "celular"
-                    ? 22
-                    : campo === "email"
-                      ? 254
-                      : 200
-          }
+          autoComplete={preenchimento[campo] ?? "off"}
+          maxLength={tamanhos[campo] ?? 200}
         />
       )}
       {dica && (
@@ -196,10 +229,20 @@ export function FormularioInscricao({ aberta = true }: { aberta?: boolean }) {
     event.preventDefault();
     if (emCurso.current) return;
     setFalha("");
-    const conteudo = JSON.stringify(valores);
+    // Os campos do responsável somem da tela quando a data deixa de ser de
+    // menor; o que foi digitado neles não é validado nem enviado.
+    const dados = menor
+      ? valores
+      : {
+          ...valores,
+          responsavelLegal: "",
+          cpfResponsavel: "",
+          documentoResponsavel: "",
+        };
+    const conteudo = JSON.stringify(dados);
     if (!envio.current || envio.current.conteudo !== conteudo)
       envio.current = { chave: crypto.randomUUID(), conteudo };
-    const payload = { ...valores, confirmado, chaveEnvio: envio.current.chave };
+    const payload = { ...dados, confirmado, chaveEnvio: envio.current.chave };
     const schema =
       etapa === 0
         ? dadosInscricaoSchema
@@ -435,24 +478,45 @@ export function FormularioInscricao({ aberta = true }: { aberta?: boolean }) {
                 )}
                 {etapa === 0 && (
                   <div className={styles.grade}>
+                    <h3 className={styles.secao}>Identificação</h3>
                     {campo("nomeCompleto", { longo: true })}
                     {campo("dataNascimento", { tipo: "date" })}
                     {campo("estadoCivil")}
+                    {campo("sexo")}
+                    {campo("profissao")}
+                    {campo("escolaridade", {
+                      dica: "Exemplo: ensino médio completo.",
+                    })}
                     {campo("cpf", {
                       dica: "Digite os 11 números, sem pontos nem traço.",
                     })}
                     {campo("rg", {
                       dica: "Não é necessário enviar foto ou cópia do documento.",
                     })}
+                    <h3 className={styles.secao}>Endereço</h3>
                     {campo("endereco", {
                       longo: true,
-                      dica: "Rua, número, complemento, bairro, cidade, UF e CEP.",
+                      dica: "Rua, número e complemento.",
                     })}
-                    {menor &&
-                      campo("responsavelLegal", {
-                        longo: true,
-                        dica: "Obrigatório para pessoas menores de 18 anos.",
-                      })}
+                    {campo("bairro")}
+                    {campo("cidadeUf", { dica: "Exemplo: Brasília/DF." })}
+                    {campo("cep", { dica: "Exemplo: 72500-000." })}
+                    {menor && (
+                      <>
+                        <h3 className={styles.secao}>Responsável legal</h3>
+                        {campo("responsavelLegal", {
+                          longo: true,
+                          dica: "Obrigatório para pessoas menores de 18 anos.",
+                        })}
+                        {campo("cpfResponsavel", {
+                          dica: "Digite os 11 números, sem pontos nem traço.",
+                        })}
+                        {campo("documentoResponsavel", {
+                          dica: "Exemplo: certidão de nascimento ou termo de guarda. Não é necessário enviar cópia.",
+                        })}
+                      </>
+                    )}
+                    <h3 className={styles.secao}>Contatos</h3>
                     <div className={`${styles.info} ${styles.largo}`}>
                       <strong>Como podemos falar com você?</strong>
                       <p>
@@ -465,11 +529,22 @@ export function FormularioInscricao({ aberta = true }: { aberta?: boolean }) {
                       tipo: "tel",
                       dica: "Exemplo: (61) 99999-9999.",
                     })}
+                    {campo("whatsapp", {
+                      tipo: "tel",
+                      dica: "Só se for diferente do celular. Por enquanto, as mensagens da clínica pelo WhatsApp vão para o celular informado acima.",
+                    })}
                     {campo("email", {
                       tipo: "email",
                       dica: "Exemplo: nome@exemplo.com.br.",
                     })}
                     {campo("canalPreferencial")}
+                    <h3 className={styles.secao}>Contato de emergência</h3>
+                    {campo("contatoEmergenciaNome", { longo: true })}
+                    {campo("contatoEmergenciaParentesco")}
+                    {campo("contatoEmergenciaTelefone", {
+                      tipo: "tel",
+                      dica: "Exemplo: (61) 99999-9999.",
+                    })}
                   </div>
                 )}
                 {etapa === 1 && (
@@ -520,7 +595,7 @@ export function FormularioInscricao({ aberta = true }: { aberta?: boolean }) {
                               ([nome]) =>
                                 (grupo === 1) ===
                                   nome in triagemInscricaoSchema.shape &&
-                                (nome !== "responsavelLegal" || menor),
+                                (!responsavel.includes(nome) || menor),
                             )
                             .map(([nome, rotulo]) => (
                               <div key={nome}>

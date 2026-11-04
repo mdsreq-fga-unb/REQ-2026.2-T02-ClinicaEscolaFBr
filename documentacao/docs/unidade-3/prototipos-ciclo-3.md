@@ -7,7 +7,7 @@ Os protótipos das telas do Ciclo 3 foram gerados com uma ferramenta de prototip
 
 As telas estão organizadas pelo fluxo do sistema, uma seção por feature. Cada imagem reúne os estados da tela (padrão, erro, vazio, acesso negado), identificados no topo de cada quadro. As páginas públicas aparecem no computador (1366 px) e no celular (360 px). Os dados mostrados são fictícios. Clique numa imagem para abri-la em tamanho original.
 
-Os protótipos também podem ser abertos no próprio Claude Design, onde é possível navegar entre as telas, e em PDF, em alta resolução. As duas versões são a de 24/10/2026, com os ajustes da validação.
+Os protótipos também podem ser abertos no próprio Claude Design, onde é possível navegar entre as telas, e em PDF, em alta resolução. O PDF é a versão de 24/10/2026, com os ajustes da validação. O Claude Design e as imagens da inscrição (RF1) já têm os dados da ficha de identificação, de 31/10/2026.
 
 [:material-palette-outline: Abrir no Claude Design](https://claude.ai/artifact/Ad1CLwRmS2AFtZHDj8vtwo#page-dcb81aee8d83){ .md-button .md-button--primary target="_blank" rel="noopener" }
 [:material-file-pdf-box: Abrir em PDF (24 MB)](../assets/prototipos-ciclo-3/prototipos-ciclo-3.pdf){ .md-button target="_blank" rel="noopener" }
@@ -16,7 +16,7 @@ Os protótipos também podem ser abertos no próprio Claude Design, onde é poss
 
 ### RF1 — Registrar solicitação de atendimento on-line { #rf1 }
 
-[RF1](../unidade-2/requisitos/funcionais.md#rf1) · issue [#88](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/issues/88). Etapas de dados e contatos, triagem e revisão, mais a tela de erros ao continuar. O canal preferencial é e-mail, WhatsApp ou ligação, e o RG é pedido como está no documento. O aviso do CVV e do SAMU fica visível em todas as etapas.
+[RF1](../unidade-2/requisitos/funcionais.md#rf1) · issue [#88](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/issues/88). Etapas de dados e contatos, triagem e revisão, mais a tela de erros ao continuar. O canal preferencial é e-mail, WhatsApp ou ligação, e o RG é pedido como está no documento. O aviso do CVV e do SAMU fica visível em todas as etapas. Desde 31/10/2026, a etapa 1 pede também os dados da ficha de identificação da Clínica Escola ([DF43](../unidade-2/requisitos/decisoes-fbr.md)), todos opcionais: sexo, profissão, escolaridade, bairro, cidade/UF, CEP, WhatsApp e contato de emergência, e, para menor de idade, o CPF do responsável e o documento que comprova a responsabilidade. A revisão mostra esses dados nas seções de endereço e de contato de emergência.
 
 **No computador**
 

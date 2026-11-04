@@ -70,10 +70,35 @@ describe('RF1/RF2: contrato compartilhado', () => {
     { celular: '123' },
     { canalPreferencial: 'sms' },
     { confirmado: false },
+    { cep: '7000' },
+    {
+      dataNascimento: '2015-03-10',
+      responsavelLegal: 'Responsável Fictício',
+      cpfResponsavel: '111.444.777-35',
+    },
+    { whatsapp: '123' },
+    { contatoEmergenciaTelefone: '9999' },
   ])('recusa contrato inválido %j', (alteracao) => {
     expect(
       inscricaoSchema.safeParse({ ...valido(), ...alteracao }).success,
     ).toBe(false);
+  });
+  it('aceita a inscrição sem os dados opcionais da ficha de identificação (DF43)', () => {
+    expect(inscricaoSchema.safeParse(valido()).success).toBe(true);
+  });
+  it('descarta os dados do responsável de adulto, sem conferir o formato (DF43, LGPD)', () => {
+    const resultado = inscricaoSchema.safeParse({
+      ...valido(),
+      responsavelLegal: 'Responsável Fictício',
+      cpfResponsavel: '5299822',
+      documentoResponsavel: 'Certidão de nascimento',
+    });
+    expect(resultado.success).toBe(true);
+    expect(resultado.data).toMatchObject({
+      responsavelLegal: '',
+      cpfResponsavel: '',
+      documentoResponsavel: '',
+    });
   });
   it('calcula a maioridade na data do aniversário', () => {
     expect(menorDeIdade('2008-10-25', '2026-10-24')).toBe(true);
@@ -155,7 +180,7 @@ describe('RF1/RF2: HTTP, transações e migrations oficiais', () => {
     await app?.close();
     await fechar?.();
   });
-  const enviar = (dados = valido()) =>
+  const enviar = (dados: object = valido()) =>
     request(app.getHttpServer()).post('/inscricoes').send(dados);
 
   it.each([
@@ -181,6 +206,49 @@ describe('RF1/RF2: HTTP, transações e migrations oficiais', () => {
       expect(registro.email).toBe(contatos.email || null);
     },
   );
+  it('guarda os dados da ficha de identificação e deixa nulos os que ficaram em branco (DF43)', async () => {
+    await enviar({
+      ...valido(),
+      sexo: 'Feminino',
+      profissao: 'Professora',
+      escolaridade: 'Superior completo',
+      bairro: 'Santa Maria',
+      cidadeUf: 'Brasília/DF',
+      cep: '72500-000',
+      whatsapp: '(61) 98888-7777',
+      contatoEmergenciaNome: 'Contato Fictício',
+      contatoEmergenciaParentesco: 'Irmã',
+      contatoEmergenciaTelefone: '(61) 3333-4444',
+    }).expect(201);
+    const [registro] = await db.select().from(inscricoes);
+    expect(registro).toMatchObject({
+      sexo: 'Feminino',
+      profissao: 'Professora',
+      escolaridade: 'Superior completo',
+      bairro: 'Santa Maria',
+      cidadeUf: 'Brasília/DF',
+      cep: '72500000',
+      whatsapp: '61988887777',
+      contatoEmergenciaNome: 'Contato Fictício',
+      contatoEmergenciaParentesco: 'Irmã',
+      contatoEmergenciaTelefone: '6133334444',
+      cpfResponsavel: null,
+      documentoResponsavel: null,
+    });
+  });
+  it('guarda o CPF e o documento do responsável legal de menor de idade (DF43)', async () => {
+    await enviar({
+      ...valido(),
+      dataNascimento: '2015-03-10',
+      responsavelLegal: 'Responsável Fictício',
+      cpfResponsavel: '52998224725',
+      documentoResponsavel: 'Certidão de nascimento',
+    }).expect(201);
+    const [registro] = await db.select().from(inscricoes);
+    expect(registro.cpfResponsavel).toBe('52998224725');
+    expect(registro.documentoResponsavel).toBe('Certidão de nascimento');
+    expect(registro.sexo).toBeNull();
+  });
   it.each([
     { email: '', celular: '' },
     { email: '', canalPreferencial: 'email' },
@@ -202,6 +270,18 @@ describe('RF1/RF2: HTTP, transações e migrations oficiais', () => {
       expect(await db.select().from(inscricoes)).toHaveLength(0);
     },
   );
+  it('não guarda o CPF e o documento do responsável na inscrição de adulto (DF43, LGPD)', async () => {
+    await enviar({
+      ...valido(),
+      responsavelLegal: 'Responsável Fictício',
+      cpfResponsavel: '52998224725',
+      documentoResponsavel: 'Certidão de nascimento',
+    }).expect(201);
+    const [registro] = await db.select().from(inscricoes);
+    expect(registro.responsavelLegal).toBeNull();
+    expect(registro.cpfResponsavel).toBeNull();
+    expect(registro.documentoResponsavel).toBeNull();
+  });
   it('aceita menor com responsável', async () => {
     await enviar({
       ...valido(),
@@ -284,6 +364,20 @@ describe('RF1/RF2: HTTP, transações e migrations oficiais', () => {
     await enviar(dados).expect(201);
     await enviar({ ...dados, queixa: 'Outra declaração' }).expect(409);
     await enviar({ ...dados, nomeCompleto: 'Outro nome' }).expect(409);
+    expect(await db.select().from(inscricoes)).toHaveLength(1);
+  });
+  it('compara os dados da ficha de identificação no reenvio, depois de normalizados (DF43)', async () => {
+    const dados = {
+      ...valido(),
+      cep: '72500-000',
+      whatsapp: '(61) 98888-7777',
+    };
+    await enviar(dados).expect(201);
+    await enviar({ ...dados, cep: '72500000', whatsapp: '61988887777' }).expect(
+      201,
+    );
+    await enviar({ ...dados, cep: '72500-001' }).expect(409);
+    await enviar({ ...dados, profissao: 'Professora' }).expect(409);
     expect(await db.select().from(inscricoes)).toHaveLength(1);
   });
   it('sequência e idempotência resistem a requisições concorrentes; mesmo CPF é permitido', async () => {

@@ -85,6 +85,69 @@ describe("Formulário RF1/RF2", () => {
     continuar();
     expect(screen.getByRole("heading", { name: "Triagem" })).toHaveFocus();
   });
+  it("mostra os dados do responsável só para menor e revisa a ficha de identificação (DF43)", () => {
+    render(<FormularioInscricao />);
+    dados();
+    expect(document.getElementById("cpfResponsavel")).toBeNull();
+    expect(document.getElementById("sexo")).not.toBeRequired();
+    preencher("dataNascimento", "2020-01-01");
+    preencher("responsavelLegal", "Responsável Fictício");
+    preencher("cpfResponsavel", "52998224725");
+    preencher("documentoResponsavel", "Certidão de nascimento");
+    preencher("profissao", "Estudante");
+    preencher("cep", "72500-000");
+    continuar();
+    triagem();
+    continuar();
+    expect(screen.getByText("52998224725")).toBeInTheDocument();
+    expect(screen.getByText("Certidão de nascimento")).toBeInTheDocument();
+    expect(screen.getByText("Estudante")).toBeInTheDocument();
+    expect(screen.getByText("72500-000")).toBeInTheDocument();
+    expect(screen.getByText("Sexo").nextSibling).toHaveTextContent(
+      "Não informado",
+    );
+  });
+  it("ignora o CPF do responsável incompleto quando a data é corrigida para a de um adulto (DF43)", () => {
+    render(<FormularioInscricao />);
+    dados(true);
+    preencher("responsavelLegal", "Responsável Fictício");
+    preencher("cpfResponsavel", "5299822");
+    preencher("dataNascimento", "1990-01-01");
+    continuar();
+    expect(screen.getByRole("heading", { name: "Triagem" })).toHaveFocus();
+  });
+  it("não envia os dados do responsável quando a data é corrigida para a de um adulto (DF43, LGPD)", async () => {
+    const fetch = vi.fn().mockResolvedValue(response());
+    vi.stubGlobal("fetch", fetch);
+    render(<FormularioInscricao />);
+    dados(true);
+    preencher("responsavelLegal", "Responsável Fictício");
+    preencher("cpfResponsavel", "52998224725");
+    preencher("documentoResponsavel", "Certidão de nascimento");
+    preencher("dataNascimento", "1990-01-01");
+    continuar();
+    triagem();
+    continuar();
+    expect(screen.queryByText("52998224725")).toBeNull();
+    confirmar();
+    enviar();
+    await waitFor(() => expect(fetch).toHaveBeenCalledTimes(1));
+    expect(JSON.parse(fetch.mock.calls[0][1].body)).toMatchObject({
+      responsavelLegal: "",
+      cpfResponsavel: "",
+      documentoResponsavel: "",
+    });
+  });
+  it("recusa CEP incompleto da ficha de identificação (DF43)", () => {
+    render(<FormularioInscricao />);
+    dados();
+    preencher("cep", "7250");
+    continuar();
+    expect(document.getElementById("cep")).toHaveAttribute(
+      "aria-invalid",
+      "true",
+    );
+  });
   it.each(["whatsapp", "ligacao"])(
     "exige celular para %s, mas aceita e-mail como único contato",
     (canal) => {

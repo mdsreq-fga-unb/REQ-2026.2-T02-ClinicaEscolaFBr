@@ -27,7 +27,26 @@ export function menorDeIdade(
   return idade - (hoje.slice(5) < nascimento.slice(5) ? 1 : 0) < 18;
 }
 
+const opcional = (max: number) =>
+  z.string().trim().max(max, `Use no máximo ${max} caracteres.`).default("");
+const soDigitos = (valor: string) =>
+  valor.replace(/\D/g, "").replace(/^55(?=\d{10,11}$)/, "");
+// Fixo ou celular, com DDD.
+const telefone = (mensagem: string) =>
+  z
+    .string()
+    .trim()
+    .max(22)
+    .regex(
+      /^(?:(?:\+55\s?)?(?:\([1-9]\d\)|[1-9]\d)\s?9?\d{4}-?\d{4})?$/,
+      mensagem,
+    )
+    .transform(soDigitos)
+    .default("");
+
 // Validação de formato, sem consulta de identidade ou upload de documentos.
+// Os dados da ficha de identificação da Clínica Escola são opcionais até a FBr
+// definir quais são obrigatórios (DF43).
 const dadosBase = z.object({
   nomeCompleto: obrigatorio(200),
   dataNascimento: z.iso
@@ -45,8 +64,22 @@ const dadosBase = z.object({
     "Informe um RG válido, sem anexos.",
   ),
   endereco: obrigatorio(500),
+  bairro: opcional(100),
+  cidadeUf: opcional(100),
+  cep: z
+    .string()
+    .trim()
+    .regex(/^(?:\d{5}-?\d{3})?$/, "Digite os 8 números do CEP.")
+    .transform((valor) => valor.replace(/\D/g, ""))
+    .default(""),
   estadoCivil: z.enum(ESTADOS_CIVIS, { error: "Selecione o estado civil." }),
+  sexo: opcional(50),
+  profissao: opcional(100),
+  escolaridade: opcional(100),
   responsavelLegal: z.string().trim().max(200).default(""),
+  // O formato só é conferido para menor de idade, em validarResponsavel.
+  cpfResponsavel: z.string().trim().max(200).default(""),
+  documentoResponsavel: opcional(200),
   celular: z
     .string()
     .trim()
@@ -55,13 +88,15 @@ const dadosBase = z.object({
       /^(?:(?:\+55\s?)?(?:\([1-9]\d\)|[1-9]\d)\s?9\d{4}-?\d{4})?$/,
       "Informe um celular com DDD e 11 dígitos.",
     )
-    .transform((valor) =>
-      valor.replace(/\D/g, "").replace(/^55(?=\d{11}$)/, ""),
-    )
+    .transform(soDigitos)
     .default(""),
+  whatsapp: telefone("Informe um número com DDD."),
   email: z
     .union([z.literal(""), z.email("Informe um e-mail válido.").max(254)])
     .default(""),
+  contatoEmergenciaNome: opcional(200),
+  contatoEmergenciaParentesco: opcional(50),
+  contatoEmergenciaTelefone: telefone("Informe um telefone com DDD."),
   canalPreferencial: z.enum(CANAIS, {
     error: "Escolha e-mail, WhatsApp ou ligação.",
   }),
@@ -70,6 +105,7 @@ const validarResponsavel = (
   dados: {
     dataNascimento: string;
     responsavelLegal: string;
+    cpfResponsavel: string;
     celular: string;
     email: string;
     canalPreferencial: string;
@@ -96,15 +132,46 @@ const validarResponsavel = (
       message: "Informe um celular para WhatsApp ou ligação.",
     });
   }
-  if (menorDeIdade(dados.dataNascimento) && !dados.responsavelLegal) {
+  if (!menorDeIdade(dados.dataNascimento)) return;
+  if (!dados.responsavelLegal) {
     ctx.addIssue({
       code: "custom",
       path: ["responsavelLegal"],
       message: "Informe o nome do responsável legal para menores de 18 anos.",
     });
   }
+  if (!/^(?:\d{11})?$/.test(dados.cpfResponsavel)) {
+    ctx.addIssue({
+      code: "custom",
+      path: ["cpfResponsavel"],
+      message: "Digite os 11 números do CPF, sem pontuação.",
+    });
+  }
 };
-export const dadosInscricaoSchema = dadosBase.superRefine(validarResponsavel);
+// Os dados do responsável só valem para menor de idade. Se a data de
+// nascimento for corrigida para a de um adulto, o que foi digitado antes não é
+// guardado (minimização, LGPD).
+export const semResponsavelDeAdulto = <
+  T extends {
+    dataNascimento: string;
+    responsavelLegal: string;
+    cpfResponsavel: string;
+    documentoResponsavel: string;
+  },
+>(
+  dados: T,
+): T =>
+  menorDeIdade(dados.dataNascimento)
+    ? dados
+    : {
+        ...dados,
+        responsavelLegal: "",
+        cpfResponsavel: "",
+        documentoResponsavel: "",
+      };
+export const dadosInscricaoSchema = dadosBase
+  .superRefine(validarResponsavel)
+  .transform(semResponsavelDeAdulto);
 export const triagemInscricaoSchema = z.object({
   queixa: obrigatorio(5000),
   percepcaoUrgencia: obrigatorio(2000),
@@ -118,7 +185,8 @@ export const inscricaoSchema = dadosBase
     }),
     chaveEnvio: z.uuid(),
   })
-  .superRefine(validarResponsavel);
+  .superRefine(validarResponsavel)
+  .transform(semResponsavelDeAdulto);
 export type Inscricao = z.infer<typeof inscricaoSchema>;
 export const comprovanteSchema = z.object({
   numero: z.string().regex(/^\d{4}-\d{5,}$/),
