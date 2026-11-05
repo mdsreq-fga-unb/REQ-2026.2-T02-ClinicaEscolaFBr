@@ -1,0 +1,71 @@
+/* Verificação de identidade (RF52): usa a base da página pública da inscrição
+   e acrescenta o que é só desta tela, como no protótipo 7-1 e 7-2. */
+.estreito {
+  max-width: 620px;
+  gap: 20px;
+}
+.passos {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  font-size: 13px;
+  color: #52616d;
+}
+.passos li + li::before {
+  content: "›";
+  margin-right: 8px;
+  color: #75848f;
+}
+.passos [aria-current="step"] {
+  color: #00658a;
+  font-weight: 700;
+}
+.botoes {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  align-items: center;
+}
+.botoes button:disabled {
+  cursor: not-allowed;
+  background: #e2e8ee;
+  border-color: #c5d0d8;
+  color: #3d4b55;
+  opacity: 1;
+}
+.link {
+  align-self: flex-start;
+  background: none;
+  border: 0;
+  padding: 0;
+  font: inherit;
+  font-size: 15px;
+  color: #00658a;
+  text-decoration: underline;
+  cursor: pointer;
+}
+.campoCodigo {
+  max-width: 240px;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.3em;
+}
+.nota {
+  border-top: 1px solid #e2e8ee;
+  padding-top: 18px;
+  font-size: 15px;
+  color: #52616d;
+}
+.nota strong {
+  color: #1a2731;
+}
+@media (max-width: 600px) {
+  .botoes > * {
+    width: 100%;
+  }
+  .campoCodigo {
+    max-width: none;
+  }
+}

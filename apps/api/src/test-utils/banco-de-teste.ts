@@ -35,7 +35,7 @@ export async function criarBancoDeTeste(): Promise<BancoDeTeste> {
     cliente.exec(
       `TRUNCATE acessos_prontuario, links_confirmacao, sessoes_atendimento, prontuarios,
         vinculos_estagiario, atribuicoes_supervisor, casos, decisoes_prioridade, inscricoes,
-        sessoes_login, convites_ativacao, auditoria, usuarios CASCADE`,
+        sessoes_login, convites_ativacao, auditoria, usuarios, limites_codigo_verificacao CASCADE`,
     );
   return { db, limpar, fechar: () => cliente.close() };
 }

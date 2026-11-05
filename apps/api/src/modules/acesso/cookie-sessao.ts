@@ -10,3 +10,7 @@ export const opcoesCookieSessao = (webUrl: string): CookieOptions => ({
   secure: webUrl.startsWith('https://'),
   path: '/',
 });
+
+// Cookie da verificação de identidade do paciente ou do responsável (RF52), com
+// as mesmas opções do cookie da sessão.
+export const COOKIE_VERIFICACAO = 'verificacao';

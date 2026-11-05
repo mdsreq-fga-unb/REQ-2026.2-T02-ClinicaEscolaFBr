@@ -837,7 +837,7 @@ rfs:
   ordem: 31
   lider: Joaquim
   issue: 47
-  estado: Planejada
+  estado: Código concluído
   origem: [DF24, DF40]
 
 - id: RF53
