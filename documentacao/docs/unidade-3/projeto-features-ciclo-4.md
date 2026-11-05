@@ -136,6 +136,279 @@ sequenceDiagram
 
 **Riscos:** o remetente oficial de e-mail depende da FBr, como no RF53. O RF1, de que o RF52 depende, já está na `main` ([#139](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/pull/139)).
 
+## Controle de assiduidade e alertas (CP9)
+
+As cinco features da CP9 trabalham sobre os mesmos registros: a falta (`FaltaPaciente`), o desligamento (`DesligamentoPorFaltas`) e a vaga liberada (`VagaLiberada`). A contagem e o alerta não têm tabela própria: são calculados a partir das faltas, para que nunca fiquem diferentes delas (RNF32). O módulo novo da API é o `assiduidade`.
+
+**Classes novas** (somam-se ao modelo acima e ao do Ciclo 3):
+
+```mermaid
+classDiagram
+    direction LR
+    class SessaoAtendimento {
+      +uuid id
+      +string status
+      +datetime inicio
+    }
+    class Caso {
+      +uuid id
+      +string situacao
+      +int cicloAtendimento
+    }
+    class FaltaPaciente {
+      +uuid id
+      +string origem
+      +int cicloAtendimento
+      +uuid registradaPor
+      +datetime registradaEm
+      +bool justificada
+      +string motivoJustificativaCifrado
+      +uuid justificadaPor
+      +datetime justificadaEm
+      +uuid retiradaPor
+      +datetime retiradaEm
+    }
+    class DesligamentoPorFaltas {
+      +uuid id
+      +int cicloAtendimento
+      +date dataDecisao
+      +uuid decididoPor
+      +datetime decididoEm
+      +uuid revertidoPor
+      +datetime revertidoEm
+      +string motivoReversaoCifrado
+    }
+    class VagaLiberada {
+      +uuid id
+      +uuid estagiarioId
+      +uuid supervisorId
+      +datetime liberadaEm
+      +datetime ocupadaEm
+      +uuid ocupadaPorVinculoId
+      +datetime encerradaEm
+    }
+    SessaoAtendimento "1" -- "0..1" FaltaPaciente : gera
+    Caso "1" -- "0..*" FaltaPaciente : acumula
+    Caso "1" -- "0..*" DesligamentoPorFaltas : sofre
+    DesligamentoPorFaltas "1" -- "1" VagaLiberada : libera
+    DesligamentoPorFaltas "0..1" -- "0..*" FaltaPaciente : retira da contagem na reversão
+```
+
+- **`FaltaPaciente.origem`:** `falta`, quando a sessão aconteceu sem o paciente (RF34), ou `cancelamento_fora_do_prazo`, quando o RF15 classifica o cancelamento assim. Uma sessão gera no máximo uma falta (índice único em `sessao_id`).
+- **Status novo da sessão:** `falta_paciente`, que se soma ao `confirmada` e ao `cancelada` do RF14 e do RF15. Como o RF15 e o RF34 mexem no mesmo `status_sessao`, a migration que acrescenta os três valores sai na primeira PR das duas, e a outra só a reaproveita.
+- **Situações novas do caso:** `desligado_por_faltas` (RF37) e `aguardando_vaga` (RF38, quando a vaga já foi ocupada).
+- **Cifrados (RNF51):** o motivo da justificativa e o motivo da reversão podem trazer informação de saúde, como um atestado, por isso ficam em colunas `*_cifrado`.
+- **Somente inserção, com campos que só são preenchidos uma vez (RNF32):** nenhuma falta é apagada nem tem a origem trocada. A justificativa e a retirada da contagem preenchem campos vazios com um `UPDATE` condicional (`justificada_em is null`, `retirada_em is null`), e cada operação vai para a auditoria com o estado anterior e o novo. O usuário da aplicação no banco (`clinica_app`) não recebe `DELETE` nessas tabelas.
+
+**Contagem (RF35):** `FaltasService.contar(casoId)` conta as `FaltaPaciente` do ciclo vigente do caso com `retiradaEm` vazio. Ela aparece no prontuário (RF27), nos dados administrativos da secretaria e na agenda, como "Faltas no ciclo: N de 2".
+
+---
+
+### RF34 — Registrar falta do paciente na sessão ([#150](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/issues/150))
+
+**Rotas** (módulo `assiduidade`):
+
+- `POST /sessoes/:id/falta`: secretaria ou estagiário responsável pelo caso. Recebe, opcionalmente, `justificada` e `motivo`, para quem já tem o comprovante na hora.
+- `POST /faltas/:id/justificativa`: secretaria, estagiário responsável ou supervisor responsável. Recebe o `motivo`, obrigatório. É a justificativa feita depois, a partir da lista de sessões do paciente: nos dados administrativos, para a secretaria, e no prontuário, para o estagiário e o supervisor.
+
+```mermaid
+sequenceDiagram
+    actor U as Secretaria ou estagiário responsável
+    participant A as API (assiduidade)
+    participant DB as Banco
+    U->>A: POST /sessoes/:id/falta, com justificativa opcional
+    A->>DB: confere o perfil e o vínculo vigente com o caso
+    alt sem permissão
+        A-->>U: 403, sem dado da sessão
+    else sessão futura, já cancelada, já realizada ou já com falta
+        A-->>U: 422 com o motivo
+    else justificada sem motivo
+        A-->>U: 400 com o campo indicado
+    else sessão presencial já passada, agendada ou confirmada
+        A->>DB: transação com status falta_paciente e FaltaPaciente (origem falta)
+        A->>DB: auditoria (RNF10, RNF32)
+        A->>DB: conta as faltas do ciclo (RF35)
+        A-->>U: falta registrada, com a contagem e o aviso ou o alerta
+    end
+```
+
+| Regra | Critério de aceitação |
+| --- | --- |
+| Só aceita sessão com `inicio` no passado e status `agendada` ou `confirmada`; a confirmação do RF14 não muda nada | Falta em sessão presencial já passada, sem realização nem cancelamento, confirmada ou não, muda o status para "falta do paciente", com data, horário e usuário |
+| `422` para `cancelada`, `realizada` ou `falta_paciente` | Sessão cancelada ou realizada não aceita falta |
+| A transação grava a `FaltaPaciente`, que é o evento consumido pela contagem | Cada falta gera o evento da contagem (RF35) |
+| A justificativa preenche `justificada`, o motivo cifrado, `justificadaPor` e `justificadaEm`, e não muda a origem nem a contagem | A secretaria ou os responsáveis justificam, na hora ou depois, com autor e data/hora |
+| `403` para quem não é a secretaria nem o estagiário ou o supervisor responsáveis | Outro usuário não justifica a falta |
+
+**Telas:** diálogo "Registrar falta do paciente" na agenda e na lista de sessões, com a caixa "Falta justificada" e o campo de motivo, que só aparece quando ela é marcada; "Marcar como justificada" na linha da falta, depois. Protótipo: [prancha 3-1](prototipos-ciclo-4.md#rf34).
+
+**Dados de teste:** uma sessão das 14h00 de ontem confirmada e outra não confirmada (aceitam a falta); uma sessão de amanhã, uma cancelada e uma realizada (recusam); uma falta justificada no registro e outra justificada depois; um estagiário e um supervisor sem vínculo com o caso tentando justificar (403).
+
+---
+
+### RF35 — Contabilizar faltas do paciente no ciclo ([#151](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/issues/151))
+
+**Sem rota própria.** A contagem é o `FaltasService.contar(casoId)`, chamado pelas telas que mostram o paciente e no fim das transações que criam ou retiram falta. A falta vem de dois lugares: do RF34 e do cancelamento do RF15, que chama `FaltasService.registrarCancelamentoForaDoPrazo(sessaoId)` na mesma transação, quando classifica o cancelamento como fora do prazo.
+
+```mermaid
+sequenceDiagram
+    participant F as RF34 ou RF15
+    participant S as FaltasService
+    participant DB as Banco
+    F->>S: falta ou cancelamento fora do prazo, na mesma transação
+    S->>DB: FaltaPaciente com a origem
+    S->>DB: conta as faltas do ciclo com retiradaEm vazio
+    alt contagem = 1
+        S-->>F: aviso para a secretaria e o estagiário (nova falta resulta em desligamento)
+    else contagem >= 2
+        S-->>F: limite atingido (alerta do RF36)
+    end
+```
+
+| Regra | Critério de aceitação |
+| --- | --- |
+| Conta as faltas do `cicloAtendimento` vigente do caso, consecutivas ou não, e nunca zera por sessão realizada | A 1ª falta ou o 1º cancelamento fora do prazo leva a 1 e avisa; uma nova falta, mesmo depois de sessões realizadas, leva a 2 e dispara o alerta |
+| Só o RF15 com classificação `fora_do_prazo` cria falta; `no_prazo` e `administrativo` não chamam o serviço | Cancelamento no prazo e cancelamento administrativo não alteram a contagem |
+| A falta de confirmação (RF14) não cria registro nenhum | Quem não confirmou, mas compareceu, não ganha falta |
+| `justificada` não entra no filtro da contagem | A falta justificada continua contando |
+| O filtro usa o ciclo vigente do caso | Num novo ciclo, a contagem começa em zero |
+| A reversão (RF38) preenche `retiradaEm` e `retiradaPor` só nas faltas indicadas | Na reversão, as faltas indicadas deixam de contar e continuam no histórico, com autor e data/hora |
+
+**Telas:** contador "Faltas no ciclo: N de 2", com o histórico do que conta e do que não conta e a falta retirada marcada como desconsiderada. Protótipo: [prancha 3-2](prototipos-ciclo-4.md#rf35).
+
+**Dados de teste:** paciente sem falta; com uma falta; com uma falta, duas sessões realizadas e uma nova falta; cancelamentos no prazo (2 horas antes), fora do prazo (30 minutos antes) e administrativo (10 minutos antes); paciente que não confirmou e compareceu; falta justificada; paciente no ciclo 2 com duas faltas no ciclo 1.
+
+---
+
+### RF36 — Emitir alerta de limite de faltas atingido ([#152](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/issues/152))
+
+**Rota:** `GET /faltas/alertas` (secretaria e coordenação: todos os casos; estagiário: só os casos dele). Devolve os casos `em_atendimento` com contagem 2 ou mais, sem desligamento vigente no ciclo, com o nome do paciente e a data da última falta, sem o motivo das faltas.
+
+**O alerta não tem tabela:** ele existe enquanto a condição vale. Por isso, some sozinho quando o desligamento é registrado (o caso deixa de estar `em_atendimento`) e não volta depois de uma reversão que deixe a contagem abaixo de 2.
+
+```mermaid
+sequenceDiagram
+    actor U as Secretaria, coordenação ou estagiário
+    participant W as Web (área interna)
+    participant A as API (assiduidade)
+    U->>W: qualquer página da área interna
+    W->>A: GET /faltas/alertas
+    A-->>W: casos com limite atingido, conforme o perfil
+    W-->>U: faixa vermelha "Limite de faltas atingido" com o nome do paciente
+```
+
+| Regra | Critério de aceitação |
+| --- | --- |
+| Contagem >= 2 e caso `em_atendimento` | Na 2ª falta do ciclo, consecutiva ou não, o alerta aparece para a secretaria, o estagiário responsável e a coordenação |
+| O caso desligado sai do filtro | O registro do desligamento (RF37) remove o alerta |
+
+**Telas (RNF33):** faixa no topo da área interna, carregada pelo layout em toda página, com ícone, o texto "Limite de faltas atingido", o nome do paciente e o link para o paciente; `role="status"`, para o leitor de tela anunciar sem roubar o foco; o vermelho nunca é o único sinal. A consulta usa o mesmo cache do contador do menu, para não pesar na navegação. Protótipo: [prancha 3-3](prototipos-ciclo-4.md#rf36).
+
+**Dados de teste:** um paciente com 1 falta (sem alerta) e outro com 2 (com alerta), vistos pelos três perfis; a coordenação com três pacientes no limite; um estagiário que não é o responsável (não vê o alerta do paciente); o mesmo paciente depois do desligamento (o alerta some).
+
+---
+
+### RF37 — Desligar paciente por faltas e liberar vaga ([#153](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/issues/153))
+
+**Rotas:**
+
+- `POST /casos/:id/desligamento` (secretaria ou coordenação), com a `dataDecisao`.
+- `GET /vagas/liberadas` (coordenação: todas; supervisor: as dos estagiários dele), com o próximo inscrito elegível da fila, que vem do RF7.
+
+```mermaid
+sequenceDiagram
+    actor U as Secretaria ou coordenação
+    participant A as API (assiduidade)
+    participant F as Fila (RF7)
+    participant DB as Banco
+    U->>A: POST /casos/:id/desligamento
+    A->>DB: confere o perfil e a contagem do ciclo
+    alt contagem menor que 2
+        A-->>U: 422 paciente sem alerta de limite pendente
+    else limite atingido
+        A->>DB: transação: DesligamentoPorFaltas e caso desligado_por_faltas
+        A->>DB: encerra o vínculo vigente com o estagiário
+        A->>DB: cancela as sessões futuras (classificação desligamento, sem falta)
+        A->>DB: VagaLiberada do estagiário e do supervisor
+        A->>DB: auditoria (RNF10, RNF32)
+        A->>F: próximo inscrito elegível
+        A-->>U: desligado, vaga liberada aguardando realocação
+    end
+```
+
+| Regra | Critério de aceitação |
+| --- | --- |
+| `422` quando a contagem do ciclo é menor que 2 | Paciente sem alerta pendente não pode ser desligado por faltas |
+| Uma transação só: desligamento, situação do caso, vínculo encerrado, sessões futuras canceladas e vaga liberada | A confirmação registra a decisão com data e responsável, muda o status, encerra o vínculo, cancela as sessões futuras e sinaliza a vaga, com o próximo inscrito da fila |
+| As sessões canceladas pelo desligamento não geram falta nem notificação de ausência do estagiário | O desligamento não aumenta a contagem nem conta como falta do estagiário |
+| `VagaLiberada.ocupadaEm` só é preenchido pelo RF21, quando o supervisor vincula um novo paciente ao mesmo estagiário | Nenhum inscrito é vinculado sozinho; a vaga só deixa de estar pendente com o novo vínculo |
+| Tudo na mesma transação, sem fila de mensagens nem tarefa agendada | A vaga aparece como liberada em até 5 segundos (RNF34) |
+
+**Integração com o RF21:** ao registrar um vínculo, o `CasosService` procura a `VagaLiberada` aberta mais antiga do mesmo estagiário e preenche `ocupadaEm` e `ocupadaPorVinculoId`. É a única mudança no código do Ciclo 3.
+
+**Telas:** botão "Desligar por faltas" só no paciente com alerta, com diálogo de confirmação que lista as sessões futuras que serão canceladas; cartão "Vaga liberada aguardando realocação" na distribuição (coordenação) e em "Meus casos" (supervisor), com o próximo inscrito elegível. Protótipo: [prancha 3-4](prototipos-ciclo-4.md#rf37).
+
+**Dados de teste:** um paciente com 2 faltas e duas sessões futuras; um paciente com 1 falta (recusado); uma fila com o próximo inscrito elegível e uma fila vazia; o desligamento pela secretaria e pela coordenação; a vaga vista pelo supervisor do estagiário e por outro supervisor (que não vê).
+
+---
+
+### RF38 — Reverter desligamento de paciente por faltas ([#154](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/issues/154))
+
+**Rota:** `POST /desligamentos/:id/reversao` (só coordenação), com o `motivo`, obrigatório, e a lista `faltasRetiradas`, com os ids das faltas do ciclo que deixam de contar (RF35). A lista pode vir vazia.
+
+```mermaid
+sequenceDiagram
+    actor C as Coordenação
+    participant A as API (assiduidade)
+    participant DB as Banco
+    C->>A: POST /desligamentos/:id/reversao, com motivo e faltas retiradas
+    alt outro perfil
+        A-->>C: 403
+    else sem motivo, ou falta de outro caso ou ciclo
+        A-->>C: 400 com o campo indicado
+    else desligamento já revertido
+        A-->>C: 409
+    else reversão válida
+        A->>DB: transação: marca o desligamento como revertido, com autor, data e motivo cifrado
+        A->>DB: retira da contagem as faltas indicadas
+        alt vaga ainda não ocupada
+            A->>DB: novo vínculo vigente com o mesmo estagiário e caso em_atendimento
+            A->>DB: encerra a VagaLiberada
+            A-->>C: revertido, com as sessões canceladas a reagendar
+        else vaga já ocupada por outro paciente
+            A->>DB: caso aguardando_vaga, sem mexer no vínculo novo
+            A-->>C: revertido, pendente de tratamento manual da vaga
+        end
+        A->>DB: auditoria (RNF10, RNF32)
+    end
+```
+
+| Regra | Critério de aceitação |
+| --- | --- |
+| Vaga sem `ocupadaEm`: o caso volta para `em_atendimento` com um novo `VinculoEstagiario` do mesmo estagiário; o vínculo antigo continua no histórico | Com a vaga livre, o paciente volta ao atendimento com o mesmo estagiário, a sinalização sai e as sessões canceladas aparecem para reagendar |
+| Vaga com `ocupadaEm`: o vínculo do novo paciente não é tocado; o caso fica `aguardando_vaga` | Com a vaga já ocupada, o novo paciente continua e a reversão fica pendente de tratamento manual |
+| `@Perfis('coordenacao')` | Outro perfil não reverte |
+| O desligamento recebe os campos da reversão, e nenhum registro é apagado | O desligamento e a reversão continuam na auditoria, cada um com autor, data/hora e motivo |
+
+**Telas:** diálogo "Reverter desligamento" com o motivo obrigatório e a lista das faltas do ciclo, cada uma com uma caixa "Deixa de contar"; depois, a lista das sessões canceladas a reagendar, com o atalho para o agendamento. A escolha das faltas é uma proposta levada à FBr em 06/11. Protótipo: [prancha 3-5](prototipos-ciclo-4.md#rf38).
+
+**Dados de teste:** um desligamento com a vaga livre e duas sessões canceladas; um com a vaga já ocupada por outro paciente; uma reversão sem motivo (recusada); uma reversão com uma falta retirada (a contagem volta a 1); tentativas da secretaria, do supervisor e do estagiário (403); uma segunda reversão do mesmo desligamento (409).
+
+---
+
+**Decisões de projeto da CP9** (a conferir na inspeção):
+
+1. **Contagem e alerta calculados, sem tabela.** Assim, não há como a contagem divergir das faltas, e a reversão ajusta tudo só preenchendo `retiradaEm`. O custo é uma consulta por tela, coberta por um índice em `(caso_id, ciclo_atendimento)` na `faltas_paciente`.
+2. **Cancelamento fora do prazo vira `FaltaPaciente`.** O RF15 (Nicolas) chama o `FaltasService` na mesma transação do cancelamento. A interface entre os dois é só esse método, combinado entre as duas PRs.
+3. **Sessões canceladas pelo desligamento.** Ficam `cancelada`, com a classificação `desligamento`, que não é nenhuma das três do RF15. Elas não contam como falta do paciente nem do estagiário.
+4. **Novo vínculo na reversão, em vez de reativar o antigo.** Preserva o histórico de responsáveis do RF27 e respeita o índice de um vínculo vigente por caso.
+5. **Situação `aguardando_vaga`.** O RF38 não diz em que situação o caso fica quando a vaga já foi ocupada. O protótipo mostra "aguarda vaga", e a coordenação resolve depois, distribuindo de novo (RF20) ou vinculando quando surgir uma vaga.
+6. **Fila (RF7) ainda não existe.** Até o RF7 entrar, o `GET /vagas/liberadas` devolve o próximo inscrito elegível como vazio, e a tela mostra "Fila de espera disponível com o RF7".
+
+**Dependências e riscos:** o RF14 e o RF15 (Nicolas) trazem os status `confirmada` e `cancelada`; até eles entrarem, os testes do RF34 criam as sessões direto no banco, como no Ciclo 3. O RF7 (Jônatas) traz a fila. Nenhuma integração externa: não há e-mail, SMS nem PDF na CP9.
+
+---
+
 ## Roteiro da inspeção de design
 
 O mesmo do [Ciclo 3](projeto-features-ciclo-3.md#roteiro-da-inspecao-de-design): o Líder de Feature faz a inspeção com o revisor da issue e registra o resultado num comentário da issue.
