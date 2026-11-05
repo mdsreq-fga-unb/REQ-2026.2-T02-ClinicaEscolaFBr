@@ -82,6 +82,17 @@ def motivo_mvp(rf):
     return MOTIVO[(2, esforco == 1)]
 
 
+def texto_removidos(removidos):
+    """ "sem o RF19, removido em 24/10/2026" ou "sem o RF19 e o RF23, removidos"."""
+    if not removidos:
+        return ""
+    if len(removidos) == 1:
+        r = removidos[0]
+        return f"sem o {r['id']}, removido em {r['removido']}"
+    codigos = [f"o {r['id']}" for r in removidos]
+    return f"sem {', '.join(codigos[:-1])} e {codigos[-1]}, removidos"
+
+
 def expandir(texto, prefixo="RF"):
     """Códigos citados em um texto, inclusive intervalos como "RF34–RF38"."""
     achados = []
@@ -109,10 +120,14 @@ class Catalogo:
         rnfs_vigentes = [r for r in self.rnfs if not r.get("removido") and not r.get("consolidado_em")]
         mvp = [r for r in rfs_vigentes if r["mvp"]]
         rnfs_mvp = [r for r in rnfs_vigentes if r["classificacao"] != "Não aplicável ao MVP"]
+        removidos = [r for r in self.rfs if r.get("removido")]
         return {
             "rfs": len(self.rfs),
             "rfs_vigentes": len(rfs_vigentes),
             "rfs_removidos": len(self.rfs) - len(rfs_vigentes),
+            # Trecho para "RF1 a RF69, sem o RF19, removido em 24/10/2026": com o
+            # código e a data de cada removido, no singular ou no plural.
+            "rfs_removidos_texto": texto_removidos(removidos),
             "rfs_mvp": len(mvp),
             "rfs_posteriores": len(rfs_vigentes) - len(mvp),
             "rnfs": len(self.rnfs),

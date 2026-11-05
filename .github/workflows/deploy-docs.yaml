@@ -21,6 +21,9 @@ concurrency:
 
 jobs:
   deploy:
+    # A execução manual também só publica a development: rodada a partir da main,
+    # ela publicaria a documentação de antes da última promoção.
+    if: github.ref == 'refs/heads/development'
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository

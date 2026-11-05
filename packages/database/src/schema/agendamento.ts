@@ -15,8 +15,8 @@ import { casos } from "./casos";
 
 export const statusSessaoEnum = pgEnum("status_sessao", STATUS_SESSAO);
 
-// Sessão de atendimento (RF10): a duração e o intervalo para anotações, que fica
-// reservado na agenda do estagiário, vêm dos parâmetros de agendamento (DF18).
+// Sessão de atendimento (RF10): 50 minutos mais o intervalo de 10 minutos para
+// anotações, que fica reservado na agenda do estagiário (DF18).
 export const sessoesAtendimento = pgTable(
   "sessoes_atendimento",
   {
