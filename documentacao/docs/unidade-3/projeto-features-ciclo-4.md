@@ -1048,4 +1048,4 @@ sequenceDiagram
 
 O mesmo do [Ciclo 3](projeto-features-ciclo-3.md#roteiro-da-inspecao-de-design): o Líder de Feature faz a inspeção com o revisor da issue e registra o resultado num comentário da issue.
 
-Como o Gabriel escreveu o projeto, ele não inspeciona nenhuma feature deste ciclo, nem as que tem como revisor na issue (RF11, RF14, RF15, RF16 e RF69). Nelas, o Líder faz a inspeção com outro integrante, definido na reunião da equipe de 05/11/2026. Nas features do Gabriel (RF34 a RF38), a inspeção é do Nicolas, o revisor das issues.
+Como o Gabriel escreveu o projeto, ele não inspeciona nenhuma feature deste ciclo, nem as que tem como revisor na issue (RF11, RF14, RF15, RF16 e RF69). Nelas, o Líder faz a inspeção com outro integrante, definido na reunião da equipe de 05/11/2026: o Jônatas, com o Nicolas (RF11, RF14, RF15 e RF16), e a Maria Clara, com o Luís (RF69). Nas features do Gabriel (RF34 a RF38), a inspeção é do Nicolas, o revisor das issues.
