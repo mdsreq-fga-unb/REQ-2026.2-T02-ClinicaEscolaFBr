@@ -454,6 +454,8 @@ export class CasosService {
           );
         }
 
+        // A linha do estagiário fica bloqueada até o fim, para que uma desativação
+        // simultânea não deixe o caso com uma conta desativada (RF21, RF54).
         const [escolhido] = await tx
           .select({ id: usuarios.id, nome: usuarios.nome })
           .from(usuarios)
@@ -463,7 +465,8 @@ export class CasosService {
               eq(usuarios.perfil, 'estagiario'),
               eq(usuarios.situacao, 'ativo'),
             ),
-          );
+          )
+          .for('update');
         if (!escolhido) {
           throw new UnprocessableEntityException(
             'Estagiário com conta ativa não encontrado.',
