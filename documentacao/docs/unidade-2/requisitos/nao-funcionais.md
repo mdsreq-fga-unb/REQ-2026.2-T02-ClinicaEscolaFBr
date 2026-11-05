@@ -1,42 +1,15 @@
+---
+render_macros: true
+---
+
 # 8.2 Lista de Requisitos Não Funcionais
 
 Os requisitos não funcionais (RNFs) descrevem propriedades e restrições mensuráveis do sistema, classificadas conforme o modelo **URPS+** (Usabilidade, Confiabilidade, Desempenho, Suportabilidade e demais categorias, como Segurança e Auditoria). Cada RNF mantém rastreabilidade com a **Feature** que ele restringe e, por meio dela, com a Característica de Produto (CP) de origem — mesma cadeia usada nos [Requisitos Funcionais](funcionais.md).
 
 <details class="requirement-index" markdown>
-<summary>Índice de requisitos não funcionais por código (59)</summary>
+<summary>Índice de requisitos não funcionais por código ({{ n.rnfs }} registrados, {{ n.rnfs_vigentes }} vigentes)</summary>
 
-| Requisito | Requisito |
-| --- | --- |
-| [RNF1 — Identificação e recuperação de erros no formulário](#rnf1) | [RNF2 — Proteção das informações no comprovante de inscrição](#rnf2) |
-| [RNF3 — Sigilo das informações de triagem](#rnf3) | [RNF4 — Rastreabilidade das regras de sinalização](#rnf4) |
-| [RNF5 — Integridade e auditoria das decisões de prioridade](#rnf5) | [RNF6 — Privacidade e controle de acesso à consulta da fila](#rnf6) |
-| [RNF7 — Compreensibilidade das informações sobre a posição na fila](#rnf7) | [RNF8 — Confiabilidade das informações institucionais da fila](#rnf8) |
-| [RNF9 — Integridade do agendamento](#rnf9) | [RNF10 — Auditoria das operações sobre a sessão](#rnf10) |
-| [RNF11 — Confiabilidade do envio de lembretes](#rnf11) | [RNF12 — Tempo de resposta nas operações de agendamento](#rnf12) |
-| [RNF13 — Minimização de dados na agenda](#rnf13) | [RNF14 — Disponibilidade do módulo de agendamento](#rnf14) |
-| [RNF15 — Usabilidade da confirmação de presença pelo paciente](#rnf15) | [RNF16 — Autorização para distribuição, vínculo e transferência de casos](#rnf16) |
-| [RNF17 — Privacidade dos dados nas telas de distribuição e consulta](#rnf17) | [RNF18 — Auditoria de atribuições, vínculos e transferências](#rnf18) |
-| [RNF19 — Integridade dos vínculos de responsabilidade](#rnf19) | [RNF20 — Continuidade do histórico na troca de responsável](#rnf20) |
-| [RNF21 — Desempenho das listagens e operações de vínculo](#rnf21) | [RNF22 — Usabilidade da distribuição e do vínculo de casos](#rnf22) |
-| [RNF23 — Modificabilidade do cadastro de áreas de especialidade](#rnf23) | [RNF24 — Acessibilidade das telas de distribuição e consulta](#rnf24) |
-| [RNF25 — Sigilo do conteúdo clínico nas respostas negadas](#rnf25) | [RNF26 — Sigilo do conteúdo da evolução (consolidado no RNF25)](#rnf26) |
-| [RNF27 — Integridade e proveniência dos registros de evolução](#rnf27) | [RNF28 — Auditoria das correções de evolução](#rnf28) |
-| [RNF29 — Desempenho do registro e da consulta de evolução](#rnf29) | [RNF30 — Usabilidade do registro de evolução](#rnf30) |
-| [RNF31 — Fidelidade e rastreabilidade do relatório final](#rnf31) | [RNF32 — Integridade e auditoria da contagem de faltas](#rnf32) |
-| [RNF33 — Visibilidade do alerta de limite de faltas](#rnf33) | [RNF34 — Tempo de liberação da vaga após desligamento](#rnf34) |
-| [RNF35 — Privacidade dos dados de faltas do estagiário](#rnf35) | [RNF36 — Auditoria dos registros de contribuição social](#rnf36) |
-| [RNF37 — Privacidade dos dados na declaração](#rnf37) | [RNF38 — Autorização para emissão e consulta](#rnf38) |
-| [RNF39 — Auditoria de emissões e reemissões](#rnf39) | [RNF40 — Tempo de geração da declaração](#rnf40) |
-| [RNF41 — Usabilidade da emissão](#rnf41) | [RNF42 — Formato e compatibilidade do documento](#rnf42) |
-| [RNF43 — Acessibilidade da tela de emissão](#rnf43) | [RNF44 — Integridade do conteúdo da declaração](#rnf44) |
-| [RNF45 — Segurança da consulta pública de autenticidade](#rnf45) | [RNF46 — Atualização dos indicadores operacionais](#rnf46) |
-| [RNF47 — Tempo de geração do relatório institucional](#rnf47) | [RNF48 — Auditoria de relatórios institucionais](#rnf48) |
-| [RNF49 — Proteção das credenciais de acesso](#rnf49) | [RNF50 — Expiração da sessão por inatividade](#rnf50) |
-| [RNF51 — Criptografia dos dados](#rnf51) | [RNF52 — Trilha de auditoria de acessos ao prontuário](#rnf52) |
-| [RNF53 — Cópia de segurança e recuperação dos dados](#rnf53) | [RNF54 — Auditoria das decisões de continuidade](#rnf54) |
-| [RNF55 — Integridade do histórico na continuidade](#rnf55) | [RNF56 — Conformidade com WCAG 2.2 nível AA](#rnf56) |
-| [RNF57 — Aparência reforçada do indicador de foco](#rnf57) | [RNF58 — Responsividade da interface](#rnf58) |
-| [RNF59 — Segurança do link de confirmação de presença](#rnf59) | |
+{{ indice("RNF") }}
 
 </details>
 
@@ -61,7 +34,8 @@ Após a identificação de um erro de preenchimento, o sistema deve preservar os
 A conformidade deve ser verificada por meio de testes com campos obrigatórios vazios e entradas inválidas, incluindo telefone celular, e-mail e canal preferencial (RF1), confirmando a identificação textual dos erros e a preservação das informações válidas previamente inseridas.
 
 Classificação: usabilidade e acessibilidade (URPS+).
-Rastreabilidade: Feature "Registrar solicitação de atendimento on-line" → CP1 — Inscrição on-line; complementa os requisitos transversais de acessibilidade da CP14.
+Rastreabilidade: Feature "Registrar solicitação de atendimento on-line" → CP1 — Inscrição on-line; complementa os requisitos transversais de acessibilidade da CP14.{{ origem("RNF1") }}
+{{ registro("RNF1") }}
 
 #### Feature — Emitir comprovante de inscrição
 
@@ -72,7 +46,8 @@ As informações clínicas não devem ser incluídas no endereço eletrônico ut
 A conformidade deve ser verificada com inscrições fictícias contendo queixa e outros dados clínicos, confirmando que essas informações não aparecem no endereço eletrônico nem nas mensagens públicas de sucesso ou erro. O conteúdo permitido no comprovante é definido pelo RF2 e não é repetido neste RNF.
 
 Classificação: segurança e privacidade (URPS+).
-Rastreabilidade: Feature "Emitir comprovante de inscrição" → CP1 — Inscrição on-line; relacionada à CP12 — Segurança, sigilo e controle de acesso.
+Rastreabilidade: Feature "Emitir comprovante de inscrição" → CP1 — Inscrição on-line; relacionada à CP12 — Segurança, sigilo e controle de acesso.{{ origem("RNF2") }}
+{{ registro("RNF2") }}
 
 ### Triagem e sinalização de casos (CP2)
 
@@ -85,7 +60,8 @@ As features da CP2 tratam respostas potencialmente sensíveis da inscrição e d
 As respostas de triagem e as sinalizações vinculadas à inscrição devem ser exibidas somente aos perfis de supervisor e coordenação. A interface e as respostas a tentativas de acesso negadas não devem revelar queixa, histórico informado, urgência percebida ou sinalizações clínicas. A conformidade deve ser verificada com inscrições fictícias, comparando consultas por supervisor e coordenação com tentativas de acesso por secretaria, estagiário e usuário externo.
 
 Classificação: segurança e privacidade (URPS+).
-Rastreabilidade: Feature "Organizar informações da inscrição para triagem" → CP2 — Triagem e sinalização de casos; relacionada às features "Sinalizar pontos de atenção da inscrição" e "Registrar prioridade clínica do inscrito" e à CP12 — Segurança, sigilo e controle de acesso.
+Rastreabilidade: Feature "Organizar informações da inscrição para triagem" → CP2 — Triagem e sinalização de casos; relacionada às features "Sinalizar pontos de atenção da inscrição" e "Registrar prioridade clínica do inscrito" e à CP12 — Segurança, sigilo e controle de acesso.{{ origem("RNF3") }}
+{{ registro("RNF3") }}
 
 #### Feature — Sinalizar pontos de atenção da inscrição
 
@@ -94,7 +70,8 @@ Rastreabilidade: Feature "Organizar informações da inscrição para triagem" �
 Cada ponto de atenção apresentado deve manter vínculo verificável com a resposta original e com a versão da regra institucional aprovada que o produziu. As versões das regras devem preservar identificador, data de vigência, responsável pela aprovação e histórico de publicação; uma nova versão não pode reprocessar silenciosamente sinalizações anteriores. A conformidade deve ser verificada com dados fictícios, incluindo troca de versão e ausência de regra vigente, confirmando a origem de cada sinalização, a preservação da versão aplicada e a ausência de cor de prioridade atribuída automaticamente.
 
 Classificação: confiabilidade e auditoria (URPS+).
-Rastreabilidade: Feature "Sinalizar pontos de atenção da inscrição" → CP2 — Triagem e sinalização de casos; relacionada a RF5.
+Rastreabilidade: Feature "Sinalizar pontos de atenção da inscrição" → CP2 — Triagem e sinalização de casos; relacionada a RF5.{{ origem("RNF4") }}
+{{ registro("RNF4") }}
 
 #### Feature — Registrar prioridade clínica do inscrito
 
@@ -103,7 +80,8 @@ Rastreabilidade: Feature "Sinalizar pontos de atenção da inscrição" → CP2 
 O histórico das decisões de prioridade do RF6 deve ser imutável e acrescentado cronologicamente: uma reclassificação deve criar um novo evento de auditoria vinculado à decisão anterior, sem sobrescrever, alterar ou apagar eventos já registrados. A conformidade deve ser verificada classificando e reclassificando uma inscrição fictícia e, em seguida, tentando alterar e excluir eventos anteriores pela interface; a trilha deve permanecer íntegra e permitir reconstruir a sequência das decisões. Os perfis autorizados e os dados funcionais de cada decisão permanecem definidos exclusivamente no RF6.
 
 Classificação: confiabilidade e auditoria (URPS+).
-Rastreabilidade: Feature "Registrar prioridade clínica do inscrito" → CP2 — Triagem e sinalização de casos; integração com RF7 (CP3).
+Rastreabilidade: Feature "Registrar prioridade clínica do inscrito" → CP2 — Triagem e sinalização de casos; integração com RF7 (CP3).{{ origem("RNF5") }}
+{{ registro("RNF5") }}
 
 ### Fila de espera e consulta de posição (CP3)
 
@@ -128,7 +106,8 @@ A conformidade deve ser verificada por meio de testes automatizados com inscriç
 Em todos os casos de acesso não autorizado, nenhuma informação individual da inscrição consultada deve ser divulgada.
 
 Classificação: segurança e privacidade (URPS+).
-Rastreabilidade: Feature "Consultar posição individual na fila" → CP3 — Fila de espera e consulta de posição; relacionada à CP12 — Segurança, sigilo e controle de acesso. Dependência: RF52 — Verificar identidade do paciente ou responsável (CP12).
+Rastreabilidade: Feature "Consultar posição individual na fila" → CP3 — Fila de espera e consulta de posição; relacionada à CP12 — Segurança, sigilo e controle de acesso. Dependência: RF52 — Verificar identidade do paciente ou responsável (CP12).{{ origem("RNF6") }}
+{{ registro("RNF6") }}
 
 **RNF7 — Compreensibilidade das informações sobre a posição na fila**{ #rnf7 }
 
@@ -139,7 +118,8 @@ O aviso deve ser exibido junto ao resultado da consulta, sem exigir que o intere
 A conformidade deve ser verificada por teste de compreensão com, no mínimo, 10 participantes representativos do público externo da Clínica Escola — interessados inscritos, pacientes ou responsáveis legais, incluindo participantes com baixa familiaridade digital. Após concluir a consulta sem explicação adicional do avaliador, cada participante deve responder, com suas próprias palavras, se a posição pode mudar e se ela garante uma data de atendimento. O requisito é atendido quando pelo menos 90% dos participantes responderem corretamente às duas questões e todas as consultas apresentarem o aviso junto ao resultado.
 
 Classificação: usabilidade (URPS+).
-Rastreabilidade: Feature "Consultar posição individual na fila" → CP3 — Fila de espera e consulta de posição → IS03 — Expectativa sobre a fila.
+Rastreabilidade: Feature "Consultar posição individual na fila" → CP3 — Fila de espera e consulta de posição → IS03 — Expectativa sobre a fila.{{ origem("RNF7") }}
+{{ registro("RNF7") }}
 
 #### Feature — Manter e informar condições gerais da fila
 
@@ -156,7 +136,8 @@ A conformidade deve ser verificada mediante a publicação de informações inst
 Após a publicação da atualização, a consulta deve apresentar exclusivamente a versão vigente das informações institucionais.
 
 Classificação: confiabilidade (URPS+).
-Rastreabilidade: Feature "Manter e informar condições gerais da fila" → CP3 — Fila de espera e consulta de posição → IS02 — Aumento da demanda.
+Rastreabilidade: Feature "Manter e informar condições gerais da fila" → CP3 — Fila de espera e consulta de posição → IS02 — Aumento da demanda.{{ origem("RNF8") }}
+{{ registro("RNF8") }}
 
 ### Agendamento, Confirmação e Remarcação (CP4)
 
@@ -169,7 +150,8 @@ Duas sessões não podem ser agendadas para o mesmo horário do mesmo estagiári
 A conformidade deve ser verificada por teste de concorrência, com duas tentativas simultâneas de agendar ou remarcar uma sessão para o mesmo horário do mesmo estagiário, confirmando que apenas uma é aceita.
 
 Classificação: confiabilidade (URPS+).
-Rastreabilidade: CP4 — Agendamento, confirmação e remarcação (transversal às features "Agendar sessão do paciente" e "Reagendar sessão do paciente").
+Rastreabilidade: CP4 — Agendamento, confirmação e remarcação (transversal às features "Agendar sessão do paciente" e "Reagendar sessão do paciente").{{ origem("RNF9") }}
+{{ registro("RNF9") }}
 
 **RNF10 — Auditoria das operações sobre a sessão**{ #rnf10 }
 
@@ -189,11 +171,12 @@ Esses registros não podem ser apagados nem sobrescritos por nenhum perfil, e de
 A conformidade deve ser verificada por teste de integração que execute cada operação da tabela e confirme o registro de auditoria correspondente, com todos os dados listados, e por inspeção, confirmando que a interface não oferece meio de alterar ou apagar esses registros.
 
 Classificação: auditoria (URPS+).
-Rastreabilidade: CP4 — Agendamento, confirmação e remarcação (transversal às features "Agendar sessão do paciente", "Reagendar sessão do paciente", "Confirmar presença em sessão agendada", "Registrar cancelamento de sessão pelo paciente" e "Registrar cancelamento de sessão pelo estagiário").
+Rastreabilidade: CP4 — Agendamento, confirmação e remarcação (transversal às features "Agendar sessão do paciente", "Reagendar sessão do paciente", "Confirmar presença em sessão agendada", "Registrar cancelamento de sessão pelo paciente" e "Registrar cancelamento de sessão pelo estagiário").{{ origem("RNF10") }}
+{{ registro("RNF10") }}
 
 **RNF11 — Confiabilidade do envio de lembretes**{ #rnf11 }
 
-O sistema deve entregar ao provedor de e-mail pelo menos 98% dos lembretes de sessão (RF13) dos pacientes com e-mail como canal preferencial; o SMS foi descartado pela Clínica Escola em 23/10/2026 ([DF24](decisoes-fbr.md)), e os lembretes por WhatsApp são enviados pela secretaria. Como o sistema não controla a chegada da mensagem ao aparelho do paciente, considera-se **entregue** o lembrete aceito pelo provedor de e-mail.
+O sistema deve entregar ao provedor de e-mail pelo menos 98% dos lembretes de sessão (RF13) dos pacientes com e-mail como canal preferencial; o SMS foi descartado pela Clínica Escola em 23/10/2026 ([DF24](decisoes-fbr.md#df24)), e os lembretes por WhatsApp são enviados pela secretaria. Como o sistema não controla a chegada da mensagem ao aparelho do paciente, considera-se **entregue** o lembrete aceito pelo provedor de e-mail.
 
 - **Fórmula e janela:** taxa = lembretes aceitos pelo provedor ÷ lembretes programados por e-mail × 100, apurada por mês civil, sobre todos os lembretes programados no mês.
 - **Nova tentativa:** um lembrete recusado ou sem resposta do provedor deve ser reenviado automaticamente até 3 vezes, dentro de 1 hora após a primeira tentativa.
@@ -205,20 +188,22 @@ O envio e cada falha de cada lembrete devem ser registrados para consulta poster
 A conformidade deve ser verificada por teste com provedor simulado, sobre uma amostra de pelo menos 200 lembretes por canal, com falhas injetadas em 10% deles, conferindo as novas tentativas, a taxa de entrega calculada, a exclusão das falhas externas e a sinalização à secretaria; em produção, pelo relatório mensal da taxa de cada canal.
 
 Classificação: confiabilidade (URPS+).
-Rastreabilidade: Feature "Enviar lembrete de sessão agendada" → CP4 — Agendamento, confirmação e remarcação.
+Rastreabilidade: Feature "Enviar lembrete de sessão agendada" → CP4 — Agendamento, confirmação e remarcação.{{ origem("RNF11") }}
+{{ registro("RNF11") }}
 
 **RNF12 — Tempo de resposta nas operações de agendamento**{ #rnf12 }
 
 As operações de agendar, reagendar, confirmar presença e registrar cancelamento devem apresentar retorno em até 2 segundos para 95% das requisições no cenário de referência abaixo. O tempo é medido no servidor, do recebimento da requisição ao envio da resposta, sem incluir a rede do usuário.
 
-- **Carga:** 30 usuários simultâneos executando essas operações de forma contínua por 10 minutos, pico de uso de secretaria, estagiários e supervisores estimado pela equipe e confirmado pela Clínica Escola em 23/10/2026 ([DF22](decisoes-fbr.md)).
+- **Carga:** 30 usuários simultâneos executando essas operações de forma contínua por 10 minutos, pico de uso de secretaria, estagiários e supervisores estimado pela equipe e confirmado pela Clínica Escola em 23/10/2026 ([DF22](decisoes-fbr.md#df22)).
 - **Massa de dados:** dois semestres de operação, com cerca de 360 inscrições, 200 pacientes atendidos e 4.000 sessões registradas, a partir do volume da clínica de 100 vagas e 160 a 180 inscrições por semestre.
 - **Infraestrutura:** ambiente de homologação com a mesma configuração do servidor de produção (VPS da FBr).
 
 A conformidade deve ser verificada por teste de carga automatizado (por exemplo, k6 ou JMeter) nesse cenário, conferindo o percentil 95 do tempo de resposta de cada operação.
 
 Classificação: desempenho (URPS+).
-Rastreabilidade: CP4 — Agendamento, confirmação e remarcação (transversal às features "Agendar sessão do paciente", "Reagendar sessão do paciente", "Confirmar presença em sessão agendada", "Registrar cancelamento de sessão pelo paciente" e "Registrar cancelamento de sessão pelo estagiário").
+Rastreabilidade: CP4 — Agendamento, confirmação e remarcação (transversal às features "Agendar sessão do paciente", "Reagendar sessão do paciente", "Confirmar presença em sessão agendada", "Registrar cancelamento de sessão pelo paciente" e "Registrar cancelamento de sessão pelo estagiário").{{ origem("RNF12") }}
+{{ registro("RNF12") }}
 
 **RNF13 — Minimização de dados na agenda**{ #rnf13 }
 
@@ -227,7 +212,8 @@ Quem pode consultar cada agenda é definido no RF11. Este RNF restringe **o que*
 A conformidade deve ser verificada por inspeção das respostas do servidor à consulta da agenda, confirmando a ausência dos campos não permitidos, e por teste de requisição direta ao servidor com um usuário sem vínculo de supervisão, confirmando a negação.
 
 Classificação: privacidade (URPS+).
-Rastreabilidade: Feature "Consultar agenda de sessões do estagiário" → CP4 — Agendamento, confirmação e remarcação; relacionada à CP12 — Segurança, sigilo e controle de acesso.
+Rastreabilidade: Feature "Consultar agenda de sessões do estagiário" → CP4 — Agendamento, confirmação e remarcação; relacionada à CP12 — Segurança, sigilo e controle de acesso.{{ origem("RNF13") }}
+{{ registro("RNF13") }}
 
 **RNF14 — Disponibilidade do módulo de agendamento**{ #rnf14 }
 
@@ -242,7 +228,8 @@ O módulo de agendamento e confirmação deve estar disponível em pelo menos 99
 A conformidade deve ser verificada por monitor externo que consulte a página de agendamento a cada minuto durante o horário comercial, com relatório mensal da disponibilidade calculada pela fórmula acima.
 
 Classificação: confiabilidade (URPS+).
-Rastreabilidade: CP4 — Agendamento, confirmação e remarcação (transversal a todas as features).
+Rastreabilidade: CP4 — Agendamento, confirmação e remarcação (transversal a todas as features).{{ origem("RNF14") }}
+{{ registro("RNF14") }}
 
 **RNF15 — Usabilidade da confirmação de presença pelo paciente**{ #rnf15 }
 
@@ -251,7 +238,8 @@ A confirmação de presença deve ser possível a partir do link enviado no agen
 A conformidade deve ser verificada por teste de usabilidade com, no mínimo, 10 participantes representativos, incluindo pessoas com baixo letramento digital, sem ajuda durante a execução. O requisito é atendido quando pelo menos 90% dos participantes confirmam a presença em até 2 interações a partir do link.
 
 Classificação: usabilidade (URPS+).
-Rastreabilidade: Feature "Confirmar presença em sessão agendada" → CP4 — Agendamento, confirmação e remarcação; relacionada à CP14 — Acessibilidade e usabilidade e ao RNF59 (segurança do mesmo link).
+Rastreabilidade: Feature "Confirmar presença em sessão agendada" → CP4 — Agendamento, confirmação e remarcação; relacionada à CP14 — Acessibilidade e usabilidade e ao RNF59 (segurança do mesmo link).{{ origem("RNF15") }}
+{{ registro("RNF15") }}
 
 **RNF59 — Segurança do link de confirmação de presença**{ #rnf59 }
 
@@ -274,7 +262,8 @@ A conformidade deve ser verificada por testes de segurança que abram o link em 
 Em toda recusa, nenhum dado da sessão é exposto. A conformidade também deve ser verificada por inspeção do código de geração do token, conferindo a fonte aleatória e o tamanho.
 
 Classificação: segurança (URPS+).
-Rastreabilidade: Feature "Confirmar presença em sessão agendada" → CP4 — Agendamento, confirmação e remarcação; relacionada ao RNF15 (usabilidade do mesmo link) e à CP12 — Segurança, sigilo e controle de acesso.
+Rastreabilidade: Feature "Confirmar presença em sessão agendada" → CP4 — Agendamento, confirmação e remarcação; relacionada ao RNF15 (usabilidade do mesmo link) e à CP12 — Segurança, sigilo e controle de acesso.{{ origem("RNF59") }}
+{{ registro("RNF59") }}
 
 ### Distribuição de casos entre supervisores e estagiários (CP5)
 
@@ -287,7 +276,8 @@ A distribuição de casos a supervisores é exclusiva da coordenação (RF20); a
 A conformidade deve ser verificada por testes de autorização, com cenários positivos e negativos, para os perfis paciente, secretaria, estagiário, supervisor e coordenação, incluindo a tentativa de um supervisor distribuir um caso ou transferi-lo para outro supervisor, sem nenhum acesso indevido.
 
 Classificação: segurança (URPS+).
-Rastreabilidade: CP5 — Distribuição de casos entre supervisores e estagiários (transversal a todas as features da CP5).
+Rastreabilidade: CP5 — Distribuição de casos entre supervisores e estagiários (transversal a todas as features da CP5).{{ origem("RNF16") }}
+{{ registro("RNF16") }}
 
 **RNF17 — Privacidade dos dados nas telas de distribuição e consulta**{ #rnf17 }
 
@@ -300,12 +290,13 @@ As telas de distribuição de casos e de consulta de responsáveis devem exibir,
 | Supervisor                | Os mesmos campos da secretaria, para os próprios casos e os dos seus estagiários; na lista desses casos (RF23), também a prioridade clínica e a situação do caso |
 | Coordenação                | Todos os campos acima, sem restrição de caso |
 
-Nenhum perfil sem acesso ao prontuário (RF55, CP12) deve visualizar dado clínico (queixa, evolução) nessas telas. A única exceção é a prioridade clínica (vermelha, amarela ou verde), que aparece na lista de casos aguardando distribuição e no painel de distribuição (RF18 e RF20) para a coordenação e os supervisores, porque a ordem de distribuição segue a prioridade, como confirmado pela Clínica Escola ([DF16](decisoes-fbr.md)), e na lista de casos do estagiário e do supervisor (RF23), restrita aos casos sob a responsabilidade deles, que já têm acesso ao prontuário desses casos; a queixa e as demais informações de triagem continuam ocultas. Exceção registrada em 24/10/2026, na inspeção de design do RF18, para resolver a contradição com o RF18, e ampliada ao RF23 em 26/10/2026, na avaliação do DoR do Ciclo 4.
+Nenhum perfil sem acesso ao prontuário (RF55, CP12) deve visualizar dado clínico (queixa, evolução) nessas telas. A única exceção é a prioridade clínica (vermelha, amarela ou verde), que aparece na lista de casos aguardando distribuição e no painel de distribuição (RF18 e RF20) para a coordenação e os supervisores, porque a ordem de distribuição segue a prioridade, como confirmado pela Clínica Escola ([DF16](decisoes-fbr.md#df16)), e na lista de casos do estagiário e do supervisor (RF23), restrita aos casos sob a responsabilidade deles, que já têm acesso ao prontuário desses casos; a queixa e as demais informações de triagem continuam ocultas. Exceção registrada em 24/10/2026, na inspeção de design do RF18, para resolver a contradição com o RF18, e ampliada ao RF23 em 26/10/2026, na avaliação do DoR do Ciclo 4.
 
 A conformidade deve ser verificada por revisão das telas por perfil, comparando o conteúdo exibido com a matriz acima, e por teste do conteúdo efetivamente exibido, confirmando a ausência de campos clínicos para perfis sem acesso ao prontuário.
 
 Classificação: privacidade (URPS+).
-Rastreabilidade: CP5 — Distribuição de casos entre supervisores e estagiários (transversal às features "Listar casos aguardando distribuição", "Consultar responsáveis pelo caso" e "Consultar casos sob responsabilidade do estagiário ou supervisor").
+Rastreabilidade: CP5 — Distribuição de casos entre supervisores e estagiários (transversal às features "Listar casos aguardando distribuição", "Consultar responsáveis pelo caso" e "Consultar casos sob responsabilidade do estagiário ou supervisor").{{ origem("RNF17") }}
+{{ registro("RNF17") }}
 
 **RNF18 — Auditoria de atribuições, vínculos e transferências**{ #rnf18 }
 
@@ -314,7 +305,8 @@ Toda atribuição, vínculo, alteração e transferência de responsável por um
 A conformidade deve ser verificada por teste de integração, confirmando o registro de auditoria após cada operação de distribuição, vínculo ou transferência.
 
 Classificação: auditoria (URPS+).
-Rastreabilidade: CP5 — Distribuição de casos entre supervisores e estagiários (transversal às features "Distribuir caso a supervisor", "Vincular paciente a estagiário responsável", "Transferir caso para outro estagiário ou supervisor" e "Consultar histórico de responsáveis do caso").
+Rastreabilidade: CP5 — Distribuição de casos entre supervisores e estagiários (transversal às features "Distribuir caso a supervisor", "Vincular paciente a estagiário responsável", "Transferir caso para outro estagiário ou supervisor" e "Consultar histórico de responsáveis do caso").{{ origem("RNF18") }}
+{{ registro("RNF18") }}
 
 **RNF19 — Integridade dos vínculos de responsabilidade**{ #rnf19 }
 
@@ -323,7 +315,8 @@ Após a distribuição (RF20), todo caso ativo deve ter um supervisor responsáv
 A conformidade deve ser garantida por restrições de integridade no banco de dados, além de testes de regra de negócio, confirmando que um caso distribuído sem estagiário vinculado permanece válido no estado "aguardando vínculo", e sem nenhuma inconsistência de vínculo identificada nos demais casos.
 
 Classificação: confiabilidade (URPS+).
-Rastreabilidade: CP5 — Distribuição de casos entre supervisores e estagiários (transversal às features "Distribuir caso a supervisor", "Vincular paciente a estagiário responsável" e "Transferir caso para outro estagiário ou supervisor").
+Rastreabilidade: CP5 — Distribuição de casos entre supervisores e estagiários (transversal às features "Distribuir caso a supervisor", "Vincular paciente a estagiário responsável" e "Transferir caso para outro estagiário ou supervisor").{{ origem("RNF19") }}
+{{ registro("RNF19") }}
 
 **RNF20 — Continuidade do histórico na troca de responsável**{ #rnf20 }
 
@@ -332,7 +325,8 @@ A troca de responsável por um caso não deve causar perda de informação: as s
 A conformidade deve ser verificada por teste comparando o histórico do caso antes e depois da transferência, confirmando que a totalidade dos registros anteriores permanece acessível.
 
 Classificação: confiabilidade (URPS+).
-Rastreabilidade: Feature "Transferir caso para outro estagiário ou supervisor" → CP5 — Distribuição de casos entre supervisores e estagiários; relacionada à feature "Consultar histórico de responsáveis do caso".
+Rastreabilidade: Feature "Transferir caso para outro estagiário ou supervisor" → CP5 — Distribuição de casos entre supervisores e estagiários; relacionada à feature "Consultar histórico de responsáveis do caso".{{ origem("RNF20") }}
+{{ registro("RNF20") }}
 
 **RNF21 — Desempenho das listagens e operações de vínculo**{ #rnf21 }
 
@@ -341,7 +335,8 @@ As listagens de casos e as operações de distribuição, vínculo e consulta de
 A conformidade deve ser verificada por teste de desempenho reproduzindo o cenário de referência acima, confirmando que 95% das requisições atendem ao limite de 3 segundos.
 
 Classificação: desempenho (URPS+).
-Rastreabilidade: CP5 — Distribuição de casos entre supervisores e estagiários (transversal às features "Listar casos aguardando distribuição", "Consultar responsáveis pelo caso", "Consultar casos sob responsabilidade do estagiário ou supervisor" e "Visualizar distribuição de casos por supervisor").
+Rastreabilidade: CP5 — Distribuição de casos entre supervisores e estagiários (transversal às features "Listar casos aguardando distribuição", "Consultar responsáveis pelo caso", "Consultar casos sob responsabilidade do estagiário ou supervisor" e "Visualizar distribuição de casos por supervisor").{{ origem("RNF21") }}
+{{ registro("RNF21") }}
 
 **RNF22 — Usabilidade da distribuição e do vínculo de casos**{ #rnf22 }
 
@@ -350,11 +345,14 @@ A coordenação deve conseguir distribuir os casos (RF20) e o supervisor, vincul
 A conformidade deve ser verificada por teste de usabilidade com uma amostra mínima de 5 participantes representativos por perfil (supervisor e coordenação), em telas responsivas, com pelo menos 90% dos participantes concluindo a tarefa sem auxílio externo.
 
 Classificação: usabilidade (URPS+).
-Rastreabilidade: CP5 — Distribuição de casos entre supervisores e estagiários (transversal às features "Listar casos aguardando distribuição", "Distribuir caso a supervisor" e "Vincular paciente a estagiário responsável").
+Rastreabilidade: CP5 — Distribuição de casos entre supervisores e estagiários (transversal às features "Listar casos aguardando distribuição", "Distribuir caso a supervisor" e "Vincular paciente a estagiário responsável").{{ origem("RNF22") }}
+{{ registro("RNF22") }}
 
 **RNF23 — Modificabilidade do cadastro de áreas de especialidade**{ #rnf23 }
 
-**Removido em 24/10/2026**, junto com o RF19: a Clínica Escola informou que não há divisão por área de especialidade ([DF26](decisoes-fbr.md)). O número foi mantido para preservar as referências já feitas a ele.
+**Removido em 24/10/2026**, junto com o RF19: a Clínica Escola informou que não há divisão por área de especialidade ([DF26](decisoes-fbr.md#df26)). O número foi mantido para preservar as referências já feitas a ele.
+
+{{ registro("RNF23") }}
 
 **RNF24 — Acessibilidade das telas de distribuição e consulta**{ #rnf24 }
 
@@ -363,7 +361,8 @@ As telas de distribuição de casos, vínculo e consulta de responsáveis devem 
 A conformidade deve ser verificada com leitor de tela e checklist de acessibilidade.
 
 Classificação: acessibilidade (URPS+).
-Rastreabilidade: CP5 — Distribuição de casos entre supervisores e estagiários (transversal às features "Listar casos aguardando distribuição", "Distribuir caso a supervisor", "Vincular paciente a estagiário responsável", "Consultar responsáveis pelo caso", "Consultar casos sob responsabilidade do estagiário ou supervisor" e "Visualizar distribuição de casos por supervisor"); relacionada à CP14 — Acessibilidade e usabilidade.
+Rastreabilidade: CP5 — Distribuição de casos entre supervisores e estagiários (transversal às features "Listar casos aguardando distribuição", "Distribuir caso a supervisor", "Vincular paciente a estagiário responsável", "Consultar responsáveis pelo caso", "Consultar casos sob responsabilidade do estagiário ou supervisor" e "Visualizar distribuição de casos por supervisor"); relacionada à CP14 — Acessibilidade e usabilidade.{{ origem("RNF24") }}
+{{ registro("RNF24") }}
 
 ### Prontuário eletrônico (CP6)
 
@@ -382,7 +381,8 @@ Quando o acesso for negado pelo RF55 (a secretaria, o estagiário e o supervisor
 A conformidade deve ser verificada com registros fictícios completos e incompletos de cada tipo (prontuário com e sem seções preenchidas, evoluções com correções e complementos), inspecionando a interface e as respostas do servidor em tentativas negadas antes e depois de uma transferência de responsável e confirmando que nenhum conteúdo ou indicador de existência é exposto.
 
 Classificação: segurança e privacidade (URPS+).
-Rastreabilidade: transversal às features "Criar e inicializar o prontuário do paciente" (RF66), "Registrar anamnese e contrato terapêutico do paciente" (RF69) e "Consultar prontuário do paciente" (RF27) (CP6), às features de registro e consulta de evolução (CP7) e à feature "Gerar relatório final de evolução" (CP8); relacionada ao RF55 (CP12).
+Rastreabilidade: transversal às features "Criar e inicializar o prontuário do paciente" (RF66), "Registrar anamnese e contrato terapêutico do paciente" (RF69) e "Consultar prontuário do paciente" (RF27) (CP6), às features de registro e consulta de evolução (CP7) e à feature "Gerar relatório final de evolução" (CP8); relacionada ao RF55 (CP12).{{ origem("RNF25") }}
+{{ registro("RNF25") }}
 
 ### Registro de evolução por sessão (CP7)
 
@@ -392,6 +392,8 @@ A CP7 tem sete features (ver [Requisitos Funcionais](funcionais.md)); os RNFs ab
 
 Consolidado no [RNF25](#rnf25) em 24/10/2026, que passou a ser a regra única de sigilo do conteúdo clínico nas respostas negadas, com as particularidades da evolução (registro original, correções, complementos e a sua quantidade). O número foi mantido para preservar as referências já feitas a ele.
 
+{{ registro("RNF26") }}
+
 **RNF27 — Integridade e proveniência dos registros de evolução**{ #rnf27 }
 
 Cada evolução persistida deve conservar sua associação à sessão, ao paciente, ao ciclo, ao autor e ao momento de registro. Correções e complementos devem conservar seu tipo, autor, data/hora, vínculo com o registro original e ordem cronológica. O histórico não deve ser perdido nem associado a outro caso após troca de responsável (RF25). A validação pelo supervisor (RF67) deve conservar o supervisor, a data/hora e a versão da evolução validada, e o encerramento por alta (RF68) deve conservar autor, confirmação do supervisor, data e motivo; nenhum desses registros pode ser apagado ou sobrescrito.
@@ -399,7 +401,8 @@ Cada evolução persistida deve conservar sua associação à sessão, ao pacien
 A conformidade deve ser verificada por comparação entre sessão, evolução, correções, complementos, validações, encerramento e histórico antes e depois de uma transferência de caso.
 
 Classificação: confiabilidade e auditoria (URPS+).
-Rastreabilidade: Features "Registrar evolução da sessão realizada", "Validar evolução pelo supervisor" e "Encerrar caso por alta" → CP7 — Registro de evolução por sessão; relacionada a RF25 e RNF20.
+Rastreabilidade: Features "Registrar evolução da sessão realizada", "Validar evolução pelo supervisor" e "Encerrar caso por alta" → CP7 — Registro de evolução por sessão; relacionada a RF25 e RNF20.{{ origem("RNF27") }}
+{{ registro("RNF27") }}
 
 **RNF28 — Auditoria das correções de evolução**{ #rnf28 }
 
@@ -408,7 +411,8 @@ Toda correção de um registro de evolução (RF29 — Corrigir evolução regis
 A conformidade deve ser verificada corrigindo um registro de evolução fictício e conferindo que a versão original permanece acessível junto com a nova versão, o autor e o motivo da correção.
 
 Classificação: auditoria e confiabilidade (URPS+).
-Rastreabilidade: Feature "Corrigir evolução registrada" → CP7 — Registro de evolução por sessão.
+Rastreabilidade: Feature "Corrigir evolução registrada" → CP7 — Registro de evolução por sessão.{{ origem("RNF28") }}
+{{ registro("RNF28") }}
 
 **RNF29 — Desempenho do registro e da consulta de evolução**{ #rnf29 }
 
@@ -419,10 +423,11 @@ O registro de uma nova evolução e a consulta de uma evolução já registrada,
 - **Rede:** conexão do cliente com pelo menos 20 Mbps, latência de ida e volta de até 50 ms e sem perda de pacotes durante o teste.
 - **Infraestrutura:** ambiente de homologação com a mesma configuração do servidor de produção da FBr; a quantidade de vCPUs, memória, versão do banco de dados e versão da aplicação deve ser registrada no relatório do teste.
 
-A conformidade deve ser verificada por teste de carga automatizado, por exemplo com k6 ou JMeter, calculando separadamente o percentil 95 do tempo de resposta de ponta a ponta para registro e consulta. A carga de 30 usuários foi confirmada pela Clínica Escola em 23/10/2026 ([DF22](decisoes-fbr.md)).
+A conformidade deve ser verificada por teste de carga automatizado, por exemplo com k6 ou JMeter, calculando separadamente o percentil 95 do tempo de resposta de ponta a ponta para registro e consulta. A carga de 30 usuários foi confirmada pela Clínica Escola em 23/10/2026 ([DF22](decisoes-fbr.md#df22)).
 
 Classificação: desempenho (URPS+).
-Rastreabilidade: CP7 — Registro de evolução por sessão (transversal às features "Registrar evolução da sessão realizada" e "Consultar evolução de uma sessão específica").
+Rastreabilidade: CP7 — Registro de evolução por sessão (transversal às features "Registrar evolução da sessão realizada" e "Consultar evolução de uma sessão específica").{{ origem("RNF29") }}
+{{ registro("RNF29") }}
 
 **RNF30 — Usabilidade do registro de evolução**{ #rnf30 }
 
@@ -431,7 +436,8 @@ Um estagiário deve conseguir localizar uma sessão realizada, preencher a evolu
 A conformidade deve ser verificada por teste de tarefa com, no mínimo, 10 estagiários representativos, após uma orientação inicial de até 15 minutos e sem ajuda durante a execução. O requisito é atendido quando pelo menos 90% dos participantes concluírem corretamente o registro na primeira tentativa, dentro dos limites de 3 minutos e 6 interações, sem associar a evolução à sessão ou ao paciente incorreto.
 
 Classificação: usabilidade (URPS+).
-Rastreabilidade: Feature "Registrar evolução da sessão realizada" → CP7 — Registro de evolução por sessão.
+Rastreabilidade: Feature "Registrar evolução da sessão realizada" → CP7 — Registro de evolução por sessão.{{ origem("RNF30") }}
+{{ registro("RNF30") }}
 
 ### Geração do relatório final de evolução (CP8)
 
@@ -446,7 +452,8 @@ Como o relatório final é entregue de forma impressa pela secretaria ao pacient
 A conformidade deve ser verificada com ciclo fictício contendo registros completos e lacunas, comparando versões, estados e decisões com os registros de origem, tentando imprimir uma versão não aprovada e conferindo a ausência de download ou envio por e-mail ao paciente.
 
 Classificação: confiabilidade, auditoria, segurança e privacidade (URPS+).
-Rastreabilidade: Feature "Gerar relatório final de evolução" → CP8 — Geração do relatório final de evolução → OE5/OE6; relacionada ao RF33 e aos controles da CP12.
+Rastreabilidade: Feature "Gerar relatório final de evolução" → CP8 — Geração do relatório final de evolução → OE5/OE6; relacionada ao RF33 e aos controles da CP12.{{ origem("RNF31") }}
+{{ registro("RNF31") }}
 
 ### Controle de assiduidade e alertas (CP9)
 
@@ -461,7 +468,8 @@ A contagem de faltas do paciente no ciclo (RF35) e os eventos que a originam (RF
 A conformidade deve ser verificada registrando faltas com dados fictícios e confirmando, por inspeção do histórico, que nenhum perfil consegue apagar ou alterar os registros de falta sem deixar rastro da alteração.
 
 Classificação: auditoria (URPS+).
-Rastreabilidade: Feature "Contabilizar faltas do paciente no ciclo" → CP9 — Controle de assiduidade e alertas; relacionada às features "Registrar falta do paciente na sessão" e "Desligar paciente por faltas e liberar vaga".
+Rastreabilidade: Feature "Contabilizar faltas do paciente no ciclo" → CP9 — Controle de assiduidade e alertas; relacionada às features "Registrar falta do paciente na sessão" e "Desligar paciente por faltas e liberar vaga".{{ origem("RNF32") }}
+{{ registro("RNF32") }}
 
 **RNF33 — Visibilidade do alerta de limite de faltas**{ #rnf33 }
 
@@ -470,7 +478,8 @@ O alerta de limite de faltas (RF36) deve ser exibido com destaque visual (cor ve
 A conformidade deve ser verificada demonstrando, para um paciente com o limite de faltas atingido, que o alerta aparece de forma destacada aos três perfis mencionados ao acessarem o sistema, sem etapas de navegação adicionais; exibindo a tela em escala de cinza, para confirmar que o alerta continua identificável pelo ícone e pelo texto; e por inspeção com leitor de tela e ferramenta automatizada de acessibilidade (ex.: axe), sem falhas de nível A ou AA no componente.
 
 Classificação: usabilidade (URPS+).
-Rastreabilidade: Feature "Emitir alerta de limite de faltas atingido" → CP9 — Controle de assiduidade e alertas.
+Rastreabilidade: Feature "Emitir alerta de limite de faltas atingido" → CP9 — Controle de assiduidade e alertas.{{ origem("RNF33") }}
+{{ registro("RNF33") }}
 
 **RNF34 — Tempo de liberação da vaga após desligamento**{ #rnf34 }
 
@@ -479,7 +488,8 @@ A liberação da vaga e a sinalização "vaga liberada aguardando realocação" 
 A conformidade deve ser verificada por teste automatizado que registre o desligamento de um paciente fictício e meça o tempo até a vaga aparecer como liberada, com o próximo inscrito elegível indicado (RF7), na tela da coordenação e do supervisor, repetido 20 vezes, com todas as medições em até 5 segundos.
 
 Classificação: desempenho (URPS+).
-Rastreabilidade: Feature "Desligar paciente por faltas e liberar vaga" → CP9 — Controle de assiduidade e alertas; relacionada à CP3 — Fila de espera e consulta de posição.
+Rastreabilidade: Feature "Desligar paciente por faltas e liberar vaga" → CP9 — Controle de assiduidade e alertas; relacionada à CP3 — Fila de espera e consulta de posição.{{ origem("RNF34") }}
+{{ registro("RNF34") }}
 
 #### Controle de faltas do estagiário
 
@@ -490,7 +500,8 @@ A relação de faltas do estagiário (RF39), a contagem de faltas no semestre (R
 A conformidade deve ser verificada testando o acesso de um usuário sem vínculo de supervisão à relação de faltas de um estagiário e confirmando a negação do acesso.
 
 Classificação: segurança e privacidade (URPS+).
-Rastreabilidade: Features "Consolidar faltas do estagiário para a supervisão", "Contabilizar faltas do estagiário no semestre", "Sinalizar reprovação do estagiário por faltas" e "Registrar decisão institucional sobre a reprovação do estagiário" → CP9 — Controle de assiduidade e alertas; relacionada à CP12 — Segurança, sigilo e controle de acesso.
+Rastreabilidade: Features "Consolidar faltas do estagiário para a supervisão", "Contabilizar faltas do estagiário no semestre", "Sinalizar reprovação do estagiário por faltas" e "Registrar decisão institucional sobre a reprovação do estagiário" → CP9 — Controle de assiduidade e alertas; relacionada à CP12 — Segurança, sigilo e controle de acesso.{{ origem("RNF35") }}
+{{ registro("RNF35") }}
 
 ### Registros administrativos do atendimento (CP10)
 
@@ -507,7 +518,8 @@ Todo registro de pagamento da contribuição social (RF41) deve guardar o usuár
 A conformidade deve ser verificada por inspeção: registrar pagamentos, alterar o parâmetro de valor e corrigir um pagamento com dados fictícios, conferir se todos os campos acima foram guardados (inclusive o registro anterior preservado após a correção) e confirmar que nenhum perfil consegue apagá-los ou sobrescrevê-los diretamente pela interface.
 
 Classificação: auditoria (URPS+).
-Rastreabilidade: Feature "Registrar pagamento da contribuição social do paciente" → CP10 — Registros administrativos do atendimento.
+Rastreabilidade: Feature "Registrar pagamento da contribuição social do paciente" → CP10 — Registros administrativos do atendimento.{{ origem("RNF36") }}
+{{ registro("RNF36") }}
 
 #### Declaração de comparecimento
 
@@ -520,7 +532,8 @@ A declaração de comparecimento deve conter exatamente os seguintes campos, e n
 A conformidade deve ser verificada por revisão do modelo do documento vigente, confirmando que contém exatamente os campos listados, e por teste do conteúdo efetivamente gerado, confirmando a ausência de campos clínicos ou adicionais.
 
 Classificação: privacidade (URPS+).
-Rastreabilidade: CP10 — Registros administrativos do atendimento (transversal às features "Emitir declaração de comparecimento do paciente" e "Reemitir declaração de comparecimento").
+Rastreabilidade: CP10 — Registros administrativos do atendimento (transversal às features "Emitir declaração de comparecimento do paciente" e "Reemitir declaração de comparecimento").{{ origem("RNF37") }}
+{{ registro("RNF37") }}
 
 **RNF38 — Autorização para emissão e consulta**{ #rnf38 }
 
@@ -529,7 +542,8 @@ Podem listar, emitir e reemitir declarações: a secretaria, autenticada institu
 A conformidade deve ser verificada por testes de autorização, com cenários positivos e negativos, para os perfis secretaria, paciente/responsável (com e sem identidade verificada), estagiário e supervisor, sem nenhum acesso indevido.
 
 Classificação: segurança (URPS+).
-Rastreabilidade: CP10 — Registros administrativos do atendimento (transversal às features "Listar sessões com comparecimento registrado do paciente", "Emitir declaração de comparecimento do paciente" e "Reemitir declaração de comparecimento").
+Rastreabilidade: CP10 — Registros administrativos do atendimento (transversal às features "Listar sessões com comparecimento registrado do paciente", "Emitir declaração de comparecimento do paciente" e "Reemitir declaração de comparecimento").{{ origem("RNF38") }}
+{{ registro("RNF38") }}
 
 **RNF39 — Auditoria de emissões e reemissões**{ #rnf39 }
 
@@ -538,7 +552,8 @@ Toda emissão e reemissão de declaração (RF45, RF46) deve ser registrada com:
 A conformidade deve ser verificada por teste de integração, confirmando o registro de auditoria após cada emissão, reemissão e tentativa negada, com todos os campos acima presentes.
 
 Classificação: auditoria (URPS+).
-Rastreabilidade: Features "Emitir declaração de comparecimento do paciente" e "Reemitir declaração de comparecimento" → CP10 — Registros administrativos do atendimento.
+Rastreabilidade: Features "Emitir declaração de comparecimento do paciente" e "Reemitir declaração de comparecimento" → CP10 — Registros administrativos do atendimento.{{ origem("RNF39") }}
+{{ registro("RNF39") }}
 
 **RNF40 — Tempo de geração da declaração**{ #rnf40 }
 
@@ -547,7 +562,8 @@ A geração da declaração deve ser rápida o suficiente para o atendimento pre
 A conformidade deve ser verificada por teste de desempenho reproduzindo o cenário de referência acima.
 
 Classificação: desempenho (URPS+).
-Rastreabilidade: CP10 — Registros administrativos do atendimento (transversal às features "Emitir declaração de comparecimento do paciente" e "Reemitir declaração de comparecimento").
+Rastreabilidade: CP10 — Registros administrativos do atendimento (transversal às features "Emitir declaração de comparecimento do paciente" e "Reemitir declaração de comparecimento").{{ origem("RNF40") }}
+{{ registro("RNF40") }}
 
 **RNF41 — Usabilidade da emissão**{ #rnf41 }
 
@@ -556,7 +572,8 @@ A emissão da declaração deve ser simples tanto para a secretaria quanto para 
 A conformidade deve ser verificada por teste de usabilidade com uma amostra mínima de 5 participantes representativos por público (secretaria e pacientes/responsáveis), com pelo menos 90% concluindo a emissão sem auxílio externo.
 
 Classificação: usabilidade (URPS+).
-Rastreabilidade: Feature "Listar sessões com comparecimento registrado do paciente" → CP10 — Registros administrativos do atendimento; relacionada à feature "Emitir declaração de comparecimento do paciente".
+Rastreabilidade: Feature "Listar sessões com comparecimento registrado do paciente" → CP10 — Registros administrativos do atendimento; relacionada à feature "Emitir declaração de comparecimento do paciente".{{ origem("RNF41") }}
+{{ registro("RNF41") }}
 
 **RNF42 — Formato e compatibilidade do documento**{ #rnf42 }
 
@@ -565,7 +582,8 @@ O documento gerado deve ser entregue ao paciente em formato impresso (papel), co
 A conformidade deve ser verificada por inspeção do documento em impressão e em dispositivo móvel.
 
 Classificação: compatibilidade e restrição de produto (URPS+).
-Rastreabilidade: CP10 — Registros administrativos do atendimento (transversal às features "Emitir declaração de comparecimento do paciente" e "Reemitir declaração de comparecimento").
+Rastreabilidade: CP10 — Registros administrativos do atendimento (transversal às features "Emitir declaração de comparecimento do paciente" e "Reemitir declaração de comparecimento").{{ origem("RNF42") }}
+{{ registro("RNF42") }}
 
 **RNF43 — Acessibilidade da tela de emissão**{ #rnf43 }
 
@@ -574,7 +592,8 @@ A tela de emissão e a de listagem de sessões (RF44) devem ser acessíveis a pe
 A conformidade deve ser verificada com leitor de tela e checklist de acessibilidade nas telas envolvidas.
 
 Classificação: acessibilidade (URPS+).
-Rastreabilidade: Feature "Listar sessões com comparecimento registrado do paciente" → CP10 — Registros administrativos do atendimento; relacionada à feature "Emitir declaração de comparecimento do paciente" e à CP14 — Acessibilidade e usabilidade.
+Rastreabilidade: Feature "Listar sessões com comparecimento registrado do paciente" → CP10 — Registros administrativos do atendimento; relacionada à feature "Emitir declaração de comparecimento do paciente" e à CP14 — Acessibilidade e usabilidade.{{ origem("RNF43") }}
+{{ registro("RNF43") }}
 
 **RNF44 — Integridade do conteúdo da declaração**{ #rnf44 }
 
@@ -583,7 +602,8 @@ O conteúdo da declaração deve refletir fielmente o registro da sessão no mom
 A conformidade deve ser verificada por teste comparando o documento gerado com os dados de origem, confirmando que 100% dos campos coincidem com o registro da sessão, e por teste corrigindo o registro de uma sessão já declarada, confirmando a reemissão com o conteúdo corrigido e o aviso de desatualização na verificação pública do código original.
 
 Classificação: confiabilidade (URPS+).
-Rastreabilidade: Feature "Emitir declaração de comparecimento do paciente" → CP10 — Registros administrativos do atendimento; relacionada à feature "Reemitir declaração de comparecimento".
+Rastreabilidade: Feature "Emitir declaração de comparecimento do paciente" → CP10 — Registros administrativos do atendimento; relacionada à feature "Reemitir declaração de comparecimento".{{ origem("RNF44") }}
+{{ registro("RNF44") }}
 
 **RNF45 — Segurança da consulta pública de autenticidade**{ #rnf45 }
 
@@ -592,7 +612,8 @@ A verificação de autenticidade por terceiros não deve expor dados pessoais al
 A conformidade deve ser verificada por teste da consulta pública nos três estados (válido, inválido e revogado) e revisão dos dados retornados em cada um.
 
 Classificação: segurança (URPS+).
-Rastreabilidade: Feature "Validar autenticidade da declaração" → CP10 — Registros administrativos do atendimento.
+Rastreabilidade: Feature "Validar autenticidade da declaração" → CP10 — Registros administrativos do atendimento.{{ origem("RNF45") }}
+{{ registro("RNF45") }}
 
 ### Indicadores e Relatórios Institucionais (CP11)
 
@@ -603,7 +624,8 @@ Rastreabilidade: Feature "Validar autenticidade da declaração" → CP10 — Re
 Os quatro indicadores exibidos pelo RF48 (vagas ocupadas, tempo médio de espera, taxa de evasão e distribuição de casos por supervisor) devem refletir todos os registros incluídos ou alterados no sistema até, no máximo, 15 minutos antes do momento em que a consulta é feita (ex.: um paciente desligado às 10h00 deve estar refletido na taxa de evasão a partir, no mais tardar, das 10h15).
 
 Classificação: confiabilidade (URPS+).
-Rastreabilidade: Feature "Consultar indicadores operacionais" → CP11 — Indicadores e relatórios institucionais.
+Rastreabilidade: Feature "Consultar indicadores operacionais" → CP11 — Indicadores e relatórios institucionais.{{ origem("RNF46") }}
+{{ registro("RNF46") }}
 
 #### Feature — Exportar relatório institucional em PDF [#23](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/issues/23)
 
@@ -612,14 +634,16 @@ Rastreabilidade: Feature "Consultar indicadores operacionais" → CP11 — Indic
 O sistema deve exibir em tela os indicadores operacionais (RF48) e gerar o arquivo PDF do relatório institucional (RF49) em até 5 segundos cada, contados, respectivamente, do acionamento da consulta até a exibição completa dos indicadores e do acionamento da exportação até o arquivo ficar disponível para download, para qualquer período de referência de até 12 meses e com até 10 usuários realizando consultas ou exportações simultaneamente.
 
 Classificação: desempenho (URPS+).
-Rastreabilidade: Features "Consultar indicadores operacionais" e "Exportar relatório institucional em PDF" → CP11 — Indicadores e relatórios institucionais.
+Rastreabilidade: Features "Consultar indicadores operacionais" e "Exportar relatório institucional em PDF" → CP11 — Indicadores e relatórios institucionais.{{ origem("RNF47") }}
+{{ registro("RNF47") }}
 
 **RNF48 — Auditoria de relatórios institucionais**{ #rnf48 }
 
 Para cada exportação do relatório institucional (RF49), o sistema deve registrar o usuário responsável, a data e a hora da operação e o período consultado, mantendo esse registro acessível para consulta por qualquer usuário com perfil de coordenação por, no mínimo, 24 meses a partir do registro, compatível com o ciclo de fiscalização do CRP.
 
 Classificação: auditoria (URPS+).
-Rastreabilidade: Feature "Exportar relatório institucional em PDF" → CP11 — Indicadores e relatórios institucionais.
+Rastreabilidade: Feature "Exportar relatório institucional em PDF" → CP11 — Indicadores e relatórios institucionais.{{ origem("RNF48") }}
+{{ registro("RNF48") }}
 
 ### Segurança, Sigilo e Controle de Acesso (CP12)
 
@@ -629,12 +653,13 @@ Os RNFs abaixo restringem as features da CP12 e valem para todas as funcionalida
 
 **RNF49 — Proteção das credenciais de acesso**{ #rnf49 }
 
-As senhas dos usuários institucionais devem ter, no mínimo, 8 caracteres, com pelo menos uma letra e um número, e devem ser armazenadas apenas na forma de hash com algoritmo próprio para senhas (bcrypt ou Argon2), nunca em texto legível. Após 3 tentativas de login seguidas com erro para o mesmo usuário, o sistema deve bloquear novas tentativas desse usuário por 15 minutos, como pedido pela Clínica Escola em 23/10/2026 ([DF25](decisoes-fbr.md)).
+As senhas dos usuários institucionais devem ter, no mínimo, 8 caracteres, com pelo menos uma letra e um número, e devem ser armazenadas apenas na forma de hash com algoritmo próprio para senhas (bcrypt ou Argon2), nunca em texto legível. Após 3 tentativas de login seguidas com erro para o mesmo usuário, o sistema deve bloquear novas tentativas desse usuário por 15 minutos, como pedido pela Clínica Escola em 23/10/2026 ([DF25](decisoes-fbr.md#df25)).
 
 A conformidade deve ser verificada por inspeção do banco de dados (nenhuma senha legível armazenada) e por teste de 3 tentativas de login com erro, confirmando o bloqueio e sua liberação após 15 minutos.
 
 Classificação: segurança (URPS+).
-Rastreabilidade: Feature "Autenticar usuário institucional" → CP12 — Segurança, sigilo e controle de acesso.
+Rastreabilidade: Feature "Autenticar usuário institucional" → CP12 — Segurança, sigilo e controle de acesso.{{ origem("RNF49") }}
+{{ registro("RNF49") }}
 
 #### Feature — Encerrar sessão do usuário [#46](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/issues/46)
 
@@ -645,7 +670,8 @@ A sessão de um usuário institucional deve ser encerrada automaticamente após 
 A conformidade deve ser verificada por teste: deixar uma sessão parada por 30 minutos e confirmar que a próxima ação exige nova autenticação.
 
 Classificação: segurança (URPS+).
-Rastreabilidade: Feature "Encerrar sessão do usuário" → CP12 — Segurança, sigilo e controle de acesso.
+Rastreabilidade: Feature "Encerrar sessão do usuário" → CP12 — Segurança, sigilo e controle de acesso.{{ origem("RNF50") }}
+{{ registro("RNF50") }}
 
 #### Feature — Restringir acesso ao prontuário do paciente [#50](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/issues/50)
 
@@ -664,7 +690,8 @@ Toda comunicação entre o navegador e o sistema deve usar HTTPS com TLS 1.2 ou 
 A conformidade deve ser verificada por ferramenta de análise de configuração TLS (ex.: SSL Labs), por teste de acesso via HTTP, por inspeção do banco de dados, confirmando que nenhum dos campos listados aparece em texto legível, por inspeção do repositório de código, confirmando a ausência de chaves, e por um teste de rotação em ambiente de homologação, confirmando que os dados continuam legíveis pela aplicação após a troca.
 
 Classificação: segurança (URPS+).
-Rastreabilidade: Feature "Restringir acesso ao prontuário do paciente" → CP12 — Segurança, sigilo e controle de acesso; transversal aos dados de saúde tratados na CP1, CP2, CP7 e CP8.
+Rastreabilidade: Feature "Restringir acesso ao prontuário do paciente" → CP12 — Segurança, sigilo e controle de acesso; transversal aos dados de saúde tratados na CP1, CP2, CP7 e CP8.{{ origem("RNF51") }}
+{{ registro("RNF51") }}
 
 #### Feature — Consultar registro de acessos ao prontuário [#51](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/issues/51)
 
@@ -675,18 +702,20 @@ O sistema deve registrar automaticamente todo acesso ao prontuário, permitido o
 A conformidade deve ser verificada por teste: realizar acessos permitidos e negados com usuários de teste e conferir se todos aparecem na consulta do RF56, por teste da API, enviando requisições de alteração e de exclusão dos registros de acesso com usuários de todos os perfis e confirmando que todas são recusadas, e por inspeção das permissões do banco de dados, confirmando que o usuário da aplicação só pode inserir e consultar a tabela de registros de acesso, sem permissão de alteração ou exclusão.
 
 Classificação: auditoria (URPS+).
-Rastreabilidade: Feature "Consultar registro de acessos ao prontuário" → CP12 — Segurança, sigilo e controle de acesso.
+Rastreabilidade: Feature "Consultar registro de acessos ao prontuário" → CP12 — Segurança, sigilo e controle de acesso.{{ origem("RNF52") }}
+{{ registro("RNF52") }}
 
 #### Transversal às features da CP12
 
 **RNF53 — Cópia de segurança e recuperação dos dados**{ #rnf53 }
 
-O sistema deve fazer cópia de segurança completa dos dados pelo menos uma vez por dia, de forma que uma falha cause a perda de, no máximo, 24 horas de registros (ponto de recuperação). Após uma falha que torne o sistema ou os dados indisponíveis, o serviço deve voltar a operar com os dados da última cópia em até 8 horas contadas da detecção da falha (tempo de recuperação), o que corresponde, no pior caso, a um dia de atendimento em que a clínica recorre ao registro manual. As cópias devem ser armazenadas criptografadas, fora do servidor principal, e a restauração deve ser testada pelo menos uma vez por semestre, seguindo um procedimento de restauração documentado.
+O sistema deve fazer cópia de segurança completa dos dados pelo menos uma vez por dia, de forma que uma falha cause a perda de, no máximo, 24 horas de registros (ponto de recuperação). Após uma falha que torne o sistema ou os dados indisponíveis, o serviço deve voltar a operar com os dados da última cópia em até 8 horas contadas da detecção da falha (tempo de recuperação), o que corresponde, no pior caso, a um dia de atendimento em que a clínica recorre ao registro manual. As cópias devem ser armazenadas criptografadas, fora do servidor principal, e a restauração deve ser testada pelo menos uma vez por semestre, seguindo um procedimento de restauração documentado. A FBr, que hospeda o sistema, cuida das cópias e de onde elas ficam guardadas ([DF46](decisoes-fbr.md#df46)).
 
 A conformidade deve ser verificada por inspeção do histórico de cópias (uma cópia por dia) e por um teste de restauração em ambiente separado, cronometrado do início do procedimento até o sistema voltar a atender, confirmando que o tempo total fica em até 8 horas e que os dados restaurados correspondem aos da última cópia.
 
 Classificação: confiabilidade (URPS+).
-Rastreabilidade: CP12 — Segurança, sigilo e controle de acesso (transversal às features); responde ao risco IS05 — Dependência tecnológica da intervenção social (Seção 3). Origem: [DF46](decisoes-fbr.md), pela qual a FBr, que hospeda o sistema, cuida das cópias e de onde elas ficam guardadas.
+Rastreabilidade: CP12 — Segurança, sigilo e controle de acesso (transversal às features); responde ao risco IS05 — Dependência tecnológica da intervenção social (Seção 3).{{ origem("RNF53") }}
+{{ registro("RNF53") }}
 
 ### Continuidade de casos entre semestres (CP13)
 
@@ -701,7 +730,8 @@ Após o prazo mínimo, a eliminação ou anonimização somente pode ocorrer med
 A conformidade deve ser verificada registrando decisões de continuidade e de encerramento com dados fictícios, corrigindo-as antes e depois de uma transferência e confirmando que somente a coordenação pode corrigir, sempre com motivo e sem apagar versões ou desfazer transferências silenciosamente. Devem ser testados também: tentativa de destinação antes de 5 anos; bloqueio por obrigação de guarda adicional; e destinação autorizada após o prazo, com geração do respectivo registro de auditoria.
 
 Classificação: auditoria (URPS+).
-Rastreabilidade: Feature "Registrar decisão de continuidade do caso" → CP13 — Continuidade de casos entre semestres.
+Rastreabilidade: Feature "Registrar decisão de continuidade do caso" → CP13 — Continuidade de casos entre semestres.{{ origem("RNF54") }}
+{{ registro("RNF54") }}
 
 **RNF55 — Integridade do histórico na continuidade**{ #rnf55 }
 
@@ -710,7 +740,8 @@ A transferência de um caso na virada de semestre (RF60) não deve causar perda 
 A conformidade deve ser verificada por teste comparando o histórico completo do caso antes e depois da continuidade, confirmando que todos os tipos de registro permanecem acessíveis ao novo responsável e que a simples chegada da data de encerramento, sem confirmação da coordenação, não altera o responsável.
 
 Classificação: confiabilidade (URPS+).
-Rastreabilidade: Feature "Vincular caso a novo estagiário na continuidade" → CP13 — Continuidade de casos entre semestres; relacionada ao RNF20 (CP5).
+Rastreabilidade: Feature "Vincular caso a novo estagiário na continuidade" → CP13 — Continuidade de casos entre semestres; relacionada ao RNF20 (CP5).{{ origem("RNF55") }}
+{{ registro("RNF55") }}
 
 ### Acessibilidade e Usabilidade (CP14)
 
@@ -723,7 +754,8 @@ A exigência de acessibilidade não é apenas uma boa prática do projeto: a Cl�
 As páginas voltadas ao público externo devem atender a todos os critérios de sucesso de nível A e AA da WCAG 2.2 aplicáveis a conteúdo web, verificável pela combinação de ferramenta automatizada de auditoria de acessibilidade (ex.: Lighthouse ou axe) e inspeção/teste manual (incluindo navegação por teclado e leitor de tela), sem nenhuma ocorrência de falha de nível A ou AA apontada pela ferramenta ou identificada na inspeção manual.
 
 Classificação: acessibilidade (URPS+).
-Rastreabilidade: CP14 — Acessibilidade e usabilidade (transversal às páginas voltadas ao público externo, das features "Registrar solicitação de atendimento on-line" (RF1), "Emitir comprovante de inscrição" (RF2), "Consultar posição individual na fila" (RF8), "Confirmar presença em sessão agendada" (RF14), "Listar sessões com comparecimento registrado do paciente" (RF44), "Emitir declaração de comparecimento do paciente" (RF45), "Verificar identidade do paciente ou responsável" (RF52) e "Registrar consentimento para tratamento de dados" (RF57), e às features "Ativar modo de alto contraste" e "Ajustar tamanho do texto").
+Rastreabilidade: CP14 — Acessibilidade e usabilidade (transversal às páginas voltadas ao público externo, das features "Registrar solicitação de atendimento on-line" (RF1), "Emitir comprovante de inscrição" (RF2), "Consultar posição individual na fila" (RF8), "Confirmar presença em sessão agendada" (RF14), "Listar sessões com comparecimento registrado do paciente" (RF44), "Emitir declaração de comparecimento do paciente" (RF45), "Verificar identidade do paciente ou responsável" (RF52) e "Registrar consentimento para tratamento de dados" (RF57), e às features "Ativar modo de alto contraste" e "Ajustar tamanho do texto").{{ origem("RNF56") }}
+{{ registro("RNF56") }}
 
 **RNF57 — Aparência reforçada do indicador de foco**{ #rnf57 }
 
@@ -736,7 +768,8 @@ A operação por teclado e a existência de um indicador de foco visível já fa
 A conformidade deve ser verificada navegando por teclado por todas as páginas voltadas ao público externo, nas combinações de contraste e tamanho de texto, e medindo, com ferramenta de verificação de contraste, a espessura e o contraste do indicador de cada tipo de elemento interativo.
 
 Classificação: acessibilidade (URPS+).
-Rastreabilidade: CP14 — Acessibilidade e usabilidade (transversal às páginas voltadas ao público externo, das features "Registrar solicitação de atendimento on-line" (RF1), "Emitir comprovante de inscrição" (RF2), "Consultar posição individual na fila" (RF8), "Confirmar presença em sessão agendada" (RF14), "Listar sessões com comparecimento registrado do paciente" (RF44), "Emitir declaração de comparecimento do paciente" (RF45), "Verificar identidade do paciente ou responsável" (RF52) e "Registrar consentimento para tratamento de dados" (RF57), e às features "Ativar modo de alto contraste" e "Ajustar tamanho do texto").
+Rastreabilidade: CP14 — Acessibilidade e usabilidade (transversal às páginas voltadas ao público externo, das features "Registrar solicitação de atendimento on-line" (RF1), "Emitir comprovante de inscrição" (RF2), "Consultar posição individual na fila" (RF8), "Confirmar presença em sessão agendada" (RF14), "Listar sessões com comparecimento registrado do paciente" (RF44), "Emitir declaração de comparecimento do paciente" (RF45), "Verificar identidade do paciente ou responsável" (RF52) e "Registrar consentimento para tratamento de dados" (RF57), e às features "Ativar modo de alto contraste" e "Ajustar tamanho do texto").{{ origem("RNF57") }}
+{{ registro("RNF57") }}
 
 **RNF58 — Responsividade da interface**{ #rnf58 }
 
@@ -745,4 +778,5 @@ A adaptação à largura de 320 pixels já é exigida pelo RNF56 (critério 1.4.
 A conformidade deve ser verificada exibindo cada página voltada ao público externo nas larguras de 320, 360, 768, 1024, 1366 e 1920 pixels, com a ferramenta de simulação de dispositivos do navegador, e confirmando em cada uma a ausência de rolagem horizontal, sobreposição, corte ou funcionalidade inacessível.
 
 Classificação: usabilidade (URPS+).
-Rastreabilidade: CP14 — Acessibilidade e usabilidade (transversal às páginas voltadas ao público externo, das features "Registrar solicitação de atendimento on-line" (RF1), "Emitir comprovante de inscrição" (RF2), "Consultar posição individual na fila" (RF8), "Confirmar presença em sessão agendada" (RF14), "Listar sessões com comparecimento registrado do paciente" (RF44), "Emitir declaração de comparecimento do paciente" (RF45), "Verificar identidade do paciente ou responsável" (RF52) e "Registrar consentimento para tratamento de dados" (RF57), e às features "Ativar modo de alto contraste" e "Ajustar tamanho do texto").
+Rastreabilidade: CP14 — Acessibilidade e usabilidade (transversal às páginas voltadas ao público externo, das features "Registrar solicitação de atendimento on-line" (RF1), "Emitir comprovante de inscrição" (RF2), "Consultar posição individual na fila" (RF8), "Confirmar presença em sessão agendada" (RF14), "Listar sessões com comparecimento registrado do paciente" (RF44), "Emitir declaração de comparecimento do paciente" (RF45), "Verificar identidade do paciente ou responsável" (RF52) e "Registrar consentimento para tratamento de dados" (RF57), e às features "Ativar modo de alto contraste" e "Ajustar tamanho do texto").{{ origem("RNF58") }}
+{{ registro("RNF58") }}

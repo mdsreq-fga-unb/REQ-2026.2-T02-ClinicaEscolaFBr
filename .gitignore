@@ -1,5 +1,7 @@
 .venv/
 documentacao/site/
+/site/
+__pycache__/
 node_modules/
 dist/
 .next/

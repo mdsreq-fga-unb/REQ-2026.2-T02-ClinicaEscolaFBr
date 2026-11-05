@@ -19,6 +19,14 @@ Não faça alterações diretamente em `development` ou `main`, mesmo quando a m
 
 > Importante: a branch `gh-pages` é a branch de publicação do site do MkDocs no GitHub Pages. Ela não deve ser alterada manualmente, deletada, force-push, reescrita ou usada como branch de desenvolvimento. O conteúdo do site deve ser gerado a partir da branch de trabalho e publicado pelo fluxo do GitHub Pages, sem edição direta na `gh-pages`.
 
+## Publicação da documentação { #publicacao-da-documentacao }
+
+O site de documentação (GitHub Pages) é gerado da `development` pelo workflow `.github/workflows/deploy-docs.yaml`, a cada merge que muda `documentacao/`. As PRs de documentação vão para a `development`, como as demais, e aparecem no site logo depois do merge, sem depender da PR `main <- development`, que continua servindo só para levar o sistema à produção ([Implantação](../../unidade-3/implantacao.md#fluxo-das-branches)).
+
+O rodapé de todas as páginas mostra a data da última publicação, que é a data do commit da `development` publicado. Se a publicação falhar, a data não muda, e o erro aparece na execução do workflow "Deploy MkDocs Documentation", na aba Actions.
+
+O docs-check (`.github/workflows/docs-check.yml`) roda nas PRs para a `development` e para a `main` que mudam `documentacao/`. Ele confere o [catálogo de requisitos](../../unidade-2/requisitos/backlog.md#catalogo-de-requisitos) e compila o site com `mkdocs build --strict`, com as versões fixadas em `documentacao/requirements.txt`. No modo estrito, uma página que não está no menu (`nav` do `mkdocs.yml`), um link para uma página inexistente ou uma âncora inválida impedem o merge.
+
 ## Fluxo de trabalho
 
 ### 1. Atualizar a branch de destino
@@ -60,11 +68,15 @@ Durante o trabalho:
 - execute os testes, verificações e a documentação local antes de abrir a PR;
 - não inclua segredos, credenciais, dados pessoais ou arquivos gerados.
 
-Para a documentação MkDocs, valide a construção localmente:
+Para a documentação MkDocs, confira o catálogo de requisitos e valide a construção localmente, como o docs-check faz:
 
 ```bash
-mkdocs build --strict
+pip install -r documentacao/requirements.txt
+python documentacao/scripts/verificar_catalogo.py
+mkdocs build --strict --config-file documentacao/mkdocs.yml
 ```
+
+Página nova entra no `nav` do `mkdocs.yml` na mesma PR; sem isso, o build estrito falha. Mudança no nome, no valor, no esforço, no ciclo, no estado ou na origem de um requisito é feita no catálogo `documentacao/dados/requisitos.yml`, e não nas tabelas, que são geradas a partir dele.
 
 ### 3.1 Configurar a validação local de commits
 

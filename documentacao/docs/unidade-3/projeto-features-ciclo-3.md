@@ -4,6 +4,9 @@ Esta página registra o processo **Projetar por Feature** do FDD para as 13 feat
 
 Os requisitos de origem estão na [seção 8.1](../unidade-2/requisitos/funcionais.md), e os itens do ciclo, em [Features e backlog](../visao-geral/backlog.md#ciclo-3).
 
+!!! note "Regras de negócio: vale o requisito"
+    As regras de negócio (prazos, limites, durações, quem pode o quê) são escritas uma vez, no requisito da [seção 8.1](../unidade-2/requisitos/funcionais.md) e na decisão do [Registro de Decisões com a FBr](../unidade-2/requisitos/decisoes-fbr.md). Este projeto cita o RF e a DF e descreve como a regra é implementada; quando os valores aparecem aqui, é como exemplo de teste. Se este projeto e o requisito divergirem, vale o requisito, e a divergência é corrigida aqui. A visão geral da arquitetura e as decisões técnicas estão em [Arquitetura técnica](arquitetura.md).
+
 ## Convenções
 
 - **API:** NestJS, um módulo por área do FDD (`acesso`, `inscricao`, `triagem`, `casos`, `agendamento`, `acompanhamento-clinico`). As rotas internas exigem sessão e usam o `PerfisGuard` com o decorator `@Perfis(...)`. As rotas públicas (inscrição e ativação de conta) não exigem sessão.
@@ -128,7 +131,7 @@ classDiagram
 
 - `Perfil`: secretaria, estagiario, supervisor, coordenacao (já existe em `@clinica/shared`).
 - `SituacaoUsuario`: pendente_ativacao, ativo, desativado. Substitui a coluna booleana `ativo` da base técnica, que não representa o estado "pendente de ativação" do RF53.
-- `Canal`: email, whatsapp, ligacao. O SMS não é usado ([DF24](../unidade-2/requisitos/decisoes-fbr.md)); WhatsApp e ligação exigem o celular.
+- `Canal`: email, whatsapp, ligacao. O SMS não é usado ([DF24](../unidade-2/requisitos/decisoes-fbr.md#df24)); WhatsApp e ligação exigem o celular.
 - `Cor`: vermelha, amarela, verde.
 - `SituacaoCaso`: aguardando_distribuicao, aguardando_vinculo, em_atendimento, encerrado.
 - `StatusSessao`: agendada (os demais status entram com o RF14, o RF15 e o RF16 no Ciclo 4).
@@ -183,7 +186,7 @@ sequenceDiagram
 | --- | --- |
 | A senha é comparada com o hash (bcrypt ou Argon2), e a mesma mensagem é usada para qualquer falha | E-mail ou senha incorretos negam o acesso sem indicar o campo |
 | Só a situação `ativo` autentica | Usuário desativado (RF54) não entra; usuário pendente (RF53) também não |
-| Contador `tentativasFalhas` e `bloqueadoAte` no usuário ([DF25](../unidade-2/requisitos/decisoes-fbr.md)) | Na 3ª tentativa seguida com erro, o acesso fica bloqueado por 15 minutos |
+| Contador `tentativasFalhas` e `bloqueadoAte` no usuário ([DF25](../unidade-2/requisitos/decisoes-fbr.md#df25)) | Na 3ª tentativa seguida com erro, o acesso fica bloqueado por 15 minutos |
 | `entradasEmCurso` reserva a conferência de cada entrada: os erros somados às entradas em curso não passam de 3, e as entradas além disso esperam uma vaga por até 5 segundos em vez de serem recusadas; só a senha errada conta como erro ([#176](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/issues/176)). A vaga volta em qualquer erro inesperado, e uma reserva com mais de 30 segundos (`emCursoDesde`) é descartada, caso a API tenha caído no meio da conferência. E-mails sem conta seguem a mesma regra, em memória | Tentativas simultâneas com erro não passam de 3 antes do bloqueio, e entradas simultâneas com a senha certa são todas aceitas. Sem vaga em 5 segundos, a entrada recebe 429 ("Muitas tentativas de entrada ao mesmo tempo"), que não conta como erro. A espera é a mesma com ou sem conta, para o tempo da resposta não revelar quais e-mails têm conta |
 | O menu e as rotas são filtrados pelo perfil (`PerfisGuard`) | Usuário ativo vê apenas as funcionalidades do seu perfil |
 
@@ -224,7 +227,7 @@ sequenceDiagram
 
 | Regra | Critério de aceitação |
 | --- | --- |
-| O token é guardado só como hash, é de uso único e vale 72 h (parâmetro) | Link já usado ou com mais de 72 horas é recusado |
+| O token é guardado só como hash, é de uso único e vale pelo prazo do convite ([RF53](../unidade-2/requisitos/funcionais.md#rf53), [DF30](../unidade-2/requisitos/decisoes-fbr.md#df30)) | Link já usado ou com mais de 72 horas é recusado |
 | O reenvio marca o convite anterior como `invalidadoEm` e cria outro | O reenvio invalida o link anterior |
 | Índice único no e-mail | E-mail já cadastrado não pode ser cadastrado de novo |
 | Rota com `@Perfis('coordenacao')` | Usuário sem perfil de coordenação não cadastra |
@@ -266,7 +269,7 @@ sequenceDiagram
 - **O que entra depois:** a mesma política passa a valer para a evolução (CP7, a partir do Ciclo 4). O critério da transferência entre estagiários é verificado quando a transferência (RF25) for construída, no Ciclo 4, e a política passa a proteger também o relatório final (RF33) no Ciclo 6.
 
 **Rotas:**
-- `GET /prontuarios/:id`: estagiário responsável e supervisor do caso; coordenação, só leitura, em qualquer caso ([DF32](../unidade-2/requisitos/decisoes-fbr.md)).
+- `GET /prontuarios/:id`: estagiário responsável e supervisor do caso; coordenação, só leitura, em qualquer caso ([DF32](../unidade-2/requisitos/decisoes-fbr.md#df32)).
 - `GET /pacientes/:id/dados-administrativos`: secretaria e coordenação.
 
 ```mermaid
@@ -375,7 +378,7 @@ sequenceDiagram
 
 ### RF4 — Organizar informações da inscrição para triagem ([#90](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/issues/90))
 
-**Rota:** `GET /triagem/inscricoes` (supervisor e coordenação). Devolve as inscrições sem decisão de prioridade vigente, com o campo calculado `diasAguardando` (dias desde `criadaEm`), e aceita ordenação por esse campo. A FBr não adota prazo de triagem ([DF19](../unidade-2/requisitos/decisoes-fbr.md)), então não há sinal de "além do prazo".
+**Rota:** `GET /triagem/inscricoes` (supervisor e coordenação). Devolve as inscrições sem decisão de prioridade vigente, com o campo calculado `diasAguardando` (dias desde `criadaEm`), e aceita ordenação por esse campo. A FBr não adota prazo de triagem ([DF19](../unidade-2/requisitos/decisoes-fbr.md#df19)), então não há sinal de "além do prazo".
 
 ```mermaid
 sequenceDiagram
@@ -452,7 +455,7 @@ sequenceDiagram
 
 ### RF19 — Registrar áreas de especialidade do supervisor ([#93](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/issues/93))
 
-**Removido em 24/10/2026.** A FBr não divide os atendimentos por área de especialidade ([DF26](../unidade-2/requisitos/decisoes-fbr.md)). Não há rotas nem tabelas de áreas no Ciclo 3.
+**Removido em 24/10/2026.** A FBr não divide os atendimentos por área de especialidade ([DF26](../unidade-2/requisitos/decisoes-fbr.md#df26)). Não há rotas nem tabelas de áreas no Ciclo 3.
 
 ### RF20 — Distribuir caso a supervisor ([#94](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/issues/94))
 
@@ -483,14 +486,14 @@ sequenceDiagram
 | Regra | Critério de aceitação |
 | --- | --- |
 | A contagem e a atribuição acontecem na mesma transação, com bloqueio da linha do supervisor | Supervisor no limite não recebe novo caso, mesmo com duas distribuições simultâneas |
-| Limite vindo do parâmetro `limite_casos_supervisor` ([DF17](../unidade-2/requisitos/decisoes-fbr.md)) | A lista mostra "12 de 50" e o motivo quando o supervisor está no limite |
+| Limite vindo do parâmetro `limite_casos_supervisor` ([DF17](../unidade-2/requisitos/decisoes-fbr.md#df17)) | A lista mostra "12 de 50" e o motivo quando o supervisor está no limite |
 | `@Perfis('coordenacao')` | Usuário sem perfil de coordenação não distribui casos |
 
 **Dados de teste:** um supervisor com 12 casos; um supervisor com 50 casos (no limite); todos os supervisores no limite (mensagem de nenhum disponível); um caso já distribuído.
 
 ### RF21 — Vincular paciente a estagiário responsável ([#95](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/issues/95))
 
-**Rota:** `POST /casos/:id/estagiario` (supervisor responsável pelo caso). Mostra como opções apenas estagiários com a situação `ativo`, cada um com a quantidade de pacientes em atendimento, como no protótipo. O vínculo e a criação do prontuário (RF66) acontecem na mesma transação. O caso tem um único estagiário responsável vigente, garantido por índice único parcial; os estagiários de apoio só observam e não são vinculados ([DF27](../unidade-2/requisitos/decisoes-fbr.md)).
+**Rota:** `POST /casos/:id/estagiario` (supervisor responsável pelo caso). Mostra como opções apenas estagiários com a situação `ativo`, cada um com a quantidade de pacientes em atendimento, como no protótipo. O vínculo e a criação do prontuário (RF66) acontecem na mesma transação. O caso tem um único estagiário responsável vigente, garantido por índice único parcial; os estagiários de apoio só observam e não são vinculados ([DF27](../unidade-2/requisitos/decisoes-fbr.md#df27)).
 
 ```mermaid
 sequenceDiagram
@@ -521,9 +524,9 @@ sequenceDiagram
 
 ### RF10 — Agendar sessão do paciente ([#96](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/issues/96))
 
-**Rota:** `POST /sessoes` (secretaria, ou o estagiário responsável pelo caso). Recebe o caso, o início e, opcionalmente, o término. Sem término, ele é calculado com o parâmetro `duracao_sessao_minutos` (padrão de 50). O fim do intervalo para anotações é `termino + intervalo_anotacoes_minutos` (padrão de 10) ([DF18](../unidade-2/requisitos/decisoes-fbr.md)).
+**Rota:** `POST /sessoes` (secretaria, ou o estagiário responsável pelo caso). Recebe o caso, o início e, opcionalmente, o término. Sem término, ele é calculado com o parâmetro `duracao_sessao_minutos` (padrão de 50). O fim do intervalo para anotações é `termino + intervalo_anotacoes_minutos` (padrão de 10) ([DF18](../unidade-2/requisitos/decisoes-fbr.md#df18)).
 
-**Escopo no Ciclo 3:** o agendamento gera o link de confirmação. Com e-mail como canal preferencial, a API envia o link por e-mail; com WhatsApp ou ligação, a resposta traz a mensagem pronta e o endereço `https://wa.me/55<celular>?text=<mensagem>`, e a interface mostra o botão "Enviar pelo WhatsApp", que chama `POST /sessoes/:id/whatsapp` para registrar `mensagemWhatsappEm` ([DF24](../unidade-2/requisitos/decisoes-fbr.md)). O SMS não é usado. A página que confirma a presença entra com o RF14, no Ciclo 4.
+**Escopo no Ciclo 3:** o agendamento gera o link de confirmação. Com e-mail como canal preferencial, a API envia o link por e-mail; com WhatsApp ou ligação, a resposta traz a mensagem pronta e o endereço `https://wa.me/55<celular>?text=<mensagem>`, e a interface mostra o botão "Enviar pelo WhatsApp", que chama `POST /sessoes/:id/whatsapp` para registrar `mensagemWhatsappEm` ([DF24](../unidade-2/requisitos/decisoes-fbr.md#df24)). O SMS não é usado. A página que confirma a presença entra com o RF14, no Ciclo 4.
 
 ```mermaid
 sequenceDiagram

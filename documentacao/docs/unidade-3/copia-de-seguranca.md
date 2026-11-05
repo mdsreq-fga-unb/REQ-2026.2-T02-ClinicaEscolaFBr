@@ -61,7 +61,7 @@ Na VPS, copie a pasta `scripts/copia-de-seguranca/` para `/opt/clinica/scripts/`
 30 3 * * * CONTEINER_BANCO=banco-<uuid da validação> AMBIENTE=validacao DESTINATARIO_COPIAS=copias-clinica@fbr.edu.br DESTINO_COPIAS=/mnt/copias/validacao bash /opt/clinica/scripts/copia-de-seguranca/fazer-copia.sh >> /var/log/clinica-copias.log 2>&1
 ```
 
-- **Destino:** `/mnt/copias` deve ficar fora do servidor principal, como um disco de rede ou uma pasta sincronizada com um armazenamento externo. Como o sistema fica no servidor da FBr, a própria FBr cuida das cópias e escolhe esse destino ([DF46](../unidade-2/requisitos/decisoes-fbr.md)); esta página e os scripts são o que a equipe entrega para isso.
+- **Destino:** `/mnt/copias` deve ficar fora do servidor principal, como um disco de rede ou uma pasta sincronizada com um armazenamento externo. Como o sistema fica no servidor da FBr, a própria FBr cuida das cópias e escolhe esse destino ([DF46](../unidade-2/requisitos/decisoes-fbr.md#df46)); esta página e os scripts são o que a equipe entrega para isso.
 - **Falhas:** cada execução deixa uma linha no `copias-<ambiente>.log` da pasta das cópias, com `ok` ou `FALHOU`. Confira o log toda semana e, se o servidor tiver e-mail configurado, ponha o `MAILTO` no `cron`, para a falha chegar a alguém. O histórico do log é a evidência de uma cópia por dia.
 
 No desenvolvimento, com o Postgres do `docker compose`, sem a senha na linha de comando:

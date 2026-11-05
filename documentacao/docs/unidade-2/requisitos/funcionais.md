@@ -1,3 +1,7 @@
+---
+render_macros: true
+---
+
 # 8.1 Lista de Requisitos Funcionais
 
 Os requisitos funcionais (RFs) são declarados a partir da decomposição das Características de Produto (CPs) em **Features**, seguindo o processo FDD (etapa _Construir a Lista de Features_) e as práticas descritas na [Seção 5 — Engenharia de Requisitos](../../unidade-1/engenharia-requisitos.md). Cada Feature segue o formato `<ação> <resultado> <objeto>` e agrupa um ou mais RFs; cada RF mantém rastreabilidade com a Feature que o declarou e, por meio dela, com a CP de origem, compondo a cadeia **Problema → OG → OEs → CPs → Features → RFs/RNFs** descrita no cronograma da Unidade 2.
@@ -13,45 +17,9 @@ Os requisitos funcionais (RFs) são declarados a partir da decomposição das Ca
 Quando o RF usa uma regra decidida com a Clínica Escola FBr, a rastreabilidade termina com **Origem**, que aponta para o código da decisão no [Registro de Decisões com a FBr (8.4)](decisoes-fbr.md), com a data e a fonte.
 
 <details class="requirement-index" markdown>
-<summary>Índice de requisitos funcionais por código (69)</summary>
+<summary>Índice de requisitos funcionais por código ({{ n.rfs }} registrados, {{ n.rfs_vigentes }} vigentes)</summary>
 
-| Requisito | Requisito |
-| --- | --- |
-| [RF1 — Registrar solicitação de atendimento on-line](#rf1) | [RF2 — Emitir comprovante de inscrição](#rf2) |
-| [RF3 — Registrar inscrição assistida](#rf3) | [RF4 — Organizar informações da inscrição para triagem](#rf4) |
-| [RF5 — Sinalizar pontos de atenção da inscrição](#rf5) | [RF6 — Registrar prioridade clínica do inscrito](#rf6) |
-| [RF7 — Ordenar inscritos na fila de espera](#rf7) | [RF8 — Consultar posição individual na fila](#rf8) |
-| [RF9 — Manter e informar condições gerais da fila](#rf9) | [RF10 — Agendar sessão do paciente](#rf10) |
-| [RF11 — Consultar agenda de sessões do estagiário](#rf11) | [RF12 — Reagendar sessão do paciente](#rf12) |
-| [RF13 — Enviar lembrete de sessão agendada](#rf13) | [RF14 — Confirmar presença em sessão agendada](#rf14) |
-| [RF15 — Registrar cancelamento de sessão pelo paciente](#rf15) | [RF16 — Registrar cancelamento de sessão pelo estagiário](#rf16) |
-| [RF17 — Notificar paciente sobre ausência do estagiário](#rf17) | [RF18 — Listar casos aguardando distribuição](#rf18) |
-| [RF19 — Registrar áreas de especialidade do supervisor](#rf19) | [RF20 — Distribuir caso a supervisor](#rf20) |
-| [RF21 — Vincular paciente a estagiário responsável](#rf21) | [RF22 — Consultar responsáveis pelo caso](#rf22) |
-| [RF23 — Consultar casos sob responsabilidade do estagiário ou supervisor](#rf23) | [RF24 — Visualizar distribuição de casos por supervisor](#rf24) |
-| [RF25 — Transferir caso para outro estagiário ou supervisor](#rf25) | [RF26 — Consultar histórico de responsáveis do caso](#rf26) |
-| [RF27 — Consultar prontuário do paciente](#rf27) | [RF28 — Registrar evolução da sessão realizada](#rf28) |
-| [RF29 — Corrigir evolução registrada](#rf29) | [RF30 — Registrar complemento de evolução da sessão](#rf30) |
-| [RF31 — Consultar evolução de uma sessão específica](#rf31) | [RF32 — Consultar histórico de evolução do paciente](#rf32) |
-| [RF33 — Gerar relatório final de evolução](#rf33) | [RF34 — Registrar falta do paciente na sessão](#rf34) |
-| [RF35 — Contabilizar faltas do paciente no ciclo](#rf35) | [RF36 — Emitir alerta de limite de faltas atingido](#rf36) |
-| [RF37 — Desligar paciente por faltas e liberar vaga](#rf37) | [RF38 — Reverter desligamento de paciente por faltas](#rf38) |
-| [RF39 — Consolidar faltas do estagiário para a supervisão](#rf39) | [RF40 — Contabilizar faltas do estagiário no semestre](#rf40) |
-| [RF63 — Sinalizar reprovação do estagiário por faltas](#rf63) | [RF64 — Registrar decisão institucional sobre a reprovação do estagiário](#rf64) |
-| [RF41 — Registrar pagamento da contribuição social do paciente](#rf41) | [RF42 — Consultar situação da contribuição social dos pacientes](#rf42) |
-| [RF43 — Bloquear agendamento por contribuição social pendente](#rf43) | [RF44 — Listar sessões com comparecimento registrado do paciente](#rf44) |
-| [RF45 — Emitir declaração de comparecimento do paciente](#rf45) | [RF46 — Reemitir declaração de comparecimento](#rf46) |
-| [RF47 — Validar autenticidade da declaração](#rf47) | [RF48 — Consultar indicadores operacionais](#rf48) |
-| [RF49 — Exportar relatório institucional em PDF](#rf49) | [RF50 — Autenticar usuário institucional](#rf50) |
-| [RF51 — Encerrar sessão do usuário](#rf51) | [RF52 — Verificar identidade do paciente ou responsável](#rf52) |
-| [RF53 — Cadastrar usuário institucional com perfil de acesso](#rf53) | [RF54 — Desativar usuário institucional](#rf54) |
-| [RF55 — Restringir acesso ao prontuário do paciente](#rf55) | [RF56 — Consultar registro de acessos ao prontuário](#rf56) |
-| [RF57 — Registrar consentimento para tratamento de dados](#rf57) | [RF65 — Registrar revogação do consentimento](#rf65) |
-| [RF58 — Listar casos elegíveis para continuidade entre semestres](#rf58) | [RF59 — Registrar decisão de continuidade do caso](#rf59) |
-| [RF60 — Vincular caso a novo estagiário na continuidade](#rf60) | [RF61 — Ativar modo de alto contraste](#rf61) |
-| [RF62 — Ajustar tamanho do texto](#rf62) | [RF66 — Criar e inicializar o prontuário do paciente](#rf66) |
-| [RF67 — Validar evolução pelo supervisor](#rf67) | [RF68 — Encerrar caso por alta](#rf68) |
-| [RF69 — Registrar anamnese e contrato terapêutico do paciente](#rf69) | |
+{{ indice("RF") }}
 
 </details>
 
@@ -80,7 +48,7 @@ O sistema deve permitir que o interessado realize uma solicitação de atendimen
 - O formulário deve exigir, como campos obrigatórios — confirmados pela Clínica Escola na reunião de 26/08/2026 ([ata](../../unidade-1/reunioes.md)) —, os seguintes: nome completo, data de nascimento, CPF, RG, endereço, estado civil e a queixa (motivo da busca pelo atendimento); quando o interessado for menor de idade, o formulário deve exigir também o nome do responsável legal.
 - Para viabilizar os lembretes e a verificação de identidade previstos nos RF13 e RF52, o interessado deve informar pelo menos um canal de contato válido entre telefone celular e e-mail e indicar o canal preferencial: **e-mail**, **WhatsApp** ou **ligação** (os dois últimos exigem o celular). Quem escolhe e-mail recebe as mensagens automáticas do sistema; quem escolhe WhatsApp ou ligação é contatado pela secretaria. O SMS não é usado.
 - O formulário também deve coletar, para a triagem, a percepção de urgência e um campo de histórico relevante informado pelo interessado, ambos como declarações do próprio solicitante.
-- O formulário também deve coletar os dados da ficha de identificação da Clínica Escola que os campos acima não cobrem ([DF43](decisoes-fbr.md)): sexo, profissão, escolaridade, bairro, cidade, CEP, WhatsApp, contato de emergência e, para menor de idade, o CPF e o documento que comprova a responsabilidade legal. Até a FBr definir a obrigatoriedade desses dados, eles são opcionais; essa regra é uma proposta da equipe.
+- O formulário também deve coletar os dados da ficha de identificação da Clínica Escola que os campos acima não cobrem ([DF43](decisoes-fbr.md#df43)): sexo, profissão, escolaridade, bairro, cidade, CEP, WhatsApp, contato de emergência e, para menor de idade, o CPF e o documento que comprova a responsabilidade legal. Até a FBr definir a obrigatoriedade desses dados, eles são opcionais; essa regra é uma proposta da equipe.
 - O CPF e o RG são coletados apenas como texto informado pelo próprio interessado — a Clínica Escola não exige, nem o sistema deve solicitar, o envio de cópia digitalizada desses documentos.
 - O sistema deve validar o formato dos dados de contato, verificar os campos obrigatórios e solicitar a confirmação do interessado antes de registrar a inscrição.
 - O formulário deve exibir, de forma fixa e sempre visível, um aviso textual com os contatos de emergência do CVV (188) e do SAMU (192), conforme solicitado pela Clínica Escola FBr na validação do MVP ([10.2.4](backlog.md#1024-validacao-do-mvp-com-o-cliente)) — condição vinculada ao adiamento da sinalização automática de pontos de atenção (RF5) para uma entrega posterior.
@@ -111,7 +79,9 @@ _Critérios de aceitação:_
 
 - Para interessado menor de idade, calculado pela data de nascimento, o envio sem o nome do responsável legal é bloqueado e o campo é indicado.
 
-_Rastreabilidade:_ Feature "Registrar solicitação de atendimento on-line" → CP1 — Inscrição on-line → OE1/OE4. Restrição transversal: CP12 — Segurança, sigilo e controle de acesso. Origem: [DF02](decisoes-fbr.md), [DF07](decisoes-fbr.md), [DF24](decisoes-fbr.md), [DF43](decisoes-fbr.md).
+_Rastreabilidade:_ Feature "Registrar solicitação de atendimento on-line" → CP1 — Inscrição on-line → OE1/OE4. Restrição transversal: CP12 — Segurança, sigilo e controle de acesso.{{ origem("RF1") }}
+
+{{ registro("RF1") }}
 
 #### Feature — Emitir comprovante de inscrição [#89](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/issues/89)
 
@@ -135,7 +105,9 @@ _Critérios de aceitação:_
 
 - O comprovante não contém a queixa nem dados clínicos desnecessários à confirmação do registro.
 
-_Rastreabilidade:_ Feature "Emitir comprovante de inscrição" → CP1 — Inscrição on-line → OE1/OE4. Dependência: RF1.
+_Rastreabilidade:_ Feature "Emitir comprovante de inscrição" → CP1 — Inscrição on-line → OE1/OE4. Dependência: RF1.{{ origem("RF2") }}
+
+{{ registro("RF2") }}
 
 #### Feature — Registrar inscrição assistida
 
@@ -161,7 +133,9 @@ _Critérios de aceitação:_
 
 - A modalidade de inscrição, sozinha, não altera a prioridade na fila entre solicitações com a mesma classificação validada.
 
-_Rastreabilidade:_ Feature "Registrar inscrição assistida" → CP1 — Inscrição on-line → OE1/OE4 → IS01 — Exclusão digital. Origem: [DF13](decisoes-fbr.md).
+_Rastreabilidade:_ Feature "Registrar inscrição assistida" → CP1 — Inscrição on-line → OE1/OE4 → IS01 — Exclusão digital.{{ origem("RF3") }}
+
+{{ registro("RF3") }}
 
 ### Triagem e sinalização de casos (CP2)
 
@@ -190,7 +164,9 @@ _Critérios de aceitação:_
 - As respostas do interessado aparecem identificadas como declaração do interessado, separadas de qualquer avaliação registrada pela equipe.
 - Sem inscrições aguardando triagem, a tela informa que não há inscrições pendentes.
 
-_Rastreabilidade:_ Feature "Organizar informações da inscrição para triagem" → CP2 — Triagem e sinalização de casos → OE2/OE1. Dependência: RF1 (CP1); restrição transversal: CP12 — Segurança, sigilo e controle de acesso. Origem: [DF19](decisoes-fbr.md).
+_Rastreabilidade:_ Feature "Organizar informações da inscrição para triagem" → CP2 — Triagem e sinalização de casos → OE2/OE1. Dependência: RF1 (CP1); restrição transversal: CP12 — Segurança, sigilo e controle de acesso.{{ origem("RF4") }}
+
+{{ registro("RF4") }}
 
 #### Feature — Sinalizar pontos de atenção da inscrição
 
@@ -206,7 +182,9 @@ _Critérios de aceitação:_
 - Novas triagens usam apenas a versão vigente das regras, e cada sinalização anterior mantém a identificação da versão que a produziu.
 - Sem regras aprovadas e vigentes, a inscrição é apresentada sem pontos de atenção.
 
-_Rastreabilidade:_ Feature "Sinalizar pontos de atenção da inscrição" → CP2 — Triagem e sinalização de casos → OE2/OE1. Dependência: RF4; restrição transversal: CP12 — Segurança, sigilo e controle de acesso.
+_Rastreabilidade:_ Feature "Sinalizar pontos de atenção da inscrição" → CP2 — Triagem e sinalização de casos → OE2/OE1. Dependência: RF4; restrição transversal: CP12 — Segurança, sigilo e controle de acesso.{{ origem("RF5") }}
+
+{{ registro("RF5") }}
 
 #### Feature — Registrar prioridade clínica do inscrito [#91](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/issues/91)
 
@@ -224,7 +202,9 @@ _Critérios de aceitação:_
 - A alteração autorizada de prioridade mantém o histórico da decisão anterior e disponibiliza a nova classificação para a fila (CP3).
 - A tela de registro de prioridade exibe a referência vermelha/amarela/verde da Clínica Escola como apoio textual, sem preencher nem sugerir a cor automaticamente.
 
-_Rastreabilidade:_ Feature "Registrar prioridade clínica do inscrito" → CP2 — Triagem e sinalização de casos → OE2/OE1. Dependência: RF4. Apoio opcional: RF5 (fora do MVP), cuja sinalização automática reforça a decisão quando existir, sem ser pré-condição para ela. Integração: RF7 (CP3) e RF20 (CP5); restrição transversal: CP12 — Segurança, sigilo e controle de acesso. Origem: [DF03](decisoes-fbr.md), [DF26](decisoes-fbr.md).
+_Rastreabilidade:_ Feature "Registrar prioridade clínica do inscrito" → CP2 — Triagem e sinalização de casos → OE2/OE1. Dependência: RF4. Apoio opcional: RF5 (fora do MVP), cuja sinalização automática reforça a decisão quando existir, sem ser pré-condição para ela. Integração: RF7 (CP3) e RF20 (CP5); restrição transversal: CP12 — Segurança, sigilo e controle de acesso.{{ origem("RF6") }}
+
+{{ registro("RF6") }}
 
 #### Modelo de domínio da CP2
 
@@ -256,7 +236,7 @@ O sistema não deve utilizar sinalizações da triagem como decisão clínica de
 
 Quando ocorrer uma alteração autorizada na prioridade ou na situação de um inscrito, o sistema deve atualizar seu posicionamento na fila de acordo com os critérios institucionais definidos para a ordenação.
 
-Os critérios de desempate entre inscritos com a mesma prioridade seguem a ordem de registro da inscrição: entre dois inscritos com a mesma prioridade, tem precedência quem se inscreveu primeiro, conforme confirmado pela Clínica Escola. Para quem voltou à fila por perda da vaga (RF43), vale a data da volta, e não a da inscrição original ([DF33](decisoes-fbr.md)).
+Os critérios de desempate entre inscritos com a mesma prioridade seguem a ordem de registro da inscrição: entre dois inscritos com a mesma prioridade, tem precedência quem se inscreveu primeiro, conforme confirmado pela Clínica Escola. Para quem voltou à fila por perda da vaga (RF43), vale a data da volta, e não a da inscrição original ([DF33](decisoes-fbr.md#df33)).
 
 _Critérios de aceitação:_
 
@@ -270,7 +250,9 @@ _Critérios de aceitação:_
 
 - Entre inscritos com a mesma prioridade confirmada, fica à frente quem registrou a inscrição (RF1/RF3) primeiro.
 
-_Rastreabilidade:_ Feature "Ordenar inscritos na fila de espera" → CP3 — Fila de espera e consulta de posição → OE4/OE7. Dependência: RF6 (CP2), que fornece a prioridade clínica confirmada. Origem: [DF16](decisoes-fbr.md).
+_Rastreabilidade:_ Feature "Ordenar inscritos na fila de espera" → CP3 — Fila de espera e consulta de posição → OE4/OE7. Dependência: RF6 (CP2), que fornece a prioridade clínica confirmada.{{ origem("RF7") }}
+
+{{ registro("RF7") }}
 
 #### Feature — Consultar posição individual na fila [#155](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/issues/155)
 
@@ -286,7 +268,9 @@ _Critérios de aceitação:_
 
 - Após mudanças de prioridade ou de situação que alterem a fila, uma nova consulta autorizada mostra a posição atualizada.
 
-_Rastreabilidade:_ Feature "Consultar posição individual na fila" → CP3 — Fila de espera e consulta de posição → OE4/OE7 → IS03 — Expectativa sobre a fila. Dependência: RF52 — Verificar identidade do paciente ou responsável (CP12). Origem: [DF40](decisoes-fbr.md).
+_Rastreabilidade:_ Feature "Consultar posição individual na fila" → CP3 — Fila de espera e consulta de posição → OE4/OE7 → IS03 — Expectativa sobre a fila. Dependência: RF52 — Verificar identidade do paciente ou responsável (CP12).{{ origem("RF8") }}
+
+{{ registro("RF8") }}
 
 #### Feature — Manter e informar condições gerais da fila
 
@@ -314,7 +298,9 @@ _Critérios de aceitação:_
 
 - A publicação de uma alteração aprovada substitui a informação anterior e mostra a nova data de atualização.
 
-_Rastreabilidade:_ Feature "Manter e informar condições gerais da fila" → CP3 — Fila de espera e consulta de posição → OE4/OE7 → IS02 — Aumento da demanda. Integração: RF48 (CP11), que mantém o parâmetro de vagas ofertadas no semestre.
+_Rastreabilidade:_ Feature "Manter e informar condições gerais da fila" → CP3 — Fila de espera e consulta de posição → OE4/OE7 → IS02 — Aumento da demanda. Integração: RF48 (CP11), que mantém o parâmetro de vagas ofertadas no semestre.{{ origem("RF9") }}
+
+{{ registro("RF9") }}
 
 ### Agendamento, Confirmação e Remarcação (CP4)
 
@@ -324,7 +310,7 @@ O agendamento depende do vínculo entre paciente e estagiário responsável, def
 
 Conforme confirmado pela Clínica Escola na reunião de 26/08/2026 ([ata](../../unidade-1/reunioes.md)), todas as sessões de atendimento psicológico da Clínica Escola FBr são presenciais — a FBr não realiza atendimento psicológico remoto no estágio supervisionado. A base normativa dessa restrição (norma do CFP/CRP-DF ou regulamento de estágio da FBr) ainda depende de confirmação formal ([Cenário Atual, 1.4](../../unidade-1/cenario-atual.md#14-identificacao-da-oportunidade-ou-problema); [Pendências](analise-feedback.md#pendencias-de-validacao-com-a-fbr)). O agendamento (RF10) e a confirmação de presença (RF14) tratam, portanto, exclusivamente de horários presenciais; o sistema não precisa prever modalidade remota de sessão.
 
-Os canais de contato com o paciente (e-mail, WhatsApp e ligação, sem SMS), a duração da sessão, a antecedência do lembrete e a antecedência mínima de cancelamento foram confirmados pela Clínica Escola em 23/10/2026 ([DF18, DF20, DF21 e DF24](decisoes-fbr.md)), e o limite de uma remarcação por paciente no ciclo já havia sido confirmado. Os prazos que ainda não foram fixados pela FBr são tratados como **parâmetros de agendamento**: valores configuráveis pela coordenação na interface, sem intervenção técnica, que o sistema aplica a partir da alteração e que nascem com o valor padrão abaixo. Os valores padrão são uma proposta da equipe e devem ser confirmados na validação com a FBr; a mudança de um valor não altera sessões já realizadas nem classificações já registradas.
+Os canais de contato com o paciente (e-mail, WhatsApp e ligação, sem SMS), a duração da sessão, a antecedência do lembrete e a antecedência mínima de cancelamento foram confirmados pela Clínica Escola em 23/10/2026 ([DF18](decisoes-fbr.md#df18), [DF20](decisoes-fbr.md#df20), [DF21](decisoes-fbr.md#df21) e [DF24](decisoes-fbr.md#df24)), e o limite de uma remarcação por paciente no ciclo já havia sido confirmado. Os prazos que ainda não foram fixados pela FBr são tratados como **parâmetros de agendamento**: valores configuráveis pela coordenação na interface, sem intervenção técnica, que o sistema aplica a partir da alteração e que nascem com o valor padrão abaixo. Os valores padrão são uma proposta da equipe e devem ser confirmados na validação com a FBr; a mudança de um valor não altera sessões já realizadas nem classificações já registradas.
 
 | Parâmetro                                  | Valor padrão                          | Responsável pela configuração | Utilizado em |
 | ------------------------------------------ | ------------------------------------- | ----------------------------- | ------------ |
@@ -347,6 +333,8 @@ Os canais de contato com o paciente (e-mail, WhatsApp e ligação, sem SMS), a d
 - O registro de auditoria do agendamento segue o RNF10.
 - Ao confirmar o agendamento, o link de confirmação de presença utilizado pelo RF14 deve chegar ao paciente pelo canal preferencial informado na inscrição (RF1): com **e-mail**, o sistema envia automaticamente; com **WhatsApp** ou **ligação**, o sistema mostra a quem agendou um botão "Enviar pelo WhatsApp", que abre o WhatsApp com a mensagem pronta para o celular do paciente (data, horário e link), e registra quando o botão foi usado. Para quem prefere ligação, a mensagem também serve de roteiro da ligação.
 
+**Entrega parcial no Ciclo 3.** O agendamento entregue no Ciclo 3 já gera o link de confirmação de presença e o envia ao paciente pelo canal preferencial, como descrito acima. A página que recebe o link e registra a confirmação é a do [RF14](#rf14), prevista para o Ciclo 4: até ela ser entregue, o paciente recebe o link, mas não consegue confirmar a presença por ele. O link passa a funcionar com a entrega do RF14. Os critérios de aceitação sobre o envio do link são verificados no Ciclo 3; a confirmação pela página do link é verificada nos critérios do RF14.
+
 _Critérios de aceitação:_
 
 - O agendamento, pela secretaria ou pelo estagiário, de paciente com estagiário vinculado, informando só o início, registra a sessão como "agendada" com paciente, estagiário, data, início e término calculado pela duração padrão.
@@ -359,7 +347,9 @@ _Critérios de aceitação:_
 - Horário de término ajustado para antes do início, ou igual a ele, é recusado, com a indicação do erro.
 - Estagiário que não é o responsável pelo paciente, supervisor e coordenação não conseguem agendar sessão para o paciente.
 
-_Rastreabilidade:_ Feature "Agendar sessão do paciente" → CP4 — Agendamento, confirmação e remarcação → OE3/OE4. Dependência: RF21 (CP5 — vínculo do paciente ao estagiário responsável); integração: RF1 (canal de contato preferencial) e RF14 (link de confirmação de presença); restrição transversal: CP12 — Segurança, sigilo e controle de acesso. Origem: [DF01](decisoes-fbr.md), [DF18](decisoes-fbr.md), [DF24](decisoes-fbr.md).
+_Rastreabilidade:_ Feature "Agendar sessão do paciente" → CP4 — Agendamento, confirmação e remarcação → OE3/OE4. Dependência: RF21 (CP5 — vínculo do paciente ao estagiário responsável); integração: RF1 (canal de contato preferencial) e RF14 (link de confirmação de presença); restrição transversal: CP12 — Segurança, sigilo e controle de acesso.{{ origem("RF10") }}
+
+{{ registro("RF10") }}
 
 #### Feature — Consultar agenda de sessões do estagiário [#141](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/issues/141)
 
@@ -373,7 +363,9 @@ _Critérios de aceitação:_
 - O supervisor vê a agenda dos estagiários sob sua supervisão.
 - Usuário sem vínculo de supervisão com o estagiário não acessa a agenda dele.
 
-_Rastreabilidade:_ Feature "Consultar agenda de sessões do estagiário" → CP4 — Agendamento, confirmação e remarcação → OE3/OE4. Dependência: RF10, RF21 (CP5); restrição transversal: CP12.
+_Rastreabilidade:_ Feature "Consultar agenda de sessões do estagiário" → CP4 — Agendamento, confirmação e remarcação → OE3/OE4. Dependência: RF10, RF21 (CP5); restrição transversal: CP12.{{ origem("RF11") }}
+
+{{ registro("RF11") }}
 
 #### Feature — Reagendar sessão do paciente
 
@@ -393,7 +385,9 @@ _Critérios de aceitação:_
 - A aprovação da remarcação excedente pela coordenação, com justificativa, efetiva a remarcação e gera o registro de auditoria do RNF10 com a justificativa e o aprovador.
 - O reagendamento de sessão cancelada por ausência do estagiário (RF16), feito pela opção oferecida ao paciente (RF17), é permitido e não conta no limite do paciente.
 
-_Rastreabilidade:_ Feature "Reagendar sessão do paciente" → CP4 — Agendamento, confirmação e remarcação → OE3/OE4. Dependência: RF10.
+_Rastreabilidade:_ Feature "Reagendar sessão do paciente" → CP4 — Agendamento, confirmação e remarcação → OE3/OE4. Dependência: RF10.{{ origem("RF12") }}
+
+{{ registro("RF12") }}
 
 #### Feature — Enviar lembrete de sessão agendada
 
@@ -409,7 +403,9 @@ _Critérios de aceitação:_
 - Nova antecedência definida pela coordenação vale para as sessões futuras cujo lembrete ainda não foi enviado.
 - Falha no envio do lembrete é registrada como falha, e não como envio concluído.
 
-_Rastreabilidade:_ Feature "Enviar lembrete de sessão agendada" → CP4 — Agendamento, confirmação e remarcação → OE3. Dependência: RF10. Origem: [DF06](decisoes-fbr.md), [DF21](decisoes-fbr.md), [DF24](decisoes-fbr.md).
+_Rastreabilidade:_ Feature "Enviar lembrete de sessão agendada" → CP4 — Agendamento, confirmação e remarcação → OE3. Dependência: RF10.{{ origem("RF13") }}
+
+{{ registro("RF13") }}
 
 #### Feature — Confirmar presença em sessão agendada [#142](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/issues/142)
 
@@ -426,7 +422,9 @@ _Critérios de aceitação:_
 - Sessão sem confirmação ao fim do prazo é sinalizada para a secretaria, sem registro de falta.
 - Sessão já cancelada não pode ser confirmada.
 
-_Rastreabilidade:_ Feature "Confirmar presença em sessão agendada" → CP4 — Agendamento, confirmação e remarcação → OE3. Dependência: RF10; integração: RF13 (lembrete automático adicional, entrega posterior). Origem: [DF24](decisoes-fbr.md), [DF45](decisoes-fbr.md).
+_Rastreabilidade:_ Feature "Confirmar presença em sessão agendada" → CP4 — Agendamento, confirmação e remarcação → OE3. Dependência: RF10; integração: RF13 (lembrete automático adicional, entrega posterior).{{ origem("RF14") }}
+
+{{ registro("RF14") }}
 
 #### Feature — Registrar cancelamento de sessão pelo paciente [#143](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/issues/143)
 
@@ -440,7 +438,7 @@ O sistema deve permitir que o paciente, ou a secretaria em seu nome, cancele uma
 
 Depois do horário de início, a sessão não pode mais ser cancelada; o não comparecimento é tratado como falta (RF34). A classificação é feita com o valor do parâmetro vigente no momento do registro do cancelamento.
 
-Como o paciente não tem conta no sistema, o cancelamento feito por ele usa o mesmo link da confirmação de presença, recebido no agendamento (RF14): a página do link oferece a opção de cancelar, com a justificativa obrigatória, e segue as proteções do [RNF59](nao-funcionais.md#rnf59). O paciente que informou só o celular, e por isso recebe o link pela secretaria ou não o recebe, pode pedir o cancelamento à secretaria, por WhatsApp ou ligação, e a secretaria o registra em seu nome ([DF24](decisoes-fbr.md)).
+Como o paciente não tem conta no sistema, o cancelamento feito por ele usa o mesmo link da confirmação de presença, recebido no agendamento (RF14): a página do link oferece a opção de cancelar, com a justificativa obrigatória, e segue as proteções do [RNF59](nao-funcionais.md#rnf59). O paciente que informou só o celular, e por isso recebe o link pela secretaria ou não o recebe, pode pedir o cancelamento à secretaria, por WhatsApp ou ligação, e a secretaria o registra em seu nome ([DF24](decisoes-fbr.md#df24)).
 
 _Critérios de aceitação:_
 
@@ -451,7 +449,9 @@ _Critérios de aceitação:_
 - Sessão já iniciada ou realizada não pode ser cancelada.
 - O cancelamento registrado pela secretaria ou pelo estagiário como administrativo para remarcação é classificado nessa categoria e não gera evento de falta para a CP9, qualquer que seja a antecedência.
 
-_Rastreabilidade:_ Feature "Registrar cancelamento de sessão pelo paciente" → CP4 — Agendamento, confirmação e remarcação → OE3. Dependência: RF10. Integração: CP9 — Controle de assiduidade e alertas. Origem: [DF10](decisoes-fbr.md), [DF20](decisoes-fbr.md).
+_Rastreabilidade:_ Feature "Registrar cancelamento de sessão pelo paciente" → CP4 — Agendamento, confirmação e remarcação → OE3. Dependência: RF10. Integração: CP9 — Controle de assiduidade e alertas.{{ origem("RF15") }}
+
+{{ registro("RF15") }}
 
 #### Feature — Registrar cancelamento de sessão pelo estagiário [#144](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/issues/144)
 
@@ -468,7 +468,9 @@ _Critérios de aceitação:_
 - Cancelamento registrado como ausência real do estagiário é contabilizado nas faltas dele (RF39/RF40).
 - Cancelamento registrado como administrativo para remarcação não é contabilizado nas faltas do estagiário (RF39/RF40).
 
-_Rastreabilidade:_ Feature "Registrar cancelamento de sessão pelo estagiário" → CP4 — Agendamento, confirmação e remarcação → OE3/OE4. Dependência: RF10, RF21 (CP5). Origem: [DF10](decisoes-fbr.md).
+_Rastreabilidade:_ Feature "Registrar cancelamento de sessão pelo estagiário" → CP4 — Agendamento, confirmação e remarcação → OE3/OE4. Dependência: RF10, RF21 (CP5).{{ origem("RF16") }}
+
+{{ registro("RF16") }}
 
 #### Feature — Notificar paciente sobre ausência do estagiário
 
@@ -481,7 +483,9 @@ _Critérios de aceitação:_
 - A sessão cancelada por ausência do estagiário gera notificação imediata, por e-mail, ao paciente com e-mail como canal preferencial, com a opção de reagendar.
 - Para paciente com WhatsApp ou ligação como canal preferencial, o cancelamento gera imediatamente o aviso à secretaria, com o botão "Enviar pelo WhatsApp" e a mensagem pronta.
 
-_Rastreabilidade:_ Feature "Notificar paciente sobre ausência do estagiário" → CP4 — Agendamento, confirmação e remarcação → OE3. Dependência: RF16. Origem: [DF24](decisoes-fbr.md).
+_Rastreabilidade:_ Feature "Notificar paciente sobre ausência do estagiário" → CP4 — Agendamento, confirmação e remarcação → OE3. Dependência: RF16.{{ origem("RF17") }}
+
+{{ registro("RF17") }}
 
 #### Modelo de domínio da CP4
 
@@ -512,15 +516,19 @@ _Critérios de aceitação:_
 - Caso já distribuído a um supervisor não aparece na lista de pendentes.
 - Sem casos pendentes, a lista informa que não há casos aguardando distribuição.
 
-_Rastreabilidade:_ Feature "Listar casos aguardando distribuição" → CP5 — Distribuição de casos entre supervisores e estagiários → OE5/OE2. Dependência: RF6 (CP2); restrição transversal: CP12 — Segurança, sigilo e controle de acesso. Origem: [DF16](decisoes-fbr.md).
+_Rastreabilidade:_ Feature "Listar casos aguardando distribuição" → CP5 — Distribuição de casos entre supervisores e estagiários → OE5/OE2. Dependência: RF6 (CP2); restrição transversal: CP12 — Segurança, sigilo e controle de acesso.{{ origem("RF18") }}
+
+{{ registro("RF18") }}
 
 #### Feature — Registrar áreas de especialidade do supervisor [#93](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/issues/93)
 
 **RF19 — Registrar áreas de especialidade do supervisor**{ #rf19 }
 
-**Removido em 24/10/2026.** Na reunião de validação do protótipo de 23/10/2026, a Clínica Escola informou que não há divisão por área de especialidade: todo atendimento é tratado como psicologia clínica geral ([DF26](decisoes-fbr.md)). O cadastro de áreas deixou de existir, e a distribuição (RF20) passou a não considerar área. O número foi mantido para preservar as referências já feitas a ele.
+**Removido em 24/10/2026.** Na reunião de validação do protótipo de 23/10/2026, a Clínica Escola informou que não há divisão por área de especialidade: todo atendimento é tratado como psicologia clínica geral ([DF26](decisoes-fbr.md#df26)). O cadastro de áreas deixou de existir, e a distribuição (RF20) passou a não considerar área. O número foi mantido para preservar as referências já feitas a ele.
 
-_Rastreabilidade:_ Feature "Registrar áreas de especialidade do supervisor" (removida) → CP5 — Distribuição de casos entre supervisores e estagiários. Origem: [DF26](decisoes-fbr.md).
+_Rastreabilidade:_ Feature "Registrar áreas de especialidade do supervisor" (removida) → CP5 — Distribuição de casos entre supervisores e estagiários.{{ origem("RF19") }}
+
+{{ registro("RF19") }}
 
 #### Feature — Distribuir caso a supervisor [#94](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/issues/94)
 
@@ -537,7 +545,9 @@ _Critérios de aceitação:_
 - Caso que já tem supervisor responsável não pode ser distribuído de novo; o sistema orienta o uso da transferência (RF25).
 - Usuário sem perfil de coordenação não consegue distribuir casos.
 
-_Rastreabilidade:_ Feature "Distribuir caso a supervisor" → CP5 — Distribuição de casos entre supervisores e estagiários → OE5. Dependência: RF18, RF6 (CP2); restrição transversal: CP12 — Segurança, sigilo e controle de acesso. Origem: [DF17](decisoes-fbr.md), [DF26](decisoes-fbr.md).
+_Rastreabilidade:_ Feature "Distribuir caso a supervisor" → CP5 — Distribuição de casos entre supervisores e estagiários → OE5. Dependência: RF18, RF6 (CP2); restrição transversal: CP12 — Segurança, sigilo e controle de acesso.{{ origem("RF20") }}
+
+{{ registro("RF20") }}
 
 #### Feature — Vincular paciente a estagiário responsável [#95](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/issues/95)
 
@@ -552,7 +562,9 @@ _Critérios de aceitação:_
 - Supervisor que não é responsável pelo caso não consegue vincular estagiário a ele.
 - Estagiário com conta desativada (RF54) não aparece entre as opções de vínculo.
 
-_Rastreabilidade:_ Feature "Vincular paciente a estagiário responsável" → CP5 — Distribuição de casos entre supervisores e estagiários → OE5. Dependência: RF20, RF53 e RF54 (CP12). Integração: RF66 (CP6 — criação do prontuário a partir do vínculo). Origem: [DF17](decisoes-fbr.md), [DF27](decisoes-fbr.md).
+_Rastreabilidade:_ Feature "Vincular paciente a estagiário responsável" → CP5 — Distribuição de casos entre supervisores e estagiários → OE5. Dependência: RF20, RF53 e RF54 (CP12). Integração: RF66 (CP6 — criação do prontuário a partir do vínculo).{{ origem("RF21") }}
+
+{{ registro("RF21") }}
 
 #### Feature — Consultar responsáveis pelo caso [#145](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/issues/145)
 
@@ -565,7 +577,9 @@ _Critérios de aceitação:_
 - A consulta do caso por secretaria, estagiário, supervisor ou coordenação mostra o estagiário e o supervisor responsáveis, sem dados clínicos.
 - Caso ainda sem supervisor ou sem estagiário responsável aparece como "pendente de distribuição", sem nome no campo que falta.
 
-_Rastreabilidade:_ Feature "Consultar responsáveis pelo caso" → CP5 — Distribuição de casos entre supervisores e estagiários → OE5. Dependência: RF21.
+_Rastreabilidade:_ Feature "Consultar responsáveis pelo caso" → CP5 — Distribuição de casos entre supervisores e estagiários → OE5. Dependência: RF21.{{ origem("RF22") }}
+
+{{ registro("RF22") }}
 
 #### Feature — Consultar casos sob responsabilidade do estagiário ou supervisor [#146](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/issues/146)
 
@@ -579,7 +593,9 @@ _Critérios de aceitação:_
 - O supervisor vê na lista os casos sob sua responsabilidade direta e os dos estagiários vinculados a eles.
 - Estagiário ou supervisor sem vínculo com um caso não o vê na lista e tem o acesso direto negado.
 
-_Rastreabilidade:_ Feature "Consultar casos sob responsabilidade do estagiário ou supervisor" → CP5 — Distribuição de casos entre supervisores e estagiários → OE5. Dependência: RF21.
+_Rastreabilidade:_ Feature "Consultar casos sob responsabilidade do estagiário ou supervisor" → CP5 — Distribuição de casos entre supervisores e estagiários → OE5. Dependência: RF21.{{ origem("RF23") }}
+
+{{ registro("RF23") }}
 
 #### Feature — Visualizar distribuição de casos por supervisor
 
@@ -589,7 +605,9 @@ O sistema deve mostrar à coordenação quantos casos ativos cada supervisor e c
 
 _Critério de aceitação:_ A visão de distribuição mostra à coordenação o número atual de casos ativos por supervisor e por estagiário.
 
-_Rastreabilidade:_ Feature "Visualizar distribuição de casos por supervisor" → CP5 — Distribuição de casos entre supervisores e estagiários → OE5; alimenta CP11 — Indicadores e relatórios institucionais. Dependência: RF20.
+_Rastreabilidade:_ Feature "Visualizar distribuição de casos por supervisor" → CP5 — Distribuição de casos entre supervisores e estagiários → OE5; alimenta CP11 — Indicadores e relatórios institucionais. Dependência: RF20.{{ origem("RF24") }}
+
+{{ registro("RF24") }}
 
 #### Feature — Transferir caso para outro estagiário ou supervisor [#147](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/issues/147)
 
@@ -603,7 +621,9 @@ _Critérios de aceitação:_
 - O supervisor A não consegue transferir seu caso para estagiário do supervisor B; o sistema orienta a transferência pela coordenação.
 - A transferência de caso ativo pela coordenação para outro supervisor registra o novo supervisor e, quando indicado, o novo estagiário, preserva o histórico e revoga o acesso dos responsáveis anteriores.
 
-_Rastreabilidade:_ Feature "Transferir caso para outro estagiário ou supervisor" → CP5 — Distribuição de casos entre supervisores e estagiários → OE5. Dependência: RF21; restrição transversal: RNF16. Origem: [DF08](decisoes-fbr.md), [DF09](decisoes-fbr.md), [DF28](decisoes-fbr.md).
+_Rastreabilidade:_ Feature "Transferir caso para outro estagiário ou supervisor" → CP5 — Distribuição de casos entre supervisores e estagiários → OE5. Dependência: RF21; restrição transversal: RNF16.{{ origem("RF25") }}
+
+{{ registro("RF25") }}
 
 #### Feature — Consultar histórico de responsáveis do caso
 
@@ -617,7 +637,9 @@ _Critérios de aceitação:_
 - Supervisor que respondeu pelo caso no passado vê no histórico apenas o próprio período de responsabilidade.
 - Estagiário ou supervisor sem vínculo atual ou passado com o caso não acessa o histórico.
 
-_Rastreabilidade:_ Feature "Consultar histórico de responsáveis do caso" → CP5 — Distribuição de casos entre supervisores e estagiários → OE5. Dependência: RF21, RF25.
+_Rastreabilidade:_ Feature "Consultar histórico de responsáveis do caso" → CP5 — Distribuição de casos entre supervisores e estagiários → OE5. Dependência: RF21, RF25.{{ origem("RF26") }}
+
+{{ registro("RF26") }}
 
 ### Prontuário eletrônico (CP6)
 
@@ -638,13 +660,15 @@ _Critérios de aceitação:_
 - Caso que já tem prontuário no ciclo vigente não recebe um segundo prontuário.
 - A criação do prontuário registra a data/hora e o vínculo que a originou.
 
-_Rastreabilidade:_ Feature "Criar e inicializar o prontuário do paciente" → CP6 — Prontuário eletrônico → OE5/OE6. Dependência: RF21 (CP5). Integração: RF69 (registro dos dados iniciais). Restrição transversal: CP12 — Segurança, sigilo e controle de acesso.
+_Rastreabilidade:_ Feature "Criar e inicializar o prontuário do paciente" → CP6 — Prontuário eletrônico → OE5/OE6. Dependência: RF21 (CP5). Integração: RF69 (registro dos dados iniciais). Restrição transversal: CP12 — Segurança, sigilo e controle de acesso.{{ origem("RF66") }}
+
+{{ registro("RF66") }}
 
 #### Feature — Registrar anamnese e contrato terapêutico do paciente [#130](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/issues/130)
 
 **RF69 — Registrar anamnese e contrato terapêutico do paciente**{ #rf69 }
 
-O sistema deve permitir que somente o estagiário responsável pelo caso registre, no prontuário criado pelo RF66, a anamnese e o contrato terapêutico (ou documento equivalente) que formalizam o início do acompanhamento. A anamnese segue a "Ficha de anamnese" que a Clínica Escola enviou em 30/10/2026, com seis seções: (I) queixa principal; (II) história do problema atual; (III) histórico familiar; (IV) desenvolvimento (infantil e adolescente); (V) histórico médico; e (VI) aspectos psicossociais. A queixa principal vem preenchida com a queixa informada na inscrição (RF1), e o estagiário pode completá-la. Até a FBr definir a obrigatoriedade, só a queixa principal é obrigatória, e as seções em branco aparecem como "não informado"; essa regra é uma proposta da equipe. O contrato terapêutico segue o "Contrato de Prestação de Serviço" da Clínica Escola, indicado em 31/10/2026 ([DF41](decisoes-fbr.md)): o contrato é assinado em papel na primeira sessão, e o estagiário registra no prontuário a data de assinatura, o aceite do termo de consentimento livre e esclarecido para pesquisa, que é opcional, e a guarda da via assinada. Até a FBr confirmar, a confirmação da guarda da via é obrigatória para registrar o contrato; essa regra é uma proposta da equipe. As regras de desmarcação e de faltas do contrato divergem da DF20 e estão nas [pendências de validação com a FBr](analise-feedback.md#pendencias-de-validacao-com-a-fbr); até a resposta, valem as da DF20. Esta feature foi separada do RF66 em 24/10/2026, porque a criação automática do prontuário e o registro dos dados iniciais têm gatilhos, atores e condições diferentes. O sigilo dos dados iniciais segue o RNF25 e o acesso, a restrição do RF55.
+O sistema deve permitir que somente o estagiário responsável pelo caso registre, no prontuário criado pelo RF66, a anamnese e o contrato terapêutico (ou documento equivalente) que formalizam o início do acompanhamento. A anamnese segue a "Ficha de anamnese" que a Clínica Escola enviou em 30/10/2026, com seis seções: (I) queixa principal; (II) história do problema atual; (III) histórico familiar; (IV) desenvolvimento (infantil e adolescente); (V) histórico médico; e (VI) aspectos psicossociais. A queixa principal vem preenchida com a queixa informada na inscrição (RF1), e o estagiário pode completá-la. Até a FBr definir a obrigatoriedade, só a queixa principal é obrigatória, e as seções em branco aparecem como "não informado"; essa regra é uma proposta da equipe. O contrato terapêutico segue o "Contrato de Prestação de Serviço" da Clínica Escola, indicado em 31/10/2026 ([DF41](decisoes-fbr.md#df41)): o contrato é assinado em papel na primeira sessão, e o estagiário registra no prontuário a data de assinatura, o aceite do termo de consentimento livre e esclarecido para pesquisa, que é opcional, e a guarda da via assinada. Até a FBr confirmar, a confirmação da guarda da via é obrigatória para registrar o contrato; essa regra é uma proposta da equipe. As regras de desmarcação e de faltas do contrato divergem da DF20 e estão nas [pendências de validação com a FBr](analise-feedback.md#pendencias-de-validacao-com-a-fbr); até a resposta, valem as da DF20. Esta feature foi separada do RF66 em 24/10/2026, porque a criação automática do prontuário e o registro dos dados iniciais têm gatilhos, atores e condições diferentes. O sigilo dos dados iniciais segue o RNF25 e o acesso, a restrição do RF55.
 
 _Critérios de aceitação:_
 
@@ -655,7 +679,9 @@ _Critérios de aceitação:_
 - Usuário que não é o estagiário responsável pelo caso não consegue registrar a anamnese nem o contrato.
 - Caso sem prontuário criado (RF66) não aceita o registro de anamnese nem de contrato.
 
-_Rastreabilidade:_ Feature "Registrar anamnese e contrato terapêutico do paciente" → CP6 — Prontuário eletrônico → OE5/OE6. Dependência: RF66; integração: RF1 (queixa da inscrição). Restrição transversal: CP12 — Segurança, sigilo e controle de acesso. Origem: [DF37](decisoes-fbr.md), [DF41](decisoes-fbr.md).
+_Rastreabilidade:_ Feature "Registrar anamnese e contrato terapêutico do paciente" → CP6 — Prontuário eletrônico → OE5/OE6. Dependência: RF66; integração: RF1 (queixa da inscrição). Restrição transversal: CP12 — Segurança, sigilo e controle de acesso.{{ origem("RF69") }}
+
+{{ registro("RF69") }}
 
 #### Feature — Consultar prontuário do paciente [#148](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/issues/148)
 
@@ -668,9 +694,11 @@ _Critérios de aceitação:_
 - Ao abrir o prontuário, o estagiário ou o supervisor do caso vê todos os elementos mínimos do ciclo: identificação do paciente, do caso e do ciclo; dados iniciais; responsáveis; sessões; evoluções com correções, complementos e situação de validação; e encerramento por alta e relatório final, quando existentes.
 - Elemento mínimo ainda sem registro no ciclo aparece como ausente, sem omitir a seção e sem conteúdo clínico presumido.
 - Após transferência, o novo responsável autorizado encontra no prontuário os registros anteriores preservados.
-- Usuário sem vínculo clínico vigente com o caso não acessa o conteúdo clínico do prontuário, com exceção da coordenação, que o consulta só para leitura (RF55, [DF32](decisoes-fbr.md)).
+- Usuário sem vínculo clínico vigente com o caso não acessa o conteúdo clínico do prontuário, com exceção da coordenação, que o consulta só para leitura (RF55, [DF32](decisoes-fbr.md#df32)).
 
-_Rastreabilidade:_ Feature "Consultar prontuário do paciente" → CP6 — Prontuário eletrônico → OE5/OE6. Dependência: RF66, RF21 (CP5); integração: RF69 (dados iniciais); restrição transversal: RF55 (CP12).
+_Rastreabilidade:_ Feature "Consultar prontuário do paciente" → CP6 — Prontuário eletrônico → OE5/OE6. Dependência: RF66, RF21 (CP5); integração: RF69 (dados iniciais); restrição transversal: RF55 (CP12).{{ origem("RF27") }}
+
+{{ registro("RF27") }}
 
 #### Modelo de domínio da CP6
 
@@ -684,13 +712,13 @@ A CP7 foi decomposta em sete features: registro da evolução de uma sessão rea
 
 O registro de evolução depende de uma sessão já realizada (CP4) e do vínculo entre paciente e estagiário responsável (CP5). O acesso ao conteúdo registrado é restrito ao estagiário responsável, ao seu supervisor e, para consulta, à coordenação, conforme os perfis definidos na CP12 — Segurança, sigilo e controle de acesso. A evolução registrada alimenta o prontuário eletrônico (CP6) e, ao fim do ciclo, o relatório final de evolução (CP8).
 
-O prazo de correção (RF29) e a possibilidade de complementos (RF30) já foram confirmados pela Clínica Escola. O conteúdo do registro de evolução segue a ficha "Registro de evolução" que a Clínica Escola enviou em 30/10/2026 ([DF38](decisoes-fbr.md)); quais campos são obrigatórios ainda está nas [pendências](analise-feedback.md#pendencias-de-validacao-com-a-fbr). Como orientação de formato, a FBr descreveu, na reunião de 26/08/2026 ([ata](../../unidade-1/reunioes.md)), que a evolução esperada é um resumo objetivo da sessão ("um resuminho"), e não uma transcrição integral do atendimento.
+O prazo de correção (RF29) e a possibilidade de complementos (RF30) já foram confirmados pela Clínica Escola. O conteúdo do registro de evolução segue a ficha "Registro de evolução" que a Clínica Escola enviou em 30/10/2026 ([DF38](decisoes-fbr.md#df38)); quais campos são obrigatórios ainda está nas [pendências](analise-feedback.md#pendencias-de-validacao-com-a-fbr). Como orientação de formato, a FBr descreveu, na reunião de 26/08/2026 ([ata](../../unidade-1/reunioes.md)), que a evolução esperada é um resumo objetivo da sessão ("um resuminho"), e não uma transcrição integral do atendimento.
 
 #### Feature — Registrar evolução da sessão realizada [#149](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/issues/149)
 
 **RF28 — Registrar evolução da sessão realizada**{ #rf28 }
 
-O sistema deve permitir que o estagiário responsável registre a evolução de uma sessão já realizada, vinculando o registro ao paciente, ao ciclo de atendimento e à sessão de origem. O registro segue a ficha "Registro de evolução" da Clínica Escola: humor e aparência do paciente, conteúdo trabalhado, técnicas utilizadas, intervenções e encaminhamentos, e plano para a próxima sessão. O número da sessão no ciclo, a data, o horário e o comparecimento vêm da própria sessão (CP4) e não são digitados de novo: como só a sessão realizada aceita evolução, o comparecimento é sempre "sim", e a falta segue o RF34. O estagiário e o supervisor que assinam a ficha são os do vínculo vigente do caso. Até a FBr definir a obrigatoriedade, são obrigatórios humor e aparência, conteúdo trabalhado, técnicas utilizadas e plano para a próxima sessão; intervenções e encaminhamentos pode ficar em branco, porque nem toda sessão tem; e cada campo aceita até 1.000 caracteres. Essa obrigatoriedade e o limite são uma proposta da equipe, registrada nas [pendências de validação com a FBr](analise-feedback.md#pendencias-de-validacao-com-a-fbr). A cada 10 sessões realizadas no ciclo, o sistema sinaliza ao estagiário e ao supervisor que é hora do fechamento avaliativo, que é registrado no relatório final (RF33). Cada registro deve identificar o autor e o momento do registro. O sistema deve impedir que uma evolução seja registrada para sessão de outro paciente ou por estagiário sem vínculo vigente com o caso, e deve impedir o registro de evolução para sessão que ainda não foi realizada.
+O sistema deve permitir que o estagiário responsável registre a evolução de uma sessão já realizada, vinculando o registro ao paciente, ao ciclo de atendimento e à sessão de origem. O registro segue a ficha "Registro de evolução" da Clínica Escola: humor e aparência do paciente, conteúdo trabalhado, técnicas utilizadas, intervenções e encaminhamentos, e plano para a próxima sessão. O número da sessão no ciclo, a data, o horário e o comparecimento vêm da própria sessão (CP4) e não são digitados de novo: como só a sessão realizada aceita evolução, o comparecimento é sempre "sim", e a falta segue o RF34. O estagiário e o supervisor que assinam a ficha são os do vínculo vigente do caso. Até a FBr definir a obrigatoriedade, são obrigatórios humor e aparência, conteúdo trabalhado, técnicas utilizadas e plano para a próxima sessão; intervenções e encaminhamentos pode ficar em branco, porque nem toda sessão tem; e cada campo aceita até 1.000 caracteres. Essa obrigatoriedade e o limite são uma proposta da equipe, registrada nas [pendências de validação com a FBr](analise-feedback.md#pendencias-de-validacao-com-a-fbr). A cada 10 sessões realizadas no ciclo, o sistema sinaliza ao estagiário e ao supervisor que é hora do fechamento avaliativo, que é registrado no relatório final (RF33). Os campos seguem a ficha da [DF38](decisoes-fbr.md#df38), e o fechamento avaliativo, a [DF23](decisoes-fbr.md#df23). Cada registro deve identificar o autor e o momento do registro. O sistema deve impedir que uma evolução seja registrada para sessão de outro paciente ou por estagiário sem vínculo vigente com o caso, e deve impedir o registro de evolução para sessão que ainda não foi realizada.
 
 _Critérios de aceitação:_
 
@@ -702,7 +730,9 @@ _Critérios de aceitação:_
 - Campo com mais de 1.000 caracteres é recusado, com a indicação do limite.
 - Ao completar a 10ª sessão realizada no ciclo, o estagiário e o supervisor veem o aviso de fechamento avaliativo.
 
-_Rastreabilidade:_ Feature "Registrar evolução da sessão realizada" → CP7 — Registro de evolução por sessão → OE5/OE2. Dependência: RF10 (CP4, sessão agendada e realizada), RF21 (CP5, vínculo estagiário-paciente); restrição transversal: CP12 — Segurança, sigilo e controle de acesso. Origem: [DF38](decisoes-fbr.md) (campos) e [DF23](decisoes-fbr.md) (fechamento avaliativo).
+_Rastreabilidade:_ Feature "Registrar evolução da sessão realizada" → CP7 — Registro de evolução por sessão → OE5/OE2. Dependência: RF10 (CP4, sessão agendada e realizada), RF21 (CP5, vínculo estagiário-paciente); restrição transversal: CP12 — Segurança, sigilo e controle de acesso.{{ origem("RF28") }}
+
+{{ registro("RF28") }}
 
 #### Feature — Corrigir evolução registrada
 
@@ -718,7 +748,9 @@ _Critérios de aceitação:_
 - Sem data-limite registrada para o semestre, a correção é permitida e a coordenação é avisada de que o parâmetro está pendente.
 - Só o autor e o supervisor do caso conseguem corrigir uma evolução; o supervisor pode corrigir diretamente o registro do estagiário, como confirmado pela Clínica Escola (para cobrir fiscalização e férias do estagiário).
 
-_Rastreabilidade:_ Feature "Corrigir evolução registrada" → CP7 — Registro de evolução por sessão → OE5. Dependência: RF28. Origem: [DF11](decisoes-fbr.md).
+_Rastreabilidade:_ Feature "Corrigir evolução registrada" → CP7 — Registro de evolução por sessão → OE5. Dependência: RF28.{{ origem("RF29") }}
+
+{{ registro("RF29") }}
 
 #### Feature — Registrar complemento de evolução da sessão
 
@@ -732,7 +764,9 @@ _Critérios de aceitação:_
 - A consulta da evolução (RF31/RF32) mostra o registro original e todos os complementos em ordem cronológica, distinguindo-os das correções (RF29).
 - Usuário sem vínculo clínico vigente com o caso não consegue adicionar complemento.
 
-_Rastreabilidade:_ Feature "Registrar complemento de evolução da sessão" → CP7 — Registro de evolução por sessão → OE5. Dependência: RF28.
+_Rastreabilidade:_ Feature "Registrar complemento de evolução da sessão" → CP7 — Registro de evolução por sessão → OE5. Dependência: RF28.{{ origem("RF30") }}
+
+{{ registro("RF30") }}
 
 #### Feature — Validar evolução pelo supervisor
 
@@ -747,7 +781,9 @@ _Critérios de aceitação:_
 - Evolução validada que recebe nova correção (RF29) ou novo complemento (RF30) volta para "pendente de validação".
 - Na consulta (RF31/RF32), evoluções pendentes de validação aparecem de forma distinta das validadas.
 
-_Rastreabilidade:_ Feature "Validar evolução pelo supervisor" → CP7 — Registro de evolução por sessão → OE5/OE2. Dependência: RF28; integração: RF29, RF30.
+_Rastreabilidade:_ Feature "Validar evolução pelo supervisor" → CP7 — Registro de evolução por sessão → OE5/OE2. Dependência: RF28; integração: RF29, RF30.{{ origem("RF67") }}
+
+{{ registro("RF67") }}
 
 #### Feature — Encerrar caso por alta
 
@@ -769,7 +805,9 @@ _Critérios de aceitação:_
 - O histórico do caso identifica o encerramento como alta, distinto do desligamento por faltas (RF37).
 - O encerramento por alta só é concluído após a confirmação do supervisor.
 
-_Rastreabilidade:_ Feature "Encerrar caso por alta" → CP7 — Registro de evolução por sessão → OE5/OE2. Dependência: RF28; integração: RF21 (CP5), RF37 (CP9). Origem: [DF34](decisoes-fbr.md), [DF35](decisoes-fbr.md).
+_Rastreabilidade:_ Feature "Encerrar caso por alta" → CP7 — Registro de evolução por sessão → OE5/OE2. Dependência: RF28; integração: RF21 (CP5), RF37 (CP9).{{ origem("RF68") }}
+
+{{ registro("RF68") }}
 
 #### Feature — Consultar evolução de uma sessão específica
 
@@ -782,7 +820,9 @@ _Critérios de aceitação:_
 - A consulta da evolução de uma sessão pelo estagiário responsável ou pelo supervisor mostra o original, as correções e os complementos, com autor e data/hora de cada item, distinguindo revisão de conteúdo de informação adicional.
 - Usuário sem vínculo clínico vigente com o caso não acessa a evolução da sessão.
 
-_Rastreabilidade:_ Feature "Consultar evolução de uma sessão específica" → CP7 — Registro de evolução por sessão → OE5. Dependência: RF28, RF29 e RF30; restrição transversal: CP12.
+_Rastreabilidade:_ Feature "Consultar evolução de uma sessão específica" → CP7 — Registro de evolução por sessão → OE5. Dependência: RF28, RF29 e RF30; restrição transversal: CP12.{{ origem("RF31") }}
+
+{{ registro("RF31") }}
 
 #### Feature — Consultar histórico de evolução do paciente
 
@@ -796,7 +836,9 @@ _Critérios de aceitação:_
 - Ciclo sem evoluções exibe o aviso de que não há registros, sem mostrar dados de outro ciclo.
 - Usuário sem acesso ao prontuário não consulta o histórico de evolução.
 
-_Rastreabilidade:_ Feature "Consultar histórico de evolução do paciente" → CP7 — Registro de evolução por sessão → OE5/OE2. Dependência: RF27 (CP6), RF28, RF29 e RF30; restrição transversal: RF55 (CP12).
+_Rastreabilidade:_ Feature "Consultar histórico de evolução do paciente" → CP7 — Registro de evolução por sessão → OE5/OE2. Dependência: RF27 (CP6), RF28, RF29 e RF30; restrição transversal: RF55 (CP12).{{ origem("RF32") }}
+
+{{ registro("RF32") }}
 
 #### Modelo de domínio da CP7
 
@@ -815,7 +857,7 @@ A CP8 foi decomposta em uma feature: a geração do relatório final de evoluç�
 
 **RF33 — Gerar relatório final de evolução**{ #rf33 }
 
-O sistema deve permitir que o estagiário responsável elabore o relatório final do ciclo de atendimento a partir das evoluções registradas e o submeta ao supervisor responsável. O relatório segue o modelo de relatório psicológico da Clínica Escola ([DF42](decisoes-fbr.md)), com as seções: (1) identificação, com o paciente, o solicitante, o estagiário autor, o supervisor com o número do CRP e a finalidade do relatório; (2) descrição da demanda, com o início do acompanhamento; (3) procedimentos; (4) análise; (5) conclusão; e o local e a data, seguidos das assinaturas do estagiário e do supervisor. O sistema guarda também, fora do texto impresso, o ciclo e as sessões consideradas, os registros de origem, o número da versão, a data de geração e o estado `rascunho`, `em revisão`, `devolvido para ajustes` ou `aprovado`. O sistema deve permitir verificar a correspondência entre o conteúdo consolidado e o histórico do prontuário e não deve completar lacunas clínicas por inferência.
+O sistema deve permitir que o estagiário responsável elabore o relatório final do ciclo de atendimento a partir das evoluções registradas e o submeta ao supervisor responsável. O relatório segue o modelo de relatório psicológico da Clínica Escola ([DF42](decisoes-fbr.md#df42)), com as seções: (1) identificação, com o paciente, o solicitante, o estagiário autor, o supervisor com o número do CRP e a finalidade do relatório; (2) descrição da demanda, com o início do acompanhamento; (3) procedimentos; (4) análise; (5) conclusão; e o local e a data, seguidos das assinaturas do estagiário e do supervisor. O sistema guarda também, fora do texto impresso, o ciclo e as sessões consideradas, os registros de origem, o número da versão, a data de geração e o estado `rascunho`, `em revisão`, `devolvido para ajustes` ou `aprovado`. O sistema deve permitir verificar a correspondência entre o conteúdo consolidado e o histórico do prontuário e não deve completar lacunas clínicas por inferência.
 
 O supervisor deve poder aprovar o relatório ou devolvê-lo ao estagiário com observações obrigatórias. Cada nova submissão deve gerar versão distinguível, preservando as versões e decisões anteriores. A Clínica Escola confirmou esse fluxo de revisão e a entrega impressa depois da assinatura do supervisor em 30/10/2026. O modelo recebido nessa data era o do relatório de estágio do aluno, que é um documento acadêmico e fica fora do escopo; o modelo do relatório entregue ao paciente chegou em 31/10/2026. Somente uma versão aprovada, com identificação do supervisor e data/hora da aprovação, pode ser finalizada em PDF para impressão; o documento deve conter campos para as assinaturas manuscritas do estagiário e do supervisor. A secretaria deve poder imprimir exclusivamente a versão aprovada e, antes de registrar a entrega presencial ao paciente ou ao responsável legal, deve confirmar no sistema que a via foi assinada. O sistema deve registrar a data e o responsável pela impressão e pela entrega e não deve disponibilizar o relatório para download ou envio por e-mail ao paciente.
 
@@ -835,7 +877,9 @@ _Critérios de aceitação:_
 - A secretaria imprime apenas a versão aprovada e, antes de registrar quem entregou e quando, confirma que a via foi assinada; não há download nem envio por e-mail ao destinatário.
 - Ciclo encerrado com menos de 8 ou mais de 10 sessões exige justificativa da exceção na submissão do relatório.
 
-_Rastreabilidade:_ Feature "Gerar relatório final de evolução" → CP8 — Geração do relatório final de evolução → OE5/OE6. Dependência: RF28, RF32 (CP7); restrição transversal: RF55 (CP12). Origem: [DF04](decisoes-fbr.md), [DF12](decisoes-fbr.md), [DF23](decisoes-fbr.md), [DF36](decisoes-fbr.md), [DF42](decisoes-fbr.md).
+_Rastreabilidade:_ Feature "Gerar relatório final de evolução" → CP8 — Geração do relatório final de evolução → OE5/OE6. Dependência: RF28, RF32 (CP7); restrição transversal: RF55 (CP12).{{ origem("RF33") }}
+
+{{ registro("RF33") }}
 
 #### Modelo de domínio da CP8
 
@@ -871,7 +915,9 @@ _Critérios de aceitação:_
 - A secretaria, o estagiário responsável ou o supervisor responsável marca uma falta como justificada, com o motivo, no registro da falta ou depois, a partir da lista de sessões do paciente; a marcação fica com autor e data/hora.
 - Usuário que não é a secretaria nem o estagiário ou o supervisor responsáveis pelo caso não marca a falta como justificada.
 
-_Rastreabilidade:_ Feature "Registrar falta do paciente na sessão" → CP9 — Controle de assiduidade e alertas → OE4/OE3. Dependência: RF10, RF14, RF15 (CP4).
+_Rastreabilidade:_ Feature "Registrar falta do paciente na sessão" → CP9 — Controle de assiduidade e alertas → OE4/OE3. Dependência: RF10, RF14, RF15 (CP4).{{ origem("RF34") }}
+
+{{ registro("RF34") }}
 
 #### Feature — Contabilizar faltas do paciente no ciclo [#151](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/issues/151)
 
@@ -889,7 +935,9 @@ _Critérios de aceitação:_
 - Em um novo ciclo de atendimento do mesmo paciente, a contagem começa em zero.
 - Na reversão de desligamento feito por engano (RF38), as faltas que a coordenação indicar deixam de contar, e a contagem passa a ser a das faltas mantidas (por exemplo, de duas faltas com uma retirada, a contagem volta a uma); todas as faltas continuam no histórico, com autor e data/hora da retirada.
 
-_Rastreabilidade:_ Feature "Contabilizar faltas do paciente no ciclo" → CP9 — Controle de assiduidade e alertas → OE4/OE3. Dependência: RF15 (CP4), RF34. Origem: [DF20](decisoes-fbr.md).
+_Rastreabilidade:_ Feature "Contabilizar faltas do paciente no ciclo" → CP9 — Controle de assiduidade e alertas → OE4/OE3. Dependência: RF15 (CP4), RF34.{{ origem("RF35") }}
+
+{{ registro("RF35") }}
 
 #### Feature — Emitir alerta de limite de faltas atingido [#152](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/issues/152)
 
@@ -902,7 +950,9 @@ _Critérios de aceitação:_
 - Ao atingir duas faltas no ciclo, consecutivas ou não, é exibido um alerta em destaque vermelho para a secretaria, o estagiário responsável e a coordenação.
 - O registro da decisão de desligamento (RF37) remove o alerta pendente do paciente.
 
-_Rastreabilidade:_ Feature "Emitir alerta de limite de faltas atingido" → CP9 — Controle de assiduidade e alertas → OE4/OE3. Dependência: RF35.
+_Rastreabilidade:_ Feature "Emitir alerta de limite de faltas atingido" → CP9 — Controle de assiduidade e alertas → OE4/OE3. Dependência: RF35.{{ origem("RF36") }}
+
+{{ registro("RF36") }}
 
 #### Feature — Desligar paciente por faltas e liberar vaga [#153](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/issues/153)
 
@@ -922,7 +972,9 @@ _Critérios de aceitação:_
 - Nenhum inscrito é vinculado automaticamente à vaga liberada; ela só deixa de estar pendente quando o supervisor registra o novo vínculo (RF21).
 - Paciente sem alerta de limite de faltas pendente não pode ser desligado por faltas.
 
-_Rastreabilidade:_ Feature "Desligar paciente por faltas e liberar vaga" → CP9 — Controle de assiduidade e alertas → OE4/OE3. Dependência: RF36. Integração: CP3 — Fila de espera e consulta de posição (RF7); CP5 — Distribuição de casos (RF20, RF21), responsável pela realocação.
+_Rastreabilidade:_ Feature "Desligar paciente por faltas e liberar vaga" → CP9 — Controle de assiduidade e alertas → OE4/OE3. Dependência: RF36. Integração: CP3 — Fila de espera e consulta de posição (RF7); CP5 — Distribuição de casos (RF20, RF21), responsável pela realocação.{{ origem("RF37") }}
+
+{{ registro("RF37") }}
 
 #### Feature — Reverter desligamento de paciente por faltas [#154](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/issues/154)
 
@@ -937,7 +989,9 @@ _Critérios de aceitação:_
 - Usuário sem perfil de coordenação não consegue reverter desligamento por faltas.
 - Após a reversão, o registro original do desligamento e o da reversão continuam disponíveis para auditoria, cada um com autor, data/hora e motivo.
 
-_Rastreabilidade:_ Feature "Reverter desligamento de paciente por faltas" → CP9 — Controle de assiduidade e alertas → OE4/OE3. Dependência: RF37.
+_Rastreabilidade:_ Feature "Reverter desligamento de paciente por faltas" → CP9 — Controle de assiduidade e alertas → OE4/OE3. Dependência: RF37.{{ origem("RF38") }}
+
+{{ registro("RF38") }}
 
 #### Controle de faltas do estagiário
 
@@ -954,7 +1008,9 @@ _Critérios de aceitação:_
 - A consulta do supervisor às faltas de estagiário sob sua supervisão lista as sessões canceladas por ausência real (RF16) no período escolhido, sem os cancelamentos administrativos para remarcação.
 - Usuário sem vínculo de supervisão com o estagiário não acessa a relação de faltas.
 
-_Rastreabilidade:_ Feature "Consolidar faltas do estagiário para a supervisão" → CP9 — Controle de assiduidade e alertas → OE4/OE3. Dependência: RF16 (CP4). Restrição transversal: CP12 — Segurança, sigilo e controle de acesso.
+_Rastreabilidade:_ Feature "Consolidar faltas do estagiário para a supervisão" → CP9 — Controle de assiduidade e alertas → OE4/OE3. Dependência: RF16 (CP4). Restrição transversal: CP12 — Segurança, sigilo e controle de acesso.{{ origem("RF39") }}
+
+{{ registro("RF39") }}
 
 #### Feature — Contabilizar faltas do estagiário no semestre
 
@@ -969,7 +1025,9 @@ _Critérios de aceitação:_
 - No início de cada semestre letivo, a contagem do estagiário volta a zero, e a do semestre anterior fica preservada no histórico.
 - Somente o supervisor do estagiário e a coordenação consultam a contagem de faltas dele.
 
-_Rastreabilidade:_ Feature "Contabilizar faltas do estagiário no semestre" → CP9 — Controle de assiduidade e alertas → OE4/OE3. Dependência: RF16 (CP4), RF39.
+_Rastreabilidade:_ Feature "Contabilizar faltas do estagiário no semestre" → CP9 — Controle de assiduidade e alertas → OE4/OE3. Dependência: RF16 (CP4), RF39.{{ origem("RF40") }}
+
+{{ registro("RF40") }}
 
 #### Feature — Sinalizar reprovação do estagiário por faltas
 
@@ -984,7 +1042,9 @@ _Critérios de aceitação:_
 - Faltas além da terceira no mesmo semestre não criam nova sinalização.
 - Somente o supervisor do estagiário e a coordenação visualizam a sinalização de reprovação.
 
-_Rastreabilidade:_ Feature "Sinalizar reprovação do estagiário por faltas" → CP9 — Controle de assiduidade e alertas → OE4/OE3. Dependência: RF40. Origem: [DF12](decisoes-fbr.md).
+_Rastreabilidade:_ Feature "Sinalizar reprovação do estagiário por faltas" → CP9 — Controle de assiduidade e alertas → OE4/OE3. Dependência: RF40.{{ origem("RF63") }}
+
+{{ registro("RF63") }}
 
 #### Feature — Registrar decisão institucional sobre a reprovação do estagiário
 
@@ -999,7 +1059,9 @@ _Critérios de aceitação:_
 - Usuário sem perfil de coordenação não consegue registrar a decisão.
 - A sinalização encerrada e a decisão continuam disponíveis no histórico do estagiário para o supervisor e a coordenação.
 
-_Rastreabilidade:_ Feature "Registrar decisão institucional sobre a reprovação do estagiário" → CP9 — Controle de assiduidade e alertas → OE4/OE3. Dependência: RF63. Origem: [DF12](decisoes-fbr.md).
+_Rastreabilidade:_ Feature "Registrar decisão institucional sobre a reprovação do estagiário" → CP9 — Controle de assiduidade e alertas → OE4/OE3. Dependência: RF63.{{ origem("RF64") }}
+
+{{ registro("RF64") }}
 
 #### Modelo de domínio da CP9
 
@@ -1039,7 +1101,9 @@ _Critérios de aceitação:_
 - Usuário sem perfil de coordenação não consegue alterar o valor da contribuição.
 - A correção de um pagamento registrado exige o motivo, gera nova versão com autor e data/hora e mantém a versão anterior consultável.
 
-_Rastreabilidade:_ Feature "Registrar pagamento da contribuição social do paciente" → CP10 — Registros administrativos do atendimento → OE6/OE4. Origem: [DF05](decisoes-fbr.md), [DF15](decisoes-fbr.md).
+_Rastreabilidade:_ Feature "Registrar pagamento da contribuição social do paciente" → CP10 — Registros administrativos do atendimento → OE6/OE4.{{ origem("RF41") }}
+
+{{ registro("RF41") }}
 
 #### Feature — Consultar situação da contribuição social dos pacientes [#44](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/issues/44)
 
@@ -1054,13 +1118,15 @@ _Critérios de aceitação:_
 - Na agenda do dia, a 1ª sessão de paciente com contribuição pendente exibe a indicação "contribuição pendente", que some assim que o pagamento é registrado. Como confirmado pela Clínica Escola, na 1ª sessão a indicação é apenas informativa; a partir da 2ª, a pendência bloqueia o agendamento (RF43).
 - O estagiário vê, para seus pacientes, apenas a situação da contribuição (efetivada ou pendente), sem a forma de pagamento e sem dados de outros pacientes.
 
-_Rastreabilidade:_ Feature "Consultar situação da contribuição social dos pacientes" → CP10 — Registros administrativos do atendimento → OE6/OE4. A indicação na agenda depende do agendamento da CP4.
+_Rastreabilidade:_ Feature "Consultar situação da contribuição social dos pacientes" → CP10 — Registros administrativos do atendimento → OE6/OE4. A indicação na agenda depende do agendamento da CP4.{{ origem("RF42") }}
+
+{{ registro("RF42") }}
 
 #### Feature — Bloquear agendamento por contribuição social pendente
 
 **RF43 — Bloquear agendamento por contribuição social pendente**{ #rf43 }
 
-O paciente tem 10 dias corridos, contados do vínculo com o estagiário (RF21), para pagar a contribuição social e efetivar a vaga, como decidido com a Clínica Escola. Se o pagamento não for registrado (RF41) nesse prazo, o sistema avisa a secretaria, e a secretaria ou a coordenação confirma a perda da vaga: o vínculo é encerrado, a vaga é liberada, as sessões futuras são canceladas e o paciente volta à fila de espera (CP3), com a mesma prioridade clínica e, para o desempate, a data em que voltou para a fila, e não a da inscrição original ([DF33](decisoes-fbr.md)). Enquanto o prazo corre, o sistema também deve impedir o agendamento (RF10) da 2ª sessão em diante de um paciente cuja contribuição social do ciclo de atendimento atual (RF41) ainda esteja pendente. A 1ª sessão do paciente não deve ser bloqueada por essa razão — a taxa é exigida a partir dela, mas o bloqueio só passa a valer da 2ª sessão em diante, conforme confirmado pela Clínica Escola. Como não existe isenção da taxa, o bloqueio se aplica a todos os pacientes sem exceção.
+O paciente tem 10 dias corridos, contados do vínculo com o estagiário (RF21), para pagar a contribuição social e efetivar a vaga, como decidido com a Clínica Escola. Se o pagamento não for registrado (RF41) nesse prazo, o sistema avisa a secretaria, e a secretaria ou a coordenação confirma a perda da vaga: o vínculo é encerrado, a vaga é liberada, as sessões futuras são canceladas e o paciente volta à fila de espera (CP3), com a mesma prioridade clínica e, para o desempate, a data em que voltou para a fila, e não a da inscrição original ([DF33](decisoes-fbr.md#df33)). Enquanto o prazo corre, o sistema também deve impedir o agendamento (RF10) da 2ª sessão em diante de um paciente cuja contribuição social do ciclo de atendimento atual (RF41) ainda esteja pendente. A 1ª sessão do paciente não deve ser bloqueada por essa razão — a taxa é exigida a partir dela, mas o bloqueio só passa a valer da 2ª sessão em diante, conforme confirmado pela Clínica Escola. Como não existe isenção da taxa, o bloqueio se aplica a todos os pacientes sem exceção.
 
 _Critérios de aceitação:_
 
@@ -1071,7 +1137,9 @@ _Critérios de aceitação:_
 - Paciente que paga dentro dos 10 dias não gera aviso nem perde a vaga.
 - Paciente que perdeu a vaga volta à fila com a mesma prioridade clínica, atrás dos inscritos da mesma prioridade que entraram na fila antes da data da perda da vaga.
 
-_Rastreabilidade:_ Feature "Bloquear agendamento por contribuição social pendente" → CP10 — Registros administrativos do atendimento → OE6/OE4; restrição sobre a feature "Agendar sessão do paciente" (RF10, CP4). Dependência: RF41, RF42. Origem: [DF15](decisoes-fbr.md) e [DF33](decisoes-fbr.md).
+_Rastreabilidade:_ Feature "Bloquear agendamento por contribuição social pendente" → CP10 — Registros administrativos do atendimento → OE6/OE4; restrição sobre a feature "Agendar sessão do paciente" (RF10, CP4). Dependência: RF41, RF42.{{ origem("RF43") }}
+
+{{ registro("RF43") }}
 
 #### Declaração de comparecimento
 
@@ -1089,7 +1157,9 @@ _Critérios de aceitação:_
 - Paciente ou responsável com identidade verificada (RF52) vê somente as próprias sessões.
 - Paciente sem sessão com presença registrada recebe o aviso de que não há sessões disponíveis para declaração.
 
-_Rastreabilidade:_ Feature "Listar sessões com comparecimento registrado do paciente" → CP10 — Registros administrativos do atendimento → OE6/OE4. Dependência: RF52 (CP12).
+_Rastreabilidade:_ Feature "Listar sessões com comparecimento registrado do paciente" → CP10 — Registros administrativos do atendimento → OE6/OE4. Dependência: RF52 (CP12).{{ origem("RF44") }}
+
+{{ registro("RF44") }}
 
 #### Feature — Emitir declaração de comparecimento do paciente
 
@@ -1113,7 +1183,9 @@ _Critérios de aceitação:_
 - Para paciente menor de idade com a autorização preenchida, o responsável legal emite a declaração normalmente.
 - O documento só pode ser visualizado em tela e impresso, sem download nem envio por e-mail.
 
-_Rastreabilidade:_ Feature "Emitir declaração de comparecimento do paciente" → CP10 — Registros administrativos do atendimento → OE6/OE4. Dependência: RF52 (CP12).
+_Rastreabilidade:_ Feature "Emitir declaração de comparecimento do paciente" → CP10 — Registros administrativos do atendimento → OE6/OE4. Dependência: RF52 (CP12).{{ origem("RF45") }}
+
+{{ registro("RF45") }}
 
 
 #### Feature — Reemitir declaração de comparecimento
@@ -1128,7 +1200,9 @@ _Critérios de aceitação:_
 - A secretaria reemite a declaração de qualquer paciente; o paciente ou responsável com identidade verificada reemite apenas declarações das próprias sessões.
 - A tentativa de reemitir declaração de outro paciente é negada e registrada (RNF39).
 
-_Rastreabilidade:_ Feature "Reemitir declaração de comparecimento" → CP10 — Registros administrativos do atendimento → OE6/OE4.
+_Rastreabilidade:_ Feature "Reemitir declaração de comparecimento" → CP10 — Registros administrativos do atendimento → OE6/OE4.{{ origem("RF46") }}
+
+{{ registro("RF46") }}
 
 #### Feature — Validar autenticidade da declaração
 
@@ -1142,7 +1216,9 @@ _Critérios de aceitação:_
 - Código inexistente retorna apenas uma mensagem genérica de código inválido.
 - Código de declaração cujo registro de origem foi corrigido após a emissão informa que o documento não corresponde mais ao registro vigente, sem exibir os dados anteriores.
 
-_Rastreabilidade:_ Feature "Validar autenticidade da declaração" → CP10 — Registros administrativos do atendimento → OE6/OE4.
+_Rastreabilidade:_ Feature "Validar autenticidade da declaração" → CP10 — Registros administrativos do atendimento → OE6/OE4.{{ origem("RF47") }}
+
+{{ registro("RF47") }}
 
 ### Indicadores e Relatórios Institucionais (CP11)
 
@@ -1175,7 +1251,9 @@ _Critérios de aceitação:_
 - A coordenação registra as vagas ofertadas de cada semestre, e a alteração guarda o valor anterior, o novo, o autor e a data/hora.
 - Sem vagas ofertadas registradas para o semestre, "vagas ocupadas" mostra só a quantidade ocupada e informa que o total não foi registrado.
 
-_Rastreabilidade:_ Feature "Consultar indicadores operacionais" → CP11 — Indicadores e relatórios institucionais → OE6/OE4. Dependência: RF37 e RF38 (CP9), RF21 (CP5). Integração: RF9 (CP3, fora do MVP), que divulga as vagas ofertadas registradas aqui.
+_Rastreabilidade:_ Feature "Consultar indicadores operacionais" → CP11 — Indicadores e relatórios institucionais → OE6/OE4. Dependência: RF37 e RF38 (CP9), RF21 (CP5). Integração: RF9 (CP3, fora do MVP), que divulga as vagas ofertadas registradas aqui.{{ origem("RF48") }}
+
+{{ registro("RF48") }}
 
 #### Feature — Exportar relatório institucional em PDF [#23](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/issues/23)
 
@@ -1189,7 +1267,9 @@ _Critérios de aceitação:_
 - Se o total de vagas ofertadas não foi registrado (RF48), o PDF reproduz o mesmo aviso exibido em tela.
 - Usuário sem perfil de coordenação não consegue exportar o relatório.
 
-_Rastreabilidade:_ Feature "Exportar relatório institucional em PDF" → CP11 — Indicadores e relatórios institucionais → OE6/OE4. Dependência: RF48.
+_Rastreabilidade:_ Feature "Exportar relatório institucional em PDF" → CP11 — Indicadores e relatórios institucionais → OE6/OE4. Dependência: RF48.{{ origem("RF49") }}
+
+{{ registro("RF49") }}
 
 ### Segurança, Sigilo e Controle de Acesso (CP12)
 
@@ -1210,7 +1290,9 @@ _Critérios de aceitação:_
 - Usuário desativado (RF54) não consegue entrar com as credenciais antigas.
 - Depois de 3 tentativas seguidas com erro para o mesmo usuário, o acesso desse usuário fica bloqueado por 15 minutos (RNF49), e a tela informa o bloqueio.
 
-_Rastreabilidade:_ Feature "Autenticar usuário institucional" → CP12 — Segurança, sigilo e controle de acesso → OE7/OE5. Origem: [DF25](decisoes-fbr.md).
+_Rastreabilidade:_ Feature "Autenticar usuário institucional" → CP12 — Segurança, sigilo e controle de acesso → OE7/OE5.{{ origem("RF50") }}
+
+{{ registro("RF50") }}
 
 #### Feature — Encerrar sessão do usuário [#46](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/issues/46)
 
@@ -1220,13 +1302,15 @@ O sistema deve permitir que o usuário institucional autenticado (secretaria, es
 
 _Critério de aceitação:_ Ao sair, a sessão é encerrada e qualquer página interna, inclusive pelo botão "voltar" do navegador, exige nova autenticação.
 
-_Rastreabilidade:_ Feature "Encerrar sessão do usuário" → CP12 — Segurança, sigilo e controle de acesso → OE7. Dependência: RF50, que cria a sessão encerrada aqui.
+_Rastreabilidade:_ Feature "Encerrar sessão do usuário" → CP12 — Segurança, sigilo e controle de acesso → OE7. Dependência: RF50, que cria a sessão encerrada aqui.{{ origem("RF51") }}
+
+{{ registro("RF51") }}
 
 #### Feature — Verificar identidade do paciente ou responsável [#47](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/issues/47)
 
 **RF52 — Verificar identidade do paciente ou responsável**{ #rf52 }
 
-O sistema deve exigir que o paciente, ou o responsável legal no caso de crianças e adolescentes, confirme sua identidade antes de acessar as informações do próprio paciente (posição na fila da CP3 e declarações de comparecimento da CP10). A confirmação é feita informando o CPF ou o número de inscrição e, em seguida, um código de uso único enviado ao e-mail cadastrado na inscrição (RF1). O código é enviado só por e-mail, conforme decidido com a Clínica Escola ([DF24](decisoes-fbr.md)): quem escolhe e-mail recebe as mensagens automáticas, e quem informa só o celular é atendido pela secretaria, já que o SMS foi descartado. Assim, o paciente que informou só o celular não faz a consulta pelo sistema: ele consulta a posição na fila e pede a declaração na secretaria, que confere a identidade pessoalmente ou por telefone. Conhecer apenas o CPF ou o número de inscrição não deve ser suficiente para acessar as informações.
+O sistema deve exigir que o paciente, ou o responsável legal no caso de crianças e adolescentes, confirme sua identidade antes de acessar as informações do próprio paciente (posição na fila da CP3 e declarações de comparecimento da CP10). A confirmação é feita informando o CPF ou o número de inscrição e, em seguida, um código de uso único enviado ao e-mail cadastrado na inscrição (RF1). O código é enviado só por e-mail, conforme decidido com a Clínica Escola ([DF24](decisoes-fbr.md#df24)): quem escolhe e-mail recebe as mensagens automáticas, e quem informa só o celular é atendido pela secretaria, já que o SMS foi descartado. Assim, o paciente que informou só o celular não faz a consulta pelo sistema: ele consulta a posição na fila e pede a declaração na secretaria, que confere a identidade pessoalmente ou por telefone. Conhecer apenas o CPF ou o número de inscrição não deve ser suficiente para acessar as informações.
 
 O código segue as regras abaixo:
 
@@ -1246,7 +1330,9 @@ _Critérios de aceitação:_
 - Novo código pedido menos de 60 segundos após o anterior é recusado, informando o tempo restante.
 - Depois de 3 códigos enviados ao mesmo CPF em 60 minutos, um quarto pedido é recusado e o bloqueio dura 60 minutos.
 
-_Rastreabilidade:_ Feature "Verificar identidade do paciente ou responsável" → CP12 — Segurança, sigilo e controle de acesso → OE7/OE5. Atende à verificação de acesso exigida pela feature "Consultar posição individual na fila" (CP3) e pelas features de declaração da CP10. Origem: [DF24](decisoes-fbr.md), [DF40](decisoes-fbr.md).
+_Rastreabilidade:_ Feature "Verificar identidade do paciente ou responsável" → CP12 — Segurança, sigilo e controle de acesso → OE7/OE5. Atende à verificação de acesso exigida pela feature "Consultar posição individual na fila" (CP3) e pelas features de declaração da CP10.{{ origem("RF52") }}
+
+{{ registro("RF52") }}
 
 #### Feature — Cadastrar usuário institucional com perfil de acesso [#48](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/issues/48)
 
@@ -1270,7 +1356,9 @@ _Critérios de aceitação:_
 - Usuário sem perfil de coordenação não consegue cadastrar usuários.
 - O cadastro, o reenvio do convite e a ativação ficam registrados na auditoria, com o autor, o usuário afetado e a data/hora.
 
-_Rastreabilidade:_ Feature "Cadastrar usuário institucional com perfil de acesso" → CP12 — Segurança, sigilo e controle de acesso → OE7/OE5. Origem: [DF30](decisoes-fbr.md).
+_Rastreabilidade:_ Feature "Cadastrar usuário institucional com perfil de acesso" → CP12 — Segurança, sigilo e controle de acesso → OE7/OE5.{{ origem("RF53") }}
+
+{{ registro("RF53") }}
 
 #### Feature — Desativar usuário institucional [#49](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/issues/49)
 
@@ -1285,13 +1373,15 @@ _Critérios de aceitação:_
 - Os registros anteriores de usuário desativado continuam disponíveis a usuários autorizados, identificados com o nome de quem os fez.
 - Usuário sem perfil de coordenação não consegue desativar usuários.
 
-_Rastreabilidade:_ Feature "Desativar usuário institucional" → CP12 — Segurança, sigilo e controle de acesso → OE7/OE5.
+_Rastreabilidade:_ Feature "Desativar usuário institucional" → CP12 — Segurança, sigilo e controle de acesso → OE7/OE5.{{ origem("RF54") }}
+
+{{ registro("RF54") }}
 
 #### Feature — Restringir acesso ao prontuário do paciente [#50](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/issues/50)
 
 **RF55 — Restringir acesso ao prontuário do paciente**{ #rf55 }
 
-O sistema deve permitir o acesso ao prontuário de um paciente (CP6), que reúne os registros de evolução (CP7) e o relatório final (CP8), somente ao estagiário responsável pelo paciente, ao supervisor desse estagiário, conforme o vínculo definido na CP5, e à coordenação, que consulta o conteúdo clínico de todos os prontuários, sem registrar nem alterar nada nele ([DF32](decisoes-fbr.md)). O perfil de secretaria não deve ter acesso ao conteúdo clínico do prontuário, apenas aos dados cadastrais (nome, data de nascimento, contatos e responsável legal) e administrativos (situação do caso, sessões agendadas e realizadas, faltas e situação da contribuição social) do paciente. A regra não prevê outras exceções por perfil, conforme a definição da CP12 na [Seção 2.3](../../unidade-1/solucao-proposta.md#23-caracteristicas-de-produto-mapeadas-com-os-objetivos-especificos), atualizada com a decisão da FBr de 23/10/2026. Todo acesso, inclusive o da coordenação, fica no registro de acessos (RNF52).
+O sistema deve permitir o acesso ao prontuário de um paciente (CP6), que reúne os registros de evolução (CP7) e o relatório final (CP8), somente ao estagiário responsável pelo paciente, ao supervisor desse estagiário, conforme o vínculo definido na CP5, e à coordenação, que consulta o conteúdo clínico de todos os prontuários, sem registrar nem alterar nada nele ([DF32](decisoes-fbr.md#df32)). O perfil de secretaria não deve ter acesso ao conteúdo clínico do prontuário, apenas aos dados cadastrais (nome, data de nascimento, contatos e responsável legal) e administrativos (situação do caso, sessões agendadas e realizadas, faltas e situação da contribuição social) do paciente. A regra não prevê outras exceções por perfil, conforme a definição da CP12 na [Seção 2.3](../../unidade-1/solucao-proposta.md#23-caracteristicas-de-produto-mapeadas-com-os-objetivos-especificos), atualizada com a decisão da FBr de 23/10/2026. Todo acesso, inclusive o da coordenação, fica no registro de acessos (RNF52).
 
 _Critérios de aceitação:_
 
@@ -1301,7 +1391,9 @@ _Critérios de aceitação:_
 - Secretaria e coordenação veem os dados cadastrais e administrativos do paciente; a secretaria não vê os registros de evolução nem o relatório final.
 - Concluída a transferência do estagiário A para o estagiário C, C passa a acessar o prontuário e A perde o acesso.
 
-_Rastreabilidade:_ Feature "Restringir acesso ao prontuário do paciente" → CP12 — Segurança, sigilo e controle de acesso → OE7/OE5. Origem: DF32. Dependência: RF21 (CP5, vínculo entre paciente, estagiário e supervisor) e RF66 (CP6, prontuário). Integração: RF28 a RF32 (CP7, evolução), protegidos pela mesma regra quando forem construídos, e RF33 (CP8, relatório final).
+_Rastreabilidade:_ Feature "Restringir acesso ao prontuário do paciente" → CP12 — Segurança, sigilo e controle de acesso → OE7/OE5. Dependência: RF21 (CP5, vínculo entre paciente, estagiário e supervisor) e RF66 (CP6, prontuário). Integração: RF28 a RF32 (CP7, evolução), protegidos pela mesma regra quando forem construídos, e RF33 (CP8, relatório final).{{ origem("RF55") }}
+
+{{ registro("RF55") }}
 
 #### Feature — Consultar registro de acessos ao prontuário [#51](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/issues/51)
 
@@ -1315,13 +1407,15 @@ _Critérios de aceitação:_
 - Tentativas negadas pelo RF55 aparecem no registro identificadas como "acesso negado".
 - Usuário sem perfil de coordenação não consulta o registro de acessos.
 
-_Rastreabilidade:_ Feature "Consultar registro de acessos ao prontuário" → CP12 — Segurança, sigilo e controle de acesso → OE7. Origem: [DF29](decisoes-fbr.md).
+_Rastreabilidade:_ Feature "Consultar registro de acessos ao prontuário" → CP12 — Segurança, sigilo e controle de acesso → OE7.{{ origem("RF56") }}
+
+{{ registro("RF56") }}
 
 #### Feature — Registrar consentimento para tratamento de dados [#52](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/issues/52)
 
 **RF57 — Registrar consentimento para tratamento de dados**{ #rf57 }
 
-O sistema deve apresentar, antes da conclusão da inscrição (CP1), um termo que informe, em linguagem simples, quais dados pessoais e de saúde são coletados, para que finalidade, quem terá acesso a eles, por quanto tempo serão guardados e como o consentimento pode ser revogado (RF65), e deve exigir a concordância do interessado para concluir a inscrição. Para crianças e adolescentes, a concordância deve ser dada pelo responsável legal (LGPD, art. 14). O sistema deve registrar a versão do termo aceita e a data/hora do aceite. A FBr não tinha termo próprio: a equipe redige o texto, e a FBr o revisa e aprova ([DF44](decisoes-fbr.md)); cada nova versão aprovada passa a valer para as inscrições seguintes, sem alterar o registro dos aceites anteriores.
+O sistema deve apresentar, antes da conclusão da inscrição (CP1), um termo que informe, em linguagem simples, quais dados pessoais e de saúde são coletados, para que finalidade, quem terá acesso a eles, por quanto tempo serão guardados e como o consentimento pode ser revogado (RF65), e deve exigir a concordância do interessado para concluir a inscrição. Para crianças e adolescentes, a concordância deve ser dada pelo responsável legal (LGPD, art. 14). O sistema deve registrar a versão do termo aceita e a data/hora do aceite. A FBr não tinha termo próprio: a equipe redige o texto, e a FBr o revisa e aprova ([DF44](decisoes-fbr.md#df44)); cada nova versão aprovada passa a valer para as inscrições seguintes, sem alterar o registro dos aceites anteriores.
 
 **Base legal (pendente de validação com a FBr).** A LGPD admite duas bases legais para o tratamento de dados de saúde neste contexto: o consentimento específico e destacado do titular (art. 11, I) ou a tutela da saúde em procedimento realizado por profissionais de saúde (art. 11, II, "f"). A definição cabe à FBr, como controladora dos dados. Até essa validação, o sistema adota o cenário mais restritivo: trata o aceite como consentimento específico e destacado e permite a sua revogação (RF65). Os demais direitos do titular previstos no art. 18 da LGPD (confirmação, acesso, correção, informação sobre compartilhamento etc.) serão atendidos pelo canal institucional da FBr e ficam fora do escopo atual do sistema, até que a FBr indique quais deles devem ser atendidos pela ferramenta.
 
@@ -1334,7 +1428,9 @@ _Critérios de aceitação:_
 
 O aceite on-line não substitui a autorização e o termo de responsabilidade assinados presencialmente pelo responsável legal, que continuam exigidos pela clínica para o atendimento de crianças e adolescentes ([ata de 26/08/2026](../../unidade-1/reunioes.md)).
 
-_Rastreabilidade:_ Feature "Registrar consentimento para tratamento de dados" → CP12 — Segurança, sigilo e controle de acesso → OE7. Complementa a feature "Registrar solicitação de atendimento on-line" da CP1. Origem: [DF44](decisoes-fbr.md).
+_Rastreabilidade:_ Feature "Registrar consentimento para tratamento de dados" → CP12 — Segurança, sigilo e controle de acesso → OE7. Complementa a feature "Registrar solicitação de atendimento on-line" da CP1.{{ origem("RF57") }}
+
+{{ registro("RF57") }}
 
 #### Feature — Registrar revogação do consentimento
 
@@ -1359,7 +1455,9 @@ _Critérios de aceitação:_
 - A revogação não pode ser concluída sem a verificação de identidade da pessoa.
 - Usuário sem perfil de secretaria não consegue registrar a revogação.
 
-_Rastreabilidade:_ Feature "Registrar revogação do consentimento" → CP12 — Segurança, sigilo e controle de acesso → OE7. Dependência: RF57, RF52; integração: RF7 (CP3), RF10 e RF13 (CP4), RF55.
+_Rastreabilidade:_ Feature "Registrar revogação do consentimento" → CP12 — Segurança, sigilo e controle de acesso → OE7. Dependência: RF57, RF52; integração: RF7 (CP3), RF10 e RF13 (CP4), RF55.{{ origem("RF65") }}
+
+{{ registro("RF65") }}
 
 ### Continuidade de casos entre semestres (CP13)
 
@@ -1381,7 +1479,9 @@ _Critérios de aceitação:_
 - Caso com decisão de continuidade registrada (RF59) não aparece como pendente.
 - Sem estagiários com casos ativos marcados para desligamento, a lista informa que não há casos pendentes de decisão.
 
-_Rastreabilidade:_ Feature "Listar casos elegíveis para continuidade entre semestres" → CP13 — Continuidade de casos entre semestres → OE5/OE6. Dependência: RF54 (CP12), CP5.
+_Rastreabilidade:_ Feature "Listar casos elegíveis para continuidade entre semestres" → CP13 — Continuidade de casos entre semestres → OE5/OE6. Dependência: RF54 (CP12), CP5.{{ origem("RF58") }}
+
+{{ registro("RF58") }}
 
 #### Feature — Registrar decisão de continuidade do caso
 
@@ -1399,7 +1499,9 @@ _Critérios de aceitação:_
 - A correção, com motivo, de decisão ainda não efetivada preserva a versão anterior e passa a valer como instrução vigente.
 - A correção de decisão cuja transferência já foi efetivada preserva a transferência realizada e exige reversão ou nova transferência explícita, vinculada à correção, sem trocar o responsável atual silenciosamente.
 
-_Rastreabilidade:_ Feature "Registrar decisão de continuidade do caso" → CP13 — Continuidade de casos entre semestres → OE5/OE6. Dependência: RF58.
+_Rastreabilidade:_ Feature "Registrar decisão de continuidade do caso" → CP13 — Continuidade de casos entre semestres → OE5/OE6. Dependência: RF58.{{ origem("RF59") }}
+
+{{ registro("RF59") }}
 
 #### Feature — Vincular caso a novo estagiário na continuidade
 
@@ -1413,7 +1515,9 @@ _Critérios de aceitação:_
 - Sem confirmação da coordenação na data de encerramento, a transferência fica pendente e o responsável não muda automaticamente.
 - Caso com decisão vigente de encerramento não recebe oferta nem efetivação de transferência na virada de semestre.
 
-_Rastreabilidade:_ Feature "Vincular caso a novo estagiário na continuidade" → CP13 — Continuidade de casos entre semestres → OE5/OE6. Dependência: RF59, RF25 (CP5).
+_Rastreabilidade:_ Feature "Vincular caso a novo estagiário na continuidade" → CP13 — Continuidade de casos entre semestres → OE5/OE6. Dependência: RF59, RF25 (CP5).{{ origem("RF60") }}
+
+{{ registro("RF60") }}
 
 #### Modelo de domínio da CP13
 
@@ -1432,7 +1536,9 @@ O sistema deve permitir que o paciente ative um modo de alto contraste em todas 
 
 _Critério de aceitação:_ O modo de alto contraste ativado permanece em todas as páginas públicas durante a mesma sessão do navegador, sem precisar ser reativado; a preferência não precisa ser mantida após o fim da sessão, já que essas páginas não exigem login do paciente.
 
-_Rastreabilidade:_ Feature "Ativar modo de alto contraste" → CP14 — Acessibilidade e usabilidade → OE1/OE7.
+_Rastreabilidade:_ Feature "Ativar modo de alto contraste" → CP14 — Acessibilidade e usabilidade → OE1/OE7.{{ origem("RF61") }}
+
+{{ registro("RF61") }}
 
 #### Feature — Ajustar tamanho do texto [#25](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/issues/25)
 
@@ -1442,4 +1548,6 @@ O sistema deve permitir que o paciente aumente ou diminua o tamanho do texto exi
 
 _Critério de aceitação:_ O nível de tamanho de texto escolhido vale para todas as páginas públicas, com a mesma regra de persistência por sessão do navegador do RF61.
 
-_Rastreabilidade:_ Feature "Ajustar tamanho do texto" → CP14 — Acessibilidade e usabilidade → OE1/OE7.
+_Rastreabilidade:_ Feature "Ajustar tamanho do texto" → CP14 — Acessibilidade e usabilidade → OE1/OE7.{{ origem("RF62") }}
+
+{{ registro("RF62") }}

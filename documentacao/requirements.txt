@@ -1,0 +1,8 @@
+# Dependências do site de documentação (MkDocs), com as versões fixas usadas no
+# docs-check e no deploy (AUD-35). O Dependabot propõe as atualizações; uma
+# versão nova só entra depois de passar no docs-check (mkdocs build --strict).
+mkdocs==1.6.1
+mkdocs-material==9.8.0
+pymdown-extensions==12.3
+mkdocs-macros-plugin==1.5.0
+PyYAML==6.0.3

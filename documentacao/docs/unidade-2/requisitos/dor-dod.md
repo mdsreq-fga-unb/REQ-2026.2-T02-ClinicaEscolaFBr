@@ -31,6 +31,7 @@ Os critérios **[B]** são **bloqueantes**: sem eles, a feature não entra na co
 | R1.4 | A feature não está marcada na documentação como **entrega posterior** ou **adiada**. Se estiver, só entra depois que a condição registrada for resolvida ([seção 9.1.6](#916-situacao-conhecida-na-documentacao)). | B |
 | R1.5 | A feature consta no Backlog de Produto (Seção 10) e está dentro do escopo do MVP, ou foi explicitamente decidida como fora dele. | B |
 | R1.6 | A issue da feature está vinculada ao título (`#NN`), quando o repositório já tiver a issue criada. | R |
+| R1.7 | Toda **integração** com um RF de ciclo posterior diz, no requisito, o que acontece enquanto esse RF não existe (por exemplo, o link de confirmação do RF10 antes do RF14). Se a feature for entregue sem a parte que depende dele, a entrega parcial fica registrada no [catálogo de requisitos](backlog.md#catalogo-de-requisitos) e aparece na linha "Entrega e situação" do requisito. | B |
 
 #### Clareza e completude da descrição
 
@@ -144,14 +145,15 @@ Com base na Seção 8.1 consultada em 08/10/2026 e atualizada em 24/10/2026 com 
 | Requisito ou CP | Situação registrada | Efeito no DoR |
 | --------------- | ------------------- | ------------- |
 | RF3 (inscrição assistida) | Entrega posterior; a recepção usa o RF1 em nome do interessado. | R1.4: não entra até a condição ser resolvida. |
+| RF10 (agendamento) | Entregue no Ciclo 3 com o envio do link de confirmação; a página que recebe o link é a do RF14, do Ciclo 4. A entrega parcial está declarada no RF10. | R1.7: atendido no RF10; o RF14 completa o fluxo. |
 | RF5 (pontos de atenção) | Adiado; depende de regras aprovadas e vigentes pela coordenação. | R1.4 e R4.4: precisa das regras versionadas. |
 | RF12 (reagendamento) | Entrega posterior; hoje é feito por cancelamento (RF15/RF16) e nova sessão (RF10). | R1.4. |
 | RF13 (lembrete automático) | Entrega posterior; o RF14 funciona sem ele. | R1.4. |
-| RF4 (triagem) | Resolvido em 23/10/2026: a FBr não adota prazo de triagem ([DF19](decisoes-fbr.md)); a lista mostra há quantos dias cada inscrição aguarda. | Nenhum: R2.4 deixa de se aplicar ao prazo. |
-| CP5 (distribuição) | Resolvido em 23/10/2026: desempate pela data de inscrição, limite de 50 casos por supervisor, sem limite por estagiário, um estagiário responsável por caso e sem área de especialidade ([DF16, DF17, DF26 e DF27](decisoes-fbr.md)). | Nenhum. |
+| RF4 (triagem) | Resolvido em 23/10/2026: a FBr não adota prazo de triagem ([DF19](decisoes-fbr.md#df19)); a lista mostra há quantos dias cada inscrição aguarda. | Nenhum: R2.4 deixa de se aplicar ao prazo. |
+| CP5 (distribuição) | Resolvido em 23/10/2026: desempate pela data de inscrição, limite de 50 casos por supervisor, sem limite por estagiário, um estagiário responsável por caso e sem área de especialidade ([DF16](decisoes-fbr.md#df16), [DF17](decisoes-fbr.md#df17), [DF26](decisoes-fbr.md#df26) e [DF27](decisoes-fbr.md#df27)). | Nenhum. |
 | RF57 (consentimento) | Base legal depende da FBr, como controladora dos dados. | R6.4: pendência registrada. |
-| Parâmetros de agendamento | Confirmados em 23/10/2026: sessão de 50 min mais 10 min de anotações, lembrete 24 h antes e cancelamento sem falta até 1 h antes ([DF18, DF20 e DF21](decisoes-fbr.md)). O prazo de confirmação (12 h) segue como proposta a validar. | R2.4: atendido pelo parâmetro configurável. |
-| RNF12 | Carga de referência de 30 usuários simultâneos confirmada em 23/10/2026 ([DF22](decisoes-fbr.md)). | R5.3: atendido. |
+| Parâmetros de agendamento | Confirmados em 23/10/2026: sessão de 50 min mais 10 min de anotações, lembrete 24 h antes e cancelamento sem falta até 1 h antes ([DF18](decisoes-fbr.md#df18), [DF20](decisoes-fbr.md#df20) e [DF21](decisoes-fbr.md#df21)). O prazo de confirmação (12 h) segue como proposta a validar. | R2.4: atendido pelo parâmetro configurável. |
+| RNF12 | Carga de referência de 30 usuários simultâneos confirmada em 23/10/2026 ([DF22](decisoes-fbr.md#df22)). | R5.3: atendido. |
 
 ### 9.1.7 Relação com os demais documentos
 

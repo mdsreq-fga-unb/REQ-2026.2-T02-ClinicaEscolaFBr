@@ -45,8 +45,9 @@ theme:
     - search.highlight
     - content.code.copy
 
-# Números exibidos na página inicial (overrides/home.html).
-# Atualize aqui quando a quantidade de requisitos mudar.
+# Números exibidos na página inicial (overrides/home.html). Os de requisitos
+# funcionais e não funcionais são recalculados no build a partir do catálogo
+# (dados/requisitos.yml); o valor abaixo é só o padrão.
 extra:
   home:
     stats:
@@ -56,8 +57,30 @@ extra:
         label: características de produto
       - value: "68"
         label: requisitos funcionais
-      - value: "58"
+      - value: "57"
         label: requisitos não funcionais
+
+plugins:
+  - search
+  # Gera as tabelas de priorização, MVP, backlog, os índices e as contagens a
+  # partir do catálogo de requisitos (AUD-30). Só as páginas com
+  # "render_macros: true" no cabeçalho passam pelas macros.
+  - macros:
+      module_name: macros/catalogo
+      render_by_default: false
+      on_error_fail: true
+      on_undefined: strict
+
+# Avisos que, com "mkdocs build --strict" no docs-check, impedem a publicação:
+# páginas fora do menu, links para páginas inexistentes e âncoras inválidas.
+validation:
+  nav:
+    omitted_files: warn
+    not_found: warn
+  links:
+    not_found: warn
+    anchors: warn
+    unrecognized_links: warn
 
 markdown_extensions:
   - pymdownx.emoji:
@@ -118,6 +141,7 @@ nav:
           - Análise de UX do site: analise-ux-capitulo-10.md
   - Unidade 3 — Construção do MVP:
       - Início da unidade: unidade-3/index.md
+      - Arquitetura técnica: unidade-3/arquitetura.md
       - Projeto das features do Ciclo 3: unidade-3/projeto-features-ciclo-3.md
       - Protótipos do Ciclo 3: unidade-3/prototipos-ciclo-3.md
       - Projeto das features do Ciclo 4: unidade-3/projeto-features-ciclo-4.md

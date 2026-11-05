@@ -123,6 +123,7 @@ body:
         - label: "R1.4 [B] A feature não está marcada como entrega posterior ou adiada (ou a condição registrada já foi resolvida)."
         - label: "R1.5 [B] A feature consta no Backlog de Produto e está no escopo do MVP, ou foi decidida explicitamente como fora dele."
         - label: "R1.6 [R] A issue da feature está vinculada no título da feature na documentação (#NN)."
+        - label: "R1.7 [B] Toda integração com um RF de ciclo posterior diz o que acontece enquanto ele não existe, e a entrega parcial está no catálogo de requisitos."
 
   - type: checkboxes
     id: dor-r2
