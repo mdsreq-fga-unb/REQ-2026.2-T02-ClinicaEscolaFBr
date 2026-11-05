@@ -7,6 +7,7 @@ import {
   Req,
   Res,
   UnauthorizedException,
+  UseGuards,
 } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import type { Request, Response } from 'express';
@@ -18,6 +19,10 @@ import {
 } from '@clinica/shared';
 import { ZodValidationPipe } from '../../common/zod-validation.pipe';
 import { COOKIE_VERIFICACAO, opcoesCookieSessao } from './cookie-sessao';
+import {
+  LimiteConferenciasGuard,
+  LimitePedidosDeCodigoGuard,
+} from './limite-verificacao.guard';
 import { MENSAGEM_SEM_VERIFICACAO } from './verificacao.guard';
 import { VerificacaoService } from './verificacao.service';
 
@@ -32,6 +37,7 @@ export class VerificacaoController {
 
   @Post('codigo')
   @HttpCode(202)
+  @UseGuards(LimitePedidosDeCodigoGuard)
   pedirCodigo(
     @Body(new ZodValidationPipe(pedidoCodigoSchema)) dados: PedidoCodigo,
   ) {
@@ -40,6 +46,7 @@ export class VerificacaoController {
 
   @Post('conferir')
   @HttpCode(200)
+  @UseGuards(LimiteConferenciasGuard)
   async conferir(
     @Body(new ZodValidationPipe(conferenciaCodigoSchema))
     dados: ConferenciaCodigo,

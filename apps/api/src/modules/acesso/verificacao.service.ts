@@ -8,7 +8,7 @@ import {
 } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { createHmac, hkdfSync, randomInt, timingSafeEqual } from 'node:crypto';
-import { and, desc, eq, gt, isNull, lte, or, sql } from 'drizzle-orm';
+import { and, count, desc, eq, gt, isNull, lte, or, sql } from 'drizzle-orm';
 import {
   codigosVerificacao,
   inscricoes,
@@ -82,39 +82,69 @@ export class VerificacaoService {
 
   // Pedido de código. Os limites valem pelo identificador informado, exista ou
   // não a inscrição, para o 429 também não revelar nada (decisão 2 do projeto).
+  // Depois da reserva, a resposta sai sem esperar a busca da inscrição, a
+  // gravação do código e o e-mail: o tempo dela é o mesmo, exista ou não a
+  // inscrição, tenha ou não e-mail (decisão 5 do projeto).
   async pedirCodigo({ identificador }: PedidoCodigo) {
     const chave = this.chaveDe(identificador);
     await this.reservarEnvio(chave);
-
-    const inscricao = await this.buscarInscricao(identificador);
-    if (inscricao?.email) {
-      const codigo = String(randomInt(0, 1_000_000)).padStart(6, '0');
-      const agora = new Date();
-      await this.db.transaction(async (tx) => {
-        // O código novo invalida o anterior do mesmo identificador (RF52).
-        await tx
-          .update(codigosVerificacao)
-          .set({ invalidadoEm: agora })
-          .where(
-            and(
-              eq(codigosVerificacao.identificadorChave, chave),
-              isNull(codigosVerificacao.usadoEm),
-              isNull(codigosVerificacao.invalidadoEm),
-            ),
-          );
-        await tx.insert(codigosVerificacao).values({
-          inscricaoId: inscricao.id,
-          identificadorChave: chave,
-          codigoHash: this.hashCodigo(chave, codigo),
-          expiraEm: depois(agora, MINUTOS_VALIDADE_CODIGO * MINUTO),
-          criadoEm: agora,
-        });
-      });
-      // A resposta não espera o e-mail, para o tempo dela não indicar se a
-      // inscrição existe ou tem e-mail (decisão 5 do projeto).
-      void this.enviarCodigo(inscricao.id, inscricao.email, codigo);
-    }
+    this.emCurso = this.gerarEEnviar(identificador, chave).catch((erro) =>
+      this.logger.error('Falha ao gerar o código de verificação', erro),
+    );
     return { message: MENSAGEM_CODIGO_PEDIDO };
+  }
+
+  // Último envio em segundo plano, para os testes esperarem por ele.
+  emCurso: Promise<unknown> = Promise.resolve();
+
+  private async gerarEEnviar(identificador: Identificador, chave: string) {
+    const inscricao = await this.buscarInscricao(identificador);
+    if (!inscricao?.email) return;
+    const email = inscricao.email;
+    const codigo = String(randomInt(0, 1_000_000)).padStart(6, '0');
+    const agora = new Date();
+    const c = codigosVerificacao;
+    const gerado = await this.db.transaction(async (tx) => {
+      // Um pedido por vez para a mesma inscrição, pelo CPF ou pelo número.
+      await tx
+        .select({ id: inscricoes.id })
+        .from(inscricoes)
+        .where(eq(inscricoes.id, inscricao.id))
+        .for('update');
+      // No máximo 3 códigos por inscrição em 60 minutos, somando o CPF e o
+      // número: alternar os dois identificadores não dobra as tentativas.
+      const [{ total }] = await tx
+        .select({ total: count() })
+        .from(c)
+        .where(
+          and(
+            eq(c.inscricaoId, inscricao.id),
+            gt(c.criadoEm, depois(agora, -MINUTOS_JANELA_ENVIOS * MINUTO)),
+          ),
+        );
+      if (total >= CODIGOS_POR_JANELA) return false;
+      // O código novo invalida o anterior da inscrição, venha do CPF ou do
+      // número: só um código vale por vez (RF52).
+      await tx
+        .update(c)
+        .set({ invalidadoEm: agora })
+        .where(
+          and(
+            eq(c.inscricaoId, inscricao.id),
+            isNull(c.usadoEm),
+            isNull(c.invalidadoEm),
+          ),
+        );
+      await tx.insert(c).values({
+        inscricaoId: inscricao.id,
+        identificadorChave: chave,
+        codigoHash: this.hashCodigo(chave, codigo),
+        expiraEm: depois(agora, MINUTOS_VALIDADE_CODIGO * MINUTO),
+        criadoEm: agora,
+      });
+      return true;
+    });
+    if (gerado) await this.enviarCodigo(inscricao.id, email, codigo);
   }
 
   // Reserva o envio numa única operação: um a cada 60 segundos e 3 em 60

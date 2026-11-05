@@ -33,6 +33,7 @@ import {
 } from '../../test-utils/banco-de-teste';
 import { AcessoModule } from './acesso.module';
 import { InscricaoVerificada, VerificacaoGuard } from './verificacao.guard';
+import { VerificacaoService } from './verificacao.service';
 
 // Rota de exemplo do paciente, como as do RF8 e da CP10 vão usar o guard.
 @Controller('teste-paciente')
@@ -78,6 +79,9 @@ describe('Verificação de identidade do paciente ou do responsável (RF52, RNF6
             () => ({
               WEB_URL: 'http://localhost:3000',
               CHAVE_DADOS: CHAVE_TESTE,
+              // Todos os testes vêm da mesma origem; o limite por origem tem
+              // teste próprio (limite-verificacao.guard.spec.ts).
+              LIMITE_VERIFICACAO_POR_ORIGEM: '100000',
             }),
           ],
         }),
@@ -165,7 +169,8 @@ describe('Verificação de identidade do paciente ou do responsável (RF52, RNF6
     }
     throw new Error(`Nenhum código enviado para ${email}`);
   }
-  const semEnvio = () => new Promise((pronto) => setTimeout(pronto, 50));
+  // Espera a busca, a gravação e o envio feitos depois da resposta.
+  const semEnvio = () => app.get(VerificacaoService).emCurso;
   const outroCodigo = (codigo: string) =>
     String((Number(codigo) + 1) % 1_000_000).padStart(6, '0');
   // Volta no tempo o envio e a janela do limite, como se tivesse passado o tempo.
@@ -392,6 +397,38 @@ describe('Verificação de identidade do paciente ou do responsável (RF52, RNF6
       expiraEm: sql`now() - interval '1 second'`,
     });
     await dadosDoPaciente(outro).expect(401);
+  });
+
+  it('alternar o CPF e o número não passa de 3 códigos por inscrição em 60 minutos (RF52, RNF6)', async () => {
+    for (const identificador of [
+      '529.982.247-25',
+      '2026-00487',
+      '52998224725',
+      '2026-00487',
+    ]) {
+      await pedir(identificador).expect(202);
+      await semEnvio();
+      await voltarLimites(61);
+    }
+    expect(
+      enviar.mock.calls.filter(([para]) => para === 'ana@exemplo.com'),
+    ).toHaveLength(3);
+    expect(
+      await db
+        .select()
+        .from(codigosVerificacao)
+        .where(eq(codigosVerificacao.inscricaoId, ana.id)),
+    ).toHaveLength(3);
+  });
+
+  it('o código pedido pelo número invalida o que foi pedido pelo CPF: só um vale por vez (RF52, RNF6)', async () => {
+    await pedir('52998224725').expect(202);
+    const peloCpf = await codigoEnviadoPara('ana@exemplo.com');
+    enviar.mockClear();
+    await pedir('2026-00487').expect(202);
+    const peloNumero = await codigoEnviadoPara('ana@exemplo.com');
+    await conferir('52998224725', peloCpf).expect(400);
+    await conferir('2026-00487', peloNumero).expect(200);
   });
 
   it('a verificação concluída fica na auditoria, com a inscrição e sem usuário (RF52, RNF10)', async () => {

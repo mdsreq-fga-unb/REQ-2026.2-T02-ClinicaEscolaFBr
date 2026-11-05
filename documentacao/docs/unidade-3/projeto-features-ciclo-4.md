@@ -84,12 +84,12 @@ sequenceDiagram
     else 3 envios nos últimos 60 min
         A-->>W: 429 com o horário de liberação
     else envio permitido
-        A->>DB: busca a inscrição (pelo número, ou a mais recente do CPF)
-        opt a inscrição existe e tem e-mail
-            A->>DB: invalida o código anterior e cria outro, válido por 10 min
-            A--)M: envia o código, sem esperar o envio
-        end
         A-->>W: 202 com a mesma mensagem em todos os casos
+        A->>DB: depois da resposta, busca a inscrição (pelo número, ou a mais recente do CPF)
+        opt a inscrição existe, tem e-mail e recebeu menos de 3 códigos em 60 min
+            A->>DB: invalida o código anterior da inscrição e cria outro, válido por 10 min
+            A--)M: envia o código
+        end
     end
     P->>W: código de 6 dígitos
     W->>A: POST /verificacao/conferir
@@ -118,10 +118,12 @@ sequenceDiagram
 **Decisões de projeto** (a conferir na inspeção):
 
 1. **Identificador guardado como chave, e não em texto.** `identificadorChave` é um HMAC-SHA256 do identificador normalizado (`cpf:<11 dígitos>` ou `numero:<AAAA-NNNNN>`), com uma chave do servidor. O CPF não fica gravado nas tabelas novas. Na implementação, a chave do HMAC é derivada da `CHAVE_DADOS` (HKDF), para não exigir outra variável na implantação; se a `CHAVE_DADOS` for trocada, os códigos e as verificações em curso deixam de valer, e a pessoa pede um novo código.
-2. **Limites pelo identificador, e não pela inscrição.** Os limites valem igual para um CPF ou número que existe e para um que não existe, para que o `429` não revele a inscrição; é a mesma ideia do bloqueio do RF50 para e-mail sem conta. Como o CPF e o número são identificadores diferentes, alternando os dois uma mesma inscrição pode receber até 6 códigos por hora. O risco é aceito: cada código aceita só 5 tentativas.
+2. **Limites pelo identificador, pela inscrição e pela origem.** Os limites do `429` valem igual para um CPF ou número que existe e para um que não existe, para que a resposta não revele a inscrição; é a mesma ideia do bloqueio do RF50 para e-mail sem conta. Na implementação, entraram mais dois limites, que não mudam a resposta:
+    - **Por inscrição:** no máximo 3 códigos em 60 minutos, somando o CPF e o número, e só um código vale por vez; o código novo invalida o anterior da inscrição, venha ele de qualquer dos dois identificadores. Assim, alternar o CPF e o número não dobra as tentativas. Quando a inscrição já recebeu 3 códigos, o pedido responde o mesmo `202`, e nada é enviado.
+    - **Por origem:** 30 pedidos de código e 30 conferências a cada 10 minutos por endereço (`LIMITE_VERIFICACAO_POR_ORIGEM`), como o limite da inscrição do RF1. Sem ele, alguém poderia pedir códigos para muitas inscrições de uma vez, já que os números são sequenciais, e tentar adivinhar todos.
 3. **CPF com mais de uma inscrição:** vale a mais recente, que é a que está na fila.
 4. **Duração da verificação:** 15 minutos, sem renovação (`MINUTOS_VERIFICACAO`). O RF52 não define esse prazo. Ele é curto porque a consulta é rápida e pode ser feita num computador compartilhado. Depois do prazo, a pessoa pede um novo código.
-5. **Envio do e-mail fora da resposta:** a API responde sem esperar o envio, para que o tempo de resposta não indique se a inscrição existe ou tem e-mail.
+5. **Envio do e-mail fora da resposta:** a API responde logo depois de reservar o envio no limite do identificador. A busca da inscrição, a gravação do código e o e-mail acontecem depois da resposta, para que o tempo dela não indique se a inscrição existe ou tem e-mail.
 6. **Código:** gerado com `crypto.randomInt` e guardado como HMAC, nunca em texto.
 7. **Auditoria:** a verificação concluída grava `verificar_identidade` na auditoria, sem usuário e com a inscrição como entidade, para rastrear o acesso aos dados dela. O pedido de código não altera dado da inscrição e não é auditado.
 
