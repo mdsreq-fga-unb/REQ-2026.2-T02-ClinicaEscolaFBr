@@ -455,7 +455,10 @@ export class CasosService {
         }
 
         // A linha do estagiário fica bloqueada até o fim, para que uma desativação
-        // simultânea não deixe o caso com uma conta desativada (RF21, RF54).
+        // simultânea não deixe o caso com uma conta desativada (RF21, RF54): o
+        // vínculo que chega durante a desativação relê a conta e é recusado. A
+        // desativação que começa depois do vínculo espera ele terminar e segue;
+        // trocar o estagiário de um caso já vinculado é a transferência (RF25).
         const [escolhido] = await tx
           .select({ id: usuarios.id, nome: usuarios.nome })
           .from(usuarios)

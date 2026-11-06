@@ -470,7 +470,7 @@ describe('Distribuição de casos (RF18, RF20 e RF21)', () => {
 
     // O banco de teste tem uma conexão só e não reproduz a corrida: o que se confere
     // aqui é a trava que impede a desativação de passar no meio do vínculo.
-    it('a conta do estagiário fica travada durante o vínculo, para a desativação não passar no meio (RF21, RNF19)', async () => {
+    it('a conta do estagiário fica travada durante o vínculo, para a desativação não passar no meio (RF21, RF54)', async () => {
       const caso = await casoDaCarla();
       consultas.length = 0;
       await vincular(caso, 'ana').expect(201);
