@@ -38,9 +38,12 @@ describe('Distribuição de casos (RF18, RF20 e RF21)', () => {
   let fechar: () => Promise<void>;
   const pessoas: Record<string, UsuarioAutenticado> = {};
   let numero = 0;
+  const consultas: string[] = [];
 
   beforeAll(async () => {
-    ({ db, limpar, fechar } = await criarBancoDeTeste());
+    ({ db, limpar, fechar } = await criarBancoDeTeste({
+      logQuery: (consulta) => consultas.push(consulta),
+    }));
 
     @Global()
     @Module({
@@ -463,6 +466,18 @@ describe('Distribuição de casos (RF18, RF20 e RF21)', () => {
       const caso = await casoDaCarla();
       await vincular(caso, 'larissa').expect(422);
       expect(await db.select().from(prontuarios)).toEqual([]);
+    });
+
+    // O banco de teste tem uma conexão só e não reproduz a corrida: o que se confere
+    // aqui é a trava que impede a desativação de passar no meio do vínculo.
+    it('a conta do estagiário fica travada durante o vínculo, para a desativação não passar no meio (RF21, RF54)', async () => {
+      const caso = await casoDaCarla();
+      consultas.length = 0;
+      await vincular(caso, 'ana').expect(201);
+      const estagiario = consultas.find(
+        (c) => c.includes('from "usuarios"') && c.includes('"perfil" ='),
+      );
+      expect(estagiario).toMatch(/for update$/);
     });
 
     it('supervisor que não é responsável pelo caso não vincula estagiário (RF21, RNF16)', async () => {

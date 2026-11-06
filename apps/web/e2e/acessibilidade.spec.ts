@@ -10,6 +10,7 @@ for (const pagina of [
   "/triagem",
   "/distribuicao",
   "/meus-casos",
+  "/pagina-inexistente",
 ]) {
   test(`sem violações WCAG AA em ${pagina}`, async ({ page }) => {
     await page.goto(pagina);
