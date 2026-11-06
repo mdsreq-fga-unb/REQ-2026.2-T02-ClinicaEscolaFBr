@@ -115,6 +115,25 @@ describe("Falta do paciente e contagem no ciclo (RF34, RF35)", () => {
     expect(screen.getByText("Limite atingido")).toBeTruthy();
   });
 
+  it("acima do limite, mostra o total e o limite à parte, sem '3 de 2' (RF35)", () => {
+    render(
+      <ResumoFaltas
+        contagem={{ faltas: 3, limite: 2, aviso: "limite_atingido" }}
+        nome="Mariana Alves Toledo"
+      />,
+    );
+    expect(screen.queryByText("3 de 2")).toBeNull();
+    expect(screen.getByText("3 faltas")).toBeTruthy();
+    expect(
+      screen.getByText("Acima do limite de 2 faltas no ciclo"),
+    ).toBeTruthy();
+    expect(
+      screen.getByText(
+        "Mariana Alves Toledo tem 3 faltas neste ciclo, acima do limite de 2.",
+      ),
+    ).toBeTruthy();
+  });
+
   it("o histórico marca a ordem da falta que conta (RF35)", () => {
     render(
       <HistoricoFaltas

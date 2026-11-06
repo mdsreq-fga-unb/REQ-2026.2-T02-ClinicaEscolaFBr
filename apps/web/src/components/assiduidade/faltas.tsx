@@ -132,6 +132,29 @@ function SeloLimite() {
   );
 }
 
+// "N de 2" enquanto não passa do limite. Acima dele (uma falta registrada antes do
+// desligamento, pelo RF34 ou pelo cancelamento fora do prazo do RF15), mostra o
+// total e o limite à parte, para não ler "3 de 2".
+function Contador({ contagem }: { contagem: ContagemFaltas }) {
+  const acima = contagem.faltas > contagem.limite;
+  return (
+    <p className="flex flex-wrap items-center gap-3">
+      <span className="text-[22px] font-bold text-marca">
+        {acima
+          ? `${contagem.faltas} faltas`
+          : `${contagem.faltas} de ${contagem.limite}`}
+      </span>
+      <Medidor faltas={contagem.faltas} limite={contagem.limite} />
+      {contagem.aviso === "limite_atingido" && <SeloLimite />}
+      {acima && (
+        <span className="ui-meta w-full">
+          Acima do limite de {contagem.limite} faltas no ciclo
+        </span>
+      )}
+    </p>
+  );
+}
+
 // Contagem de faltas do ciclo nos dados do paciente (RF35), com o aviso da 1ª falta
 // e do limite. Fica fora da agenda, que só mostra paciente, data, horário e status
 // (RNF13).
@@ -148,13 +171,7 @@ export function ResumoFaltas({
     <div className="flex flex-col gap-3 rounded-[12px] border border-border bg-muted px-4 py-3.5">
       <div>
         <p className="ui-meta font-semibold">Faltas no ciclo</p>
-        <p className="flex flex-wrap items-center gap-3">
-          <span className="text-[22px] font-bold text-marca">
-            {contagem.faltas} de {contagem.limite}
-          </span>
-          <Medidor faltas={contagem.faltas} limite={contagem.limite} />
-          {contagem.aviso === "limite_atingido" && <SeloLimite />}
-        </p>
+        <Contador contagem={contagem} />
       </div>
       {contagem.aviso === "primeira_falta" && (
         <Aviso
@@ -165,7 +182,11 @@ export function ResumoFaltas({
       {contagem.aviso === "limite_atingido" && (
         <Aviso
           tipo="erro"
-          titulo={`${nome} atingiu o limite de ${contagem.limite} faltas neste ciclo.`}
+          titulo={
+            contagem.faltas > contagem.limite
+              ? `${nome} tem ${contagem.faltas} faltas neste ciclo, acima do limite de ${contagem.limite}.`
+              : `${nome} atingiu o limite de ${contagem.limite} faltas neste ciclo.`
+          }
         >
           O desligamento por faltas é avaliado pela secretaria ou pela
           coordenação.
@@ -212,13 +233,7 @@ export function HistoricoFaltas({
           </h2>
           <p className="ui-meta">Ciclo {ciclo}</p>
         </div>
-        <p className="flex flex-wrap items-center gap-3">
-          <span className="text-[22px] font-bold text-marca">
-            {contagem.faltas} de {contagem.limite}
-          </span>
-          <Medidor faltas={contagem.faltas} limite={contagem.limite} />
-          {contagem.aviso === "limite_atingido" && <SeloLimite />}
-        </p>
+        <Contador contagem={contagem} />
       </div>
       {faltas.length ? (
         <ol className="flex flex-col">
