@@ -168,6 +168,11 @@ const mexeNoCodigo = (arquivos) =>
 // registro de inspeção nem como evidência.
 const MARCA_ROBO = "<!-- feature-status -->";
 
+// Primeira linha visível de todo comentário do robô, para não confundir com os
+// comentários escritos à mão.
+const PREFIXO_ROBO =
+  "🤖 *Comentário automático do acompanhamento de features (feature-status).*";
+
 // Comentário que registra a inspeção de design, pelo cabeçalho usado na equipe.
 const ehInspecao = (texto) =>
   !(texto ?? "").includes(MARCA_ROBO) &&
@@ -204,6 +209,7 @@ function cpDoTitulo(titulo) {
 
 module.exports = {
   MARCA_ROBO,
+  PREFIXO_ROBO,
   ehFeature,
   dorAprovado,
   mexeNoCodigo,

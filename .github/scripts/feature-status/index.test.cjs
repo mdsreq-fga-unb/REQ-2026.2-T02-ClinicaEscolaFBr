@@ -230,6 +230,31 @@ test("PR mesclada na main marca o D4.3 e leva a Em Validação", async () => {
   assert.equal(item.Status, "Em Validação");
   assert.match(comentarios[0].body, /D4\.3 marcado/);
   assert.ok(comentarios[0].body.includes(L.MARCA_ROBO));
+  assert.ok(comentarios[0].body.startsWith(L.PREFIXO_ROBO));
+});
+
+test("a issue é lida, editada e comentada pelo cliente das Actions, e o Project pelo do PROJECT_TOKEN", async () => {
+  item = { Status: "Em Construção" };
+  // Cliente do PROJECT_TOKEN sem acesso às issues: se o script usasse ele para
+  // comentar ou editar, a chamada quebraria.
+  const soProject = {
+    graphql: github.graphql,
+    paginate: github.paginate,
+    rest: { pulls: github.rest.pulls },
+  };
+  await acompanhar({
+    github: soProject,
+    api: github,
+    context: {
+      eventName: "pull_request",
+      payload: { action: "closed", pull_request: pr({ merged: true }) },
+      repo: { owner: "mdsreq-fga-unb", repo: "REQ" },
+    },
+    core,
+  });
+  assert.match(issue.body, /- \[x\] D4\.3/);
+  assert.equal(item.Status, "Em Validação");
+  assert.ok(comentarios[0].body.startsWith(L.PREFIXO_ROBO));
 });
 
 test("PR mesclada na development também marca o D4.3, citando a branch", async () => {
