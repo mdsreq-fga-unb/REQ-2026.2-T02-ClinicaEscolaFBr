@@ -2,7 +2,41 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { cleanup, fireEvent, render, screen } from "@testing-library/react";
 import type { ReactNode } from "react";
 import { afterEach, beforeAll, describe, expect, it, vi } from "vitest";
-import { ContadorFaltas, RegistrarFalta, ResumoFalta } from "./faltas";
+import {
+  HistoricoFaltas,
+  ResumoFaltas,
+  SessoesComFaltas,
+  type SessaoDoCiclo,
+} from "./faltas";
+
+const AGORA = new Date("2026-11-06T18:00:00.000Z").getTime();
+const passada: SessaoDoCiclo = {
+  id: "s1",
+  inicio: "2026-11-06T17:00:00.000Z",
+  termino: "2026-11-06T17:50:00.000Z",
+  estagiario: "Ana Beatriz Costa",
+  status: "confirmada",
+  falta: null,
+};
+const comFalta: SessaoDoCiclo = {
+  id: "s2",
+  inicio: "2026-10-29T17:00:00.000Z",
+  termino: "2026-10-29T17:50:00.000Z",
+  estagiario: "Ana Beatriz Costa",
+  status: "falta_paciente",
+  falta: {
+    id: "f1",
+    origem: "falta",
+    registradaPor: "Juliana Rocha",
+    registradaPeloPaciente: false,
+    registradaEm: "2026-10-29T18:05:00.000Z",
+    justificada: false,
+    motivo: null,
+    justificadaPor: null,
+    justificadaEm: null,
+    retiradaDaContagem: false,
+  },
+};
 
 function simularApi() {
   const chamadas: { url: string; corpo: unknown }[] = [];
@@ -29,6 +63,19 @@ const comConsultas = (filho: ReactNode) =>
     </QueryClientProvider>,
   );
 
+const sessoes = (lista: SessaoDoCiclo[]) =>
+  comConsultas(
+    <SessoesComFaltas
+      nome="Mariana Alves Toledo"
+      sessoes={lista}
+      limite={2}
+      agora={AGORA}
+      podeRegistrar
+      podeJustificar
+      chave={["paciente", "c1"]}
+    />,
+  );
+
 describe("Falta do paciente e contagem no ciclo (RF34, RF35)", () => {
   beforeAll(() => {
     HTMLDialogElement.prototype.showModal = function () {
@@ -43,32 +90,48 @@ describe("Falta do paciente e contagem no ciclo (RF34, RF35)", () => {
     vi.unstubAllGlobals();
   });
 
-  it("o contador mostra as faltas do ciclo e avisa, na 1ª falta, que uma nova leva ao desligamento (RF35)", () => {
+  it("na 1ª falta, a contagem mostra 1 de 2 e avisa que uma nova falta leva ao desligamento (RF35)", () => {
     render(
-      <ContadorFaltas
+      <ResumoFaltas
         contagem={{ faltas: 1, limite: 2, aviso: "primeira_falta" }}
+        nome="Mariana Alves Toledo"
       />,
     );
-    expect(screen.getByText(/1 de 2/)).toBeTruthy();
+    expect(screen.getByText("1 de 2")).toBeTruthy();
     expect(
-      screen.getByText("Uma nova falta resulta em desligamento."),
+      screen.getByText(
+        "Mariana Alves Toledo tem 1 falta neste ciclo. Uma nova falta leva ao desligamento por faltas.",
+      ),
     ).toBeTruthy();
   });
 
-  it("na 2ª falta, o contador avisa que o limite foi atingido (RF35, RF36)", () => {
+  it("no limite, a contagem mostra o selo de limite atingido (RF35, RF36)", () => {
     render(
-      <ContadorFaltas
+      <ResumoFaltas
         contagem={{ faltas: 2, limite: 2, aviso: "limite_atingido" }}
+        nome="Mariana Alves Toledo"
       />,
     );
-    expect(screen.getByText("Limite de faltas atingido.")).toBeTruthy();
+    expect(screen.getByText("Limite atingido")).toBeTruthy();
+  });
+
+  it("o histórico marca a ordem da falta que conta (RF35)", () => {
+    render(
+      <HistoricoFaltas
+        id="historico"
+        contagem={{ faltas: 1, limite: 2, aviso: "primeira_falta" }}
+        ciclo={1}
+        sessoes={[comFalta]}
+      />,
+    );
+    expect(screen.getByText("Conta · 1ª falta")).toBeTruthy();
   });
 
   it("falta justificada sem motivo não é enviada, e o campo é indicado (RF34)", async () => {
     const chamadas = simularApi();
-    comConsultas(<RegistrarFalta sessaoId="s1" chave={["paciente", "c1"]} />);
+    sessoes([passada]);
     fireEvent.click(
-      screen.getByRole("button", { name: "Registrar falta do paciente" }),
+      screen.getAllByRole("button", { name: "Registrar falta do paciente" })[0],
     );
     fireEvent.click(
       screen.getByRole("checkbox", { name: /Falta justificada/ }),
@@ -80,48 +143,54 @@ describe("Falta do paciente e contagem no ciclo (RF34, RF35)", () => {
     expect(chamadas).toHaveLength(0);
   });
 
-  it("registra a falta justificada com o motivo (RF34)", async () => {
+  it("registra a falta justificada com o motivo e avisa que a sessão passou para falta (RF34)", async () => {
     const chamadas = simularApi();
-    comConsultas(<RegistrarFalta sessaoId="s1" chave={["paciente", "c1"]} />);
+    sessoes([passada]);
     fireEvent.click(
-      screen.getByRole("button", { name: "Registrar falta do paciente" }),
+      screen.getAllByRole("button", { name: "Registrar falta do paciente" })[0],
     );
     fireEvent.click(
       screen.getByRole("checkbox", { name: /Falta justificada/ }),
     );
-    fireEvent.change(screen.getByLabelText("Motivo da justificativa"), {
-      target: { value: "Atestado médico" },
-    });
+    fireEvent.change(
+      screen.getByLabelText("Motivo da justificativa (obrigatório)"),
+      { target: { value: "Atestado médico" } },
+    );
     fireEvent.click(screen.getByRole("button", { name: "Registrar falta" }));
-    await vi.waitFor(() => expect(chamadas).toHaveLength(1));
+    expect(await screen.findByText("Falta registrada.")).toBeTruthy();
     expect(chamadas[0]).toEqual({
       url: expect.stringContaining("/sessoes/s1/falta"),
       corpo: { justificada: true, motivo: "Atestado médico" },
     });
   });
 
-  it("a falta pelo link mostra que foi registrada pelo paciente, e a não justificada oferece a justificativa (RF34, RF35)", () => {
-    comConsultas(
-      <ResumoFalta
-        falta={{
-          id: "f1",
-          origem: "cancelamento_fora_do_prazo",
-          registradaPor: null,
-          registradaPeloPaciente: true,
-          registradaEm: "2026-11-06T17:00:00.000Z",
-          justificada: false,
-          motivo: null,
-          justificadaPor: null,
-          justificadaEm: null,
-          retiradaDaContagem: false,
-        }}
-        podeJustificar
-        chave={["paciente", "c1"]}
-      />,
+  it("justifica depois, na própria linha, e avisa que a falta continua contando (RF34)", async () => {
+    const chamadas = simularApi();
+    sessoes([comFalta]);
+    fireEvent.click(
+      screen.getAllByRole("button", { name: "Marcar como justificada" })[0],
     );
-    expect(screen.getByText(/pelo paciente, pelo link da sessão/)).toBeTruthy();
+    fireEvent.change(
+      screen.getAllByLabelText("Motivo da justificativa (obrigatório)")[0],
+      { target: { value: "Comprovante de trabalho" } },
+    );
+    fireEvent.click(
+      screen.getAllByRole("button", { name: "Salvar justificativa" })[0],
+    );
+    expect(await screen.findByText("Justificativa registrada.")).toBeTruthy();
+    expect(chamadas[0].url).toContain("/faltas/f1/justificativa");
+  });
+
+  it("sessão futura não oferece o registro da falta (RF34)", () => {
+    sessoes([
+      {
+        ...passada,
+        inicio: "2026-11-09T17:00:00.000Z",
+        termino: "2026-11-09T17:50:00.000Z",
+      },
+    ]);
     expect(
-      screen.getByRole("button", { name: "Marcar como justificada" }),
-    ).toBeTruthy();
+      screen.queryByRole("button", { name: "Registrar falta do paciente" }),
+    ).toBeNull();
   });
 });

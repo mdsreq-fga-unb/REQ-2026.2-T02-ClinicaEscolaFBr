@@ -3,15 +3,12 @@ import { useQuery } from "@tanstack/react-query";
 import Link from "next/link";
 import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
-import type {
-  ContagemFaltas,
-  FaltaDaSessao,
-  StatusSessao,
-} from "@clinica/shared";
+import type { ContagemFaltas } from "@clinica/shared";
 import {
-  ContadorFaltas,
-  RegistrarFalta,
-  ResumoFalta,
+  HistoricoFaltas,
+  ResumoFaltas,
+  SessoesComFaltas,
+  type SessaoDoCiclo,
 } from "@/components/assiduidade/faltas";
 import { Aviso } from "@/components/comum/aviso";
 import { Dados } from "@/components/comum/dados";
@@ -23,7 +20,6 @@ import {
   dataHoraBr,
   NOMES_CANAL,
   NOMES_SITUACAO_CASO,
-  NOMES_STATUS_SESSAO,
 } from "@/lib/formato";
 
 type DadosAdministrativos = {
@@ -42,13 +38,8 @@ type DadosAdministrativos = {
   // Só vem para a coordenação, que consulta o prontuário (DF32).
   prontuarioId?: string | null;
   faltasNoCiclo: ContagemFaltas;
-  sessoes: {
-    id: string;
-    inicio: string;
-    termino: string;
-    status: StatusSessao;
-    falta: FaltaDaSessao | null;
-  }[];
+  cicloAtendimento: number;
+  sessoes: SessaoDoCiclo[];
 };
 
 const celularBr = (c: string | null) =>
@@ -131,54 +122,43 @@ export default function PacientePage() {
                 "Ciclo de atendimento",
                 d.vinculadoEm ? `Desde ${dataBr(d.vinculadoEm)}` : "—",
               ],
+              [
+                "Sessões realizadas",
+                String(
+                  d.sessoes.filter((s) => s.status === "realizada").length,
+                ),
+              ],
               ["Próxima sessão", dataHoraBr(d.proximaSessao)],
               ["Estagiário", d.estagiario ?? "—"],
               ["Supervisor", d.supervisor ?? "—"],
             ]}
           />
+          <ResumoFaltas
+            contagem={d.faltasNoCiclo}
+            nome={d.nome}
+            linkHistorico="#historico-faltas"
+          />
         </section>
       </div>
+      <HistoricoFaltas
+        id="historico-faltas"
+        contagem={d.faltasNoCiclo}
+        ciclo={d.cicloAtendimento}
+        sessoes={d.sessoes}
+      />
       <section aria-labelledby="sessoes-ciclo" className="ui-cartao">
         <h2 id="sessoes-ciclo" className="ui-h2">
           Sessões do ciclo
         </h2>
-        <ContadorFaltas contagem={d.faltasNoCiclo} />
-        {d.sessoes.length ? (
-          <ol className="flex flex-col">
-            {d.sessoes.map((atendimento) => (
-              <li
-                key={atendimento.id}
-                className="border-b border-border py-4 first:pt-0 last:border-b-0 last:pb-0"
-              >
-                <h3 className="text-[15px] font-bold">
-                  {dataHoraBr(atendimento.inicio)} ·{" "}
-                  {NOMES_STATUS_SESSAO[atendimento.status]}
-                </h3>
-                {atendimento.falta ? (
-                  <ResumoFalta
-                    falta={atendimento.falta}
-                    podeJustificar={secretaria}
-                    chave={["paciente", casoId]}
-                  />
-                ) : (
-                  secretaria &&
-                  (atendimento.status === "agendada" ||
-                    atendimento.status === "confirmada") &&
-                  new Date(atendimento.inicio).getTime() <= agora && (
-                    <div className="mt-3">
-                      <RegistrarFalta
-                        sessaoId={atendimento.id}
-                        chave={["paciente", casoId]}
-                      />
-                    </div>
-                  )
-                )}
-              </li>
-            ))}
-          </ol>
-        ) : (
-          <p className="ui-dica">Não há sessões registradas neste ciclo.</p>
-        )}
+        <SessoesComFaltas
+          nome={d.nome}
+          sessoes={d.sessoes}
+          limite={d.faltasNoCiclo.limite}
+          agora={agora}
+          podeRegistrar={secretaria}
+          podeJustificar={secretaria}
+          chave={["paciente", casoId]}
+        />
       </section>
       <div className="flex flex-wrap gap-3">
         {d.prontuarioId && (

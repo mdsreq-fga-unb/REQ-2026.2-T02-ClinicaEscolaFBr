@@ -14,9 +14,11 @@ import {
   type StatusSessao,
 } from "@clinica/shared";
 import {
-  ContadorFaltas,
-  RegistrarFalta,
-  ResumoFalta,
+  AcoesFaltaDaSessao,
+  DetalheFalta,
+  HistoricoFaltas,
+  ResumoFaltas,
+  SeloSessao,
 } from "@/components/assiduidade/faltas";
 import { Aviso } from "@/components/comum/aviso";
 import {
@@ -27,13 +29,7 @@ import {
 import { Dados } from "@/components/comum/dados";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { api, ErroApi } from "@/lib/api";
-import {
-  dataBr,
-  dataHoraBr,
-  idade,
-  NOMES_SITUACAO_CASO,
-  NOMES_STATUS_SESSAO,
-} from "@/lib/formato";
+import { dataBr, dataHoraBr, idade, NOMES_SITUACAO_CASO } from "@/lib/formato";
 import { useSessao } from "@/lib/sessao";
 
 type ErrosDe<T> = Partial<Record<keyof T, string>>;
@@ -318,6 +314,7 @@ type Prontuario = {
     inicio: string;
     termino: string;
     estagiarioId: string;
+    estagiario: string;
     status: StatusSessao;
     falta: FaltaDaSessao | null;
     evolucao: null | {
@@ -530,82 +527,100 @@ export default function ProntuarioPage() {
             Registre o fechamento no relatório final do ciclo.
           </Aviso>
         )}
-        <ContadorFaltas contagem={p.faltasNoCiclo} />
+        <ResumoFaltas
+          contagem={p.faltasNoCiclo}
+          nome={p.nome}
+          linkHistorico="#historico-faltas"
+        />
         {p.sessoes.length ? (
           <ol className="flex flex-col">
-            {p.sessoes.map((atendimento) => (
-              <li
-                key={atendimento.id}
-                className="border-b border-border py-4 first:pt-0 last:border-b-0 last:pb-0"
-              >
-                <h3 className="text-[15px] font-bold">
-                  {dataHoraBr(atendimento.inicio)} ·{" "}
-                  {NOMES_STATUS_SESSAO[atendimento.status]}
-                </h3>
-                {atendimento.falta ? (
-                  <ResumoFalta
-                    falta={atendimento.falta}
-                    podeJustificar={
-                      sessao?.perfil === "estagiario" ||
-                      sessao?.perfil === "supervisor"
-                    }
+            {p.sessoes.map((atendimento) => {
+              const responsavel = atendimento.estagiarioId === sessao?.id;
+              const podeJustificar =
+                responsavel || sessao?.perfil === "supervisor";
+              const marcarRealizada =
+                responsavel &&
+                (atendimento.status === "agendada" ||
+                  atendimento.status === "confirmada") &&
+                new Date(atendimento.termino).getTime() <= agora;
+              return (
+                <li
+                  key={atendimento.id}
+                  className="border-b border-border py-4 first:pt-0 last:border-b-0 last:pb-0"
+                >
+                  <h3 className="flex flex-wrap items-center gap-2 text-[15px] font-bold">
+                    {dataHoraBr(atendimento.inicio)}
+                    <SeloSessao
+                      status={atendimento.status}
+                      justificada={atendimento.falta?.justificada}
+                    />
+                  </h3>
+                  {atendimento.falta && (
+                    <DetalheFalta falta={atendimento.falta} />
+                  )}
+                  {atendimento.evolucao ? (
+                    <div className="mt-2 flex flex-col gap-2 text-[15px]">
+                      <p>
+                        <strong>Evolução:</strong> {atendimento.evolucao.queixa}
+                      </p>
+                      <p>
+                        <strong>Planejamento:</strong>{" "}
+                        {atendimento.evolucao.planejamento}
+                      </p>
+                      <p className="ui-meta">
+                        Registrada por {atendimento.evolucao.registradaPor} em{" "}
+                        {dataHoraBr(atendimento.evolucao.registradaEm)}
+                      </p>
+                    </div>
+                  ) : responsavel && atendimento.status === "realizada" ? (
+                    <FormularioEvolucao
+                      prontuarioId={p.id}
+                      sessaoId={atendimento.id}
+                      inicio={atendimento.inicio}
+                    />
+                  ) : (
+                    !atendimento.falta && (
+                      <p className="ui-dica mt-1">
+                        {(atendimento.status === "agendada" ||
+                          atendimento.status === "confirmada") &&
+                        new Date(atendimento.inicio).getTime() > agora
+                          ? "A sessão ainda não aconteceu."
+                          : atendimento.status === "cancelada"
+                            ? "Sessão cancelada."
+                            : "Evolução não registrada."}
+                      </p>
+                    )
+                  )}
+                  <AcoesFaltaDaSessao
+                    nome={p.nome}
+                    sessao={atendimento}
+                    limite={p.faltasNoCiclo.limite}
+                    agora={agora}
+                    podeRegistrar={responsavel}
+                    podeJustificar={podeJustificar}
                     chave={["prontuario", p.id]}
-                  />
-                ) : atendimento.evolucao ? (
-                  <div className="mt-2 flex flex-col gap-2 text-[15px]">
-                    <p>
-                      <strong>Evolução:</strong> {atendimento.evolucao.queixa}
-                    </p>
-                    <p>
-                      <strong>Planejamento:</strong>{" "}
-                      {atendimento.evolucao.planejamento}
-                    </p>
-                    <p className="ui-meta">
-                      Registrada por {atendimento.evolucao.registradaPor} em{" "}
-                      {dataHoraBr(atendimento.evolucao.registradaEm)}
-                    </p>
-                  </div>
-                ) : atendimento.estagiarioId === sessao?.id &&
-                  atendimento.status === "realizada" ? (
-                  <FormularioEvolucao
-                    prontuarioId={p.id}
-                    sessaoId={atendimento.id}
-                    inicio={atendimento.inicio}
-                  />
-                ) : atendimento.estagiarioId === sessao?.id &&
-                  (atendimento.status === "agendada" ||
-                    atendimento.status === "confirmada") &&
-                  new Date(atendimento.inicio).getTime() <= agora ? (
-                  <div className="mt-3 flex flex-wrap gap-3">
-                    {new Date(atendimento.termino).getTime() <= agora && (
+                  >
+                    {marcarRealizada && (
                       <AcaoSessao
                         prontuarioId={p.id}
                         sessaoId={atendimento.id}
                       />
                     )}
-                    <RegistrarFalta
-                      sessaoId={atendimento.id}
-                      chave={["prontuario", p.id]}
-                    />
-                  </div>
-                ) : (
-                  <p className="ui-dica mt-1">
-                    {(atendimento.status === "agendada" ||
-                      atendimento.status === "confirmada") &&
-                    new Date(atendimento.inicio).getTime() > agora
-                      ? "A sessão ainda não aconteceu."
-                      : atendimento.status === "cancelada"
-                        ? "Sessão cancelada."
-                        : "Evolução não registrada."}
-                  </p>
-                )}
-              </li>
-            ))}
+                  </AcoesFaltaDaSessao>
+                </li>
+              );
+            })}
           </ol>
         ) : (
           <p className="ui-dica">Não há sessões registradas neste ciclo.</p>
         )}
       </section>
+      <HistoricoFaltas
+        id="historico-faltas"
+        contagem={p.faltasNoCiclo}
+        ciclo={p.cicloAtendimento}
+        sessoes={p.sessoes}
+      />
       <section aria-labelledby="historico-responsaveis" className={cartao}>
         <h2 id="historico-responsaveis" className="ui-h2">
           Histórico de responsáveis

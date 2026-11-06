@@ -101,9 +101,11 @@ export class ProntuariosService {
         inicio: sessoesAtendimento.inicio,
         termino: sessoesAtendimento.termino,
         estagiarioId: sessoesAtendimento.estagiarioId,
+        estagiario: estagiario.nome,
         status: sessoesAtendimento.status,
       })
       .from(sessoesAtendimento)
+      .innerJoin(estagiario, eq(estagiario.id, sessoesAtendimento.estagiarioId))
       .where(
         and(
           eq(sessoesAtendimento.casoId, prontuario.casoId),
@@ -387,9 +389,11 @@ export class ProntuariosService {
         id: sessoesAtendimento.id,
         inicio: sessoesAtendimento.inicio,
         termino: sessoesAtendimento.termino,
+        estagiario: estagiario.nome,
         status: sessoesAtendimento.status,
       })
       .from(sessoesAtendimento)
+      .innerJoin(estagiario, eq(estagiario.id, sessoesAtendimento.estagiarioId))
       .where(
         and(
           eq(sessoesAtendimento.casoId, casoId),
@@ -402,6 +406,7 @@ export class ProntuariosService {
       ...caso,
       ...linha,
       proximaSessao: proxima?.inicio ?? null,
+      cicloAtendimento: ciclo,
       faltasNoCiclo: await this.faltas.contar(casoId),
       sessoes: sessoes.map((sessao) => ({
         ...sessao,
