@@ -230,3 +230,70 @@ A reunião teve como objetivo consolidar as pendências do Ciclo 3, alinhar o no
 ### Encerramento
 
 O Ciclo 3 foi entregue no prazo, restando inspeções, evidências e a validação com a FBr. O fluxo de deploy automático para a validação e a produção foi alinhado, e o Ciclo 4 segue com a conclusão do DoR, a preparação dos protótipos e a construção das 19 features previstas.
+
+## Reunião do Ciclo 4: inspeção de design, validação e pendências
+
+**Data:** 05/11/2026
+**Local:** Reunião on-line (Google Meet)
+**Participantes:** Gabriel da Cunha Barbaceli; Luís Henrique Luna; Jônatas Davi Oliveira Farias; Nicolas Lopes da Costa.
+
+![Registro da reunião do Ciclo 4: inspeção de design, validação e pendências](../assets/reuniao-10.jpeg)
+
+_Figura 18 — Registro da reunião do Ciclo 4: inspeção de design, validação e pendências, realizada em 05/11/2026._
+
+[Consultar ata completa em PDF](../assets/atas-reunioes/Ata_Reuniao_Ciclo_4_Inspecao_Design_Validacao_Pendencias_05-11-2026.pdf)
+
+!!! note "Correção de 05/11/2026"
+    O resumo abaixo corrige um ponto da ata em PDF: o Gabriel escreveu o projeto das 18 features do Ciclo 4 que faltavam ([#203](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/pull/203)), e não a inspeção de design delas. Como autor do projeto, ele não inspeciona nenhuma dessas features, e a inspeção de cada uma fica com o Líder e o revisor da issue, como registra o [Projeto das features do Ciclo 4](projeto-features-ciclo-4.md#roteiro-da-inspecao-de-design).
+
+### Resumo
+
+A reunião teve como objetivo alinhar a inspeção de design das features do Ciclo 4, revisar as pendências e preparar a validação com a Clínica Escola FBr de 06/11.
+
+### 1. Inspeção de design do Ciclo 4
+
+- A inspeção de design precisa ser feita antes da construção, para reduzir o risco de retrabalho.
+- O Gabriel escreveu o projeto das 18 features que faltavam e o organizou na pull request #203, com o Nicolas e o Joaquim como revisores.
+- Nas features em que o Gabriel seria o revisor da issue, outro integrante faz a inspeção no lugar dele, para que o autor do projeto não inspecione o próprio trabalho: o Jônatas, com o Nicolas (RF11, RF14, RF15 e RF16), e a Maria Clara, com o Luís (RF69).
+- Cada Líder confere o projeto das suas features e registra a inspeção na issue, e o outro participante confirma com `/de-acordo`.
+- O prazo para concluir as inspeções e as revisões é sábado à tarde (07/11/2026). O Gabriel envia no grupo a distribuição de Líderes e revisores.
+
+### 2. Situação das entregas e pendências
+
+- As atividades previstas desde 29/10 foram concluídas no prazo e já estão na branch `development`, exceto a inspeção de design.
+- Continua pendente a inspeção de código das features do Luís, cobrada pelo Gabriel.
+- Os Líderes de cada feature devem marcar o R8.1 e o R8.3 do DoR, que registram que o Líder entende o que a issue pede e tem as integrações e a massa de teste.
+- Os Líderes também devem marcar o R7.2, com os estados vazios e as mensagens que os protótipos já mostram.
+- As respostas da FBr às perguntas enviadas pela equipe já estão incorporadas aos requisitos.
+
+### 3. Validação com a FBr
+
+- A reunião de validação com a FBr está marcada para 06/11/2026, às 14h30. Os participantes confirmaram disponibilidade, e um integrante pode entrar depois, por causa de aula.
+- O Gabriel demonstra as funcionalidades do Ciclo 3 no ambiente de validação, seguindo um roteiro preparado para a demonstração.
+- O teste de usabilidade do RNF22 é aplicado pela FBr depois da reunião. O kit, com as orientações e as etapas do teste, já foi enviado por e-mail ao Robson.
+- O retorno da FBr sobre a validação e o teste de usabilidade é necessário para fechar as issues do Ciclo 3.
+- Os protótipos do Ciclo 4 também são apresentados para validação, e as dúvidas e pendências reunidas pela equipe são levadas à FBr.
+
+### 4. Ajuste no ambiente de validação
+
+- A página de erro 404 aparecia em inglês. A pull request #204 a coloca em português e dentro do sistema, com o Joaquim como revisor.
+- O ajuste evita confusão durante o teste de usabilidade, caso alguém abra uma página de uma funcionalidade ainda não construída.
+
+### 5. Próximos passos e responsabilidades
+
+- **Gabriel:** enviar no grupo a distribuição das inspeções e das revisões; encaminhar as pendências de cada integrante; conduzir a demonstração do Ciclo 3 na reunião com a FBr; tirar dúvidas sobre os materiais publicados.
+- **Líderes de feature:** inspecionar o design das suas features; marcar o R8.1 e o R8.3; marcar o R7.2 com os estados vazios e as mensagens dos protótipos.
+- **Revisores designados:** conferir a consistência das inspeções de design.
+- **Joaquim:** revisar a pull request #204. Se participar da reunião com a FBr, pode apresentar os protótipos do Ciclo 4.
+- **Luís:** concluir a inspeção de código cobrada pelo Gabriel.
+- **Nicolas:** seguir as orientações enviadas pelo Gabriel e tirar as dúvidas que restarem.
+
+### 6. Datas
+
+- **06/11/2026, às 14h30:** reunião de demonstração e validação com a FBr.
+- **07/11/2026, à tarde:** prazo para concluir as inspeções de design e as revisões.
+- **10/11/2026:** entrega do Ciclo 4.
+
+### Encerramento
+
+A equipe combinou concluir as inspeções de design até sábado à tarde e tratar as pendências do DoR e dos protótipos. A próxima etapa é validar com a FBr as entregas do Ciclo 3 e os protótipos do Ciclo 4 e, então, avançar com a construção.
