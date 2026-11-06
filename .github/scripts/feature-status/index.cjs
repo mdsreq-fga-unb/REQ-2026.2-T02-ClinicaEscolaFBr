@@ -13,7 +13,11 @@ const MEMBROS = ["OWNER", "MEMBER", "COLLABORATOR"];
 const BRANCHES_DE_INTEGRACAO = ["development", "main"];
 const { ehFeature } = L;
 
-module.exports = async ({ github, context, core }) => {
+// `github` usa o PROJECT_TOKEN, que a API do Project exige; `api` usa o token
+// das Actions, para os comentários e as edições das issues saírem como
+// github-actions[bot], e não como a pessoa dona do PROJECT_TOKEN. Sem `api`
+// (nos testes), o mesmo cliente faz as duas coisas.
+module.exports = async ({ github, api = github, context, core }) => {
   const { owner, repo } = context.repo;
   const evento = context.eventName;
   const carga = context.payload;
@@ -37,20 +41,20 @@ module.exports = async ({ github, context, core }) => {
     (projeto ??= await P.carregarProjeto(github));
 
   const buscarIssue = async (numero) =>
-    (await github.rest.issues.get({ owner, repo, issue_number: numero })).data;
+    (await api.rest.issues.get({ owner, repo, issue_number: numero })).data;
 
   const comentar = (numero, body) =>
-    github.rest.issues.createComment({
+    api.rest.issues.createComment({
       owner,
       repo,
       issue_number: numero,
-      body: `${body}\n\n${L.MARCA_ROBO}`,
+      body: `${L.PREFIXO_ROBO}\n\n${body}\n\n${L.MARCA_ROBO}`,
     });
 
   const marcar = async (issue, codigos) => {
     const novo = L.marcarItens(issue.body ?? "", codigos);
     if (novo === issue.body) return issue;
-    const { data } = await github.rest.issues.update({
+    const { data } = await api.rest.issues.update({
       owner,
       repo,
       issue_number: issue.number,
@@ -69,7 +73,7 @@ module.exports = async ({ github, context, core }) => {
     const atual = L.estadoAtual(corpo);
     const estado = L.maisAvancado(L.ESTADOS, atual, L.estadoDoChecklist(corpo));
     if (atual && estado !== atual) {
-      await github.rest.issues.update({
+      await api.rest.issues.update({
         owner,
         repo,
         issue_number: issue.number,
@@ -114,7 +118,7 @@ module.exports = async ({ github, context, core }) => {
     );
     const rnfs = R.rnfsDaFeature(corpo);
     if (!integrada || rnfs.length === 0) return null;
-    const comentarios = await github.paginate(github.rest.issues.listComments, {
+    const comentarios = await api.paginate(api.rest.issues.listComments, {
       owner,
       repo,
       issue_number: issue.number,
@@ -131,14 +135,14 @@ module.exports = async ({ github, context, core }) => {
       (c.body ?? "").includes(R.MARCA_RNFS),
     );
     if (!anterior) {
-      await github.rest.issues.createComment({
+      await api.rest.issues.createComment({
         owner,
         repo,
         issue_number: issue.number,
         body: texto,
       });
     } else if (anterior.body !== texto) {
-      await github.rest.issues.updateComment({
+      await api.rest.issues.updateComment({
         owner,
         repo,
         comment_id: anterior.id,
@@ -150,7 +154,7 @@ module.exports = async ({ github, context, core }) => {
 
   const featuresAbertas = async () =>
     (
-      await github.paginate(github.rest.issues.listForRepo, {
+      await api.paginate(api.rest.issues.listForRepo, {
         owner,
         repo,
         state: "open",
@@ -229,7 +233,7 @@ module.exports = async ({ github, context, core }) => {
     }
     if (lido.comando === "de-acordo") {
       // A confirmação precisa vir de alguém diferente de quem registrou a inspeção.
-      const { data: comentarios } = await github.rest.issues.listComments({
+      const { data: comentarios } = await api.rest.issues.listComments({
         owner,
         repo,
         issue_number: issue.number,

@@ -3,7 +3,7 @@
 // Convenção dos testes e do comando /rnf: "Boas práticas de utilização do GitHub",
 // seção "Verificação dos RNFs (D4.5)".
 
-const { MARCA_ROBO } = require("./logica.cjs");
+const { MARCA_ROBO, PREFIXO_ROBO } = require("./logica.cjs");
 
 // Códigos citados no texto, um a um ("RNF56, RNF57") ou em intervalo ("RNF56 a
 // RNF58", "RNF56-RNF58", "RNF56 a 58"), que vale por todos os códigos entre eles.
@@ -271,6 +271,8 @@ function comentarioRnfs(linhas, execucao) {
   });
   const completo = todosVerificados(linhas);
   return [
+    PREFIXO_ROBO,
+    "",
     "**Verificação dos RNFs (D4.5)**, atualizada automaticamente",
     "",
     `Testes da versão integrada: ${execucao ? `[execução do CI da \`development\`](${execucao})` : "sem relatório da `development`"}.`,

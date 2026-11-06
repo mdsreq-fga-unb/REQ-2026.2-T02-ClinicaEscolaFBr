@@ -2,7 +2,9 @@
 # issue e o Status do Project seguem o checklist do DoR e do DoD, as PRs que citam
 # a issue, os comandos /de-acordo, /demonstrada, /aceite e /rnf e os testes da
 # versão integrada, para o D4.5 (regras em .github/scripts/feature-status). Precisa do segredo PROJECT_TOKEN, um token com
-# os escopos repo e project; sem ele, o workflow só avisa e não altera nada.
+# os escopos repo e project; sem ele, o workflow só avisa e não altera nada. O PROJECT_TOKEN
+# só mexe no Project: os comentários e as edições das issues usam o token das Actions e
+# saem como github-actions[bot].
 name: Feature Status
 
 on:
@@ -29,6 +31,8 @@ permissions:
   contents: read
   # Para baixar o relatório de RNFs gerado pelo CI da development.
   actions: read
+  # Para o robô comentar e marcar o checklist das issues como github-actions[bot].
+  issues: write
 
 # Uma execução por issue ou PR de cada vez, para as edições não se cruzarem.
 concurrency:
@@ -92,11 +96,13 @@ jobs:
       - uses: actions/github-script@v9
         env:
           TEM_TOKEN: ${{ secrets.PROJECT_TOKEN != '' }}
+          TOKEN_DAS_ISSUES: ${{ github.token }}
         with:
           github-token: ${{ secrets.PROJECT_TOKEN || github.token }}
           script: |
             const acompanhar = require('./.github/scripts/feature-status/index.cjs');
-            await acompanhar({ github, context, core });
+            const api = getOctokit(process.env.TOKEN_DAS_ISSUES);
+            await acompanhar({ github, api, context, core });
 
   issue-da-feature:
     name: PR cita a issue da feature
