@@ -297,3 +297,76 @@ A reunião teve como objetivo alinhar a inspeção de design das features do Cic
 ### Encerramento
 
 A equipe combinou concluir as inspeções de design até sábado à tarde e tratar as pendências do DoR e dos protótipos. A próxima etapa é validar com a FBr as entregas do Ciclo 3 e os protótipos do Ciclo 4 e, então, avançar com a construção.
+
+## Reunião de validação do Ciclo 3 com a FBr
+
+**Data:** 06/11/2026
+**Local:** Reunião on-line (Google Meet)
+**Participantes:** pela FBr, Thiago Viana; pela equipe, Gabriel da Cunha Barbaceli, Nicolas Lopes da Costa, Luís Henrique Luna e Jônatas Davi Oliveira Farias, que entrou depois do início. O Robson não pôde participar, por causa de outras reuniões no mesmo horário.
+
+![Registro da reunião de validação do Ciclo 3 com a Clínica Escola FBr](../assets/reuniao-4-cliente.jpeg)
+
+_Figura 19 — Registro da reunião de validação do Ciclo 3 com a Clínica Escola FBr, realizada em 06/11/2026._
+
+[Consultar ata completa em PDF](../assets/atas-reunioes/Ata_Reuniao_Validacao_Ciclo_3_FBr_06-11-2026.pdf)
+
+### Resumo
+
+O Gabriel demonstrou as features do Ciclo 3 no ambiente de validação, do ponto de vista do paciente e da equipe. O Thiago aprovou o andamento e pediu sete ajustes: quatro na inscrição e três no agendamento e no e-mail da sessão. Como ele estava com pouco tempo, os protótipos do Ciclo 4 e as pendências não foram apresentados e seguiram por e-mail e pelo grupo da FBr. O aceite formal de cada feature foi pedido por escrito, por e-mail, porque o Robson, que registra o aceite pela FBr ([DF39](../unidade-2/requisitos/decisoes-fbr.md#df39)), não participou.
+
+### 1. Demonstração das features do Ciclo 3
+
+| Feature | Demonstrada | O que foi mostrado |
+| --- | --- | --- |
+| RF1 — Registrar solicitação de atendimento on-line | Sim | As três etapas, os erros com o link para cada campo, os dados do responsável para menor e a revisão |
+| RF2 — Emitir comprovante de inscrição | Sim | Número, data e hora, aviso de que a inscrição não garante vaga, CVV e SAMU, impressão em PDF |
+| RF4 — Organizar informações da inscrição para triagem | Sim | A inscrição nova na triagem, com o tempo de espera e a declaração completa |
+| RF6 — Registrar prioridade clínica do inscrito | Sim | A classificação sem opção pré-marcada, o registro com autor e data e o histórico de decisões |
+| RF18 — Listar casos aguardando distribuição | Sim | A ordem pela prioridade e pela data e hora da inscrição |
+| RF20 — Distribuir caso a supervisor | Sim | Os supervisores disponíveis abaixo do limite de 50 casos e a confirmação; o supervisor só consulta |
+| RF21 — Vincular paciente a estagiário responsável | Sim | Os estagiários ativos, com os pacientes de cada um, e o vínculo |
+| RF66 — Criar e inicializar o prontuário do paciente | Sim | O prontuário criado no vínculo, com os dados da inscrição e o histórico de responsáveis |
+| RF55 — Restringir acesso ao prontuário do paciente | Sim | A secretaria tentando abrir o prontuário, com o acesso negado e a tentativa registrada |
+| RF10 — Agendar sessão do paciente | Sim, com dois erros | O bloqueio do caso sem estagiário, o agendamento e o e-mail com o link de confirmação; aceitou uma data passada e um início depois do término |
+| RF50 — Autenticar usuário institucional | Sim | A entrada com os perfis de coordenação, supervisor, estagiário e secretaria, cada um com o seu menu |
+| RF53 — Cadastrar usuário institucional com perfil de acesso | Sim | A lista de usuários, o cadastro com convite por e-mail e a conta de coordenação do Thiago, ativada durante a reunião |
+| RF54 — Desativar usuário institucional | Sim | A desativação de uma conta de teste, com os registros dela mantidos |
+| RF51 — Encerrar sessão do usuário | Não | A troca de contas foi feita em janelas separadas, sem mostrar a saída |
+
+### 2. Ajustes pedidos pela FBr
+
+| # | Ajuste | Afeta | Situação |
+| --- | --- | --- | --- |
+| 1 | Avaliar se o RG continua obrigatório, com a nova Carteira de Identidade Nacional (CIN); o CPF continua obrigatório | RF1 | A confirmar com o Robson, nas [pendências de validação](../unidade-2/requisitos/analise-feedback.md#pendencias-de-validacao-com-a-fbr) |
+| 2 | O CPF do responsável legal é obrigatório na inscrição de menor de idade | RF1, RF57 | Decidido ([DF47](../unidade-2/requisitos/decisoes-fbr.md#df47)) |
+| 3 | Os dados de endereço e contato devem ser completos e obrigatórios | RF1 | A confirmar com o Robson, nas pendências de validação |
+| 4 | Sai a escolha do canal preferencial: o e-mail e o telefone passam a ser obrigatórios, com um aviso de que os contatos da clínica são feitos por e-mail | RF1, RF8, RF52 | Decidido ([DF48](../unidade-2/requisitos/decisoes-fbr.md#df48)) |
+| 5 | O agendamento não pode aceitar data passada nem início depois do término | RF10 | Erro da equipe, a corrigir |
+| 6 | Os horários da sessão andam de 10 em 10 minutos | RF10 | Decidido ([DF49](../unidade-2/requisitos/decisoes-fbr.md#df49)) |
+| 7 | O e-mail da sessão ganha cabeçalho e rodapé com a identidade e as informações da FBr, sem ficar carregado a ponto de cair no spam | RF10, RF53 | A fazer |
+
+O Thiago também perguntou se a coordenação e o supervisor terão um painel para acompanhar se os atendimentos acontecem no horário e se os pacientes comparecem. O Gabriel mostrou, nos [protótipos do Ciclo 4](prototipos-ciclo-4.md), a agenda dos estagiários (RF11) e o alerta de limite de faltas (RF36), e explicou que o acompanhamento e a avaliação do estagiário entram nos ciclos seguintes.
+
+### 3. Protótipos e pendências do Ciclo 4
+
+Não foram apresentados, porque o Thiago estava com pouco tempo. O link dos protótipos, com as quatro propostas a validar, foi enviado por e-mail, com o pedido de resposta até 09/11, e as pendências que só a FBr resolve foram enviadas no grupo da FBr. O R7.3 das features do Ciclo 4 continua pendente até essa validação, registrado no DoR de cada issue.
+
+### 4. Teste de usabilidade (RNF22)
+
+- A FBr aplica o teste a partir de agora, com a coordenação, supervisores e estagiários sem treinamento prévio. O Thiago e o Robson se ajudam na aplicação.
+- Quem aplica dá a tarefa, não explica a tela e anota as dificuldades; se a pessoa precisar de ajuda, anota a ajuda e o motivo.
+- As contas dos participantes são criadas pela coordenação no ambiente de validação.
+- O prazo desejado para a planilha voltar é 13/11/2026: as features do Ciclo 3 só passam a concluídas depois desse retorno.
+
+### 5. Próximos passos e responsabilidades
+
+- **Gabriel:** enviar ao Thiago o e-mail com o kit, o termo, os protótipos e o pedido de aceite por escrito; enviar as pendências no grupo da FBr; registrar as decisões DF47 a DF49.
+- **Nicolas:** corrigir o agendamento (data passada, início depois do término e horários de 10 em 10 minutos).
+- **Jônatas:** ajustar a inscrição (CPF do responsável, e-mail e telefone obrigatórios, sem a escolha do canal, com o aviso).
+- **Thiago:** confirmar com o Robson o RG e a obrigatoriedade do endereço e do contato.
+- **Thiago e Robson:** aplicar o teste de usabilidade e devolver a planilha até 13/11; validar os protótipos do Ciclo 4 até 09/11; responder ao pedido de aceite.
+- **Robson:** ativar a conta de coordenação na validação antes de o convite vencer, em 08/11.
+
+### Encerramento
+
+O Thiago elogiou o sistema e a equipe e disse que a FBr começa os testes o quanto antes. As dúvidas seguem pelo grupo da FBr.
