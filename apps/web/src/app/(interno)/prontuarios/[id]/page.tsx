@@ -7,9 +7,17 @@ import { useEffect, useState, type FormEvent } from "react";
 import {
   dadosIniciaisSchema,
   evolucaoSchema,
+  type ContagemFaltas,
   type DadosIniciais,
   type Evolucao,
+  type FaltaDaSessao,
+  type StatusSessao,
 } from "@clinica/shared";
+import {
+  ContadorFaltas,
+  RegistrarFalta,
+  ResumoFalta,
+} from "@/components/assiduidade/faltas";
 import { Aviso } from "@/components/comum/aviso";
 import {
   Campo,
@@ -19,7 +27,13 @@ import {
 import { Dados } from "@/components/comum/dados";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { api, ErroApi } from "@/lib/api";
-import { dataBr, dataHoraBr, idade, NOMES_SITUACAO_CASO } from "@/lib/formato";
+import {
+  dataBr,
+  dataHoraBr,
+  idade,
+  NOMES_SITUACAO_CASO,
+  NOMES_STATUS_SESSAO,
+} from "@/lib/formato";
 import { useSessao } from "@/lib/sessao";
 
 type ErrosDe<T> = Partial<Record<keyof T, string>>;
@@ -266,7 +280,7 @@ function AcaoSessao({
     }
   }
   return (
-    <div className="mt-3">
+    <div>
       {erro && <Aviso tipo="alerta" titulo={erro} className="mb-3" />}
       <Button type="button" onClick={marcar}>
         Marcar sessão como realizada
@@ -304,7 +318,8 @@ type Prontuario = {
     inicio: string;
     termino: string;
     estagiarioId: string;
-    status: string;
+    status: StatusSessao;
+    falta: FaltaDaSessao | null;
     evolucao: null | {
       id: string;
       queixa: string;
@@ -317,6 +332,7 @@ type Prontuario = {
   relatorioFinal: null | { estado: string };
   sessoesRealizadas: number;
   fechamentoAvaliativoPendente: boolean;
+  faltasNoCiclo: ContagemFaltas;
 };
 
 // Acesso negado: a mesma tela para qualquer recusa, sem o nome do paciente (RNF25).
@@ -514,6 +530,7 @@ export default function ProntuarioPage() {
             Registre o fechamento no relatório final do ciclo.
           </Aviso>
         )}
+        <ContadorFaltas contagem={p.faltasNoCiclo} />
         {p.sessoes.length ? (
           <ol className="flex flex-col">
             {p.sessoes.map((atendimento) => (
@@ -523,11 +540,18 @@ export default function ProntuarioPage() {
               >
                 <h3 className="text-[15px] font-bold">
                   {dataHoraBr(atendimento.inicio)} ·{" "}
-                  {atendimento.status === "realizada"
-                    ? "Realizada"
-                    : "Agendada"}
+                  {NOMES_STATUS_SESSAO[atendimento.status]}
                 </h3>
-                {atendimento.evolucao ? (
+                {atendimento.falta ? (
+                  <ResumoFalta
+                    falta={atendimento.falta}
+                    podeJustificar={
+                      sessao?.perfil === "estagiario" ||
+                      sessao?.perfil === "supervisor"
+                    }
+                    chave={["prontuario", p.id]}
+                  />
+                ) : atendimento.evolucao ? (
                   <div className="mt-2 flex flex-col gap-2 text-[15px]">
                     <p>
                       <strong>Evolução:</strong> {atendimento.evolucao.queixa}
@@ -549,15 +573,30 @@ export default function ProntuarioPage() {
                     inicio={atendimento.inicio}
                   />
                 ) : atendimento.estagiarioId === sessao?.id &&
-                  atendimento.status === "agendada" &&
-                  new Date(atendimento.termino).getTime() <= agora ? (
-                  <AcaoSessao prontuarioId={p.id} sessaoId={atendimento.id} />
+                  (atendimento.status === "agendada" ||
+                    atendimento.status === "confirmada") &&
+                  new Date(atendimento.inicio).getTime() <= agora ? (
+                  <div className="mt-3 flex flex-wrap gap-3">
+                    {new Date(atendimento.termino).getTime() <= agora && (
+                      <AcaoSessao
+                        prontuarioId={p.id}
+                        sessaoId={atendimento.id}
+                      />
+                    )}
+                    <RegistrarFalta
+                      sessaoId={atendimento.id}
+                      chave={["prontuario", p.id]}
+                    />
+                  </div>
                 ) : (
                   <p className="ui-dica mt-1">
-                    {atendimento.status === "agendada" &&
-                    new Date(atendimento.termino).getTime() > agora
+                    {(atendimento.status === "agendada" ||
+                      atendimento.status === "confirmada") &&
+                    new Date(atendimento.inicio).getTime() > agora
                       ? "A sessão ainda não aconteceu."
-                      : "Evolução não registrada."}
+                      : atendimento.status === "cancelada"
+                        ? "Sessão cancelada."
+                        : "Evolução não registrada."}
                   </p>
                 )}
               </li>

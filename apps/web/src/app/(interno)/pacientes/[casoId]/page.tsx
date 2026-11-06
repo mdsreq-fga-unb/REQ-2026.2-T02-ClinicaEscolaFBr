@@ -2,6 +2,17 @@
 import { useQuery } from "@tanstack/react-query";
 import Link from "next/link";
 import { useParams } from "next/navigation";
+import { useEffect, useState } from "react";
+import type {
+  ContagemFaltas,
+  FaltaDaSessao,
+  StatusSessao,
+} from "@clinica/shared";
+import {
+  ContadorFaltas,
+  RegistrarFalta,
+  ResumoFalta,
+} from "@/components/assiduidade/faltas";
 import { Aviso } from "@/components/comum/aviso";
 import { Dados } from "@/components/comum/dados";
 import { buttonVariants } from "@/components/ui/button";
@@ -12,6 +23,7 @@ import {
   dataHoraBr,
   NOMES_CANAL,
   NOMES_SITUACAO_CASO,
+  NOMES_STATUS_SESSAO,
 } from "@/lib/formato";
 
 type DadosAdministrativos = {
@@ -29,6 +41,14 @@ type DadosAdministrativos = {
   supervisor: string | null;
   // Só vem para a coordenação, que consulta o prontuário (DF32).
   prontuarioId?: string | null;
+  faltasNoCiclo: ContagemFaltas;
+  sessoes: {
+    id: string;
+    inicio: string;
+    termino: string;
+    status: StatusSessao;
+    falta: FaltaDaSessao | null;
+  }[];
 };
 
 const celularBr = (c: string | null) =>
@@ -39,6 +59,13 @@ const celularBr = (c: string | null) =>
 export default function PacientePage() {
   const { casoId } = useParams<{ casoId: string }>();
   const { data: sessao } = useSessao();
+  // Horário de referência para saber se a sessão já começou e aceita a falta,
+  // atualizado a cada minuto.
+  const [agora, setAgora] = useState(() => Date.now());
+  useEffect(() => {
+    const relogio = setInterval(() => setAgora(Date.now()), 60_000);
+    return () => clearInterval(relogio);
+  }, []);
   const consulta = useQuery({
     queryKey: ["paciente", casoId],
     queryFn: () =>
@@ -49,6 +76,7 @@ export default function PacientePage() {
   if (consulta.isError || !consulta.data)
     return <Aviso tipo="erro" titulo="Não foi possível abrir o paciente." />;
   const d = consulta.data;
+  const secretaria = sessao?.perfil === "secretaria";
   return (
     <div className="flex flex-col gap-6">
       <nav aria-label="Você está em" className="ui-trilha">
@@ -110,6 +138,48 @@ export default function PacientePage() {
           />
         </section>
       </div>
+      <section aria-labelledby="sessoes-ciclo" className="ui-cartao">
+        <h2 id="sessoes-ciclo" className="ui-h2">
+          Sessões do ciclo
+        </h2>
+        <ContadorFaltas contagem={d.faltasNoCiclo} />
+        {d.sessoes.length ? (
+          <ol className="flex flex-col">
+            {d.sessoes.map((atendimento) => (
+              <li
+                key={atendimento.id}
+                className="border-b border-border py-4 first:pt-0 last:border-b-0 last:pb-0"
+              >
+                <h3 className="text-[15px] font-bold">
+                  {dataHoraBr(atendimento.inicio)} ·{" "}
+                  {NOMES_STATUS_SESSAO[atendimento.status]}
+                </h3>
+                {atendimento.falta ? (
+                  <ResumoFalta
+                    falta={atendimento.falta}
+                    podeJustificar={secretaria}
+                    chave={["paciente", casoId]}
+                  />
+                ) : (
+                  secretaria &&
+                  (atendimento.status === "agendada" ||
+                    atendimento.status === "confirmada") &&
+                  new Date(atendimento.inicio).getTime() <= agora && (
+                    <div className="mt-3">
+                      <RegistrarFalta
+                        sessaoId={atendimento.id}
+                        chave={["paciente", casoId]}
+                      />
+                    </div>
+                  )
+                )}
+              </li>
+            ))}
+          </ol>
+        ) : (
+          <p className="ui-dica">Não há sessões registradas neste ciclo.</p>
+        )}
+      </section>
       <div className="flex flex-wrap gap-3">
         {d.prontuarioId && (
           <Link
