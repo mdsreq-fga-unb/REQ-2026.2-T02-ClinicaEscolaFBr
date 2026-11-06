@@ -163,7 +163,7 @@ rfs:
   ciclo: 4
   ordem: 32
   lider: Jônatas
-  depende: [RF52]
+  depende: [RF52, RF7]
   issue: 155
   estado: Planejada
   origem: [DF40]
