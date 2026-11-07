@@ -162,36 +162,49 @@ export class DesligamentosService {
         .where(eq(vinculosEstagiario.id, vinculo.id));
 
       // Sessões futuras canceladas pelo desligamento: não geram falta nem contam
-      // como ausência do estagiário, e ficam ligadas a ele para o RF38.
+      // como ausência do estagiário, e ficam ligadas a ele para o RF38. A trava
+      // espera um cancelamento em andamento por outro caminho (RF15, RF16); a
+      // sessão que ele cancelou sai da lista, e o conflito no sessao_id é ignorado.
+      const agora = new Date();
       const futuras = await tx
-        .select({ id: sessoesAtendimento.id })
+        .select({
+          id: sessoesAtendimento.id,
+          inicio: sessoesAtendimento.inicio,
+        })
         .from(sessoesAtendimento)
         .where(
           and(
             eq(sessoesAtendimento.casoId, casoId),
             inArray(sessoesAtendimento.status, STATUS_SESSAO_EM_ABERTO),
-            gt(sessoesAtendimento.inicio, new Date()),
+            gt(sessoesAtendimento.inicio, agora),
           ),
-        );
+        )
+        .for('update');
+      let canceladas: string[] = [];
       if (futuras.length) {
+        const inseridos = await tx
+          .insert(cancelamentosSessao)
+          .values(
+            futuras.map((s) => ({
+              sessaoId: s.id,
+              origem: usuario.perfil as 'secretaria' | 'coordenacao',
+              classificacao: 'desligamento' as const,
+              registradoPor: usuario.id,
+              antecedenciaMinutos: Math.floor(
+                (s.inicio.getTime() - agora.getTime()) / 60_000,
+              ),
+              desligamentoId: desligamento.id,
+            })),
+          )
+          .onConflictDoNothing({ target: cancelamentosSessao.sessaoId })
+          .returning({ sessaoId: cancelamentosSessao.sessaoId });
+        canceladas = inseridos.map((c) => c.sessaoId);
+      }
+      if (canceladas.length) {
         await tx
           .update(sessoesAtendimento)
           .set({ status: 'cancelada' })
-          .where(
-            inArray(
-              sessoesAtendimento.id,
-              futuras.map((s) => s.id),
-            ),
-          );
-        await tx.insert(cancelamentosSessao).values(
-          futuras.map((s) => ({
-            sessaoId: s.id,
-            origem: usuario.perfil as 'secretaria' | 'coordenacao',
-            classificacao: 'desligamento' as const,
-            registradoPor: usuario.id,
-            desligamentoId: desligamento.id,
-          })),
-        );
+          .where(inArray(sessoesAtendimento.id, canceladas));
       }
 
       const [vaga] = await tx
@@ -220,7 +233,7 @@ export class DesligamentosService {
             casoId,
             situacao: 'desligado_por_faltas',
             faltas: faltas.map((f) => f.id),
-            sessoesCanceladas: futuras.map((s) => s.id),
+            sessoesCanceladas: canceladas,
             vagaId: vaga.id,
           },
         },
@@ -229,7 +242,7 @@ export class DesligamentosService {
       return {
         desligamentoId: desligamento.id,
         estagiario: vinculo.estagiario,
-        sessoesCanceladas: futuras.length,
+        sessoesCanceladas: canceladas.length,
       };
     });
   }

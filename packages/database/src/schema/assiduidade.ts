@@ -169,10 +169,12 @@ export const classificacaoCancelamentoEnum = pgEnum(
   CLASSIFICACOES_CANCELAMENTO,
 );
 
-// Cancelamento da sessão (RF15, RF16, RF25 e RF37), com quem registrou e por quê.
-// Entra com o desligamento (RF37), o primeiro a cancelar sessões, e é reaproveitado
-// pelo RF15. O cancelamento pelo desligamento guarda o desligamento, para o RF38
-// listar as sessões a reagendar. Só inserção.
+// Cancelamento da sessão (RF15, RF16, RF25 e RF37): no máximo um por sessão, com
+// quem registrou e por quê. Entra com o desligamento (RF37), o primeiro a cancelar
+// sessões, já no formato que o RF15 usa. A antecedência fica guardada com a
+// classificação, para ela poder ser conferida mesmo que o parâmetro mude. O
+// cancelamento pelo desligamento guarda o desligamento, para o RF38 listar as
+// sessões a reagendar. Só inserção.
 export const cancelamentosSessao = pgTable(
   "cancelamentos_sessao",
   {
@@ -191,7 +193,7 @@ export const cancelamentosSessao = pgTable(
     registradoEm: timestamp("registrado_em", { withTimezone: true })
       .notNull()
       .defaultNow(),
-    antecedenciaMinutos: integer("antecedencia_minutos"),
+    antecedenciaMinutos: integer("antecedencia_minutos").notNull(),
     desligamentoId: uuid("desligamento_id").references(
       () => desligamentosPorFaltas.id,
     ),
@@ -199,7 +201,7 @@ export const cancelamentosSessao = pgTable(
   (t) => [
     check(
       "cancelamentos_autor",
-      sql`(${t.registradoPor} is null) = (${t.origem} = 'link')`,
+      sql`(${t.origem} = 'link') = (${t.registradoPor} is null)`,
     ),
     check(
       "cancelamentos_desligamento",

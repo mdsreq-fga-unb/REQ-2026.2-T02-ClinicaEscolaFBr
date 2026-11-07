@@ -10,10 +10,10 @@ CREATE TABLE "cancelamentos_sessao" (
 	"justificativa_cifrada" text,
 	"registrado_por" uuid,
 	"registrado_em" timestamp with time zone DEFAULT now() NOT NULL,
-	"antecedencia_minutos" integer,
+	"antecedencia_minutos" integer NOT NULL,
 	"desligamento_id" uuid,
 	CONSTRAINT "cancelamentos_sessao_sessao_id_unique" UNIQUE("sessao_id"),
-	CONSTRAINT "cancelamentos_autor" CHECK (("cancelamentos_sessao"."registrado_por" is null) = ("cancelamentos_sessao"."origem" = 'link')),
+	CONSTRAINT "cancelamentos_autor" CHECK (("cancelamentos_sessao"."origem" = 'link') = ("cancelamentos_sessao"."registrado_por" is null)),
 	CONSTRAINT "cancelamentos_desligamento" CHECK (("cancelamentos_sessao"."desligamento_id" is not null) = ("cancelamentos_sessao"."classificacao" = 'desligamento')),
 	CONSTRAINT "cancelamentos_justificativa" CHECK ("cancelamentos_sessao"."justificativa_cifrada" is not null or "cancelamentos_sessao"."classificacao" in ('desligamento', 'administrativo'))
 );

@@ -295,6 +295,13 @@ describe('Alerta, desligamento por faltas e reversão (RF36, RF37, RF38)', () =>
         classificacao: 'desligamento',
         origem: 'secretaria',
       });
+      // A antecedência fica guardada, como no cancelamento do RF15.
+      const antecedencias = canceladas
+        .map((c) => c.antecedenciaMinutos)
+        .sort((x, y) => x - y);
+      expect(antecedencias[0]).toBeGreaterThan(100 * 60 - 2);
+      expect(antecedencias[0]).toBeLessThanOrEqual(100 * 60);
+      expect(antecedencias[1]).toBeGreaterThan(268 * 60 - 2);
       // Nenhuma falta nova com o cancelamento.
       expect(
         await db
@@ -314,6 +321,34 @@ describe('Alerta, desligamento por faltas e reversão (RF36, RF37, RF38)', () =>
         .from(auditoria)
         .where(eq(auditoria.operacao, 'desligar_por_faltas'));
       expect(evento.usuarioId).toBe(pessoas.secretaria.id);
+    });
+
+    it('a sessão já cancelada por outro caminho no mesmo instante não derruba o desligamento (RF15)', async () => {
+      const caso = await criarCaso();
+      await falta(await criarSessao(caso, -200));
+      await falta(await criarSessao(caso, -50));
+      const pelaPaciente = await criarSessao(caso, 100);
+      await criarSessao(caso, 268);
+      // O cancelamento pelo link já gravado, com a sessão ainda em aberto.
+      await db.insert(cancelamentosSessao).values({
+        sessaoId: pelaPaciente,
+        origem: 'link',
+        classificacao: 'no_prazo',
+        justificativaCifrada: 'x',
+        antecedenciaMinutos: 6000,
+      });
+
+      const { body } = await desligar(caso).expect(201);
+      expect(body.sessoesCanceladas).toBe(1);
+      const [daPaciente] = await db
+        .select()
+        .from(cancelamentosSessao)
+        .where(eq(cancelamentosSessao.sessaoId, pelaPaciente));
+      expect(daPaciente).toMatchObject({
+        origem: 'link',
+        classificacao: 'no_prazo',
+        desligamentoId: null,
+      });
     });
 
     it('um segundo pedido de desligamento do mesmo caso é recusado (422)', async () => {

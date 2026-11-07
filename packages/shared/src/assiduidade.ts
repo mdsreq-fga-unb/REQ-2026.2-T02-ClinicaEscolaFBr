@@ -66,26 +66,6 @@ export type FaltaDaSessao = {
   retiradaEm: string | null;
 };
 
-// Quem registrou o cancelamento da sessão e por quê (RF15, RF16, RF25, RF37).
-export const ORIGENS_CANCELAMENTO = [
-  "link",
-  "secretaria",
-  "estagiario",
-  "supervisor",
-  "coordenacao",
-] as const;
-export type OrigemCancelamento = (typeof ORIGENS_CANCELAMENTO)[number];
-
-export const CLASSIFICACOES_CANCELAMENTO = [
-  "no_prazo",
-  "fora_do_prazo",
-  "administrativo",
-  "ausencia_estagiario",
-  "desligamento",
-] as const;
-export type ClassificacaoCancelamento =
-  (typeof CLASSIFICACOES_CANCELAMENTO)[number];
-
 // Alerta do limite de faltas (RF36) e aviso da 1ª falta (RF35), na faixa do topo da
 // área interna. Sem o motivo das faltas.
 export type AlertaFaltas = {

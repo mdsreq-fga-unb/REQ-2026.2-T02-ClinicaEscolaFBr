@@ -1533,7 +1533,7 @@
           "name": "antecedencia_minutos",
           "type": "integer",
           "primaryKey": false,
-          "notNull": false
+          "notNull": true
         },
         "desligamento_id": {
           "name": "desligamento_id",
@@ -1600,7 +1600,7 @@
       "checkConstraints": {
         "cancelamentos_autor": {
           "name": "cancelamentos_autor",
-          "value": "(\"cancelamentos_sessao\".\"registrado_por\" is null) = (\"cancelamentos_sessao\".\"origem\" = 'link')"
+          "value": "(\"cancelamentos_sessao\".\"origem\" = 'link') = (\"cancelamentos_sessao\".\"registrado_por\" is null)"
         },
         "cancelamentos_desligamento": {
           "name": "cancelamentos_desligamento",
