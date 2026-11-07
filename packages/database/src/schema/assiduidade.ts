@@ -2,17 +2,24 @@ import { sql } from "drizzle-orm";
 import {
   boolean,
   check,
+  date,
   index,
   integer,
   pgEnum,
   pgTable,
+  primaryKey,
   text,
   timestamp,
+  uniqueIndex,
   uuid,
 } from "drizzle-orm/pg-core";
-import { ORIGENS_FALTA } from "@clinica/shared";
+import {
+  CLASSIFICACOES_CANCELAMENTO,
+  ORIGENS_CANCELAMENTO,
+  ORIGENS_FALTA,
+} from "@clinica/shared";
 import { usuarios } from "./base";
-import { casos } from "./casos";
+import { casos, vinculosEstagiario } from "./casos";
 import { sessoesAtendimento } from "./agendamento";
 
 export const origemFaltaEnum = pgEnum("origem_falta", ORIGENS_FALTA);
@@ -65,5 +72,143 @@ export const faltasPaciente = pgTable(
       sql`(${t.retiradaEm} is null) = (${t.retiradaPor} is null)`,
     ),
     index("faltas_caso_ciclo").on(t.casoId, t.cicloAtendimento),
+  ],
+);
+
+// Desligamento do paciente por faltas (RF37), com a reversão pela coordenação
+// (RF38). Não há motivo digitado na decisão: o motivo é o limite atingido, com as
+// faltas gravadas em desligamento_faltas. A reversão só preenche os campos dela.
+export const desligamentosPorFaltas = pgTable(
+  "desligamentos_por_faltas",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    casoId: uuid("caso_id")
+      .notNull()
+      .references(() => casos.id),
+    cicloAtendimento: integer("ciclo_atendimento").notNull(),
+    dataDecisao: date("data_decisao").notNull(),
+    decididoPor: uuid("decidido_por")
+      .notNull()
+      .references(() => usuarios.id),
+    decididoEm: timestamp("decidido_em", { withTimezone: true })
+      .notNull()
+      .defaultNow(),
+    revertidoPor: uuid("revertido_por").references(() => usuarios.id),
+    revertidoEm: timestamp("revertido_em", { withTimezone: true }),
+    // Pode trazer informação de saúde (RNF51); só a coordenação lê.
+    motivoReversaoCifrado: text("motivo_reversao_cifrado"),
+  },
+  (t) => [
+    check(
+      "desligamentos_reversao_completa",
+      sql`(${t.revertidoEm} is null) = (${t.revertidoPor} is null) and (${t.revertidoEm} is null) = (${t.motivoReversaoCifrado} is null)`,
+    ),
+    // Um desligamento vigente por caso e ciclo: dois pedidos simultâneos não geram
+    // dois desligamentos nem duas vagas.
+    uniqueIndex("desligamentos_vigente_unico")
+      .on(t.casoId, t.cicloAtendimento)
+      .where(sql`${t.revertidoEm} is null`),
+  ],
+);
+
+// Faltas que contavam no momento da decisão: o fundamento do desligamento (RF38).
+// Só inserção.
+export const desligamentoFaltas = pgTable(
+  "desligamento_faltas",
+  {
+    desligamentoId: uuid("desligamento_id")
+      .notNull()
+      .references(() => desligamentosPorFaltas.id),
+    faltaId: uuid("falta_id")
+      .notNull()
+      .references(() => faltasPaciente.id),
+  },
+  (t) => [primaryKey({ columns: [t.desligamentoId, t.faltaId] })],
+);
+
+// Vaga do estagiário liberada pelo desligamento, aguardando realocação (RF37). Só
+// o vínculo de um paciente novo pelo RF21 a ocupa; a reversão (RF38) a encerra.
+export const vagasLiberadas = pgTable(
+  "vagas_liberadas",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    desligamentoId: uuid("desligamento_id")
+      .notNull()
+      .unique()
+      .references(() => desligamentosPorFaltas.id),
+    estagiarioId: uuid("estagiario_id")
+      .notNull()
+      .references(() => usuarios.id),
+    supervisorId: uuid("supervisor_id")
+      .notNull()
+      .references(() => usuarios.id),
+    liberadaEm: timestamp("liberada_em", { withTimezone: true })
+      .notNull()
+      .defaultNow(),
+    ocupadaEm: timestamp("ocupada_em", { withTimezone: true }),
+    ocupadaPorVinculoId: uuid("ocupada_por_vinculo_id").references(
+      () => vinculosEstagiario.id,
+    ),
+    encerradaEm: timestamp("encerrada_em", { withTimezone: true }),
+  },
+  (t) => [
+    check(
+      "vagas_ocupacao_completa",
+      sql`(${t.ocupadaEm} is null) = (${t.ocupadaPorVinculoId} is null)`,
+    ),
+    index("vagas_estagiario").on(t.estagiarioId),
+  ],
+);
+
+export const origemCancelamentoEnum = pgEnum(
+  "origem_cancelamento",
+  ORIGENS_CANCELAMENTO,
+);
+export const classificacaoCancelamentoEnum = pgEnum(
+  "classificacao_cancelamento",
+  CLASSIFICACOES_CANCELAMENTO,
+);
+
+// Cancelamento da sessão (RF15, RF16, RF25 e RF37), com quem registrou e por quê.
+// Entra com o desligamento (RF37), o primeiro a cancelar sessões, e é reaproveitado
+// pelo RF15. O cancelamento pelo desligamento guarda o desligamento, para o RF38
+// listar as sessões a reagendar. Só inserção.
+export const cancelamentosSessao = pgTable(
+  "cancelamentos_sessao",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    sessaoId: uuid("sessao_id")
+      .notNull()
+      .unique()
+      .references(() => sessoesAtendimento.id),
+    origem: origemCancelamentoEnum("origem").notNull(),
+    classificacao: classificacaoCancelamentoEnum("classificacao").notNull(),
+    // Vazia só no desligamento e no cancelamento administrativo da transferência,
+    // em que o motivo fica no próprio desligamento ou na transferência.
+    justificativaCifrada: text("justificativa_cifrada"),
+    // Vazio no cancelamento pelo link, feito pelo paciente sem login (RNF10).
+    registradoPor: uuid("registrado_por").references(() => usuarios.id),
+    registradoEm: timestamp("registrado_em", { withTimezone: true })
+      .notNull()
+      .defaultNow(),
+    antecedenciaMinutos: integer("antecedencia_minutos"),
+    desligamentoId: uuid("desligamento_id").references(
+      () => desligamentosPorFaltas.id,
+    ),
+  },
+  (t) => [
+    check(
+      "cancelamentos_autor",
+      sql`(${t.registradoPor} is null) = (${t.origem} = 'link')`,
+    ),
+    check(
+      "cancelamentos_desligamento",
+      sql`(${t.desligamentoId} is not null) = (${t.classificacao} = 'desligamento')`,
+    ),
+    check(
+      "cancelamentos_justificativa",
+      sql`${t.justificativaCifrada} is not null or ${t.classificacao} in ('desligamento', 'administrativo')`,
+    ),
+    index("cancelamentos_desligamento").on(t.desligamentoId),
   ],
 );

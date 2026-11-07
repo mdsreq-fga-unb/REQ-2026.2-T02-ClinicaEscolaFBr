@@ -1,5 +1,5 @@
 import { z } from "zod";
-import type { Cor } from "./dominio-ciclo-3";
+import type { Cor, SituacaoCaso } from "./dominio-ciclo-3";
 
 // Distribuição de casos (RF18, RF20 e RF21).
 
@@ -50,6 +50,9 @@ export type CasoDoSupervisor = {
   prioridade: Cor | null;
   estagiario: string | null;
   prontuarioId: string | null;
+  situacao: SituacaoCaso;
+  // Fim do vínculo encerrado pelo desligamento (RF37), quando não há estagiário.
+  vinculoEncerradoEm: string | null;
 };
 
 // Estagiário com conta ativa, com os pacientes em atendimento (RF21).
