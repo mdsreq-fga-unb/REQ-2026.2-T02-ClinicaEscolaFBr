@@ -312,7 +312,7 @@ _Figura 19 — Registro da reunião de validação do Ciclo 3 com a Clínica Esc
 
 ### Resumo
 
-O Gabriel demonstrou as features do Ciclo 3 no ambiente de validação, do ponto de vista do paciente e da equipe. O Thiago aprovou o andamento e pediu sete ajustes: quatro na inscrição e três no agendamento e no e-mail da sessão. Como ele estava com pouco tempo, os protótipos do Ciclo 4 e as pendências não foram apresentados e seguiram por e-mail e pelo grupo da FBr. O aceite formal de cada feature foi pedido por escrito, por e-mail, porque o Robson, que registra o aceite pela FBr ([DF39](../unidade-2/requisitos/decisoes-fbr.md#df39)), não participou.
+O Gabriel demonstrou as features do Ciclo 3 no ambiente de validação, do ponto de vista do paciente e da equipe. O Thiago aprovou o andamento e pediu sete ajustes: quatro na inscrição e três no agendamento e no e-mail da sessão. Como ele estava com pouco tempo, os protótipos do Ciclo 4 e as pendências não foram apresentados e seguiram por e-mail e pelo grupo da FBr. O Thiago aceitou as features demonstradas, menos as três que tiveram ajustes (RF1, RF10 e RF53), que voltam para o aceite depois das correções. Como o Robson, que registra o aceite pela FBr ([DF39](../unidade-2/requisitos/decisoes-fbr.md#df39)), não participou, a confirmação dele é pedida por e-mail.
 
 ### 1. Demonstração das features do Ciclo 3
 
@@ -331,7 +331,9 @@ O Gabriel demonstrou as features do Ciclo 3 no ambiente de validação, do ponto
 | RF50 — Autenticar usuário institucional | Sim | A entrada com os perfis de coordenação, supervisor, estagiário e secretaria, cada um com o seu menu |
 | RF53 — Cadastrar usuário institucional com perfil de acesso | Sim | A lista de usuários, o cadastro com convite por e-mail e a conta de coordenação do Thiago, ativada durante a reunião |
 | RF54 — Desativar usuário institucional | Sim | A desativação de uma conta de teste, com os registros dela mantidos |
-| RF51 — Encerrar sessão do usuário | Não | A troca de contas foi feita em janelas separadas, sem mostrar a saída |
+| RF51 — Encerrar sessão do usuário | Sim | A saída da conta, encerrando a sessão do usuário |
+
+**Aceite:** o Thiago aceitou, pela FBr, as features demonstradas sem ajustes: RF2, RF4, RF6, RF18, RF20, RF21, RF66, RF55, RF50, RF54 e RF51. O RF1, o RF10 e o RF53 ficam sem aceite até os ajustes da seção 2 serem feitos e mostrados à FBr. Como o Robson, que registra o aceite pela FBr ([DF39](../unidade-2/requisitos/decisoes-fbr.md#df39)), não participou, a confirmação dele é pedida por e-mail.
 
 ### 2. Ajustes pedidos pela FBr
 
@@ -360,13 +362,16 @@ Não foram apresentados, porque o Thiago estava com pouco tempo. O link dos prot
 
 ### 5. Próximos passos e responsabilidades
 
-- **Gabriel:** enviar ao Thiago o e-mail com o kit, o termo, os protótipos e o pedido de aceite por escrito; enviar as pendências no grupo da FBr; registrar as decisões DF47 a DF49.
+- **Gabriel:** enviar ao Thiago o e-mail com o kit, o termo, os protótipos e o pedido de confirmação do aceite pelo Robson; enviar as pendências no grupo da FBr; registrar as decisões DF47 a DF49.
 - **Nicolas:** corrigir o agendamento (data passada, início depois do término e horários de 10 em 10 minutos).
 - **Jônatas:** ajustar a inscrição (CPF do responsável, e-mail e telefone obrigatórios, sem a escolha do canal, com o aviso).
 - **Thiago:** confirmar com o Robson o RG e a obrigatoriedade do endereço e do contato.
-- **Thiago e Robson:** aplicar o teste de usabilidade e devolver a planilha até 13/11; validar os protótipos do Ciclo 4 até 09/11; responder ao pedido de aceite.
+- **Thiago e Robson:** aplicar o teste de usabilidade e devolver a planilha até 13/11; validar os protótipos do Ciclo 4 até 09/11. O Robson confirma o aceite por e-mail.
 - **Robson:** ativar a conta de coordenação na validação antes de o convite vencer, em 08/11.
 
 ### Encerramento
 
 O Thiago elogiou o sistema e a equipe e disse que a FBr começa os testes o quanto antes. As dúvidas seguem pelo grupo da FBr.
+
+!!! note "Correção (07/11/2026)"
+    Esta ata foi corrigida em 07/11/2026. A versão anterior registrava que não houve aceite por feature e que o RF51 não foi demonstrado. Na reunião, o RF51 foi demonstrado e aceito, e o Thiago aceitou as features que não tiveram ajustes; as que tiveram ajustes (RF1, RF10 e RF53) ficam sem aceite até as correções.
