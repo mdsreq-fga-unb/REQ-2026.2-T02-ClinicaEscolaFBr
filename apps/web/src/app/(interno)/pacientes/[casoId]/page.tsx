@@ -3,7 +3,7 @@ import { useQuery } from "@tanstack/react-query";
 import Link from "next/link";
 import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
-import type { ContagemFaltas } from "@clinica/shared";
+import type { AcoesCancelamento, ContagemFaltas } from "@clinica/shared";
 import {
   HistoricoFaltas,
   ResumoFaltas,
@@ -40,6 +40,7 @@ type DadosAdministrativos = {
   faltasNoCiclo: ContagemFaltas;
   cicloAtendimento: number;
   sessoes: SessaoDoCiclo[];
+  acoesCancelamento: AcoesCancelamento;
 };
 
 const celularBr = (c: string | null) =>
@@ -158,6 +159,8 @@ export default function PacientePage() {
           podeRegistrar={secretaria}
           podeJustificar={secretaria}
           chave={["paciente", casoId]}
+          acoesCancelamento={d.acoesCancelamento}
+          casoId={d.casoId}
         />
       </section>
       <div className="flex flex-wrap gap-3">

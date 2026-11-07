@@ -7,6 +7,8 @@ import { useEffect, useState, type FormEvent } from "react";
 import {
   dadosIniciaisSchema,
   evolucaoSchema,
+  type AcoesCancelamento,
+  type CancelamentoDaSessao,
   type ContagemFaltas,
   type DadosIniciais,
   type Evolucao,
@@ -317,6 +319,7 @@ type Prontuario = {
     estagiario: string;
     status: StatusSessao;
     falta: FaltaDaSessao | null;
+    cancelamento: CancelamentoDaSessao | null;
     evolucao: null | {
       id: string;
       queixa: string;
@@ -331,6 +334,8 @@ type Prontuario = {
   fechamentoAvaliativoPendente: boolean;
   faltasNoCiclo: ContagemFaltas;
   acoesFalta: { registrar: boolean; justificar: boolean };
+  acoesCancelamento: AcoesCancelamento;
+  casoId: string;
 };
 
 // Acesso negado: a mesma tela para qualquer recusa, sem o nome do paciente (RNF25).
@@ -552,6 +557,7 @@ export default function ProntuarioPage() {
                     <SeloSessao
                       status={atendimento.status}
                       justificada={atendimento.falta?.justificada}
+                      cancelamento={atendimento.cancelamento}
                     />
                   </h3>
                   {atendimento.falta && (
@@ -598,6 +604,8 @@ export default function ProntuarioPage() {
                     podeRegistrar={p.acoesFalta.registrar}
                     podeJustificar={p.acoesFalta.justificar}
                     chave={["prontuario", p.id]}
+                    acoesCancelamento={p.acoesCancelamento}
+                    casoId={p.casoId}
                   >
                     {marcarRealizada && (
                       <AcaoSessao
