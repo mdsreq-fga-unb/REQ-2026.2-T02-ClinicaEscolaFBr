@@ -47,3 +47,12 @@ export const NOMES_CANAL = {
   whatsapp: "WhatsApp",
   ligacao: "Ligação",
 } as const;
+
+// Situação da sessão (RF10, RF14, RF15, RF34).
+export const NOMES_STATUS_SESSAO = {
+  agendada: "Agendada",
+  confirmada: "Confirmada",
+  cancelada: "Cancelada",
+  realizada: "Realizada",
+  falta_paciente: "Falta do paciente",
+} as const;

@@ -29,6 +29,11 @@ export function Dialogo({
   children: ReactNode;
 }) {
   const ref = useRef<HTMLDialogElement>(null);
+  // O fechamento feito pelo próprio componente, ao sair da tela, também dispara o
+  // evento "close", depois de a limpeza terminar. No desenvolvimento, o React
+  // monta, desmonta e monta de novo o efeito: sem esta marca, o "close" da
+  // primeira montagem chegaria com o diálogo já reaberto e o fecharia.
+  const fechadoPeloComponente = useRef(false);
   const idTitulo = useId();
   useEffect(() => {
     const dialogo = ref.current;
@@ -39,14 +44,23 @@ export function Dialogo({
         : null;
     if (!dialogo.open) dialogo.showModal();
     return () => {
-      if (dialogo.open) dialogo.close();
+      if (dialogo.open) {
+        fechadoPeloComponente.current = true;
+        dialogo.close();
+      }
       if (origem?.isConnected) origem.focus();
     };
   }, [aberto]);
   return (
     <dialog
       ref={ref}
-      onClose={aoFechar}
+      onClose={() => {
+        if (fechadoPeloComponente.current) {
+          fechadoPeloComponente.current = false;
+          return;
+        }
+        aoFechar();
+      }}
       role={alerta ? "alertdialog" : undefined}
       aria-labelledby={idTitulo}
       className={cn(

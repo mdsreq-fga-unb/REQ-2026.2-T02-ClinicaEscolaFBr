@@ -2,6 +2,14 @@
 import { useQuery } from "@tanstack/react-query";
 import Link from "next/link";
 import { useParams } from "next/navigation";
+import { useEffect, useState } from "react";
+import type { ContagemFaltas } from "@clinica/shared";
+import {
+  HistoricoFaltas,
+  ResumoFaltas,
+  SessoesComFaltas,
+  type SessaoDoCiclo,
+} from "@/components/assiduidade/faltas";
 import { Aviso } from "@/components/comum/aviso";
 import { Dados } from "@/components/comum/dados";
 import { buttonVariants } from "@/components/ui/button";
@@ -29,6 +37,9 @@ type DadosAdministrativos = {
   supervisor: string | null;
   // Só vem para a coordenação, que consulta o prontuário (DF32).
   prontuarioId?: string | null;
+  faltasNoCiclo: ContagemFaltas;
+  cicloAtendimento: number;
+  sessoes: SessaoDoCiclo[];
 };
 
 const celularBr = (c: string | null) =>
@@ -39,6 +50,13 @@ const celularBr = (c: string | null) =>
 export default function PacientePage() {
   const { casoId } = useParams<{ casoId: string }>();
   const { data: sessao } = useSessao();
+  // Horário de referência para saber se a sessão já começou e aceita a falta,
+  // atualizado a cada minuto.
+  const [agora, setAgora] = useState(() => Date.now());
+  useEffect(() => {
+    const relogio = setInterval(() => setAgora(Date.now()), 60_000);
+    return () => clearInterval(relogio);
+  }, []);
   const consulta = useQuery({
     queryKey: ["paciente", casoId],
     queryFn: () =>
@@ -49,6 +67,7 @@ export default function PacientePage() {
   if (consulta.isError || !consulta.data)
     return <Aviso tipo="erro" titulo="Não foi possível abrir o paciente." />;
   const d = consulta.data;
+  const secretaria = sessao?.perfil === "secretaria";
   return (
     <div className="flex flex-col gap-6">
       <nav aria-label="Você está em" className="ui-trilha">
@@ -103,13 +122,44 @@ export default function PacientePage() {
                 "Ciclo de atendimento",
                 d.vinculadoEm ? `Desde ${dataBr(d.vinculadoEm)}` : "—",
               ],
+              [
+                "Sessões realizadas",
+                String(
+                  d.sessoes.filter((s) => s.status === "realizada").length,
+                ),
+              ],
               ["Próxima sessão", dataHoraBr(d.proximaSessao)],
               ["Estagiário", d.estagiario ?? "—"],
               ["Supervisor", d.supervisor ?? "—"],
             ]}
           />
+          <ResumoFaltas
+            contagem={d.faltasNoCiclo}
+            nome={d.nome}
+            linkHistorico="#historico-faltas"
+          />
         </section>
       </div>
+      <HistoricoFaltas
+        id="historico-faltas"
+        contagem={d.faltasNoCiclo}
+        ciclo={d.cicloAtendimento}
+        sessoes={d.sessoes}
+      />
+      <section aria-labelledby="sessoes-ciclo" className="ui-cartao">
+        <h2 id="sessoes-ciclo" className="ui-h2">
+          Sessões do ciclo
+        </h2>
+        <SessoesComFaltas
+          nome={d.nome}
+          sessoes={d.sessoes}
+          limite={d.faltasNoCiclo.limite}
+          agora={agora}
+          podeRegistrar={secretaria}
+          podeJustificar={secretaria}
+          chave={["paciente", casoId]}
+        />
+      </section>
       <div className="flex flex-wrap gap-3">
         {d.prontuarioId && (
           <Link

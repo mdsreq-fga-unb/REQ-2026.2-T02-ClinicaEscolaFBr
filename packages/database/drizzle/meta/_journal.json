@@ -50,6 +50,13 @@
       "when": 1793493506560,
       "tag": "0006_contrato_da_clinica",
       "breakpoints": true
+    },
+    {
+      "idx": 7,
+      "version": "7",
+      "when": 1793991869138,
+      "tag": "0007_faltas_do_paciente",
+      "breakpoints": true
     }
   ]
 }

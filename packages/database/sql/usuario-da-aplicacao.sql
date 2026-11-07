@@ -39,3 +39,20 @@ BEGIN
   END LOOP;
 END
 $$;
+
+-- Registros que só ganham informação, com o gatilho proteger_campos_preenchidos, como
+-- as faltas do paciente (RNF32): a aplicação atualiza, mas não apaga.
+DO $$
+DECLARE
+  tabela regclass;
+BEGIN
+  FOR tabela IN
+    SELECT DISTINCT t.tgrelid::regclass
+    FROM pg_trigger t
+    JOIN pg_proc f ON f.oid = t.tgfoid
+    WHERE f.proname = 'proteger_campos_preenchidos' AND NOT t.tgisinternal
+  LOOP
+    EXECUTE format('REVOKE DELETE, TRUNCATE ON %s FROM clinica_app', tabela);
+  END LOOP;
+END
+$$;

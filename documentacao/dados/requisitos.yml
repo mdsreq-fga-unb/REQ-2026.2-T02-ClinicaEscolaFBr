@@ -571,7 +571,7 @@ rfs:
   lider: Gabriel
   depende: [RF10, RF14, RF15]
   issue: 150
-  estado: Planejada
+  estado: Código concluído
 
 - id: RF35
   nome: Contabilizar faltas do paciente no ciclo
@@ -585,7 +585,7 @@ rfs:
   lider: Gabriel
   depende: [RF15, RF34]
   issue: 151
-  estado: Planejada
+  estado: Código concluído
   origem: [DF20]
 
 - id: RF36

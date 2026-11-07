@@ -5,7 +5,16 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { aliasedTable, and, eq, gt, asc, desc, isNull } from 'drizzle-orm';
+import {
+  aliasedTable,
+  and,
+  eq,
+  gt,
+  asc,
+  desc,
+  inArray,
+  isNull,
+} from 'drizzle-orm';
 import {
   atribuicoesSupervisor,
   casos,
@@ -20,9 +29,10 @@ import {
 import { cifrar, decifrar } from '../../common/criptografia';
 import { AuditoriaService } from '../../auditoria/auditoria.service';
 import type { UsuarioAutenticado } from '../../auth/usuario-autenticado';
-import type { DadosIniciais } from '@clinica/shared';
+import { STATUS_SESSAO_EM_ABERTO, type DadosIniciais } from '@clinica/shared';
 import type { Evolucao } from '@clinica/shared';
 import { DB } from '../../database/database.module';
+import { FaltasService } from '../assiduidade/faltas.service';
 import { PoliticaProntuario } from './politica-prontuario';
 
 const estagiario = aliasedTable(usuarios, 'estagiario');
@@ -35,6 +45,7 @@ export class ProntuariosService {
     private readonly politica: PoliticaProntuario,
     private readonly config: ConfigService,
     private readonly auditoria: AuditoriaService,
+    private readonly faltas: FaltasService,
   ) {}
 
   // Prontuário com o conteúdo clínico, para o estagiário e o supervisor do caso e,
@@ -90,9 +101,11 @@ export class ProntuariosService {
         inicio: sessoesAtendimento.inicio,
         termino: sessoesAtendimento.termino,
         estagiarioId: sessoesAtendimento.estagiarioId,
+        estagiario: estagiario.nome,
         status: sessoesAtendimento.status,
       })
       .from(sessoesAtendimento)
+      .innerJoin(estagiario, eq(estagiario.id, sessoesAtendimento.estagiarioId))
       .where(
         and(
           eq(sessoesAtendimento.casoId, prontuario.casoId),
@@ -114,6 +127,12 @@ export class ProntuariosService {
       .innerJoin(usuarios, eq(usuarios.id, evolucoes.registradaPor))
       .where(eq(evolucoes.prontuarioId, id))
       .orderBy(asc(evolucoes.registradaEm));
+    // Quem abre o prontuário pode justificar a falta ou é a coordenação: vê o motivo.
+    const faltasDoCiclo = await this.faltas.doCiclo(
+      prontuario.casoId,
+      prontuario.cicloAtendimento,
+      true,
+    );
     const sessoesRealizadas = sessoes.filter(
       (sessao) => sessao.status === 'realizada',
     ).length;
@@ -135,8 +154,18 @@ export class ProntuariosService {
         estagiarios: historicoEstagiarios,
         supervisores: historicoSupervisores,
       },
+      // A contagem é a do ciclo deste prontuário, o mesmo das sessões listadas.
+      faltasNoCiclo: await this.faltas.contar(
+        prontuario.casoId,
+        undefined,
+        prontuario.cicloAtendimento,
+      ),
+      // Os botões de falta seguem a regra da API (vínculo e atribuição vigentes),
+      // e não o estagiário de cada sessão.
+      acoesFalta: await this.faltas.acoesPermitidas(prontuario.casoId, usuario),
       sessoes: sessoes.map((sessao) => ({
         ...sessao,
+        falta: faltasDoCiclo.get(sessao.id) ?? null,
         evolucao: evolucoesRows.find((e) => e.sessaoId === sessao.id)
           ? (() => {
               const evolucao = evolucoesRows.find(
@@ -200,7 +229,7 @@ export class ProntuariosService {
         .where(
           and(
             eq(sessoesAtendimento.id, sessaoId),
-            eq(sessoesAtendimento.status, 'agendada'),
+            inArray(sessoesAtendimento.status, STATUS_SESSAO_EM_ABERTO),
           ),
         )
         .returning({ id: sessoesAtendimento.id });
@@ -351,13 +380,47 @@ export class ProntuariosService {
       .where(
         and(
           eq(sessoesAtendimento.casoId, casoId),
-          eq(sessoesAtendimento.status, 'agendada'),
+          inArray(sessoesAtendimento.status, STATUS_SESSAO_EM_ABERTO),
           gt(sessoesAtendimento.inicio, new Date()),
         ),
       )
       .orderBy(asc(sessoesAtendimento.inicio))
       .limit(1);
-    const dados = { ...caso, ...linha, proximaSessao: proxima?.inicio ?? null };
+    // Sessões do ciclo com as faltas (RF34, RF35): a secretaria registra e justifica a
+    // falta por aqui. Nenhum conteúdo clínico entra na resposta (RF55).
+    const [{ ciclo }] = await this.db
+      .select({ ciclo: casos.cicloAtendimento })
+      .from(casos)
+      .where(eq(casos.id, casoId));
+    const sessoes = await this.db
+      .select({
+        id: sessoesAtendimento.id,
+        inicio: sessoesAtendimento.inicio,
+        termino: sessoesAtendimento.termino,
+        estagiario: estagiario.nome,
+        status: sessoesAtendimento.status,
+      })
+      .from(sessoesAtendimento)
+      .innerJoin(estagiario, eq(estagiario.id, sessoesAtendimento.estagiarioId))
+      .where(
+        and(
+          eq(sessoesAtendimento.casoId, casoId),
+          eq(sessoesAtendimento.cicloAtendimento, ciclo),
+        ),
+      )
+      .orderBy(asc(sessoesAtendimento.inicio));
+    const faltasDoCiclo = await this.faltas.doCiclo(casoId, ciclo, true);
+    const dados = {
+      ...caso,
+      ...linha,
+      proximaSessao: proxima?.inicio ?? null,
+      cicloAtendimento: ciclo,
+      faltasNoCiclo: await this.faltas.contar(casoId, undefined, ciclo),
+      sessoes: sessoes.map((sessao) => ({
+        ...sessao,
+        falta: faltasDoCiclo.get(sessao.id) ?? null,
+      })),
+    };
     if (usuario.perfil !== 'coordenacao') return dados;
     const [prontuario] = await this.db
       .select({ id: prontuarios.id })

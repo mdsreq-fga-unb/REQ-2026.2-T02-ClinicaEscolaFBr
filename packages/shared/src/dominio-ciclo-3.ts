@@ -61,16 +61,33 @@ export const SITUACOES_CASO = [
 export const situacaoCasoSchema = z.enum(SITUACOES_CASO);
 export type SituacaoCaso = z.infer<typeof situacaoCasoSchema>;
 
-// Status da sessão (RF10). Os demais status entram com o RF14, o RF15 e o RF16 no Ciclo 4.
-export const STATUS_SESSAO = ["agendada", "realizada"] as const;
+// Status da sessão (RF10). A confirmação (RF14), o cancelamento (RF15 e RF16) e a
+// falta do paciente (RF34) entram juntos no Ciclo 4, numa migration só.
+export const STATUS_SESSAO = [
+  "agendada",
+  "confirmada",
+  "cancelada",
+  "realizada",
+  "falta_paciente",
+] as const;
 export const statusSessaoSchema = z.enum(STATUS_SESSAO);
 export type StatusSessao = z.infer<typeof statusSessaoSchema>;
 
-// Status que ocupam o horário na agenda (RNF9): a sessão realizada continua ocupando,
-// para não se marcar outra por cima do intervalo de anotações.
+// Status que ocupam o horário na agenda (RNF9): só a sessão cancelada libera o
+// horário. A realizada continua ocupando, para não se marcar outra por cima do
+// intervalo de anotações.
 export const STATUS_QUE_OCUPAM_AGENDA: StatusSessao[] = [
   "agendada",
+  "confirmada",
   "realizada",
+  "falta_paciente",
+];
+
+// Sessão que ainda vai acontecer ou já aconteceu sem registro: pode ser marcada
+// como realizada (RF28) ou receber a falta do paciente (RF34).
+export const STATUS_SESSAO_EM_ABERTO: StatusSessao[] = [
+  "agendada",
+  "confirmada",
 ];
 
 // Parâmetros alterados pela coordenação, com o valor padrão confirmado com a FBr.

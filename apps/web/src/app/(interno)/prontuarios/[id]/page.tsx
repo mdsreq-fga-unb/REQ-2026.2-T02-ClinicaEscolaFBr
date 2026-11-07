@@ -7,9 +7,19 @@ import { useEffect, useState, type FormEvent } from "react";
 import {
   dadosIniciaisSchema,
   evolucaoSchema,
+  type ContagemFaltas,
   type DadosIniciais,
   type Evolucao,
+  type FaltaDaSessao,
+  type StatusSessao,
 } from "@clinica/shared";
+import {
+  AcoesFaltaDaSessao,
+  DetalheFalta,
+  HistoricoFaltas,
+  ResumoFaltas,
+  SeloSessao,
+} from "@/components/assiduidade/faltas";
 import { Aviso } from "@/components/comum/aviso";
 import {
   Campo,
@@ -266,7 +276,7 @@ function AcaoSessao({
     }
   }
   return (
-    <div className="mt-3">
+    <div>
       {erro && <Aviso tipo="alerta" titulo={erro} className="mb-3" />}
       <Button type="button" onClick={marcar}>
         Marcar sessão como realizada
@@ -304,7 +314,9 @@ type Prontuario = {
     inicio: string;
     termino: string;
     estagiarioId: string;
-    status: string;
+    estagiario: string;
+    status: StatusSessao;
+    falta: FaltaDaSessao | null;
     evolucao: null | {
       id: string;
       queixa: string;
@@ -317,6 +329,8 @@ type Prontuario = {
   relatorioFinal: null | { estado: string };
   sessoesRealizadas: number;
   fechamentoAvaliativoPendente: boolean;
+  faltasNoCiclo: ContagemFaltas;
+  acoesFalta: { registrar: boolean; justificar: boolean };
 };
 
 // Acesso negado: a mesma tela para qualquer recusa, sem o nome do paciente (RNF25).
@@ -514,59 +528,98 @@ export default function ProntuarioPage() {
             Registre o fechamento no relatório final do ciclo.
           </Aviso>
         )}
+        <ResumoFaltas
+          contagem={p.faltasNoCiclo}
+          nome={p.nome}
+          linkHistorico="#historico-faltas"
+        />
         {p.sessoes.length ? (
           <ol className="flex flex-col">
-            {p.sessoes.map((atendimento) => (
-              <li
-                key={atendimento.id}
-                className="border-b border-border py-4 first:pt-0 last:border-b-0 last:pb-0"
-              >
-                <h3 className="text-[15px] font-bold">
-                  {dataHoraBr(atendimento.inicio)} ·{" "}
-                  {atendimento.status === "realizada"
-                    ? "Realizada"
-                    : "Agendada"}
-                </h3>
-                {atendimento.evolucao ? (
-                  <div className="mt-2 flex flex-col gap-2 text-[15px]">
-                    <p>
-                      <strong>Evolução:</strong> {atendimento.evolucao.queixa}
-                    </p>
-                    <p>
-                      <strong>Planejamento:</strong>{" "}
-                      {atendimento.evolucao.planejamento}
-                    </p>
-                    <p className="ui-meta">
-                      Registrada por {atendimento.evolucao.registradaPor} em{" "}
-                      {dataHoraBr(atendimento.evolucao.registradaEm)}
-                    </p>
-                  </div>
-                ) : atendimento.estagiarioId === sessao?.id &&
-                  atendimento.status === "realizada" ? (
-                  <FormularioEvolucao
-                    prontuarioId={p.id}
-                    sessaoId={atendimento.id}
-                    inicio={atendimento.inicio}
-                  />
-                ) : atendimento.estagiarioId === sessao?.id &&
-                  atendimento.status === "agendada" &&
-                  new Date(atendimento.termino).getTime() <= agora ? (
-                  <AcaoSessao prontuarioId={p.id} sessaoId={atendimento.id} />
-                ) : (
-                  <p className="ui-dica mt-1">
-                    {atendimento.status === "agendada" &&
-                    new Date(atendimento.termino).getTime() > agora
-                      ? "A sessão ainda não aconteceu."
-                      : "Evolução não registrada."}
-                  </p>
-                )}
-              </li>
-            ))}
+            {p.sessoes.map((atendimento) => {
+              const responsavel = atendimento.estagiarioId === sessao?.id;
+              const marcarRealizada =
+                responsavel &&
+                (atendimento.status === "agendada" ||
+                  atendimento.status === "confirmada") &&
+                new Date(atendimento.termino).getTime() <= agora;
+              return (
+                <li
+                  key={atendimento.id}
+                  className="border-b border-border py-4 first:pt-0 last:border-b-0 last:pb-0"
+                >
+                  <h3 className="flex flex-wrap items-center gap-2 text-[15px] font-bold">
+                    {dataHoraBr(atendimento.inicio)}
+                    <SeloSessao
+                      status={atendimento.status}
+                      justificada={atendimento.falta?.justificada}
+                    />
+                  </h3>
+                  {atendimento.falta && (
+                    <DetalheFalta falta={atendimento.falta} />
+                  )}
+                  {atendimento.evolucao ? (
+                    <div className="mt-2 flex flex-col gap-2 text-[15px]">
+                      <p>
+                        <strong>Evolução:</strong> {atendimento.evolucao.queixa}
+                      </p>
+                      <p>
+                        <strong>Planejamento:</strong>{" "}
+                        {atendimento.evolucao.planejamento}
+                      </p>
+                      <p className="ui-meta">
+                        Registrada por {atendimento.evolucao.registradaPor} em{" "}
+                        {dataHoraBr(atendimento.evolucao.registradaEm)}
+                      </p>
+                    </div>
+                  ) : responsavel && atendimento.status === "realizada" ? (
+                    <FormularioEvolucao
+                      prontuarioId={p.id}
+                      sessaoId={atendimento.id}
+                      inicio={atendimento.inicio}
+                    />
+                  ) : (
+                    !atendimento.falta && (
+                      <p className="ui-dica mt-1">
+                        {(atendimento.status === "agendada" ||
+                          atendimento.status === "confirmada") &&
+                        new Date(atendimento.termino).getTime() > agora
+                          ? "A sessão ainda não aconteceu."
+                          : atendimento.status === "cancelada"
+                            ? "Sessão cancelada."
+                            : "Evolução não registrada."}
+                      </p>
+                    )
+                  )}
+                  <AcoesFaltaDaSessao
+                    nome={p.nome}
+                    sessao={atendimento}
+                    limite={p.faltasNoCiclo.limite}
+                    agora={agora}
+                    podeRegistrar={p.acoesFalta.registrar}
+                    podeJustificar={p.acoesFalta.justificar}
+                    chave={["prontuario", p.id]}
+                  >
+                    {marcarRealizada && (
+                      <AcaoSessao
+                        prontuarioId={p.id}
+                        sessaoId={atendimento.id}
+                      />
+                    )}
+                  </AcoesFaltaDaSessao>
+                </li>
+              );
+            })}
           </ol>
         ) : (
           <p className="ui-dica">Não há sessões registradas neste ciclo.</p>
         )}
       </section>
+      <HistoricoFaltas
+        id="historico-faltas"
+        contagem={p.faltasNoCiclo}
+        ciclo={p.cicloAtendimento}
+        sessoes={p.sessoes}
+      />
       <section aria-labelledby="historico-responsaveis" className={cartao}>
         <h2 id="historico-responsaveis" className="ui-h2">
           Histórico de responsáveis

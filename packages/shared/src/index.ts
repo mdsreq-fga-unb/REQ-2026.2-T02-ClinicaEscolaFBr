@@ -5,3 +5,4 @@ export * from "./acesso";
 export * from "./agendamento";
 export * from "./inscricao";
 export * from "./casos";
+export * from "./assiduidade";
