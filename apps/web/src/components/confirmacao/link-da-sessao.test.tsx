@@ -161,6 +161,37 @@ describe("Página do link da sessão (RF14)", () => {
     },
   );
 
+  it("com a página aberta, o fim do prazo troca o botão pelo aviso, sem recarregar", async () => {
+    const quase = new Date(Date.now() + 300).toISOString();
+    simularApi([
+      ok({ ...agendada, prazoConfirmacao: quase }),
+      ok({ ...encerrada, prazoConfirmacao: quase }),
+    ]);
+    abrir();
+    expect(
+      await screen.findByRole("button", { name: "Confirmar presença" }),
+    ).toBeTruthy();
+
+    expect(
+      await screen.findByText("Prazo de confirmação encerrado."),
+    ).toBeTruthy();
+    expect(
+      screen.queryByRole("button", { name: "Confirmar presença" }),
+    ).toBeNull();
+  });
+
+  it("no prazo encerrado, o título e o texto do aviso ficam separados", async () => {
+    simularApi([ok(encerrada)]);
+    abrir();
+
+    const aviso = (
+      await screen.findByText("Prazo de confirmação encerrado.")
+    ).closest("p");
+    expect(aviso?.textContent).toMatch(
+      /^Prazo de confirmação encerrado\. O prazo/,
+    );
+  });
+
   it("falha ao confirmar: mantém o botão e avisa, sem dizer que confirmou", async () => {
     simularApi([ok(agendada)], [{ status: 500, corpo: {} }]);
     abrir();

@@ -149,7 +149,7 @@ function PrazoEncerrado({ sessao }: { sessao: SessaoDoLink }) {
       <div className="flex items-start gap-2.5 rounded-[10px] border border-[#f0cf9f] bg-alerta-fundo p-3.5 text-[15px]">
         <Clock aria-hidden className="mt-0.5 size-5 shrink-0 text-[#a85400]" />
         <p>
-          <strong className="block">Prazo de confirmação encerrado.</strong>O
+          <strong className="block">Prazo de confirmação encerrado.</strong> O
           prazo para confirmar a presença pelo site terminou às {horaBr(prazo)}{" "}
           de {dataBr(sessao.prazoConfirmacao)}. Se você vai à sessão, procure a
           secretaria da Clínica Escola.
@@ -224,6 +224,28 @@ export function LinkDaSessao({ token }: { token: string }) {
       }
     },
   });
+
+  // Com a página aberta, a situação muda sozinha no fim do prazo de confirmação e no
+  // início da sessão, quando o link deixa de valer (RNF59): a página consulta a API
+  // de novo nesses momentos, em vez de mostrar um botão que ela vai recusar.
+  const sessaoAberta = consulta.data;
+  useEffect(() => {
+    if (!sessaoAberta) return;
+    const proximaMudanca = sessaoAberta.podeConfirmar
+      ? sessaoAberta.prazoConfirmacao
+      : sessaoAberta.inicio;
+    // Um segundo depois do instante, quando a API já recusa.
+    const espera = Date.parse(proximaMudanca) - Date.now() + 1000;
+    // O setTimeout aceita até uns 24 dias; com mais que isso, a página já terá sido
+    // aberta de novo.
+    if (espera <= 0 || espera > 2 ** 31 - 1) return;
+    const relogio = setTimeout(
+      () =>
+        void cache.invalidateQueries({ queryKey: ["link-da-sessao", token] }),
+      espera,
+    );
+    return () => clearTimeout(relogio);
+  }, [sessaoAberta, cache, token]);
 
   if (consulta.isPending) {
     return (
