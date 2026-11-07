@@ -234,7 +234,7 @@ describe('Alerta, desligamento por faltas e reversão (RF36, RF37, RF38)', () =>
       expect((await alertas('secretaria')).body.primeiraFalta).toEqual([]);
     });
 
-    it('o desligamento remove o alerta', async () => {
+    it('o alerta é calculado das faltas e o desligamento o remove (RNF32)', async () => {
       const caso = await casoNoLimite();
       await desligar(caso).expect(201);
       expect((await alertas('secretaria')).body.limite).toEqual([]);
@@ -256,7 +256,7 @@ describe('Alerta, desligamento por faltas e reversão (RF36, RF37, RF38)', () =>
       }
     });
 
-    it('a confirmação registra a decisão, muda a situação, encerra o vínculo, cancela as sessões futuras e libera a vaga', async () => {
+    it('a confirmação registra a decisão, muda a situação, encerra o vínculo, cancela as sessões futuras e libera a vaga na mesma operação (RNF32, RNF34)', async () => {
       const caso = await casoNoLimite();
       const { body } = await desligar(caso).expect(201);
       expect(body).toMatchObject({
