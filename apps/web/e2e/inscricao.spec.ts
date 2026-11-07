@@ -365,11 +365,11 @@ test("timeout real não confirma; repetição mantém a mesma chave", async ({
   expect(chaves[1]).toBe(chaves[0]);
 });
 
-test("a raiz mantém entrada institucional e cadastro público não libera área interna", async ({
+test("a raiz leva à inscrição e o cadastro público não libera a área interna", async ({
   page,
 }) => {
   await page.goto("/");
-  await expect(page).toHaveURL(/\/entrar$/);
+  await expect(page).toHaveURL(/\/inscricao$/);
   await page.goto("/usuarios");
   await expect(page).toHaveURL(/\/entrar$/);
   await page.goto("/inscricao");
