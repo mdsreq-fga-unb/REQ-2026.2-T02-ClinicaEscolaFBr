@@ -127,10 +127,10 @@ function Efeito({
       <p>
         <strong className="block">
           Antecedência: {duracaoCurta(minutos)}.
-        </strong>
+        </strong>{" "}
         {noPrazo
           ? "Cancelamento no prazo: não conta como falta."
-          : "Cancelamento fora do prazo: conta como falta do paciente no ciclo."}
+          : "Cancelamento fora do prazo: conta como falta do paciente no ciclo."}{" "}
         <span className="ui-meta block">
           Calculada pelo sistema: registro às {horaBr(new Date(agora))} para a
           sessão das {hora(sessao.inicio)}.
