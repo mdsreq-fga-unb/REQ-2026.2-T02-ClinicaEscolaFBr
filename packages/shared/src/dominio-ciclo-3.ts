@@ -96,5 +96,6 @@ export const PARAMETROS_PADRAO = {
   intervalo_anotacoes_minutos: 10, // RF10, DF18
   limite_casos_supervisor: 50, // RF20, DF17
   validade_convite_horas: 72, // RF53, DF30
+  prazo_confirmacao_horas: 24, // RF14, DF45
 } as const;
 export type ChaveParametro = keyof typeof PARAMETROS_PADRAO;

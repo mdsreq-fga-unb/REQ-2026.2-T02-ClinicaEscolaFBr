@@ -25,6 +25,7 @@ import {
   type UsuarioAutenticado,
 } from '../../auth/usuario-autenticado';
 import { ZodValidationPipe } from '../../common/zod-validation.pipe';
+import { ConfirmacaoService } from './confirmacao.service';
 import { SessoesService } from './sessoes.service';
 
 // Agendamento de sessão pela secretaria ou pelo estagiário responsável (RF10).
@@ -33,7 +34,28 @@ import { SessoesService } from './sessoes.service';
 @UseGuards(AutenticadoGuard, PerfisGuard)
 @Perfis('secretaria', 'estagiario')
 export class SessoesController {
-  constructor(private readonly sessoes: SessoesService) {}
+  constructor(
+    private readonly sessoes: SessoesService,
+    private readonly confirmacao: ConfirmacaoService,
+  ) {}
+
+  // Sessões sem confirmação no fim do prazo, para o contato ativo (RF14).
+  @Get('sem-confirmacao')
+  @Perfis('secretaria')
+  semConfirmacao() {
+    return this.confirmacao.semConfirmacao();
+  }
+
+  // Confirmação recebida pela secretaria, por telefone (RF14).
+  @Post(':id/confirmacao')
+  @HttpCode(200)
+  @Perfis('secretaria')
+  registrarConfirmacao(
+    @Param('id', ParseUUIDPipe) id: string,
+    @UsuarioAtual() autor: UsuarioAutenticado,
+  ) {
+    return this.confirmacao.registrarPelaSecretaria(id, autor);
+  }
 
   @Get('pacientes')
   buscarPacientes(
