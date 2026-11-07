@@ -95,14 +95,16 @@ describe("Alerta, desligamento e reversão (RF36, RF37, RF38)", () => {
     primeiraFalta: [],
   };
 
-  it("a faixa mostra o paciente no limite e leva a secretaria a avaliar o desligamento (RF36)", async () => {
+  it("a faixa mostra o paciente no limite com ícone e texto, anunciada sem roubar o foco, e leva a secretaria a avaliar o desligamento (RF36, RNF33)", async () => {
     simularApi(alertas);
     comConsultas(<FaixaAlertas perfil="secretaria" />);
-    expect(
-      await screen.findByText(
-        "Limite de faltas atingido: Mariana Alves Toledo",
-      ),
-    ).toBeTruthy();
+    const titulo = await screen.findByText(
+      "Limite de faltas atingido: Mariana Alves Toledo",
+    );
+    // O vermelho nunca é o único sinal: texto, ícone e role="status".
+    const faixa = titulo.closest("[role=status]");
+    expect(faixa).toBeTruthy();
+    expect(faixa!.querySelector("svg")).toBeTruthy();
     const link = screen.getByRole("link", {
       name: "Avaliar desligamento: Mariana Alves Toledo",
     });
