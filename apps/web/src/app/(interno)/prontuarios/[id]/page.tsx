@@ -330,6 +330,7 @@ type Prontuario = {
   sessoesRealizadas: number;
   fechamentoAvaliativoPendente: boolean;
   faltasNoCiclo: ContagemFaltas;
+  acoesFalta: { registrar: boolean; justificar: boolean };
 };
 
 // Acesso negado: a mesma tela para qualquer recusa, sem o nome do paciente (RNF25).
@@ -536,8 +537,6 @@ export default function ProntuarioPage() {
           <ol className="flex flex-col">
             {p.sessoes.map((atendimento) => {
               const responsavel = atendimento.estagiarioId === sessao?.id;
-              const podeJustificar =
-                responsavel || sessao?.perfil === "supervisor";
               const marcarRealizada =
                 responsavel &&
                 (atendimento.status === "agendada" ||
@@ -583,7 +582,7 @@ export default function ProntuarioPage() {
                       <p className="ui-dica mt-1">
                         {(atendimento.status === "agendada" ||
                           atendimento.status === "confirmada") &&
-                        new Date(atendimento.inicio).getTime() > agora
+                        new Date(atendimento.termino).getTime() > agora
                           ? "A sessão ainda não aconteceu."
                           : atendimento.status === "cancelada"
                             ? "Sessão cancelada."
@@ -596,8 +595,8 @@ export default function ProntuarioPage() {
                     sessao={atendimento}
                     limite={p.faltasNoCiclo.limite}
                     agora={agora}
-                    podeRegistrar={responsavel}
-                    podeJustificar={podeJustificar}
+                    podeRegistrar={p.acoesFalta.registrar}
+                    podeJustificar={p.acoesFalta.justificar}
                     chave={["prontuario", p.id]}
                   >
                     {marcarRealizada && (

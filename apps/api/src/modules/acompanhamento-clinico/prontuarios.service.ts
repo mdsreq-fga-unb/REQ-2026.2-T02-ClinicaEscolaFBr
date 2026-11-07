@@ -154,7 +154,15 @@ export class ProntuariosService {
         estagiarios: historicoEstagiarios,
         supervisores: historicoSupervisores,
       },
-      faltasNoCiclo: await this.faltas.contar(prontuario.casoId),
+      // A contagem é a do ciclo deste prontuário, o mesmo das sessões listadas.
+      faltasNoCiclo: await this.faltas.contar(
+        prontuario.casoId,
+        undefined,
+        prontuario.cicloAtendimento,
+      ),
+      // Os botões de falta seguem a regra da API (vínculo e atribuição vigentes),
+      // e não o estagiário de cada sessão.
+      acoesFalta: await this.faltas.acoesPermitidas(prontuario.casoId, usuario),
       sessoes: sessoes.map((sessao) => ({
         ...sessao,
         falta: faltasDoCiclo.get(sessao.id) ?? null,
@@ -407,7 +415,7 @@ export class ProntuariosService {
       ...linha,
       proximaSessao: proxima?.inicio ?? null,
       cicloAtendimento: ciclo,
-      faltasNoCiclo: await this.faltas.contar(casoId),
+      faltasNoCiclo: await this.faltas.contar(casoId, undefined, ciclo),
       sessoes: sessoes.map((sessao) => ({
         ...sessao,
         falta: faltasDoCiclo.get(sessao.id) ?? null,

@@ -141,7 +141,7 @@ export class FaltasService {
       );
       return {
         faltaId: falta.id,
-        contagem: await this.contar(sessao.casoId, tx),
+        contagem: await this.contar(sessao.casoId, tx, sessao.ciclo),
       };
     });
   }
@@ -245,12 +245,17 @@ export class FaltasService {
       },
       tx,
     );
-    return this.contar(sessao.casoId, tx);
+    return this.contar(sessao.casoId, tx, sessao.ciclo);
   }
 
-  // RF35: faltas do ciclo vigente do caso, consecutivas ou não, sem as retiradas da
-  // contagem na reversão (RF38). A justificativa não muda a contagem.
-  async contar(casoId: string, tx?: Transacao): Promise<ContagemFaltas> {
+  // RF35: faltas de um ciclo, consecutivas ou não, sem as retiradas da contagem na
+  // reversão (RF38). A justificativa não muda a contagem. Sem o ciclo, conta o
+  // vigente do caso; o prontuário e o registro da falta passam o ciclo deles.
+  async contar(
+    casoId: string,
+    tx?: Transacao,
+    ciclo?: number,
+  ): Promise<ContagemFaltas> {
     const banco = tx ?? this.db;
     const [{ total }] = await banco
       .select({ total: count() })
@@ -259,7 +264,7 @@ export class FaltasService {
       .where(
         and(
           eq(faltasPaciente.casoId, casoId),
-          eq(faltasPaciente.cicloAtendimento, casos.cicloAtendimento),
+          eq(faltasPaciente.cicloAtendimento, ciclo ?? casos.cicloAtendimento),
           isNull(faltasPaciente.retiradaEm),
         ),
       );
@@ -334,10 +339,33 @@ export class FaltasService {
     usuario: UsuarioAutenticado,
     perfis: ('secretaria' | 'supervisor')[],
   ) {
+    if (!(await this.ehResponsavel(tx, casoId, usuario, perfis)))
+      throw new ForbiddenException(SEM_PERMISSAO);
+  }
+
+  // O que o usuário pode fazer com as faltas do caso, pela mesma regra das rotas,
+  // para a tela mostrar só os botões que a API aceita.
+  async acoesPermitidas(casoId: string, usuario: UsuarioAutenticado) {
+    const [registrar, justificar] = await Promise.all([
+      this.ehResponsavel(this.db, casoId, usuario, ['secretaria']),
+      this.ehResponsavel(this.db, casoId, usuario, [
+        'secretaria',
+        'supervisor',
+      ]),
+    ]);
+    return { registrar, justificar };
+  }
+
+  private async ehResponsavel(
+    banco: Db | Transacao,
+    casoId: string,
+    usuario: UsuarioAutenticado,
+    perfis: ('secretaria' | 'supervisor')[],
+  ): Promise<boolean> {
     if (usuario.perfil === 'secretaria' && perfis.includes('secretaria'))
-      return;
+      return true;
     if (usuario.perfil === 'estagiario') {
-      const [vinculo] = await tx
+      const [vinculo] = await banco
         .select({ id: vinculosEstagiario.id })
         .from(vinculosEstagiario)
         .where(
@@ -347,10 +375,10 @@ export class FaltasService {
             eq(vinculosEstagiario.vigente, true),
           ),
         );
-      if (vinculo) return;
+      if (vinculo) return true;
     }
     if (usuario.perfil === 'supervisor' && perfis.includes('supervisor')) {
-      const [atribuicao] = await tx
+      const [atribuicao] = await banco
         .select({ id: atribuicoesSupervisor.id })
         .from(atribuicoesSupervisor)
         .where(
@@ -360,8 +388,8 @@ export class FaltasService {
             eq(atribuicoesSupervisor.vigente, true),
           ),
         );
-      if (atribuicao) return;
+      if (atribuicao) return true;
     }
-    throw new ForbiddenException(SEM_PERMISSAO);
+    return false;
   }
 }

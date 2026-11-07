@@ -338,6 +338,57 @@ describe('Falta do paciente e contagem no ciclo (RF34, RF35)', () => {
       limite: 2,
       aviso: null,
     });
+    // O prontuário do ciclo 1 continua mostrando a contagem do ciclo dele.
+    expect(await faltas.contar(caso, undefined, 1)).toMatchObject({
+      faltas: 2,
+      aviso: 'limite_atingido',
+    });
+  });
+
+  it('a falta registrada responde com a contagem do ciclo da sessão (RF35)', async () => {
+    const caso = await criarCaso(2);
+    await registrar('secretaria', await criarSessao(caso, -200, 'agendada', 1));
+    const { body } = await registrar(
+      'secretaria',
+      await criarSessao(caso, -150, 'agendada', 1),
+    ).expect(201);
+    expect(body.contagem).toMatchObject({ faltas: 2 });
+  });
+
+  it('os botões de falta seguem o vínculo e a atribuição vigentes, e não o estagiário da sessão (RF34, RF25)', async () => {
+    const caso = await criarCaso();
+    await criarSessao(caso, -2);
+    // Transferência: a Ana, estagiária da sessão, sai, e o Pedro assume o caso.
+    await db
+      .update(vinculosEstagiario)
+      .set({ vigente: false })
+      .where(eq(vinculosEstagiario.casoId, caso));
+    await db.insert(vinculosEstagiario).values({
+      casoId: caso,
+      estagiarioId: pessoas.pedro.id,
+      vinculadoPor: pessoas.carla.id,
+    });
+
+    expect(await faltas.acoesPermitidas(caso, pessoas.pedro)).toEqual({
+      registrar: true,
+      justificar: true,
+    });
+    expect(await faltas.acoesPermitidas(caso, pessoas.ana)).toEqual({
+      registrar: false,
+      justificar: false,
+    });
+    expect(await faltas.acoesPermitidas(caso, pessoas.carla)).toEqual({
+      registrar: false,
+      justificar: true,
+    });
+    expect(await faltas.acoesPermitidas(caso, pessoas.ricardo)).toEqual({
+      registrar: false,
+      justificar: false,
+    });
+    expect(await faltas.acoesPermitidas(caso, pessoas.secretaria)).toEqual({
+      registrar: true,
+      justificar: true,
+    });
   });
 
   it('a falta retirada da contagem na reversão deixa de contar e continua no histórico (RF35, RF38)', async () => {
