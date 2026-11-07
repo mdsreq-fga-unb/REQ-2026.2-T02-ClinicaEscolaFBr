@@ -1,6 +1,6 @@
-# 1. Cenário Atual do Cliente e do Negócio
+# Cenário Atual do Cliente e do Negócio { #1-cenario-atual-do-cliente-e-do-negocio }
 
-## 1.1 Identificação do Cliente/Parceiro
+## Identificação do Cliente/Parceiro { #11-identificacao-do-clienteparceiro }
 
 - **Nome:** Faculdade Brasília
 
@@ -14,7 +14,7 @@
 
 - **Vínculo com o projeto:** Cliente real e parte interessada principal, responsável por fornecer informações sobre o negócio, validar as decisões do projeto e avaliar as entregas realizadas ao longo do desenvolvimento.
 
-## 1.2 Introdução ao Negócio e Contexto
+## Introdução ao Negócio e Contexto { #12-introducao-ao-negocio-e-contexto }
 
 A **Faculdade Brasília - FBr** é uma instituição de ensino superior privada, credenciada pelo Ministério da Educação (MEC) e sediada na Avenida Santa Maria, na Região Administrativa de Santa Maria, no Distrito Federal. Idealizada desde a década de 1990 e inaugurada em 08 de agosto de 2019 com aproximadamente 1500 alunos, a instituição atua hoje com graduação presencial e a distância, pós-graduação, extensão universitária e escola técnica, em cursos como Direito, Enfermagem, Psicologia, Análise e Desenvolvimento de Sistemas e Pedagogia.
 
@@ -31,7 +31,7 @@ Apesar da relevância do serviço, toda a operação é conduzida hoje de forma 
 
 Esse é o cenário no qual o projeto se propõe a atuar.
 
-## 1.3 Rich Picture
+## Rich Picture { #13-rich-picture }
 
 O Rich Picture da Figura 1 representa o cenário atual da Clínica Escola de Psicologia da Faculdade Brasília, com base no levantamento realizado em 26 de agosto de 2026 junto à coordenação do curso de Psicologia, à diretoria financeira e de tecnologia e à secretaria acadêmica.
 
@@ -50,7 +50,7 @@ Não há atualmente um sistema integrado de gestão. As informações são manti
 - Dificuldade de geração de indicadores
 - Riscos relacionados ao tratamento de dados pessoais sensíveis
 
-## 1.4 Identificação da Oportunidade ou Problema
+## Identificação da Oportunidade ou Problema { #14-identificacao-da-oportunidade-ou-problema }
 
 <div class="key-figures" markdown>
 
@@ -92,7 +92,7 @@ A oportunidade, portanto, é digitalizar as etapas do processo que hoje dependem
 ![Diagrama de Ishikawa das causas do problema da Clínica Escola](../assets/ishikawa-diagram.png)
 > **Figura 2 - Diagrama de Ishikawa das causas do problema da Clínica Escola** (organizado pelos 6M's).
 
-## 1.5 Desafios do Projeto
+## Desafios do Projeto { #15-desafios-do-projeto }
 
 Os principais desafios identificados junto ao cliente envolvem aspectos técnicos, regulatórios, operacionais e de gestão do projeto:
 
@@ -102,7 +102,7 @@ Os principais desafios identificados junto ao cliente envolvem aspectos técnico
 - **Acessibilidade:** o sistema deverá considerar diferentes necessidades de acessibilidade, inclusive de pessoas com limitações visuais ou outras condições que possam dificultar sua interação com recursos digitais.
 - **Confiabilidade da triagem:** informações utilizadas para priorização dos atendimentos possuem natureza clínica, tornando especialmente crítica a confiabilidade de qualquer processo de classificação ou apoio à triagem.
 
-## 1.6 Mapa de Stakeholders
+## Mapa de Stakeholders { #16-mapa-de-stakeholders }
 
 A coluna única "Nível de impacto" utilizada anteriormente misturava dois critérios distintos: o **impacto sofrido** pelo stakeholder em decorrência do projeto (o quanto ele é afetado) e a **influência** que esse stakeholder exerce sobre as decisões do projeto (o quanto ele decide). Os dois critérios foram separados abaixo, pois um stakeholder pode ser fortemente afetado sem ter poder de decisão sobre o projeto — caso dos pacientes — e vice-versa.
 
@@ -119,7 +119,7 @@ A coluna única "Nível de impacto" utilizada anteriormente misturava dois crit�
 
 Os pacientes são diretamente afetados por decisões sobre priorização, posição na fila, condução do atendimento, tratamento de seus dados sensíveis, cancelamento/desligamento e eventual classificação automatizada de prioridade — por isso seu impacto sofrido é alto, mesmo não tendo poder de decisão sobre o projeto (influência baixa). Já o CRP e o MEC não sofrem impacto direto no dia a dia da operação, mas têm alta influência indireta, pois definem normas e exigências de fiscalização que o sistema precisa respeitar.
 
-## 1.7 Segmentação de Clientes
+## Segmentação de Clientes { #17-segmentacao-de-clientes }
 
 A Clínica Escola atende a comunidade externa da Região Administrativa de Santa Maria e das cidades do entorno do Distrito Federal, majoritariamente pessoas em situação de vulnerabilidade socioeconômica que não têm condições de custear atendimento psicológico particular.
 

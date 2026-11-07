@@ -1,3 +1,7 @@
+---
+render_macros: true
+---
+
 # Cronograma e Entregas da Unidade 3
 
 O planejamento da Unidade 3 dá continuidade à abordagem ágil, ao ciclo de vida ágil e ao processo Feature-Driven Development (FDD) adotados nas unidades anteriores. O cronograma compreende o período de **14/10/2026 a 17/11/2026**, organizado em três ciclos de construção (ver o [Cronograma geral](../../visao-geral/cronograma.md), com o status de todos os ciclos do projeto). Em cada ciclo, as features do [backlog](../../visao-geral/backlog.md) passam pelos processos **Planejar por Feature**, **Projetar por Feature** e **Construir por Feature**: a feature só entra na construção depois de atender ao [DoR](../../requisitos/dor-dod.md#91-definition-of-ready-dor) e só é considerada pronta quando atende ao [DoD](../../requisitos/dor-dod.md#92-definition-of-done-dod), com as evidências registradas na issue da feature.
@@ -18,12 +22,12 @@ O planejamento da Unidade 3 dá continuidade à abordagem ágil, ao ciclo de vid
 
 | Período | Fase / Processo FDD | Atividades | Atividade de ER / Resultado | Entregáveis |
 | --- | --- | --- | --- | --- |
-| 28/10 a 10/11 | Projetar por Feature / Construir por Feature | Construção dos 20 itens do Ciclo 4, com o DoR avaliado ao fim do Ciclo 3, e demonstração dos incrementos do Ciclo 3 à Clínica Escola FBr. | Representação, verificação e validação (inspeções, testes e demonstração ao cliente). | Features do Ciclo 4 registradas nas issues; demonstração registrada em ata. |
+| 28/10 a 10/11 | Projetar por Feature / Construir por Feature | Construção dos {{ ciclos[4].features }} itens do Ciclo 4, com o DoR avaliado ao fim do Ciclo 3, e demonstração dos incrementos do Ciclo 3 à Clínica Escola FBr. | Representação, verificação e validação (inspeções, testes e demonstração ao cliente). | Features do Ciclo 4 registradas nas issues; demonstração registrada em ata. |
 
 ## Ciclo 5 (11/11 a 17/11) — Consolidação e entrega da Unidade 3 { #ciclo-5 }
 
 | Período | Fase / Processo FDD | Atividades | Atividade de ER / Resultado | Entregáveis |
 | --- | --- | --- | --- | --- |
-| 11/11 a 16/11 | Projetar por Feature / Construir por Feature | Construção dos 7 itens do Ciclo 5 e consolidação dos incrementos da unidade. | Verificação e validação e organização e atualização dos requisitos. | Features do Ciclo 5 registradas nas issues. |
+| 11/11 a 16/11 | Projetar por Feature / Construir por Feature | Construção dos {{ ciclos[5].features }} itens do Ciclo 5 e consolidação dos incrementos da unidade. | Verificação e validação e organização e atualização dos requisitos. | Features do Ciclo 5 registradas nas issues. |
 | 16/11 | Preparação da entrega | Revisão do site, das evidências do cronograma e das Lições Aprendidas, preparação dos slides e gravação do vídeo. | Organização e atualização (rastreabilidade final da unidade). | [Lições Aprendidas](licoes-aprendidas.md), slides e [vídeo de apresentação](index.md#video-de-apresentacao-da-unidade-3). |
 | 17/11 | Entrega | Publicação do GitHub Pages e entrega oficial da Unidade 3. | — | Entrega da Unidade 3. |

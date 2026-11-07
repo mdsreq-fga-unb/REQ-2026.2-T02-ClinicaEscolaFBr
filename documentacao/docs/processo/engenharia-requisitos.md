@@ -1,11 +1,11 @@
-# 5. Engenharia de Requisitos
+# Engenharia de Requisitos { #5-engenharia-de-requisitos }
 
 !!! abstract "Referência vigente"
     Esta página é mantida atualizada depois da entrega da Unidade 1 (07/09/2026) e vale como referência do processo de Engenharia de Requisitos. As mudanças posteriores estão no [histórico de revisão](../index.md#historico-de-revisao). A versão entregue na Unidade 1 pode ser consultada [no repositório](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/tree/c4601b23320d9dd120a6f7982d863ff75291743d).
 
 O processo de ER separa técnicas, práticas, ferramentas e resultados. Entrevistas, análise documental, priorização, negociação, modelagem, revisão e validação orientada a cenários são técnicas. A lista de features, a rastreabilidade, os relatórios de progresso e os critérios de aceitação são artefatos ou estruturas produzidas/mantidas pelo processo; o GitHub Projects é a ferramenta de apoio.
 
-## 5.1 Atividades e Técnicas de ER
+## Atividades e Técnicas de ER { #51-atividades-e-tecnicas-de-er }
 
 !!! info "Execução"
     Os documentos da clínica analisados, a representação usada, a verificação por checklist e a validação com cada público estão em [Execução do processo — Engenharia de requisitos na prática](../visao-geral/execucao-do-processo.md#6-engenharia-de-requisitos-na-pratica).
@@ -18,7 +18,7 @@ O processo de ER separa técnicas, práticas, ferramentas e resultados. Entrevis
 
 ### Análise e Consenso
 
-- **Priorização MoSCoW:** será utilizada para classificar as features conforme sua importância para o produto em _Must Have_, _Should Have_, _Could Have_ e _Won’t Have this time_, apoiando a definição do escopo e das funcionalidades prioritárias para o MVP. Na Unidade 2, essa escala (de 1 a 4) foi cruzada com o esforço técnico estimado pela equipe numa matriz de valor de negócio × esforço técnico ([Backlog de Produto, 10.2](../requisitos/priorizacao-e-mvp.md#102-priorizacao-e-recorte-do-mvp)).
+- **Priorização MoSCoW:** será utilizada para classificar as features conforme sua importância para o produto em _Must Have_, _Should Have_, _Could Have_ e _Won’t Have this time_, apoiando a definição do escopo e das funcionalidades prioritárias para o MVP. Na Unidade 2, essa escala (de 1 a 4) foi cruzada com o esforço técnico estimado pela equipe numa matriz de valor de negócio × esforço técnico ([Backlog de Produto, priorização e recorte do MVP](../requisitos/priorizacao-e-mvp.md#102-priorizacao-e-recorte-do-mvp)).
 
 - **Negociação:** será utilizada quando forem identificadas necessidades, prioridades ou restrições conflitantes, buscando estabelecer decisões consensuais entre a equipe e os stakeholders.
 
@@ -69,7 +69,7 @@ As sessões com pacientes e responsáveis devem proteger dados sensíveis, permi
 
 - **GitHub Projects (ferramenta):** será utilizado para registrar status, responsáveis, prioridades, dependências, links de rastreabilidade e evidências; não é uma técnica de ER.
 
-## 5.2 Requisitos não funcionais no processo FDD
+## Requisitos não funcionais no processo FDD { #52-requisitos-nao-funcionais-no-processo-fdd }
 
 No processo adotado, os RNFs são declarados junto à característica de produto e relacionados às features FDD que eles afetam. Essa aplicação está documentada nas 14 características de produto ([Requisitos Não Funcionais](../requisitos/nao-funcionais.md)).
 
@@ -79,15 +79,15 @@ Para cada CP, o fluxo de tratamento dos RNFs é:
 2. **Definição de meta:** estabelecer uma métrica ou condição verificável sempre que possível, como zero acessos indevidos, 100% das emissões auditadas, limite de tempo de resposta ou requisitos de acessibilidade do documento.
 3. **Relacionamento com as features:** informar explicitamente as features afetadas pelo RNF. Na CP10 (declaração de comparecimento), essa relação é feita entre RNF37–RNF45 e RF44–RF47, considerando também as regras de negócio e os critérios de aceitação das features.
 4. **Definição da verificação:** registrar como o RNF será avaliado, por exemplo, por teste de autorização, teste de integração, teste de desempenho, inspeção do documento, teste de usabilidade, leitor de tela ou checklist de acessibilidade.
-5. **Validação e evidência:** submeter as declarações, metas e decisões pendentes à revisão interna e à validação com a FBr. Depois da implementação, registrar o resultado dos testes ou inspeções e a evidência correspondente. Um RNF somente será considerado conforme quando sua meta estiver definida, sua forma de verificação for executada e o resultado estiver registrado.
+5. **Validação e evidência:** submeter as declarações, metas e decisões pendentes à revisão interna e à validação com a FBr. Depois da implementação, a verificação de cada RNF é um critério do DoD da feature ([D4.5](../requisitos/dor-dod.md#922-checklist-por-marco-do-fdd)), com a evidência registrada como explicado em [Verificação dos RNFs](boas-praticas-github.md#verificacao-dos-rnfs-d45).
 
 Cada RNF é registrado em formato descritivo, associado à feature correspondente: um parágrafo com a descrição do requisito e a forma de verificação, seguido — sem linha em branco entre eles — por `Classificação: <categoria> (URPS+).` e por `Rastreabilidade: Feature "<nome>" → <CP> — <nome da CP>; <relações adicionais quando houver>.` Quando o requisito estiver em elaboração, isso deve ser indicado no texto descritivo como "a validar", "proposta" ou "meta a definir com a FBr", sem tratar a declaração como conformidade já comprovada.
 
-Os critérios de aceitação permanecem registrados no arquivo de requisitos funcionais e devem ser usados em conjunto com os RNFs aplicáveis. A rastreabilidade liga a CP à feature, ao RNF, à regra de negócio, ao critério de aceitação e à evidência de verificação. Serão utilizados os seguintes checklists: (a) checklist de qualidade dos requisitos, para clareza, completude, consistência e verificabilidade; (b) checklist de segurança e privacidade, para perfis, minimização de dados, sigilo e auditoria; (c) checklist de acessibilidade e usabilidade, para teclado, leitor de tela, contraste, linguagem simples e uso em celular; e (d) checklist de verificação técnica, para desempenho, integridade, portabilidade e tratamento de erros. Na versão atual, esses checklists ainda serão aplicados na revisão interna; a documentação já registra explicitamente a verificação de acessibilidade e os métodos de teste dos demais RNFs.
+Os critérios de aceitação permanecem registrados no arquivo de requisitos funcionais e devem ser usados em conjunto com os RNFs aplicáveis. A rastreabilidade liga a CP à feature, ao RNF, à regra de negócio, ao critério de aceitação e à evidência de verificação. São utilizados os seguintes checklists: (a) checklist de qualidade dos requisitos, para clareza, completude, consistência e verificabilidade; (b) checklist de segurança e privacidade, para perfis, minimização de dados, sigilo e auditoria; (c) checklist de acessibilidade e usabilidade, para teclado, leitor de tela, contraste, linguagem simples e uso em celular; e (d) checklist de verificação técnica, para desempenho, integridade, portabilidade e tratamento de erros. O checklist de qualidade dos requisitos é o do [DoR](../requisitos/dor-dod.md#913-checklist-de-criterios); os de segurança, acessibilidade e verificação técnica entram na inspeção de design e na inspeção de código do [DoD](../requisitos/dor-dod.md#922-checklist-por-marco-do-fdd).
 
 Na CP10 (declaração de comparecimento), os campos obrigatórios da declaração, os perfis autorizados a emiti-la e a consulta de autenticidade por terceiros foram definidos com a Clínica Escola ([RF45 a RF47](../requisitos/funcionais.md#rf45)), e a declaração consolidada foi retirada do escopo (versão 2.23 do histórico). Os pontos que ainda dependem da FBr ficam visíveis em [Pendências de validação com a FBr](../requisitos/analise-feedback.md#pendencias-de-validacao-com-a-fbr) e devem ser resolvidos antes do aceite final.
 
-## 5.3 Engenharia de Requisitos e o FDD
+## Engenharia de Requisitos e o FDD { #53-engenharia-de-requisitos-e-o-fdd }
 
 | Fases do Processo                    | Atividades ER             | Prática                                                                              | Técnica                                                               | Resultado Esperado                                                                                             |
 | ------------------------------------ | ------------------------- | ------------------------------------------------------------------------------------ | --------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------- |

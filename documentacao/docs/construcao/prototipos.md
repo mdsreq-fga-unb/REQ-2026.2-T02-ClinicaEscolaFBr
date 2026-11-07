@@ -1,6 +1,6 @@
 # Protótipos
 
-Os protótipos das telas foram gerados com uma ferramenta de prototipação assistida por IA (Claude Design), a partir dos requisitos funcionais e não funcionais da [seção 8](../requisitos/funcionais.md) e do [projeto das features](projeto-features.md). A equipe conferiu cada tela contra os critérios de aceitação e os RNFs de acessibilidade (RNF56 a RNF58) e pediu as correções necessárias. A revisão final de cada tela faz parte da inspeção de design da feature, registrada na sua issue.
+Os protótipos das telas foram gerados com uma ferramenta de prototipação assistida por IA (Claude Design), a partir dos requisitos funcionais e não funcionais da [requisitos](../requisitos/funcionais.md) e do [projeto das features](projeto-features.md). A equipe conferiu cada tela contra os critérios de aceitação e os RNFs de acessibilidade (RNF56 a RNF58) e pediu as correções necessárias. A revisão final de cada tela faz parte da inspeção de design da feature, registrada na sua issue.
 
 As telas estão organizadas pelo fluxo do sistema, uma seção por feature, e cada feature diz em que ciclo foi prototipada. Cada imagem reúne os estados da tela (padrão, erro, vazio, bloqueio e acesso negado), identificados no topo de cada quadro, com o perfil que vê cada um. As páginas públicas aparecem no computador (1366 px) e no celular (360 px). Os dados mostrados são fictícios. Clique numa imagem para abri-la em tamanho original.
 

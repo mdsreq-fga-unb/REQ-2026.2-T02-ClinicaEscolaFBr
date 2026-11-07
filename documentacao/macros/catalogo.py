@@ -59,7 +59,7 @@ def numero(codigo):
 
 
 def arredondar(valor, casas=0):
-    """Arredondamento matemático (0,5 para cima), regras 1 e 3 da seção 10.2.1.3."""
+    """Arredondamento matemático (0,5 para cima), regras 1 e 3 da regra de consolidação (Priorização e MVP)."""
     fator = 10 ** casas
     return int(valor * fator + 0.5 + 1e-9) / fator
 
@@ -114,6 +114,9 @@ class Catalogo:
         self.rnfs = dados["rnfs"]
         self.decisoes = dados["decisoes"]
         self.ciclos = {c["numero"]: c for c in dados["ciclos"]}
+        # Quantas features do MVP cada ciclo tem, para os cronogramas usarem a mesma conta.
+        for numero, c in self.ciclos.items():
+            c["features"] = sum(1 for r in self.rfs if r.get("mvp") and r.get("ciclo") == numero)
         self.por_codigo = {r["id"]: r for r in self.rfs + self.rnfs}
         self.df = {d["id"]: d for d in self.decisoes}
         self.pagina = PAGINA_BACKLOG
@@ -145,7 +148,7 @@ class Catalogo:
         }
 
     def composicao_mvp(self):
-        """Quantos RFs do MVP e de fora dele por categoria (texto da seção 10.2.3)."""
+        """Quantos RFs do MVP e de fora dele por categoria (texto da definição do MVP)."""
         dentro = {"must": 0, "should_baixo": 0, "dependencia": 0, "pedido": 0, "could": 0}
         fora = {"should": 0, "could": 0, "wont": 0}
         for r in self.rfs:
@@ -192,7 +195,7 @@ class Catalogo:
     def issue(self, rf):
         return f"[#{rf['issue']}]({REPO}/issues/{rf['issue']})" if rf.get("issue") else "—"
 
-    # ---- Tabelas da priorização (10.2) -----------------------------------
+    # ---- Tabelas da priorização ------------------------------------------
     def tabela_consolidada(self):
         linhas = [
             "| Código | Requisito | CP | Valor de negócio | Justificativa do cliente | Esforço | Complexidade | Lacuna de capacidade | Esforço técnico consolidado |",
@@ -248,7 +251,7 @@ class Catalogo:
             linhas.append(f"| {self.link(r['id'])} | {r['nome']} | {classificacao} | {r['relacionado']} | {r['justificativa']} |")
         return "\n".join(linhas)
 
-    # ---- Índices (8.1 e 8.2) ---------------------------------------------
+    # ---- Índices dos RFs e RNFs ------------------------------------------
     def _rotulo_situacao(self, r):
         if r.get("removido"):
             return f" (removido em {r['removido']})"
@@ -266,7 +269,7 @@ class Catalogo:
             linhas.append(f"| {celulas[i]} | {celulas[i + 1]} |")
         return "\n".join(linhas)
 
-    # ---- Registro de cada requisito (8.1 e 8.2) ---------------------------
+    # ---- Registro de cada requisito --------------------------------------
     def origem(self, codigo):
         """Fim da linha de rastreabilidade: " Origem: DFnn." ou nada, sem decisão."""
         dfs = self.por_codigo[codigo].get("origem", [])
@@ -292,7 +295,7 @@ class Catalogo:
             decisao = "no MVP" if r["mvp"] else "fora do MVP"
             prioridade = (f"{MOSCOW[r['valor']]} (valor {r['valor']}) · esforço técnico "
                           f"{decimal_br(esforco_decimal(r))} · {decisao} "
-                          f"([10.2.3]({self.href(PAGINA_BACKLOG + '#1023-definicao-do-mvp')}))")
+                          f"([definição do MVP]({self.href(PAGINA_BACKLOG + '#1023-definicao-do-mvp')}))")
             return f"_Prioridade:_ {prioridade}.\n\n_Entrega e situação:_ {self._situacao_rf(r)}."
         # RNF: linhas no mesmo parágrafo de "Classificação" e "Rastreabilidade"
         if r.get("removido") or r.get("consolidado_em"):
@@ -329,7 +332,7 @@ class Catalogo:
         itens.sort(key=lambda r: (r["ciclo"], r["ordem"]))
         return "; ".join(f"{self.link(r['id'])} (C{r['ciclo']}, {r['estado'].lower()})" for r in itens) or "—"
 
-    # ---- Registro de Decisões (8.4) --------------------------------------
+    # ---- Registro de Decisões --------------------------------------------
     def requisitos_da_decisao(self, df):
         citam = [r["id"] for r in self.rfs + self.rnfs if df in r.get("origem", [])]
         return sorted(citam, key=lambda c: (c.startswith("RNF"), numero(c)))
@@ -351,13 +354,12 @@ class Catalogo:
             linhas.append(f"| <span id=\"{d['id'].lower()}\"></span>{d['id']} | {d['data']}, {d['fonte']} | {decisao} | {', '.join(reqs) or '—'} |")
         return "\n".join(linhas)
 
-    # ---- Features e backlog (visão geral) ---------------------------------
+    # ---- Features e backlog (visão geral) --------------------------------
     def tabela_situacao_ciclos(self):
         n = self.n
         linhas = ["| Ciclo | Período | Features | Status do ciclo |", "| --- | --- | --- | --- |"]
         for c in self.dados["ciclos"]:
-            qtd = sum(1 for r in self.rfs if r.get("mvp") and r.get("ciclo") == c["numero"])
-            linhas.append(f"| [Ciclo {c['numero']}](#ciclo-{c['numero']}) | {c['periodo']} | {qtd or 'sem novas features'} | {c['status']} |")
+            linhas.append(f"| [Ciclo {c['numero']}](#ciclo-{c['numero']}) | {c['periodo']} | {c['features'] or 'sem novas features'} | {c['status']} |")
         linhas.append(f"| **MVP** | | **{n['rfs_mvp']}** | |")
         linhas.append(f"| [Versões posteriores](#versoes-posteriores) | reavaliadas ao fim da Unidade 4 | {n['rfs_posteriores']} | Fora do MVP |")
         return "\n".join(linhas)

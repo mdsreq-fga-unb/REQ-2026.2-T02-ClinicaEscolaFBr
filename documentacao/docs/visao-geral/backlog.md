@@ -9,9 +9,9 @@ render_macros: true
 
 Esta é a lista única das features do produto e do backlog de construção, com o ciclo em que cada feature é construída e o seu Líder de Feature. O detalhamento fica nas unidades:
 
-- a declaração de cada feature, com o RF, os critérios de aceitação e a rastreabilidade, está em [Requisitos Funcionais (8.1)](../requisitos/funcionais.md);
-- os RNFs que restringem as features estão em [Requisitos Não Funcionais (8.2)](../requisitos/nao-funcionais.md) e na [classificação dos RNFs para o MVP (10.2.3.1)](../requisitos/priorizacao-e-mvp.md#10231-classificacao-dos-requisitos-nao-funcionais-para-o-mvp);
-- o motivo de cada feature estar ou não no MVP está na [priorização e recorte do MVP (10.2)](../requisitos/priorizacao-e-mvp.md#102-priorizacao-e-recorte-do-mvp), validada com a Clínica Escola FBr, e as decisões posteriores, no [Registro de Decisões com a FBr](../requisitos/decisoes-fbr.md);
+- a declaração de cada feature, com o RF, os critérios de aceitação e a rastreabilidade, está em [Requisitos Funcionais](../requisitos/funcionais.md);
+- os RNFs que restringem as features estão em [Requisitos Não Funcionais](../requisitos/nao-funcionais.md) e na [classificação dos RNFs para o MVP](../requisitos/priorizacao-e-mvp.md#10231-classificacao-dos-requisitos-nao-funcionais-para-o-mvp);
+- o motivo de cada feature estar ou não no MVP está na [priorização e recorte do MVP](../requisitos/priorizacao-e-mvp.md#102-priorizacao-e-recorte-do-mvp), validada com a Clínica Escola FBr, e as decisões posteriores, no [Registro de Decisões com a FBr](../requisitos/decisoes-fbr.md);
 - as datas e o status de cada ciclo estão no [Cronograma geral](cronograma.md).
 
 **Status de cada feature:** é acompanhado na issue da feature e no [Project do repositório](https://github.com/orgs/mdsreq-fga-unb/projects/124), atualizado a cada marco do FDD, e copiado para o [catálogo de requisitos](../requisitos/priorizacao-e-mvp.md#catalogo-de-requisitos) na PR que muda o estado da feature, de onde aparece na linha "Entrega e situação" de cada RF. As tabelas desta página são geradas do catálogo, a cada publicação do site.
@@ -37,7 +37,7 @@ O backlog segue o processo **Planejar por Feature** do FDD:
 
 ## Backlog do MVP por ciclo
 
-### Ciclo 3 (14/10 a 27/10) · {{ ciclos[3].status }} { #ciclo-3 }
+### Ciclo 3 ({{ ciclos[3].periodo }}) · {{ ciclos[3].status }} { #ciclo-3 }
 
 O resultado de cada feature está no [fechamento do Ciclo 3](cronograma.md#ciclo-3-fechado-em-27102026).
 
@@ -45,21 +45,21 @@ Antes das features, Gabriel preparou a base técnica do projeto (repositório, b
 
 {{ tabela_ciclo(3) }}
 
-### Ciclo 4 (28/10 a 10/11) · {{ ciclos[4].status }} { #ciclo-4 }
+### Ciclo 4 ({{ ciclos[4].periodo }}) · {{ ciclos[4].status }} { #ciclo-4 }
 
 {{ tabela_ciclo(4) }}
 
-### Ciclo 5 (11/11 a 17/11) · {{ ciclos[5].status }} { #ciclo-5 }
+### Ciclo 5 ({{ ciclos[5].periodo }}) · {{ ciclos[5].status }} { #ciclo-5 }
 
 Ao fim deste ciclo, em 17/11, acontece a entrega da Unidade 3: todas as CPs do MVP com ao menos um incremento construído.
 
 {{ tabela_ciclo(5) }}
 
-### Ciclo 6 (18/11 a 01/12) · {{ ciclos[6].status }} { #ciclo-6 }
+### Ciclo 6 ({{ ciclos[6].periodo }}) · {{ ciclos[6].status }} { #ciclo-6 }
 
 {{ tabela_ciclo(6) }}
 
-### Ciclo 7 (02/12 a 10/12) · {{ ciclos[7].status }} { #ciclo-7 }
+### Ciclo 7 ({{ ciclos[7].periodo }}) · {{ ciclos[7].status }} { #ciclo-7 }
 
 Sem novas features: demonstração integrada do MVP, aceite da FBr, correções apontadas e entrega da Unidade 4, em 10/12.
 

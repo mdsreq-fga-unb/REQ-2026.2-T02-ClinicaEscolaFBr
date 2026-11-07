@@ -3,7 +3,7 @@
 # É a fonte única dos atributos de cada requisito: CP, valor de negócio, esforço,
 # decisão de MVP, ciclo, Líder de Feature, dependências, issue, estado da feature
 # e origem nas decisões com a FBr (DF). A declaração e os critérios de aceitação
-# continuam nas páginas 8.1 e 8.2; as tabelas de priorização, MVP, backlog, os
+# continuam nas páginas de requisitos funcionais e não funcionais; as tabelas de priorização, MVP, backlog, os
 # índices, as contagens e a coluna "Requisitos" do Registro de Decisões são
 # geradas a partir daqui no build do site (documentacao/macros/catalogo.py).
 #
@@ -13,9 +13,9 @@
 # (documentacao/scripts/verificar_catalogo.py).
 #
 # Campos dos RFs:
-#   esforco: [esforço, complexidade, lacuna de capacidade], escalas da seção 10.2.1.2
+#   esforco: [esforço, complexidade, lacuna de capacidade], escalas adotadas na Priorização e MVP
 #   mvp: true/false; removido: data em que o requisito foi removido
-#   motivo_mvp: só quando o motivo não é o da regra da seção 10.2.3
+#   motivo_mvp: só quando o motivo não é o da regra da definição do MVP
 #   ciclo, ordem: ciclo de construção e ordem no backlog do MVP
 #   depende: dependências obrigatórias (coluna "Depende de" do backlog)
 #   estado: Planejada, Em design, Design inspecionado, Código concluído,
@@ -41,13 +41,16 @@ cps:
   CP13: Continuidade de casos entre semestres
   CP14: Acessibilidade e usabilidade
 
+# Período e status dos ciclos de construção: fonte única do Cronograma geral, do
+# cronograma da Unidade 3 e de Features e backlog. O status é revisto no
+# fechamento de cada ciclo (Encerrado, Em andamento ou Aguardando).
 ciclos:
 - numero: 3
   periodo: 14/10 a 27/10/2026
   status: Encerrado
 - numero: 4
   periodo: 28/10 a 10/11/2026
-  status: Aguardando
+  status: Em andamento
 - numero: 5
   periodo: 11/11 a 17/11/2026
   status: Aguardando
@@ -550,7 +553,7 @@ rfs:
   justificativa: Entregável importante, mas pode ser compilado manualmente na primeira versão
   esforco: [4, 4, 3]
   mvp: true
-  motivo_mvp: Should have com esforço alto, incluído no MVP em 24/10/2026 porque a FBr pediu o relatório final pronto antes do fim do semestre ([10.2.4](#1024-validacao-do-mvp-com-o-cliente)); construção no Ciclo 6, até 01/12/2026.
+  motivo_mvp: Should have com esforço alto, incluído no MVP em 24/10/2026 porque a FBr pediu o relatório final pronto antes do fim do semestre ([validação do MVP](#1024-validacao-do-mvp-com-o-cliente)); construção no Ciclo 6, até 01/12/2026.
   ciclo: 6
   ordem: 44
   lider: Gabriel

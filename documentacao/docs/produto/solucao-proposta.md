@@ -1,9 +1,9 @@
-# 2. Solução Proposta
+# Solução Proposta { #2-solucao-proposta }
 
 !!! abstract "Referência vigente"
     Esta página é mantida atualizada depois da entrega da Unidade 1 (07/09/2026) e vale como referência do produto. As mudanças posteriores estão no [histórico de revisão](../index.md#historico-de-revisao) e, quando vieram da Clínica Escola, no [Registro de Decisões com a FBr](../requisitos/decisoes-fbr.md). A versão entregue na Unidade 1 pode ser consultada [no repositório](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/tree/c4601b23320d9dd120a6f7982d863ff75291743d).
 
-## 2.1 Objetivo Geral do Produto
+## Objetivo Geral do Produto { #21-objetivo-geral-do-produto }
 
 O objetivo do produto é **apoiar a integração e a digitalização da gestão da Clínica Escola de Psicologia da Faculdade Brasília**, por meio de uma aplicação web responsiva que apoie o processo desde a inscrição do paciente até a entrega do relatório final de evolução.
 
@@ -12,9 +12,9 @@ A solução deverá:
 - Ampliar o aproveitamento das vagas ofertadas a cada semestre
 - Atacar prioritariamente as falhas de agendamento e de confirmação de presença que hoje produzem horários ociosos
 - Reduzir o esforço manual da coordenação, da secretaria, dos supervisores e dos estagiários
-- Preservar integralmente o caráter presencial do atendimento psicológico, conforme informado pela Clínica Escola (a base normativa dessa restrição está pendente de confirmação; ver [Cenário Atual, 1.4](cenario-atual.md#14-identificacao-da-oportunidade-ou-problema))
+- Preservar integralmente o caráter presencial do atendimento psicológico, conforme informado pela Clínica Escola (a base normativa dessa restrição está pendente de confirmação; ver [Cenário Atual, identificação do problema](cenario-atual.md#14-identificacao-da-oportunidade-ou-problema))
 
-## 2.2 Objetivos Específicos (OE) do Produto
+## Objetivos Específicos (OE) do Produto { #22-objetivos-especificos-oe-do-produto }
 
 - **(OE1)** Facilitar o acesso da comunidade de Santa Maria/DF ao processo de triagem psicológica, reduzindo barreiras de tempo e deslocamento na etapa de inscrição
 - **(OE2)** Apoiar a triagem dos inscritos, organizando as informações da inscrição e sinalizando pontos de atenção para subsidiar a priorização clínica realizada pela equipe da clínica, sem atribuição automática de prioridade pelo sistema
@@ -24,7 +24,7 @@ A solução deverá:
 - **(OE6)** Subsidiar a gestão da clínica e a prestação de contas perante o Conselho Regional de Psicologia e o MEC, com base em indicadores confiáveis sobre o atendimento
 - **(OE7)** Assegurar o sigilo das informações dos pacientes, em conformidade com a LGPD e com as normas do Conselho Federal de Psicologia
 
-## 2.3 Características de Produto (mapeadas com os Objetivos Específicos)
+## Características de Produto (mapeadas com os Objetivos Específicos) { #23-caracteristicas-de-produto-mapeadas-com-os-objetivos-especificos }
 
 A solução proposta para a Clínica Escola da FBr deverá contemplar, de forma preliminar, as seguintes características:
 
@@ -47,32 +47,15 @@ A solução proposta para a Clínica Escola da FBr deverá contemplar, de forma 
 
 ### Escopo do MVP
 
-O recorte do MVP é feito **por requisito**, e não por característica: a priorização da Unidade 2 cruzou o valor de negócio avaliado pela Clínica Escola FBr com o esforço técnico de cada RF, e o resultado foi validado com a FBr ([seções 10.2.3 e 10.2.4 do Backlog de Produto](../requisitos/priorizacao-e-mvp.md#1023-definicao-do-mvp)). Por isso, uma mesma característica pode ter parte dos seus RFs no MVP e parte em versões posteriores.
+O recorte do MVP é feito **por requisito**, e não por característica: a priorização da Unidade 2 cruzou o valor de negócio avaliado pela Clínica Escola FBr com o esforço técnico de cada RF, e o resultado foi validado com a FBr ([definição do MVP](../requisitos/priorizacao-e-mvp.md#1023-definicao-do-mvp) e [validação do MVP](../requisitos/priorizacao-e-mvp.md#1024-validacao-do-mvp-com-o-cliente), em Priorização e MVP). Por isso, uma mesma característica pode ter parte dos seus RFs no MVP e parte em versões posteriores.
 
 A lista vigente das features do MVP e das que ficam para depois, organizada por área e conjunto do FDD (que correspondem às características acima), fica num só lugar: [Features e backlog](../visao-geral/backlog.md#features-por-area-e-conjunto). As mudanças de escopo depois da validação estão no [Registro de Decisões com a FBr](../requisitos/decisoes-fbr.md).
 
-Na CP14, embora os dois RFs específicos (RF61 e RF62 — alto contraste e ajuste de tamanho de texto) fiquem para depois, o piso de conformidade WCAG 2.2 nível AA (RNF56) permanece obrigatório desde o MVP, por exigência confirmada da FBr/MEC.
+Os RNFs também têm um patamar para o MVP: os obrigatórios desde a primeira entrega, como o piso de acessibilidade WCAG 2.2 nível AA (RNF56), estão na [classificação dos RNFs para o MVP](../requisitos/priorizacao-e-mvp.md#10231-classificacao-dos-requisitos-nao-funcionais-para-o-mvp).
 
-<details class="revision-note" markdown>
-<summary>Histórico: recorte inicial por característica (Unidade 1)</summary>
+Na Unidade 1, antes da priorização formal, o MVP foi definido por característica (CP1, CP2, CP3, CP4, CP5, CP9, CP12 e CP14). Esse recorte foi substituído pela priorização por requisito da Unidade 2 e está preservado na [versão entregue da Unidade 1](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/blob/c4601b23320d9dd120a6f7982d863ff75291743d/docs/unidade-1/solucao-proposta.md#escopo-do-mvp).
 
-Na Unidade 1, antes da priorização formal, o MVP foi definido por característica. Esse recorte foi refinado pela priorização da Unidade 2, resumida na tabela acima: CP6, CP7, CP10 e CP11, antes no escopo desejável, entraram no MVP (a CP10 parcialmente); a CP8 ficou inicialmente para uma versão posterior e entrou no MVP em 24/10/2026, a pedido da FBr; CP14 teve seus dois RFs específicos adiados; e CP13 permanece fora do MVP. O texto original da Unidade 1 está preservado abaixo.
-
-Considerando o prazo de um semestre letivo e a priorização acordada com o cliente, o **Produto Mínimo Viável (MVP)** será composto pelas características:
-
-**CP1, CP2, CP3, CP4, CP5, CP9, CP12 e CP14**.
-
-Essas características endereçam a dor mais crítica relatada pela coordenação: a inscrição, a organização da triagem, o agendamento, a confirmação de presença e o reaproveitamento das vagas liberadas, com controle de acesso compatível com a sensibilidade dos dados tratados.
-
-As características **CP6, CP7, CP8, CP10 e CP11** (prontuário eletrônico, registro de evolução, relatório final, registros administrativos e indicadores institucionais) compõem o **escopo desejável**, a ser tratado nas evoluções seguintes do produto dentro do horizonte da disciplina.
-
-A característica **CP13** (continuidade de casos entre semestres) representa uma **visão de produto de mais longo prazo**: depende de definições institucionais sobre o fluxo de encerramento e transferência de estágio ainda não fechadas com o cliente, e por isso não integra nem o MVP nem o escopo desejável imediato desta entrega.
-
-> **Observação sobre a abrangência do MVP:** o MVP reúne oito características que incluem organização de triagem, fila priorizada, agendamento com notificações, distribuição de casos, segurança de dados sensíveis e acessibilidade. Esse volume de escopo é reconhecido pela equipe como um risco de cronograma a ser reavaliado com mais critério na etapa de priorização formal da disciplina (Unidade 2).
-
-</details>
-
-## 2.4 Tecnologias a Serem Utilizadas
+## Tecnologias a Serem Utilizadas { #24-tecnologias-a-serem-utilizadas }
 
 Conforme foi definido pela equipe, a stack tecnológica optada para o desenvolvimento da solução é definida por:
 
@@ -84,7 +67,7 @@ Conforme foi definido pela equipe, a stack tecnológica optada para o desenvolvi
 
 **Controle de versão e documentação** GitHub como repositório central do código-fonte, diagramas e artefatos de requisitos, utilizando GitHub Projects para rastreamento de features e MkDocs/GitHub Pages para publicação da documentação do projeto.
 
-## 2.5 Pesquisa de Mercado e Análise Competitiva
+## Pesquisa de Mercado e Análise Competitiva { #25-pesquisa-de-mercado-e-analise-competitiva }
 
 O mercado brasileiro de software para gestão de serviços de saúde é maduro e conta com soluções consolidadas de prontuário eletrônico, agenda e cobrança, inclusive produtos especializados em psicologia. Entretanto, essa oferta está organizada em torno do **consultório privado e da clínica particular**, nos quais quem atende é um profissional formado, responsável pela própria agenda e remunerado por sessão.
 
@@ -124,23 +107,25 @@ A literatura acadêmica registra iniciativas de sistemas de triagem e atendiment
 | Modelo de custo                                  | Contrato institucional, preço sob consulta                             | Assinatura mensal por profissional de saúde       | Assinatura mensal por profissional ou por clínica         | Gratuito ou já contratado                          | Solução própria da FBr, sem custo por usuário                        |
 | Solicitação de atendimento e triagem             | Parcial: foco no prontuário e na supervisão                            | Não: agenda voltada ao paciente já cadastrado    | Não                                                        | Não                                                | **Sim**: solicitação online, triagem e fila de espera priorizada     |
 | Hierarquia estagiário–supervisor                 | Sim                                                                      | Não: presume profissional autônomo               | Parcial: gestão de clínica, sem papel de estagiário       | Não                                                | **Sim**: perfis de estagiário, supervisor e coordenação              |
-| Continuidade de casos entre semestres            | Não previsto explicitamente                                            | Não                                                | Não                                                        | Não                                                | **Sim** *(visão de produto — ver escopo do MVP)*                     |
-| Indicadores de gestão e responsabilidade social  | Sim, com viés financeiro e assistencial                                | Sim, com viés financeiro                          | Sim, com viés financeiro                                   | Não                                                | **Sim** *(MVP)*                                                      |
-| Sigilo, LGPD e trilha de auditoria               | Sim                                                                      | Sim                                                | Sim                                                        | Não: sem controle de acesso nem rastreabilidade    | **Sim**: acesso por perfil e registro de auditoria *(MVP)*           |
+| Continuidade de casos entre semestres            | Não previsto explicitamente                                            | Não                                                | Não                                                        | Não                                                | **Sim**                     |
+| Indicadores de gestão e responsabilidade social  | Sim, com viés financeiro e assistencial                                | Sim, com viés financeiro                          | Sim, com viés financeiro                                   | Não                                                | **Sim**                                                      |
+| Sigilo, LGPD e trilha de auditoria               | Sim                                                                      | Sim                                                | Sim                                                        | Não: sem controle de acesso nem rastreabilidade    | **Sim**: acesso por perfil e registro de auditoria           |
 
-> **Nota:** as marcações "Sim" referem-se à solução completa, conforme concebida para a Clínica Escola FBr. Nem todas as capacidades estarão disponíveis já na primeira entrega — a seção "Escopo do MVP" especifica quais capacidades compõem o MVP, o escopo desejável e a visão de produto de mais longo prazo.
+> **Nota:** as marcações "Sim" referem-se à solução completa, conforme concebida para a Clínica Escola FBr. Nem todas as capacidades estarão disponíveis já na primeira entrega; o que entra nela está no [Escopo do MVP](#escopo-do-mvp).
 
 ### Diferenciais da Solução
 
 A solução da Clínica Escola FBr irá se diferenciar pelos seguintes aspectos:
 
-- **Fluxo desenhado para a clínica escola** *(no MVP, conforme a atualização em "Escopo do MVP")*: no recorte final ([10.2.3](../requisitos/priorizacao-e-mvp.md#1023-definicao-do-mvp)), o MVP cobre o processo da solicitação online de atendimento pelo cidadão até o agendamento, a confirmação de presença, a alocação do caso a um estagiário e seu supervisor, a criação e o registro do prontuário e da evolução por sessão, com validação pelo supervisor (CP6, CP7), e o encerramento do caso por alta. Ficam para depois refinamentos desse fluxo, como a remarcação em uma única operação (RF12), e o lembrete automático (RF13), enquanto a geração do relatório final ao término do ciclo (CP8) entrou no MVP em 24/10/2026; o encerramento/encaminhamento de casos entre semestres (CP13) permanece como visão de produto de mais longo prazo, tratado caso a caso pela transferência de caso (RF25) nesta primeira versão.
-- **Papéis alinhados à estrutura acadêmica** *(no MVP)*: os perfis de solicitante, secretaria, estagiário, supervisor e coordenação, com controle de acesso (CP12), fazem parte do MVP. Como o prontuário eletrônico (CP6) também está no MVP, a restrição de acesso ao prontuário ao estagiário responsável, ao seu supervisor e à coordenação já se aplica desde esta primeira entrega, sem depender de uma fase posterior.
-- **Continuidade dos casos entre semestres** *(visão de produto)*: corresponde à CP13, ainda sem definição institucional fechada com o cliente; permanece como direção de evolução do produto, e não como entrega prevista no curto prazo.
-- **Indicadores sociais e acadêmicos em lugar de gestão financeira** *(no MVP)*: corresponde à CP11, incluída no MVP por atender aos relatórios institucionais que a FBr presta ao MEC; o foco dos relatórios será deslocado da cobrança para indicadores de valor institucional (vagas ocupadas, tempo médio de espera, taxa de evasão e distribuição de casos por supervisor, conforme o [RF48](../requisitos/funcionais.md#rf48)).
-- **Custo total compatível com um projeto social** *(válido para toda a solução, independentemente da fase)*: como solução própria da instituição, o produto não implica assinatura por profissional, permitindo que o número de estagiários atendidos cresça a cada semestre sem custo marginal por usuário.
+- **Fluxo desenhado para a clínica escola:** o sistema cobre o percurso da solicitação on-line de atendimento até o agendamento, a confirmação de presença, a alocação do caso a um estagiário e seu supervisor, o prontuário, a evolução de cada sessão validada pelo supervisor e o encerramento do caso, em vez de partir de um paciente já cadastrado.
+- **Papéis alinhados à estrutura acadêmica:** perfis de solicitante, secretaria, estagiário, supervisor e coordenação, com controle de acesso (CP12) e o prontuário restrito ao estagiário responsável, ao seu supervisor e à coordenação.
+- **Continuidade dos casos entre semestres:** a transferência organizada dos casos quando o estagiário conclui o estágio (CP13), que ainda depende de definição institucional da FBr.
+- **Indicadores sociais e acadêmicos em lugar de gestão financeira:** a CP11 atende aos relatórios institucionais que a FBr presta ao MEC; o foco dos relatórios será deslocado da cobrança para indicadores de valor institucional (vagas ocupadas, tempo médio de espera, taxa de evasão e distribuição de casos por supervisor, conforme o [RF48](../requisitos/funcionais.md#rf48)).
+- **Custo total compatível com um projeto social:** como solução própria da instituição, o produto não implica assinatura por profissional, permitindo que o número de estagiários atendidos cresça a cada semestre sem custo marginal por usuário.
 
-## 2.6 Viabilidade da Proposta
+Quais requisitos de cada diferencial entram na primeira entrega está no [Escopo do MVP](#escopo-do-mvp), acima.
+
+## Viabilidade da Proposta { #26-viabilidade-da-proposta }
 
 Os principais fatores que sustentam a viabilidade da proposta são o acesso facilitado ao cliente, a delimitação já negociada do escopo de MVP e a adoção de um modelo de entrega ágil ao longo do semestre. A equipe, embora enxuta, já definiu a stack tecnológica do projeto: TypeScript no front-end, com Next.js, e no back-end, com NestJS, além de PostgreSQL como banco de dados, o que reduz a dispersão de esforço ao concentrar o desenvolvimento em uma única linguagem entre as duas camadas da aplicação. O planejamento distribui o desenvolvimento em ciclos semanais que priorizam primeiro as funcionalidades que atacam o gargalo mais crítico apontado pela coordenação: o agendamento e a confirmação de presença dos pacientes.
 
@@ -152,9 +137,9 @@ Diante desse cenário, a viabilidade do projeto passa a depender de três condi�
 
 - Manter o escopo do MVP fechado no conjunto de funcionalidades já priorizado com o cliente, resistindo à antecipação de itens do escopo desejável;
 - Sustentar uma cadência regular de validações com a Faculdade Brasília, aproveitando a disponibilidade e a agilidade de resposta já observadas durante o levantamento;
-- Monitorar, ao longo do semestre, a complexidade acumulada do MVP — que, no recorte final ([10.2.3](../requisitos/priorizacao-e-mvp.md#1023-definicao-do-mvp)), passou a tocar a maior parte das características de produto (11 das 14 CPs, cada uma com no máximo duas exclusões pontuais), incluindo triagem, fila priorizada, agendamento, prontuário, evolução, indicadores institucionais, notificações, distribuição de casos, registros administrativos, segurança de dados sensíveis e o piso de acessibilidade — para que a entrega das funcionalidades não comprometa o tratamento adequado da segurança e do sigilo (CP12).
+- Monitorar, ao longo do semestre, a complexidade acumulada do MVP — que, no recorte final ([definição do MVP](../requisitos/priorizacao-e-mvp.md#1023-definicao-do-mvp)), passou a tocar a maior parte das características de produto, incluindo triagem, fila priorizada, agendamento, prontuário, evolução, indicadores institucionais, notificações, distribuição de casos, registros administrativos, segurança de dados sensíveis e o piso de acessibilidade — para que a entrega das funcionalidades não comprometa o tratamento adequado da segurança e do sigilo (CP12).
 
-## 2.7 Benefícios Esperados
+## Benefícios Esperados { #27-beneficios-esperados }
 
 - **Para o cliente:** ampliar a capacidade de gestão da Clínica Escola de Psicologia da FBr, centralizando informações relacionadas à inscrição, seleção, agendamento e acompanhamento dos pacientes. A solução deverá contribuir para a redução de processos manuais, melhorar o controle sobre faltas, cancelamentos e vagas disponíveis, facilitar a realocação de pacientes e proporcionar maior rastreabilidade dos atendimentos. Também se espera melhorar o controle das atividades dos estagiários e fornecer informações mais organizadas para supervisores e coordenação, criando melhores condições para a continuidade e expansão dos serviços prestados pela Clínica Escola.
 

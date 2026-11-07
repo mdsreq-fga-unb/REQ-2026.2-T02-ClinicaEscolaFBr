@@ -2,7 +2,7 @@
 render_macros: true
 ---
 
-# 8.4 Registro de Decisões com a FBr
+# Registro de Decisões com a FBr { #84-registro-de-decisoes-com-a-fbr }
 
 !!! abstract "Na estrutura de requisitos"
     Esta página é a fonte única das regras decididas com a Clínica Escola. Cada RF cita a decisão como Origem, e a coluna "Requisitos" é gerada a partir disso. Como as informações se ligam e são atualizadas: [Organização e atualização](../visao-geral/organizacao-e-atualizacao.md).

@@ -1,8 +1,8 @@
 # Execução do processo
 
-Esta página mostra como o processo definido na [Estratégia de Engenharia de Software (4)](../processo/estrategia-esw.md) e na [Engenharia de Requisitos (5)](../processo/engenharia-requisitos.md) foi executado: o que foi produzido em cada atividade, quem revisou e o que mudou com cada revisão. As duas páginas descrevem o processo; esta reúne as evidências de execução, com links para os registros de origem (issues, pull requests, atas e o histórico do documento), sem repetir o conteúdo deles.
+Esta página mostra como o processo definido na [Estratégia de Engenharia de Software](../processo/estrategia-esw.md) e na [Engenharia de Requisitos](../processo/engenharia-requisitos.md) foi executado: o que foi produzido em cada atividade, quem revisou e o que mudou com cada revisão. As duas páginas descrevem o processo; esta reúne as evidências de execução, com links para os registros de origem (issues, pull requests, atas e o histórico do documento), sem repetir o conteúdo deles.
 
-## 1. Modelo abrangente do domínio
+## Modelo abrangente do domínio { #1-modelo-abrangente-do-dominio }
 
 O FDD começa pelo modelo abrangente do domínio. Os projetos das features ([Ciclo 3](../construcao/projeto-features.md) e [Ciclo 4](../construcao/projeto-features.md)) detalham as classes de cada característica de produto; o diagrama abaixo integra essas partes num modelo só, com as relações entre inscrição, caso, ciclo de atendimento, sessão, prontuário e responsáveis.
 
@@ -96,7 +96,7 @@ classDiagram
 
 As inspeções de design do RF22, RF23, RF25, RF27, RF28 e RF69 ainda não foram registradas; elas entram nesta tabela quando forem feitas.
 
-## 2. Revisão da lista de features
+## Revisão da lista de features { #2-revisao-da-lista-de-features }
 
 A lista de features foi revisada contra o modelo do domínio e as regras do FDD: cada feature precisa ser pequena o bastante para ser construída e demonstrada num ciclo, não pode sobrepor outra e precisa corresponder a uma parte do modelo. A tabela registra o que cada verificação encontrou e o que mudou.
 
@@ -109,23 +109,23 @@ A lista de features foi revisada contra o modelo do domínio e as regras do FDD:
 | Escopo do MVP | A FBr pediu o relatório final de evolução antes do fim do semestre | RF33 incluído no MVP, no Ciclo 6 | Versão 3.3 |
 | Consistência entre as listas | A mesma feature aparecia em listas mantidas à mão, que podiam divergir | Catálogo único dos requisitos, com a conferência automática do formato, das dependências e dos estados (`verificar_catalogo.py`, no CI) | Versão 3.34 e [catálogo de requisitos](../requisitos/priorizacao-e-mvp.md#catalogo-de-requisitos) |
 
-## 3. Planejamento por feature e capacidade
+## Planejamento por feature e capacidade { #3-planejamento-por-feature-e-capacidade }
 
 Cada feature tem Líder, revisor e ciclo em [Features e backlog](backlog.md). A viabilidade dos ciclos é conferida pela [carga por Líder de Feature e ciclo](cronograma.md#carga-por-lider-de-feature-e-ciclo), calculada da escala de esforço de cada RF, e o tempo das inspeções, da integração e da demonstração aparece nos [pontos de controle por feature](cronograma.md#pontos-de-controle-por-feature) de cada ciclo. Quando a carga de um ciclo passa do que a equipe consegue fazer, vale a [regra de limite de capacidade do MVP](../requisitos/priorizacao-e-mvp.md#limite-de-capacidade).
 
-## 4. Acompanhamento pelos marcos do FDD
+## Acompanhamento pelos marcos do FDD { #4-acompanhamento-pelos-marcos-do-fdd }
 
 O estado de cada feature segue os marcos do FDD e do [DoD](../requisitos/dor-dod.md): Planejada, Em design, Design inspecionado, Código concluído, Código inspecionado, Promovida para a versão integrada, Demonstrada e Aceita. Ele é atualizado na issue da feature pelo acompanhamento automático (que lê o checklist do DoR e do DoD, as pull requests e os comandos `/de-acordo`, `/demonstrada` e `/aceite`), refletido no [Project do repositório](https://github.com/orgs/mdsreq-fga-unb/projects/124) e copiado para o catálogo, de onde sai a [situação por ciclo](backlog.md#situacao-por-ciclo). Cada passagem de marco fica registrada na issue, com a data e o link da evidência: a inspeção, a aprovação da pull request, o merge, a ata da demonstração e o aceite.
 
-## 5. Fechamento dos ciclos
+## Fechamento dos ciclos { #5-fechamento-dos-ciclos }
 
 No fim de cada ciclo, o [Cronograma geral](cronograma.md) compara o planejado com o realizado, feature a feature: o marco alcançado, o que passou para o ciclo seguinte e o motivo. O fechamento do Ciclo 3 está registrado lá; o do Ciclo 4 entra em 10/11/2026.
 
-## 6. Engenharia de requisitos na prática
+## Engenharia de requisitos na prática { #6-engenharia-de-requisitos-na-pratica }
 
 ### Documentos analisados
 
-Os documentos da Clínica Escola chegaram no grupo de mensagens com a FBr, em 30/10 e 31/10/2026. Cada um gerou uma decisão no [Registro de Decisões com a FBr (8.4)](../requisitos/decisoes-fbr.md), e a decisão é a Origem do requisito.
+Os documentos da Clínica Escola chegaram no grupo de mensagens com a FBr, em 30/10 e 31/10/2026. Cada um gerou uma decisão no [Registro de Decisões com a FBr](../requisitos/decisoes-fbr.md), e a decisão é a Origem do requisito.
 
 | Documento | O que foi tirado dele | Decisão | Requisitos |
 | --- | --- | --- | --- |
@@ -144,7 +144,7 @@ O processo previa diagramas de atividades "quando necessário". Os fluxos com v�
 
 ### Verificação
 
-A verificação interna por checklist é a avaliação do [DoR](../requisitos/dor-dod.md) de cada feature: os critérios ficam marcados na issue, e a seção "Registro da avaliação do DoR" guarda a data, o avaliador, o revisor, o resultado e as ressalvas. Sem esse registro, o acompanhamento automático não deixa a feature passar para "Em design". A inspeção de design (DoD 1) verifica de novo o projeto, com o modelo, a acessibilidade, a LGPD e as normas do CRP. A avaliação da equipe Sem Requisitos é uma verificação externa, registrada na [Análise do Feedback (8.3)](../requisitos/analise-feedback.md).
+A verificação interna por checklist é a avaliação do [DoR](../requisitos/dor-dod.md) de cada feature: os critérios ficam marcados na issue, e a seção "Registro da avaliação do DoR" guarda a data, o avaliador, o revisor, o resultado e as ressalvas. Sem esse registro, o acompanhamento automático não deixa a feature passar para "Em design". A inspeção de design (DoD 1) verifica de novo o projeto, com o modelo, a acessibilidade, a LGPD e as normas do CRP. A avaliação da equipe Sem Requisitos é uma verificação externa, registrada na [Análise do Feedback](../requisitos/analise-feedback.md).
 
 ### Validação com os diferentes públicos
 

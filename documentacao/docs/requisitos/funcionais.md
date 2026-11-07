@@ -2,12 +2,12 @@
 render_macros: true
 ---
 
-# 8.1 Lista de Requisitos Funcionais
+# Requisitos Funcionais { #81-lista-de-requisitos-funcionais }
 
 !!! abstract "Na estrutura de requisitos"
     Esta página é a fonte única do texto de cada RF, que declara uma feature do FDD: descrição, critérios de aceitação e rastreabilidade até a característica de produto e os objetivos específicos. Os atributos de planejamento (valor, MVP, ciclo, Líder e estado) vêm do catálogo de requisitos. Como as informações se ligam e são atualizadas: [Organização e atualização](../visao-geral/organizacao-e-atualizacao.md).
 
-Os requisitos funcionais (RFs) são declarados a partir da decomposição das Características de Produto (CPs) em **Features**, seguindo o processo FDD (etapa _Construir a Lista de Features_) e as práticas descritas na [Seção 5 — Engenharia de Requisitos](../processo/engenharia-requisitos.md). Cada Feature segue o formato `<ação> <resultado> <objeto>` e agrupa um ou mais RFs; cada RF mantém rastreabilidade com a Feature que o declarou e, por meio dela, com a CP de origem, compondo a cadeia **Problema → OG → OEs → CPs → Features → RFs/RNFs** descrita no cronograma da Unidade 2.
+Os requisitos funcionais (RFs) são declarados a partir da decomposição das Características de Produto (CPs) em **Features**, seguindo o processo FDD (etapa _Construir a Lista de Features_) e as práticas descritas na [Engenharia de Requisitos](../processo/engenharia-requisitos.md). Cada Feature segue o formato `<ação> <resultado> <objeto>` e agrupa um ou mais RFs; cada RF mantém rastreabilidade com a Feature que o declarou e, por meio dela, com a CP de origem, compondo a cadeia **Problema → OG → OEs → CPs → Features → RFs/RNFs** descrita no cronograma da Unidade 2.
 
 **Como ler a rastreabilidade.** A linha de rastreabilidade de cada RF usa quatro tipos de relação, sempre apontando para o RF envolvido, e não para a CP inteira:
 { #como-ler-a-rastreabilidade }
@@ -17,7 +17,7 @@ Os requisitos funcionais (RFs) são declarados a partir da decomposição das Ca
 - **Apoio opcional:** o requisito indicado melhora o resultado quando existe, mas a sua ausência não impede o funcionamento. É o caso de um RF fora do MVP que reforça um RF do MVP.
 - **Restrição transversal:** CP ou RNF cujas regras se aplicam ao RF (por exemplo, a CP12 — Segurança, sigilo e controle de acesso).
 
-Quando o RF usa uma regra decidida com a Clínica Escola FBr, a rastreabilidade termina com **Origem**, que aponta para o código da decisão no [Registro de Decisões com a FBr (8.4)](decisoes-fbr.md), com a data e a fonte.
+Quando o RF usa uma regra decidida com a Clínica Escola FBr, a rastreabilidade termina com **Origem**, que aponta para o código da decisão no [Registro de Decisões com a FBr](decisoes-fbr.md), com a data e a fonte.
 
 <details class="requirement-index" markdown>
 <summary>Índice de requisitos funcionais por código ({{ n.rfs }} registrados, {{ n.rfs_vigentes }} vigentes)</summary>
@@ -38,7 +38,7 @@ A lista de features, organizada por área e conjunto do FDD, fica na Visão gera
 
 A CP1 foi decomposta em três features: registro da solicitação de atendimento on-line, emissão de comprovante de inscrição e registro de inscrição assistida. As features têm como objetivo ampliar o acesso da comunidade aos serviços da Clínica Escola FBr, permitindo que o interessado realize sua inscrição sem necessidade de deslocamento presencial e que pessoas com dificuldades de acesso digital possam utilizar um canal assistido.
 
-O registro da inscrição assistida constitui uma resposta proposta ao risco de exclusão digital identificado na intervenção social (Seção 3), cuja forma de operação deverá ser validada com a Clínica Escola.
+O registro da inscrição assistida constitui uma resposta proposta ao risco de exclusão digital identificado na [Intervenção Social](../produto/intervencao-social.md), cuja forma de operação deverá ser validada com a Clínica Escola.
 
 As funcionalidades destinadas ao público externo devem observar os requisitos de acessibilidade da CP14, enquanto o acesso institucional aos dados dos inscritos deve respeitar os perfis e as restrições estabelecidos pela CP12.
 
@@ -54,7 +54,7 @@ O sistema deve permitir que o interessado realize uma solicitação de atendimen
 - O formulário também deve coletar os dados da ficha de identificação da Clínica Escola que os campos acima não cobrem ([DF43](decisoes-fbr.md#df43)): sexo, profissão, escolaridade, bairro, cidade, CEP, WhatsApp, contato de emergência e, para menor de idade, o CPF e o documento que comprova a responsabilidade legal. Até a FBr definir a obrigatoriedade desses dados, eles são opcionais; essa regra é uma proposta da equipe. A exceção é o CPF do responsável legal, obrigatório na inscrição de menor de idade ([DF47](decisoes-fbr.md#df47)), porque o consentimento do RF57 é dado pelo responsável.
 - O CPF e o RG são coletados apenas como texto informado pelo próprio interessado — a Clínica Escola não exige, nem o sistema deve solicitar, o envio de cópia digitalizada desses documentos.
 - O sistema deve validar o formato dos dados de contato, verificar os campos obrigatórios e solicitar a confirmação do interessado antes de registrar a inscrição.
-- O formulário deve exibir, de forma fixa e sempre visível, um aviso textual com os contatos de emergência do CVV (188) e do SAMU (192), conforme solicitado pela Clínica Escola FBr na validação do MVP ([10.2.4](priorizacao-e-mvp.md#1024-validacao-do-mvp-com-o-cliente)) — condição vinculada ao adiamento da sinalização automática de pontos de atenção (RF5) para uma entrega posterior.
+- O formulário deve exibir, de forma fixa e sempre visível, um aviso textual com os contatos de emergência do CVV (188) e do SAMU (192), conforme solicitado pela Clínica Escola FBr na validação do MVP ([validação do MVP](priorizacao-e-mvp.md#1024-validacao-do-mvp-com-o-cliente)) — condição vinculada ao adiamento da sinalização automática de pontos de atenção (RF5) para uma entrega posterior.
 
 Após a conclusão do envio, o sistema deve armazenar a solicitação e gerar um identificador único, que será utilizado para o acompanhamento da inscrição nas etapas posteriores de triagem e fila de espera.
 
@@ -120,7 +120,7 @@ O sistema deve permitir que um usuário institucional com perfil de secretaria r
 
 O registro assistido deve utilizar os mesmos campos cadastrais e informações obrigatórias estabelecidos para a inscrição on-line, permitindo que a solicitação seja incorporada ao mesmo fluxo de triagem e fila de espera.
 
-Enquanto este requisito ficar para uma entrega posterior, o apoio a quem precisa de auxílio para se inscrever é feito pela recepção, preenchendo em nome do interessado o próprio formulário de inscrição on-line (RF1), de modo que a solicitação entre na mesma fila — condição confirmada pela Clínica Escola FBr na validação do MVP ([10.2.4](priorizacao-e-mvp.md#1024-validacao-do-mvp-com-o-cliente)).
+Enquanto este requisito ficar para uma entrega posterior, o apoio a quem precisa de auxílio para se inscrever é feito pela recepção, preenchendo em nome do interessado o próprio formulário de inscrição on-line (RF1), de modo que a solicitação entre na mesma fila — condição confirmada pela Clínica Escola FBr na validação do MVP ([validação do MVP](priorizacao-e-mvp.md#1024-validacao-do-mvp-com-o-cliente)).
 
 O sistema deve identificar a modalidade utilizada para o registro da inscrição, diferenciando as solicitações realizadas diretamente pelo interessado daquelas registradas com auxílio de um usuário institucional.
 
@@ -144,7 +144,7 @@ _Rastreabilidade:_ Feature "Registrar inscrição assistida" → CP1 — Inscri�
 
 A CP2 foi decomposta em três features: organização das informações da inscrição, sinalização de pontos de atenção e registro da prioridade definida pela equipe clínica. A inscrição on-line ou assistida (CP1) fornece os dados de entrada; somente a prioridade clínica confirmada pode alimentar a ordenação da fila (CP3). O acesso aos dados da triagem observa a CP12 — Segurança, sigilo e controle de acesso, conforme a numeração da [Solução Proposta](../produto/solucao-proposta.md#23-caracteristicas-de-produto-mapeadas-com-os-objetivos-especificos).
 
-A formulação desta CP na atividade de decomposição menciona pré-classificação automática pelas opções do formulário. A versão vigente da Solução Proposta, §2.2–2.3, restringe o sistema a organizar e sinalizar informações, reservando a classificação vermelha, amarela ou verde exclusivamente à equipe clínica.
+A formulação desta CP na atividade de decomposição menciona pré-classificação automática pelas opções do formulário. A versão vigente da Solução Proposta (objetivos específicos e características de produto) restringe o sistema a organizar e sinalizar informações, reservando a classificação vermelha, amarela ou verde exclusivamente à equipe clínica.
 
 Na prática hoje descrita pela FBr, a triagem parte da leitura da queixa em texto livre preenchida pelo interessado (RF1), não de opções fechadas do formulário; a pré-classificação automática por opções do formulário foi uma proposta da equipe de projeto discutida internamente, não uma funcionalidade solicitada pela Clínica Escola na reunião de 26/08/2026.
 
@@ -225,7 +225,7 @@ As features têm como objetivo organizar a fila de acordo com as prioridades est
 
 A ordenação da fila depende da classificação de prioridade realizada na CP2, enquanto a consulta individual deve respeitar as restrições de acesso e sigilo previstas na CP12.
 
-A apresentação das condições gerais de atendimento constitui uma resposta proposta aos riscos de aumento da demanda e de criação de expectativas inadequadas sobre o tempo de espera, identificados na intervenção social (Seção 3).
+A apresentação das condições gerais de atendimento constitui uma resposta proposta aos riscos de aumento da demanda e de criação de expectativas inadequadas sobre o tempo de espera, identificados na [Intervenção Social](../produto/intervencao-social.md).
 
 #### Feature — Ordenar inscritos na fila de espera [#140](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/issues/140)
 
@@ -307,11 +307,11 @@ _Rastreabilidade:_ Feature "Manter e informar condições gerais da fila" → CP
 
 ### Agendamento, Confirmação e Remarcação (CP4)
 
-A CP4 foi decomposta em oito features, organizadas em três conjuntos: agendamento, confirmação/lembrete e cancelamento, respondendo à dor mais crítica relatada pela coordenação — as falhas de agendamento e de confirmação de presença que produzem horários ociosos ([Solução Proposta, §2.1 e §2.3](../produto/solucao-proposta.md#23-caracteristicas-de-produto-mapeadas-com-os-objetivos-especificos)).
+A CP4 foi decomposta em oito features, organizadas em três conjuntos: agendamento, confirmação/lembrete e cancelamento, respondendo à dor mais crítica relatada pela coordenação — as falhas de agendamento e de confirmação de presença que produzem horários ociosos ([Solução Proposta, objetivo geral e características de produto](../produto/solucao-proposta.md#23-caracteristicas-de-produto-mapeadas-com-os-objetivos-especificos)).
 
 O agendamento depende do vínculo entre paciente e estagiário responsável, definido pela CP5, e pressupõe que a inscrição já tenha passado pela triagem da CP2. O acesso aos dados da sessão observa os perfis definidos na CP12 — Segurança, sigilo e controle de acesso. O registro de um não comparecimento gera o evento consumido pela CP9 — Controle de assiduidade e alertas, para a contagem cumulativa de faltas; esta decomposição trata apenas do registro do evento na sessão, não da interpretação cumulativa dele.
 
-Conforme confirmado pela Clínica Escola na reunião de 26/08/2026 ([ata](../historico/unidade-1/reunioes.md)), todas as sessões de atendimento psicológico da Clínica Escola FBr são presenciais — a FBr não realiza atendimento psicológico remoto no estágio supervisionado. A base normativa dessa restrição (norma do CFP/CRP-DF ou regulamento de estágio da FBr) ainda depende de confirmação formal ([Cenário Atual, 1.4](../produto/cenario-atual.md#14-identificacao-da-oportunidade-ou-problema); [Pendências](analise-feedback.md#pendencias-de-validacao-com-a-fbr)). O agendamento (RF10) e a confirmação de presença (RF14) tratam, portanto, exclusivamente de horários presenciais; o sistema não precisa prever modalidade remota de sessão.
+Conforme confirmado pela Clínica Escola na reunião de 26/08/2026 ([ata](../historico/unidade-1/reunioes.md)), todas as sessões de atendimento psicológico da Clínica Escola FBr são presenciais — a FBr não realiza atendimento psicológico remoto no estágio supervisionado. A base normativa dessa restrição (norma do CFP/CRP-DF ou regulamento de estágio da FBr) ainda depende de confirmação formal ([Cenário Atual, identificação do problema](../produto/cenario-atual.md#14-identificacao-da-oportunidade-ou-problema); [Pendências](analise-feedback.md#pendencias-de-validacao-com-a-fbr)). O agendamento (RF10) e a confirmação de presença (RF14) tratam, portanto, exclusivamente de horários presenciais; o sistema não precisa prever modalidade remota de sessão.
 
 Os canais de contato com o paciente (e-mail, WhatsApp e ligação, sem SMS), a duração da sessão, a antecedência do lembrete e a antecedência mínima de cancelamento foram confirmados pela Clínica Escola em 23/10/2026 ([DF18](decisoes-fbr.md#df18), [DF20](decisoes-fbr.md#df20), [DF21](decisoes-fbr.md#df21) e [DF24](decisoes-fbr.md#df24)), e o limite de uma remarcação por paciente no ciclo já havia sido confirmado. Os prazos que ainda não foram fixados pela FBr são tratados como **parâmetros de agendamento**: valores configuráveis pela coordenação na interface, sem intervenção técnica, que o sistema aplica a partir da alteração e que nascem com o valor padrão abaixo. Os valores padrão são uma proposta da equipe e devem ser confirmados na validação com a FBr; a mudança de um valor não altera sessões já realizadas nem classificações já registradas.
 
@@ -504,7 +504,7 @@ _Rastreabilidade:_ Feature "Notificar paciente sobre ausência do estagiário" �
 
 ### Distribuição de casos entre supervisores e estagiários (CP5)
 
-A CP5 foi decomposta em nove features (uma delas, o RF19, removida em 24/10/2026 por decisão da FBr), organizadas em três conjuntos: distribuição dos casos entre supervisores, vinculação de cada paciente a um estagiário responsável e acompanhamento/reorganização dos vínculos já estabelecidos, apoiando a organização da reunião inicial de estágio e a rastreabilidade da responsabilidade sobre cada caso ([Solução Proposta, §2.3](../produto/solucao-proposta.md#23-caracteristicas-de-produto-mapeadas-com-os-objetivos-especificos)).
+A CP5 foi decomposta em nove features (uma delas, o RF19, removida em 24/10/2026 por decisão da FBr), organizadas em três conjuntos: distribuição dos casos entre supervisores, vinculação de cada paciente a um estagiário responsável e acompanhamento/reorganização dos vínculos já estabelecidos, apoiando a organização da reunião inicial de estágio e a rastreabilidade da responsabilidade sobre cada caso ([Solução Proposta, características de produto](../produto/solucao-proposta.md#23-caracteristicas-de-produto-mapeadas-com-os-objetivos-especificos)).
 
 A distribuição depende da classificação de prioridade realizada na CP2 e da fila de espera da CP3, enquanto o acesso ao prontuário do caso pelo estagiário e pelo supervisor respeita os perfis e restrições definidos na CP12. Três regras de distribuição ainda dependem de confirmação da FBr e estão registradas em [Pendências de validação com a FBr](analise-feedback.md#pendencias-de-validacao-com-a-fbr): se a prioridade clínica orienta diretamente a ordem de distribuição (RN5.4), se há limite de casos simultâneos por estagiário e por supervisor (RN5.8) e se um caso pode ser atendido em dupla (RN5.9). Enquanto não houver resposta, os requisitos adotam o padrão de um responsável principal por caso, sem limite configurado, com a lista de pendentes ordenada pela prioridade. O enquadramento da transferência de caso na CP5 (RF25) foi validado com o MVP.
 
@@ -649,7 +649,7 @@ _Rastreabilidade:_ Feature "Consultar histórico de responsáveis do caso" → C
 
 ### Prontuário eletrônico (CP6)
 
-A CP6 foi decomposta em três features: a criação e inicialização do prontuário eletrônico no início do acompanhamento, o registro da anamnese e do contrato terapêutico pelo estagiário responsável e a consulta ao prontuário pelo estagiário responsável e por seu supervisor. O registro da evolução de cada sessão passa a ser tratado como capacidade própria na CP7 — Registro de evolução por sessão, e a consolidação do relatório final do ciclo de atendimento passa a ser tratada na CP8 — Geração do relatório final de evolução, conforme a decomposição em três características já registrada na [Solução Proposta, §2.3](../produto/solucao-proposta.md#23-caracteristicas-de-produto-mapeadas-com-os-objetivos-especificos). Esta seção substitui a decomposição consolidada anteriormente declarada sob o rótulo único "CP6" (issue #34), que reunia prontuário, evolução e relatório final antes da separação em CP6/CP7/CP8.
+A CP6 foi decomposta em três features: a criação e inicialização do prontuário eletrônico no início do acompanhamento, o registro da anamnese e do contrato terapêutico pelo estagiário responsável e a consulta ao prontuário pelo estagiário responsável e por seu supervisor. O registro da evolução de cada sessão passa a ser tratado como capacidade própria na CP7 — Registro de evolução por sessão, e a consolidação do relatório final do ciclo de atendimento passa a ser tratada na CP8 — Geração do relatório final de evolução, conforme a decomposição em três características já registrada na [Solução Proposta, características de produto](../produto/solucao-proposta.md#23-caracteristicas-de-produto-mapeadas-com-os-objetivos-especificos). Esta seção substitui a decomposição consolidada anteriormente declarada sob o rótulo único "CP6" (issue #34), que reunia prontuário, evolução e relatório final antes da separação em CP6/CP7/CP8.
 
 O acesso ao prontuário depende do vínculo de responsabilidade definido na CP5 e está sujeito à restrição de acesso do RF55 — Restringir acesso ao prontuário do paciente (CP12). Para tornar a completude verificável sem presumir conteúdo diagnóstico, o prontuário possui o conjunto mínimo de dados estruturais definido no RF27; campos clínicos adicionais somente podem ser acrescentados após validação institucional.
 
@@ -714,7 +714,7 @@ _Rastreabilidade:_ Feature "Consultar prontuário do paciente" → CP6 — Pront
 
 ### Registro de evolução por sessão (CP7)
 
-A CP7 foi decomposta em sete features: registro da evolução de uma sessão realizada, correção de um registro já salvo, registro de complemento, validação da evolução pelo supervisor, encerramento do caso por alta, consulta da evolução de uma sessão específica e consulta do histórico consolidado de evoluções do ciclo de atendimento. A validação pelo supervisor (RF67) e o encerramento por alta (RF68) foram declarados a partir das dúvidas levantadas pela Clínica Escola FBr na validação do MVP (seção [10.2.4](priorizacao-e-mvp.md#1024-validacao-do-mvp-com-o-cliente)); a consulta do histórico consolidado foi incorporada a partir da decomposição consolidada anteriormente sob o rótulo único "CP6" (issue #34), que também tratava do prontuário e do relatório final antes da separação em três características (CP6/CP7/CP8) confirmada na [Solução Proposta, §2.3](../produto/solucao-proposta.md#23-caracteristicas-de-produto-mapeadas-com-os-objetivos-especificos).
+A CP7 foi decomposta em sete features: registro da evolução de uma sessão realizada, correção de um registro já salvo, registro de complemento, validação da evolução pelo supervisor, encerramento do caso por alta, consulta da evolução de uma sessão específica e consulta do histórico consolidado de evoluções do ciclo de atendimento. A validação pelo supervisor (RF67) e o encerramento por alta (RF68) foram declarados a partir das dúvidas levantadas pela Clínica Escola FBr na validação do MVP ([validação do MVP](priorizacao-e-mvp.md#1024-validacao-do-mvp-com-o-cliente)); a consulta do histórico consolidado foi incorporada a partir da decomposição consolidada anteriormente sob o rótulo único "CP6" (issue #34), que também tratava do prontuário e do relatório final antes da separação em três características (CP6/CP7/CP8) confirmada na [Solução Proposta, características de produto](../produto/solucao-proposta.md#23-caracteristicas-de-produto-mapeadas-com-os-objetivos-especificos).
 
 O registro de evolução depende de uma sessão já realizada (CP4) e do vínculo entre paciente e estagiário responsável (CP5). O acesso ao conteúdo registrado é restrito ao estagiário responsável, ao seu supervisor e, para consulta, à coordenação, conforme os perfis definidos na CP12 — Segurança, sigilo e controle de acesso. A evolução registrada alimenta o prontuário eletrônico (CP6) e, ao fim do ciclo, o relatório final de evolução (CP8).
 
@@ -857,7 +857,7 @@ _Rastreabilidade:_ Feature "Consultar histórico de evolução do paciente" → 
 
 ### Geração do relatório final de evolução (CP8)
 
-A CP8 foi decomposta em uma feature: a geração do relatório final de evolução do ciclo de atendimento, a partir das evoluções registradas na CP7, para revisão do supervisor responsável, conforme a [Solução Proposta, §2.3](../produto/solucao-proposta.md#23-caracteristicas-de-produto-mapeadas-com-os-objetivos-especificos). Esta seção substitui a decomposição anteriormente consolidada sob o rótulo único "CP6" (issue #34) para a parte referente ao relatório final.
+A CP8 foi decomposta em uma feature: a geração do relatório final de evolução do ciclo de atendimento, a partir das evoluções registradas na CP7, para revisão do supervisor responsável, conforme a [Solução Proposta, características de produto](../produto/solucao-proposta.md#23-caracteristicas-de-produto-mapeadas-com-os-objetivos-especificos). Esta seção substitui a decomposição anteriormente consolidada sob o rótulo único "CP6" (issue #34) para a parte referente ao relatório final.
 
 #### Feature — Gerar relatório final de evolução [#131](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/issues/131)
 
@@ -1079,7 +1079,7 @@ _Rastreabilidade:_ Feature "Registrar decisão institucional sobre a reprovaçã
 
 ### Registros administrativos do atendimento (CP10)
 
-A CP10 foi decomposta em sete features, organizadas em dois conjuntos que reúnem as antigas características declaradas separadamente como "Registro da Contribuição Social" e "Emissão de Declaração de Comparecimento", agrupadas em uma única CP10 — Registros administrativos do atendimento, conforme a [Solução Proposta, §2.3](../produto/solucao-proposta.md#23-caracteristicas-de-produto-mapeadas-com-os-objetivos-especificos): (i) o registro do pagamento da taxa de responsabilidade social (R$ 35,00, valor padrão), cobrada uma vez por semestre e devida a partir da primeira sessão, distinguindo quem efetivou e quem não efetivou o pagamento; e (ii) a emissão automática da declaração de comparecimento do paciente, com data, horário e nome do estagiário responsável.
+A CP10 foi decomposta em sete features, organizadas em dois conjuntos que reúnem as antigas características declaradas separadamente como "Registro da Contribuição Social" e "Emissão de Declaração de Comparecimento", agrupadas em uma única CP10 — Registros administrativos do atendimento, conforme a [Solução Proposta, características de produto](../produto/solucao-proposta.md#23-caracteristicas-de-produto-mapeadas-com-os-objetivos-especificos): (i) o registro do pagamento da taxa de responsabilidade social (R$ 35,00, valor padrão), cobrada uma vez por semestre e devida a partir da primeira sessão, distinguindo quem efetivou e quem não efetivou o pagamento; e (ii) a emissão automática da declaração de comparecimento do paciente, com data, horário e nome do estagiário responsável.
 
 #### Contribuição social
 
@@ -1279,7 +1279,7 @@ _Rastreabilidade:_ Feature "Exportar relatório institucional em PDF" → CP11 �
 
 ### Segurança, Sigilo e Controle de Acesso (CP12)
 
-A CP12 foi decomposta em nove features, organizadas em três conjuntos: autenticação, controle de acesso por perfil e proteção de dados. Elas respondem à restrição mais crítica apontada pelo cliente, o sigilo das informações psicológicas ([Seção 1.5](../produto/cenario-atual.md#15-desafios-do-projeto)), e atendem à LGPD e às normas do Conselho Federal de Psicologia (CFP).
+A CP12 foi decomposta em nove features, organizadas em três conjuntos: autenticação, controle de acesso por perfil e proteção de dados. Elas respondem à restrição mais crítica apontada pelo cliente, o sigilo das informações psicológicas ([desafios do projeto](../produto/cenario-atual.md#15-desafios-do-projeto)), e atendem à LGPD e às normas do Conselho Federal de Psicologia (CFP).
 
 Os perfis de acesso são cinco: **paciente**, **secretaria**, **estagiário**, **supervisor** e **coordenação**. Os quatro perfis institucionais acessam o sistema com e-mail e senha. O paciente (ou seu responsável legal) não possui conta nem senha, já que parte do público tem pouca familiaridade com tecnologia: as páginas públicas, como a inscrição, não exigem identificação, e o acesso às informações do próprio paciente (posição na fila da CP3 e declarações da CP10) é liberado por uma verificação de identidade feita a cada consulta.
 
@@ -1387,7 +1387,7 @@ _Rastreabilidade:_ Feature "Desativar usuário institucional" → CP12 — Segur
 
 **RF55 — Restringir acesso ao prontuário do paciente**{ #rf55 }
 
-O sistema deve permitir o acesso ao prontuário de um paciente (CP6), que reúne os registros de evolução (CP7) e o relatório final (CP8), somente ao estagiário responsável pelo paciente, ao supervisor desse estagiário, conforme o vínculo definido na CP5, e à coordenação, que consulta o conteúdo clínico de todos os prontuários, sem registrar nem alterar nada nele ([DF32](decisoes-fbr.md#df32)). O perfil de secretaria não deve ter acesso ao conteúdo clínico do prontuário, apenas aos dados cadastrais (nome, data de nascimento, contatos e responsável legal) e administrativos (situação do caso, sessões agendadas e realizadas, faltas e situação da contribuição social) do paciente. A regra não prevê outras exceções por perfil, conforme a definição da CP12 na [Seção 2.3](../produto/solucao-proposta.md#23-caracteristicas-de-produto-mapeadas-com-os-objetivos-especificos), atualizada com a decisão da FBr de 23/10/2026. Todo acesso, inclusive o da coordenação, fica no registro de acessos (RNF52).
+O sistema deve permitir o acesso ao prontuário de um paciente (CP6), que reúne os registros de evolução (CP7) e o relatório final (CP8), somente ao estagiário responsável pelo paciente, ao supervisor desse estagiário, conforme o vínculo definido na CP5, e à coordenação, que consulta o conteúdo clínico de todos os prontuários, sem registrar nem alterar nada nele ([DF32](decisoes-fbr.md#df32)). O perfil de secretaria não deve ter acesso ao conteúdo clínico do prontuário, apenas aos dados cadastrais (nome, data de nascimento, contatos e responsável legal) e administrativos (situação do caso, sessões agendadas e realizadas, faltas e situação da contribuição social) do paciente. A regra não prevê outras exceções por perfil, conforme a definição da CP12 na [características de produto](../produto/solucao-proposta.md#23-caracteristicas-de-produto-mapeadas-com-os-objetivos-especificos), atualizada com a decisão da FBr de 23/10/2026. Todo acesso, inclusive o da coordenação, fica no registro de acessos (RNF52).
 
 _Critérios de aceitação:_
 
@@ -1467,9 +1467,9 @@ _Rastreabilidade:_ Feature "Registrar revogação do consentimento" → CP12 —
 
 ### Continuidade de casos entre semestres (CP13)
 
-A CP13 foi decomposta em três features, que organizam a transferência de um caso e de seu histórico clínico quando o estagiário responsável conclui o estágio, preservando a continuidade do acompanhamento do paciente nos semestres seguintes, conforme a [Solução Proposta, §2.3](../produto/solucao-proposta.md#23-caracteristicas-de-produto-mapeadas-com-os-objetivos-especificos).
+A CP13 foi decomposta em três features, que organizam a transferência de um caso e de seu histórico clínico quando o estagiário responsável conclui o estágio, preservando a continuidade do acompanhamento do paciente nos semestres seguintes, conforme a [Solução Proposta, características de produto](../produto/solucao-proposta.md#23-caracteristicas-de-produto-mapeadas-com-os-objetivos-especificos).
 
-Diferentemente da transferência de caso já prevista na CP5 (RF25 — Transferir caso para outro estagiário ou supervisor), que trata de uma reorganização pontual e a qualquer momento do semestre, a CP13 trata do processo estruturado de virada de semestre: identificar, para cada estagiário que está concluindo o estágio, os casos ativos sob sua responsabilidade, registrar a decisão de continuidade (ou de encerramento) de cada um e, quando aplicável, efetivar a transferência para o novo estagiário responsável, reaproveitando o mecanismo do RF25. Para tornar esse fluxo verificável, os requisitos abaixo adotam datas configuradas por semestre e confirmação explícita da coordenação; a CP permanece como visão de produto de mais longo prazo, fora do MVP e do escopo desejável imediato, confirmado pelo recorte técnico de MVP em [10.2.3](priorizacao-e-mvp.md#1023-definicao-do-mvp) (RF58, RF59 e RF60 fora do MVP).
+Diferentemente da transferência de caso já prevista na CP5 (RF25 — Transferir caso para outro estagiário ou supervisor), que trata de uma reorganização pontual e a qualquer momento do semestre, a CP13 trata do processo estruturado de virada de semestre: identificar, para cada estagiário que está concluindo o estágio, os casos ativos sob sua responsabilidade, registrar a decisão de continuidade (ou de encerramento) de cada um e, quando aplicável, efetivar a transferência para o novo estagiário responsável, reaproveitando o mecanismo do RF25. Para tornar esse fluxo verificável, os requisitos abaixo adotam datas configuradas por semestre e confirmação explícita da coordenação; a CP permanece como visão de produto de mais longo prazo, fora do MVP e do escopo desejável imediato, confirmado pelo recorte técnico de MVP em [definição do MVP](priorizacao-e-mvp.md#1023-definicao-do-mvp) (RF58, RF59 e RF60 fora do MVP).
 
 #### Feature — Listar casos elegíveis para continuidade entre semestres
 
@@ -1532,7 +1532,7 @@ _Rastreabilidade:_ Feature "Vincular caso a novo estagiário na continuidade" �
 
 ### Acessibilidade e Usabilidade (CP14)
 
-A CP14 foi decomposta em duas features de personalização da exibição, voltadas a reduzir barreiras de acesso para o público em vulnerabilidade social e para pessoas com deficiência visual, conforme os desafios identificados na [Seção 1.5](../produto/cenario-atual.md#15-desafios-do-projeto). As duas features se aplicam exclusivamente às **páginas voltadas ao público externo** (paciente/solicitante) — inscrição, consulta de posição na fila, agendamento e confirmação de presença —, e não ao painel administrativo interno (usado por coordenação, secretaria, estagiários e supervisores).
+A CP14 foi decomposta em duas features de personalização da exibição, voltadas a reduzir barreiras de acesso para o público em vulnerabilidade social e para pessoas com deficiência visual, conforme os desafios identificados na [desafios do projeto](../produto/cenario-atual.md#15-desafios-do-projeto). As duas features se aplicam exclusivamente às **páginas voltadas ao público externo** (paciente/solicitante) — inscrição, consulta de posição na fila, agendamento e confirmação de presença —, e não ao painel administrativo interno (usado por coordenação, secretaria, estagiários e supervisores).
 
 #### Feature — Ativar modo de alto contraste [#24](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/issues/24)
 

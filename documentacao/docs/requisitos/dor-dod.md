@@ -1,26 +1,26 @@
-# 9. DoR e DoD
+# DoR e DoD { #9-dor-e-dod }
 
 !!! abstract "Na estrutura de requisitos"
     Esta página define os critérios que levam cada feature de Planejada a Aceita. O estado de cada feature é acompanhado na issue dela e copiado para o catálogo. Como as informações se ligam e são atualizadas: [Organização e atualização](../visao-geral/organizacao-e-atualizacao.md).
 
-## 9.1 Definition of Ready (DoR)
+## Definition of Ready (DoR) { #91-definition-of-ready-dor }
 
-### 9.1.1 Objetivo
+### Objetivo { #911-objetivo }
 
 Este documento define os **critérios de entrada** para que uma feature, com os requisitos funcionais (RFs) que ela declara e os requisitos não funcionais (RNFs) que a restringem, possa ser **iniciada na construção**. Evita-se, assim, desenvolver requisitos incompletos, ambíguos ou ainda dependentes de validação com a Clínica Escola FBr, o que gera retrabalho e impede o teste objetivo.
 
-O DoR trata apenas da **entrada**. Os critérios de saída (quando uma feature pode ser considerada pronta) estão no Definition of Done (DoD), na [seção 9.2](#92-definition-of-done-dod).
+O DoR trata apenas da **entrada**. Os critérios de saída (quando uma feature pode ser considerada pronta) estão no Definition of Done (DoD), na [DoD](#92-definition-of-done-dod).
 
-Os critérios foram derivados da estrutura que os requisitos já seguem na [Seção 8.1](funcionais.md) e na [Seção 8.2](nao-funcionais.md) e dos tipos de problema apontados na verificação cruzada ([Seção 8.3](analise-feedback.md)). O DoR **avalia** os requisitos existentes; não cria nem renumera requisitos. Quando a avaliação encontra uma lacuna, a feature volta ao seu Líder de Feature ([seção 9.1.5](#915-resultado-da-avaliacao)).
+Os critérios foram derivados da estrutura que os requisitos já seguem na [Requisitos funcionais](funcionais.md) e na [Requisitos não funcionais](nao-funcionais.md) e dos tipos de problema apontados na verificação cruzada ([Análise do feedback](analise-feedback.md)). O DoR **avalia** os requisitos existentes; não cria nem renumera requisitos. Quando a avaliação encontra uma lacuna, a feature volta ao seu Líder de Feature ([resultado da avaliação](#915-resultado-da-avaliacao)).
 
-### 9.1.2 Escopo e unidade de avaliação
+### Escopo e unidade de avaliação { #912-escopo-e-unidade-de-avaliacao }
 
 - **Unidade de avaliação:** a **feature** (FDD), com seus RFs e os RNFs que a restringem. Um RF só entra na construção se a feature a que pertence também estiver pronta.
 - **Quando aplicar:** antes de a feature ser puxada para uma iteração de construção.
 - **Quem avalia:** o Líder de Feature responsável pela feature (ver a [composição da equipe](../processo/equipe-e-cliente.md#71-composicao-da-equipe) e o [Features e backlog](../visao-geral/backlog.md)) faz a autoavaliação pelo checklist, e outro integrante, na revisão cruzada, confirma antes da entrada.
-- **Resultado:** **Pronta**, **Pronta com ressalvas** ou **Não pronta** ([seção 9.1.5](#915-resultado-da-avaliacao)).
+- **Resultado:** **Pronta**, **Pronta com ressalvas** ou **Não pronta** ([resultado da avaliação](#915-resultado-da-avaliacao)).
 
-### 9.1.3 Checklist de critérios
+### Checklist de critérios { #913-checklist-de-criterios }
 
 Os critérios **[B]** são **bloqueantes**: sem eles, a feature não entra na construção. Os critérios **[R]** são **recomendáveis**: podem ficar pendentes se a pendência for registrada.
 
@@ -31,8 +31,8 @@ Os critérios **[B]** são **bloqueantes**: sem eles, a feature não entra na co
 | R1.1 | A feature segue o formato `<ação> <resultado> <objeto>` e está na lista de features (FDD), dentro de uma Área e de um Conjunto. | B |
 | R1.2 | Cada RF tem o cabeçalho "RFn — título" igual ao da feature e uma linha de **Rastreabilidade** com a cadeia Feature → CP → OE. | B |
 | R1.3 | As **dependências**, **integrações** e **restrições transversais** (por exemplo, CP12) estão declaradas na rastreabilidade, e os requisitos dos quais a feature depende já estão prontos ou em construção. | B |
-| R1.4 | A feature não está marcada na documentação como **entrega posterior** ou **adiada**. Se estiver, só entra depois que a condição registrada for resolvida ([seção 9.1.6](#916-situacao-conhecida-na-documentacao)). | B |
-| R1.5 | A feature consta no Backlog de Produto (Seção 10) e está dentro do escopo do MVP, ou foi explicitamente decidida como fora dele. | B |
+| R1.4 | A feature não está marcada na documentação como **entrega posterior** ou **adiada**. Se estiver, só entra depois que a condição registrada for resolvida ([situação conhecida na documentação](#916-situacao-conhecida-na-documentacao)). | B |
+| R1.5 | A feature consta na [Priorização e MVP](priorizacao-e-mvp.md) e está dentro do escopo do MVP, ou foi explicitamente decidida como fora dele. | B |
 | R1.6 | A issue da feature está vinculada ao título (`#NN`), quando o repositório já tiver a issue criada. | R |
 | R1.7 | Toda **integração** com um RF de ciclo posterior diz, no requisito, o que acontece enquanto esse RF não existe (por exemplo, o link de confirmação do RF10 antes do RF14). Se a feature for entregue sem a parte que depende dele, a entrega parcial fica registrada no [catálogo de requisitos](priorizacao-e-mvp.md#catalogo-de-requisitos) e aparece na linha "Entrega e situação" do requisito. | B |
 
@@ -103,7 +103,7 @@ Os critérios **[B]** são **bloqueantes**: sem eles, a feature não entra na co
 | R8.2 | A feature cabe em uma iteração. Se não couber, foi dividida em partes menores sem perder a rastreabilidade. | B |
 | R8.3 | Integrações externas (envio de e-mail, mensagem pronta de WhatsApp, geração de PDF) e a massa de dados necessária para teste estão identificadas. | R |
 
-### 9.1.4 Verificação rápida da redação
+### Verificação rápida da redação { #914-verificacao-rapida-da-redacao }
 
 Antes de marcar os grupos de descrição e critérios como atendidos, confere-se se o requisito evita os problemas mais recorrentes na verificação cruzada:
 
@@ -115,7 +115,7 @@ Antes de marcar os grupos de descrição e critérios como atendidos, confere-se
 - **Incompletude:** partes obrigatórias da descrição sem critério de aceitação.
 - **Redundância:** a regra já está declarada em outro requisito.
 
-### 9.1.5 Resultado da avaliação
+### Resultado da avaliação { #915-resultado-da-avaliacao }
 
 | Resultado | Condição | Consequência |
 | --------- | -------- | ------------ |
@@ -141,9 +141,9 @@ Pendências [R] e/ou com a FBr: <descrição, responsável, prazo, ou "nenhuma">
 Justificativas: <por que cada critério pendente não impede ou impede a entrada>
 ```
 
-### 9.1.6 Situação conhecida na documentação
+### Situação conhecida na documentação { #916-situacao-conhecida-na-documentacao }
 
-Com base na Seção 8.1 consultada em 08/10/2026 e atualizada em 24/10/2026 com as decisões de 23/10, os pontos abaixo afetam a avaliação e devem ser conferidos antes de cada feature entrar na construção.
+Com base nos requisitos funcionais consultados em 08/10/2026 e atualizada em 24/10/2026 com as decisões de 23/10, os pontos abaixo afetam a avaliação e devem ser conferidos antes de cada feature entrar na construção.
 
 | Requisito ou CP | Situação registrada | Efeito no DoR |
 | --------------- | ------------------- | ------------- |
@@ -158,33 +158,33 @@ Com base na Seção 8.1 consultada em 08/10/2026 e atualizada em 24/10/2026 com 
 | Parâmetros de agendamento | Confirmados em 23/10/2026: sessão de 50 min mais 10 min de anotações, lembrete 24 h antes e cancelamento sem falta até 1 h antes ([DF18](decisoes-fbr.md#df18), [DF20](decisoes-fbr.md#df20) e [DF21](decisoes-fbr.md#df21)). O prazo de confirmação (12 h) segue como proposta a validar. | R2.4: atendido pelo parâmetro configurável. |
 | RNF12 | Carga de referência de 30 usuários simultâneos confirmada em 23/10/2026 ([DF22](decisoes-fbr.md#df22)). | R5.3: atendido. |
 
-### 9.1.7 Relação com os demais documentos
+### Relação com os demais documentos { #917-relacao-com-os-demais-documentos }
 
 - **DoD:** uma feature só é avaliada pelo DoD depois de passar pelo DoR. Os critérios de teste, qualidade e documentação de saída estão no DoD.
-- **Requisitos (8.1 e 8.2):** o DoR verifica a qualidade desses documentos. As correções decorrentes da verificação cruzada devem estar aplicadas antes da avaliação.
-- **Análise do Feedback (8.3):** concentra as pendências de validação com a FBr citadas no R4.2.
+- **Requisitos funcionais e não funcionais:** o DoR verifica a qualidade desses documentos. As correções decorrentes da verificação cruzada devem estar aplicadas antes da avaliação.
+- **Análise do feedback:** concentra as pendências de validação com a FBr citadas no R4.2.
 - **Backlog de Produto (10):** fonte para o R1.5, sobre o pertencimento ao MVP e a ordem de entrega.
 
-### 9.1.8 Revisão deste documento
+### Revisão deste documento { #918-revisao-deste-documento }
 
 O DoR é revisado ao fim de cada iteração, na retrospectiva, e atualizado quando um retrabalho causado por requisito mal definido revelar um critério que faltava.
 
-## 9.2 Definition of Done (DoD)
+## Definition of Done (DoD) { #92-definition-of-done-dod }
 
-### 9.2.1 Regra de fluxo
+### Regra de fluxo { #921-regra-de-fluxo }
 
 O DoR e o DoD marcam as duas pontas da construção de uma feature:
 
-- uma feature só **entra em desenvolvimento** quando atende ao **DoR** (seção 9.1);
+- uma feature só **entra em desenvolvimento** quando atende ao **DoR**;
 - uma feature só é **considerada concluída** quando atende ao **DoD** (esta seção).
 
 Uma feature que não passou pelo DoR não é avaliada pelo DoD. A validação ocorre de forma incremental, acompanhando os marcos do FDD e combinando inspeções internas, testes e demonstrações com o cliente.
 
-Esta seção é a **fonte única** dos critérios de validação de cada marco. O [processo de validação (7.3)](../processo/equipe-e-cliente.md#73-processo-de-validacao) apenas explica como esses marcos se encaixam no processo da equipe e aponta para cá, sem repetir os critérios.
+Esta seção é a **fonte única** dos critérios de validação de cada marco. O [processo de validação](../processo/equipe-e-cliente.md#73-processo-de-validacao) apenas explica como esses marcos se encaixam no processo da equipe e aponta para cá, sem repetir os critérios.
 
-### 9.2.2 Checklist por marco do FDD
+### Checklist por marco do FDD { #922-checklist-por-marco-do-fdd }
 
-Uma feature só é considerada **pronta** quando cumprir todos os critérios abaixo, na ordem. Cada critério indica a **evidência** que comprova o seu cumprimento: sem a evidência registrada, o critério não é marcado como atendido. Todas as evidências ficam na issue da feature no GitHub (seção 9.2.3), por anexo ou link.
+Uma feature só é considerada **pronta** quando cumprir todos os critérios abaixo, na ordem. Cada critério indica a **evidência** que comprova o seu cumprimento: sem a evidência registrada, o critério não é marcado como atendido. Todas as evidências ficam na issue da feature no GitHub ([Registro](#923-registro)), por anexo ou link.
 
 #### 1. Design inspecionado
 
@@ -241,13 +241,13 @@ Uma feature só é considerada **pronta** quando cumprir todos os critérios aba
 
 | # | Critério | Evidência |
 | ---- | -------- | --------- |
-| D6.1 | Aceite formal da FBr registrado e vinculado à feature. | Aceite registrado na issue da feature (seção 9.2.3), com link para a ata ou a mensagem da FBr. |
+| D6.1 | Aceite formal da FBr registrado e vinculado à feature. | Aceite registrado na issue da feature ([Registro](#923-registro)), com link para a ata ou a mensagem da FBr. |
 | D6.2 | Observações, pendências e correções solicitadas pela FBr registradas e vinculadas à feature. | Itens listados no mesmo registro do aceite, cada correção com issue própria vinculada. |
 | D6.3 | Caso não seja aceita, a feature **não está pronta**: retorna ao planejamento com prioridade e critérios revisados. | Motivo da recusa registrado na issue e a feature devolvida ao backlog. |
 
 > **Regra de conformidade:** o aceite da FBr avalia comportamento, valor e adequação às necessidades da clínica. Ele **não substitui** a verificação de conformidade com o CRP, a LGPD e os requisitos de acessibilidade, que é responsabilidade da equipe técnica e é feita nas etapas 1 (Design inspecionado) e 3 (Código inspecionado).
 
-### 9.2.3 Registro
+### Registro { #923-registro }
 
 O aceite da FBr fica no **mesmo registro** da feature (a sua issue no GitHub), junto com as evidências das etapas anteriores, as pendências e as correções solicitadas. Assim, é possível rastrear, a partir da feature, quem aceitou, quando e com quais ressalvas.
 
@@ -263,7 +263,7 @@ Pendências: <descrição, responsável, prazo>
 Correções solicitadas: <descrição e issue vinculada>
 ```
 
-### 9.2.4 DoD da entrega final (MVP)
+### DoD da entrega final (MVP) { #924-dod-da-entrega-final-mvp }
 
 - [ ] Todas as features do MVP cumprem a DoD acima
 - [ ] Demonstração integrada do fluxo completo do MVP apresentada à FBr

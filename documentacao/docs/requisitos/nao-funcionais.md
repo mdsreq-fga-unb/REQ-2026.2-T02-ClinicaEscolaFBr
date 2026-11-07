@@ -2,7 +2,7 @@
 render_macros: true
 ---
 
-# 8.2 Lista de Requisitos Não Funcionais
+# Requisitos Não Funcionais { #82-lista-de-requisitos-nao-funcionais }
 
 !!! abstract "Na estrutura de requisitos"
     Esta página é a fonte única dos RNFs. Cada RNF aponta para os RFs que restringe, e a issue de cada feature lista os RNFs dela, que entram na verificação do D4.5. Como as informações se ligam e são atualizadas: [Organização e atualização](../visao-geral/organizacao-e-atualizacao.md).
@@ -508,7 +508,7 @@ Rastreabilidade: Features "Consolidar faltas do estagiário para a supervisão",
 
 ### Registros administrativos do atendimento (CP10)
 
-A CP10 reúne as condições de qualidade das antigas características "Registro da Contribuição Social" e "Emissão de Declaração de Comparecimento", agrupadas em uma única CP10 conforme a [Solução Proposta, §2.3](../produto/solucao-proposta.md#23-caracteristicas-de-produto-mapeadas-com-os-objetivos-especificos).
+A CP10 reúne as condições de qualidade das antigas características "Registro da Contribuição Social" e "Emissão de Declaração de Comparecimento", agrupadas em uma única CP10 conforme a [Solução Proposta, características de produto](../produto/solucao-proposta.md#23-caracteristicas-de-produto-mapeadas-com-os-objetivos-especificos).
 
 #### Contribuição social
 
@@ -717,7 +717,7 @@ O sistema deve fazer cópia de segurança completa dos dados pelo menos uma vez 
 A conformidade deve ser verificada por inspeção do histórico de cópias (uma cópia por dia) e por um teste de restauração em ambiente separado, cronometrado do início do procedimento até o sistema voltar a atender, confirmando que o tempo total fica em até 8 horas e que os dados restaurados correspondem aos da última cópia.
 
 Classificação: confiabilidade (URPS+).
-Rastreabilidade: CP12 — Segurança, sigilo e controle de acesso (transversal às features); responde ao risco IS05 — Dependência tecnológica da intervenção social (Seção 3).{{ origem("RNF53") }}
+Rastreabilidade: CP12 — Segurança, sigilo e controle de acesso (transversal às features); responde ao risco IS05 — Dependência tecnológica da [Intervenção Social](../produto/intervencao-social.md).{{ origem("RNF53") }}
 {{ registro("RNF53") }}
 
 ### Continuidade de casos entre semestres (CP13)
