@@ -244,7 +244,7 @@ _Figura 18 — Registro da reunião do Ciclo 4: inspeção de design, validaçã
 [Consultar ata completa em PDF](../assets/atas-reunioes/Ata_Reuniao_Ciclo_4_Inspecao_Design_Validacao_Pendencias_05-11-2026.pdf)
 
 !!! note "Correção de 05/11/2026"
-    O resumo abaixo corrige um ponto da ata em PDF: o Gabriel escreveu o projeto das 18 features do Ciclo 4 que faltavam ([#203](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/pull/203)), e não a inspeção de design delas. Como autor do projeto, ele não inspeciona nenhuma dessas features, e a inspeção de cada uma fica com o Líder e o revisor da issue, como registra o [Projeto das features do Ciclo 4](projeto-features-ciclo-4.md#roteiro-da-inspecao-de-design).
+    O resumo abaixo corrige um ponto da ata em PDF: o Gabriel escreveu o projeto das 18 features do Ciclo 4 que faltavam ([#203](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/pull/203)), e não a inspeção de design delas. Como autor do projeto, ele não inspeciona nenhuma dessas features, e a inspeção de cada uma fica com o Líder e o revisor da issue, como registra o [Projeto das features do Ciclo 4](projeto-features.md#roteiro-da-inspecao-de-design).
 
 ### Resumo
 
@@ -345,7 +345,7 @@ O Gabriel demonstrou as features do Ciclo 3 no ambiente de validação, do ponto
 | 6 | Os horários da sessão andam de 10 em 10 minutos | RF10 | Decidido ([DF49](../unidade-2/requisitos/decisoes-fbr.md#df49)) |
 | 7 | O e-mail da sessão ganha cabeçalho e rodapé com a identidade e as informações da FBr, sem ficar carregado a ponto de cair no spam | RF10, RF53 | A fazer |
 
-O Thiago também perguntou se a coordenação e o supervisor terão um painel para acompanhar se os atendimentos acontecem no horário e se os pacientes comparecem. O Gabriel mostrou, nos [protótipos do Ciclo 4](prototipos-ciclo-4.md), a agenda dos estagiários (RF11) e o alerta de limite de faltas (RF36), e explicou que o acompanhamento e a avaliação do estagiário entram nos ciclos seguintes.
+O Thiago também perguntou se a coordenação e o supervisor terão um painel para acompanhar se os atendimentos acontecem no horário e se os pacientes comparecem. O Gabriel mostrou, nos [protótipos do Ciclo 4](prototipos.md), a agenda dos estagiários (RF11) e o alerta de limite de faltas (RF36), e explicou que o acompanhamento e a avaliação do estagiário entram nos ciclos seguintes.
 
 ### 3. Protótipos e pendências do Ciclo 4
 

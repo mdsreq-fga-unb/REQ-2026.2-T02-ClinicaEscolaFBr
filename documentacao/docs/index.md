@@ -6,7 +6,7 @@ hide:
 
 # Clínica Escola FBr — Documentação do projeto
 
-Documentação do projeto · versão 3.44
+Documentação do projeto · versão 3.45
 
 <details class="revision-history" id="historico-de-revisao" markdown>
 <summary>Histórico de revisão</summary>
@@ -118,6 +118,7 @@ Registro cronológico das versões e alterações do documento de visão e dos a
 | 06/11/2026 | 3.41 | Projeto das features do Ciclo 4: a regra da migration dos status passa a usar a função imutável `sessao_ocupa_horario`, porque a conversão do enum para texto não é aceita na restrição de exclusão; RF34 e RF35 com o código concluído no catálogo | Gabriel da Cunha Barbaceli |
 | 07/11/2026 | 3.43 | Resposta às issues de avaliação #100, #101 e #108: nova página "Execução do processo", na Visão geral, com o modelo abrangente integrado do domínio e as revisões dele, a revisão da lista de features, as inspeções de design, o acompanhamento pelos marcos, os documentos da clínica analisados, a representação usada, a verificação por checklist e a validação com cada público; regra de limite de capacidade do MVP na priorização (10.2); justificativas do RF8 e do RF14 alinhadas ao valor dado pela FBr; validação com pacientes nas pendências com a FBr. Revisão das issues dos Ciclos 3 e 4: estado das features no catálogo igual ao das issues e dependência do RF52 e do RF57 no RF1 | Gabriel da Cunha Barbaceli |
 | 07/11/2026 | 3.44 | Reorganização do site a partir das orientações do professor e dos monitores sobre a organização e a atualização dos requisitos: nova página "Organização e atualização dos requisitos", com a estrutura de requisitos (a feature e o RF como unidade central, com os atributos e onde cada um é declarado), o recorte do MVP, a estratégia de atualização (marcos, gatilhos e o que é manual e o que é automático), a evolução da estrutura e as versões entregues; menu separado entre a referência vigente (Visão geral, Produto e requisitos, Processo e equipe e Construção do MVP) e o Histórico das unidades, sem mudar o endereço das páginas; aviso "Na estrutura de requisitos" nas páginas de requisitos; seção "O que foi realizado" na Unidade 3, gerada do catálogo; versão da página inicial atualizada | Gabriel da Cunha Barbaceli |
+| 07/11/2026 | 3.45 | Construção do MVP reorganizada: os projetos das features dos Ciclos 3 e 4 viraram uma página só, "Projeto das features", com as features agrupadas por característica de produto e o ciclo indicado em cada uma; os protótipos dos dois ciclos viraram "Protótipos", organizados pelo fluxo do sistema; a segurança da implantação entrou na página "Implantação e segurança"; implantação, cópia de segurança e teste de carga ficaram no grupo "Implantação e operação"; os endereços antigos redirecionam para o mesmo trecho da página nova | Gabriel da Cunha Barbaceli |
 
 
 A versão 1.6 está registrada com a data do commit (04/09/2026), posterior à da versão 1.7; a numeração foi mantida para preservar as referências já feitas a essas versões.

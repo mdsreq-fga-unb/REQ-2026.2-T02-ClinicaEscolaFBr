@@ -4,7 +4,7 @@ Esta página mostra como o processo definido na [Estratégia de Engenharia de So
 
 ## 1. Modelo abrangente do domínio
 
-O FDD começa pelo modelo abrangente do domínio. Os projetos das features ([Ciclo 3](../unidade-3/projeto-features-ciclo-3.md) e [Ciclo 4](../unidade-3/projeto-features-ciclo-4.md)) detalham as classes de cada característica de produto; o diagrama abaixo integra essas partes num modelo só, com as relações entre inscrição, caso, ciclo de atendimento, sessão, prontuário e responsáveis.
+O FDD começa pelo modelo abrangente do domínio. Os projetos das features ([Ciclo 3](../unidade-3/projeto-features.md) e [Ciclo 4](../unidade-3/projeto-features.md)) detalham as classes de cada característica de produto; o diagrama abaixo integra essas partes num modelo só, com as relações entre inscrição, caso, ciclo de atendimento, sessão, prontuário e responsáveis.
 
 ```mermaid
 classDiagram
@@ -87,10 +87,10 @@ classDiagram
 
 | Data | Revisão | Quem | O que mudou | Evidência |
 | --- | --- | --- | --- | --- |
-| 19/10/2026 | Modelo das features do Ciclo 3, na avaliação do DoR | Gabriel | Classes da inscrição, da triagem, da distribuição, do vínculo, do prontuário e da sessão, com a vigência dos responsáveis | [Projeto das features do Ciclo 3](../unidade-3/projeto-features-ciclo-3.md), versão 3.1 do [histórico](../index.md#historico-de-revisao) |
+| 19/10/2026 | Modelo das features do Ciclo 3, na avaliação do DoR | Gabriel | Classes da inscrição, da triagem, da distribuição, do vínculo, do prontuário e da sessão, com a vigência dos responsáveis | [Classes do Ciclo 3](../unidade-3/projeto-features.md#modelo-detalhado-do-ciclo-3), no Projeto das features, versão 3.1 do [histórico](../index.md#historico-de-revisao) |
 | 24/10/2026 | Inspeções de design do Ciclo 3 (DoD 1) | Gabriel, com o `/de-acordo` do Líder de cada feature; o RF51 foi inspecionado por Joaquim em 25/10 | Os apontamentos de cada feature e as correções no projeto, registrados na própria issue | Comentário "Inspeção de design (DoD 1)" nas issues [#45](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/issues/45), [#88](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/issues/88) a [#97](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/issues/97) |
 | 24/10/2026 | Avaliação da Unidade 2 pelo professor | Gabriel | O RF66 passa a criar só o prontuário, e a anamnese e o contrato vão para o RF69 | Versão 3.3 do [histórico](../index.md#historico-de-revisao) |
-| 05/11/2026 | Modelo das 18 features do Ciclo 4 | Gabriel, revisado por Nicolas e Joaquim | Classes da confirmação, do cancelamento, da assiduidade (falta, desligamento e vaga) e da verificação de identidade; situações novas do caso e da sessão | [PR #203](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/pull/203) e [Projeto das features do Ciclo 4](../unidade-3/projeto-features-ciclo-4.md) |
+| 05/11/2026 | Modelo das 18 features do Ciclo 4 | Gabriel, revisado por Nicolas e Joaquim | Classes da confirmação, do cancelamento, da assiduidade (falta, desligamento e vaga) e da verificação de identidade; situações novas do caso e da sessão | [PR #203](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/pull/203) e [Classes do Ciclo 4](../unidade-3/projeto-features.md#modelo-detalhado-do-ciclo-4), no Projeto das features |
 | 28/10 a 06/11/2026 | Inspeções de design do Ciclo 4 (DoD 1) | Joaquim (RF52 em 28/10; RF7, RF8 e RF57 em 06/11), Nicolas (RF34 a RF38) e Jônatas (RF11 e RF14 a RF16), em 06/11 | Permissões do banco para os registros da assiduidade (RNF32); a comparação do status da sessão numa função imutável; a página do termo de consentimento | Comentário "Inspeção de design (DoD 1)" nas issues de cada feature, como a [#150](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/issues/150) e a [#140](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/issues/140) |
 | 07/11/2026 | Construção do RF36 ao RF38 | Gabriel, com revisão de Nicolas na PR | O cancelamento da sessão entra com o desligamento, o primeiro a cancelar sessões, e é reaproveitado pelo RF15 | [PR #216](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/pull/216) |
 
@@ -140,7 +140,7 @@ Os documentos não são publicados no site, porque são modelos internos da clí
 
 ### Representação
 
-O processo previa diagramas de atividades "quando necessário". Os fluxos com várias decisões, como a inscrição em três etapas, o desligamento e a reversão, e a confirmação e o cancelamento da sessão, foram representados por diagramas de sequência com os caminhos alternativos (blocos `alt`), nos projetos das features ([Ciclo 3](../unidade-3/projeto-features-ciclo-3.md) e [Ciclo 4](../unidade-3/projeto-features-ciclo-4.md)), porque eles mostram, no mesmo desenho, quem faz cada passo e o que o sistema grava. Por isso, nenhum diagrama de atividades foi necessário. As situações do caso e da sessão estão nas listas de situações do modelo, e a visão geral do processo da clínica está no Rich Picture do [Cenário Atual](../unidade-1/cenario-atual.md).
+O processo previa diagramas de atividades "quando necessário". Os fluxos com várias decisões, como a inscrição em três etapas, o desligamento e a reversão, e a confirmação e o cancelamento da sessão, foram representados por diagramas de sequência com os caminhos alternativos (blocos `alt`), nos projetos das features ([Ciclo 3](../unidade-3/projeto-features.md) e [Ciclo 4](../unidade-3/projeto-features.md)), porque eles mostram, no mesmo desenho, quem faz cada passo e o que o sistema grava. Por isso, nenhum diagrama de atividades foi necessário. As situações do caso e da sessão estão nas listas de situações do modelo, e a visão geral do processo da clínica está no Rich Picture do [Cenário Atual](../unidade-1/cenario-atual.md).
 
 ### Verificação
 

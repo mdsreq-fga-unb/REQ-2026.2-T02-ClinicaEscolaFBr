@@ -16,10 +16,10 @@ O menu separa a **referência vigente**, que é atualizada ao longo de todo o pr
 | Produto | O problema, a solução proposta (objetivo geral, objetivos específicos e características do produto) e a intervenção social | Vigente |
 | Requisitos | Requisitos funcionais e não funcionais, decisões com a FBr, análise do feedback, DoR e DoD, e priorização e recorte do MVP | Vigente |
 | Processo e equipe | Estratégia de engenharia de software (FDD), engenharia de requisitos, interação com o cliente e boas práticas no GitHub | Vigente |
-| Construção do MVP | Arquitetura, projetos das features, protótipos, implantação e segurança | Vigente, cresce a cada ciclo |
+| Construção do MVP | Arquitetura, projeto das features, protótipos, termo de consentimento e o grupo Implantação e operação (implantação e segurança, cópia de segurança e teste de carga) | Vigente, cresce a cada ciclo |
 | Histórico das unidades | Página inicial, cronograma, reuniões e lições aprendidas de cada unidade | Histórico, não é reescrito |
 
-Os endereços das páginas não mudaram com a reorganização do menu; por isso, os links já citados em issues, atas e pull requests continuam funcionando. Os números das seções (1 a 10) vêm do documento de visão das Unidades 1 e 2 e foram mantidos, porque as issues de avaliação e as atas os citam.
+Os endereços das páginas não mudaram com a reorganização do menu. Na Construção do MVP, o projeto e os protótipos de cada ciclo foram unidos numa página só, organizada pelo sistema e não pelo ciclo, e a segurança da implantação entrou na página de implantação; os endereços antigos redirecionam para o mesmo trecho da página nova, e por isso os links já citados em issues, atas e pull requests continuam funcionando. Os números das seções (1 a 10) vêm do documento de visão das Unidades 1 e 2 e foram mantidos, porque as issues de avaliação e as atas os citam.
 
 ## 2. Estrutura de requisitos
 
@@ -49,7 +49,7 @@ Todos os atributos ficam pendurados no RF. Os que são compartilhados por vário
 | Decisões da Clínica Escola | [Registro de Decisões com a FBr (8.4)](unidade-2/requisitos/decisoes-fbr.md) | "Origem: DFnn" na rastreabilidade do RF |
 | Valor, esforço, MVP, ciclo, ordem, Líder, dependências e estado | [Catálogo de requisitos](unidade-2/requisitos/backlog.md#catalogo-de-requisitos) (`documentacao/dados/requisitos.yml`) | Uma entrada por RF |
 | Evidências da construção (inspeções, testes, demonstração e aceite) | Issue da feature no GitHub | Campo "issue" do catálogo e link no título do RF |
-| Projeto da feature (modelo, diagramas e rotas) | Projetos das features ([Ciclo 3](unidade-3/projeto-features-ciclo-3.md) e [Ciclo 4](unidade-3/projeto-features-ciclo-4.md)) | Seção do RF, com o número da issue |
+| Projeto da feature (modelo, diagramas e rotas) | [Projeto das features](unidade-3/projeto-features.md) | Seção do RF, com o número da issue |
 
 As visões que juntam muitos RFs, como a priorização, o recorte do MVP, o backlog por ciclo, a situação por ciclo e a coluna "Requisitos" das decisões, **não são escritas à mão**: são geradas do catálogo quando o site é publicado. Assim, cada informação tem uma fonte só, e as listas não divergem.
 

@@ -47,13 +47,11 @@ As evidências de cada marco ficam na issue da feature:
 <div class="unit-cards" markdown>
 
 - [:material-layers-outline: **Arquitetura técnica** Partes do sistema, módulos por CP, caminho de uma requisição e decisões técnicas.](arquitetura.md)
-- [:material-sitemap-outline: **Projeto das features do Ciclo 3** Modelo detalhado, diagramas e roteiro da inspeção de design.](projeto-features-ciclo-3.md)
-- [:material-cellphone-link: **Protótipos do Ciclo 3** Telas de cada feature, organizadas pelo fluxo do sistema.](prototipos-ciclo-3.md)
-- [:material-sitemap-outline: **Projeto das features do Ciclo 4** Modelo detalhado e diagramas das features do Ciclo 4, começando pelo RF52.](projeto-features-ciclo-4.md)
-- [:material-cellphone-link: **Protótipos do Ciclo 4** Telas das features do Ciclo 4.](prototipos-ciclo-4.md)
-- [:material-server-network: **Implantação** Ambientes de produção e de validação no Coolify da FBr e como o deploy acontece.](implantacao.md)
+- [:material-sitemap-outline: **Projeto das features** Modelo detalhado, diagramas de cada feature dos Ciclos 3 e 4, por característica de produto, e roteiro da inspeção de design.](projeto-features.md)
+- [:material-cellphone-link: **Protótipos** Telas das features dos Ciclos 3 e 4, organizadas pelo fluxo do sistema.](prototipos.md)
+- [:material-file-sign: **Termo de consentimento (versão 0.1)** Texto do termo aceito na inscrição, em revisão pela FBr.](termo-consentimento.md)
+- [:material-server-network: **Implantação e segurança** Ambientes no Coolify da FBr, como o deploy acontece, HTTPS, usuário da aplicação no banco e troca da chave dos dados (RNF51 e RNF52).](implantacao.md)
 - [:material-backup-restore: **Cópia de segurança e restauração** Procedimento do RNF53, com os scripts e o teste de restauração.](copia-de-seguranca.md)
-- [:material-shield-lock-outline: **Segurança da implantação** HTTPS, usuário da aplicação no banco e troca da chave dos dados (RNF51 e RNF52).](seguranca-da-implantacao.md)
 - [:material-speedometer: **Teste de carga** Cenário de referência do RNF12 e do RNF21, com a massa de dois semestres.](teste-de-carga.md)
 - [:material-check-decagram-outline: **9. DoR e DoD** Critérios de entrada na construção e de feature pronta.](../unidade-2/requisitos/dor-dod.md)
 - [:material-rocket-launch-outline: **Features e backlog** Itens do MVP por ciclo e Líder de Feature.](../visao-geral/backlog.md)

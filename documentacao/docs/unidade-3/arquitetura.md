@@ -4,7 +4,7 @@ render_macros: true
 
 # Arquitetura técnica
 
-Esta página descreve a arquitetura atual do sistema: as partes que o compõem, os módulos de cada característica de produto (CP), o caminho de uma requisição e as decisões técnicas, com o motivo e os requisitos que cada uma atende. O projeto detalhado de cada feature continua nas páginas de projeto do [Ciclo 3](projeto-features-ciclo-3.md) e do [Ciclo 4](projeto-features-ciclo-4.md), e o funcionamento dos ambientes está em [Implantação](implantacao.md).
+Esta página descreve a arquitetura atual do sistema: as partes que o compõem, os módulos de cada característica de produto (CP), o caminho de uma requisição e as decisões técnicas, com o motivo e os requisitos que cada uma atende. O projeto detalhado de cada feature continua nas páginas de projeto do [Ciclo 3](projeto-features.md) e do [Ciclo 4](projeto-features.md), e o funcionamento dos ambientes está em [Implantação](implantacao.md).
 
 As decisões de negócio ficam no [Registro de Decisões com a FBr](../unidade-2/requisitos/decisoes-fbr.md) (DF). As decisões técnicas ficam na [seção de decisões técnicas](#decisoes-tecnicas) desta página (DT), no mesmo formato: código, data, decisão, motivo e requisitos atendidos.
 
@@ -118,6 +118,6 @@ Cada decisão técnica tem um código (DT), a data em que entrou no repositório
 | <span id="dt10"></span>DT10 | 28/10/2026 | A API se conecta ao banco com o usuário `clinica_app`, sem permissão de alterar ou apagar as tabelas que só aceitam inserção. As migrations rodam com o dono do banco. | Mesmo com uma falha na API, os registros que só aceitam inserção continuam protegidos. | [RNF52](../unidade-2/requisitos/nao-funcionais.md#rnf52) |
 | <span id="dt11"></span>DT11 | 29/10/2026 | Imagens publicadas no GHCR e implantadas no Coolify da VPS da FBr, com a `development` na validação e a `main` na produção, depois de aprovação. | A FBr confere cada mudança na validação, com dados fictícios, antes da produção. | [RNF14](../unidade-2/requisitos/nao-funcionais.md#rnf14), [RNF53](../unidade-2/requisitos/nao-funcionais.md#rnf53) |
 
-Os detalhes de cada decisão estão no código, nos comentários dos arquivos citados, e nas páginas de [Segurança da implantação](seguranca-da-implantacao.md), [Cópia de segurança e restauração](copia-de-seguranca.md) e [Implantação](implantacao.md).
+Os detalhes de cada decisão estão no código, nos comentários dos arquivos citados, e nas páginas de [Segurança da implantação](implantacao.md#seguranca-da-implantacao), [Cópia de segurança e restauração](copia-de-seguranca.md) e [Implantação](implantacao.md).
 
 **Como registrar uma decisão nova:** na PR que introduz a decisão, acrescente uma linha a esta tabela com o próximo código, a data, a decisão, o motivo e os requisitos atendidos. Uma decisão que substitui outra marca a anterior como substituída, sem apagá-la.

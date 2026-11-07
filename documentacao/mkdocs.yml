@@ -131,15 +131,13 @@ nav:
       - Referências: unidade-1/referencias.md
   - Construção do MVP:
       - Arquitetura técnica: unidade-3/arquitetura.md
-      - Projeto das features do Ciclo 3: unidade-3/projeto-features-ciclo-3.md
-      - Protótipos do Ciclo 3: unidade-3/prototipos-ciclo-3.md
-      - Projeto das features do Ciclo 4: unidade-3/projeto-features-ciclo-4.md
-      - Protótipos do Ciclo 4: unidade-3/prototipos-ciclo-4.md
+      - Projeto das features: unidade-3/projeto-features.md
+      - Protótipos: unidade-3/prototipos.md
       - Termo de consentimento (versão 0.1): unidade-3/termo-consentimento.md
-      - Implantação: unidade-3/implantacao.md
-      - Cópia de segurança e restauração: unidade-3/copia-de-seguranca.md
-      - Segurança da implantação: unidade-3/seguranca-da-implantacao.md
-      - Teste de carga: unidade-3/teste-de-carga.md
+      - Implantação e operação:
+          - Implantação e segurança: unidade-3/implantacao.md
+          - Cópia de segurança e restauração: unidade-3/copia-de-seguranca.md
+          - Teste de carga: unidade-3/teste-de-carga.md
   - Histórico das unidades:
       - Unidade 3 (em andamento):
           - Início da unidade: unidade-3/index.md
@@ -157,3 +155,12 @@ nav:
           - 6. Cronograma e Entregas: unidade-1/gestao/cronograma.md
           - Reuniões: unidade-1/reunioes.md
           - Lições Aprendidas: unidade-1/licoes-aprendidas.md
+
+# Endereços antigos das páginas unidas na reorganização da Construção do MVP;
+# cada um redireciona para a página nova, mantendo o trecho do link.
+not_in_nav: |
+  /unidade-3/projeto-features-ciclo-3.md
+  /unidade-3/projeto-features-ciclo-4.md
+  /unidade-3/prototipos-ciclo-3.md
+  /unidade-3/prototipos-ciclo-4.md
+  /unidade-3/seguranca-da-implantacao.md
