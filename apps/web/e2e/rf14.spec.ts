@@ -16,8 +16,8 @@ import { criarPacienteComSessoes } from "./apoio-confirmacao";
 let paciente = "";
 let link = { agendada: "", prazoEncerrado: "", cancelada: "", largura: "" };
 
-test.beforeAll(async () => {
-  const criado = await criarPacienteComSessoes([
+test.beforeAll(async ({ playwright }) => {
+  const criado = await criarPacienteComSessoes(playwright, [
     { horas: 72 },
     { horas: 5 },
     { horas: 96, status: "cancelada" },

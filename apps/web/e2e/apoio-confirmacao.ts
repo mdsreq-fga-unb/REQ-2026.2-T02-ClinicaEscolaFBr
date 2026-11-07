@@ -1,32 +1,37 @@
 import { createHash, randomBytes } from "node:crypto";
+import type { PlaywrightWorkerArgs } from "@playwright/test";
 import {
-  casos,
   createDb,
-  inscricoes,
   linksConfirmacao,
   sessoesAtendimento,
   usuarios,
   vinculosEstagiario,
 } from "@clinica/database";
 import type { StatusSessao } from "@clinica/shared";
+import { criarCasoTriado } from "./apoio";
 import { EQUIPE } from "./equipe";
 
 const HORA = 60 * 60 * 1000;
 
-// Paciente em atendimento com sessões e links de confirmação gravados direto no banco
-// local de teste (RF10, RF14): o token do link só existe no e-mail, e o e2e precisa
-// dele. Cada chamada cria um estagiário próprio, para as sessões não colidirem com as
-// de outras execuções no mesmo banco (RNF9).
+// Paciente em atendimento com sessões e links de confirmação (RF10, RF14). A
+// inscrição e o caso vêm da API (RF1, RF6), que cifra os dados de saúde (RNF51);
+// o vínculo, as sessões e os links são gravados direto no banco local de teste,
+// porque o token do link só existe no e-mail e o e2e precisa dele. Cada chamada
+// cria um estagiário próprio, para as sessões não colidirem com as de outras
+// execuções no mesmo banco (RNF9).
 export async function criarPacienteComSessoes(
+  playwright: PlaywrightWorkerArgs["playwright"],
   sessoes: { horas: number; status?: StatusSessao }[],
 ) {
+  const marca = `${Date.now()}${Math.floor(Math.random() * 1000)}`;
+  const paciente = `Paciente RF14 ${marca}`;
+  await criarCasoTriado(playwright, paciente);
+
   const db = createDb(
     process.env.DATABASE_URL ??
       "postgresql://clinica:clinica@localhost:5432/clinica",
   );
   try {
-    const marca = `${Date.now()}${Math.floor(Math.random() * 1000)}`;
-    const paciente = `Paciente RF14 ${marca}`;
     // Contas criadas pela semente.ts antes do e2e.
     const pessoa = async (email: string) => {
       const linha = await db.query.usuarios.findFirst({
@@ -38,6 +43,23 @@ export async function criarPacienteComSessoes(
     };
     const secretaria = await pessoa(EQUIPE.secretaria.email);
     const supervisor = await pessoa(EQUIPE.supervisor.email);
+    const inscricao = await db.query.inscricoes.findFirst({
+      columns: { id: true },
+      where: (i, { eq }) => eq(i.nomeCompleto, paciente),
+    });
+    const caso = inscricao
+      ? await db.query.casos.findFirst({
+          columns: { id: true },
+          where: (c, { eq }) => eq(c.inscricaoId, inscricao.id),
+        })
+      : undefined;
+    if (!caso) throw new Error(`Caso de ${paciente} não encontrado.`);
+    // O caso passa direto a "em atendimento": a distribuição e o vínculo pela tela
+    // são cobertos pelo e2e do Ciclo 3.
+    await db.$client.query(
+      "update casos set situacao = 'em_atendimento' where id = $1",
+      [caso.id],
+    );
     const [estagiario] = await db
       .insert(usuarios)
       .values({
@@ -46,28 +68,6 @@ export async function criarPacienteComSessoes(
         perfil: "estagiario",
         situacao: "ativo",
       })
-      .returning();
-    const [inscricao] = await db
-      .insert(inscricoes)
-      .values({
-        numero: `E2E-${marca}`,
-        nomeCompleto: paciente,
-        dataNascimento: "1990-01-01",
-        cpf: marca.slice(-11).padStart(11, "3"),
-        rg: "1234567",
-        endereco: "Rua Fictícia, 14",
-        estadoCivil: "solteiro",
-        canalPreferencial: "whatsapp",
-        celular: "61998765432",
-        email: "paciente.rf14@example.com",
-        queixaCifrada: "x",
-        percepcaoUrgenciaCifrada: "x",
-        historicoRelevanteCifrado: "x",
-      })
-      .returning();
-    const [caso] = await db
-      .insert(casos)
-      .values({ inscricaoId: inscricao.id, situacao: "em_atendimento" })
       .returning();
     await db.insert(vinculosEstagiario).values({
       casoId: caso.id,
