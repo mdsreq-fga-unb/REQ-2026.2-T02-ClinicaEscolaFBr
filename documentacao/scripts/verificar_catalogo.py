@@ -71,8 +71,8 @@ def main():
 
     # ---- Catálogo x páginas ------------------------------------------------
     for pagina, prefixo, catalogo in (
-        ("unidade-2/requisitos/funcionais.md", "RF", rfs),
-        ("unidade-2/requisitos/nao-funcionais.md", "RNF", rnfs),
+        ("requisitos/funcionais.md", "RF", rfs),
+        ("requisitos/nao-funcionais.md", "RNF", rnfs),
     ):
         regs = registros(pagina, prefixo)
         for codigo in catalogo.keys() - regs.keys():

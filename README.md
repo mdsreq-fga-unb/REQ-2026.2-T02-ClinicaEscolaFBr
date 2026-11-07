@@ -53,7 +53,7 @@ O sistema atende a cinco públicos:
 - **Supervisores:** acompanhamento e supervisão dos casos;
 - **Coordenação:** indicadores, relatórios e gestão geral da clínica.
 
-O MVP reúne 54 dos 68 requisitos funcionais vigentes (ver o [Backlog de Produto](https://mdsreq-fga-unb.github.io/REQ-2026.2-T02-ClinicaEscolaFBr/unidade-2/requisitos/backlog/)).
+O MVP reúne 54 dos 68 requisitos funcionais vigentes (ver o [Backlog de Produto](https://mdsreq-fga-unb.github.io/REQ-2026.2-T02-ClinicaEscolaFBr/requisitos/priorizacao-e-mvp/)).
 
 ---
 
@@ -579,7 +579,7 @@ pip install -r documentacao/requirements.txt
 
 Nas próximas vezes, basta ativar o ambiente (`source .venv/bin/activate` ou `.venv\Scripts\Activate.ps1`) e rodar `pnpm docs:serve`.
 
-O site publicado é atualizado **automaticamente** quando uma alteração em `documentacao/` chega à branch `development`, a versão integrada; o rodapé do site mostra a data da última publicação. Detalhes em [Publicação da documentação](https://mdsreq-fga-unb.github.io/REQ-2026.2-T02-ClinicaEscolaFBr/unidade-1/gestao/boas-praticas-github/#publicacao-da-documentacao).
+O site publicado é atualizado **automaticamente** quando uma alteração em `documentacao/` chega à branch `development`, a versão integrada; o rodapé do site mostra a data da última publicação. Detalhes em [Publicação da documentação](https://mdsreq-fga-unb.github.io/REQ-2026.2-T02-ClinicaEscolaFBr/processo/boas-praticas-github/#publicacao-da-documentacao).
 
 As tabelas de priorização, MVP e backlog, os índices e as contagens de requisitos são geradas do catálogo `documentacao/dados/requisitos.yml`. Antes de abrir a PR, confira o catálogo e o site como o docs-check faz:
 
@@ -634,9 +634,9 @@ mkdocs build --strict --config-file documentacao/mkdocs.yml
 - validações e tipos compartilhados: `packages/shared/src/`;
 - tabelas: `packages/database/src/schema/`, sempre com `pnpm db:generate` no mesmo PR.
 
-**Testes que verificam um RNF** citam no nome o RF da feature e o RNF, entre parênteses, por exemplo `describe('Restrição de acesso ao prontuário (RF55)')` com `it('o registro de acessos não pode ser alterado nem apagado (RNF52)')`. Assim o CI conta o teste como evidência do D4.5 da feature. O que não é teste automático entra com o comentário `/rnf RNF53 <link>` na issue. A convenção completa está em [Verificação dos RNFs (D4.5)](https://mdsreq-fga-unb.github.io/REQ-2026.2-T02-ClinicaEscolaFBr/unidade-1/gestao/boas-praticas-github/#verificacao-dos-rnfs-d45).
+**Testes que verificam um RNF** citam no nome o RF da feature e o RNF, entre parênteses, por exemplo `describe('Restrição de acesso ao prontuário (RF55)')` com `it('o registro de acessos não pode ser alterado nem apagado (RNF52)')`. Assim o CI conta o teste como evidência do D4.5 da feature. O que não é teste automático entra com o comentário `/rnf RNF53 <link>` na issue. A convenção completa está em [Verificação dos RNFs (D4.5)](https://mdsreq-fga-unb.github.io/REQ-2026.2-T02-ClinicaEscolaFBr/processo/boas-praticas-github/#verificacao-dos-rnfs-d45).
 
-Mais orientações em [Boas práticas de utilização do GitHub](https://mdsreq-fga-unb.github.io/REQ-2026.2-T02-ClinicaEscolaFBr/unidade-1/gestao/boas-praticas-github/).
+Mais orientações em [Boas práticas de utilização do GitHub](https://mdsreq-fga-unb.github.io/REQ-2026.2-T02-ClinicaEscolaFBr/processo/boas-praticas-github/).
 
 ---
 
@@ -737,4 +737,4 @@ pnpm db:migrate
 | Nicolas Costa     | Analista de Viabilidade                                              |
 | Jônatas Farias    | Analista de Negócio                                                  |
 
-Todos atuam como **Líderes de Feature** dos conjuntos de features sob sua responsabilidade. A divisão completa está na [composição da equipe](https://mdsreq-fga-unb.github.io/REQ-2026.2-T02-ClinicaEscolaFBr/unidade-1/gestao/equipe-comunicacao/) e em [Features e backlog](https://mdsreq-fga-unb.github.io/REQ-2026.2-T02-ClinicaEscolaFBr/visao-geral/backlog/), com o ciclo e o status de cada feature.
+Todos atuam como **Líderes de Feature** dos conjuntos de features sob sua responsabilidade. A divisão completa está na [composição da equipe](https://mdsreq-fga-unb.github.io/REQ-2026.2-T02-ClinicaEscolaFBr/processo/equipe-e-cliente/) e em [Features e backlog](https://mdsreq-fga-unb.github.io/REQ-2026.2-T02-ClinicaEscolaFBr/visao-geral/backlog/), com o ciclo e o status de cada feature.

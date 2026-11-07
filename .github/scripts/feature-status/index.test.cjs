@@ -269,7 +269,7 @@ test("PR mesclada na development também marca o D4.3, citando a branch", async 
 });
 
 test("PR só de documentação não marca nada, mesmo citando a issue", async () => {
-  arquivos = ["documentacao/docs/unidade-2/requisitos/backlog.md"];
+  arquivos = ["documentacao/docs/requisitos/priorizacao-e-mvp.md"];
   item = { Status: "Em Design" };
   await rodar("pull_request", {
     action: "closed",

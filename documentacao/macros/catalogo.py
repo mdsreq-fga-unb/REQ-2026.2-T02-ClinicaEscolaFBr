@@ -19,10 +19,10 @@ import yaml
 RAIZ = Path(__file__).resolve().parent.parent
 CATALOGO = RAIZ / "dados" / "requisitos.yml"
 
-PAGINA_RF = "unidade-2/requisitos/funcionais.md"
-PAGINA_RNF = "unidade-2/requisitos/nao-funcionais.md"
-PAGINA_DF = "unidade-2/requisitos/decisoes-fbr.md"
-PAGINA_BACKLOG = "unidade-2/requisitos/backlog.md"
+PAGINA_RF = "requisitos/funcionais.md"
+PAGINA_RNF = "requisitos/nao-funcionais.md"
+PAGINA_DF = "requisitos/decisoes-fbr.md"
+PAGINA_BACKLOG = "requisitos/priorizacao-e-mvp.md"
 REPO = "https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr"
 
 MOSCOW = {4: "Must have", 3: "Should have", 2: "Could have", 1: "Won't have now"}

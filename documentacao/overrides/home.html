@@ -6,12 +6,12 @@
   progressivos: sem JavaScript ou com movimento reduzido, tudo fica visível.
 -#}
 {% set path = [
-  ("unidade-1/cenario-atual/", "hospital-building", "Entenda o cenário da clínica", "Problema, pessoas envolvidas e contexto do atendimento."),
-  ("unidade-1/solucao-proposta/", "lightbulb-on-outline", "Entenda a solução", "Objetivos e proposta de funcionamento do sistema."),
-  ("unidade-2/requisitos/funcionais/", "clipboard-text-outline", "Explore os requisitos", "Funcionalidades e requisitos de qualidade do sistema."),
-  ("unidade-2/requisitos/backlog/", "rocket-launch-outline", "Descubra o que entra no MVP", "Critérios de priorização e requisitos da primeira versão."),
+  ("produto/cenario-atual/", "hospital-building", "Entenda o cenário da clínica", "Problema, pessoas envolvidas e contexto do atendimento."),
+  ("produto/solucao-proposta/", "lightbulb-on-outline", "Entenda a solução", "Objetivos e proposta de funcionamento do sistema."),
+  ("requisitos/funcionais/", "clipboard-text-outline", "Explore os requisitos", "Funcionalidades e requisitos de qualidade do sistema."),
+  ("requisitos/priorizacao-e-mvp/", "rocket-launch-outline", "Descubra o que entra no MVP", "Critérios de priorização e requisitos da primeira versão."),
   ("visao-geral/cronograma/", "calendar-check-outline", "Acompanhe o andamento", "Cronograma geral e backlog, com o status de cada ciclo e feature."),
-  ("organizacao-e-atualizacao/", "sitemap-outline", "Entenda a organização", "Onde está cada informação, como ela é atualizada e onde ficam as versões entregues."),
+  ("visao-geral/organizacao-e-atualizacao/", "sitemap-outline", "Entenda a organização", "Onde está cada informação, como ela é atualizada e onde ficam as versões entregues."),
 ] %}
 
 {#- Liga o movimento antes da pintura para a entrada não "piscar".
@@ -54,11 +54,11 @@
           Conheça o contexto da clínica, a solução proposta e as prioridades do sistema.
         </p>
         <div class="home-hero__actions fbr-reveal" style="--d: 5">
-          <a class="fbr-button fbr-button--primary" href="{{ 'unidade-1/cenario-atual/' | url }}">
+          <a class="fbr-button fbr-button--primary" href="{{ 'produto/cenario-atual/' | url }}">
             Começar pelo cenário
             {% include ".icons/material/arrow-right.svg" %}
           </a>
-          <a class="fbr-button fbr-button--ghost" href="{{ 'unidade-2/requisitos/funcionais/' | url }}">
+          <a class="fbr-button fbr-button--ghost" href="{{ 'requisitos/funcionais/' | url }}">
             Ir direto aos requisitos
           </a>
         </div>
@@ -116,24 +116,24 @@
   <details class="home-more">
     <summary>Outros documentos do projeto</summary>
     <ul>
-      <li><a href="{{ 'organizacao-e-atualizacao/' | url }}">Organização e atualização dos requisitos</a></li>
+      <li><a href="{{ 'visao-geral/organizacao-e-atualizacao/' | url }}">Organização e atualização dos requisitos</a></li>
       <li><a href="{{ 'visao-geral/cronograma/' | url }}">Cronograma geral (com o status de cada ciclo)</a></li>
       <li><a href="{{ 'visao-geral/execucao-do-processo/' | url }}">Execução do processo (evidências do FDD e da engenharia de requisitos)</a></li>
-      <li><a href="{{ 'unidade-1/estrategia-esw/' | url }}">Estratégia de engenharia de software</a></li>
+      <li><a href="{{ 'processo/estrategia-esw/' | url }}">Estratégia de engenharia de software</a></li>
       <li><a href="{{ 'visao-geral/backlog/' | url }}">Features e backlog (com o status de cada feature)</a></li>
-      <li><a href="{{ 'unidade-1/gestao/cronograma/' | url }}">Cronograma da Unidade 1</a></li>
-      <li><a href="{{ 'unidade-2/gestao/cronograma/' | url }}">Cronograma da Unidade 2</a></li>
-      <li><a href="{{ 'unidade-3/gestao/cronograma/' | url }}">Cronograma da Unidade 3</a></li>
-      <li><a href="{{ 'unidade-2/requisitos/nao-funcionais/' | url }}">Requisitos não funcionais (qualidade do sistema)</a></li>
-      <li><a href="{{ 'unidade-2/requisitos/dor-dod/' | url }}">Critérios de preparação e conclusão (DoR e DoD)</a></li>
-      <li><a href="{{ 'analise-ux-capitulo-10/' | url }}">Análise de UX do site</a></li>
-      <li><a href="{{ 'unidade-1/gestao/equipe-comunicacao/' | url }}">Equipe e comunicação</a></li>
-      <li><a href="{{ 'unidade-1/reunioes/' | url }}">Reuniões da Unidade 1</a></li>
-      <li><a href="{{ 'unidade-2/reunioes/' | url }}">Reuniões da Unidade 2</a></li>
-      <li><a href="{{ 'unidade-3/reunioes/' | url }}">Reuniões da Unidade 3</a></li>
-      <li><a href="{{ 'unidade-1/licoes-aprendidas/' | url }}">Lições aprendidas da Unidade 1</a></li>
-      <li><a href="{{ 'unidade-2/licoes-aprendidas/' | url }}">Lições aprendidas da Unidade 2</a></li>
-      <li><a href="{{ 'unidade-1/referencias/' | url }}">Referências</a></li>
+      <li><a href="{{ 'historico/unidade-1/cronograma/' | url }}">Cronograma da Unidade 1</a></li>
+      <li><a href="{{ 'historico/unidade-2/cronograma/' | url }}">Cronograma da Unidade 2</a></li>
+      <li><a href="{{ 'historico/unidade-3/cronograma/' | url }}">Cronograma da Unidade 3</a></li>
+      <li><a href="{{ 'requisitos/nao-funcionais/' | url }}">Requisitos não funcionais (qualidade do sistema)</a></li>
+      <li><a href="{{ 'requisitos/dor-dod/' | url }}">Critérios de preparação e conclusão (DoR e DoD)</a></li>
+      <li><a href="{{ 'historico/unidade-2/analise-ux/' | url }}">Análise de UX do site</a></li>
+      <li><a href="{{ 'processo/equipe-e-cliente/' | url }}">Equipe e comunicação</a></li>
+      <li><a href="{{ 'historico/unidade-1/reunioes/' | url }}">Reuniões da Unidade 1</a></li>
+      <li><a href="{{ 'historico/unidade-2/reunioes/' | url }}">Reuniões da Unidade 2</a></li>
+      <li><a href="{{ 'historico/unidade-3/reunioes/' | url }}">Reuniões da Unidade 3</a></li>
+      <li><a href="{{ 'historico/unidade-1/licoes-aprendidas/' | url }}">Lições aprendidas da Unidade 1</a></li>
+      <li><a href="{{ 'historico/unidade-2/licoes-aprendidas/' | url }}">Lições aprendidas da Unidade 2</a></li>
+      <li><a href="{{ 'historico/unidade-1/referencias/' | url }}">Referências</a></li>
       <li><a href="#historico-de-revisao">Histórico de revisão</a></li>
       <li><a href="https://youtu.be/ysMmYmttAH8">Assistir à apresentação da Unidade 1</a></li>
       <li><a href="https://youtu.be/XUJEFZv7Pn8">Assistir à apresentação da Unidade 2</a></li>

@@ -1431,7 +1431,7 @@ decisoes:
   data: 02/10/2026
   fonte: validação do MVP
   decisao: O RF15 e o RF25 entram no MVP; o RF5, o RF13, o RF24 e o RF26 podem ficar para depois.
-  outros: ['[Backlog 10.2](backlog.md#102-priorizacao-e-recorte-do-mvp)']
+  outros: ['[Priorização e MVP](priorizacao-e-mvp.md#102-priorizacao-e-recorte-do-mvp)']
 
 - id: DF07
   data: 02/10/2026
@@ -1564,7 +1564,7 @@ decisoes:
   data: 23/10/2026
   fonte: validação do protótipo
   decisao: Os protótipos das features do Ciclo 3 foram aprovados, com a remoção da área de especialidade e o ajuste dos canais de contato.
-  outros: ['[Protótipos do Ciclo 3](../../unidade-3/prototipos-ciclo-3.md)']
+  outros: ['[Protótipos do Ciclo 3](../construcao/prototipos.md)']
 
 - id: DF32
   data: 23/10/2026
