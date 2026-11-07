@@ -1,0 +1,4593 @@
+
+<!doctype html>
+<html lang="pt" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Documentação do projeto Clínica Escola FBr para as entregas das Unidades 1 a 4.">
+      
+      
+      
+        <link rel="canonical" href="https://mdsreq-fga-unb.github.io/REQ-2026.2-T02-ClinicaEscolaFBr/unidade-3/projeto-features-ciclo-4/">
+      
+      
+        <link rel="prev" href="../prototipos-ciclo-3/">
+      
+      
+        <link rel="next" href="../prototipos-ciclo-4/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../assets/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.8.0">
+    
+    
+      
+        <title>Projeto das features do Ciclo 4 - Clínica Escola FBr - Documentação</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.57a0d79d.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.fb2fffe2.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,300..800;1,14..32,300..800&family=JetBrains+Mono:wght@400;500;600&display=swap">
+  <style>:root{--md-text-font:"Inter";--md-code-font:"JetBrains Mono"}</style>
+
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/extra.css">
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/reading.css">
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/melhorias.css">
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="custom" data-md-color-accent="custom">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#projeto-das-features-do-ciclo-4" class="md-skip">
+          Pular para conteúdo
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow md-header--lifted" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Cabeçalho">
+    <a href="../.." title="Clínica Escola FBr - Documentação" class="md-header__button md-logo" aria-label="Clínica Escola FBr - Documentação" data-md-component="logo">
+      <img class="fbr-logo fbr-logo--light" src="../../assets/images/logo-fbr.png" alt="" width="131" height="144">
+<img class="fbr-logo fbr-logo--dark" src="../../assets/images/logo-fbr-dark.png" alt="" width="131" height="144">
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Clínica Escola FBr - Documentação
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Projeto das features do Ciclo 4
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="custom" data-md-color-accent="custom"  aria-label="Alternar para modo escuro"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Alternar para modo escuro" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m17.75 4.09-2.53 1.94.91 3.06-2.63-1.81-2.63 1.81.91-3.06-2.53-1.94L12.44 4l1.06-3 1.06 3zm3.5 6.91-1.64 1.25.59 1.98-1.7-1.17-1.7 1.17.59-1.98L15.75 11l2.06-.05L18.5 9l.69 1.95zm-2.28 4.95c.83-.08 1.72 1.1 1.19 1.85-.32.45-.66.87-1.08 1.27C15.17 23 8.84 23 4.94 19.07c-3.91-3.9-3.91-10.24 0-14.14.4-.4.82-.76 1.27-1.08.75-.53 1.93.36 1.85 1.19-.27 2.86.69 5.83 2.89 8.02a9.96 9.96 0 0 0 8.02 2.89m-1.64 2.02a12.08 12.08 0 0 1-7.8-3.47c-2.17-2.19-3.33-5-3.49-7.82-2.81 3.14-2.7 7.96.31 10.98 3.02 3.01 7.84 3.12 10.98.31"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="custom" data-md-color-accent="custom"  aria-label="Alternar para modo claro"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Alternar para modo claro" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 7a5 5 0 0 1 5 5 5 5 0 0 1-5 5 5 5 0 0 1-5-5 5 5 0 0 1 5-5m0 2a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3m0-7 2.39 3.42C13.65 5.15 12.84 5 12 5s-1.65.15-2.39.42zM3.34 7l4.16-.35A7.2 7.2 0 0 0 5.94 8.5c-.44.74-.69 1.5-.83 2.29zm.02 10 1.76-3.77a7.131 7.131 0 0 0 2.38 4.14zM20.65 7l-1.77 3.79a7.02 7.02 0 0 0-2.38-4.15zm-.01 10-4.14.36c.59-.51 1.12-1.14 1.54-1.86.42-.73.69-1.5.83-2.29zM12 22l-2.41-3.44c.74.27 1.55.44 2.41.44.82 0 1.63-.17 2.37-.44z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Buscar" placeholder="Buscar" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Pesquisar">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Limpar" aria-label="Limpar" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Inicializando busca
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr" title="Ir para repositório" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 2A10 10 0 0 0 2 12c0 4.42 2.87 8.17 6.84 9.5.5.08.66-.23.66-.5v-1.69c-2.77.6-3.36-1.34-3.36-1.34-.46-1.16-1.11-1.47-1.11-1.47-.91-.62.07-.6.07-.6 1 .07 1.53 1.03 1.53 1.03.87 1.52 2.34 1.07 2.91.83.09-.65.35-1.09.63-1.34-2.22-.25-4.55-1.11-4.55-4.92 0-1.11.38-2 1.03-2.71-.1-.25-.45-1.29.1-2.64 0 0 .84-.27 2.75 1.02.79-.22 1.65-.33 2.5-.33s1.71.11 2.5.33c1.91-1.29 2.75-1.02 2.75-1.02.55 1.35.2 2.39.1 2.64.65.71 1.03 1.6 1.03 2.71 0 3.82-2.34 4.66-4.57 4.91.36.31.69.92.69 1.85V21c0 .27.16.59.67.5C19.14 20.16 22 16.42 22 12A10 10 0 0 0 12 2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    REQ-2026.2-T02-ClinicaEscolaFBr
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+    
+      
+<nav class="md-tabs" aria-label="Abas" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../.." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Início
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../visao-geral/cronograma/" class="md-tabs__link">
+          
+  
+  
+  Visão geral do projeto
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../unidade-1/" class="md-tabs__link">
+          
+  
+  
+  Unidade 1 — Visão e planejamento
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../unidade-2/" class="md-tabs__link">
+          
+  
+  
+  Unidade 2 — Requisitos e priorização
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../" class="md-tabs__link">
+          
+  
+  
+  Unidade 3 — Construção do MVP
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+    
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navegação" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="Clínica Escola FBr - Documentação" class="md-nav__button md-logo" aria-label="Clínica Escola FBr - Documentação" data-md-component="logo">
+      <img class="fbr-logo fbr-logo--light" src="../../assets/images/logo-fbr.png" alt="" width="131" height="144">
+<img class="fbr-logo fbr-logo--dark" src="../../assets/images/logo-fbr-dark.png" alt="" width="131" height="144">
+    </a>
+    Clínica Escola FBr - Documentação
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr" title="Ir para repositório" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 2A10 10 0 0 0 2 12c0 4.42 2.87 8.17 6.84 9.5.5.08.66-.23.66-.5v-1.69c-2.77.6-3.36-1.34-3.36-1.34-.46-1.16-1.11-1.47-1.11-1.47-.91-.62.07-.6.07-.6 1 .07 1.53 1.03 1.53 1.03.87 1.52 2.34 1.07 2.91.83.09-.65.35-1.09.63-1.34-2.22-.25-4.55-1.11-4.55-4.92 0-1.11.38-2 1.03-2.71-.1-.25-.45-1.29.1-2.64 0 0 .84-.27 2.75 1.02.79-.22 1.65-.33 2.5-.33s1.71.11 2.5.33c1.91-1.29 2.75-1.02 2.75-1.02.55 1.35.2 2.39.1 2.64.65.71 1.03 1.6 1.03 2.71 0 3.82-2.34 4.66-4.57 4.91.36.31.69.92.69 1.85V21c0 .27.16.59.67.5C19.14 20.16 22 16.42 22 12A10 10 0 0 0 12 2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    REQ-2026.2-T02-ClinicaEscolaFBr
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Início
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Visão geral do projeto
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Visão geral do projeto
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../visao-geral/cronograma/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Cronograma geral
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../visao-geral/backlog/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Features e backlog
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Unidade 1 — Visão e planejamento
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Unidade 1 — Visão e planejamento
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../unidade-1/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Início da unidade
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../unidade-1/cenario-atual/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    1. Cenário Atual
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../unidade-1/solucao-proposta/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    2. Solução Proposta
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../unidade-1/intervencao-social/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    3. Intervenção Social
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../unidade-1/estrategia-esw/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    4. Estratégia de ESW
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../unidade-1/engenharia-requisitos/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    5. Engenharia de Requisitos
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_7" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_7" id="__nav_3_7_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Gestão do Projeto
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_7">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Gestão do Projeto
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../unidade-1/gestao/cronograma/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    6. Cronograma e Entregas
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../unidade-1/gestao/equipe-comunicacao/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    7. Interação entre Equipe e Cliente
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../unidade-1/gestao/boas-praticas-github/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Boas práticas no GitHub
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../unidade-1/reunioes/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Reuniões
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_8" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_8" id="__nav_3_8_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Estudos e referências
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_8_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_8">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Estudos e referências
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../unidade-1/estudos/fdd/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Estudo de FDD
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../unidade-1/licoes-aprendidas/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Lições Aprendidas
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../unidade-1/referencias/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Referências
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Unidade 2 — Requisitos e priorização
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Unidade 2 — Requisitos e priorização
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../unidade-2/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Início da unidade
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_4_2" id="__nav_4_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    8. Requisitos de Software
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    8. Requisitos de Software
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../unidade-2/requisitos/funcionais/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    8.1 Requisitos Funcionais
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../unidade-2/requisitos/nao-funcionais/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    8.2 Requisitos Não Funcionais
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../unidade-2/requisitos/analise-feedback/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    8.3 Análise do Feedback
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../unidade-2/requisitos/decisoes-fbr/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    8.4 Registro de Decisões com a FBr
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../unidade-2/requisitos/dor-dod/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    9. DoR e DoD
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../unidade-2/requisitos/backlog/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    10. Backlog de Produto
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_4_5" id="__nav_4_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Gestão do Projeto
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Gestão do Projeto
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../unidade-2/gestao/cronograma/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Cronograma e Entregas
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../unidade-2/reunioes/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Reuniões
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_4_6" id="__nav_4_6_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Aprendizados e documentação
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Aprendizados e documentação
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../unidade-2/licoes-aprendidas/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Lições Aprendidas
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../analise-ux-capitulo-10/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Análise de UX do site
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Unidade 3 — Construção do MVP
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Unidade 3 — Construção do MVP
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Início da unidade
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../arquitetura/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Arquitetura técnica
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../projeto-features-ciclo-3/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Projeto das features do Ciclo 3
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../prototipos-ciclo-3/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Protótipos do Ciclo 3
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Projeto das features do Ciclo 4
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Projeto das features do Ciclo 4
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Índice">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Índice
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#convencoes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Convenções
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#modelo-detalhado-do-ciclo-4" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Modelo detalhado do Ciclo 4
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#acesso-e-seguranca-cp12" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Acesso e segurança (CP12)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Acesso e segurança (CP12)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#rf52-verificar-identidade-do-paciente-ou-responsavel-47" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        RF52 — Verificar identidade do paciente ou responsável (#47)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#rf57-registrar-consentimento-para-tratamento-de-dados-52" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        RF57 — Registrar consentimento para tratamento de dados (#52)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#fila-de-espera-cp3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Fila de espera (CP3)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Fila de espera (CP3)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#rf7-ordenar-inscritos-na-fila-de-espera-140" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        RF7 — Ordenar inscritos na fila de espera (#140)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#rf8-consultar-posicao-individual-na-fila-155" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        RF8 — Consultar posição individual na fila (#155)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#agendamento-confirmacao-e-cancelamento-cp4" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Agendamento, confirmação e cancelamento (CP4)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Agendamento, confirmação e cancelamento (CP4)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#rf11-consultar-agenda-de-sessoes-do-estagiario-141" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        RF11 — Consultar agenda de sessões do estagiário (#141)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#rf14-confirmar-presenca-em-sessao-agendada-142" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        RF14 — Confirmar presença em sessão agendada (#142)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#rf15-registrar-cancelamento-de-sessao-pelo-paciente-143" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        RF15 — Registrar cancelamento de sessão pelo paciente (#143)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#rf16-registrar-cancelamento-de-sessao-pelo-estagiario-144" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        RF16 — Registrar cancelamento de sessão pelo estagiário (#144)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#distribuicao-de-casos-cp5" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Distribuição de casos (CP5)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Distribuição de casos (CP5)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#rf22-consultar-responsaveis-pelo-caso-145" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        RF22 — Consultar responsáveis pelo caso (#145)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#rf23-consultar-casos-sob-responsabilidade-do-estagiario-ou-supervisor-146" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        RF23 — Consultar casos sob responsabilidade do estagiário ou supervisor (#146)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#rf25-transferir-caso-para-outro-estagiario-ou-supervisor-147" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        RF25 — Transferir caso para outro estagiário ou supervisor (#147)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#prontuario-cp6" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Prontuário (CP6)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Prontuário (CP6)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#rf27-consultar-prontuario-do-paciente-148" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        RF27 — Consultar prontuário do paciente (#148)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#rf69-registrar-anamnese-e-contrato-terapeutico-do-paciente-130" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        RF69 — Registrar anamnese e contrato terapêutico do paciente (#130)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#registro-de-evolucao-cp7" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Registro de evolução (CP7)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Registro de evolução (CP7)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#rf28-registrar-evolucao-da-sessao-realizada-149" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        RF28 — Registrar evolução da sessão realizada (#149)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#controle-de-assiduidade-e-alertas-cp9" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Controle de assiduidade e alertas (CP9)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Controle de assiduidade e alertas (CP9)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#rf34-registrar-falta-do-paciente-na-sessao-150" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        RF34 — Registrar falta do paciente na sessão (#150)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#rf35-contabilizar-faltas-do-paciente-no-ciclo-151" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        RF35 — Contabilizar faltas do paciente no ciclo (#151)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#rf36-emitir-alerta-de-limite-de-faltas-atingido-152" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        RF36 — Emitir alerta de limite de faltas atingido (#152)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#rf37-desligar-paciente-por-faltas-e-liberar-vaga-153" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        RF37 — Desligar paciente por faltas e liberar vaga (#153)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#rf38-reverter-desligamento-de-paciente-por-faltas-154" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        RF38 — Reverter desligamento de paciente por faltas (#154)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#roteiro-da-inspecao-de-design" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Roteiro da inspeção de design
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../prototipos-ciclo-4/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Protótipos do Ciclo 4
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../termo-consentimento/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Termo de consentimento (versão 0.1)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../implantacao/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Implantação
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../copia-de-seguranca/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Cópia de segurança e restauração
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../seguranca-da-implantacao/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Segurança da implantação
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../teste-de-carga/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Teste de carga
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+          
+          
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5_12" >
+        
+          
+          <label class="md-nav__link" for="__nav_5_12" id="__nav_5_12_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Gestão do Projeto
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_5_12_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5_12">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Gestão do Projeto
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../gestao/cronograma/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Cronograma e Entregas
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../reunioes/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Reuniões
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+          
+          
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5_13" >
+        
+          
+          <label class="md-nav__link" for="__nav_5_13" id="__nav_5_13_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Aprendizados
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_5_13_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5_13">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Aprendizados
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../licoes-aprendidas/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Lições Aprendidas
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Índice">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Índice
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#convencoes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Convenções
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#modelo-detalhado-do-ciclo-4" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Modelo detalhado do Ciclo 4
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#acesso-e-seguranca-cp12" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Acesso e segurança (CP12)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Acesso e segurança (CP12)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#rf52-verificar-identidade-do-paciente-ou-responsavel-47" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        RF52 — Verificar identidade do paciente ou responsável (#47)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#rf57-registrar-consentimento-para-tratamento-de-dados-52" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        RF57 — Registrar consentimento para tratamento de dados (#52)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#fila-de-espera-cp3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Fila de espera (CP3)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Fila de espera (CP3)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#rf7-ordenar-inscritos-na-fila-de-espera-140" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        RF7 — Ordenar inscritos na fila de espera (#140)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#rf8-consultar-posicao-individual-na-fila-155" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        RF8 — Consultar posição individual na fila (#155)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#agendamento-confirmacao-e-cancelamento-cp4" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Agendamento, confirmação e cancelamento (CP4)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Agendamento, confirmação e cancelamento (CP4)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#rf11-consultar-agenda-de-sessoes-do-estagiario-141" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        RF11 — Consultar agenda de sessões do estagiário (#141)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#rf14-confirmar-presenca-em-sessao-agendada-142" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        RF14 — Confirmar presença em sessão agendada (#142)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#rf15-registrar-cancelamento-de-sessao-pelo-paciente-143" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        RF15 — Registrar cancelamento de sessão pelo paciente (#143)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#rf16-registrar-cancelamento-de-sessao-pelo-estagiario-144" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        RF16 — Registrar cancelamento de sessão pelo estagiário (#144)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#distribuicao-de-casos-cp5" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Distribuição de casos (CP5)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Distribuição de casos (CP5)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#rf22-consultar-responsaveis-pelo-caso-145" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        RF22 — Consultar responsáveis pelo caso (#145)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#rf23-consultar-casos-sob-responsabilidade-do-estagiario-ou-supervisor-146" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        RF23 — Consultar casos sob responsabilidade do estagiário ou supervisor (#146)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#rf25-transferir-caso-para-outro-estagiario-ou-supervisor-147" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        RF25 — Transferir caso para outro estagiário ou supervisor (#147)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#prontuario-cp6" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Prontuário (CP6)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Prontuário (CP6)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#rf27-consultar-prontuario-do-paciente-148" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        RF27 — Consultar prontuário do paciente (#148)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#rf69-registrar-anamnese-e-contrato-terapeutico-do-paciente-130" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        RF69 — Registrar anamnese e contrato terapêutico do paciente (#130)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#registro-de-evolucao-cp7" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Registro de evolução (CP7)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Registro de evolução (CP7)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#rf28-registrar-evolucao-da-sessao-realizada-149" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        RF28 — Registrar evolução da sessão realizada (#149)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#controle-de-assiduidade-e-alertas-cp9" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Controle de assiduidade e alertas (CP9)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Controle de assiduidade e alertas (CP9)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#rf34-registrar-falta-do-paciente-na-sessao-150" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        RF34 — Registrar falta do paciente na sessão (#150)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#rf35-contabilizar-faltas-do-paciente-no-ciclo-151" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        RF35 — Contabilizar faltas do paciente no ciclo (#151)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#rf36-emitir-alerta-de-limite-de-faltas-atingido-152" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        RF36 — Emitir alerta de limite de faltas atingido (#152)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#rf37-desligar-paciente-por-faltas-e-liberar-vaga-153" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        RF37 — Desligar paciente por faltas e liberar vaga (#153)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#rf38-reverter-desligamento-de-paciente-por-faltas-154" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        RF38 — Reverter desligamento de paciente por faltas (#154)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#roteiro-da-inspecao-de-design" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Roteiro da inspeção de design
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+                
+
+
+
+  
+
+
+  <nav class="md-path" aria-label="Navegação" >
+    <ol class="md-path__list">
+      
+        
+  
+  
+    <li class="md-path__item">
+      <a href="../.." class="md-path__link">
+        
+  <span class="md-ellipsis">
+    Início
+  </span>
+
+      </a>
+    </li>
+  
+
+      
+      
+        
+  
+  
+    
+    
+      <li class="md-path__item">
+        <a href="../" class="md-path__link">
+          
+  <span class="md-ellipsis">
+    Unidade 3 — Construção do MVP
+  </span>
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ol>
+  </nav>
+
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="projeto-das-features-do-ciclo-4">Projeto das features do Ciclo 4<a class="headerlink" href="#projeto-das-features-do-ciclo-4" title="Link para esta seção">#</a></h1>
+<p>Esta página registra o processo <strong>Projetar por Feature</strong> do FDD para as features do Ciclo 4: o modelo detalhado, os diagramas de sequência, as rotas da API, as regras ligadas aos critérios de aceitação e os dados de teste de cada feature. Como no Ciclo 3, ela é o material da <strong>inspeção de design</strong> (marco 1 do <a href="../../unidade-2/requisitos/dor-dod/#1-design-inspecionado">DoD</a>), e o resultado da inspeção de cada feature é registrado na sua issue.</p>
+<div class="admonition info">
+<p class="admonition-title">Quem escreveu o projeto do Ciclo 4</p>
+<p>Por causa do prazo do ciclo, o projeto de todas as features foi escrito pelo Gabriel em 05/11/2026, menos o do RF52, escrito pelo Joaquim. Para que nenhum projeto seja inspecionado por quem o escreveu, a inspeção de cada feature é feita pelo Líder de Feature com o revisor da issue, e o código continua com cada Líder.</p>
+</div>
+<p>As seções estão agrupadas pela CP, e as classes novas ficam no modelo detalhado ou na seção da CP. Os requisitos de origem estão na <a href="../../unidade-2/requisitos/funcionais/">seção 8.1</a>, e os itens do ciclo, em <a href="../../visao-geral/backlog/#ciclo-4">Features e backlog</a>.</p>
+<h2 id="convencoes">Convenções<a class="headerlink" href="#convencoes" title="Link para esta seção">#</a></h2>
+<p>Valem as <a href="../projeto-features-ciclo-3/#convencoes">convenções do Ciclo 3</a>, inclusive a de citar o RF e a DF em vez de repetir a regra de negócio, com um acréscimo:</p>
+<ul>
+<li><strong>Rotas públicas do paciente:</strong> o paciente e o responsável legal não têm conta (critério R6.2 do DoR). As rotas que mostram dados de uma inscrição, como a consulta da fila (RF8) e as declarações da CP10, usam o <code>VerificacaoGuard</code> do RF52, que só libera a inscrição cuja identidade foi verificada.</li>
+</ul>
+<h2 id="modelo-detalhado-do-ciclo-4">Modelo detalhado do Ciclo 4<a class="headerlink" href="#modelo-detalhado-do-ciclo-4" title="Link para esta seção">#</a></h2>
+<p>Classes novas do ciclo, que se somam ao <a href="../projeto-features-ciclo-3/#modelo-detalhado-do-ciclo-3">modelo do Ciclo 3</a>. A <code>Inscricao</code> aparece só com os atributos usados aqui.</p>
+<pre class="mermaid"><code>classDiagram
+    direction LR
+    class Inscricao {
+      +uuid id
+      +string numero
+      +string cpf
+      +string email
+      +datetime criadaEm
+    }
+    class CodigoVerificacao {
+      +uuid id
+      +string identificadorChave
+      +string codigoHash
+      +datetime expiraEm
+      +int tentativasFalhas
+      +datetime usadoEm
+      +datetime invalidadoEm
+      +datetime criadoEm
+    }
+    class LimiteCodigoVerificacao {
+      +string identificadorChave
+      +datetime ultimoEnvioEm
+      +datetime janelaInicio
+      +int enviosNaJanela
+      +datetime bloqueadoAte
+    }
+    class VerificacaoIdentidade {
+      +uuid id
+      +string tokenHash
+      +datetime criadaEm
+      +datetime expiraEm
+      +datetime encerradaEm
+    }
+    Inscricao "1" -- "0..*" CodigoVerificacao : recebe
+    Inscricao "1" -- "0..*" VerificacaoIdentidade : libera</code></pre>
+<p><code>LimiteCodigoVerificacao</code> não tem chave estrangeira: ele é guardado pelo identificador informado, exista ou não uma inscrição com ele.</p>
+<h2 id="acesso-e-seguranca-cp12">Acesso e segurança (CP12)<a class="headerlink" href="#acesso-e-seguranca-cp12" title="Link para esta seção">#</a></h2>
+<h3 id="rf52-verificar-identidade-do-paciente-ou-responsavel-47">RF52 — Verificar identidade do paciente ou responsável (<a href="https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/issues/47">#47</a>)<a class="headerlink" href="#rf52-verificar-identidade-do-paciente-ou-responsavel-47" title="Link para esta seção">#</a></h3>
+<p>O RF52 não mostra dados por conta própria: ele confirma a identidade e entrega às outras features uma verificação ligada a uma única inscrição. Quem usa a verificação é a consulta da posição na fila (RF8, <a href="https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/issues/155">#155</a>) e, mais adiante, as declarações de comparecimento da CP10 (RF44 a RF46). O código vai só por e-mail (<a href="../../unidade-2/requisitos/decisoes-fbr/#df24">DF24</a>).</p>
+<p><strong>Rotas</strong> (módulo <code>acesso</code>, todas públicas):</p>
+<ul>
+<li><code>POST /verificacao/codigo</code>: recebe o identificador, que pode ser o CPF (com ou sem pontuação) ou o número da inscrição (<code>AAAA-NNNNN</code>). Responde sempre <code>202</code> com a mesma mensagem, ou <code>429</code> com <code>segundosRestantes</code> (pedido antes de 60 segundos) ou <code>bloqueadoAte</code> (limite de 3 códigos em 60 minutos).</li>
+<li><code>POST /verificacao/conferir</code>: recebe o identificador e o código. Com o código certo, responde <code>200</code> e grava o cookie <code>verificacao</code>. Em qualquer outro caso, responde <code>400</code> com a mesma mensagem.</li>
+<li><code>POST /verificacao/encerrar</code>: encerra a verificação e apaga o cookie.</li>
+</ul>
+<p>O <code>VerificacaoGuard</code> lê o cookie <code>verificacao</code>, confere se a verificação está dentro do prazo e não foi encerrada e preenche <code>req.inscricaoVerificada</code> com o id da inscrição. Sem verificação válida, a rota responde <code>401</code> sem nenhum dado. O cookie é <code>httpOnly</code>, <code>Secure</code> e <code>SameSite=Lax</code>, como o da sessão do RF50, e só o hash do token fica no banco.</p>
+<pre class="mermaid"><code>sequenceDiagram
+    actor P as Paciente ou responsável
+    participant W as Web
+    participant A as API (acesso)
+    participant DB as Banco
+    participant M as E-mail
+    P-&gt;&gt;W: CPF ou número da inscrição
+    W-&gt;&gt;A: POST /verificacao/codigo
+    A-&gt;&gt;DB: reserva o envio no limite do identificador
+    alt menos de 60 s desde o último envio
+        A--&gt;&gt;W: 429 com o tempo restante
+    else 3 envios nos últimos 60 min
+        A--&gt;&gt;W: 429 com o horário de liberação
+    else envio permitido
+        A-&gt;&gt;DB: busca a inscrição (pelo número, ou a mais recente do CPF)
+        opt a inscrição existe e tem e-mail
+            A-&gt;&gt;DB: invalida o código anterior e cria outro, válido por 10 min
+            A--)M: envia o código, sem esperar o envio
+        end
+        A--&gt;&gt;W: 202 com a mesma mensagem em todos os casos
+    end
+    P-&gt;&gt;W: código de 6 dígitos
+    W-&gt;&gt;A: POST /verificacao/conferir
+    A-&gt;&gt;DB: reserva a tentativa no código vigente do identificador
+    alt sem código vigente, ou código errado, expirado ou já usado
+        A-&gt;&gt;DB: na 5ª tentativa errada, invalida o código
+        A--&gt;&gt;W: 400 com mensagem genérica
+    else código certo
+        A-&gt;&gt;DB: marca o código como usado e cria a verificação (15 min)
+        A-&gt;&gt;DB: auditoria da verificação
+        A--&gt;&gt;W: cookie de verificação
+        W--&gt;&gt;P: informações só dessa inscrição (RF8, CP10)
+    end</code></pre>
+<table>
+<thead>
+<tr>
+<th>Regra</th>
+<th>Critério de aceitação</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>A verificação fica ligada a uma única inscrição, e o <code>VerificacaoGuard</code> só entrega o id dela às rotas do paciente</td>
+<td>O CPF ou o número, com o código informado em até 10 minutos, libera acesso apenas às informações desse paciente</td>
+</tr>
+<tr>
+<td>Sem verificação válida, as rotas do paciente respondem <code>401</code> sem dado; a conferência responde sempre a mesma mensagem, exista ou não a inscrição</td>
+<td>Sem código, ou com código incorreto ou expirado, nada é exibido e a existência da inscrição não é confirmada</td>
+</tr>
+<tr>
+<td>Para inscrição sem e-mail, nada é enviado, e a resposta é o mesmo <code>202</code> de qualquer pedido</td>
+<td>Inscrição sem e-mail não recebe código, e a resposta é a mesma de qualquer pedido</td>
+</tr>
+<tr>
+<td><code>usadoEm</code> é gravado com um <code>UPDATE</code> condicional (<code>usado_em is null</code>), e só uma conferência simultânea passa</td>
+<td>Código já utilizado é recusado</td>
+</tr>
+<tr>
+<td><code>tentativasFalhas</code> é reservada antes da comparação, como no RF50; na 5ª tentativa errada, o código recebe <code>invalidadoEm</code></td>
+<td>Na quinta tentativa incorreta, o código é invalidado e nem o correto passa a ser aceito</td>
+</tr>
+<tr>
+<td><code>ultimoEnvioEm</code> no limite do identificador; o novo código invalida o anterior</td>
+<td>Novo código pedido antes de 60 segundos é recusado, informando o tempo restante</td>
+</tr>
+<tr>
+<td><code>enviosNaJanela</code> e <code>janelaInicio</code> contam os envios em 60 minutos; no 3º, <code>bloqueadoAte</code> recebe a hora do envio mais 60 minutos</td>
+<td>Depois de 3 códigos em 60 minutos, o quarto pedido é recusado, e o bloqueio dura 60 minutos</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Decisões de projeto</strong> (a conferir na inspeção):</p>
+<ol>
+<li><strong>Identificador guardado como chave, e não em texto.</strong> <code>identificadorChave</code> é um HMAC-SHA256 do identificador normalizado (<code>cpf:&lt;11 dígitos&gt;</code> ou <code>numero:&lt;AAAA-NNNNN&gt;</code>), com uma chave do servidor. O CPF não fica gravado nas tabelas novas.</li>
+<li><strong>Limites pelo identificador, e não pela inscrição.</strong> Os limites valem igual para um CPF ou número que existe e para um que não existe, para que o <code>429</code> não revele a inscrição; é a mesma ideia do bloqueio do RF50 para e-mail sem conta. Como o CPF e o número são identificadores diferentes, alternando os dois uma mesma inscrição pode receber até 6 códigos por hora. O risco é aceito: cada código aceita só 5 tentativas.</li>
+<li><strong>CPF com mais de uma inscrição:</strong> vale a mais recente, que é a que está na fila.</li>
+<li><strong>Duração da verificação:</strong> 15 minutos, sem renovação (<code>MINUTOS_VERIFICACAO</code>). O RF52 não define esse prazo. Ele é curto porque a consulta é rápida e pode ser feita num computador compartilhado. Depois do prazo, a pessoa pede um novo código.</li>
+<li><strong>Envio do e-mail fora da resposta:</strong> a API responde sem esperar o envio, para que o tempo de resposta não indique se a inscrição existe ou tem e-mail.</li>
+<li><strong>Código:</strong> gerado com <code>crypto.randomInt</code> e guardado como HMAC, nunca em texto.</li>
+<li><strong>Auditoria:</strong> a verificação concluída grava <code>verificar_identidade</code> na auditoria, sem usuário e com a inscrição como entidade, para rastrear o acesso aos dados dela. O pedido de código não altera dado da inscrição e não é auditado.</li>
+</ol>
+<p><strong>Telas:</strong> página pública <code>/consultar</code>, em dois passos (identificador e código), usada pelo RF8 antes de mostrar a posição na fila. O código é digitado num campo único com <code>inputmode="numeric"</code> e <code>autocomplete="one-time-code"</code>. As mensagens de erro usam <code>role="alert"</code> e recebem o foco, e o botão de reenvio mostra o tempo restante. As telas estão nos <a href="../prototipos-ciclo-4/#rf52">protótipos do Ciclo 4</a>.</p>
+<p><strong>Dados de teste:</strong></p>
+<ul>
+<li>Inscrições fictícias: uma com e-mail, uma só com celular e um CPF com duas inscrições.</li>
+<li>Identificadores sem inscrição: um CPF e um número inexistentes.</li>
+<li>Códigos: um vencido (criado há 11 minutos), um já usado e um com 4 tentativas erradas.</li>
+<li>Limites: um identificador com envio há 30 segundos, um com 2 envios na janela e um bloqueado.</li>
+<li>Em desenvolvimento, o e-mail chega ao Mailpit (<code>http://localhost:8025</code>).</li>
+</ul>
+<p><strong>Riscos:</strong> o remetente oficial de e-mail depende da FBr, como no RF53. O RF1, de que o RF52 depende, já está na <code>main</code> (<a href="https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/pull/139">#139</a>).</p>
+<hr />
+<h3 id="rf57-registrar-consentimento-para-tratamento-de-dados-52">RF57 — Registrar consentimento para tratamento de dados (<a href="https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/issues/52">#52</a>)<a class="headerlink" href="#rf57-registrar-consentimento-para-tratamento-de-dados-52" title="Link para esta seção">#</a></h3>
+<p>O termo entra na etapa 3 da inscrição (RF1). A rota continua a mesma, <code>POST /inscricoes</code>, que passa a exigir o aceite. O texto do termo fica versionado no banco, e cada inscrição guarda a versão aceita e a data/hora do aceite. O texto da versão <code>0.1</code> está em <a href="../termo-consentimento/">Termo de consentimento — versão 0.1</a>.</p>
+<pre class="mermaid"><code>classDiagram
+    direction LR
+    class VersaoTermo {
+      +string versao
+      +string titulo
+      +string introducao
+      +json topicos
+      +datetime vigenteDesde
+      +bool provisoria
+    }
+    class Inscricao {
+      +string versaoTermoAceita
+      +datetime termoAceitoEm
+      +bool aceitePeloResponsavel
+    }
+    VersaoTermo "0..1" -- "0..*" Inscricao : aceita</code></pre>
+<ul>
+<li><strong><code>topicos</code>:</strong> <code>jsonb</code> com a lista dos cinco tópicos do protótipo, cada um com <code>titulo</code> e <code>corpo</code> em Markdown: o que coletamos, para que usamos, quem pode ver, por quanto tempo guardamos e seus direitos e como desistir. A caixa de concordância e o aviso para menor ficam na tela, e não no texto versionado.</li>
+<li><strong>Multiplicidade:</strong> a inscrição antiga, feita antes do termo, não tem versão (decisão 2), por isso o lado da <code>VersaoTermo</code> é <code>0..1</code>.</li>
+<li><strong>Valores do servidor:</strong> o <code>aceitePeloResponsavel</code> vem de <code>menorDeIdade(dataNascimento)</code>, nunca do cliente, e o <code>termoAceitoEm</code> é o <code>now()</code> da transação. Um <code>CHECK ((versao_termo_aceita is null) = (termo_aceito_em is null))</code> garante os dois juntos.</li>
+</ul>
+<p><strong>Rotas</strong> (módulo <code>inscricao</code>, públicas):</p>
+<ul>
+<li><code>GET /termo/vigente</code>: devolve a versão vigente, se é provisória, o título, a introdução e os cinco tópicos.</li>
+<li><code>POST /inscricoes</code>: recebe, além dos dados da inscrição, <code>aceiteTermo: true</code> e a <code>versaoTermo</code> que a pessoa leu.</li>
+</ul>
+<pre class="mermaid"><code>sequenceDiagram
+    actor P as Interessado ou responsável legal
+    participant W as Web (inscrição)
+    participant A as API (inscrição)
+    participant DB as Banco
+    W-&gt;&gt;A: GET /termo/vigente
+    A--&gt;&gt;W: versão vigente e os cinco tópicos
+    P-&gt;&gt;W: confirma os dados, marca a concordância e conclui
+    W-&gt;&gt;A: POST /inscricoes com confirmado, aceiteTermo e versaoTermo
+    alt sem aceite, sem confirmação ou menor sem nome ou CPF do responsável
+        A--&gt;&gt;W: 400 com todos os campos indicados de uma vez
+    else
+        A-&gt;&gt;DB: transação: busca a chaveEnvio
+        alt mesma chaveEnvio, mesmos dados
+            A--&gt;&gt;W: comprovante já emitido (reenvio)
+        else versão diferente da vigente
+            A--&gt;&gt;W: 409 com codigo termo_desatualizado e a versão vigente
+        else válido
+            A-&gt;&gt;DB: inscrição com versaoTermoAceita, termoAceitoEm e aceitePeloResponsavel
+            A-&gt;&gt;DB: auditoria com a versão e o aceitePeloResponsavel
+            A--&gt;&gt;W: comprovante (RF2)
+        end
+    end</code></pre>
+<table>
+<thead>
+<tr>
+<th>Regra</th>
+<th>Critério de aceitação</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>aceiteTermo</code> é <code>z.literal(true)</code> no esquema da inscrição, validado junto com o resto pelo <code>ZodValidationPipe</code></td>
+<td>Sem aceite, a inscrição não é concluída, e o sistema indica o aceite</td>
+</tr>
+<tr>
+<td>A inscrição grava a versão e o <code>termoAceitoEm</code> do servidor</td>
+<td>A inscrição guarda a versão aceita e a data/hora</td>
+</tr>
+<tr>
+<td>Para menor de idade (<code>menorDeIdade</code>), o aceite é do responsável: exige o nome e o CPF do responsável informados na etapa 1 (decisão 4) e grava <code>aceitePeloResponsavel</code></td>
+<td>Na inscrição de menor, o termo pede a identificação e a concordância do responsável</td>
+</tr>
+<tr>
+<td>O texto do termo traz o prazo de guarda e como revogar (RF65), nos tópicos 4 e 5 da <a href="../termo-consentimento/">versão 0.1</a></td>
+<td>O termo informa o prazo de guarda e como revogar</td>
+</tr>
+<tr>
+<td>Uma versão nova só vale para as inscrições seguintes; as antigas mantêm a versão aceita</td>
+<td>Cada versão aprovada vale para as inscrições seguintes, sem alterar os aceites anteriores (DF44)</td>
+</tr>
+<tr>
+<td>A versão é conferida no serviço, dentro da transação e <strong>depois</strong> da busca pela <code>chaveEnvio</code>. O 409 do termo tem código próprio (<code>{ codigo: "termo_desatualizado", versaoVigente }</code>) e não se confunde com o 409 da <code>chaveEnvio</code> reutilizada com outros dados</td>
+<td>Uma resposta perdida seguida de troca de versão não devolve 409 para uma inscrição já gravada</td>
+</tr>
+<tr>
+<td>No reenvio, o <code>aceiteTermo</code> e a <code>versaoTermo</code> saem do <code>...cadastro</code> comparado campo a campo</td>
+<td>O reenvio legítimo, com a mesma <code>chaveEnvio</code>, não vira 409</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Decisões de projeto:</strong></p>
+<ol>
+<li><strong>Versão provisória.</strong> Até a FBr aprovar o texto (DF44), a versão vigente é a <code>0.1</code>, marcada <code>provisoria</code>, e aparece assim na tela. A produção fica com <code>INSCRICAO_ABERTA=false</code> até haver uma versão aprovada (sem a variável, a inscrição fica aberta: <code>?? true</code> no <code>inscricao-aberta.guard.ts</code>). Além disso, em produção, a API recusa a inscrição enquanto a versão vigente for <code>provisoria</code>.</li>
+<li><strong>Inscrições antigas.</strong> As inscrições feitas antes do termo ficam com a versão vazia. Elas não são apagadas nem recebem um aceite presumido.</li>
+<li><strong>Texto no banco, e não no código:</strong> uma versão nova entra por migration, sem mudar o código da tela.</li>
+<li><strong>CPF do responsável passa a ser obrigatório para menor de idade.</strong> O aceite do termo pelo responsável exige o nome e o CPF dele, como no protótipo 1-1. A DF43 traz o CPF do responsável como dado da ficha, opcional, e o RF1 e a #191 o tratam assim. Com o RF57, ele passa a ser exigido na inscrição de menor. É uma proposta da equipe, citada no RF1 e registrada nas <a href="../../unidade-2/requisitos/analise-feedback/#pendencias-de-validacao-com-a-fbr">pendências de validação com a FBr</a>. Se a FBr recusar, o CPF volta a ser opcional, e o aceite do menor registra só o nome do responsável.</li>
+<li><strong>Duas caixas: a confirmação do RF1 e o aceite do termo.</strong> O critério do RF1 pede que a pessoa revise os dados e confirme o envio, e a LGPD pede que o consentimento seja específico e destacado (art. 11, I). Por isso, as duas caixas ficam separadas: "Confirmo que revisei os meus dados" (o <code>confirmado</code> que já existe) e a do termo. As pranchas 1-1 e 1-2 mostram só a do termo e são ajustadas. O aviso provisório que a etapa 3 mostra hoje no lugar do termo sai.</li>
+<li><strong>Inscrição feita na recepção.</strong> Enquanto o RF3 não entra, a recepção preenche o formulário on-line pelo interessado. Quem lê o termo e marca a caixa é o próprio interessado ou o responsável, na tela ou numa cópia impressa da mesma versão; a recepção não marca por ele. Fica registrado como limitação que, até o RF3, o aceite dado na recepção não se distingue do aceite on-line.</li>
+</ol>
+<p><strong>Telas:</strong> etapa 3 da inscrição, com o termo depois do resumo, os cinco tópicos que abrem e fecham (botões com <code>aria-expanded</code> e <code>aria-controls</code>), a caixa de confirmação dos dados e a caixa de concordância, as duas desmarcadas, e, para menor, o nome e o CPF do responsável só para leitura e o aviso de que o aceite on-line não substitui o termo assinado na clínica. O <code>aceiteTermo</code> entra nos dois lugares que hoje só tratam o <code>confirmado</code>: o link do resumo de erros, que leva à caixa do termo, e o mapeamento do 400 do servidor. <strong>Termo desatualizado (409):</strong> a tela recarrega o termo, desmarca a caixa e mostra "O termo foi atualizado. Leia a nova versão e marque a concordância de novo", com o foco na mensagem; esse estado entra na prancha. Conferida também a 320 px (RNF58). Protótipo: <a href="../prototipos-ciclo-4/#rf57">pranchas 1-1 e 1-2</a>.</p>
+<p><strong>Dados de teste:</strong> uma inscrição de maior de idade com aceite e outra sem aceite; uma de menor com o CPF do responsável e outra sem; um envio com a versão <code>0.0</code>, diferente da vigente (409 com <code>termo_desatualizado</code>); um reenvio com a mesma <code>chaveEnvio</code> depois de a versão mudar (devolve o comprovante); uma inscrição antiga sem versão; um adulto com o CPF do responsável preenchido, que é descartado; o <code>aceiteTermo: false</code> enviado direto à API (400).</p>
+<hr />
+<h2 id="fila-de-espera-cp3">Fila de espera (CP3)<a class="headerlink" href="#fila-de-espera-cp3" title="Link para esta seção">#</a></h2>
+<p>A fila não tem tabela própria. Ela é a lista dos casos nas situações <code>aguardando_distribuicao</code>, <code>aguardando_vinculo</code> e <code>aguardando_vaga</code> (RF38), que são as que esperam um estagiário, ordenada no <code>FilaService</code>. O caso nasce na primeira decisão de prioridade (RF6), então todo caso da fila tem prioridade registrada. Os casos <code>em_atendimento</code>, <code>encerrado</code> e <code>desligado_por_faltas</code> ficam fora. O mesmo serviço passa a ordenar a lista de casos aguardando distribuição (RF18), para as duas nunca ficarem diferentes.</p>
+<p><strong>Classe alterada:</strong> <code>Caso</code> ganha <code>entradaNaFilaEm</code>. Quando um paciente volta à fila por perda da vaga (RF43), ela recebe a data da volta (<a href="../../unidade-2/requisitos/decisoes-fbr/#df33">DF33</a>). O preenchimento é feito em três lugares:</p>
+<ul>
+<li><strong>Migration:</strong> cria a coluna anulável, preenche os casos existentes com o <code>inscricoes.criada_em</code> da inscrição e só depois a torna <code>NOT NULL</code>.</li>
+<li><strong><code>registrarPrioridade</code></strong> (<code>triagem.service.ts</code>), que cria o caso: passa a gravar a data da inscrição.</li>
+<li><strong><code>semear-carga.ts</code>:</strong> a massa da carga também passa a preencher a coluna.</li>
+</ul>
+<p><strong>O que o <code>FilaService</code> oferece às outras features:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Método</th>
+<th>Usado por</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>listar()</code>: a fila ordenada, com a posição</td>
+<td>RF7 e a lista do RF18</td>
+</tr>
+<tr>
+<td><code>posicaoDaInscricao(inscricaoId)</code>: a posição na fila inteira, ou nenhuma</td>
+<td>RF8 e a consulta da secretaria</td>
+</tr>
+<tr>
+<td><code>proximoElegivel(supervisorId)</code>: o primeiro caso <code>aguardando_vinculo</code> do supervisor</td>
+<td>RF37</td>
+</tr>
+</tbody>
+</table>
+<h3 id="rf7-ordenar-inscritos-na-fila-de-espera-140">RF7 — Ordenar inscritos na fila de espera (<a href="https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/issues/140">#140</a>)<a class="headerlink" href="#rf7-ordenar-inscritos-na-fila-de-espera-140" title="Link para esta seção">#</a></h3>
+<p><strong>Rota:</strong> <code>GET /fila</code> (coordenação). Devolve a fila ordenada, com a posição, o número da inscrição, o nome, a prioridade vigente e a entrada na fila. À parte, devolve as inscrições ainda sem prioridade ("Prioridade pendente"), fora da ordenação, com o número, o nome e a data da inscrição.</p>
+<pre class="mermaid"><code>sequenceDiagram
+    actor C as Coordenação
+    participant A as API (fila)
+    participant DB as Banco
+    C-&gt;&gt;A: GET /fila
+    A-&gt;&gt;DB: casos aguardando distribuição, vínculo ou vaga, com a decisão de prioridade vigente
+    A-&gt;&gt;A: decifra a cor e ordena: vermelha, amarela, verde e depois entradaNaFilaEm
+    A-&gt;&gt;DB: inscrições sem decisão de prioridade
+    A--&gt;&gt;C: fila ordenada e, à parte, as sem prioridade</code></pre>
+<table>
+<thead>
+<tr>
+<th>Regra</th>
+<th>Critério de aceitação</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Só entra na fila o caso com decisão de prioridade vigente; o RF5 e as sinalizações não definem posição</td>
+<td>Inscrito com prioridade confirmada entra na posição da prioridade; sinalização sem classificação não define posição</td>
+</tr>
+<tr>
+<td>A ordem é calculada a cada consulta, a partir da decisão vigente</td>
+<td>Uma nova prioridade confirmada atualiza a posição</td>
+</tr>
+<tr>
+<td>O caso sai da fila quando recebe estagiário (RF21), é desligado (RF37) ou encerrado. A distribuição a um supervisor (RF20) não tira o caso da fila: ele continua <code>aguardando_vinculo</code> até o vínculo. As posições dos outros são recalculadas, e as decisões continuam no histórico do RF6</td>
+<td>Mudança de situação recalcula os afetados e preserva o histórico</td>
+</tr>
+<tr>
+<td>Desempate por <code>entradaNaFilaEm</code> e, nela, pela ordem da inscrição</td>
+<td>Na mesma prioridade, fica à frente quem se inscreveu primeiro</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Decisões de projeto:</strong></p>
+<ol>
+<li><strong>Situações da fila.</strong> A fila inclui os casos aguardando distribuição, aguardando vínculo e aguardando vaga (RF38), porque todos esperam um estagiário. A ordenação acontece na aplicação, depois de decifrar a cor, como no RF18. Se o RF7 entrar antes do RF37 e do RF38, o filtro usa só as duas situações que já existem.</li>
+<li><strong>Prancha 6-1, "Mudanças recentes".</strong> O texto "saiu da fila: caso distribuído a…" passa a "saiu da fila: estagiário vinculado", como a regra acima. A prancha é ajustada.</li>
+<li>
+<p><strong>Histórico de mudanças da fila.</strong> A prancha 6-1 mostra o botão "Histórico de mudanças", o painel "Mudanças recentes" ("passou da posição 2 para 3"), o selo "Posição atualizada" e, no acesso negado, "Tentativa registrada". Como a fila é calculada a cada consulta, as posições anteriores não ficam guardadas, e o <code>PerfisGuard</code> só nega o acesso, sem registrar. O "histórico preservado" do RF7 é o das decisões do RF6. A pergunta foi levada à FBr em 06/11:</p>
+<ul>
+<li><strong>se a FBr não pedir o histórico,</strong> o painel, o selo e a frase da tentativa saem da prancha;</li>
+<li><strong>se pedir,</strong> entra uma rota de histórico montada com as <code>decisoes_prioridade</code> e a auditoria da distribuição e do vínculo, sem a variação de posição.</li>
+</ul>
+<p>Até a resposta, a tela não tem esses elementos.</p>
+</li>
+</ol>
+<p><strong>Telas:</strong> item "Fila de espera" no menu da coordenação (proposta levada à FBr em 06/11), com a posição, a prioridade e a entrada na fila, e a seção "Prioridade pendente". A marca "Voltou à fila" só aparece com o RF43, do Ciclo 6. Protótipo: <a href="../prototipos-ciclo-4/#rf7">prancha 6-1</a>.</p>
+<p><strong>Dados de teste:</strong> três casos vermelhos, amarelos e verdes inscritos em ordem trocada; dois casos amarelos inscritos em dias diferentes; um caso que muda de verde para vermelha; um caso <code>aguardando_vinculo</code> (continua na fila); um caso que recebe estagiário, um desligado e um encerrado (saem da fila); uma inscrição sem prioridade; a secretaria, o estagiário e o supervisor tentando abrir a fila (403); a lista do RF18 na mesma ordem depois da troca para o <code>FilaService</code>; um caso existente, criado antes da migration, com a <code>entradaNaFilaEm</code> preenchida pela data da inscrição.</p>
+<hr />
+<h3 id="rf8-consultar-posicao-individual-na-fila-155">RF8 — Consultar posição individual na fila (<a href="https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/issues/155">#155</a>)<a class="headerlink" href="#rf8-consultar-posicao-individual-na-fila-155" title="Link para esta seção">#</a></h3>
+<p><strong>Rotas</strong> (módulo <code>fila</code>, num controller próprio, separado do <code>GET /fila</code>, que tem os guards internos na classe):</p>
+<ul>
+<li><code>GET /fila/minha-situacao</code> (pública, com o <code>VerificacaoGuard</code> do RF52). Usa só a inscrição ligada à verificação, em <code>req.inscricaoVerificada</code>, e devolve uma de quatro situações, pela <code>casos.situacao</code>. Não devolve a prioridade nem nenhum dado clínico. Responde com <code>Cache-Control: no-store</code>, porque a consulta pode ser feita num computador compartilhado.</li>
+<li><code>GET /fila/situacao?numero=</code> (secretaria): a consulta presencial, para quem informou só o celular (RF52, <a href="../../unidade-2/requisitos/decisoes-fbr/#df24">DF24</a>) e para quem recebeu "procure a secretaria". Devolve a mesma resposta da rota pública, com a situação e a posição, sem a cor (RNF17). A secretaria confere a identidade da pessoa no balcão, e a consulta fica na auditoria.</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>Situação do caso</th>
+<th>Resposta</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Sem caso (inscrição sem prioridade)</td>
+<td>Aguardando triagem</td>
+</tr>
+<tr>
+<td><code>aguardando_distribuicao</code>, <code>aguardando_vinculo</code> ou <code>aguardando_vaga</code></td>
+<td>Na fila de espera, com a posição na fila inteira</td>
+</tr>
+<tr>
+<td><code>em_atendimento</code></td>
+<td>Em atendimento</td>
+</tr>
+<tr>
+<td><code>encerrado</code> ou <code>desligado_por_faltas</code></td>
+<td>Procure a secretaria</td>
+</tr>
+</tbody>
+</table>
+<pre class="mermaid"><code>sequenceDiagram
+    actor P as Inscrito
+    participant W as Web (/consultar)
+    participant A as API (fila)
+    participant DB as Banco
+    P-&gt;&gt;W: conclui a verificação de identidade (RF52)
+    W-&gt;&gt;A: GET /fila/minha-situacao com o cookie de verificação
+    alt sem verificação válida
+        A--&gt;&gt;W: 401 sem nenhum dado
+    else verificação válida
+        A-&gt;&gt;DB: caso da inscrição verificada e a situação dele
+        alt sem caso
+            A--&gt;&gt;W: aguardando triagem
+        else aguardando distribuição, vínculo ou vaga
+            A-&gt;&gt;A: posição calculada pelo FilaService
+            A--&gt;&gt;W: na fila de espera, posição N
+        else em atendimento
+            A--&gt;&gt;W: em atendimento
+        else encerrado ou desligado por faltas
+            A--&gt;&gt;W: procure a secretaria
+        end
+    end</code></pre>
+<table>
+<thead>
+<tr>
+<th>Regra</th>
+<th>Critério de aceitação</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>A rota só lê <code>req.inscricaoVerificada</code> e nunca recebe um id de inscrição (RNF6)</td>
+<td>Depois da verificação, o inscrito vê a própria posição e situação</td>
+</tr>
+<tr>
+<td>Sem verificação válida, <code>401</code> sem dado</td>
+<td>Sem verificação, a consulta é negada</td>
+</tr>
+<tr>
+<td>A posição vem do mesmo <code>FilaService</code> do RF7, calculada na hora</td>
+<td>Depois de mudanças na fila, uma nova consulta mostra a posição atualizada</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Decisões de projeto:</strong> a posição é a da fila inteira, e não dentro da cor, porque informar a cor revelaria a prioridade clínica (proposta levada à FBr). A resposta vem com o aviso de que a posição pode mudar e não garante data (RNF7). O "procure a secretaria", para o caso encerrado ou desligado, é uma situação a mais que as três da prancha 1-3 e é uma proposta da equipe, registrada nas pendências de validação. O horário "Consulta feita em…" vem da API, junto com a resposta.</p>
+<p><strong>Acessibilidade (RNF56 a RNF58):</strong> o resultado, que carrega depois da verificação, é anunciado com <code>role="status"</code>. O aviso do 401 usa <code>role="alert"</code>, recebe o foco e traz o botão "Confirmar identidade", que recarrega a página para recomeçar a verificação (se o componente da #202 ganhar uma função para recomeçar, ela substitui o recarregamento). A situação tem ícone e texto, e não só cor, e a página é conferida a 320 px sem rolagem lateral.</p>
+<p><strong>Telas:</strong> página <code>/consultar</code>, depois dos dois passos do RF52. O componente da #202 já mostra o título, o aviso "Identidade confirmada" e o "Encerrar consulta"; o RF8 mostra só o cartão do resultado, nas três situações do protótipo, mais o "procure a secretaria" e o acesso negado. Para a secretaria, a consulta pelo número fica na lista de Pacientes. Protótipo: <a href="../prototipos-ciclo-4/#rf8">pranchas 1-3 e 1-4</a>.</p>
+<p><strong>Dados de teste:</strong> uma inscrição sem prioridade, uma na posição 3, uma <code>aguardando_vinculo</code> (continua na fila), uma em atendimento, uma encerrada e uma desligada (procure a secretaria), cada uma com e-mail para o código; uma verificação expirada (401); uma consulta antes e depois de outro caso passar à frente; a inscrição A verificada pedindo a rota com o número de B na query (a resposta continua sendo a de A); a secretaria consultando pelo número (sem a cor) e o estagiário tentando a mesma rota (403). O teste de compreensão do aviso (RNF7) entra no teste de usabilidade da área pública, com o RF52.</p>
+<p><strong>Dependências e riscos:</strong> o RF8 usa o <code>FilaService</code> e a <code>entradaNaFilaEm</code> do RF7 (#140), as situações novas do RF37 e do RF38 e a verificação do RF52 (#202, ainda aberta). Se entrar antes do RF37 e do RF38, trata só o <code>encerrado</code> como "procure a secretaria". O RF7 entra no <code>depende</code> do RF8 no <code>requisitos.yml</code>, ao lado do RF52.</p>
+<hr />
+<h2 id="agendamento-confirmacao-e-cancelamento-cp4">Agendamento, confirmação e cancelamento (CP4)<a class="headerlink" href="#agendamento-confirmacao-e-cancelamento-cp4" title="Link para esta seção">#</a></h2>
+<p>As três features de sessão do Ciclo 4 mudam o status da <code>SessaoAtendimento</code> criada pelo RF10 e usam o <code>LinkConfirmacao</code> que ele já gera. O cancelamento ganha uma tabela própria, porque guarda a origem, a classificação e a justificativa.</p>
+<pre class="mermaid"><code>classDiagram
+    direction LR
+    class SessaoAtendimento {
+      +string status
+      +datetime confirmadaEm
+      +string confirmadaPor
+    }
+    class LinkConfirmacao {
+      +string tokenHash
+      +datetime expiraEm
+      +datetime usadoEm
+    }
+    class CancelamentoSessao {
+      +uuid id
+      +string origem
+      +string classificacao
+      +string justificativaCifrada
+      +uuid registradoPor
+      +datetime registradoEm
+      +int antecedenciaMinutos
+    }
+    SessaoAtendimento "1" -- "1" LinkConfirmacao : tem
+    SessaoAtendimento "1" -- "0..1" CancelamentoSessao : cancelada por</code></pre>
+<ul>
+<li><strong>Status da sessão:</strong> <code>agendada</code>, <code>confirmada</code> (RF14), <code>cancelada</code> (RF15, RF16, RF25 e RF37), <code>realizada</code> e <code>falta_paciente</code> (RF34).</li>
+<li><strong>Ajustes no código do Ciclo 3 que acompanham os status novos.</strong> Hoje todo status é tratado igual, e três lugares precisam mudar junto com o enum:<ul>
+<li><strong>Sobreposição (RNF9):</strong> as restrições <code>sessoes_estagiario_sem_sobreposicao</code> e <code>sessoes_caso_sem_sobreposicao</code> ganham <code>WHERE (sessao_ocupa_horario(status))</code>, uma função que compara o status como texto (veja a regra única da migration, abaixo), como a migration <code>0003</code> já prevê. Sem isso, a sessão cancelada continua ocupando o horário, e não dá para remarcar.</li>
+<li><strong>Agenda:</strong> o <code>STATUS_QUE_OCUPAM_AGENDA</code> (<code>dominio-ciclo-3.ts</code>) passa a incluir <code>confirmada</code>, para a sessão confirmada continuar bloqueando conflitos.</li>
+<li><strong>Sessão realizada:</strong> o <code>marcarSessaoRealizada</code> e a próxima sessão dos dados administrativos (<code>prontuarios.service.ts</code>) passam a aceitar <code>agendada</code> ou <code>confirmada</code>. Sem isso, a sessão confirmada não poderia ser marcada como realizada nem receber evolução (RF28).</li>
+</ul>
+</li>
+<li><strong>Regra única para a migration:</strong> os três valores novos do enum (<code>confirmada</code>, <code>cancelada</code> e <code>falta_paciente</code>) e os três ajustes acima saem numa migration só, na <strong>primeira PR que entrar entre o RF14, o RF15 e o RF34</strong>. As outras reaproveitam. O valor novo do enum não pode ser usado na transação em que é criado, e o <code>migrate</code> do Drizzle aplica todas as migrations pendentes numa transação só (o <code>migrar.ts</code> da implantação usa esse <code>migrate</code>). Por isso, separar em duas migrations não basta: as restrições comparam o status como texto, sem consultar o valor novo do enum. Como a condição de uma restrição de exclusão só aceita funções imutáveis, e a conversão do enum para texto não é, a comparação <code>status::text &lt;&gt; 'cancelada'</code> fica numa função PL/pgSQL marcada como imutável, <code>sessao_ocupa_horario(status)</code>, e a restrição usa <code>WHERE (sessao_ocupa_horario(status))</code>. Foi assim que a migration <code>0007</code> entrou, no RF34. O mesmo vale para qualquer outro uso dos valores novos na mesma PR, como um <code>CHECK</code> ou um índice parcial com <code>'confirmada'</code> ou <code>'falta_paciente'</code>. Os testes de integração não pegam esse erro, porque o PGlite roda cada comando à parte; quem pega é o <code>pnpm db:migrate</code> do CI.</li>
+<li><strong><code>CancelamentoSessao.origem</code>:</strong> quem registrou o cancelamento: <code>link</code> (o paciente, sem login), <code>secretaria</code>, <code>estagiario</code>, <code>supervisor</code> (ausência do estagiário no RF16 e transferência no RF25) ou <code>coordenacao</code> (desligamento no RF37 e transferência no RF25). <strong><code>classificacao</code>:</strong> <code>no_prazo</code>, <code>fora_do_prazo</code>, <code>administrativo</code>, <code>ausencia_estagiario</code> (RF16) ou <code>desligamento</code> (RF37). A <code>justificativaCifrada</code> pode ficar vazia só nas classificações <code>desligamento</code> e <code>administrativo</code> da transferência (RF25), em que o motivo fica no <code>DesligamentoPorFaltas</code> ou na <code>TransferenciaCaso</code>. O cancelamento por desligamento guarda o <code>desligamentoId</code>, para o RF38 listar as sessões a reagendar.</li>
+<li><strong>Parâmetros novos</strong> (tabela <code>parametros</code>, configuráveis pela coordenação): <code>prazo_confirmacao_horas</code> (24, <a href="../../unidade-2/requisitos/decisoes-fbr/#df45">DF45</a>), que substitui a constante usada hoje, e <code>antecedencia_minima_cancelamento_minutos</code> (60, <a href="../../unidade-2/requisitos/decisoes-fbr/#df20">DF20</a>).</li>
+<li><strong>Link (RNF59):</strong> o <code>expiraEm</code> passa a ser o início da sessão, porque o cancelamento pelo link vale até lá. O prazo de confirmação é conferido à parte. Hoje o link expira no fim do prazo de confirmação (<code>sessoes.service.ts</code>); a mesma migration atualiza o <code>expira_em</code> dos links ainda não usados das sessões futuras para o início da sessão, para os links já enviados também permitirem o cancelamento.</li>
+<li><strong>"Estagiário do supervisor"</strong> (uma definição para o RF11, o RF25 e o RF37): o estagiário que tem vínculo vigente num caso cuja atribuição de supervisor vigente é desse supervisor. Um estagiário sem caso vigente não é de nenhum supervisor. Como um estagiário pode ter casos com supervisores diferentes, o que cada supervisor vê dele se limita aos casos do próprio supervisor (RNF16).</li>
+</ul>
+<h3 id="rf11-consultar-agenda-de-sessoes-do-estagiario-141">RF11 — Consultar agenda de sessões do estagiário (<a href="https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/issues/141">#141</a>)<a class="headerlink" href="#rf11-consultar-agenda-de-sessoes-do-estagiario-141" title="Link para esta seção">#</a></h3>
+<p><strong>Rota:</strong> <code>GET /agenda?estagiarioId&amp;de&amp;ate&amp;status</code> (estagiário: só a própria agenda, com o <code>estagiarioId</code> ignorado; supervisor: só os estagiários que ele supervisiona). Por padrão, mostra as sessões agendadas, confirmadas e realizadas da semana; as canceladas e as faltas aparecem só quando o filtro as pede.</p>
+<pre class="mermaid"><code>sequenceDiagram
+    actor U as Estagiário ou supervisor
+    participant A as API (agendamento)
+    participant DB as Banco
+    U-&gt;&gt;A: GET /agenda com período, situação e estagiário
+    alt estagiário
+        A-&gt;&gt;DB: sessões do próprio estagiário no período
+    else supervisor
+        A-&gt;&gt;DB: confere se o estagiário tem caso vigente supervisionado por ele
+        alt não supervisiona
+            A--&gt;&gt;U: 403, sem nenhuma sessão
+        end
+        A-&gt;&gt;DB: sessões do estagiário no período, só dos casos com atribuição vigente do supervisor
+    end
+    A--&gt;&gt;U: nome do paciente, data, início, término e situação (RNF13)</code></pre>
+<table>
+<thead>
+<tr>
+<th>Regra</th>
+<th>Critério de aceitação</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Filtro de período (<code>de</code>, <code>ate</code>) e de situação, com o padrão agendada, confirmada e realizada</td>
+<td>O estagiário vê as próprias sessões, com filtro por período</td>
+</tr>
+<tr>
+<td>"Estagiário do supervisor" segue a definição única do início da CP4</td>
+<td>O supervisor vê a agenda dos estagiários dele</td>
+</tr>
+<tr>
+<td>Para o supervisor, a consulta filtra as sessões pelos casos com atribuição vigente dele; as sessões do mesmo estagiário em casos de outro supervisor não vêm (RNF16)</td>
+<td>O supervisor vê só as sessões dos casos que supervisiona</td>
+</tr>
+<tr>
+<td><code>403</code> sem sessão para quem não supervisiona; o estagiário nunca vê a agenda de outro</td>
+<td>Sem vínculo de supervisão, não acessa a agenda</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Telas:</strong> item "Agenda" do estagiário e, para o supervisor, "Agenda" com a escolha do estagiário (proposta levada à FBr). A sessão realizada leva ao prontuário. Depois da entrada, o estagiário cai hoje na <code>/meus-pacientes</code>, que dá 404 e é construída pelo RF23 (#160). A "Agenda" da secretaria, que também dá 404 hoje, é construída pelo RF14, com a seção "Sem confirmação". Protótipo: <a href="../prototipos-ciclo-4/#rf11">prancha 4-2</a>.</p>
+<p><strong>Dados de teste:</strong> um estagiário com sessões na semana em todas as situações; um período sem sessões; um supervisor com dois estagiários; um estagiário com casos de dois supervisores (cada um vê só as sessões dos próprios casos); um supervisor pedindo a agenda de um estagiário de outro (403).</p>
+<hr />
+<h3 id="rf14-confirmar-presenca-em-sessao-agendada-142">RF14 — Confirmar presença em sessão agendada (<a href="https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/issues/142">#142</a>)<a class="headerlink" href="#rf14-confirmar-presenca-em-sessao-agendada-142" title="Link para esta seção">#</a></h3>
+<p><strong>Rotas:</strong></p>
+<ul>
+<li><code>GET /confirmacao/:token</code> (pública): devolve só a data e o horário da sessão, o primeiro nome do paciente (RNF59), a situação (<code>agendada</code> ou <code>confirmada</code>) e se ainda dá para confirmar.</li>
+<li><code>POST /confirmacao/:token/confirmar</code> (pública).</li>
+<li><code>GET /sessoes/sem-confirmacao</code> (secretaria): sessões futuras agendadas cujo prazo terminou sem confirmação, com os contatos do paciente.</li>
+<li><code>POST /sessoes/:id/confirmacao</code> (secretaria): confirmação feita por telefone, como no protótipo.</li>
+</ul>
+<pre class="mermaid"><code>sequenceDiagram
+    actor P as Paciente
+    participant W as Web (/confirmacao)
+    participant A as API (agendamento)
+    participant DB as Banco
+    P-&gt;&gt;W: abre o link recebido no agendamento
+    W-&gt;&gt;A: GET /confirmacao/:token
+    A-&gt;&gt;DB: busca o link pelo hash do token
+    alt link inexistente, vencido ou sessão cancelada
+        A--&gt;&gt;W: link não é mais válido (mesma resposta)
+    else sessão já confirmada
+        A--&gt;&gt;W: presença já confirmada, só com a opção de cancelar (RF15)
+    else sessão agendada
+        A--&gt;&gt;W: data, horário e primeiro nome do paciente, com o prazo para confirmar
+    end
+    P-&gt;&gt;W: confirmar presença
+    W-&gt;&gt;A: POST /confirmacao/:token/confirmar
+    alt sessão já confirmada
+        A--&gt;&gt;W: 409 presença já confirmada
+    else depois do prazo (início menos prazo_confirmacao_horas)
+        A--&gt;&gt;W: 422 prazo encerrado, procure a secretaria
+    else dentro do prazo
+        A-&gt;&gt;DB: status confirmada, confirmadaEm e confirmadaPor = link
+        A-&gt;&gt;DB: auditoria (RNF10)
+        A--&gt;&gt;W: presença confirmada
+    end</code></pre>
+<table>
+<thead>
+<tr>
+<th>Regra</th>
+<th>Critério de aceitação</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Confirma se <code>agora &lt;= inicio - prazo_confirmacao_horas</code></td>
+<td>Sessão às 14h00: a confirmação até as 14h00 do dia anterior muda para "confirmada" e é auditada</td>
+</tr>
+<tr>
+<td>Depois disso, <code>422</code> com a orientação de procurar a secretaria</td>
+<td>A confirmação depois das 14h00 do dia anterior é recusada</td>
+</tr>
+<tr>
+<td>A lista da secretaria é uma consulta: status <code>agendada</code>, <code>inicio</code> futuro e prazo vencido; nenhuma falta é criada</td>
+<td>Sessão sem confirmação no fim do prazo vai para a secretaria, sem falta</td>
+</tr>
+<tr>
+<td>Sessão <code>cancelada</code> responde como link não mais válido</td>
+<td>Sessão cancelada não pode ser confirmada</td>
+</tr>
+<tr>
+<td>Sessão <code>confirmada</code>: a página informa que a presença já foi confirmada e só oferece cancelar; uma nova confirmação responde <code>409</code> (RNF59)</td>
+<td>Depois da confirmação, o link não confirma de novo e continua permitindo cancelar</td>
+</tr>
+<tr>
+<td>A página do link mostra só a data, o horário e o primeiro nome do paciente, sem o nome do estagiário (RNF59)</td>
+<td>O link não expõe outros dados da sessão</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Decisão de projeto:</strong> não há tarefa agendada. A sinalização para a secretaria é a própria consulta, então a sessão aparece na lista assim que o prazo vence.</p>
+<p><strong>Telas:</strong> página pública <code>/confirmacao/:token</code>, com os sete estados do protótipo, compartilhada com o RF15; a página "Agenda" da secretaria (<code>/agenda</code>), construída nesta feature, com a seção "Sem confirmação", os contatos e "Registrar confirmação". Protótipo: <a href="../prototipos-ciclo-4/#rf14-rf15-link">pranchas 1-5, 1-6</a> e <a href="../prototipos-ciclo-4/#rf14">2-1</a>.</p>
+<p><strong>Dados de teste:</strong> uma sessão às 14h00 de depois de amanhã (confirma); uma às 14h00 de amanhã, com o relógio às 14h01 de hoje (recusa); uma já confirmada (informa e só oferece cancelar; nova confirmação, 409); uma cancelada; um token inexistente; uma sessão sem confirmação com o prazo vencido (aparece na lista).</p>
+<hr />
+<h3 id="rf15-registrar-cancelamento-de-sessao-pelo-paciente-143">RF15 — Registrar cancelamento de sessão pelo paciente (<a href="https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/issues/143">#143</a>)<a class="headerlink" href="#rf15-registrar-cancelamento-de-sessao-pelo-paciente-143" title="Link para esta seção">#</a></h3>
+<p><strong>Rotas:</strong></p>
+<ul>
+<li><code>POST /confirmacao/:token/cancelar</code> (pública): o paciente cancela pelo link, com a justificativa obrigatória.</li>
+<li><code>POST /sessoes/:id/cancelamento</code> (secretaria; estagiário responsável só no tipo administrativo): recebe a justificativa e o tipo, <code>pedido_paciente</code> ou <code>administrativo</code>. É a <strong>única rota do cancelamento administrativo para remarcação</strong>, também quando ele vem do diálogo do estagiário (RF16); o supervisor não registra esse tipo. O cancelamento administrativo avisa o paciente pelo mesmo caminho do RF16, porque a sessão muda sem o pedido dele; o pedido do paciente não gera aviso.</li>
+</ul>
+<pre class="mermaid"><code>sequenceDiagram
+    actor U as Paciente (link), secretaria ou estagiário
+    participant A as API (agendamento)
+    participant F as FaltasService (CP9)
+    participant DB as Banco
+    U-&gt;&gt;A: cancelamento com justificativa
+    alt sem justificativa
+        A--&gt;&gt;U: 400 justificativa
+    else sessão já iniciada, realizada, cancelada ou com falta
+        A--&gt;&gt;U: 422 a sessão não pode mais ser cancelada
+    else válido
+        A-&gt;&gt;A: antecedência = início - agora
+        alt tipo administrativo
+            A-&gt;&gt;A: classificação administrativo
+        else antecedência &gt;= antecedencia_minima_cancelamento_minutos
+            A-&gt;&gt;A: classificação no_prazo
+        else
+            A-&gt;&gt;A: classificação fora_do_prazo
+        end
+        A-&gt;&gt;DB: transação: status cancelada, CancelamentoSessao, link usado e auditoria (RNF10)
+        opt fora_do_prazo
+            A-&gt;&gt;F: registrarCancelamentoForaDoPrazo(sessão), na mesma transação
+        end
+        A--&gt;&gt;U: sessão cancelada, com a classificação
+    end</code></pre>
+<table>
+<thead>
+<tr>
+<th>Regra</th>
+<th>Critério de aceitação</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Antecedência &gt;= 60 minutos: <code>no_prazo</code></td>
+<td>Sessão às 14h00: o cancelamento até as 13h00 fica "no prazo", com a justificativa, e é auditado</td>
+</tr>
+<tr>
+<td>Antecedência &lt; 60 minutos, antes do início: <code>fora_do_prazo</code>, que vira falta pelo <code>FaltasService</code> na mesma transação</td>
+<td>A partir das 13h01, fica "fora do prazo" e gera a falta para a CP9</td>
+</tr>
+<tr>
+<td>Justificativa obrigatória, cifrada</td>
+<td>Sem justificativa, não registra, e o campo é indicado</td>
+</tr>
+<tr>
+<td>O link recebe <code>usadoEm</code> na mesma transação do cancelamento e da auditoria, com <code>UPDATE</code> condicional (<code>usado_em is null</code>), e toda operação depois disso responde como link não mais válido (RNF59)</td>
+<td>Pelo link, o paciente cancela, e depois o link não permite mais nada</td>
+</tr>
+<tr>
+<td><code>inicio &lt;= agora</code>, ou status <code>realizada</code>, recusa</td>
+<td>Sessão iniciada ou realizada não pode ser cancelada</td>
+</tr>
+<tr>
+<td>Tipo <code>administrativo</code> só pela secretaria ou pelo estagiário, sem falta, qualquer que seja a antecedência</td>
+<td>O cancelamento administrativo não gera falta</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Decisão de projeto:</strong> o valor do parâmetro é lido no momento do cancelamento e guardado com a antecedência em minutos no <code>CancelamentoSessao</code>, para a classificação poder ser conferida depois, mesmo que o parâmetro mude. Valem as regras de desmarcação da DF20, mais recentes que as do contrato da clínica (12 horas).</p>
+<p><strong>Telas:</strong> "Cancelar" na página do link, com a justificativa; diálogo "Cancelar sessão" na agenda da secretaria e do estagiário, com o tipo. Protótipo: <a href="../prototipos-ciclo-4/#rf14-rf15-link">pranchas 1-5, 1-6</a> e <a href="../prototipos-ciclo-4/#rf15-rf16">2-2</a>.</p>
+<p><strong>Dados de teste:</strong> sessão às 14h00 cancelada às 12h59, às 13h00 e às 13h01; uma já iniciada; uma sem justificativa; um cancelamento administrativo 10 minutos antes; o link usado depois do cancelamento; um estagiário que não é o responsável tentando cancelar (403).</p>
+<hr />
+<h3 id="rf16-registrar-cancelamento-de-sessao-pelo-estagiario-144">RF16 — Registrar cancelamento de sessão pelo estagiário (<a href="https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/issues/144">#144</a>)<a class="headerlink" href="#rf16-registrar-cancelamento-de-sessao-pelo-estagiario-144" title="Link para esta seção">#</a></h3>
+<p><strong>Rota:</strong> <code>POST /sessoes/:id/ausencia-estagiario</code> (estagiário responsável, supervisor responsável ou secretaria). Recebe o motivo, obrigatório, e registra só a ausência real do estagiário. O cancelamento administrativo para remarcação, que o RF16 também distingue, usa a rota do RF15 (<code>POST /sessoes/:id/cancelamento</code> com o tipo <code>administrativo</code>), feita pela secretaria ou pelo estagiário, como dizem os dois requisitos; assim, o tipo tem uma implementação só, que também avisa o paciente.</p>
+<pre class="mermaid"><code>sequenceDiagram
+    actor U as Estagiário, supervisor ou secretaria
+    participant A as API (agendamento)
+    participant DB as Banco
+    participant M as E-mail
+    U-&gt;&gt;A: POST /sessoes/:id/ausencia-estagiario com motivo
+    alt sem vínculo com a sessão
+        A--&gt;&gt;U: 403
+    else sem motivo, ou sessão já iniciada
+        A--&gt;&gt;U: 400 ou 422
+    else válido
+        A-&gt;&gt;DB: transação: status cancelada, CancelamentoSessao (ausencia_estagiario, com a origem de quem registrou) e auditoria (RNF10)
+        alt canal e-mail
+            A-&gt;&gt;M: avisa o paciente do cancelamento
+            A--&gt;&gt;U: registrado, paciente avisado por e-mail
+        else WhatsApp ou ligação
+            A--&gt;&gt;U: registrado, com a mensagem pronta para a secretaria (DF24)
+        end
+    end</code></pre>
+<table>
+<thead>
+<tr>
+<th>Regra</th>
+<th>Critério de aceitação</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>O registro muda o status e avisa o paciente pelo canal preferencial</td>
+<td>O registro com motivo atualiza a sessão e dispara a notificação ao paciente</td>
+</tr>
+<tr>
+<td><code>403</code> para quem não é o estagiário, o supervisor do caso ou a secretaria</td>
+<td>Quem não tem vínculo com a sessão não registra a ausência</td>
+</tr>
+<tr>
+<td><code>ausencia_estagiario</code> fica guardado para o RF39 e o RF40, dos Ciclos 5 e 6</td>
+<td>A ausência real conta nas faltas do estagiário</td>
+</tr>
+<tr>
+<td><code>administrativo</code> vem só da rota do RF15 e não entra na contagem do estagiário; o supervisor não registra esse tipo</td>
+<td>O cancelamento para remarcar não conta</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Decisão de projeto:</strong> o aviso ao paciente usa o mesmo caminho do link do RF10 (e-mail automático ou mensagem pronta para o WhatsApp). O RF17, do Ciclo 5, completa a notificação. Isso fica registrado como entrega parcial (R1.7).</p>
+<p><strong>Telas:</strong> o mesmo diálogo "Cancelar sessão" do RF15, com a opção "Ausência do estagiário"; a opção "Para remarcar" do diálogo chama a rota do RF15. Protótipo: <a href="../prototipos-ciclo-4/#rf15-rf16">prancha 2-2</a>.</p>
+<p><strong>Dados de teste:</strong> uma ausência real registrada pelo estagiário e outra pelo supervisor; um cancelamento administrativo pela secretaria, pela rota do RF15; um paciente com e-mail e outro com WhatsApp; um estagiário de outro caso (403); uma sessão já iniciada.</p>
+<hr />
+<h2 id="distribuicao-de-casos-cp5">Distribuição de casos (CP5)<a class="headerlink" href="#distribuicao-de-casos-cp5" title="Link para esta seção">#</a></h2>
+<h3 id="rf22-consultar-responsaveis-pelo-caso-145">RF22 — Consultar responsáveis pelo caso (<a href="https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/issues/145">#145</a>)<a class="headerlink" href="#rf22-consultar-responsaveis-pelo-caso-145" title="Link para esta seção">#</a></h3>
+<p><strong>Rotas</strong> (módulo <code>casos</code>):</p>
+<ul>
+<li><code>GET /pacientes?busca</code> (secretaria e coordenação): a lista de Pacientes, com o nome do paciente, os nomes do estagiário e do supervisor e a situação do caso, sem dado clínico. Para a secretaria, a resposta traz só esses campos (RNF17); o número da inscrição vem só para a coordenação. É a página que hoje dá 404 no menu.</li>
+<li><code>GET /casos/:id/responsaveis</code> (secretaria, coordenação e o estagiário e o supervisor responsáveis): os dois nomes, ou "pendente de distribuição" no que faltar.</li>
+</ul>
+<pre class="mermaid"><code>sequenceDiagram
+    actor U as Secretaria, coordenação ou responsável
+    participant A as API (casos)
+    participant DB as Banco
+    U-&gt;&gt;A: GET /casos/:id/responsaveis
+    A-&gt;&gt;DB: atribuição de supervisor e vínculo de estagiário vigentes
+    alt estagiário ou supervisor sem vínculo com o caso
+        A--&gt;&gt;U: 403
+    else
+        A--&gt;&gt;U: nome do supervisor e do estagiário, ou pendente de distribuição
+    end</code></pre>
+<table>
+<thead>
+<tr>
+<th>Regra</th>
+<th>Critério de aceitação</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>A resposta só traz nomes e a situação; nunca a queixa, a prioridade ou o prontuário (RNF17)</td>
+<td>A consulta mostra os responsáveis, sem dados clínicos</td>
+</tr>
+<tr>
+<td>Sem atribuição ou sem vínculo vigente, o campo vem como <code>null</code>, e a tela mostra "pendente de distribuição"</td>
+<td>O caso sem um dos responsáveis aparece como pendente, sem nome</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Telas:</strong> lista de Pacientes (secretaria e coordenação) e ficha do paciente, já existente nos dados administrativos, com o quadro "Responsáveis". Protótipo: <a href="../prototipos-ciclo-4/#rf22">prancha 2-3</a>.</p>
+<p><strong>Dados de teste:</strong> um caso em atendimento, um aguardando vínculo (sem estagiário) e um aguardando distribuição (sem os dois); um estagiário de outro caso (403).</p>
+<hr />
+<h3 id="rf23-consultar-casos-sob-responsabilidade-do-estagiario-ou-supervisor-146">RF23 — Consultar casos sob responsabilidade do estagiário ou supervisor (<a href="https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/issues/146">#146</a>)<a class="headerlink" href="#rf23-consultar-casos-sob-responsabilidade-do-estagiario-ou-supervisor-146" title="Link para esta seção">#</a></h3>
+<p><strong>Rota:</strong> <code>GET /casos/meus?estagiarioId</code> (estagiário e supervisor). A rota já existe para o supervisor ("Meus casos"); ela passa a aceitar o estagiário, que vê só os casos com vínculo vigente dele, e o supervisor ganha o filtro por estagiário.</p>
+<pre class="mermaid"><code>sequenceDiagram
+    actor U as Estagiário ou supervisor
+    participant A as API (casos)
+    participant DB as Banco
+    U-&gt;&gt;A: GET /casos/meus
+    alt estagiário
+        A-&gt;&gt;DB: casos com vínculo vigente do estagiário
+    else supervisor
+        A-&gt;&gt;DB: casos com atribuição vigente do supervisor, com o estagiário de cada um
+    end
+    A--&gt;&gt;U: paciente, prioridade e situação de cada caso</code></pre>
+<table>
+<thead>
+<tr>
+<th>Regra</th>
+<th>Critério de aceitação</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Filtro pelo vínculo vigente do estagiário</td>
+<td>O estagiário vê só os casos vinculados a ele</td>
+</tr>
+<tr>
+<td>Filtro pela atribuição vigente do supervisor, que já inclui os casos dos estagiários dele</td>
+<td>O supervisor vê os casos dele e os dos estagiários</td>
+</tr>
+<tr>
+<td>O acesso direto a um caso de outro segue o RF55, com <code>403</code> sem dado</td>
+<td>Quem não tem vínculo não vê o caso na lista e tem o acesso direto negado</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Telas:</strong> "Meus pacientes" do estagiário (a página que hoje dá 404 depois da entrada, #160) e "Meus casos" do supervisor, com o filtro por estagiário. Protótipo: <a href="../prototipos-ciclo-4/#rf23">prancha 4-1</a>.</p>
+<p><strong>Dados de teste:</strong> dois estagiários do mesmo supervisor, com dois casos cada; um caso aguardando vínculo; um estagiário sem casos (estado vazio); um estagiário abrindo o prontuário de um caso do outro (403).</p>
+<hr />
+<h3 id="rf25-transferir-caso-para-outro-estagiario-ou-supervisor-147">RF25 — Transferir caso para outro estagiário ou supervisor (<a href="https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/issues/147">#147</a>)<a class="headerlink" href="#rf25-transferir-caso-para-outro-estagiario-ou-supervisor-147" title="Link para esta seção">#</a></h3>
+<pre class="mermaid"><code>classDiagram
+    direction LR
+    class TransferenciaCaso {
+      +uuid id
+      +string tipo
+      +uuid estagiarioAnteriorId
+      +uuid estagiarioNovoId
+      +uuid supervisorAnteriorId
+      +uuid supervisorNovoId
+      +string motivoCifrado
+      +uuid transferidoPor
+      +datetime transferidoEm
+    }
+    class Caso
+    class VinculoEstagiario
+    class AtribuicaoSupervisor
+    Caso "1" -- "0..*" TransferenciaCaso : registra
+    TransferenciaCaso --&gt; VinculoEstagiario : encerra o anterior e cria o novo
+    TransferenciaCaso --&gt; AtribuicaoSupervisor : encerra a anterior e cria a nova</code></pre>
+<p><strong>Rota:</strong> <code>POST /casos/:id/transferencia</code> (supervisor responsável ou coordenação). Recebe o <code>motivo</code>, obrigatório, e o novo estagiário, o novo supervisor ou os dois.</p>
+<pre class="mermaid"><code>sequenceDiagram
+    actor U as Supervisor responsável ou coordenação
+    participant A as API (casos)
+    participant DB as Banco
+    U-&gt;&gt;A: POST /casos/:id/transferencia com novo responsável e motivo
+    alt supervisor tentando trocar o supervisor, ou estagiário de outro supervisor
+        A--&gt;&gt;U: 403 com a orientação de pedir à coordenação
+    else sem motivo ou caso não ativo
+        A--&gt;&gt;U: 400 ou 422
+    else válido
+        A-&gt;&gt;DB: transação: encerra o vínculo e, se for o caso, a atribuição vigentes
+        A-&gt;&gt;DB: cria o novo vínculo e, se for o caso, a nova atribuição
+        A-&gt;&gt;DB: TransferenciaCaso com os anteriores, os novos, o motivo e o autor
+        A-&gt;&gt;DB: auditoria (RNF16)
+        A--&gt;&gt;U: transferido, com o mesmo prontuário
+    end</code></pre>
+<table>
+<thead>
+<tr>
+<th>Regra</th>
+<th>Critério de aceitação</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>O supervisor só troca o estagiário, e só para um estagiário dele, pela definição única do início da CP4; um estagiário sem caso vigente não é de nenhum supervisor, e a transferência para ele é feita pela coordenação</td>
+<td>O supervisor transfere para outro estagiário dele, e o anterior perde o acesso</td>
+</tr>
+<tr>
+<td>Estagiário de outro supervisor: <code>403</code>, com a orientação de pedir à coordenação</td>
+<td>O supervisor A não transfere para estagiário do supervisor B</td>
+</tr>
+<tr>
+<td>A coordenação troca o supervisor e, se indicar, o estagiário</td>
+<td>A transferência pela coordenação registra os novos responsáveis e revoga o acesso dos anteriores</td>
+</tr>
+<tr>
+<td>O prontuário do ciclo não muda; o acesso segue o vínculo vigente (RF55)</td>
+<td>O novo responsável vê o histórico preservado (RF27)</td>
+</tr>
+<tr>
+<td><code>TransferenciaCaso</code> é só de inserção e fica no banco, mesmo sem a tela do RF26</td>
+<td>O histórico de transferências existe inteiro desde já</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Decisões de projeto</strong> (a conferir na inspeção):</p>
+<ol>
+<li><strong>"Estagiário do supervisor".</strong> O modelo não liga o estagiário a um supervisor: o vínculo é por caso. Vale a definição única do início da CP4, a mesma do RF11 e do RF37.</li>
+<li><strong>Sessões futuras do estagiário anterior.</strong> Ficam canceladas como <code>administrativo</code>, com a origem de quem transferiu (<code>supervisor</code> ou <code>coordenacao</code>), sem falta para ninguém, e a tela lista as sessões para reagendar com o novo estagiário.</li>
+<li><strong>Supervisor no limite de 50 casos:</strong> até a resposta da FBr, vale o bloqueio da <a href="../../unidade-2/requisitos/decisoes-fbr/#df17">DF17</a>, como no RF20 (<code>casos.service.ts</code>): o supervisor no limite aparece desabilitado, com o motivo. Deixar a coordenação escolhê-lo com um aviso é uma proposta levada à FBr em 06/11 e registrada nas pendências de validação.</li>
+</ol>
+<p><strong>Telas:</strong> "Transferir caso" na ficha do caso, com os casos ativos de cada opção, o motivo e a confirmação. Protótipo: <a href="../prototipos-ciclo-4/#rf25">prancha 4-3</a>.</p>
+<p><strong>Dados de teste:</strong> um caso com sessões futuras transferido entre dois estagiários do mesmo supervisor; uma tentativa do supervisor A com estagiário do supervisor B e outra com um estagiário sem caso (403); um supervisor com 50 casos, desabilitado na escolha da coordenação; uma transferência pela coordenação para outro supervisor, com e sem novo estagiário; uma sem motivo; o estagiário anterior tentando abrir o prontuário depois (403).</p>
+<hr />
+<h2 id="prontuario-cp6">Prontuário (CP6)<a class="headerlink" href="#prontuario-cp6" title="Link para esta seção">#</a></h2>
+<h3 id="rf27-consultar-prontuario-do-paciente-148">RF27 — Consultar prontuário do paciente (<a href="https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/issues/148">#148</a>)<a class="headerlink" href="#rf27-consultar-prontuario-do-paciente-148" title="Link para esta seção">#</a></h3>
+<p><strong>Rota:</strong> <code>GET /prontuarios/:id</code>, que já existe (estagiário e supervisor responsáveis; coordenação só para leitura, com o acesso registrado, <a href="../../unidade-2/requisitos/decisoes-fbr/#df32">DF32</a>). O Ciclo 4 completa a resposta com o que faltava dos elementos mínimos.</p>
+<table>
+<thead>
+<tr>
+<th>Elemento mínimo</th>
+<th>De onde vem</th>
+<th>Sem registro</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Identificação do paciente, do caso e do ciclo</td>
+<td><code>Caso</code>, <code>Inscricao</code>, <code>Prontuario</code></td>
+<td>—</td>
+</tr>
+<tr>
+<td>Dados iniciais</td>
+<td>RF69</td>
+<td>"Sem registro neste ciclo"</td>
+</tr>
+<tr>
+<td>Responsáveis e histórico</td>
+<td><code>VinculoEstagiario</code>, <code>AtribuicaoSupervisor</code> e <code>TransferenciaCaso</code> (RF25)</td>
+<td>—</td>
+</tr>
+<tr>
+<td>Sessões do ciclo, com a situação e as faltas</td>
+<td><code>SessaoAtendimento</code>, <code>FaltaPaciente</code> (CP9)</td>
+<td>"Sem registro neste ciclo"</td>
+</tr>
+<tr>
+<td>Evoluções, com correções, complementos e validação</td>
+<td>RF28; RF29, RF30 e RF67 nos Ciclos 5 e 6</td>
+<td>"Nenhuma" em cada contador, até essas features existirem</td>
+</tr>
+<tr>
+<td>Encerramento por alta</td>
+<td>RF68</td>
+<td>"Sem registro neste ciclo"</td>
+</tr>
+<tr>
+<td>Relatório final</td>
+<td>RF33</td>
+<td>"Sem registro neste ciclo"</td>
+</tr>
+</tbody>
+</table>
+<pre class="mermaid"><code>sequenceDiagram
+    actor U as Responsável ou coordenação
+    participant A as API (acompanhamento-clinico)
+    participant DB as Banco
+    U-&gt;&gt;A: GET /prontuarios/:id
+    A-&gt;&gt;DB: confere o vínculo vigente (RF55) e registra o acesso (RNF52)
+    alt sem vínculo e não é coordenação
+        A--&gt;&gt;U: 403 sem nenhum dado
+    else
+        A-&gt;&gt;DB: lê e decifra os elementos do ciclo
+        A--&gt;&gt;U: prontuário com todas as seções, as ausentes marcadas
+    end</code></pre>
+<table>
+<thead>
+<tr>
+<th>Regra</th>
+<th>Critério de aceitação</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>A resposta tem uma chave para cada elemento mínimo, mesmo vazia</td>
+<td>O responsável vê todos os elementos do ciclo</td>
+</tr>
+<tr>
+<td>Elemento vazio vem como <code>null</code> e a tela mostra a ausência, sem conteúdo presumido</td>
+<td>O elemento sem registro aparece como ausente</td>
+</tr>
+<tr>
+<td>O acesso segue o vínculo vigente, e os registros ficam ligados ao prontuário, e não ao responsável</td>
+<td>Depois da transferência, o novo responsável vê os registros anteriores</td>
+</tr>
+<tr>
+<td><code>403</code> sem dado para quem não tem vínculo, com a coordenação só lendo</td>
+<td>Sem vínculo, não acessa; a coordenação só lê</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Telas:</strong> o prontuário nas seções do modelo da clínica, com a barra "Ir para", as evoluções e o histórico de responsáveis fechados e "Marcar sessão como realizada" na sessão que já terminou, como hoje. Protótipo: <a href="../prototipos-ciclo-4/#rf27">prancha 5-1</a>.</p>
+<p><strong>Dados de teste:</strong> um prontuário completo (dados iniciais, sessões realizadas, uma falta e evoluções) e um recém-criado; um caso transferido (RF25); a coordenação lendo; um estagiário sem vínculo (403).</p>
+<hr />
+<h3 id="rf69-registrar-anamnese-e-contrato-terapeutico-do-paciente-130">RF69 — Registrar anamnese e contrato terapêutico do paciente (<a href="https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/issues/130">#130</a>)<a class="headerlink" href="#rf69-registrar-anamnese-e-contrato-terapeutico-do-paciente-130" title="Link para esta seção">#</a></h3>
+<p><strong>O que já existe:</strong> a rota <code>POST /prontuarios/:id/dados-iniciais</code> grava a anamnese como um texto só e o contrato da DF41 (data, termo para pesquisa e via guardada), tudo de uma vez e uma vez só.</p>
+<p><strong>O que muda:</strong></p>
+<ul>
+<li><strong>Anamnese nas seis seções</strong> da ficha da clínica (<a href="../../unidade-2/requisitos/decisoes-fbr/#df37">DF37</a>): <code>anamneseCifrada</code> passa a guardar as seções num JSON cifrado (<code>queixaPrincipal</code>, <code>historiaProblemaAtual</code>, <code>historicoFamiliar</code>, <code>desenvolvimento</code>, <code>historicoMedico</code>, <code>aspectosPsicossociais</code>). Os registros antigos, com o texto único, aparecem como a queixa principal.</li>
+<li><strong>Anamnese e contrato salvos separados</strong>, como no protótipo: <code>POST /prontuarios/:id/anamnese</code> e <code>POST /prontuarios/:id/contrato</code>, cada um uma vez, com autor e data/hora próprios (<code>anamnesePor</code>, <code>anamneseEm</code>, <code>contratoPor</code>, <code>contratoEm</code>). Assim, o estagiário registra a anamnese antes de a via assinada estar guardada. A migration copia os <code>dados_iniciais_por</code> e <code>dados_iniciais_em</code> dos prontuários que já têm dados iniciais para as quatro colunas novas, porque o registro antigo gravava as duas partes juntas.</li>
+<li><strong>Limite de 1.000 caracteres por seção:</strong> proposta da equipe, que não está no RF69 e foi registrada nas <a href="../../unidade-2/requisitos/analise-feedback/#pendencias-de-validacao-com-a-fbr">pendências de validação com a FBr</a>.</li>
+<li><strong>Queixa principal preenchida</strong> com a queixa da inscrição (RF1), decifrada na hora de abrir o formulário.</li>
+</ul>
+<pre class="mermaid"><code>sequenceDiagram
+    actor E as Estagiário responsável
+    participant A as API (acompanhamento-clinico)
+    participant DB as Banco
+    E-&gt;&gt;A: GET /prontuarios/:id (formulário com a queixa da inscrição)
+    E-&gt;&gt;A: POST /prontuarios/:id/anamnese com as seis seções
+    alt não é o estagiário responsável, ou caso sem prontuário
+        A--&gt;&gt;E: 403 ou 404
+    else sem queixa principal, ou seção com mais de 1.000 caracteres
+        A--&gt;&gt;E: 400 com o campo indicado
+    else anamnese já registrada
+        A--&gt;&gt;E: 409
+    else
+        A-&gt;&gt;DB: anamnese cifrada, com autor e data/hora
+        A-&gt;&gt;DB: auditoria
+        A--&gt;&gt;E: anamnese registrada
+    end
+    E-&gt;&gt;A: POST /prontuarios/:id/contrato com data, termo para pesquisa e via guardada
+    A-&gt;&gt;DB: mesmas conferências, e 400 sem a via guardada
+    A--&gt;&gt;E: contrato registrado</code></pre>
+<table>
+<thead>
+<tr>
+<th>Regra</th>
+<th>Critério de aceitação</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Cada parte grava autor e data/hora próprios</td>
+<td>A anamnese e o contrato ficam como dados iniciais, com autor e data/hora</td>
+</tr>
+<tr>
+<td>Seis seções, com a queixa principal vinda da inscrição</td>
+<td>A anamnese segue as seis seções, com a queixa da inscrição</td>
+</tr>
+<tr>
+<td>Só a queixa principal é obrigatória; as outras ficam <code>null</code> e aparecem como "não informado"</td>
+<td>Sem queixa principal, não salva; as seções em branco aparecem como "não informado"</td>
+</tr>
+<tr>
+<td>O contrato guarda a data e o aceite do termo para pesquisa; a via guardada é obrigatória (proposta da equipe)</td>
+<td>O contrato registra a data e o aceite do termo</td>
+</tr>
+<tr>
+<td><code>403</code> para quem não é o estagiário responsável</td>
+<td>Outro usuário não registra</td>
+</tr>
+<tr>
+<td><code>404</code> sem prontuário (RF66)</td>
+<td>Caso sem prontuário não aceita o registro</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Telas:</strong> formulário de dados iniciais com a anamnese em seis campos e o quadro do contrato, cada um com o seu botão de salvar, e a leitura pelo supervisor. Protótipo: <a href="../prototipos-ciclo-4/#rf69">prancha 5-2</a>.</p>
+<p><strong>Dados de teste:</strong> um prontuário novo; uma anamnese só com a queixa principal e outra completa; uma seção com 1.001 caracteres; um contrato sem a via guardada; uma segunda anamnese no mesmo prontuário (409); o supervisor tentando registrar (403); um registro antigo, com o texto único.</p>
+<hr />
+<h2 id="registro-de-evolucao-cp7">Registro de evolução (CP7)<a class="headerlink" href="#registro-de-evolucao-cp7" title="Link para esta seção">#</a></h2>
+<h3 id="rf28-registrar-evolucao-da-sessao-realizada-149">RF28 — Registrar evolução da sessão realizada (<a href="https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/issues/149">#149</a>)<a class="headerlink" href="#rf28-registrar-evolucao-da-sessao-realizada-149" title="Link para esta seção">#</a></h3>
+<p><strong>O que já existe:</strong> <code>POST /prontuarios/:id/sessoes/:sessaoId/realizada</code> (o estagiário marca a sessão como realizada depois do término) e <code>POST /prontuarios/:id/sessoes/:sessaoId/evolucoes</code>, que grava a evolução com dois campos, a queixa e o planejamento (<a href="../../unidade-2/requisitos/decisoes-fbr/#df23">DF23</a>).</p>
+<p><strong>O que muda:</strong> a evolução passa a seguir a ficha da <a href="../../unidade-2/requisitos/decisoes-fbr/#df38">DF38</a>. A tabela <code>evolucoes</code> ganha cinco colunas cifradas, <code>humorAparencia</code>, <code>conteudoTrabalhado</code>, <code>tecnicasUtilizadas</code>, <code>intervencoesEncaminhamentos</code> (opcional) e <code>planoProximaSessao</code>, e as antigas (<code>queixa</code> e <code>planejamento</code>) ficam só para leitura das evoluções já registradas, como o texto livre do contrato antigo. Como <code>queixa_cifrada</code> e <code>planejamento_cifrado</code> são <code>NOT NULL</code> hoje, a migration as torna anuláveis.</p>
+<pre class="mermaid"><code>sequenceDiagram
+    actor E as Estagiário responsável
+    participant A as API (acompanhamento-clinico)
+    participant DB as Banco
+    E-&gt;&gt;A: POST .../sessoes/:sessaoId/realizada (depois do término)
+    A-&gt;&gt;DB: status realizada
+    E-&gt;&gt;A: POST .../sessoes/:sessaoId/evolucoes com os cinco campos
+    alt sem vínculo vigente, ou sessão de outro paciente
+        A--&gt;&gt;E: 403
+    else sessão não realizada (agendada, confirmada, cancelada ou com falta)
+        A--&gt;&gt;E: 422
+    else campo obrigatório vazio ou com mais de 1.000 caracteres
+        A--&gt;&gt;E: 400 com os campos indicados
+    else
+        A-&gt;&gt;DB: evolução cifrada, com autor, data/hora e a sessão de origem
+        A-&gt;&gt;DB: auditoria
+        A-&gt;&gt;DB: conta as sessões realizadas do ciclo
+        A--&gt;&gt;E: evolução registrada e, a cada 10ª sessão, o aviso de fechamento avaliativo
+    end</code></pre>
+<table>
+<thead>
+<tr>
+<th>Regra</th>
+<th>Critério de aceitação</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>A evolução fica ligada à sessão (índice único), ao prontuário e ao ciclo, com autor e data/hora</td>
+<td>A evolução válida fica associada à sessão, ao paciente e ao ciclo</td>
+</tr>
+<tr>
+<td>Confere que a sessão é do caso do prontuário e que o estagiário tem o vínculo vigente</td>
+<td>Não registra em sessão de outro paciente nem sem vínculo</td>
+</tr>
+<tr>
+<td>Só aceita sessão <code>realizada</code></td>
+<td>Sessão não realizada não aceita evolução</td>
+</tr>
+<tr>
+<td>O número da sessão no ciclo, a data, o horário e o comparecimento vêm da sessão, sem campo no formulário</td>
+<td>O registro mostra os dados da sessão, sem digitação</td>
+</tr>
+<tr>
+<td>Quatro obrigatórios e <code>intervencoesEncaminhamentos</code> opcional, cada um com até 1.000 caracteres (proposta da equipe)</td>
+<td>Sem um obrigatório, não salva; mais de 1.000 caracteres é recusado</td>
+</tr>
+<tr>
+<td>O aviso é calculado pelo número da sessão da evolução no ciclo (a ordem dela entre as realizadas), e não pelo total no momento do registro: aparece só quando esse número é múltiplo de 10, e não se repete nas evoluções seguintes</td>
+<td>Na 10ª sessão realizada do ciclo, os dois veem o aviso</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Decisão de projeto:</strong> as evoluções já registradas com os campos antigos aparecem no prontuário com os rótulos "Evolução da queixa" e "Planejamento", sem migração do conteúdo, porque não dá para separar o texto nos campos novos sem mudar o que foi escrito.</p>
+<p><strong>Telas:</strong> formulário de evolução aberto pela ação "Registrar evolução" do prontuário, com os dados da sessão só para leitura e os cinco campos; o aviso de fechamento avaliativo no topo do prontuário e em "Meus casos" do supervisor. Protótipo: <a href="../prototipos-ciclo-4/#rf28">prancha 5-3</a>.</p>
+<p><strong>Dados de teste:</strong> uma sessão realizada; sessões agendada, cancelada e com falta (422); um estagiário sem vínculo (403); uma evolução sem técnicas utilizadas; um campo com 1.001 caracteres; um paciente com 9 sessões realizadas que registra a 10ª; uma evolução antiga, com os dois campos.</p>
+<hr />
+<h2 id="controle-de-assiduidade-e-alertas-cp9">Controle de assiduidade e alertas (CP9)<a class="headerlink" href="#controle-de-assiduidade-e-alertas-cp9" title="Link para esta seção">#</a></h2>
+<p>As cinco features da CP9 trabalham sobre os mesmos registros: a falta (<code>FaltaPaciente</code>), o desligamento (<code>DesligamentoPorFaltas</code>) e a vaga liberada (<code>VagaLiberada</code>). A contagem e o alerta não têm tabela própria: são calculados a partir das faltas, para que nunca fiquem diferentes delas (RNF32). O módulo novo da API é o <code>assiduidade</code>.</p>
+<p><strong>Classes novas</strong> (somam-se ao modelo acima e ao do Ciclo 3):</p>
+<pre class="mermaid"><code>classDiagram
+    direction LR
+    class SessaoAtendimento {
+      +uuid id
+      +string status
+      +datetime inicio
+    }
+    class Caso {
+      +uuid id
+      +string situacao
+      +int cicloAtendimento
+    }
+    class FaltaPaciente {
+      +uuid id
+      +string origem
+      +int cicloAtendimento
+      +uuid registradaPor
+      +bool registradaPeloPaciente
+      +datetime registradaEm
+      +bool justificada
+      +string motivoJustificativaCifrado
+      +uuid justificadaPor
+      +datetime justificadaEm
+      +uuid retiradaPor
+      +datetime retiradaEm
+    }
+    class DesligamentoPorFaltas {
+      +uuid id
+      +int cicloAtendimento
+      +date dataDecisao
+      +uuid decididoPor
+      +datetime decididoEm
+      +uuid revertidoPor
+      +datetime revertidoEm
+      +string motivoReversaoCifrado
+    }
+    class VagaLiberada {
+      +uuid id
+      +uuid estagiarioId
+      +uuid supervisorId
+      +datetime liberadaEm
+      +datetime ocupadaEm
+      +uuid ocupadaPorVinculoId
+      +datetime encerradaEm
+    }
+    SessaoAtendimento "1" -- "0..1" FaltaPaciente : gera
+    Caso "1" -- "0..*" FaltaPaciente : acumula
+    Caso "1" -- "0..*" DesligamentoPorFaltas : sofre
+    DesligamentoPorFaltas "1" -- "1" VagaLiberada : libera
+    DesligamentoPorFaltas "0..*" -- "2..*" FaltaPaciente : fundamentado por
+    DesligamentoPorFaltas "0..1" -- "0..*" FaltaPaciente : retira da contagem na reversão</code></pre>
+<ul>
+<li><strong><code>FaltaPaciente.origem</code>:</strong> <code>falta</code>, quando a sessão aconteceu sem o paciente (RF34), ou <code>cancelamento_fora_do_prazo</code>, quando o RF15 classifica o cancelamento assim. Uma sessão gera no máximo uma falta (índice único em <code>sessao_id</code>).</li>
+<li><strong>Autor da falta:</strong> <code>registradaPor</code> é o usuário logado. No cancelamento pelo link do RF15 não há usuário: <code>registradaPor</code> fica vazio e <code>registradaPeloPaciente</code> é verdadeiro, e a auditoria identifica o paciente pelo link, como o RNF10 prevê. Uma restrição do banco exige um dos dois.</li>
+<li><strong>Faltas que fundamentam o desligamento (RF37, RF38):</strong> o desligamento não tem motivo digitado, porque o motivo é sempre o limite de faltas atingido. Em vez disso, a tabela <code>desligamento_faltas</code> grava as faltas que contavam no momento da decisão (<code>desligamentoId</code>, <code>faltaId</code>). É o "motivo" do desligamento que o critério do RF38 pede, com autor e data/hora no <code>DesligamentoPorFaltas</code>.</li>
+<li><strong>Status novo da sessão:</strong> <code>falta_paciente</code>, que se soma ao <code>confirmada</code> e ao <code>cancelada</code> do RF14 e do RF15. A migration segue a regra única da CP4: sai na primeira PR que entrar entre o RF14, o RF15 e o RF34, com os ajustes do código do Ciclo 3.</li>
+<li><strong>Situações novas do caso:</strong> <code>desligado_por_faltas</code> (RF37) e <code>aguardando_vaga</code> (RF38, quando a vaga já foi ocupada).</li>
+<li><strong>Cifrados (RNF51):</strong> o motivo da justificativa e o motivo da reversão podem trazer informação de saúde, como um atestado, por isso ficam em colunas <code>*_cifrado</code>.</li>
+<li><strong>Quem lê o motivo da justificativa:</strong> quem pode justificar a falta (a secretaria e o estagiário e o supervisor responsáveis) e a coordenação, que lê o prontuário (DF32). O texto aparece só na linha da falta, nos dados administrativos e no prontuário; nunca na agenda, na faixa de alertas ou nas listas. A leitura pela secretaria segue o protótipo (prancha 3-2, "atestado médico"), mas, como o motivo pode trazer informação de saúde e o RF55 limita a secretaria a dados administrativos, ela é confirmada com a FBr em 06/11. Até a resposta, vale a regra acima. O motivo da reversão é lido só pela coordenação.</li>
+<li><strong>Motivos fora da auditoria em texto legível:</strong> a coluna <code>dados_novos</code> da auditoria é <code>jsonb</code> sem cifra. Por isso, a justificativa e a reversão gravam na auditoria só <code>justificada: true</code>, <code>motivoInformado: true</code> e os ids das faltas retiradas, nunca o texto do motivo.</li>
+<li><strong>Somente inserção, com campos que só são preenchidos uma vez (RNF32):</strong> nenhuma falta é apagada nem tem a origem trocada. A justificativa e a retirada da contagem preenchem campos vazios com um <code>UPDATE</code> condicional (<code>justificada_em is null</code>, <code>retirada_em is null</code>), e cada operação vai para a auditoria com o estado anterior e o novo.</li>
+<li><strong>Permissões no banco (RNF32):</strong> essas tabelas precisam de <code>UPDATE</code> para a justificativa, a retirada, a reversão e a vaga, então não podem usar o gatilho <code>impedir_alteracao_registro</code>, que também bloqueia <code>UPDATE</code>. Por isso, o <code>usuario-da-aplicacao.sql</code> ganha um <code>REVOKE DELETE, TRUNCATE</code> explícito em <code>faltas_paciente</code>, <code>desligamentos_por_faltas</code>, <code>desligamento_faltas</code> e <code>vagas_liberadas</code> (hoje o <code>DELETE</code> é concedido em todas as tabelas e só retirado das que têm aquele gatilho). Um gatilho novo, <code>proteger_campos_preenchidos</code>, recusa no <code>UPDATE</code> a troca dos campos de identidade (<code>origem</code>, <code>sessao_id</code>, <code>caso_id</code>, <code>ciclo_atendimento</code>, <code>registrada_*</code>, <code>decidido_*</code>, <code>liberada_em</code>) e de qualquer campo de preenchimento único que já esteja preenchido (<code>justificada_*</code>, <code>retirada_*</code>, <code>revertido_*</code>, <code>ocupada_*</code>, <code>encerrada_em</code>). A <code>desligamento_faltas</code> é só de inserção e usa o <code>impedir_alteracao_registro</code>.</li>
+</ul>
+<p><strong>Contagem (RF35):</strong> <code>FaltasService.contar(casoId)</code> conta as <code>FaltaPaciente</code> do ciclo vigente do caso com <code>retiradaEm</code> vazio. Ela aparece no prontuário (RF27) e nos dados administrativos da secretaria, como "Faltas no ciclo: N de 2". Ela não aparece na agenda nem na resposta que a alimenta, porque o RNF13 limita cada sessão da agenda ao nome do paciente, à data, ao início, ao término e ao status.</p>
+<hr />
+<h3 id="rf34-registrar-falta-do-paciente-na-sessao-150">RF34 — Registrar falta do paciente na sessão (<a href="https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/issues/150">#150</a>)<a class="headerlink" href="#rf34-registrar-falta-do-paciente-na-sessao-150" title="Link para esta seção">#</a></h3>
+<p><strong>Rotas</strong> (módulo <code>assiduidade</code>):</p>
+<ul>
+<li><code>POST /sessoes/:id/falta</code>: secretaria ou estagiário responsável pelo caso. Recebe, opcionalmente, <code>justificada</code> e <code>motivo</code>, para quem já tem o comprovante na hora.</li>
+<li><code>POST /faltas/:id/justificativa</code>: secretaria, estagiário responsável ou supervisor responsável. Recebe o <code>motivo</code>, obrigatório. É a justificativa feita depois, a partir da lista de sessões do paciente: nos dados administrativos, para a secretaria, e no prontuário, para o estagiário e o supervisor.</li>
+</ul>
+<pre class="mermaid"><code>sequenceDiagram
+    actor U as Secretaria ou estagiário responsável
+    participant A as API (assiduidade)
+    participant DB as Banco
+    U-&gt;&gt;A: POST /sessoes/:id/falta, com justificativa opcional
+    A-&gt;&gt;DB: confere o perfil e o vínculo vigente com o caso
+    alt sem permissão
+        A--&gt;&gt;U: 403, sem dado da sessão
+    else sessão futura, já cancelada, já realizada ou já com falta
+        A--&gt;&gt;U: 422 com o motivo
+    else justificada sem motivo
+        A--&gt;&gt;U: 400 com o campo indicado
+    else sessão presencial já passada, agendada ou confirmada
+        A-&gt;&gt;DB: transação com status falta_paciente e FaltaPaciente (origem falta)
+        A-&gt;&gt;DB: auditoria (RNF10, RNF32)
+        A-&gt;&gt;DB: conta as faltas do ciclo (RF35)
+        A--&gt;&gt;U: falta registrada, com a contagem e o aviso ou o alerta
+    end</code></pre>
+<table>
+<thead>
+<tr>
+<th>Regra</th>
+<th>Critério de aceitação</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Só aceita sessão com <code>inicio</code> no passado e status <code>agendada</code> ou <code>confirmada</code>; a confirmação do RF14 não muda nada</td>
+<td>Falta em sessão presencial já passada, sem realização nem cancelamento, confirmada ou não, muda o status para "falta do paciente", com data, horário e usuário</td>
+</tr>
+<tr>
+<td><code>422</code> para <code>cancelada</code>, <code>realizada</code> ou <code>falta_paciente</code></td>
+<td>Sessão cancelada ou realizada não aceita falta</td>
+</tr>
+<tr>
+<td>A transação grava a <code>FaltaPaciente</code>, que é o evento consumido pela contagem</td>
+<td>Cada falta gera o evento da contagem (RF35)</td>
+</tr>
+<tr>
+<td>A justificativa preenche <code>justificada</code>, o motivo cifrado, <code>justificadaPor</code> e <code>justificadaEm</code>, e não muda a origem nem a contagem</td>
+<td>A secretaria ou os responsáveis justificam, na hora ou depois, com autor e data/hora</td>
+</tr>
+<tr>
+<td><code>403</code> para quem não é a secretaria nem o estagiário ou o supervisor responsáveis</td>
+<td>Outro usuário não justifica a falta</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Telas:</strong> diálogo "Registrar falta do paciente" na agenda e na lista de sessões, com a caixa "Falta justificada" e o campo de motivo, que só aparece quando ela é marcada; "Marcar como justificada" na linha da falta, depois. Na agenda, a sessão com falta mostra só o status "Falta do paciente": quem registrou e quando aparecem na linha da falta, nos dados administrativos e no prontuário, e não na agenda nem na resposta que a alimenta (RNF13). A prancha 3-1 mostra "Registrada por…" na agenda; a implementação segue o RNF13, e a prancha é ajustada. Protótipo: <a href="../prototipos-ciclo-4/#rf34">prancha 3-1</a>.</p>
+<p><strong>Dados de teste:</strong> uma sessão das 14h00 de ontem confirmada e outra não confirmada (aceitam a falta); uma sessão de amanhã, uma cancelada e uma realizada (recusam); uma falta justificada no registro e outra justificada depois; um estagiário e um supervisor sem vínculo com o caso tentando justificar (403); a resposta da agenda e a auditoria de uma falta justificada, sem o autor da falta na agenda e sem o texto do motivo na auditoria; o <code>clinica_app</code> tentando apagar uma falta e trocar a origem dela (recusado pelo banco).</p>
+<hr />
+<h3 id="rf35-contabilizar-faltas-do-paciente-no-ciclo-151">RF35 — Contabilizar faltas do paciente no ciclo (<a href="https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/issues/151">#151</a>)<a class="headerlink" href="#rf35-contabilizar-faltas-do-paciente-no-ciclo-151" title="Link para esta seção">#</a></h3>
+<p><strong>Sem rota própria.</strong> A contagem é o <code>FaltasService.contar(casoId)</code>, chamado pelas telas que mostram o paciente e no fim das transações que criam ou retiram falta. A falta vem de dois lugares: do RF34 e do cancelamento do RF15, que chama <code>FaltasService.registrarCancelamentoForaDoPrazo(tx, sessaoId, autor)</code> na mesma transação, quando classifica o cancelamento como fora do prazo. O <code>tx</code> é a transação do RF15, e o <code>autor</code> é o usuário logado (secretaria) ou <code>{ pacientePeloLink: true }</code> no cancelamento pelo link. A assinatura é combinada entre a PR do RF15 (Nicolas) e a do RF35.</p>
+<pre class="mermaid"><code>sequenceDiagram
+    participant F as RF34 ou RF15
+    participant S as FaltasService
+    participant DB as Banco
+    F-&gt;&gt;S: falta ou cancelamento fora do prazo, na mesma transação
+    S-&gt;&gt;DB: FaltaPaciente com a origem
+    S-&gt;&gt;DB: conta as faltas do ciclo com retiradaEm vazio
+    alt contagem = 1
+        S--&gt;&gt;F: aviso de que uma nova falta resulta em desligamento
+        Note over S: o aviso fica visível para a secretaria e o estagiário pela consulta de alertas, mesmo quando quem causou a falta foi o paciente pelo link
+    else contagem &gt;= 2
+        S--&gt;&gt;F: limite atingido (alerta do RF36)
+    end</code></pre>
+<table>
+<thead>
+<tr>
+<th>Regra</th>
+<th>Critério de aceitação</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Conta as faltas do <code>cicloAtendimento</code> vigente do caso, consecutivas ou não, e nunca zera por sessão realizada</td>
+<td>A 1ª falta ou o 1º cancelamento fora do prazo leva a 1 e avisa; uma nova falta, mesmo depois de sessões realizadas, leva a 2 e dispara o alerta</td>
+</tr>
+<tr>
+<td>Só o RF15 com classificação <code>fora_do_prazo</code> cria falta; <code>no_prazo</code> e <code>administrativo</code> não chamam o serviço</td>
+<td>Cancelamento no prazo e cancelamento administrativo não alteram a contagem</td>
+</tr>
+<tr>
+<td>A falta de confirmação (RF14) não cria registro nenhum</td>
+<td>Quem não confirmou, mas compareceu, não ganha falta</td>
+</tr>
+<tr>
+<td>O aviso da 1ª falta não depende de quem chamou: o <code>GET /faltas/alertas</code> do RF36 devolve também os casos <code>em_atendimento</code> com contagem 1, como aviso, para a secretaria e o estagiário responsável. Assim, a falta que vem do cancelamento pelo link, feito pelo paciente, também avisa os dois</td>
+<td>Na 1ª falta, a secretaria e o estagiário veem o aviso, qualquer que seja a origem</td>
+</tr>
+<tr>
+<td><code>justificada</code> não entra no filtro da contagem</td>
+<td>A falta justificada continua contando</td>
+</tr>
+<tr>
+<td>O filtro usa o ciclo vigente do caso</td>
+<td>Num novo ciclo, a contagem começa em zero</td>
+</tr>
+<tr>
+<td>A reversão (RF38) preenche <code>retiradaEm</code> e <code>retiradaPor</code> só nas faltas indicadas</td>
+<td>Na reversão, as faltas indicadas deixam de contar e continuam no histórico, com autor e data/hora</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Onde o aviso da 1ª falta aparece:</strong> na mesma faixa da área interna do RF36, com ícone de alerta em âmbar e o texto "1 falta no ciclo: uma nova falta resulta em desligamento", o nome do paciente e o link para ele. Ela aparece para a secretaria e para o estagiário responsável a partir do registro da falta e some quando a próxima sessão do paciente termina (realizada, com falta ou cancelada), quando o caso deixa de estar <code>em_atendimento</code> ou quando a contagem muda. Assim, o aviso chega aos dois mesmo quando a falta veio do cancelamento pelo link, sem ninguém abrir a ficha. Depois disso, o aviso continua só no contador da ficha e do prontuário. Quem registra a falta pelo RF34 também vê o aviso na resposta, logo depois do registro.</p>
+<p><strong>Telas:</strong> contador "Faltas no ciclo: N de 2", no prontuário e nos dados administrativos (fora da agenda, pelo RNF13), com o histórico do que conta e do que não conta e a falta retirada marcada como desconsiderada. Protótipo: <a href="../prototipos-ciclo-4/#rf35">prancha 3-2</a>.</p>
+<p><strong>Dados de teste:</strong> paciente sem falta; com uma falta; com uma falta, duas sessões realizadas e uma nova falta; cancelamentos no prazo (2 horas antes), fora do prazo (30 minutos antes) e administrativo (10 minutos antes); paciente que não confirmou e compareceu; falta justificada; paciente no ciclo 2 com duas faltas no ciclo 1; um cancelamento fora do prazo pelo link (falta com <code>registradaPeloPaciente</code>, sem <code>registradaPor</code>, e aviso na faixa da secretaria e do estagiário); o aviso sumindo depois da sessão seguinte.</p>
+<hr />
+<h3 id="rf36-emitir-alerta-de-limite-de-faltas-atingido-152">RF36 — Emitir alerta de limite de faltas atingido (<a href="https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/issues/152">#152</a>)<a class="headerlink" href="#rf36-emitir-alerta-de-limite-de-faltas-atingido-152" title="Link para esta seção">#</a></h3>
+<p><strong>Rota:</strong> <code>GET /faltas/alertas</code> (secretaria e coordenação: todos os casos; estagiário: só os casos dele). Devolve os casos <code>em_atendimento</code> com contagem 2 ou mais, sem desligamento vigente no ciclo, com o nome do paciente e a data da última falta, sem o motivo das faltas. À parte, para a secretaria e o estagiário responsável, devolve os avisos da 1ª falta (contagem 1) do RF35, enquanto valem as condições de exibição definidas no RF35.</p>
+<p><strong>O alerta não tem tabela:</strong> ele existe enquanto a condição vale. Por isso, some sozinho quando o desligamento é registrado (o caso deixa de estar <code>em_atendimento</code>) e não volta depois de uma reversão que deixe a contagem abaixo de 2.</p>
+<pre class="mermaid"><code>sequenceDiagram
+    actor U as Secretaria, coordenação ou estagiário
+    participant W as Web (área interna)
+    participant A as API (assiduidade)
+    U-&gt;&gt;W: qualquer página da área interna
+    W-&gt;&gt;A: GET /faltas/alertas
+    A--&gt;&gt;W: casos com limite atingido, conforme o perfil
+    W--&gt;&gt;U: faixa vermelha "Limite de faltas atingido" com o nome do paciente</code></pre>
+<table>
+<thead>
+<tr>
+<th>Regra</th>
+<th>Critério de aceitação</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Contagem &gt;= 2 e caso <code>em_atendimento</code></td>
+<td>Na 2ª falta do ciclo, consecutiva ou não, o alerta aparece para a secretaria, o estagiário responsável e a coordenação</td>
+</tr>
+<tr>
+<td>O caso desligado sai do filtro</td>
+<td>O registro do desligamento (RF37) remove o alerta</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Telas (RNF33):</strong> faixa no topo da área interna, carregada pelo layout em toda página, com ícone, o texto "Limite de faltas atingido", o nome do paciente e o link para o paciente; <code>role="status"</code>, para o leitor de tela anunciar sem roubar o foco; o vermelho nunca é o único sinal. A consulta fica em cache no navegador (TanStack Query, como o total da triagem no menu), para não pesar na navegação. O menu não tem contador de faltas hoje (<code>menu.ts</code>): se a FBr quiser um, ele é novo e fica com o RF36. Protótipo: <a href="../prototipos-ciclo-4/#rf36">prancha 3-3</a>.</p>
+<p><strong>Dados de teste:</strong> um paciente com 1 falta (sem alerta) e outro com 2 (com alerta), vistos pelos três perfis; a coordenação com três pacientes no limite; um estagiário que não é o responsável (não vê o alerta do paciente); o mesmo paciente depois do desligamento (o alerta some).</p>
+<hr />
+<h3 id="rf37-desligar-paciente-por-faltas-e-liberar-vaga-153">RF37 — Desligar paciente por faltas e liberar vaga (<a href="https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/issues/153">#153</a>)<a class="headerlink" href="#rf37-desligar-paciente-por-faltas-e-liberar-vaga-153" title="Link para esta seção">#</a></h3>
+<p><strong>Rotas:</strong></p>
+<ul>
+<li><code>POST /casos/:id/desligamento</code> (secretaria ou coordenação), com a <code>dataDecisao</code>. Não recebe motivo: o motivo é o limite atingido, e as faltas que o fundamentam são gravadas na <code>desligamento_faltas</code>.</li>
+<li><code>GET /vagas/liberadas</code> (coordenação: todas; supervisor: as vagas com <code>supervisorId</code> igual ao dele, isto é, as liberadas em casos que ele supervisionava), com o próximo inscrito elegível da fila, que vem do RF7. A vaga guarda o supervisor do caso desligado, e não depende da definição de "estagiário do supervisor", porque o estagiário pode ficar sem caso vigente depois do desligamento.</li>
+</ul>
+<p><strong>Próximo inscrito elegível</strong> (a combinar com o Jônatas na PR do RF7): é o primeiro, na ordem da fila do RF7, entre os casos <code>aguardando_vinculo</code> com atribuição vigente do mesmo supervisor da vaga, porque só esses o supervisor pode vincular ao estagiário dela (RF21). Se não houver nenhum, vem vazio, e a tela orienta pedir à coordenação a distribuição do próximo da fila (RF20). O método é <code>FilaService.proximoElegivel(supervisorId)</code>. Os campos são os mesmos da lista do RF18, que o supervisor já consulta: número da inscrição, nome, prioridade e entrada na fila, sem a queixa (RNF17). A cor da prioridade aparece porque o RF18 já a mostra ao supervisor.</p>
+<pre class="mermaid"><code>sequenceDiagram
+    actor U as Secretaria ou coordenação
+    participant A as API (assiduidade)
+    participant F as Fila (RF7)
+    participant DB as Banco
+    U-&gt;&gt;A: POST /casos/:id/desligamento
+    A-&gt;&gt;DB: transação: trava o caso (FOR UPDATE) e confere o perfil e a contagem do ciclo
+    alt sem alerta pendente (contagem menor que 2, caso fora de em_atendimento ou desligamento vigente no ciclo)
+        A--&gt;&gt;U: 422 paciente sem alerta de limite pendente
+    else limite atingido
+        A-&gt;&gt;DB: DesligamentoPorFaltas, faltas que o fundamentam e caso desligado_por_faltas
+        A-&gt;&gt;DB: encerra o vínculo vigente com o estagiário
+        A-&gt;&gt;DB: cancela as sessões futuras (classificação desligamento, ligadas ao desligamento, sem falta)
+        A-&gt;&gt;DB: VagaLiberada do estagiário e do supervisor
+        A-&gt;&gt;DB: auditoria (RNF10, RNF32)
+        A-&gt;&gt;F: próximo inscrito elegível
+        A--&gt;&gt;U: desligado, vaga liberada aguardando realocação
+    end</code></pre>
+<table>
+<thead>
+<tr>
+<th>Regra</th>
+<th>Critério de aceitação</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>422</code> fora da mesma condição do alerta do RF36: contagem do ciclo de 2 ou mais, caso <code>em_atendimento</code> e sem desligamento vigente no ciclo. A conferência acontece depois de travar o caso com <code>FOR UPDATE</code>, como o <code>vincularEstagiario</code> faz; assim, dois pedidos simultâneos não geram dois desligamentos nem duas vagas</td>
+<td>Paciente sem alerta pendente não pode ser desligado por faltas</td>
+</tr>
+<tr>
+<td>O desligamento grava, na <code>desligamento_faltas</code>, as faltas que contavam na decisão</td>
+<td>A decisão fica registrada com data, responsável e as faltas que a fundamentaram</td>
+</tr>
+<tr>
+<td>Uma transação só: desligamento, situação do caso, vínculo encerrado, sessões futuras canceladas e vaga liberada</td>
+<td>A confirmação registra a decisão com data e responsável, muda o status, encerra o vínculo, cancela as sessões futuras e sinaliza a vaga, com o próximo inscrito da fila</td>
+</tr>
+<tr>
+<td>As sessões canceladas pelo desligamento não geram falta nem notificação de ausência do estagiário</td>
+<td>O desligamento não aumenta a contagem nem conta como falta do estagiário</td>
+</tr>
+<tr>
+<td><code>VagaLiberada.ocupadaEm</code> só é preenchido pelo RF21, quando o supervisor vincula um novo paciente ao mesmo estagiário</td>
+<td>Nenhum inscrito é vinculado sozinho; a vaga só deixa de estar pendente com o novo vínculo</td>
+</tr>
+<tr>
+<td>Tudo na mesma transação, sem fila de mensagens nem tarefa agendada</td>
+<td>A vaga aparece como liberada em até 5 segundos (RNF34)</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Mudanças no código do Ciclo 3 que a CP9 faz</strong> (<code>casos.service.ts</code>):</p>
+<ol>
+<li><strong>Vínculo ocupa a vaga:</strong> ao registrar um vínculo novo pelo RF21, o <code>CasosService</code> procura a <code>VagaLiberada</code> aberta mais antiga do mesmo estagiário e preenche <code>ocupadaEm</code> e <code>ocupadaPorVinculoId</code>. Os vínculos criados pela transferência (RF25) e pela reversão (RF38) não ocupam vaga: o da reversão volta para a própria vaga do desligamento, que é encerrada, e o da transferência não é um paciente novo da fila. Por isso, o método recebe a origem do vínculo, e só a do RF21 ocupa vaga.</li>
+<li><strong>O RF21 recusa o caso desligado:</strong> hoje o <code>vincularEstagiario</code> só recusa <code>encerrado</code>. Num caso <code>desligado_por_faltas</code>, a atribuição do supervisor continua vigente, e um vínculo novo devolveria o caso a <code>em_atendimento</code> sem registrar reversão, contornando o RF38. O RF21 passa a responder <code>409</code> "Caso desligado por faltas: só a coordenação reverte (RF38)". O caso <code>aguardando_vaga</code> continua aceitando o vínculo, porque a reversão já foi feita pela coordenação (veja o RF38).</li>
+<li><strong>Caso desligado fora do limite do supervisor (DF17):</strong> o <code>casosAtivos</code> conta todo caso não <code>encerrado</code>. Ele passa a excluir também <code>desligado_por_faltas</code>, que não está em atendimento. O caso continua em "Meus casos" do supervisor, como na prancha 3-4, com a situação "Desligado por faltas". O <code>aguardando_vaga</code> continua contando, porque o caso volta ao atendimento.</li>
+</ol>
+<p><strong>Telas:</strong> botão "Desligar por faltas" só no paciente com alerta, com diálogo de confirmação que lista as sessões futuras que serão canceladas; cartão "Vaga liberada aguardando realocação" na distribuição (coordenação) e em "Meus casos" (supervisor), com o próximo inscrito elegível. Protótipo: <a href="../prototipos-ciclo-4/#rf37">prancha 3-4</a>.</p>
+<p><strong>Aviso ao paciente:</strong> o RF37 não pede aviso, e nenhuma mensagem é enviada quando as sessões futuras são canceladas pelo desligamento. Como o paciente pode ir à clínica para uma sessão que não existe mais, a pergunta foi levada à FBr em 06/11: a secretaria avisa por fora do sistema, ou o aviso vira requisito? Até a resposta, a tela de confirmação do desligamento lembra a secretaria de avisar o paciente.</p>
+<p><strong>Dados de teste:</strong> um paciente com 2 faltas e duas sessões futuras; um paciente com 1 falta (recusado); dois pedidos de desligamento simultâneos do mesmo caso (um aceito, o outro 422); uma fila com o próximo inscrito elegível do mesmo supervisor, uma com inscrito só de outro supervisor (vem vazio) e uma fila vazia; o desligamento pela secretaria e pela coordenação; a vaga vista pelo supervisor do estagiário e por outro supervisor (que não vê); o supervisor tentando vincular estagiário ao caso desligado (409); um supervisor com 50 casos, um deles desligado (pode receber um novo caso).</p>
+<hr />
+<h3 id="rf38-reverter-desligamento-de-paciente-por-faltas-154">RF38 — Reverter desligamento de paciente por faltas (<a href="https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/issues/154">#154</a>)<a class="headerlink" href="#rf38-reverter-desligamento-de-paciente-por-faltas-154" title="Link para esta seção">#</a></h3>
+<p><strong>Rota:</strong> <code>POST /desligamentos/:id/reversao</code> (só coordenação), com o <code>motivo</code>, obrigatório, e a lista <code>faltasRetiradas</code>, com os ids das faltas do ciclo que deixam de contar (RF35). A lista pode vir vazia ou retirar só parte das faltas. Quando a <strong>contagem resultante</strong> (as faltas do ciclo que continuam contando depois da retirada) for de 2 ou mais, o paciente voltaria ao atendimento já no limite, com o alerta do RF36 na hora. Isso acontece com a lista vazia, mas também, por exemplo, retirando 1 de 3 faltas. Por isso, sempre que a contagem resultante for de 2 ou mais, a reversão só é aceita com <code>manterContagem: true</code>, e a tela pede a confirmação "O paciente volta com o limite de faltas atingido".</p>
+<pre class="mermaid"><code>sequenceDiagram
+    actor C as Coordenação
+    participant A as API (assiduidade)
+    participant DB as Banco
+    C-&gt;&gt;A: POST /desligamentos/:id/reversao, com motivo e faltas retiradas
+    alt outro perfil
+        A--&gt;&gt;C: 403
+    else sem motivo, ou falta de outro caso ou ciclo
+        A--&gt;&gt;C: 400 com o campo indicado
+    else desligamento já revertido
+        A--&gt;&gt;C: 409
+    else contagem resultante de 2 ou mais, sem manterContagem
+        A--&gt;&gt;C: 422 com a contagem resultante, pedindo a confirmação
+    else reversão válida
+        A-&gt;&gt;DB: transação: trava o caso, marca o desligamento como revertido, com autor, data e motivo cifrado
+        A-&gt;&gt;DB: retira da contagem as faltas indicadas
+        alt vaga livre e estagiário com conta ativa
+            A-&gt;&gt;DB: novo vínculo vigente com o mesmo estagiário e caso em_atendimento
+            A-&gt;&gt;DB: encerra a VagaLiberada
+            A--&gt;&gt;C: revertido, com as sessões canceladas a reagendar
+        else vaga ocupada por outro paciente, ou estagiário desativado
+            A-&gt;&gt;DB: caso aguardando_vaga, sem mexer no vínculo novo, e encerra a VagaLiberada se ainda estiver aberta
+            A--&gt;&gt;C: revertido, aguardando um estagiário pelo supervisor ou pela coordenação
+        end
+        A-&gt;&gt;DB: auditoria (RNF10, RNF32)
+    end</code></pre>
+<table>
+<thead>
+<tr>
+<th>Regra</th>
+<th>Critério de aceitação</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Vaga sem <code>ocupadaEm</code> e estagiário com conta ativa: o caso volta para <code>em_atendimento</code> com um novo <code>VinculoEstagiario</code> do mesmo estagiário; o vínculo antigo continua no histórico</td>
+<td>Com a vaga livre, o paciente volta ao atendimento com o mesmo estagiário, a sinalização sai e as sessões canceladas aparecem para reagendar</td>
+</tr>
+<tr>
+<td>Vaga com <code>ocupadaEm</code>, ou estagiário desativado (RF54, o RF21 exige conta ativa): o vínculo do novo paciente não é tocado, e o caso fica <code>aguardando_vaga</code></td>
+<td>Com a vaga já ocupada, o novo paciente continua e a reversão fica pendente de tratamento manual</td>
+</tr>
+<tr>
+<td>Saída do <code>aguardando_vaga</code>: o caso mantém a atribuição do supervisor e aparece em "Meus casos" dele, com a ação "Vincular estagiário" (RF21, que aceita essa situação). Se o supervisor também precisar mudar, a coordenação usa a transferência (RF25). O caso aparece ainda numa seção "Reversões aguardando estagiário" na Distribuição, para a coordenação acompanhar. O <code>distribuir</code> (RF20) não é usado, porque o caso já tem supervisor</td>
+<td>A reversão pendente tem dono e lugar para ser resolvida</td>
+</tr>
+<tr>
+<td>Sessões a reagendar: as sessões futuras canceladas pelo desligamento ficam ligadas a ele (<code>CancelamentoSessao.desligamentoId</code>). Depois da reversão, elas aparecem como "A reagendar" na agenda da secretaria e na lista de sessões do prontuário do estagiário, até o caso ter uma sessão nova agendada (RF10) ou até a data de cada uma passar</td>
+<td>A secretaria e o estagiário veem as sessões que precisam remarcar</td>
+</tr>
+<tr>
+<td><code>@Perfis('coordenacao')</code></td>
+<td>Outro perfil não reverte</td>
+</tr>
+<tr>
+<td>O desligamento recebe os campos da reversão, e nenhum registro é apagado. O motivo do desligamento é o limite atingido, com as faltas da <code>desligamento_faltas</code>; o da reversão é digitado e cifrado</td>
+<td>O desligamento e a reversão continuam na auditoria, cada um com autor, data/hora e motivo</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Telas:</strong> diálogo "Reverter desligamento" com o motivo obrigatório e a lista das faltas do ciclo, cada uma com uma caixa "Deixa de contar"; depois, a lista das sessões canceladas a reagendar, com o atalho para o agendamento. A escolha das faltas é uma proposta levada à FBr em 06/11. Protótipo: <a href="../prototipos-ciclo-4/#rf38">prancha 3-5</a>.</p>
+<p><strong>Dados de teste:</strong> um desligamento com a vaga livre e duas sessões canceladas (aparecem "A reagendar" para a secretaria e o estagiário); um com a vaga já ocupada por outro paciente; um com o estagiário desativado depois do desligamento (fica <code>aguardando_vaga</code>); um caso <code>aguardando_vaga</code> vinculado pelo supervisor; uma reversão sem motivo (recusada); uma reversão com uma falta retirada de duas (a contagem volta a 1); uma com uma falta retirada de três, sem e com <code>manterContagem</code> (422 e aceita); tentativas da secretaria, do supervisor e do estagiário (403); uma segunda reversão do mesmo desligamento (409).</p>
+<hr />
+<p><strong>Decisões de projeto da CP9</strong> (a conferir na inspeção):</p>
+<ol>
+<li><strong>Contagem e alerta calculados, sem tabela.</strong> Assim, não há como a contagem divergir das faltas, e a reversão ajusta tudo só preenchendo <code>retiradaEm</code>. O custo é uma consulta por tela, coberta por um índice em <code>(caso_id, ciclo_atendimento)</code> na <code>faltas_paciente</code>.</li>
+<li><strong>Cancelamento fora do prazo vira <code>FaltaPaciente</code>.</strong> O RF15 (Nicolas) chama o <code>FaltasService</code> na mesma transação do cancelamento. A interface entre os dois é só esse método, combinado entre as duas PRs.</li>
+<li><strong>Sessões canceladas pelo desligamento.</strong> Ficam <code>cancelada</code>, com a classificação <code>desligamento</code>, que não é nenhuma das três do RF15. Elas não contam como falta do paciente nem do estagiário.</li>
+<li><strong>Novo vínculo na reversão, em vez de reativar o antigo.</strong> Preserva o histórico de responsáveis do RF27 e respeita o índice de um vínculo vigente por caso.</li>
+<li><strong>Situação <code>aguardando_vaga</code>.</strong> O RF38 não diz em que situação o caso fica quando a vaga já foi ocupada. O protótipo mostra "aguarda vaga". O caso mantém o supervisor, que vincula um estagiário quando houver vaga (RF21); se o supervisor também mudar, a coordenação usa a transferência (RF25). A mesma situação vale quando o estagiário foi desativado depois do desligamento.</li>
+<li><strong>Fila (RF7) ainda não existe.</strong> Até o RF7 entrar, o <code>GET /vagas/liberadas</code> devolve o próximo inscrito elegível como vazio, e a tela mostra "Fila de espera disponível com o RF7".</li>
+<li><strong>Motivo do desligamento.</strong> O desligamento não tem motivo digitado: o motivo é o limite atingido, registrado com as faltas que contavam na decisão (<code>desligamento_faltas</code>).</li>
+</ol>
+<p><strong>Dependências e riscos:</strong> a migration dos status sai na primeira PR que entrar entre o RF14, o RF15 (Nicolas) e o RF34, pela regra única da CP4. Se o RF34 entrar antes, ele leva a migration e os ajustes; até o RF14 e o RF15 entrarem, os testes do RF34 criam as sessões confirmadas e canceladas direto no banco, como no Ciclo 3. O RF7 (Jônatas) traz a fila. Nenhuma integração externa: não há e-mail, SMS nem PDF na CP9.</p>
+<hr />
+<h2 id="roteiro-da-inspecao-de-design">Roteiro da inspeção de design<a class="headerlink" href="#roteiro-da-inspecao-de-design" title="Link para esta seção">#</a></h2>
+<p>O mesmo do <a href="../projeto-features-ciclo-3/#roteiro-da-inspecao-de-design">Ciclo 3</a>: o Líder de Feature faz a inspeção com o revisor da issue e registra o resultado num comentário da issue.</p>
+<p>Como o Gabriel escreveu o projeto, ele não inspeciona nenhuma feature deste ciclo, nem as que tem como revisor na issue (RF11, RF14, RF15, RF16 e RF69). Nelas, o Líder faz a inspeção com outro integrante, definido na reunião da equipe de 05/11/2026: o Jônatas, com o Nicolas (RF11, RF14, RF15 e RF16), e a Maria Clara, com o Luís (RF69). Nas features do Gabriel (RF34 a RF38), a inspeção é do Nicolas, o revisor das issues.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Voltar para o topo
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    
+      
+      <nav class="md-footer__inner md-grid" aria-label="Rodapé" >
+        
+          
+          <a href="../prototipos-ciclo-3/" class="md-footer__link md-footer__link--prev" aria-label="Anterior: Protótipos do Ciclo 3">
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+            </div>
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Anterior
+              </span>
+              <div class="md-ellipsis">
+                Protótipos do Ciclo 3
+              </div>
+            </div>
+          </a>
+        
+        
+          
+          <a href="../prototipos-ciclo-4/" class="md-footer__link md-footer__link--next" aria-label="Próximo: Protótipos do Ciclo 4">
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Próximo
+              </span>
+              <div class="md-ellipsis">
+                Protótipos do Ciclo 4
+              </div>
+            </div>
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11z"/></svg>
+            </div>
+          </a>
+        
+      </nav>
+    
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      Clínica Escola FBr · Documentação acadêmica do projeto · 2026
+    </div>
+  
+  
+    Última publicação: 06/11/2026 ·
+    <a href="../../unidade-1/gestao/boas-praticas-github/#publicacao-da-documentacao">como o site é publicado</a> ·
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.tabs", "navigation.tabs.sticky", "navigation.sections", "navigation.path", "navigation.top", "navigation.footer", "navigation.tracking", "toc.follow", "search.suggest", "search.highlight", "content.code.copy"], "search": "../../assets/javascripts/workers/search.a7633da7.min.js", "tags": null, "translations": {"clipboard.copied": "Copiado para \u00e1rea de transfer\u00eancia", "clipboard.copy": "Copiar para \u00e1rea de transfer\u00eancia", "search.result.more.one": "mais 1 nesta p\u00e1gina", "search.result.more.other": "# mais nesta p\u00e1gina", "search.result.none": "Nenhum documento encontrado", "search.result.one": "1 documento encontrado", "search.result.other": "# documentos encontrados", "search.result.placeholder": "Digite para iniciar a busca", "search.result.term.missing": "Ausente", "select.version": "Selecione a vers\u00e3o"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.c21346df.min.js"></script>
+      
+        <script src="../../assets/javascripts/extra.js"></script>
+      
+        <script src="../../assets/javascripts/reading.js"></script>
+      
+        <script src="../../assets/javascripts/matriz.js"></script>
+      
+        <script src="../../assets/javascripts/melhorias.js"></script>
+      
+    
+  </body>
+</html>
