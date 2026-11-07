@@ -1,19 +1,35 @@
+---
+render_macros: true
+---
+
 # Unidade 3 — Construção do MVP
 
 Visão geral da Unidade 3: a construção das primeiras features do MVP nos Ciclos 3, 4 e 5, com a representação, a verificação e a validação de cada feature conduzidas pelo DoR e pelo DoD, até a entrega da unidade em 17/11/2026.
 
 !!! info "Andamento do projeto"
-    O cronograma geral e o backlog, com o status de cada ciclo, ficam na Visão geral do projeto: [Cronograma geral](../visao-geral/cronograma.md) e [Features e backlog](../visao-geral/backlog.md). O status de cada feature fica na sua issue e no [Project do repositório](https://github.com/orgs/mdsreq-fga-unb/projects/124).
+    Esta página é o registro da Unidade 3. A referência vigente (requisitos, backlog e processo) está nas outras partes do menu, explicadas em [Organização e atualização](../organizacao-e-atualizacao.md). O cronograma geral e o backlog, com o status de cada ciclo, ficam na Visão geral do projeto: [Cronograma geral](../visao-geral/cronograma.md) e [Features e backlog](../visao-geral/backlog.md).
 
 ## Ciclos da unidade
 
-| Ciclo | Período | Foco | Itens do MVP |
-| --- | --- | --- | --- |
-| Ciclo 3 | 14/10 a 27/10/2026 | Base técnica, acesso, inscrição, triagem, distribuição de casos, agendamento e prontuário | 13 |
-| Ciclo 4 | 28/10 a 10/11/2026 | Continuação dos conjuntos iniciados no Ciclo 3 e novos conjuntos do MVP | 20 |
-| Ciclo 5 | 11/11 a 17/11/2026 | Consolidação dos incrementos e entrega da Unidade 3 | 7 |
+| Ciclo | Período | Foco |
+| --- | --- | --- |
+| Ciclo 3 | 14/10 a 27/10/2026 | Base técnica, acesso, inscrição, triagem, distribuição de casos, agendamento e prontuário |
+| Ciclo 4 | 28/10 a 10/11/2026 | Continuação dos conjuntos iniciados no Ciclo 3 e novos conjuntos do MVP |
+| Ciclo 5 | 11/11 a 17/11/2026 | Consolidação dos incrementos e entrega da Unidade 3 |
 
 Os itens de cada ciclo, com o Líder de Feature e as dependências, estão em [Features e backlog](../visao-geral/backlog.md). Cada feature é acompanhada na sua issue do GitHub, que traz os checklists do [DoR e do DoD](../unidade-2/requisitos/dor-dod.md).
+
+## O que foi realizado
+
+Estado de cada feature dos Ciclos 3 e 4 no marco do FDD que ela alcançou, copiado das issues para o [catálogo de requisitos](../unidade-2/requisitos/backlog.md#catalogo-de-requisitos) (atualizado em {{ catalogo_atualizado_em }}). A partir de "Promovida para a versão integrada", a feature está na `development`, publicada no ambiente de validação da FBr.
+
+{{ tabela_andamento(3, 4) }}
+
+As evidências de cada marco ficam na issue da feature:
+
+- **Inspeção de design e de código:** comentários "Inspeção de design (DoD 1)" e a aprovação da pull request; o resumo está em [Execução do processo](../visao-geral/execucao-do-processo.md#revisoes-do-modelo).
+- **Testes:** cada pull request roda os testes unitários, de integração e ponta a ponta no CI, e o merge roda de novo na `development`. Os testes citam o RF e o RNF no nome, e o robô de acompanhamento usa os relatórios para marcar a verificação dos RNFs de cada feature (D4.5), como explicado em [Boas práticas no GitHub](../unidade-1/gestao/boas-praticas-github.md#verificacao-dos-rnfs-d45).
+- **Demonstração e aceite:** a demonstração do Ciclo 3 à FBr está na [ata de 06/11/2026](reunioes.md#reuniao-de-validacao-do-ciclo-3-com-a-fbr); o aceite formal é pedido por escrito e registrado com o comando `/aceite` na issue.
 
 ## Conteúdo da unidade
 

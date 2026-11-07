@@ -4,6 +4,9 @@ render_macros: true
 
 # 10. Backlog de Produto
 
+!!! abstract "Na estrutura de requisitos"
+    Esta página tem as regras de priorização e de recorte do MVP e o catálogo de requisitos, de onde saem as tabelas desta página, do backlog e da situação por ciclo. Como as informações se ligam e são atualizadas: [Organização e atualização](../../organizacao-e-atualizacao.md).
+
 ## 10.1 Backlog do Produto
 
 O backlog reúne os **itens de trabalho** do produto. Cada item corresponde a uma **feature**, que declara um requisito funcional (RF) e é restringida pelos RNFs da classificação da seção [10.2.3.1](#10231-classificacao-dos-requisitos-nao-funcionais-para-o-mvp). O pertencimento ao MVP vem da priorização da seção [10.2](#102-priorizacao-e-recorte-do-mvp), validada com a Clínica Escola FBr, e das decisões posteriores do [Registro de Decisões com a FBr](decisoes-fbr.md).

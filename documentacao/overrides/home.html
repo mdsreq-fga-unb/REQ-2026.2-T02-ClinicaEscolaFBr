@@ -8,10 +8,10 @@
 {% set path = [
   ("unidade-1/cenario-atual/", "hospital-building", "Entenda o cenário da clínica", "Problema, pessoas envolvidas e contexto do atendimento."),
   ("unidade-1/solucao-proposta/", "lightbulb-on-outline", "Entenda a solução", "Objetivos e proposta de funcionamento do sistema."),
-  ("unidade-1/estrategia-esw/", "map-marker-path", "Veja o plano de desenvolvimento", "Estratégia de engenharia e organização da equipe."),
   ("unidade-2/requisitos/funcionais/", "clipboard-text-outline", "Explore os requisitos", "Funcionalidades e requisitos de qualidade do sistema."),
   ("unidade-2/requisitos/backlog/", "rocket-launch-outline", "Descubra o que entra no MVP", "Critérios de priorização e requisitos da primeira versão."),
   ("visao-geral/cronograma/", "calendar-check-outline", "Acompanhe o andamento", "Cronograma geral e backlog, com o status de cada ciclo e feature."),
+  ("organizacao-e-atualizacao/", "sitemap-outline", "Entenda a organização", "Onde está cada informação, como ela é atualizada e onde ficam as versões entregues."),
 ] %}
 
 {#- Liga o movimento antes da pintura para a entrada não "piscar".
@@ -116,7 +116,10 @@
   <details class="home-more">
     <summary>Outros documentos do projeto</summary>
     <ul>
+      <li><a href="{{ 'organizacao-e-atualizacao/' | url }}">Organização e atualização dos requisitos</a></li>
       <li><a href="{{ 'visao-geral/cronograma/' | url }}">Cronograma geral (com o status de cada ciclo)</a></li>
+      <li><a href="{{ 'visao-geral/execucao-do-processo/' | url }}">Execução do processo (evidências do FDD e da engenharia de requisitos)</a></li>
+      <li><a href="{{ 'unidade-1/estrategia-esw/' | url }}">Estratégia de engenharia de software</a></li>
       <li><a href="{{ 'visao-geral/backlog/' | url }}">Features e backlog (com o status de cada feature)</a></li>
       <li><a href="{{ 'unidade-1/gestao/cronograma/' | url }}">Cronograma da Unidade 1</a></li>
       <li><a href="{{ 'unidade-2/gestao/cronograma/' | url }}">Cronograma da Unidade 2</a></li>

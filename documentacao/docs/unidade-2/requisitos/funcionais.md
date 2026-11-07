@@ -4,6 +4,9 @@ render_macros: true
 
 # 8.1 Lista de Requisitos Funcionais
 
+!!! abstract "Na estrutura de requisitos"
+    Esta página é a fonte única do texto de cada RF, que declara uma feature do FDD: descrição, critérios de aceitação e rastreabilidade até a característica de produto e os objetivos específicos. Os atributos de planejamento (valor, MVP, ciclo, Líder e estado) vêm do catálogo de requisitos. Como as informações se ligam e são atualizadas: [Organização e atualização](../../organizacao-e-atualizacao.md).
+
 Os requisitos funcionais (RFs) são declarados a partir da decomposição das Características de Produto (CPs) em **Features**, seguindo o processo FDD (etapa _Construir a Lista de Features_) e as práticas descritas na [Seção 5 — Engenharia de Requisitos](../../unidade-1/engenharia-requisitos.md). Cada Feature segue o formato `<ação> <resultado> <objeto>` e agrupa um ou mais RFs; cada RF mantém rastreabilidade com a Feature que o declarou e, por meio dela, com a CP de origem, compondo a cadeia **Problema → OG → OEs → CPs → Features → RFs/RNFs** descrita no cronograma da Unidade 2.
 
 **Como ler a rastreabilidade.** A linha de rastreabilidade de cada RF usa quatro tipos de relação, sempre apontando para o RF envolvido, e não para a CP inteira:

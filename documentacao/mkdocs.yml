@@ -105,43 +105,31 @@ markdown_extensions:
 
 nav:
   - Início: index.md
-  - Visão geral do projeto:
+  - Visão geral:
+      - Organização e atualização: organizacao-e-atualizacao.md
       - Cronograma geral: visao-geral/cronograma.md
       - Features e backlog: visao-geral/backlog.md
       - Execução do processo: visao-geral/execucao-do-processo.md
-  - Unidade 1 — Visão e planejamento:
-      - Início da unidade: unidade-1/index.md
-      - 1. Cenário Atual: unidade-1/cenario-atual.md
-      - 2. Solução Proposta: unidade-1/solucao-proposta.md
-      - 3. Intervenção Social: unidade-1/intervencao-social.md
-      - 4. Estratégia de ESW: unidade-1/estrategia-esw.md
-      - 5. Engenharia de Requisitos: unidade-1/engenharia-requisitos.md
-      - Gestão do Projeto:
-          - 6. Cronograma e Entregas: unidade-1/gestao/cronograma.md
-          - 7. Interação entre Equipe e Cliente: unidade-1/gestao/equipe-comunicacao.md
-          - Boas práticas no GitHub: unidade-1/gestao/boas-praticas-github.md
-          - Reuniões: unidade-1/reunioes.md
-      - Estudos e referências:
-          - Estudo de FDD: unidade-1/estudos/fdd.md
-          - Lições Aprendidas: unidade-1/licoes-aprendidas.md
-          - Referências: unidade-1/referencias.md
-  - Unidade 2 — Requisitos e priorização:
-      - Início da unidade: unidade-2/index.md
-      - 8. Requisitos de Software:
+  - Produto e requisitos:
+      - Produto:
+          - 1. Cenário Atual: unidade-1/cenario-atual.md
+          - 2. Solução Proposta: unidade-1/solucao-proposta.md
+          - 3. Intervenção Social: unidade-1/intervencao-social.md
+      - Requisitos:
           - 8.1 Requisitos Funcionais: unidade-2/requisitos/funcionais.md
           - 8.2 Requisitos Não Funcionais: unidade-2/requisitos/nao-funcionais.md
           - 8.3 Análise do Feedback: unidade-2/requisitos/analise-feedback.md
           - 8.4 Registro de Decisões com a FBr: unidade-2/requisitos/decisoes-fbr.md
-      - 9. DoR e DoD: unidade-2/requisitos/dor-dod.md
-      - 10. Backlog de Produto: unidade-2/requisitos/backlog.md
-      - Gestão do Projeto:
-          - Cronograma e Entregas: unidade-2/gestao/cronograma.md
-          - Reuniões: unidade-2/reunioes.md
-      - Aprendizados e documentação:
-          - Lições Aprendidas: unidade-2/licoes-aprendidas.md
-          - Análise de UX do site: analise-ux-capitulo-10.md
-  - Unidade 3 — Construção do MVP:
-      - Início da unidade: unidade-3/index.md
+          - 9. DoR e DoD: unidade-2/requisitos/dor-dod.md
+          - 10. Priorização e MVP: unidade-2/requisitos/backlog.md
+  - Processo e equipe:
+      - 4. Estratégia de ESW: unidade-1/estrategia-esw.md
+      - 5. Engenharia de Requisitos: unidade-1/engenharia-requisitos.md
+      - 7. Interação entre Equipe e Cliente: unidade-1/gestao/equipe-comunicacao.md
+      - Boas práticas no GitHub: unidade-1/gestao/boas-praticas-github.md
+      - Estudo de FDD: unidade-1/estudos/fdd.md
+      - Referências: unidade-1/referencias.md
+  - Construção do MVP:
       - Arquitetura técnica: unidade-3/arquitetura.md
       - Projeto das features do Ciclo 3: unidade-3/projeto-features-ciclo-3.md
       - Protótipos do Ciclo 3: unidade-3/prototipos-ciclo-3.md
@@ -152,8 +140,20 @@ nav:
       - Cópia de segurança e restauração: unidade-3/copia-de-seguranca.md
       - Segurança da implantação: unidade-3/seguranca-da-implantacao.md
       - Teste de carga: unidade-3/teste-de-carga.md
-      - Gestão do Projeto:
+  - Histórico das unidades:
+      - Unidade 3 (em andamento):
+          - Início da unidade: unidade-3/index.md
           - Cronograma e Entregas: unidade-3/gestao/cronograma.md
           - Reuniões: unidade-3/reunioes.md
-      - Aprendizados:
           - Lições Aprendidas: unidade-3/licoes-aprendidas.md
+      - Unidade 2 (entregue em 13/10):
+          - Início da unidade: unidade-2/index.md
+          - Cronograma e Entregas: unidade-2/gestao/cronograma.md
+          - Reuniões: unidade-2/reunioes.md
+          - Lições Aprendidas: unidade-2/licoes-aprendidas.md
+          - Análise de UX do site: analise-ux-capitulo-10.md
+      - Unidade 1 (entregue em 07/09):
+          - Início da unidade: unidade-1/index.md
+          - 6. Cronograma e Entregas: unidade-1/gestao/cronograma.md
+          - Reuniões: unidade-1/reunioes.md
+          - Lições Aprendidas: unidade-1/licoes-aprendidas.md

@@ -1,5 +1,8 @@
 # 9. DoR e DoD
 
+!!! abstract "Na estrutura de requisitos"
+    Esta página define os critérios que levam cada feature de Planejada a Aceita. O estado de cada feature é acompanhado na issue dela e copiado para o catálogo. Como as informações se ligam e são atualizadas: [Organização e atualização](../../organizacao-e-atualizacao.md).
+
 ## 9.1 Definition of Ready (DoR)
 
 ### 9.1.1 Objetivo

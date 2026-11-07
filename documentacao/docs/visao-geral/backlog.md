@@ -4,6 +4,9 @@ render_macros: true
 
 # Features e backlog
 
+!!! abstract "Na estrutura de requisitos"
+    Esta página é a lista única das features por ciclo, gerada do catálogo de requisitos. Como as informações se ligam e são atualizadas: [Organização e atualização](../organizacao-e-atualizacao.md).
+
 Esta é a lista única das features do produto e do backlog de construção, com o ciclo em que cada feature é construída e o seu Líder de Feature. O detalhamento fica nas unidades:
 
 - a declaração de cada feature, com o RF, os critérios de aceitação e a rastreabilidade, está em [Requisitos Funcionais (8.1)](../unidade-2/requisitos/funcionais.md);

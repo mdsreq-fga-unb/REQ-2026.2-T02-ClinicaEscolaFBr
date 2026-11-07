@@ -37,6 +37,11 @@ MOTIVO = {
 }
 
 ESTADOS_ENTREGUES = {"Promovida para a versão integrada", "Demonstrada", "Aceita"}
+# Marcos do FDD na ordem em que a feature passa por eles.
+ORDEM_ESTADOS = [
+    "Planejada", "Em design", "Design inspecionado", "Código concluído", "Código inspecionado",
+    "Promovida para a versão integrada", "Demonstrada", "Aceita",
+]
 
 
 def carregar(caminho=CATALOGO):
@@ -368,6 +373,24 @@ class Catalogo:
             linhas.append(f"| {r['ordem']} | {nome} | {r['cp']} | {dep} | {r['lider']} | {self.issue(r)} |")
         return "\n".join(linhas)
 
+    def tabela_andamento(self, *numeros):
+        """Features dos ciclos indicados com o estado do FDD (copiado da issue) e a
+        issue, para mostrar o que foi realizado na unidade."""
+        itens = sorted(
+            (r for r in self.rfs if r.get("mvp") and r.get("ciclo") in numeros),
+            key=lambda r: (r["ciclo"], r["ordem"]),
+        )
+        linhas = ["| Ciclo | Feature (RF) | Líder de Feature | Estado da feature | Issue |", "| --- | --- | --- | --- | --- |"]
+        for r in itens:
+            linhas.append(
+                f"| {r['ciclo']} | {self.link(r['id'])} — {r['nome']} | {r['lider']} | {r.get('estado', 'Planejada')} | {self.issue(r)} |"
+            )
+        contagem = {}
+        for r in itens:
+            contagem[r.get("estado", "Planejada")] = contagem.get(r.get("estado", "Planejada"), 0) + 1
+        resumo = "; ".join(f"{e}: {contagem[e]}" for e in ORDEM_ESTADOS if e in contagem)
+        return "\n".join(linhas) + f"\n\n_Total: {len(itens)} features ({resumo})._"
+
     def tabela_posteriores(self):
         linhas = ["| Feature (RF) | CP | Líder de Feature | Issue |", "| --- | --- | --- | --- |"]
         for r in self.rfs:
@@ -424,7 +447,7 @@ def define_env(env):
 
     for nome in ("tabela_consolidada", "tabela_mvp", "lista_fora_do_mvp", "matriz", "tabela_rnfs",
                  "indice", "origem", "registro", "tabela_decisoes", "tabela_situacao_ciclos",
-                 "tabela_ciclo", "tabela_posteriores", "tabela_conjuntos", "link", "rfs_da_cp"):
+                 "tabela_ciclo", "tabela_andamento", "tabela_posteriores", "tabela_conjuntos", "link", "rfs_da_cp"):
         env.macro(na_pagina(getattr(cat, nome)), nome)
     env.variables["composicao_mvp"] = cat.composicao_mvp()
 

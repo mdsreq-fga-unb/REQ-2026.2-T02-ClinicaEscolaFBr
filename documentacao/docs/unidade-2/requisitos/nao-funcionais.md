@@ -4,6 +4,9 @@ render_macros: true
 
 # 8.2 Lista de Requisitos Não Funcionais
 
+!!! abstract "Na estrutura de requisitos"
+    Esta página é a fonte única dos RNFs. Cada RNF aponta para os RFs que restringe, e a issue de cada feature lista os RNFs dela, que entram na verificação do D4.5. Como as informações se ligam e são atualizadas: [Organização e atualização](../../organizacao-e-atualizacao.md).
+
 Os requisitos não funcionais (RNFs) descrevem propriedades e restrições mensuráveis do sistema, classificadas conforme o modelo **URPS+** (Usabilidade, Confiabilidade, Desempenho, Suportabilidade e demais categorias, como Segurança e Auditoria). Cada RNF mantém rastreabilidade com a **Feature** que ele restringe e, por meio dela, com a Característica de Produto (CP) de origem — mesma cadeia usada nos [Requisitos Funcionais](funcionais.md).
 
 <details class="requirement-index" markdown>
