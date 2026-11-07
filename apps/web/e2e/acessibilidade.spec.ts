@@ -10,6 +10,8 @@ for (const pagina of [
   "/triagem",
   "/distribuicao",
   "/meus-casos",
+  "/agenda",
+  "/confirmacao/token-que-nao-existe",
   "/pagina-inexistente",
 ]) {
   test(`sem violações WCAG AA em ${pagina}`, async ({ page }) => {
