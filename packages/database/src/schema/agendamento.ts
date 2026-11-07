@@ -9,7 +9,12 @@ import {
   timestamp,
   uuid,
 } from "drizzle-orm/pg-core";
-import { MEIOS_CONFIRMACAO, STATUS_SESSAO } from "@clinica/shared";
+import {
+  CLASSIFICACOES_CANCELAMENTO,
+  MEIOS_CONFIRMACAO,
+  ORIGENS_CANCELAMENTO,
+  STATUS_SESSAO,
+} from "@clinica/shared";
 import { usuarios } from "./base";
 import { casos } from "./casos";
 
@@ -17,6 +22,14 @@ export const statusSessaoEnum = pgEnum("status_sessao", STATUS_SESSAO);
 export const meioConfirmacaoEnum = pgEnum(
   "meio_confirmacao",
   MEIOS_CONFIRMACAO,
+);
+export const origemCancelamentoEnum = pgEnum(
+  "origem_cancelamento",
+  ORIGENS_CANCELAMENTO,
+);
+export const classificacaoCancelamentoEnum = pgEnum(
+  "classificacao_cancelamento",
+  CLASSIFICACOES_CANCELAMENTO,
 );
 
 // Sessão de atendimento (RF10): 50 minutos mais o intervalo de 10 minutos para
@@ -87,3 +100,37 @@ export const linksConfirmacao = pgTable("links_confirmacao", {
     .notNull()
     .defaultNow(),
 });
+
+// Cancelamento da sessão (RF15, RF16): no máximo um por sessão. A antecedência fica
+// guardada com a classificação, para ela poder ser conferida mesmo que o parâmetro
+// mude. A justificativa é cifrada (RNF51) e só pode faltar no desligamento (RF37) e
+// no administrativo da transferência (RF25). Sem quem registrou, foi o paciente,
+// pelo link (RNF10).
+export const cancelamentosSessao = pgTable(
+  "cancelamentos_sessao",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    sessaoId: uuid("sessao_id")
+      .notNull()
+      .unique()
+      .references(() => sessoesAtendimento.id),
+    origem: origemCancelamentoEnum("origem").notNull(),
+    classificacao: classificacaoCancelamentoEnum("classificacao").notNull(),
+    justificativaCifrada: text("justificativa_cifrada"),
+    registradoPor: uuid("registrado_por").references(() => usuarios.id),
+    registradoEm: timestamp("registrado_em", { withTimezone: true })
+      .notNull()
+      .defaultNow(),
+    antecedenciaMinutos: integer("antecedencia_minutos").notNull(),
+  },
+  (t) => [
+    check(
+      "cancelamentos_justificativa",
+      sql`${t.justificativaCifrada} is not null or ${t.classificacao} in ('desligamento', 'administrativo')`,
+    ),
+    check(
+      "cancelamentos_autor",
+      sql`(${t.origem} = 'link') = (${t.registradoPor} is null)`,
+    ),
+  ],
+);

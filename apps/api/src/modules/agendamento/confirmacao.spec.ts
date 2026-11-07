@@ -246,6 +246,7 @@ describe('Confirmação de presença (RF14)', () => {
         situacao: 'agendada',
         prazoConfirmacao: new Date(inicio.getTime() - 24 * HORA).toISOString(),
         podeConfirmar: true,
+        antecedenciaMinimaMinutos: 60,
       });
       expect(JSON.stringify(resposta.body)).not.toMatch(
         /Toledo|Ana Beatriz|61998765432|mariana@/,

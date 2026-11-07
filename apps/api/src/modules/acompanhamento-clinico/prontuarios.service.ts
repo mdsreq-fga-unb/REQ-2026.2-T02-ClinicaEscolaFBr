@@ -17,6 +17,7 @@ import {
 } from 'drizzle-orm';
 import {
   atribuicoesSupervisor,
+  cancelamentosSessao,
   casos,
   inscricoes,
   prontuarios,
@@ -29,13 +30,32 @@ import {
 import { cifrar, decifrar } from '../../common/criptografia';
 import { AuditoriaService } from '../../auditoria/auditoria.service';
 import type { UsuarioAutenticado } from '../../auth/usuario-autenticado';
-import { STATUS_SESSAO_EM_ABERTO, type DadosIniciais } from '@clinica/shared';
+import {
+  STATUS_SESSAO_EM_ABERTO,
+  type CancelamentoDaSessao,
+  type ClassificacaoCancelamento,
+  type DadosIniciais,
+  type OrigemCancelamento,
+} from '@clinica/shared';
 import type { Evolucao } from '@clinica/shared';
 import { DB } from '../../database/database.module';
+import { acoesDeCancelamento } from '../agendamento/acoes-cancelamento';
 import { FaltasService } from '../assiduidade/faltas.service';
 import { PoliticaProntuario } from './politica-prontuario';
 
 const estagiario = aliasedTable(usuarios, 'estagiario');
+
+// O que as listas mostram do cancelamento (RF15, RF16): a classificação e a origem,
+// sem a justificativa (RNF51).
+const colunasDoCancelamento = {
+  classificacaoCancelamento: cancelamentosSessao.classificacao,
+  origemCancelamento: cancelamentosSessao.origem,
+};
+const cancelamentoDaSessao = (
+  classificacao: ClassificacaoCancelamento | null,
+  origem: OrigemCancelamento | null,
+): CancelamentoDaSessao | null =>
+  classificacao && origem ? { classificacao, origem } : null;
 const supervisor = aliasedTable(usuarios, 'supervisor');
 
 @Injectable()
@@ -103,9 +123,14 @@ export class ProntuariosService {
         estagiarioId: sessoesAtendimento.estagiarioId,
         estagiario: estagiario.nome,
         status: sessoesAtendimento.status,
+        ...colunasDoCancelamento,
       })
       .from(sessoesAtendimento)
       .innerJoin(estagiario, eq(estagiario.id, sessoesAtendimento.estagiarioId))
+      .leftJoin(
+        cancelamentosSessao,
+        eq(cancelamentosSessao.sessaoId, sessoesAtendimento.id),
+      )
       .where(
         and(
           eq(sessoesAtendimento.casoId, prontuario.casoId),
@@ -163,24 +188,36 @@ export class ProntuariosService {
       // Os botões de falta seguem a regra da API (vínculo e atribuição vigentes),
       // e não o estagiário de cada sessão.
       acoesFalta: await this.faltas.acoesPermitidas(prontuario.casoId, usuario),
-      sessoes: sessoes.map((sessao) => ({
-        ...sessao,
-        falta: faltasDoCiclo.get(sessao.id) ?? null,
-        evolucao: evolucoesRows.find((e) => e.sessaoId === sessao.id)
-          ? (() => {
-              const evolucao = evolucoesRows.find(
-                (e) => e.sessaoId === sessao.id,
-              )!;
-              return {
-                id: evolucao.id,
-                queixa: abrir(evolucao.queixa),
-                planejamento: abrir(evolucao.planejamento),
-                registradaPor: evolucao.autor,
-                registradaEm: evolucao.registradaEm,
-              };
-            })()
-          : null,
-      })),
+      // O cancelamento segue a mesma ideia (RF15, RF16).
+      acoesCancelamento: await acoesDeCancelamento(
+        this.db,
+        prontuario.casoId,
+        usuario,
+      ),
+      sessoes: sessoes.map(
+        ({ classificacaoCancelamento, origemCancelamento, ...sessao }) => ({
+          ...sessao,
+          cancelamento: cancelamentoDaSessao(
+            classificacaoCancelamento,
+            origemCancelamento,
+          ),
+          falta: faltasDoCiclo.get(sessao.id) ?? null,
+          evolucao: evolucoesRows.find((e) => e.sessaoId === sessao.id)
+            ? (() => {
+                const evolucao = evolucoesRows.find(
+                  (e) => e.sessaoId === sessao.id,
+                )!;
+                return {
+                  id: evolucao.id,
+                  queixa: abrir(evolucao.queixa),
+                  planejamento: abrir(evolucao.planejamento),
+                  registradaPor: evolucao.autor,
+                  registradaEm: evolucao.registradaEm,
+                };
+              })()
+            : null,
+        }),
+      ),
       sessoesRealizadas,
       fechamentoAvaliativoPendente:
         sessoesRealizadas > 0 && sessoesRealizadas % 10 === 0,
@@ -399,9 +436,14 @@ export class ProntuariosService {
         termino: sessoesAtendimento.termino,
         estagiario: estagiario.nome,
         status: sessoesAtendimento.status,
+        ...colunasDoCancelamento,
       })
       .from(sessoesAtendimento)
       .innerJoin(estagiario, eq(estagiario.id, sessoesAtendimento.estagiarioId))
+      .leftJoin(
+        cancelamentosSessao,
+        eq(cancelamentosSessao.sessaoId, sessoesAtendimento.id),
+      )
       .where(
         and(
           eq(sessoesAtendimento.casoId, casoId),
@@ -416,10 +458,18 @@ export class ProntuariosService {
       proximaSessao: proxima?.inicio ?? null,
       cicloAtendimento: ciclo,
       faltasNoCiclo: await this.faltas.contar(casoId, undefined, ciclo),
-      sessoes: sessoes.map((sessao) => ({
-        ...sessao,
-        falta: faltasDoCiclo.get(sessao.id) ?? null,
-      })),
+      // A secretaria cancela por aqui (RF15, RF16).
+      acoesCancelamento: await acoesDeCancelamento(this.db, casoId, usuario),
+      sessoes: sessoes.map(
+        ({ classificacaoCancelamento, origemCancelamento, ...sessao }) => ({
+          ...sessao,
+          cancelamento: cancelamentoDaSessao(
+            classificacaoCancelamento,
+            origemCancelamento,
+          ),
+          falta: faltasDoCiclo.get(sessao.id) ?? null,
+        }),
+      ),
     };
     if (usuario.perfil !== 'coordenacao') return dados;
     const [prontuario] = await this.db

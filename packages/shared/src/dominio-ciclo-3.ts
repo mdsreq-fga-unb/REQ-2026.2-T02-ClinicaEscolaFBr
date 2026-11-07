@@ -97,5 +97,6 @@ export const PARAMETROS_PADRAO = {
   limite_casos_supervisor: 50, // RF20, DF17
   validade_convite_horas: 72, // RF53, DF30
   prazo_confirmacao_horas: 24, // RF14, DF45
+  antecedencia_minima_cancelamento_minutos: 60, // RF15, DF20
 } as const;
 export type ChaveParametro = keyof typeof PARAMETROS_PADRAO;

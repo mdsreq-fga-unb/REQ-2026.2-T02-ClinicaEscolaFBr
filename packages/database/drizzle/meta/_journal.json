@@ -64,6 +64,13 @@
       "when": 1794020163524,
       "tag": "0008_confirmacao_de_presenca",
       "breakpoints": true
+    },
+    {
+      "idx": 9,
+      "version": "7",
+      "when": 1794064045769,
+      "tag": "0009_cancelamento_de_sessao",
+      "breakpoints": true
     }
   ]
 }
