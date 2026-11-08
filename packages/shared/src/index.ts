@@ -6,4 +6,5 @@ export * from "./agendamento";
 export * from "./inscricao";
 export * from "./casos";
 export * from "./assiduidade";
+export * from "./confirmacao";
 export * from "./cancelamento";
