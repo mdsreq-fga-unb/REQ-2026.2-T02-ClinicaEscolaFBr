@@ -8,3 +8,4 @@ export * from "./casos";
 export * from "./assiduidade";
 export * from "./confirmacao";
 export * from "./cancelamento";
+export * from "./agenda";
