@@ -46,6 +46,7 @@ import { DB } from '../../database/database.module';
 import { EmailService } from '../../notificacoes/email.service';
 import { ParametrosService } from '../../parametros/parametros.service';
 import { gerarToken } from '../acesso/credenciais';
+import { prazoDeConfirmacao } from './confirmacao.service';
 import {
   celularParaWhatsapp,
   dataBrasilia,
@@ -57,10 +58,6 @@ import {
 } from './horario';
 
 const estagiario = aliasedTable(usuarios, 'estagiario');
-
-// O link de confirmação vale até o prazo de confirmação do RF14 (24 horas antes do
-// início, DF45). O parâmetro e a página de confirmação entram com o RF14, no Ciclo 4.
-const PRAZO_CONFIRMACAO_HORAS = 24;
 
 const SEM_VINCULO =
   'Este paciente ainda não tem estagiário vinculado. Não é possível agendar sessão para ele agora. O vínculo é feito pelo supervisor do caso.';
@@ -218,11 +215,12 @@ export class SessoesService {
     await this.recusarConflito(dados.casoId, estagiarioId, novo, anotacoes);
 
     const { token, hash } = gerarToken();
-    const prazo = new Date(
-      inicio.getTime() - PRAZO_CONFIRMACAO_HORAS * 60 * MINUTO,
-    );
-    // Sessão marcada em cima da hora: o link vale até o início.
-    const expiraEm = prazo > new Date() ? prazo : inicio;
+    // O link vale até o início, para o cancelamento (RF15, RNF59); o prazo de
+    // confirmação é conferido à parte (RF14).
+    const expiraEm = inicio;
+    const prazoHoras = await this.parametros.numero('prazo_confirmacao_horas');
+    // Sessão marcada depois do prazo: a mensagem não pede uma confirmação recusada.
+    const podeConfirmar = new Date() <= prazoDeConfirmacao(inicio, prazoHoras);
     // Dois agendamentos simultâneos passam pela consulta acima; as restrições de
     // exclusão do banco decidem (RNF9).
     const sessao = await this.db
@@ -288,13 +286,25 @@ export class SessoesService {
     // e a tela avisa. Canal WhatsApp ou ligação: a secretaria envia a mensagem (DF24).
     if (paciente.canal === 'email' && paciente.email) {
       try {
-        await this.enviarLink(paciente.email, paciente.nome, inicio, link);
+        await this.enviarLink(
+          paciente.email,
+          paciente.nome,
+          inicio,
+          link,
+          prazoHoras,
+          podeConfirmar,
+        );
         resultado.linkEnviadoPorEmail = true;
       } catch (erro) {
         this.logger.error(`Link da sessão ${sessao.id} não enviado`, erro);
       }
     } else if (paciente.celular) {
-      const mensagem = this.mensagemWhatsapp(paciente.nome, inicio, link);
+      const mensagem = this.mensagemWhatsapp(
+        paciente.nome,
+        inicio,
+        link,
+        podeConfirmar,
+      );
       resultado.whatsapp = {
         celular: formatarCelular(paciente.celular),
         mensagem,
@@ -495,9 +505,14 @@ export class SessoesService {
     return nome.trim().split(/\s+/)[0];
   }
 
-  private mensagemWhatsapp(nome: string, inicio: Date, link: string) {
+  private mensagemWhatsapp(
+    nome: string,
+    inicio: Date,
+    link: string,
+    podeConfirmar: boolean,
+  ) {
     return `Olá, ${this.primeiroNome(nome)}! Sua sessão na Clínica Escola de Psicologia da FBr está agendada para ${diaDaSemana(inicio)}, ${dataBrasilia(inicio)}, às ${horaBrasilia(inicio)}.
-Confirme sua presença pelo link: ${link}`;
+${podeConfirmar ? `Confirme sua presença pelo link: ${link}` : `O prazo para confirmar pelo site já terminou. Se você vai à sessão, avise a secretaria. Veja os dados da sessão pelo link: ${link}`}`;
   }
 
   private async enviarLink(
@@ -505,14 +520,21 @@ Confirme sua presença pelo link: ${link}`;
     nome: string,
     inicio: Date,
     link: string,
+    prazoHoras: number,
+    podeConfirmar: boolean,
   ) {
     await this.email.enviar(
       email,
       'Sessão agendada na Clínica Escola FBr',
       `<p>Olá, ${escaparHtml(this.primeiroNome(nome))}.</p>
 <p>Sua sessão na Clínica Escola de Psicologia da FBr está agendada para ${diaDaSemana(inicio)}, ${dataBrasilia(inicio)}, às ${horaBrasilia(inicio)}. O atendimento é presencial, na clínica.</p>
-<p>Confirme sua presença pelo link: <a href="${link}">${link}</a></p>
-<p>A confirmação pode ser feita até ${PRAZO_CONFIRMACAO_HORAS} horas antes do início da sessão.</p>`,
+${
+  podeConfirmar
+    ? `<p>Confirme sua presença pelo link: <a href="${link}">${link}</a></p>
+<p>A confirmação pode ser feita até ${prazoHoras} horas antes do início da sessão.</p>`
+    : `<p>O prazo para confirmar pelo site já terminou. Se você vai à sessão, avise a secretaria.</p>
+<p>Veja os dados da sessão pelo link: <a href="${link}">${link}</a></p>`
+}`,
     );
   }
 }
