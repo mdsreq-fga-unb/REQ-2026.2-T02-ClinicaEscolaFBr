@@ -13,10 +13,18 @@ import { Fragment, useState, type FormEvent, type ReactNode } from "react";
 import {
   justificativaFaltaSchema,
   registroFaltaSchema,
+  type AcoesCancelamento,
+  type CancelamentoDaSessao,
   type ContagemFaltas,
   type FaltaDaSessao,
+  type ResultadoCancelamento,
   type StatusSessao,
 } from "@clinica/shared";
+import {
+  aceitaCancelamento,
+  DialogoCancelarSessao,
+  ResultadoDoCancelamento,
+} from "@/components/cancelamento/cancelar-sessao";
 import { Aviso } from "@/components/comum/aviso";
 import { Campo, classeTextoLongo } from "@/components/comum/campo";
 import { Dialogo } from "@/components/comum/dialogo";
@@ -33,9 +41,22 @@ export type SessaoDoCiclo = {
   estagiario: string;
   status: StatusSessao;
   falta: FaltaDaSessao | null;
+  cancelamento?: CancelamentoDaSessao | null;
   // Cancelada pelo desligamento por faltas (RF37).
   canceladaPorDesligamento?: boolean;
 };
+
+// O que a lista mostra ao lado de "Cancelada" (RF15, RF16, RF37).
+const DETALHE_CANCELAMENTO: Partial<
+  Record<CancelamentoDaSessao["classificacao"], string>
+> = {
+  administrativo: "para remarcar",
+  ausencia_estagiario: "ausência do estagiário",
+  desligamento: "desligamento por faltas",
+};
+
+// Cancelamento feito agora, para o aviso acima da lista.
+type Cancelado = { inicio: string; resultado: ResultadoCancelamento };
 
 const FUSO = "America/Sao_Paulo";
 const hora = (valor: string) =>
@@ -90,19 +111,26 @@ const ESTILO_STATUS: Record<
 export function SeloSessao({
   status,
   justificada = false,
+  cancelamento,
   porDesligamento = false,
 }: {
   status: StatusSessao;
   justificada?: boolean;
+  cancelamento?: CancelamentoDaSessao | null;
   porDesligamento?: boolean;
 }) {
   const { classe, Icone } = ESTILO_STATUS[status];
+  const detalhe = porDesligamento
+    ? DETALHE_CANCELAMENTO.desligamento
+    : status === "cancelada" && cancelamento
+      ? DETALHE_CANCELAMENTO[cancelamento.classificacao]
+      : undefined;
   return (
     <span className={cn("ui-selo", classe)}>
       <Icone aria-hidden className="size-3.5" />
       {NOMES_STATUS_SESSAO[status]}
       {justificada && " · justificada"}
-      {porDesligamento && " · desligamento por faltas"}
+      {detalhe && ` · ${detalhe}`}
     </span>
   );
 }
@@ -424,6 +452,8 @@ export function SessoesComFaltas({
   podeRegistrar,
   podeJustificar,
   chave,
+  acoesCancelamento,
+  casoId,
 }: {
   nome: string;
   sessoes: SessaoDoCiclo[];
@@ -432,15 +462,36 @@ export function SessoesComFaltas({
   podeRegistrar: boolean;
   podeJustificar: boolean;
   chave: QueryKey;
+  acoesCancelamento?: AcoesCancelamento;
+  casoId?: string;
 }) {
   const [justificando, setJustificando] = useState<string | null>(null);
   const [registrando, setRegistrando] = useState<SessaoDoCiclo | null>(null);
+  const [cancelando, setCancelando] = useState<SessaoDoCiclo | null>(null);
+  const [cancelado, setCancelado] = useState<Cancelado | null>(null);
   const [sucesso, setSucesso] = useState<{
     titulo: string;
     texto: string;
   } | null>(null);
 
   const acao = (s: SessaoDoCiclo, celular = false) => {
+    // Sessão futura: cancelar (RF15, RF16). Depois do início, só a falta (RF34).
+    if (aceitaCancelamento(s, acoesCancelamento, agora)) {
+      return (
+        <Button
+          type="button"
+          variant={celular ? "outline" : "link"}
+          className={celular ? "w-full" : undefined}
+          onClick={() => {
+            setSucesso(null);
+            setCancelado(null);
+            setCancelando(s);
+          }}
+        >
+          Cancelar sessão
+        </Button>
+      );
+    }
     if (s.falta && !s.falta.justificada && podeJustificar) {
       return (
         <Button
@@ -465,6 +516,7 @@ export function SessoesComFaltas({
           className={celular ? "w-full" : undefined}
           onClick={() => {
             setSucesso(null);
+            setCancelado(null);
             setRegistrando(s);
           }}
         >
@@ -499,6 +551,9 @@ export function SessoesComFaltas({
           {sucesso.texto}
         </Aviso>
       )}
+      {cancelado && (
+        <ResultadoDoCancelamento nome={nome} casoId={casoId} {...cancelado} />
+      )}
       {sessoes.length ? (
         <div className="ui-painel max-[1359px]:border-0 max-[1359px]:bg-transparent">
           {/* Com a ação e o detalhe da falta, a tabela precisa de uns 900 px ao
@@ -529,6 +584,7 @@ export function SessoesComFaltas({
                         <SeloSessao
                           status={s.status}
                           justificada={s.falta?.justificada}
+                          cancelamento={s.cancelamento}
                           porDesligamento={s.canceladaPorDesligamento}
                         />
                         {s.falta && <DetalheFalta falta={s.falta} />}
@@ -560,6 +616,7 @@ export function SessoesComFaltas({
                   <SeloSessao
                     status={s.status}
                     justificada={s.falta?.justificada}
+                    cancelamento={s.cancelamento}
                     porDesligamento={s.canceladaPorDesligamento}
                   />
                   {s.falta && <DetalheFalta falta={s.falta} />}
@@ -589,6 +646,19 @@ export function SessoesComFaltas({
           }}
         />
       )}
+      {cancelando && acoesCancelamento && (
+        <DialogoCancelarSessao
+          nome={nome}
+          sessao={cancelando}
+          acoes={acoesCancelamento}
+          chave={chave}
+          aoFechar={() => setCancelando(null)}
+          aoConcluir={(resultado) => {
+            setCancelado({ inicio: cancelando.inicio, resultado });
+            setCancelando(null);
+          }}
+        />
+      )}
     </div>
   );
 }
@@ -603,6 +673,8 @@ export function AcoesFaltaDaSessao({
   podeRegistrar,
   podeJustificar,
   chave,
+  acoesCancelamento,
+  casoId,
   children,
 }: {
   nome: string;
@@ -612,10 +684,14 @@ export function AcoesFaltaDaSessao({
   podeRegistrar: boolean;
   podeJustificar: boolean;
   chave: QueryKey;
+  acoesCancelamento?: AcoesCancelamento;
+  casoId?: string;
   children?: ReactNode;
 }) {
   const [registrando, setRegistrando] = useState(false);
   const [justificando, setJustificando] = useState(false);
+  const [cancelando, setCancelando] = useState(false);
+  const [cancelado, setCancelado] = useState<Cancelado | null>(null);
   const [sucesso, setSucesso] = useState<{
     titulo: string;
     texto: string;
@@ -624,7 +700,16 @@ export function AcoesFaltaDaSessao({
     !sessao.falta && podeRegistrar && aceitaFalta(sessao, agora);
   const justificar =
     !!sessao.falta && !sessao.falta.justificada && podeJustificar;
-  if (!registrar && !justificar && !sucesso && !children) return null;
+  const cancelar = aceitaCancelamento(sessao, acoesCancelamento, agora);
+  if (
+    !registrar &&
+    !justificar &&
+    !cancelar &&
+    !sucesso &&
+    !cancelado &&
+    !children
+  )
+    return null;
   return (
     <div className="mt-3 flex flex-col gap-3">
       {sucesso && (
@@ -632,8 +717,24 @@ export function AcoesFaltaDaSessao({
           {sucesso.texto}
         </Aviso>
       )}
+      {cancelado && (
+        <ResultadoDoCancelamento nome={nome} casoId={casoId} {...cancelado} />
+      )}
       <div className="flex flex-wrap gap-3 max-md:[&>*]:w-full">
         {children}
+        {cancelar && (
+          <Button
+            type="button"
+            variant="outline"
+            onClick={() => {
+              setSucesso(null);
+              setCancelado(null);
+              setCancelando(true);
+            }}
+          >
+            Cancelar sessão
+          </Button>
+        )}
         {registrar && (
           <Button
             type="button"
@@ -687,6 +788,19 @@ export function AcoesFaltaDaSessao({
               texto: `A sessão de ${nome} em ${dataBr(sessao.inicio)}, às ${hora(sessao.inicio)}, passou para “Falta do paciente”.`,
             });
             setRegistrando(false);
+          }}
+        />
+      )}
+      {cancelando && acoesCancelamento && (
+        <DialogoCancelarSessao
+          nome={nome}
+          sessao={sessao}
+          acoes={acoesCancelamento}
+          chave={chave}
+          aoFechar={() => setCancelando(false)}
+          aoConcluir={(resultado) => {
+            setCancelado({ inicio: sessao.inicio, resultado });
+            setCancelando(false);
           }}
         />
       )}

@@ -1,8 +1,10 @@
 import { createHash, randomBytes } from "node:crypto";
 import type { PlaywrightWorkerArgs } from "@playwright/test";
 import {
+  atribuicoesSupervisor,
   createDb,
   linksConfirmacao,
+  prontuarios,
   sessoesAtendimento,
   usuarios,
   vinculosEstagiario,
@@ -13,15 +15,19 @@ import { EQUIPE } from "./equipe";
 
 const HORA = 60 * 60 * 1000;
 
-// Paciente em atendimento com sessões e links de confirmação (RF10, RF14). A
+// Paciente em atendimento com sessões e links de confirmação (RF10, RF14, RF15). A
 // inscrição e o caso vêm da API (RF1, RF6), que cifra os dados de saúde (RNF51);
 // o vínculo, as sessões e os links são gravados direto no banco local de teste,
-// porque o token do link só existe no e-mail e o e2e precisa dele. Cada chamada
-// cria um estagiário próprio, para as sessões não colidirem com as de outras
-// execuções no mesmo banco (RNF9).
+// porque o token do link só existe no e-mail e o e2e precisa dele.
+// - Sem `daEquipe`, cada chamada cria um estagiário próprio, para as sessões não
+//   colidirem com as de outras execuções no mesmo banco (RNF9).
+// - Com `daEquipe`, o caso fica com o estagiário e o supervisor da semente, com o
+//   prontuário, para eles entrarem e verem as sessões (RF15, RF16). As sessões
+//   ganham minutos aleatórios, para não colidirem na agenda do estagiário.
 export async function criarPacienteComSessoes(
   playwright: PlaywrightWorkerArgs["playwright"],
   sessoes: { horas: number; status?: StatusSessao }[],
+  { daEquipe = false }: { daEquipe?: boolean } = {},
 ) {
   const marca = `${Date.now()}${Math.floor(Math.random() * 1000)}`;
   const paciente = `Paciente RF14 ${marca}`;
@@ -60,30 +66,50 @@ export async function criarPacienteComSessoes(
       "update casos set situacao = 'em_atendimento' where id = $1",
       [caso.id],
     );
-    const [estagiario] = await db
-      .insert(usuarios)
-      .values({
-        nome: `Estagiário RF14 ${marca}`,
-        email: `estagiario.rf14.${marca}@fbr.edu.br`,
-        perfil: "estagiario",
-        situacao: "ativo",
-      })
+    const estagiarioId = daEquipe
+      ? await pessoa(EQUIPE.estagiario.email)
+      : (
+          await db
+            .insert(usuarios)
+            .values({
+              nome: `Estagiário RF14 ${marca}`,
+              email: `estagiario.rf14.${marca}@fbr.edu.br`,
+              perfil: "estagiario",
+              situacao: "ativo",
+            })
+            .returning()
+        )[0].id;
+    const [vinculo] = await db
+      .insert(vinculosEstagiario)
+      .values({ casoId: caso.id, estagiarioId, vinculadoPor: supervisor })
       .returning();
-    await db.insert(vinculosEstagiario).values({
-      casoId: caso.id,
-      estagiarioId: estagiario.id,
-      vinculadoPor: supervisor,
-    });
+    let prontuarioId: string | undefined;
+    if (daEquipe) {
+      await db.insert(atribuicoesSupervisor).values({
+        casoId: caso.id,
+        supervisorId: supervisor,
+        atribuidoPor: await pessoa(EQUIPE.coordenacao.email),
+      });
+      [{ id: prontuarioId }] = await db
+        .insert(prontuarios)
+        .values({
+          casoId: caso.id,
+          cicloAtendimento: 1,
+          vinculoOrigemId: vinculo.id,
+        })
+        .returning();
+    }
 
     const tokens: string[] = [];
     for (const { horas, status = "agendada" } of sessoes) {
-      const inicio = new Date(Date.now() + horas * HORA);
+      const minutos = daEquipe ? Math.floor(Math.random() * 600) : 0;
+      const inicio = new Date(Date.now() + horas * HORA + minutos * 60_000);
       const termino = new Date(inicio.getTime() + 50 * 60_000);
       const [sessao] = await db
         .insert(sessoesAtendimento)
         .values({
           casoId: caso.id,
-          estagiarioId: estagiario.id,
+          estagiarioId,
           inicio,
           termino,
           fimIntervaloAnotacoes: new Date(termino.getTime() + 10 * 60_000),
@@ -99,7 +125,7 @@ export async function criarPacienteComSessoes(
       });
       tokens.push(token);
     }
-    return { paciente, tokens };
+    return { paciente, casoId: caso.id, prontuarioId, tokens };
   } finally {
     await db.$client.end();
   }
