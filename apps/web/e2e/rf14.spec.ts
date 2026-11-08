@@ -111,15 +111,23 @@ test.describe.serial("Confirmação de presença (RF14)", () => {
     await expect(linha).toHaveCount(1);
   });
 
-  test("o estagiário não tem a Agenda da secretaria (RF14)", async ({
+  // Desde o RF11, o estagiário tem a própria agenda em /agenda, sem a seção da
+  // secretaria; a coordenação não tem agenda.
+  test("o estagiário não vê as sessões sem confirmação da secretaria (RF14)", async ({
     browser,
   }) => {
     const page = await entrar(browser, "estagiario");
     await page.goto("/agenda");
     await expect(
-      page.getByRole("heading", { name: "Página não encontrada" }),
+      page.getByText("Suas sessões agendadas, confirmadas e realizadas."),
     ).toBeVisible();
     await expect(page.getByText("Sessões sem confirmação")).toHaveCount(0);
+
+    const coordenacao = await entrar(browser, "coordenacao");
+    await coordenacao.goto("/agenda");
+    await expect(
+      coordenacao.getByRole("heading", { name: "Página não encontrada" }),
+    ).toBeVisible();
   });
 
   test("a página do link e a Agenda cabem de 320 a 1920 px, sem rolagem lateral (RNF58)", async ({
