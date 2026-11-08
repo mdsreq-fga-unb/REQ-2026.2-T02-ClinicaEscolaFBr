@@ -244,6 +244,11 @@ describe("Formulário RF1/RF2", () => {
     expect(
       screen.getByText("A inscrição não garante vaga nem agendamento."),
     ).toBeInTheDocument();
+    // Sem escolha de canal: o contato é sempre pelo e-mail (DF48).
+    expect(document.body).toHaveTextContent(
+      "a clínica entrará em contato pelo e-mail informado na inscrição.",
+    );
+    expect(document.body).not.toHaveTextContent("canal que você escolheu");
     const print = vi.spyOn(window, "print").mockImplementation(() => {});
     fireEvent.click(
       screen.getByRole("button", { name: "Imprimir ou salvar em PDF" }),

@@ -405,7 +405,7 @@ export function FormularioInscricao({ aberta = true }: { aberta?: boolean }) {
                 O atendimento depende da triagem feita pela equipe e da
                 disponibilidade de vagas. Este comprovante não confirma o início
                 do atendimento psicológico. Se houver vaga, a clínica entrará em
-                contato pelo canal que você escolheu.
+                contato pelo e-mail informado na inscrição.
               </p>
             </div>
             <p className={styles.naoImprimir}>
