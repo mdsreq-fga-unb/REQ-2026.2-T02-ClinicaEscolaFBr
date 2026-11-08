@@ -58,6 +58,23 @@ describe('Envio de e-mail', () => {
     expect(text).not.toMatch(/<[a-z]/);
   });
 
+  it('a versão em texto não deixa marcação aninhada e mostra os caracteres escapados', async () => {
+    const servico = new EmailService(
+      new ConfigService({ SMTP_HOST: 'localhost', SMTP_PORT: '1025' }),
+    );
+    await servico.enviar(
+      'ana@fbr.edu.br',
+      'Assunto',
+      '<p>Olá, D&#39;Ávila.</p><scr<script>ipt>alerta',
+    );
+    const transporte = criarTransporte.mock.results[0].value as {
+      sendMail: jest.Mock;
+    };
+    const { text } = transporte.sendMail.mock.calls[0][0] as { text: string };
+    expect(text).toContain("Olá, D'Ávila.");
+    expect(text).not.toContain('<');
+  });
+
   it('na implantação, usa o relay do Google Workspace, sem usuário e com o domínio no EHLO', async () => {
     const servico = new EmailService(
       new ConfigService({
