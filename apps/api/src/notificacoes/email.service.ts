@@ -14,11 +14,29 @@ ${conteudo}
 <p style="font-size:13px;color:#52606d;border-top:1px solid #d9e2ec;margin-top:24px;padding-top:12px">Clínica Escola de Psicologia da FBr. Esta é uma mensagem automática: não responda a este e-mail. Em caso de dúvida, procure a secretaria da clínica.</p>
 </div>`;
 
+// Percorre caractere a caractere: uma marcação aninhada (<scr<script>ipt>) não
+// sobra no resultado, o que uma única substituição por expressão regular deixaria.
+const semMarcacao = (html: string) => {
+  let texto = '';
+  let dentroDeMarcacao = false;
+  for (const caractere of html) {
+    if (caractere === '<') dentroDeMarcacao = true;
+    else if (caractere === '>' && dentroDeMarcacao) dentroDeMarcacao = false;
+    else if (!dentroDeMarcacao) texto += caractere;
+  }
+  return texto;
+};
+
 const somenteTexto = (html: string) =>
-  html
-    .replace(/<\/(p|div|li|h[1-6])>|<br\s*\/?>/g, '\n')
-    .replace(/<a [^>]*href="([^"]+)"[^>]*>([^<]*)<\/a>/g, '$2: $1')
-    .replace(/<[^>]+>/g, '')
+  semMarcacao(
+    html
+      .replace(/<\/(p|div|li|h[1-6])>|<br\s*\/?>/g, '\n')
+      .replace(/<a [^>]*href="([^"]+)"[^>]*>([^<]*)<\/a>/g, '$2: $1'),
+  )
+    // Quem monta o e-mail escapa os dados como &#39;; no texto puro, volta ao caractere.
+    .replace(/&#(\d+);/g, (_, codigo: string) =>
+      String.fromCharCode(Number(codigo)),
+    )
     .replace(/\n\s*\n+/g, '\n\n')
     .trim();
 

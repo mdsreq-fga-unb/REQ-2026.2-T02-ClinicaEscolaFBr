@@ -38,7 +38,7 @@ test.describe.serial("Integração do Ciclo 3", () => {
         endereco: "Rua Fictícia, 100, Santa Maria",
         estadoCivil: "Solteiro(a)",
         responsavelLegal: "",
-        celular: "",
+        celular: "61999999999",
         email: "paciente.integracao@example.com",
         queixa: "Queixa fictícia de integração",
         percepcaoUrgencia: "Urgência fictícia",

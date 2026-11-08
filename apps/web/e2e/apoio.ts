@@ -80,7 +80,7 @@ export async function criarCasoTriado(
       endereco: "Rua Fictícia, 200, Gama",
       estadoCivil: "Solteiro(a)",
       responsavelLegal: "",
-      celular: "",
+      celular: "61999999999",
       email: "paciente.e2e@example.com",
       queixa: "Queixa fictícia de teste",
       percepcaoUrgencia: "Urgência fictícia",
