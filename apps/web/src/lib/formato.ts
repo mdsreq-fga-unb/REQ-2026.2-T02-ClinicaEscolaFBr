@@ -44,6 +44,8 @@ export const NOMES_SITUACAO_CASO = {
   aguardando_vinculo: "Aguardando vínculo",
   em_atendimento: "Em atendimento",
   encerrado: "Encerrado",
+  desligado_por_faltas: "Desligado por faltas",
+  aguardando_vaga: "Em atendimento · aguardando vaga",
 } as const;
 
 export const NOMES_CANAL = {

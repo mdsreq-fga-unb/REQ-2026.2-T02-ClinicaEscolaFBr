@@ -61,8 +61,15 @@
     {
       "idx": 8,
       "version": "7",
-      "when": 1794020163524,
-      "tag": "0008_confirmacao_de_presenca",
+      "when": 1794057872805,
+      "tag": "0008_desligamento_por_faltas",
+      "breakpoints": true
+    },
+    {
+      "idx": 9,
+      "version": "7",
+      "when": 1794101942737,
+      "tag": "0009_confirmacao_de_presenca",
       "breakpoints": true
     }
   ]

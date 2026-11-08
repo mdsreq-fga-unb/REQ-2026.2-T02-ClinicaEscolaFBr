@@ -4,6 +4,7 @@ import { LogOut, Menu, X } from "lucide-react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useRef, useState, type ReactNode } from "react";
+import { FaixaAlertas } from "@/components/assiduidade/desligamento";
 import { api, ErroApi } from "@/lib/api";
 import { NOMES_PERFIL, useSessao, type UsuarioDaSessao } from "@/lib/sessao";
 import { cn } from "@/lib/utils";
@@ -264,12 +265,16 @@ export function AreaInterna({ children }: { children: ReactNode }) {
         </div>
         <Navegacao {...propsNavegacao} />
       </aside>
-      <main
-        id="conteudo"
-        className="min-w-0 flex-1 px-4 pt-5 pb-8 md:px-10 md:py-8"
-      >
-        {children}
-      </main>
+      <div className="flex min-w-0 flex-1 flex-col">
+        {/* Alerta do limite de faltas (RF36), fixo no topo do conteúdo. */}
+        <FaixaAlertas perfil={usuario.perfil} />
+        <main
+          id="conteudo"
+          className="min-w-0 flex-1 px-4 pt-5 pb-8 md:px-10 md:py-8"
+        >
+          {children}
+        </main>
+      </div>
     </div>
   );
 }

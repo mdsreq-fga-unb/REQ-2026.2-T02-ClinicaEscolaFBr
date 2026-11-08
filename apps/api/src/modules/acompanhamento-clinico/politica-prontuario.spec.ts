@@ -20,6 +20,7 @@ import {
   CHAVE_TESTE,
   criarBancoDeTeste,
 } from '../../test-utils/banco-de-teste';
+import { DesligamentosService } from '../assiduidade/desligamentos.service';
 import { FaltasService } from '../assiduidade/faltas.service';
 import { PoliticaProntuario } from './politica-prontuario';
 import { ProntuariosService } from './prontuarios.service';
@@ -124,6 +125,7 @@ describe('Restrição de acesso ao prontuário (RF55)', () => {
       config,
       new AuditoriaService(db),
       new FaltasService(db, config, new AuditoriaService(db)),
+      new DesligamentosService(db, config, new AuditoriaService(db)),
     );
   });
 

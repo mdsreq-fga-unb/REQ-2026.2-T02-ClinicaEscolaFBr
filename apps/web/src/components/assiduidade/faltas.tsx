@@ -33,6 +33,8 @@ export type SessaoDoCiclo = {
   estagiario: string;
   status: StatusSessao;
   falta: FaltaDaSessao | null;
+  // Cancelada pelo desligamento por faltas (RF37).
+  canceladaPorDesligamento?: boolean;
 };
 
 const FUSO = "America/Sao_Paulo";
@@ -88,9 +90,11 @@ const ESTILO_STATUS: Record<
 export function SeloSessao({
   status,
   justificada = false,
+  porDesligamento = false,
 }: {
   status: StatusSessao;
   justificada?: boolean;
+  porDesligamento?: boolean;
 }) {
   const { classe, Icone } = ESTILO_STATUS[status];
   return (
@@ -98,6 +102,7 @@ export function SeloSessao({
       <Icone aria-hidden className="size-3.5" />
       {NOMES_STATUS_SESSAO[status]}
       {justificada && " · justificada"}
+      {porDesligamento && " · desligamento por faltas"}
     </span>
   );
 }
@@ -162,10 +167,13 @@ export function ResumoFaltas({
   contagem,
   nome,
   linkHistorico,
+  semAviso = false,
 }: {
   contagem: ContagemFaltas;
   nome: string;
   linkHistorico?: string;
+  // Fora do atendimento, como no caso desligado (RF37), só a contagem.
+  semAviso?: boolean;
 }) {
   return (
     <div className="flex flex-col gap-3 rounded-[12px] border border-border bg-muted px-4 py-3.5">
@@ -173,13 +181,13 @@ export function ResumoFaltas({
         <p className="ui-meta font-semibold">Faltas no ciclo</p>
         <Contador contagem={contagem} />
       </div>
-      {contagem.aviso === "primeira_falta" && (
+      {!semAviso && contagem.aviso === "primeira_falta" && (
         <Aviso
           tipo="alerta"
           titulo={`${nome} tem 1 falta neste ciclo. Uma nova falta leva ao desligamento por faltas.`}
         />
       )}
-      {contagem.aviso === "limite_atingido" && (
+      {!semAviso && contagem.aviso === "limite_atingido" && (
         <Aviso
           tipo="erro"
           titulo={
@@ -205,17 +213,20 @@ export function ResumoFaltas({
 }
 
 // Histórico das faltas do ciclo (RF35): o que conta, em que ordem, e o que deixou
-// de contar na reversão (RF38), que continua visível.
+// de contar na reversão (RF38), que continua visível. O rodapé recebe a ação de
+// desligar por faltas e o registro do desligamento (RF37).
 export function HistoricoFaltas({
   id,
   contagem,
   ciclo,
   sessoes,
+  rodape,
 }: {
   id?: string;
   contagem: ContagemFaltas;
   ciclo: number;
   sessoes: SessaoDoCiclo[];
+  rodape?: ReactNode;
 }) {
   const faltas = sessoes.filter((s) => s.falta);
   // Posição de cada falta que conta (1ª, 2ª...), sem as desconsideradas.
@@ -276,9 +287,11 @@ export function HistoricoFaltas({
                   </p>
                 </div>
                 {falta.retiradaDaContagem ? (
-                  <span className="ui-selo col-start-2 row-start-1 w-fit justify-self-end border-[#c3cfd8] bg-[#eef1f4] text-[#4a5864] lg:col-start-3">
-                    <RotateCcw aria-hidden className="size-3.5" />
+                  <span className="ui-selo col-start-2 row-start-1 w-fit max-w-64 justify-self-end border-[#c3cfd8] whitespace-normal bg-[#eef1f4] text-[#4a5864] lg:col-start-3">
+                    <RotateCcw aria-hidden className="size-3.5 shrink-0" />
                     Desconsiderada na reversão
+                    {falta.retiradaEm &&
+                      ` de ${dataBr(falta.retiradaEm)}${falta.retiradaPor ? ` por ${falta.retiradaPor}` : ""}`}
                   </span>
                 ) : (
                   <span className="ui-selo col-start-2 row-start-1 w-fit justify-self-end border-[#efb4ad] bg-erro-fundo text-destructive lg:col-start-3">
@@ -293,6 +306,7 @@ export function HistoricoFaltas({
       ) : (
         <p className="ui-dica">Nenhuma falta neste ciclo.</p>
       )}
+      {rodape}
       <p className="ui-dica border-t border-border pt-4">
         Contam como falta: a falta registrada na sessão e o cancelamento com
         menos de 1 hora de antecedência. Não contam: a falta de confirmação de
@@ -486,46 +500,54 @@ export function SessoesComFaltas({
         </Aviso>
       )}
       {sessoes.length ? (
-        <div className="ui-painel max-xl:border-0 max-xl:bg-transparent">
-          <table className="ui-tabela max-xl:hidden">
-            <caption className="sr-only">Sessões do ciclo de {nome}</caption>
-            <thead>
-              <tr>
-                <th scope="col">Data</th>
-                <th scope="col">Horário</th>
-                <th scope="col">Estagiário</th>
-                <th scope="col">Situação</th>
-                <th scope="col">
-                  <span className="sr-only">Ação</span>
-                </th>
-              </tr>
-            </thead>
-            <tbody>
-              {sessoes.map((s) => (
-                <Fragment key={s.id}>
-                  <tr className={cn(s.falta && "bg-muted/60")}>
-                    <td className="whitespace-nowrap">{dataBr(s.inicio)}</td>
-                    <td className="whitespace-nowrap">{horario(s)}</td>
-                    <td className="min-w-36">{s.estagiario}</td>
-                    <td>
-                      <SeloSessao
-                        status={s.status}
-                        justificada={s.falta?.justificada}
-                      />
-                      {s.falta && <DetalheFalta falta={s.falta} />}
-                    </td>
-                    <td className="text-right">{acao(s)}</td>
-                  </tr>
-                  {justificando === s.id && (
-                    <tr className="bg-muted/60">
-                      <td colSpan={5}>{formulario(s)}</td>
+        <div className="ui-painel max-[1359px]:border-0 max-[1359px]:bg-transparent">
+          {/* Com a ação e o detalhe da falta, a tabela precisa de uns 900 px ao
+              lado do menu: abaixo de 1360 px de tela, a lista vira cartões. Se um
+              nome longo ainda passar da largura, ela rola dentro do cartão. */}
+          <div className="overflow-x-auto max-[1359px]:hidden">
+            <table className="ui-tabela [&_td]:px-3.5 [&_th]:px-3.5">
+              <caption className="sr-only">Sessões do ciclo de {nome}</caption>
+              <thead>
+                <tr>
+                  <th scope="col">Data</th>
+                  <th scope="col">Horário</th>
+                  <th scope="col">Estagiário</th>
+                  <th scope="col">Situação</th>
+                  <th scope="col">
+                    <span className="sr-only">Ação</span>
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                {sessoes.map((s) => (
+                  <Fragment key={s.id}>
+                    <tr className={cn(s.falta && "bg-muted/60")}>
+                      <td className="whitespace-nowrap">{dataBr(s.inicio)}</td>
+                      <td className="whitespace-nowrap">{horario(s)}</td>
+                      <td className="min-w-32">{s.estagiario}</td>
+                      <td>
+                        <SeloSessao
+                          status={s.status}
+                          justificada={s.falta?.justificada}
+                          porDesligamento={s.canceladaPorDesligamento}
+                        />
+                        {s.falta && <DetalheFalta falta={s.falta} />}
+                      </td>
+                      <td className="text-right whitespace-nowrap">
+                        {acao(s)}
+                      </td>
                     </tr>
-                  )}
-                </Fragment>
-              ))}
-            </tbody>
-          </table>
-          <ul className="ui-lista-celular xl:hidden">
+                    {justificando === s.id && (
+                      <tr className="bg-muted/60">
+                        <td colSpan={5}>{formulario(s)}</td>
+                      </tr>
+                    )}
+                  </Fragment>
+                ))}
+              </tbody>
+            </table>
+          </div>
+          <ul className="ui-lista-celular min-[1360px]:hidden">
             {sessoes.map((s) => (
               <li key={s.id} className="ui-item-celular">
                 <div className="flex items-start justify-between gap-2">
@@ -538,6 +560,7 @@ export function SessoesComFaltas({
                   <SeloSessao
                     status={s.status}
                     justificada={s.falta?.justificada}
+                    porDesligamento={s.canceladaPorDesligamento}
                   />
                   {s.falta && <DetalheFalta falta={s.falta} />}
                 </div>
