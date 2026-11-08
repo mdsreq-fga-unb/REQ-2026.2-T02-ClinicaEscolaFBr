@@ -29,7 +29,6 @@ const valido = () => ({
   responsavelLegal: '',
   celular: '(61) 99999-9999',
   email: 'teste@example.com',
-  canalPreferencial: 'email',
   queixa: 'Queixa fictícia privada',
   percepcaoUrgencia: 'Urgência fictícia privada',
   historicoRelevante: 'Histórico fictício privado',
@@ -48,7 +47,8 @@ describe('RF1/RF2: contrato compartilhado', () => {
     'queixa',
     'percepcaoUrgencia',
     'historicoRelevante',
-    'canalPreferencial',
+    'celular',
+    'email',
   ])('recusa %s vazio', (campo) =>
     expect(
       inscricaoSchema.safeParse({ ...valido(), [campo]: '' }).success,
@@ -68,7 +68,6 @@ describe('RF1/RF2: contrato compartilhado', () => {
   it.each([
     { email: 'inválido' },
     { celular: '123' },
-    { canalPreferencial: 'sms' },
     { confirmado: false },
     { cep: '7000' },
     {
@@ -183,29 +182,18 @@ describe('RF1/RF2: HTTP, transações e migrations oficiais', () => {
   const enviar = (dados: object = valido()) =>
     request(app.getHttpServer()).post('/inscricoes').send(dados);
 
-  it.each([
-    { email: 'teste@example.com', celular: '', canalPreferencial: 'email' },
-    { email: '', celular: '61999999999', canalPreferencial: 'whatsapp' },
-    { email: '', celular: '61999999999', canalPreferencial: 'ligacao' },
-    {
-      email: 'teste@example.com',
-      celular: '61999999999',
-      canalPreferencial: 'email',
-    },
-  ])(
-    'registra adulto com %j, sem sessão e com RG alfanumérico',
-    async (contatos) => {
-      const res = await enviar({ ...valido(), ...contatos }).expect(201);
-      expect(Object.keys(res.body).sort()).toEqual(['criadaEm', 'numero']);
-      expect(res.body.numero).toMatch(/^\d{4}-\d{5,}$/);
-      expect(Number.isNaN(Date.parse(res.body.criadaEm))).toBe(false);
-      expect(res.headers['cache-control']).toBe('no-store');
-      const [registro] = await db.select().from(inscricoes);
-      expect(registro.rg).toBe(valido().rg);
-      expect(registro.celular).toBe(contatos.celular || null);
-      expect(registro.email).toBe(contatos.email || null);
-    },
-  );
+  it('registra adulto com e-mail e celular, sem sessão e com RG alfanumérico, e os contatos são por e-mail (DF48)', async () => {
+    const res = await enviar({ ...valido() }).expect(201);
+    expect(Object.keys(res.body).sort()).toEqual(['criadaEm', 'numero']);
+    expect(res.body.numero).toMatch(/^\d{4}-\d{5,}$/);
+    expect(Number.isNaN(Date.parse(res.body.criadaEm))).toBe(false);
+    expect(res.headers['cache-control']).toBe('no-store');
+    const [registro] = await db.select().from(inscricoes);
+    expect(registro.rg).toBe(valido().rg);
+    expect(registro.celular).toBe('61999999999');
+    expect(registro.email).toBe('teste@example.com');
+    expect(registro.canalPreferencial).toBe('email');
+  });
   it('guarda os dados da ficha de identificação e deixa nulos os que ficaram em branco (DF43)', async () => {
     await enviar({
       ...valido(),
@@ -251,10 +239,14 @@ describe('RF1/RF2: HTTP, transações e migrations oficiais', () => {
   });
   it.each([
     { email: '', celular: '' },
-    { email: '', canalPreferencial: 'email' },
-    { celular: '', canalPreferencial: 'whatsapp' },
-    { celular: '', canalPreferencial: 'ligacao' },
+    { email: '' },
+    { celular: '' },
     { dataNascimento: '2020-01-01', responsavelLegal: '' },
+    {
+      dataNascimento: '2020-01-01',
+      responsavelLegal: 'Responsável Fictício',
+      cpfResponsavel: '',
+    },
     { cpf: '123' },
     { email: 'inválido' },
     { celular: '123' },
@@ -287,6 +279,7 @@ describe('RF1/RF2: HTTP, transações e migrations oficiais', () => {
       ...valido(),
       dataNascimento: '2020-01-01',
       responsavelLegal: 'Responsável Fictício',
+      cpfResponsavel: '52998224725',
     }).expect(201);
   });
   it('cifra os três campos com a rotina oficial e audita sem conteúdo pessoal (RF1, RNF51)', async () => {
