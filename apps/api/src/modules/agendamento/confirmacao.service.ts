@@ -33,7 +33,7 @@ const estagiario = aliasedTable(usuarios, 'estagiario');
 
 // A mesma resposta para o link inexistente, vencido ou de sessão que não está mais em
 // aberto: nenhuma recusa diz qual foi o motivo nem mostra dados da sessão (RNF59).
-const LINK_INVALIDO =
+export const LINK_INVALIDO =
   'Este link não é mais válido. Para falar sobre a sua sessão, procure a secretaria da Clínica Escola.';
 const PRAZO_ENCERRADO =
   'O prazo para confirmar a presença pelo site terminou. Se você vai à sessão, procure a secretaria da Clínica Escola.';
@@ -48,7 +48,7 @@ const estaEmAberto = (
 ): status is 'agendada' | 'confirmada' =>
   status === 'agendada' || status === 'confirmada';
 
-const primeiroNome = (nome: string) => nome.trim().split(/\s+/)[0];
+export const primeiroNome = (nome: string) => nome.trim().split(/\s+/)[0];
 
 // Confirmação de presença (RF14): pelo link público, sem login (RNF15), ou pela
 // secretaria, quando o paciente confirma por telefone. A lista de sessões sem
@@ -62,13 +62,14 @@ export class ConfirmacaoService {
   ) {}
 
   async consultarPeloLink(token: string): Promise<SessaoDoLink> {
-    const prazoHoras = await this.parametros.numero('prazo_confirmacao_horas');
+    const prazos = await this.prazos();
     const sessao = await this.sessaoDoLink(this.db, token);
-    return this.dadosDoLink(sessao, prazoHoras);
+    return this.dadosDoLink(sessao, prazos);
   }
 
   async confirmarPeloLink(token: string): Promise<SessaoDoLink> {
-    const prazoHoras = await this.parametros.numero('prazo_confirmacao_horas');
+    const prazos = await this.prazos();
+    const { prazoHoras } = prazos;
     return this.db.transaction(async (tx) => {
       const sessao = await this.sessaoDoLink(tx, token, true);
       if (sessao.status === 'confirmada') {
@@ -79,7 +80,7 @@ export class ConfirmacaoService {
         throw new UnprocessableEntityException(PRAZO_ENCERRADO);
       }
       await this.confirmar(tx, sessao.id, agora, 'link', null);
-      return this.dadosDoLink({ ...sessao, status: 'confirmada' }, prazoHoras);
+      return this.dadosDoLink({ ...sessao, status: 'confirmada' }, prazos);
     });
   }
 
@@ -151,16 +152,23 @@ export class ConfirmacaoService {
     });
   }
 
-  // O link não confirma depois do início da sessão nem depois de usado, vencido ou
-  // de a sessão sair de "agendada" ou "confirmada" (RNF59).
-  private async sessaoDoLink(
-    banco: Db | Transacao,
-    token: string,
-    bloquear = false,
-  ) {
+  // Lidos antes da transação, que bloqueia a sessão.
+  private async prazos() {
+    const [prazoHoras, antecedenciaMinimaMinutos] = await Promise.all([
+      this.parametros.numero('prazo_confirmacao_horas'),
+      this.parametros.numero('antecedencia_minima_cancelamento_minutos'),
+    ]);
+    return { prazoHoras, antecedenciaMinimaMinutos };
+  }
+
+  // O link não confirma nem cancela depois do início da sessão nem depois de usado,
+  // vencido ou de a sessão sair de "agendada" ou "confirmada" (RNF59). O
+  // cancelamento pelo link (RF15) também passa por aqui.
+  async sessaoDoLink(banco: Db | Transacao, token: string, bloquear = false) {
     const consulta = banco
       .select({
         id: sessoesAtendimento.id,
+        casoId: sessoesAtendimento.casoId,
         inicio: sessoesAtendimento.inicio,
         status: sessoesAtendimento.status,
         nome: inscricoes.nomeCompleto,
@@ -197,7 +205,10 @@ export class ConfirmacaoService {
       status: 'agendada' | 'confirmada';
       nome: string;
     },
-    prazoHoras: number,
+    {
+      prazoHoras,
+      antecedenciaMinimaMinutos,
+    }: { prazoHoras: number; antecedenciaMinimaMinutos: number },
   ): SessaoDoLink {
     const prazo = prazoDeConfirmacao(sessao.inicio, prazoHoras);
     return {
@@ -206,6 +217,7 @@ export class ConfirmacaoService {
       situacao: sessao.status,
       prazoConfirmacao: prazo.toISOString(),
       podeConfirmar: sessao.status === 'agendada' && new Date() <= prazo,
+      antecedenciaMinimaMinutos,
     };
   }
 

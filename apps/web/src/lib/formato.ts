@@ -26,6 +26,25 @@ export const horaBr = (data: Date) =>
 export const diaDaSemanaBr = (valor: string) =>
   `${new Date(valor).toLocaleDateString("pt-BR", { timeZone: FUSO, weekday: "long" })}, ${dataBr(valor)}`;
 
+// Antecedência mínima por extenso, para o paciente (RF15): "1 hora", "2 horas",
+// "1 hora e 30 minutos", "45 minutos".
+export function duracaoPorExtenso(minutos: number) {
+  const horas = Math.floor(minutos / 60);
+  const resto = minutos % 60;
+  const h = horas === 1 ? "1 hora" : `${horas} horas`;
+  const m = resto === 1 ? "1 minuto" : `${resto} minutos`;
+  if (!horas) return m;
+  return resto ? `${h} e ${m}` : h;
+}
+
+// Antecedência calculada, na forma curta do protótipo: "40 min", "2 h", "2 h 15 min".
+export function duracaoCurta(minutos: number) {
+  const horas = Math.floor(minutos / 60);
+  const resto = minutos % 60;
+  if (!horas) return `${resto} min`;
+  return resto ? `${horas} h ${resto} min` : `${horas} h`;
+}
+
 export function idade(nascimento: string) {
   const [ano, mes, dia] = nascimento.split("-").map(Number);
   // Data de hoje em Brasília, no formato AAAA-MM-DD.

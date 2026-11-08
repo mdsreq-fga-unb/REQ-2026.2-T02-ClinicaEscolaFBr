@@ -7,7 +7,7 @@ import {
   waitFor,
 } from "@testing-library/react";
 import { afterEach, describe, expect, it, vi } from "vitest";
-import type { SessaoDoLink } from "@clinica/shared";
+import type { SessaoCanceladaPeloLink, SessaoDoLink } from "@clinica/shared";
 import { LinkDaSessao } from "./link-da-sessao";
 
 const agendada: SessaoDoLink = {
@@ -16,6 +16,7 @@ const agendada: SessaoDoLink = {
   situacao: "agendada",
   prazoConfirmacao: "2026-11-04T17:00:00.000Z",
   podeConfirmar: true,
+  antecedenciaMinimaMinutos: 60,
 };
 const confirmada: SessaoDoLink = {
   ...agendada,
@@ -31,7 +32,15 @@ const INVALIDO: Resposta = {
   corpo: { message: "Este link não é mais válido." },
 };
 
-// Respostas em sequência da consulta (GET) e da confirmação (POST).
+const cancelada: SessaoCanceladaPeloLink = {
+  primeiroNome: "Mariana",
+  inicio: "2026-11-05T17:00:00.000Z",
+  situacao: "cancelada",
+  contaComoFalta: false,
+};
+
+// Respostas em sequência da consulta (GET) e da confirmação ou do cancelamento
+// (POST). Cada POST fica registrado com o endereço e o corpo.
 function simularApi(consultas: Resposta[], confirmacoes: Resposta[] = []) {
   const posts: string[] = [];
   vi.stubGlobal(
@@ -39,7 +48,8 @@ function simularApi(consultas: Resposta[], confirmacoes: Resposta[] = []) {
     vi.fn(async (url: string, init?: RequestInit) => {
       const resposta =
         init?.method === "POST"
-          ? (posts.push(url), confirmacoes.shift())
+          ? (posts.push(`${url} ${String(init.body ?? "")}`),
+            confirmacoes.shift())
           : consultas.length > 1
             ? consultas.shift()
             : consultas[0];
@@ -206,6 +216,160 @@ describe("Página do link da sessão (RF14)", () => {
     expect(screen.queryByText("Presença confirmada")).toBeNull();
     expect(
       screen.getByRole("button", { name: "Confirmar presença" }),
+    ).toBeTruthy();
+  });
+});
+
+describe("Cancelamento pelo link (RF15)", () => {
+  afterEach(() => {
+    cleanup();
+    vi.unstubAllGlobals();
+  });
+
+  const abrirCancelamento = async () =>
+    fireEvent.click(
+      await screen.findByRole("button", {
+        name: "Não vou poder ir: cancelar sessão",
+      }),
+    );
+
+  it("cancela com a justificativa: depois, nenhum botão, e o foco vai para o resultado (RNF59, RNF24)", async () => {
+    const posts = simularApi([ok(agendada)], [ok(cancelada)]);
+    abrir();
+    await abrirCancelamento();
+
+    expect(
+      screen.getByRole("heading", { name: "Cancelar a sua sessão" }),
+    ).toBeTruthy();
+    expect(
+      screen.getByText(/Sessão de quinta-feira, 05\/11\/2026, às 14:00/),
+    ).toBeTruthy();
+    expect(screen.getByText(/menos de 1 hora de antecedência/)).toBeTruthy();
+    const campo = screen.getByLabelText(/Por que você precisa cancelar/);
+    expect(document.activeElement).toBe(campo);
+
+    fireEvent.change(campo, {
+      target: { value: "Consulta médica no mesmo horário." },
+    });
+    fireEvent.click(
+      screen.getByRole("button", { name: "Confirmar cancelamento" }),
+    );
+
+    expect(await screen.findByText("Sessão cancelada")).toBeTruthy();
+    expect(
+      screen.getByText(/foi cancelada. Para marcar outro horário/),
+    ).toBeTruthy();
+    expect(posts).toEqual([
+      expect.stringContaining(
+        '/confirmacao/token-da-sessao/cancelar {"justificativa":"Consulta médica no mesmo horário."}',
+      ),
+    ]);
+    expect(screen.queryByRole("button")).toBeNull();
+    expect(document.activeElement?.textContent).toContain("Sessão cancelada");
+    expect(screen.queryByText(/conta como falta/)).toBeNull();
+  });
+
+  it("sem justificativa: não envia, indica o campo e leva o foco a ele", async () => {
+    const posts = simularApi([ok(agendada)]);
+    abrir();
+    await abrirCancelamento();
+    fireEvent.click(screen.getByRole("button", { name: "Voltar" }));
+    await abrirCancelamento();
+    fireEvent.change(screen.getByLabelText(/Por que você precisa cancelar/), {
+      target: { value: "   " },
+    });
+    fireEvent.click(
+      screen.getByRole("button", { name: "Confirmar cancelamento" }),
+    );
+
+    expect(
+      await screen.findByText("Escreva o motivo do cancelamento."),
+    ).toBeTruthy();
+    const campo = screen.getByLabelText(/Por que você precisa cancelar/);
+    expect(campo.getAttribute("aria-invalid")).toBe("true");
+    expect(document.activeElement).toBe(campo);
+    expect(posts).toHaveLength(0);
+  });
+
+  it("fora do prazo: o resultado diz que conta como falta", async () => {
+    simularApi([ok(agendada)], [ok({ ...cancelada, contaComoFalta: true })]);
+    abrir();
+    await abrirCancelamento();
+    fireEvent.change(screen.getByLabelText(/Por que você precisa cancelar/), {
+      target: { value: "Perdi o ônibus." },
+    });
+    fireEvent.click(
+      screen.getByRole("button", { name: "Confirmar cancelamento" }),
+    );
+
+    expect(await screen.findByText(/conta como falta/)).toBeTruthy();
+  });
+
+  it("voltar: a sessão aparece de novo, com o foco no título", async () => {
+    simularApi([ok(agendada)]);
+    abrir();
+    await abrirCancelamento();
+
+    fireEvent.click(screen.getByRole("button", { name: "Voltar" }));
+
+    const titulo = screen.getByRole("heading", {
+      name: "Sua sessão na Clínica Escola",
+    });
+    expect(document.activeElement).toBe(titulo);
+    expect(
+      screen.getByRole("button", { name: "Confirmar presença" }),
+    ).toBeTruthy();
+  });
+
+  it.each([
+    ["presença confirmada", confirmada],
+    ["prazo de confirmação encerrado", encerrada],
+  ])("%s: o cancelamento continua disponível até o início", async (_c, s) => {
+    simularApi([ok(s)]);
+    abrir();
+
+    expect(
+      await screen.findByRole("button", {
+        name: "Não vou poder ir: cancelar sessão",
+      }),
+    ).toBeTruthy();
+  });
+
+  it("o link deixou de valer com a página aberta: mostra o link inválido", async () => {
+    simularApi([ok(agendada), INVALIDO], [INVALIDO]);
+    abrir();
+    await abrirCancelamento();
+    fireEvent.change(screen.getByLabelText(/Por que você precisa cancelar/), {
+      target: { value: "Viagem." },
+    });
+    fireEvent.click(
+      screen.getByRole("button", { name: "Confirmar cancelamento" }),
+    );
+
+    expect(
+      await screen.findByRole("heading", {
+        name: "Este link não é mais válido",
+      }),
+    ).toBeTruthy();
+  });
+
+  it("falha de conexão: continua no formulário e avisa, sem dizer que cancelou", async () => {
+    simularApi([ok(agendada)], [{ status: 500, corpo: {} }]);
+    abrir();
+    await abrirCancelamento();
+    fireEvent.change(screen.getByLabelText(/Por que você precisa cancelar/), {
+      target: { value: "Viagem." },
+    });
+    fireEvent.click(
+      screen.getByRole("button", { name: "Confirmar cancelamento" }),
+    );
+
+    expect(
+      await screen.findByText(/Não foi possível cancelar a sessão/),
+    ).toBeTruthy();
+    expect(screen.queryByText("Sessão cancelada")).toBeNull();
+    expect(
+      screen.getByRole("button", { name: "Confirmar cancelamento" }),
     ).toBeTruthy();
   });
 });
