@@ -51,12 +51,15 @@ export const evolucaoSchema = z.object({
 });
 export type Evolucao = z.infer<typeof evolucaoSchema>;
 
-// Situação do caso ao longo da distribuição (RF18 a RF21).
+// Situação do caso ao longo da distribuição (RF18 a RF21), do desligamento por
+// faltas (RF37) e da reversão que encontra a vaga já ocupada (RF38).
 export const SITUACOES_CASO = [
   "aguardando_distribuicao",
   "aguardando_vinculo",
   "em_atendimento",
   "encerrado",
+  "desligado_por_faltas",
+  "aguardando_vaga",
 ] as const;
 export const situacaoCasoSchema = z.enum(SITUACOES_CASO);
 export type SituacaoCaso = z.infer<typeof situacaoCasoSchema>;

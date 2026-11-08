@@ -57,6 +57,13 @@
       "when": 1793991869138,
       "tag": "0007_faltas_do_paciente",
       "breakpoints": true
+    },
+    {
+      "idx": 8,
+      "version": "7",
+      "when": 1794057872805,
+      "tag": "0008_desligamento_por_faltas",
+      "breakpoints": true
     }
   ]
 }
