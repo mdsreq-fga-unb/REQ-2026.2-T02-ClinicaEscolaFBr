@@ -113,8 +113,11 @@ export function Dialogo({
         <div
           className={cn(
             "sticky bottom-0 flex justify-end gap-3 border-t border-border bg-card px-4 pt-3 pb-4 max-md:[&>*]:w-full",
-            !alerta &&
-              "max-md:[&:has([data-principal])>:not([data-principal])]:hidden",
+            // No alerta, os dois botões ficam empilhados no celular, com o
+            // principal em cima; nos outros, só o principal aparece.
+            alerta
+              ? "max-md:flex-col-reverse"
+              : "max-md:[&:has([data-principal])>:not([data-principal])]:hidden",
             lateral ? "md:px-6 md:py-4" : "md:px-6 md:pt-4 md:pb-5",
           )}
         >

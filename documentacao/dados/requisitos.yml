@@ -571,7 +571,7 @@ rfs:
   lider: Gabriel
   depende: [RF10, RF14, RF15]
   issue: 150
-  estado: Código concluído
+  estado: Promovida para a versão integrada
 
 - id: RF35
   nome: Contabilizar faltas do paciente no ciclo
@@ -585,7 +585,7 @@ rfs:
   lider: Gabriel
   depende: [RF15, RF34]
   issue: 151
-  estado: Código concluído
+  estado: Promovida para a versão integrada
   origem: [DF20]
 
 - id: RF36
@@ -600,7 +600,7 @@ rfs:
   lider: Gabriel
   depende: [RF35]
   issue: 152
-  estado: Planejada
+  estado: Código concluído
 
 - id: RF37
   nome: Desligar paciente por faltas e liberar vaga
@@ -614,7 +614,7 @@ rfs:
   lider: Gabriel
   depende: [RF36]
   issue: 153
-  estado: Planejada
+  estado: Código concluído
 
 - id: RF38
   nome: Reverter desligamento de paciente por faltas
@@ -628,7 +628,7 @@ rfs:
   lider: Gabriel
   depende: [RF37]
   issue: 154
-  estado: Planejada
+  estado: Código concluído
 
 - id: RF39
   nome: Consolidar faltas do estagiário para a supervisão
