@@ -242,7 +242,7 @@ rfs:
   lider: Nicolas
   depende: [RF10]
   issue: 142
-  estado: Design inspecionado
+  estado: Código concluído
   origem: [DF24, DF45]
 
 - id: RF15

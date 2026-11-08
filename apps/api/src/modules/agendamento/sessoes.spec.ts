@@ -244,10 +244,10 @@ describe('Agendamento de sessão (RF10)', () => {
       .select()
       .from(linksConfirmacao)
       .where(eq(linksConfirmacao.sessaoId, body.id));
-    // O banco guarda só o hash do token, que vale até 24 horas antes do início.
+    // O banco guarda só o hash do token, que vale até o início (RF15, RNF59).
     expect(link.tokenHash).not.toBe(token);
     expect(link.expiraEm.toISOString()).toBe(
-      new Date(`2026-12-02T10:00:00-03:00`).toISOString(),
+      new Date(`2026-12-03T10:00:00-03:00`).toISOString(),
     );
   });
 

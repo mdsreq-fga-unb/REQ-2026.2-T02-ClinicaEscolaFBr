@@ -69,7 +69,7 @@ const ESTILO_STATUS: Record<
     Icone: Clock,
   },
   confirmada: {
-    classe: "border-[#a3d4b3] bg-[#e5f4ea] text-[#1b5e33]",
+    classe: "border-[#a9cfe0] bg-info-fundo text-marca",
     Icone: Check,
   },
   cancelada: {
