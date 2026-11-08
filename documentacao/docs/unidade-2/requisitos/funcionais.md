@@ -475,7 +475,7 @@ _Rastreabilidade:_ Feature "Registrar cancelamento de sessão pelo estagiário" 
 
 {{ registro("RF16") }}
 
-#### Feature — Notificar paciente sobre ausência do estagiário
+#### Feature — Notificar paciente sobre ausência do estagiário [#223](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/issues/223)
 
 **RF17 — Notificar paciente sobre ausência do estagiário**{ #rf17 }
 
@@ -737,7 +737,7 @@ _Rastreabilidade:_ Feature "Registrar evolução da sessão realizada" → CP7 �
 
 {{ registro("RF28") }}
 
-#### Feature — Corrigir evolução registrada
+#### Feature — Corrigir evolução registrada [#224](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/issues/224)
 
 **RF29 — Corrigir evolução registrada**{ #rf29 }
 
@@ -1000,7 +1000,7 @@ _Rastreabilidade:_ Feature "Reverter desligamento de paciente por faltas" → CP
 
 O escopo da CP9 também prevê o controle das faltas do estagiário, mencionado na Solução Proposta. Em resposta posterior à reunião de 26/08/2026, a Clínica Escola confirmou a regra de consequência: 3 faltas do estagiário reprovam o campo de estágio (RF40). As features abaixo separam quatro ações com regras distintas: a consulta das ausências do estagiário já registradas pela CP4 (RF16) pela supervisão (RF39), a contagem das faltas no semestre (RF40), a sinalização da reprovação ao atingir o limite (RF63) e o registro da decisão institucional da coordenação, que encerra a sinalização (RF64).
 
-#### Feature — Consolidar faltas do estagiário para a supervisão
+#### Feature — Consolidar faltas do estagiário para a supervisão [#225](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/issues/225)
 
 **RF39 — Consolidar faltas do estagiário para a supervisão**{ #rf39 }
 
@@ -1148,7 +1148,7 @@ _Rastreabilidade:_ Feature "Bloquear agendamento por contribuição social pende
 
 Este conjunto reúne quatro features que permitem que a secretaria ou o próprio paciente/responsável obtenham a declaração de comparecimento às sessões, contendo data, horário e nome do estagiário que realizou o atendimento, e validem sua autenticidade. O objetivo é atender de imediato uma demanda recorrente dos pacientes, sem trabalho manual da secretaria. A feature de emissão consolidada por período, antes cogitada como quinta feature, foi retirada da lista: a Clínica Escola confirmou que essa necessidade já é atendida pelo relatório final de atendimento (CP8).
 
-#### Feature — Listar sessões com comparecimento registrado do paciente
+#### Feature — Listar sessões com comparecimento registrado do paciente [#226](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/issues/226)
 
 **RF44 — Listar sessões com comparecimento registrado do paciente**{ #rf44 }
 
