@@ -7,12 +7,18 @@ import type {
   CasoDoSupervisor,
   EstagiarioDisponivel,
   ResultadoVinculo,
+  VagaLiberada,
 } from "@clinica/shared";
+import {
+  CartaoVagaLiberada,
+  SeloSituacaoCaso,
+} from "@/components/assiduidade/desligamento";
 import { Aviso } from "@/components/comum/aviso";
 import { Dialogo } from "@/components/comum/dialogo";
 import { Prioridade } from "@/components/casos/prioridade";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { api, ErroApi } from "@/lib/api";
+import { dataBr } from "@/lib/formato";
 import { useSessao } from "@/lib/sessao";
 
 const pacientes = (n: number) =>
@@ -157,6 +163,12 @@ export default function MeusCasosPage() {
     queryFn: () => api<CasoDoSupervisor[]>("/casos/meus"),
     enabled: supervisor,
   });
+  // Vagas liberadas por desligamento nos casos que o supervisor acompanhava (RF37).
+  const vagas = useQuery({
+    queryKey: ["vagas", "liberadas"],
+    queryFn: () => api<VagaLiberada[]>("/vagas/liberadas"),
+    enabled: supervisor,
+  });
 
   if (sessao && !supervisor) {
     return <Aviso tipo="erro" titulo="Acesso restrito aos supervisores." />;
@@ -164,8 +176,14 @@ export default function MeusCasosPage() {
 
   // No computador, "Abrir prontuário" é um botão discreto; no celular, ocupa a
   // largura do cartão, como no protótipo.
+  // O caso que aguarda vínculo, ou que aguarda vaga depois da reversão (RF38),
+  // recebe o estagiário; os outros abrem o prontuário.
+  const vincula = (caso: CasoDoSupervisor) =>
+    !caso.estagiario &&
+    (caso.situacao === "aguardando_vinculo" ||
+      caso.situacao === "aguardando_vaga");
   const acao = (caso: CasoDoSupervisor, largo = false) =>
-    caso.prontuarioId ? (
+    !vincula(caso) && caso.prontuarioId ? (
       <Link
         href={`/prontuarios/${caso.prontuarioId}`}
         aria-label={`Abrir prontuário de ${caso.nome}`}
@@ -192,6 +210,15 @@ export default function MeusCasosPage() {
   const semEstagiario = (
     <span className="text-muted-foreground italic">Sem estagiário</span>
   );
+  const estagiarioDo = (caso: CasoDoSupervisor) =>
+    caso.estagiario ??
+    (caso.vinculoEncerradoEm ? (
+      <span className="text-muted-foreground">
+        Vínculo encerrado em {dataBr(caso.vinculoEncerradoEm)}
+      </span>
+    ) : (
+      semEstagiario
+    ));
 
   return (
     <div className="flex flex-col gap-6">
@@ -209,6 +236,10 @@ export default function MeusCasosPage() {
           O prontuário do caso foi criado.
         </Aviso>
       )}
+
+      {vagas.data?.map((vaga) => (
+        <CartaoVagaLiberada key={vaga.id} vaga={vaga} supervisor />
+      ))}
 
       {lista.isPending && supervisor && <p role="status">Carregando casos…</p>}
       {lista.isError && (
@@ -239,6 +270,7 @@ export default function MeusCasosPage() {
                   <th scope="col">Paciente</th>
                   <th scope="col">Prioridade clínica</th>
                   <th scope="col">Estagiário</th>
+                  <th scope="col">Situação</th>
                   <th scope="col">
                     <span className="sr-only">Ações</span>
                   </th>
@@ -252,7 +284,10 @@ export default function MeusCasosPage() {
                     <td>
                       {caso.prioridade && <Prioridade cor={caso.prioridade} />}
                     </td>
-                    <td>{caso.estagiario ?? semEstagiario}</td>
+                    <td>{estagiarioDo(caso)}</td>
+                    <td>
+                      <SeloSituacaoCaso situacao={caso.situacao} />
+                    </td>
                     <td className="text-right">{acao(caso)}</td>
                   </tr>
                 ))}
@@ -270,8 +305,11 @@ export default function MeusCasosPage() {
                 <p className="text-sm text-muted-foreground">
                   {caso.estagiario
                     ? `Estagiário: ${caso.estagiario}`
-                    : semEstagiario}
+                    : estagiarioDo(caso)}
                 </p>
+                <div>
+                  <SeloSituacaoCaso situacao={caso.situacao} />
+                </div>
                 {acao(caso, true)}
               </li>
             ))}
@@ -289,6 +327,7 @@ export default function MeusCasosPage() {
             setMensagem(resultado);
             void cliente.invalidateQueries({ queryKey: ["casos"] });
             void cliente.invalidateQueries({ queryKey: ["estagiarios"] });
+            void cliente.invalidateQueries({ queryKey: ["vagas"] });
           }}
         />
       )}

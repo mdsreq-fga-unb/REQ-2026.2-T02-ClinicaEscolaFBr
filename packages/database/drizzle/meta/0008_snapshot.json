@@ -1,5 +1,5 @@
 {
-  "id": "b4a90246-ba8a-43d4-9cd8-19b3fdf675c5",
+  "id": "12f2f3bf-9cf0-4d2a-99c2-381166736107",
   "prevId": "18824419-7228-461a-98a7-be1054412bff",
   "version": "7",
   "dialect": "postgresql",
@@ -1025,19 +1025,6 @@
           "type": "timestamp with time zone",
           "primaryKey": false,
           "notNull": false
-        },
-        "confirmada_em": {
-          "name": "confirmada_em",
-          "type": "timestamp with time zone",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "confirmada_por": {
-          "name": "confirmada_por",
-          "type": "meio_confirmacao",
-          "typeSchema": "public",
-          "primaryKey": false,
-          "notNull": false
         }
       },
       "indexes": {
@@ -1144,10 +1131,6 @@
       "uniqueConstraints": {},
       "policies": {},
       "checkConstraints": {
-        "sessoes_confirmacao_completa": {
-          "name": "sessoes_confirmacao_completa",
-          "value": "(\"sessoes_atendimento\".\"confirmada_em\" is null) = (\"sessoes_atendimento\".\"confirmada_por\" is null)"
-        },
         "sessoes_termino_apos_inicio": {
           "name": "sessoes_termino_apos_inicio",
           "value": "\"sessoes_atendimento\".\"termino\" > \"sessoes_atendimento\".\"inicio\""
@@ -1496,6 +1479,314 @@
       "checkConstraints": {},
       "isRLSEnabled": false
     },
+    "public.cancelamentos_sessao": {
+      "name": "cancelamentos_sessao",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "sessao_id": {
+          "name": "sessao_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "origem": {
+          "name": "origem",
+          "type": "origem_cancelamento",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "classificacao": {
+          "name": "classificacao",
+          "type": "classificacao_cancelamento",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "justificativa_cifrada": {
+          "name": "justificativa_cifrada",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "registrado_por": {
+          "name": "registrado_por",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "registrado_em": {
+          "name": "registrado_em",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "antecedencia_minutos": {
+          "name": "antecedencia_minutos",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "desligamento_id": {
+          "name": "desligamento_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": false
+        }
+      },
+      "indexes": {
+        "cancelamentos_desligamento": {
+          "name": "cancelamentos_desligamento",
+          "columns": [
+            {
+              "expression": "desligamento_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {
+        "cancelamentos_sessao_sessao_id_sessoes_atendimento_id_fk": {
+          "name": "cancelamentos_sessao_sessao_id_sessoes_atendimento_id_fk",
+          "tableFrom": "cancelamentos_sessao",
+          "tableTo": "sessoes_atendimento",
+          "columnsFrom": ["sessao_id"],
+          "columnsTo": ["id"],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "cancelamentos_sessao_registrado_por_usuarios_id_fk": {
+          "name": "cancelamentos_sessao_registrado_por_usuarios_id_fk",
+          "tableFrom": "cancelamentos_sessao",
+          "tableTo": "usuarios",
+          "columnsFrom": ["registrado_por"],
+          "columnsTo": ["id"],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "cancelamentos_sessao_desligamento_id_desligamentos_por_faltas_id_fk": {
+          "name": "cancelamentos_sessao_desligamento_id_desligamentos_por_faltas_id_fk",
+          "tableFrom": "cancelamentos_sessao",
+          "tableTo": "desligamentos_por_faltas",
+          "columnsFrom": ["desligamento_id"],
+          "columnsTo": ["id"],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {
+        "cancelamentos_sessao_sessao_id_unique": {
+          "name": "cancelamentos_sessao_sessao_id_unique",
+          "nullsNotDistinct": false,
+          "columns": ["sessao_id"]
+        }
+      },
+      "policies": {},
+      "checkConstraints": {
+        "cancelamentos_autor": {
+          "name": "cancelamentos_autor",
+          "value": "(\"cancelamentos_sessao\".\"origem\" = 'link') = (\"cancelamentos_sessao\".\"registrado_por\" is null)"
+        },
+        "cancelamentos_desligamento": {
+          "name": "cancelamentos_desligamento",
+          "value": "(\"cancelamentos_sessao\".\"desligamento_id\" is not null) = (\"cancelamentos_sessao\".\"classificacao\" = 'desligamento')"
+        },
+        "cancelamentos_justificativa": {
+          "name": "cancelamentos_justificativa",
+          "value": "\"cancelamentos_sessao\".\"justificativa_cifrada\" is not null or \"cancelamentos_sessao\".\"classificacao\" in ('desligamento', 'administrativo')"
+        }
+      },
+      "isRLSEnabled": false
+    },
+    "public.desligamento_faltas": {
+      "name": "desligamento_faltas",
+      "schema": "",
+      "columns": {
+        "desligamento_id": {
+          "name": "desligamento_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "falta_id": {
+          "name": "falta_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "desligamento_faltas_desligamento_id_desligamentos_por_faltas_id_fk": {
+          "name": "desligamento_faltas_desligamento_id_desligamentos_por_faltas_id_fk",
+          "tableFrom": "desligamento_faltas",
+          "tableTo": "desligamentos_por_faltas",
+          "columnsFrom": ["desligamento_id"],
+          "columnsTo": ["id"],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "desligamento_faltas_falta_id_faltas_paciente_id_fk": {
+          "name": "desligamento_faltas_falta_id_faltas_paciente_id_fk",
+          "tableFrom": "desligamento_faltas",
+          "tableTo": "faltas_paciente",
+          "columnsFrom": ["falta_id"],
+          "columnsTo": ["id"],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {
+        "desligamento_faltas_desligamento_id_falta_id_pk": {
+          "name": "desligamento_faltas_desligamento_id_falta_id_pk",
+          "columns": ["desligamento_id", "falta_id"]
+        }
+      },
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.desligamentos_por_faltas": {
+      "name": "desligamentos_por_faltas",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "caso_id": {
+          "name": "caso_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "ciclo_atendimento": {
+          "name": "ciclo_atendimento",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "data_decisao": {
+          "name": "data_decisao",
+          "type": "date",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "decidido_por": {
+          "name": "decidido_por",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "decidido_em": {
+          "name": "decidido_em",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "revertido_por": {
+          "name": "revertido_por",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "revertido_em": {
+          "name": "revertido_em",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "motivo_reversao_cifrado": {
+          "name": "motivo_reversao_cifrado",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        }
+      },
+      "indexes": {
+        "desligamentos_vigente_unico": {
+          "name": "desligamentos_vigente_unico",
+          "columns": [
+            {
+              "expression": "caso_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "ciclo_atendimento",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": true,
+          "where": "\"desligamentos_por_faltas\".\"revertido_em\" is null",
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {
+        "desligamentos_por_faltas_caso_id_casos_id_fk": {
+          "name": "desligamentos_por_faltas_caso_id_casos_id_fk",
+          "tableFrom": "desligamentos_por_faltas",
+          "tableTo": "casos",
+          "columnsFrom": ["caso_id"],
+          "columnsTo": ["id"],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "desligamentos_por_faltas_decidido_por_usuarios_id_fk": {
+          "name": "desligamentos_por_faltas_decidido_por_usuarios_id_fk",
+          "tableFrom": "desligamentos_por_faltas",
+          "tableTo": "usuarios",
+          "columnsFrom": ["decidido_por"],
+          "columnsTo": ["id"],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "desligamentos_por_faltas_revertido_por_usuarios_id_fk": {
+          "name": "desligamentos_por_faltas_revertido_por_usuarios_id_fk",
+          "tableFrom": "desligamentos_por_faltas",
+          "tableTo": "usuarios",
+          "columnsFrom": ["revertido_por"],
+          "columnsTo": ["id"],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {
+        "desligamentos_reversao_completa": {
+          "name": "desligamentos_reversao_completa",
+          "value": "(\"desligamentos_por_faltas\".\"revertido_em\" is null) = (\"desligamentos_por_faltas\".\"revertido_por\" is null) and (\"desligamentos_por_faltas\".\"revertido_em\" is null) = (\"desligamentos_por_faltas\".\"motivo_reversao_cifrado\" is null)"
+        }
+      },
+      "isRLSEnabled": false
+    },
     "public.faltas_paciente": {
       "name": "faltas_paciente",
       "schema": "",
@@ -1684,6 +1975,133 @@
         }
       },
       "isRLSEnabled": false
+    },
+    "public.vagas_liberadas": {
+      "name": "vagas_liberadas",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "desligamento_id": {
+          "name": "desligamento_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "estagiario_id": {
+          "name": "estagiario_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "supervisor_id": {
+          "name": "supervisor_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "liberada_em": {
+          "name": "liberada_em",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "ocupada_em": {
+          "name": "ocupada_em",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "ocupada_por_vinculo_id": {
+          "name": "ocupada_por_vinculo_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "encerrada_em": {
+          "name": "encerrada_em",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": false
+        }
+      },
+      "indexes": {
+        "vagas_estagiario": {
+          "name": "vagas_estagiario",
+          "columns": [
+            {
+              "expression": "estagiario_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {
+        "vagas_liberadas_desligamento_id_desligamentos_por_faltas_id_fk": {
+          "name": "vagas_liberadas_desligamento_id_desligamentos_por_faltas_id_fk",
+          "tableFrom": "vagas_liberadas",
+          "tableTo": "desligamentos_por_faltas",
+          "columnsFrom": ["desligamento_id"],
+          "columnsTo": ["id"],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "vagas_liberadas_estagiario_id_usuarios_id_fk": {
+          "name": "vagas_liberadas_estagiario_id_usuarios_id_fk",
+          "tableFrom": "vagas_liberadas",
+          "tableTo": "usuarios",
+          "columnsFrom": ["estagiario_id"],
+          "columnsTo": ["id"],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "vagas_liberadas_supervisor_id_usuarios_id_fk": {
+          "name": "vagas_liberadas_supervisor_id_usuarios_id_fk",
+          "tableFrom": "vagas_liberadas",
+          "tableTo": "usuarios",
+          "columnsFrom": ["supervisor_id"],
+          "columnsTo": ["id"],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "vagas_liberadas_ocupada_por_vinculo_id_vinculos_estagiario_id_fk": {
+          "name": "vagas_liberadas_ocupada_por_vinculo_id_vinculos_estagiario_id_fk",
+          "tableFrom": "vagas_liberadas",
+          "tableTo": "vinculos_estagiario",
+          "columnsFrom": ["ocupada_por_vinculo_id"],
+          "columnsTo": ["id"],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {
+        "vagas_liberadas_desligamento_id_unique": {
+          "name": "vagas_liberadas_desligamento_id_unique",
+          "nullsNotDistinct": false,
+          "columns": ["desligamento_id"]
+        }
+      },
+      "policies": {},
+      "checkConstraints": {
+        "vagas_ocupacao_completa": {
+          "name": "vagas_ocupacao_completa",
+          "value": "(\"vagas_liberadas\".\"ocupada_em\" is null) = (\"vagas_liberadas\".\"ocupada_por_vinculo_id\" is null)"
+        }
+      },
+      "isRLSEnabled": false
     }
   },
   "enums": {
@@ -1709,13 +2127,10 @@
         "aguardando_distribuicao",
         "aguardando_vinculo",
         "em_atendimento",
-        "encerrado"
+        "encerrado",
+        "desligado_por_faltas",
+        "aguardando_vaga"
       ]
-    },
-    "public.meio_confirmacao": {
-      "name": "meio_confirmacao",
-      "schema": "public",
-      "values": ["link", "secretaria"]
     },
     "public.status_sessao": {
       "name": "status_sessao",
@@ -1726,6 +2141,28 @@
         "cancelada",
         "realizada",
         "falta_paciente"
+      ]
+    },
+    "public.classificacao_cancelamento": {
+      "name": "classificacao_cancelamento",
+      "schema": "public",
+      "values": [
+        "no_prazo",
+        "fora_do_prazo",
+        "administrativo",
+        "ausencia_estagiario",
+        "desligamento"
+      ]
+    },
+    "public.origem_cancelamento": {
+      "name": "origem_cancelamento",
+      "schema": "public",
+      "values": [
+        "link",
+        "secretaria",
+        "estagiario",
+        "supervisor",
+        "coordenacao"
       ]
     },
     "public.origem_falta": {

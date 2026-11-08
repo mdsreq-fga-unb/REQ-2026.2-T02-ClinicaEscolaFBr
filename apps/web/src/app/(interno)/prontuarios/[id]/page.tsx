@@ -13,6 +13,7 @@ import {
   type DadosIniciais,
   type Evolucao,
   type FaltaDaSessao,
+  type SessaoAReagendar,
   type StatusSessao,
 } from "@clinica/shared";
 import {
@@ -22,6 +23,7 @@ import {
   ResumoFaltas,
   SeloSessao,
 } from "@/components/assiduidade/faltas";
+import { SessoesAReagendar } from "@/components/assiduidade/desligamento";
 import { Aviso } from "@/components/comum/aviso";
 import {
   Campo,
@@ -288,6 +290,7 @@ function AcaoSessao({
 }
 
 type Prontuario = {
+  casoId: string;
   id: string;
   cicloAtendimento: number;
   criadoEm: string;
@@ -320,6 +323,7 @@ type Prontuario = {
     status: StatusSessao;
     falta: FaltaDaSessao | null;
     cancelamento: CancelamentoDaSessao | null;
+    canceladaPorDesligamento: boolean;
     evolucao: null | {
       id: string;
       queixa: string;
@@ -333,9 +337,9 @@ type Prontuario = {
   sessoesRealizadas: number;
   fechamentoAvaliativoPendente: boolean;
   faltasNoCiclo: ContagemFaltas;
+  sessoesAReagendar: SessaoAReagendar[];
   acoesFalta: { registrar: boolean; justificar: boolean };
   acoesCancelamento: AcoesCancelamento;
-  casoId: string;
 };
 
 // Acesso negado: a mesma tela para qualquer recusa, sem o nome do paciente (RNF25).
@@ -521,6 +525,12 @@ export default function ProntuarioPage() {
           </>
         )}
       </section>
+      <SessoesAReagendar
+        casoId={p.casoId}
+        sessoes={p.sessoesAReagendar}
+        desligamento={undefined}
+        podeAgendar={sessao?.perfil === "estagiario"}
+      />
       <section aria-labelledby="sessoes-ciclo" className={cartao}>
         <h2 id="sessoes-ciclo" className="ui-h2">
           Sessões do ciclo {p.cicloAtendimento}
@@ -558,6 +568,7 @@ export default function ProntuarioPage() {
                       status={atendimento.status}
                       justificada={atendimento.falta?.justificada}
                       cancelamento={atendimento.cancelamento}
+                      porDesligamento={atendimento.canceladaPorDesligamento}
                     />
                   </h3>
                   {atendimento.falta && (
