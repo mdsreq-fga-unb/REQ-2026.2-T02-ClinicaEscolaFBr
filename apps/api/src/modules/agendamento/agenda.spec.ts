@@ -343,18 +343,77 @@ describe('Agenda de sessões do estagiário (RF11)', () => {
       });
     });
 
-    it('sem vínculo vigente no caso, a sessão aparece sem ações', async () => {
-      await db
-        .update(vinculosEstagiario)
-        .set({ vigente: false })
-        .where(eq(vinculosEstagiario.casoId, casoDaPatricia));
+    describe('depois do fim do vínculo (RNF16, RF25, RF37)', () => {
+      const TODAS = 'agendada,confirmada,realizada,cancelada,falta_paciente';
+      const encerrarVinculo = (casoId: string) =>
+        db
+          .update(vinculosEstagiario)
+          .set({ vigente: false })
+          .where(eq(vinculosEstagiario.casoId, casoId));
 
-      const { body } = await agenda('ana', semana).expect(200);
-      const daPatricia = body.sessoes.find(
-        (s: { id: string }) => s.id === sessoes.daPatricia,
-      );
+      it('as sessões do caso deixam de vir, com o nome do paciente, e as dos outros casos continuam', async () => {
+        const antes = await agenda('ana', semana).expect(200);
+        expect(ids(antes.body)).toContain(sessoes.daPatricia);
 
-      expect(Object.values(daPatricia.acoes).some(Boolean)).toBe(false);
+        await encerrarVinculo(casoDaPatricia);
+        const { body } = await agenda('ana', {
+          ...semana,
+          status: TODAS,
+        }).expect(200);
+
+        expect(ids(body)).not.toContain(sessoes.daPatricia);
+        expect(JSON.stringify(body)).not.toContain('Beatriz Oliveira Santos');
+        expect(ids(body)).toEqual([
+          sessoes.realizada,
+          sessoes.confirmada,
+          sessoes.agendada,
+          sessoes.cancelada,
+          sessoes.falta,
+          sessoes.domingoTarde,
+        ]);
+      });
+
+      it('transferido o caso, o estagiário anterior não vê mais as sessões que fez nele', async () => {
+        await encerrarVinculo(casoDaCarla);
+        await db.insert(vinculosEstagiario).values({
+          casoId: casoDaCarla,
+          estagiarioId: pessoas.joao.id,
+          vinculadoPor: pessoas.carla.id,
+        });
+
+        const { body } = await agenda('ana', {
+          ...semana,
+          status: TODAS,
+        }).expect(200);
+
+        expect(ids(body)).toEqual([sessoes.daPatricia]);
+        expect(JSON.stringify(body)).not.toContain('Mariana Alves Toledo');
+      });
+
+      it('sem nenhum vínculo vigente, a agenda vem vazia', async () => {
+        await encerrarVinculo(casoDaCarla);
+        await encerrarVinculo(casoDaPatricia);
+
+        const { body } = await agenda('ana', {
+          ...semana,
+          status: TODAS,
+        }).expect(200);
+
+        expect(body.sessoes).toEqual([]);
+      });
+
+      it('com um vínculo novo no mesmo caso, as sessões voltam (RF38)', async () => {
+        await encerrarVinculo(casoDaPatricia);
+        await db.insert(vinculosEstagiario).values({
+          casoId: casoDaPatricia,
+          estagiarioId: pessoas.ana.id,
+          vinculadoPor: pessoas.patricia.id,
+        });
+
+        const { body } = await agenda('ana', semana).expect(200);
+
+        expect(ids(body)).toContain(sessoes.daPatricia);
+      });
     });
   });
 

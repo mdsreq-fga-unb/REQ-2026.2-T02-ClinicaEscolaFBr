@@ -390,7 +390,7 @@ sequenceDiagram
     participant DB as Banco
     U->>A: GET /agenda com período, situação e estagiário
     alt estagiário
-        A->>DB: sessões do próprio estagiário no período
+        A->>DB: sessões do próprio estagiário no período, só dos casos com vínculo vigente dele
     else supervisor
         A->>DB: confere se o estagiário tem caso vigente supervisionado por ele
         alt não supervisiona
@@ -407,6 +407,7 @@ sequenceDiagram
 | "Estagiário do supervisor" segue a definição única do início da CP4 | O supervisor vê a agenda dos estagiários dele |
 | Para o supervisor, a consulta filtra as sessões pelos casos com atribuição vigente dele; as sessões do mesmo estagiário em casos de outro supervisor não vêm (RNF16) | O supervisor vê só as sessões dos casos que supervisiona |
 | `403` sem sessão para quem não supervisiona; o estagiário nunca vê a agenda de outro | Sem vínculo de supervisão, não acessa a agenda |
+| Para o estagiário, a consulta filtra as sessões pelos casos com vínculo vigente dele, inclusive as sessões passadas (RNF16, RF25) | Encerrado o vínculo, por transferência ou desligamento, as sessões do caso e o nome do paciente deixam de aparecer |
 
 **Telas:** item "Agenda" do estagiário e, para o supervisor, "Agenda" com a escolha do estagiário (proposta levada à FBr). A sessão realizada leva ao prontuário. Depois da entrada, o estagiário cai hoje na `/meus-pacientes`, que dá 404 e é construída pelo RF23 (#160). A "Agenda" da secretaria, que também dá 404 hoje, é construída pelo RF14, com a seção "Sem confirmação". Protótipo: [prancha 4-2](prototipos-ciclo-4.md#rf11).
 
@@ -418,8 +419,9 @@ sequenceDiagram
 - **Ações de cada linha:** "Abrir prontuário" na sessão realizada; "Registrar falta do paciente" na sessão que já passou sem registro, para o estagiário com vínculo vigente (o diálogo do RF34); "Cancelar sessão" nas futuras, com o diálogo do RF15 e do RF16; para o supervisor, "Registrar ausência do estagiário". As ações seguem a mesma regra das rotas.
 - **Página:** `/agenda` mostra o conteúdo de cada perfil: "Sem confirmação" para a secretaria (RF14), a agenda do estagiário e a "Agenda dos estagiários" do supervisor, com o escolhido no endereço (`?estagiario=`). A coordenação não tem agenda. O supervisor ganha o item "Agenda" no menu, entre "Distribuição de casos" e "Meus casos", como na proposta da prancha.
 - **Acesso negado:** a tentativa do supervisor de abrir a agenda de um estagiário que não é dele fica na auditoria (`consultar_agenda_negada`), como diz a tela.
+- **Fim do vínculo:** a agenda do estagiário segue a mesma regra do prontuário: só os casos com vínculo vigente. A agenda não guarda um histórico dos antigos pacientes; se a FBr pedir esse histórico, ele precisa ser validado como exceção ao RNF16.
 
-**Dados de teste:** um estagiário com sessões na semana em todas as situações; um período sem sessões; um supervisor com dois estagiários; um estagiário com casos de dois supervisores (cada um vê só as sessões dos próprios casos); um supervisor pedindo a agenda de um estagiário de outro (403).
+**Dados de teste:** um estagiário com sessões na semana em todas as situações; um período sem sessões; um supervisor com dois estagiários; um estagiário com casos de dois supervisores (cada um vê só as sessões dos próprios casos); um supervisor pedindo a agenda de um estagiário de outro (403); um estagiário com o vínculo encerrado e com o caso transferido, com as sessões do caso fora da agenda.
 
 ---
 

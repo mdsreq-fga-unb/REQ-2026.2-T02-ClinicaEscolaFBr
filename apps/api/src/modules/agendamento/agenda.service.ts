@@ -35,8 +35,10 @@ const SEM_ACESSO =
 
 // Agenda de sessões do estagiário (RF11), separada da consulta de horários livres do
 // agendamento (GET /sessoes/agenda, RF10), que não mostra o nome dos pacientes.
-// O estagiário vê só a própria agenda. O supervisor vê a dos estagiários dele, só
-// com as sessões dos casos que ele supervisiona (RNF16).
+// O estagiário vê só a própria agenda, com as sessões dos casos em que tem vínculo
+// vigente: encerrado o vínculo, ele perde o acesso ao caso, como no prontuário (RF25,
+// RF37). O supervisor vê a dos estagiários dele, só com as sessões dos casos que ele
+// supervisiona (RNF16).
 @Injectable()
 export class AgendaService {
   constructor(
@@ -142,7 +144,14 @@ export class AgendaService {
               eq(atribuicoesSupervisor.vigente, true),
             ),
           )
-        : consulta
+        : consulta.innerJoin(
+            vinculosEstagiario,
+            and(
+              eq(vinculosEstagiario.casoId, sessoesAtendimento.casoId),
+              eq(vinculosEstagiario.estagiarioId, estagiarioId),
+              eq(vinculosEstagiario.vigente, true),
+            ),
+          )
     )
       .where(and(...condicoes))
       .orderBy(asc(sessoesAtendimento.inicio));
