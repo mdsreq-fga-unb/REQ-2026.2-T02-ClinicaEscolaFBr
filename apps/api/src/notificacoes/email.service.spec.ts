@@ -34,6 +34,30 @@ describe('Envio de e-mail', () => {
     );
   });
 
+  it('todo e-mail sai com o cabeçalho e o rodapé da clínica, sem imagem, e com a versão em texto', async () => {
+    const servico = new EmailService(
+      new ConfigService({ SMTP_HOST: 'localhost', SMTP_PORT: '1025' }),
+    );
+    await servico.enviar(
+      'ana@fbr.edu.br',
+      'Assunto',
+      '<p>Confirme pelo <a href="https://exemplo/x">link</a>.</p>',
+    );
+    const transporte = criarTransporte.mock.results[0].value as {
+      sendMail: jest.Mock;
+    };
+    const { html, text } = transporte.sendMail.mock.calls[0][0] as {
+      html: string;
+      text: string;
+    };
+    expect(html).toContain('Clínica Escola de Psicologia da FBr');
+    expect(html).toContain('<p>Confirme pelo');
+    expect(html).toContain('mensagem automática');
+    expect(html).not.toMatch(/<img/);
+    expect(text).toContain('link: https://exemplo/x');
+    expect(text).not.toMatch(/<[a-z]/);
+  });
+
   it('na implantação, usa o relay do Google Workspace, sem usuário e com o domínio no EHLO', async () => {
     const servico = new EmailService(
       new ConfigService({
