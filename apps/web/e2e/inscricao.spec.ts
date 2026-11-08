@@ -154,6 +154,7 @@ test("menor: erro, responsável, teclado e preservação dos dados", async ({
   }));
   expect(parseFloat(foco.width)).toBeGreaterThanOrEqual(2);
   expect(foco.color).toBe("rgb(0, 42, 61)");
+  await page.locator("#cpfResponsavel").fill("52998224725");
   await continuar(page);
   await preencherTriagem(page);
   await continuar(page);
