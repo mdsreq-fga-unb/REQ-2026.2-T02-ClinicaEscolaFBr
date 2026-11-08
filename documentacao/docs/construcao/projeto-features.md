@@ -1191,7 +1191,7 @@ sequenceDiagram
 
 **O que fica para depois (registrado na PR do RF14):**
 
-- o botão "Não vou poder ir: cancelar sessão" e os três estados do cancelamento entram com o RF15, para a página não ter um botão sem função;
+- o botão "Não vou poder ir: cancelar sessão" e os três estados do cancelamento entram com o RF15, para a página não ter um botão sem função (entraram na PR do RF15 e do RF16);
 - a tabela diária "Hoje" da prancha 2-1 não tem rota neste projeto e fica como pendência da Agenda da secretaria;
 - o rodapé "Dúvidas: [TELEFONE DA CLÍNICA]" das pranchas 1-5 e 1-6 fica de fora até a clínica informar o número;
 - **a configuração dos parâmetros pela coordenação** (apontada na revisão da PR #217): o `prazo_confirmacao_horas` fica na tabela `parametros`, com o padrão de 24 horas (DF45), e a API lê o valor a cada uso, então a mudança vale sem nova versão. Mas nenhuma tela ou rota deixa a coordenação alterar os parâmetros, nem este nem os do Ciclo 3 (`duracao_sessao_minutos`, `intervalo_anotacoes_minutos`, `limite_casos_supervisor` e `validade_convite_horas`), e nenhum RF cobre essa configuração. Até uma feature própria, a alteração é feita direto na tabela, por quem administra a implantação, a pedido da coordenação.
@@ -1250,6 +1250,14 @@ sequenceDiagram
 
 **Telas:** "Cancelar" na página do link, com a justificativa; diálogo "Cancelar sessão" na agenda da secretaria e do estagiário, com o tipo. Protótipo: [pranchas 1-5, 1-6](prototipos.md#rf14-rf15-link) e [2-2](prototipos.md#rf15-rf16).
 
+**Na implementação (PR do RF15 e do RF16):**
+
+- **Migration `0010`:** só o parâmetro `antecedencia_minima_cancelamento_minutos` (60). A tabela `cancelamentos_sessao` veio na `0008`, do RF37, e o status `cancelada` e a liberação do horário vieram na `0007`, do RF34.
+- **Onde fica o botão:** "Cancelar sessão" entra nas listas de sessões que já existem: "Sessões do ciclo" na ficha do paciente, para a secretaria, e as sessões do prontuário, para o estagiário e o supervisor do caso. Só aparece nas sessões agendadas ou confirmadas que ainda não começaram, e só para quem a API aceita, pela mesma regra das rotas, como os botões de falta do RF34. A Agenda da prancha 2-2 depende da tabela "Hoje" e do RF11, e passa a usar o mesmo diálogo quando eles forem feitos. Por isso, a tela "Você não tem acesso a esta sessão" da prancha não tem onde aparecer: quem não tem acesso não vê o botão, e a API responde 403.
+- **Justificativa:** até 1.000 caracteres, o mesmo limite do motivo da falta (a prancha 1-5 deixava "a confirmar"). Fica cifrada no `CancelamentoSessao` e não aparece em nenhuma lista nem na auditoria, que guarda a classificação, a origem, a antecedência e o id do cancelamento, onde o motivo está (RNF51, CFP art. 9º). Nenhuma tela mostra a justificativa por enquanto.
+- **Resultado na página do link:** quando o cancelamento fica fora do prazo, a mensagem final diz que ele conta como falta (a prancha 1-5 deixava "a confirmar").
+- **A sessão não pode mais ser cancelada:** realizada, cancelada ou com falta (422, com o motivo); pelo link, a mesma resposta do link inválido (RNF59).
+
 **Dados de teste:** sessão às 14h00 cancelada às 12h59, às 13h00 e às 13h01; uma já iniciada; uma sem justificativa; um cancelamento administrativo 10 minutos antes; o link usado depois do cancelamento; um estagiário que não é o responsável tentando cancelar (403).
 
 ---
@@ -1293,7 +1301,12 @@ sequenceDiagram
 
 **Telas:** o mesmo diálogo "Cancelar sessão" do RF15, com a opção "Ausência do estagiário"; a opção "Para remarcar" do diálogo chama a rota do RF15. Protótipo: [prancha 2-2](prototipos.md#rf15-rf16).
 
-**Dados de teste:** uma ausência real registrada pelo estagiário e outra pelo supervisor; um cancelamento administrativo pela secretaria, pela rota do RF15; um paciente com e-mail e outro com WhatsApp; um estagiário de outro caso (403); uma sessão já iniciada.
+**Na implementação (PR do RF15 e do RF16):**
+
+- **Aviso ao paciente:** com a DF48, a inscrição não pede mais o canal preferencial. A ausência e o cancelamento para remarcar avisam por e-mail sempre que o paciente tem e-mail, sem o motivo do cancelamento (CFP art. 9º). Sem e-mail, ou se o envio falhar, a tela diz que o paciente ainda não foi avisado e quem deve entrar em contato. O aviso à secretaria com o botão "Enviar pelo WhatsApp" fica para o RF17, como na prancha 2-2 (entrega parcial, R1.7).
+- **Quem vê o quê no diálogo:** a secretaria vê as três opções; o estagiário responsável, a ausência e o cancelamento para remarcar; o supervisor do caso, só a ausência. O vínculo e a atribuição vigentes valem, e não o estagiário de cada sessão.
+
+**Dados de teste:** uma ausência real registrada pelo estagiário e outra pelo supervisor; um cancelamento administrativo pela secretaria, pela rota do RF15; um paciente com e-mail e outro sem; uma falha no envio do e-mail; um estagiário e um supervisor de outro caso (403); uma sessão já iniciada.
 
 ---
 

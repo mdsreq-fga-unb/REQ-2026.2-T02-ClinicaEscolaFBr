@@ -19,7 +19,7 @@ O menu separa a **referência vigente**, que é atualizada ao longo de todo o pr
 | Construção do MVP | `construcao/` | Arquitetura, projeto das features, protótipos, termo de consentimento e o grupo Implantação e operação (implantação e segurança, cópia de segurança e teste de carga) | Vigente, cresce a cada ciclo |
 | Histórico das unidades | `historico/unidade-N/` | Página inicial, cronograma, reuniões e lições aprendidas de cada unidade | Histórico, não é reescrito |
 
-A pasta de cada página no repositório (`documentacao/docs/`) é a mesma parte do menu, e o endereço no site segue a pasta: a página de requisitos funcionais, por exemplo, fica em `requisitos/funcionais/`. Até a versão 3.45, as páginas vigentes ficavam nas pastas da unidade em que nasceram (`unidade-1/`, `unidade-2/` e `unidade-3/`). Os endereços antigos continuam funcionando: cada um leva ao endereço novo, no mesmo trecho da página, e por isso os links já citados em issues, atas e pull requests não quebram.
+A pasta de cada página no repositório (`documentacao/docs/`) é a mesma parte do menu, e o endereço no site segue a pasta: a página de requisitos funcionais, por exemplo, fica em `requisitos/funcionais/`. Até a versão 3.50, as páginas vigentes ficavam nas pastas da unidade em que nasceram (`unidade-1/`, `unidade-2/` e `unidade-3/`). Os endereços antigos continuam funcionando: cada um leva ao endereço novo, no mesmo trecho da página, e por isso os links já citados em issues, atas e pull requests não quebram.
 
 ### Uma fonte por assunto
 

@@ -257,7 +257,7 @@ rfs:
   lider: Nicolas
   depende: [RF10]
   issue: 143
-  estado: Planejada
+  estado: Código concluído
   origem: [DF10, DF20, DF24]
 
 - id: RF16
@@ -272,7 +272,7 @@ rfs:
   lider: Nicolas
   depende: [RF10, RF21]
   issue: 144
-  estado: Design inspecionado
+  estado: Código concluído
   origem: [DF10]
 
 - id: RF17
