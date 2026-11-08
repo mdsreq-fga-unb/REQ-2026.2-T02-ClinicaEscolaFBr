@@ -40,7 +40,6 @@ test.describe.serial("Integração do Ciclo 3", () => {
         responsavelLegal: "",
         celular: "",
         email: "paciente.integracao@example.com",
-        canalPreferencial: "email",
         queixa: "Queixa fictícia de integração",
         percepcaoUrgencia: "Urgência fictícia",
         historicoRelevante: "Histórico fictício",
