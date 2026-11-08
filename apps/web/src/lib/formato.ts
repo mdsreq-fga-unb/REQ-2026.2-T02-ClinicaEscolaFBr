@@ -22,6 +22,10 @@ export const horaBr = (data: Date) =>
     timeZone: FUSO,
   });
 
+// "quinta-feira, 05/11/2026", no horário de Brasília.
+export const diaDaSemanaBr = (valor: string) =>
+  `${new Date(valor).toLocaleDateString("pt-BR", { timeZone: FUSO, weekday: "long" })}, ${dataBr(valor)}`;
+
 export function idade(nascimento: string) {
   const [ano, mes, dia] = nascimento.split("-").map(Number);
   // Data de hoje em Brasília, no formato AAAA-MM-DD.
