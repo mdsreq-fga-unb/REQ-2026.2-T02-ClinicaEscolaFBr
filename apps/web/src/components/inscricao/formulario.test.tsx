@@ -10,13 +10,8 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { FormularioInscricao } from "./formulario";
 
 const recibo = { numero: "2026-00042", criadaEm: "2026-10-25T18:00:00.000Z" };
-// O canal preferencial é um grupo de opções; os outros campos recebem o texto.
 const preencher = (id: string, value: string) =>
-  id === "canalPreferencial"
-    ? fireEvent.click(
-        document.querySelector(`input[name="${id}"][value="${value}"]`)!,
-      )
-    : fireEvent.change(document.getElementById(id)!, { target: { value } });
+  fireEvent.change(document.getElementById(id)!, { target: { value } });
 const continuar = () =>
   fireEvent.click(screen.getByRole("button", { name: "Continuar" }));
 function dados(menor = false) {
@@ -26,8 +21,8 @@ function dados(menor = false) {
   preencher("rg", "MG-12.345 SSP/MG");
   preencher("endereco", "Rua Fictícia, 10");
   preencher("estadoCivil", "Solteiro(a)");
+  preencher("celular", "(61) 99999-9999");
   preencher("email", "teste@example.com");
-  preencher("canalPreferencial", "email");
 }
 function triagem() {
   preencher("queixa", "Queixa fictícia privada");
@@ -87,6 +82,13 @@ describe("Formulário RF1/RF2", () => {
       "true",
     );
     preencher("responsavelLegal", "Responsável Fictício");
+    continuar();
+    // O CPF do responsável também é obrigatório (DF47).
+    expect(document.getElementById("cpfResponsavel")).toHaveAttribute(
+      "aria-invalid",
+      "true",
+    );
+    preencher("cpfResponsavel", "52998224725");
     continuar();
     expect(
       screen.getByRole("heading", {
@@ -161,24 +163,21 @@ describe("Formulário RF1/RF2", () => {
       "true",
     );
   });
-  it.each(["whatsapp", "ligacao"])(
-    "exige celular para %s, mas aceita e-mail como único contato",
-    (canal) => {
+  it.each(["celular", "email"])(
+    "exige o %s e avisa que os contatos são por e-mail (DF48)",
+    (contato) => {
       render(<FormularioInscricao />);
       dados();
-      preencher("canalPreferencial", canal);
+      expect(
+        screen.getByText("Os contatos da clínica são feitos por e-mail."),
+      ).toBeVisible();
+      expect(screen.queryByText(/canal/i)).toBeNull();
+      preencher(contato, "");
       continuar();
-      expect(document.getElementById("celular")).toHaveAttribute(
+      expect(document.getElementById(contato)).toHaveAttribute(
         "aria-invalid",
         "true",
       );
-      preencher("canalPreferencial", "email");
-      continuar();
-      expect(
-        screen.getByRole("heading", {
-          name: "Sobre o atendimento que você procura",
-        }),
-      ).toBeInTheDocument();
     },
   );
   it("revisa, corrige dados e triagem sem perder valores; alteração exige nova confirmação", () => {
@@ -245,6 +244,11 @@ describe("Formulário RF1/RF2", () => {
     expect(
       screen.getByText("A inscrição não garante vaga nem agendamento."),
     ).toBeInTheDocument();
+    // Sem escolha de canal: o contato é sempre pelo e-mail (DF48).
+    expect(document.body).toHaveTextContent(
+      "a clínica entrará em contato pelo e-mail informado na inscrição.",
+    );
+    expect(document.body).not.toHaveTextContent("canal que você escolheu");
     const print = vi.spyOn(window, "print").mockImplementation(() => {});
     fireEvent.click(
       screen.getByRole("button", { name: "Imprimir ou salvar em PDF" }),

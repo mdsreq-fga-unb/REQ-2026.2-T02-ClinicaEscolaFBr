@@ -10,13 +10,8 @@ export async function preencherDados(page: Page, menor = false) {
   await page.locator("#rg").fill("MG-12.345.678 SSP/MG");
   await page.locator("#endereco").fill("Rua Fictícia, 10, Brasília DF");
   await page.locator("#estadoCivil").selectOption("Solteiro(a)");
-  if (menor) {
-    await page.locator("#celular").fill("61999999999");
-    await page.getByRole("radio", { name: "WhatsApp" }).check();
-  } else {
-    await page.locator("#email").fill("ficticio@example.com");
-    await page.getByRole("radio", { name: "E-mail" }).check();
-  }
+  await page.locator("#celular").fill("61999999999");
+  await page.locator("#email").fill("ficticio@example.com");
 }
 export async function preencherTriagem(page: Page) {
   await page

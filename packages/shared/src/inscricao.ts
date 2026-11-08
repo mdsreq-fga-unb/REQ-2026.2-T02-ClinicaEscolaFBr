@@ -1,6 +1,5 @@
 import { z } from "zod";
 import { hojeEmBrasilia } from "./datas";
-import { CANAIS } from "./dominio-ciclo-3";
 
 export const ESTADOS_CIVIS = [
   "Solteiro(a)",
@@ -97,9 +96,6 @@ const dadosBase = z.object({
   contatoEmergenciaNome: opcional(200),
   contatoEmergenciaParentesco: opcional(50),
   contatoEmergenciaTelefone: telefone("Informe um telefone com DDD."),
-  canalPreferencial: z.enum(CANAIS, {
-    error: "Escolha e-mail, WhatsApp ou ligação.",
-  }),
 });
 const validarResponsavel = (
   dados: {
@@ -108,28 +104,23 @@ const validarResponsavel = (
     cpfResponsavel: string;
     celular: string;
     email: string;
-    canalPreferencial: string;
   },
   ctx: z.RefinementCtx,
 ) => {
-  if (!dados.celular && !dados.email) {
-    for (const campo of ["celular", "email"])
-      ctx.addIssue({
-        code: "custom",
-        path: [campo],
-        message: "Informe pelo menos um contato: celular ou e-mail.",
-      });
-  } else if (dados.canalPreferencial === "email" && !dados.email) {
-    ctx.addIssue({
-      code: "custom",
-      path: ["email"],
-      message: "Informe um e-mail para o canal escolhido.",
-    });
-  } else if (dados.canalPreferencial !== "email" && !dados.celular) {
+  // O e-mail e o celular são obrigatórios, e os contatos da clínica são feitos
+  // por e-mail (DF48).
+  if (!dados.celular) {
     ctx.addIssue({
       code: "custom",
       path: ["celular"],
-      message: "Informe um celular para WhatsApp ou ligação.",
+      message: "Informe o telefone celular com DDD.",
+    });
+  }
+  if (!dados.email) {
+    ctx.addIssue({
+      code: "custom",
+      path: ["email"],
+      message: "Informe o e-mail.",
     });
   }
   if (!menorDeIdade(dados.dataNascimento)) return;
@@ -140,7 +131,8 @@ const validarResponsavel = (
       message: "Informe o nome do responsável legal para menores de 18 anos.",
     });
   }
-  if (!/^(?:\d{11})?$/.test(dados.cpfResponsavel)) {
+  // Obrigatório, para não ser confundido com o CPF do paciente (DF47).
+  if (!/^\d{11}$/.test(dados.cpfResponsavel)) {
     ctx.addIssue({
       code: "custom",
       path: ["cpfResponsavel"],

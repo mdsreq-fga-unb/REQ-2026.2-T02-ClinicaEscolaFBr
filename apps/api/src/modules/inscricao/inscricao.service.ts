@@ -31,6 +31,8 @@ export class InscricaoService {
     } = dados;
     const pessoais = {
       ...cadastro,
+      // A inscrição não pede mais o canal: os contatos são por e-mail (DF48).
+      canalPreferencial: 'email' as const,
       bairro: cadastro.bairro || null,
       cidadeUf: cadastro.cidadeUf || null,
       cep: cadastro.cep || null,

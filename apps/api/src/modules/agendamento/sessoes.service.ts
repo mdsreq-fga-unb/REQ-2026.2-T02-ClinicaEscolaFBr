@@ -73,6 +73,8 @@ const violaExclusao = (erro: unknown) => {
   return e?.code === '23P01' || e?.cause?.code === '23P01';
 };
 
+const emDezMinutos = (horario: Date) => horario.getTime() % (10 * MINUTO) === 0;
+
 type Intervalo = { inicio: Date; termino: Date; fim: Date };
 type SessaoExistente = {
   casoId: string;
@@ -201,6 +203,17 @@ export class SessoesService {
     const termino = dados.termino
       ? new Date(dados.termino)
       : new Date(inicio.getTime() + duracao * MINUTO);
+    if (inicio.getTime() <= Date.now()) {
+      throw new UnprocessableEntityException(
+        'A sessão precisa ser agendada para uma data e um horário futuros.',
+      );
+    }
+    // Os horários andam de 10 em 10 minutos (DF49).
+    if (![inicio, ...(dados.termino ? [termino] : [])].every(emDezMinutos)) {
+      throw new UnprocessableEntityException(
+        'Os horários da sessão andam de 10 em 10 minutos.',
+      );
+    }
     if (termino <= inicio) {
       throw new UnprocessableEntityException(
         `O término precisa ser depois do início (${horaBrasilia(inicio)}).`,
