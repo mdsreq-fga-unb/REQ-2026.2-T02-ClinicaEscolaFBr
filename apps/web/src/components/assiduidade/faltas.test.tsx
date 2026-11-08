@@ -35,6 +35,8 @@ const comFalta: SessaoDoCiclo = {
     justificadaPor: null,
     justificadaEm: null,
     retiradaDaContagem: false,
+    retiradaPor: null,
+    retiradaEm: null,
   },
 };
 

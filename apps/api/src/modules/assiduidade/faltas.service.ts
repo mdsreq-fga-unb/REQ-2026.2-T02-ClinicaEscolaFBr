@@ -7,11 +7,23 @@ import {
   UnprocessableEntityException,
 } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { aliasedTable, and, asc, count, eq, isNull } from 'drizzle-orm';
+import {
+  aliasedTable,
+  and,
+  asc,
+  count,
+  eq,
+  inArray,
+  isNull,
+  max,
+  notInArray,
+} from 'drizzle-orm';
 import {
   atribuicoesSupervisor,
   casos,
   faltasPaciente,
+  inscricoes,
+  prontuarios,
   sessoesAtendimento,
   usuarios,
   vinculosEstagiario,
@@ -20,6 +32,8 @@ import {
 import {
   LIMITE_FALTAS_CICLO,
   STATUS_SESSAO_EM_ABERTO,
+  type AlertaFaltas,
+  type AlertasFaltas,
   type AvisoFaltas,
   type ContagemFaltas,
   type FaltaDaSessao,
@@ -43,6 +57,7 @@ const SEM_PERMISSAO =
 
 const registrador = aliasedTable(usuarios, 'registrador');
 const justificador = aliasedTable(usuarios, 'justificador');
+const retirador = aliasedTable(usuarios, 'retirador');
 
 const aviso = (faltas: number): AvisoFaltas =>
   faltas >= LIMITE_FALTAS_CICLO
@@ -290,10 +305,12 @@ export class FaltasService {
         motivo: faltasPaciente.motivoJustificativaCifrado,
         justificadaPor: justificador.nome,
         justificadaEm: faltasPaciente.justificadaEm,
+        retiradaPor: retirador.nome,
         retiradaEm: faltasPaciente.retiradaEm,
       })
       .from(faltasPaciente)
       .leftJoin(registrador, eq(registrador.id, faltasPaciente.registradaPor))
+      .leftJoin(retirador, eq(retirador.id, faltasPaciente.retiradaPor))
       .leftJoin(
         justificador,
         eq(justificador.id, faltasPaciente.justificadaPor),
@@ -320,9 +337,126 @@ export class FaltasService {
           justificadaPor: f.justificadaPor,
           justificadaEm: f.justificadaEm?.toISOString() ?? null,
           retiradaDaContagem: f.retiradaEm !== null,
+          retiradaPor: f.retiradaPor,
+          retiradaEm: f.retiradaEm?.toISOString() ?? null,
         },
       ]),
     );
+  }
+
+  // RF36: casos em atendimento com o limite de faltas atingido no ciclo, para a
+  // secretaria e a coordenação (todos) e o estagiário (só os casos dele). À parte, o
+  // aviso da 1ª falta (RF35), só para a secretaria e o estagiário responsável, até a
+  // sessão seguinte do paciente terminar. Sem tabela: o alerta existe enquanto a
+  // condição vale, e some quando o desligamento (RF37) tira o caso do atendimento.
+  async alertas(usuario: UsuarioAutenticado): Promise<AlertasFaltas> {
+    const vazio = { limite: [], primeiraFalta: [] };
+    if (usuario.perfil === 'supervisor') return vazio;
+    const contagens = await this.db
+      .select({
+        casoId: faltasPaciente.casoId,
+        faltas: count(),
+        ultimaFalta: max(sessoesAtendimento.inicio),
+      })
+      .from(faltasPaciente)
+      .innerJoin(
+        casos,
+        and(
+          eq(casos.id, faltasPaciente.casoId),
+          eq(casos.cicloAtendimento, faltasPaciente.cicloAtendimento),
+        ),
+      )
+      .innerJoin(
+        sessoesAtendimento,
+        eq(sessoesAtendimento.id, faltasPaciente.sessaoId),
+      )
+      .where(
+        and(
+          isNull(faltasPaciente.retiradaEm),
+          eq(casos.situacao, 'em_atendimento'),
+          usuario.perfil === 'estagiario'
+            ? inArray(
+                faltasPaciente.casoId,
+                this.db
+                  .select({ casoId: vinculosEstagiario.casoId })
+                  .from(vinculosEstagiario)
+                  .where(
+                    and(
+                      eq(vinculosEstagiario.estagiarioId, usuario.id),
+                      eq(vinculosEstagiario.vigente, true),
+                    ),
+                  ),
+              )
+            : undefined,
+        ),
+      )
+      .groupBy(faltasPaciente.casoId);
+
+    const noLimite = contagens.filter((c) => c.faltas >= LIMITE_FALTAS_CICLO);
+    let naPrimeira =
+      usuario.perfil === 'coordenacao'
+        ? []
+        : contagens.filter((c) => c.faltas === 1);
+    // A 1ª falta deixa de avisar quando a sessão seguinte termina: realizada, com
+    // falta ou cancelada.
+    if (naPrimeira.length) {
+      const encerradas = await this.db
+        .select({
+          casoId: sessoesAtendimento.casoId,
+          inicio: sessoesAtendimento.inicio,
+        })
+        .from(sessoesAtendimento)
+        .where(
+          and(
+            inArray(
+              sessoesAtendimento.casoId,
+              naPrimeira.map((c) => c.casoId),
+            ),
+            notInArray(sessoesAtendimento.status, STATUS_SESSAO_EM_ABERTO),
+          ),
+        );
+      naPrimeira = naPrimeira.filter(
+        (c) =>
+          !encerradas.some(
+            (s) => s.casoId === c.casoId && s.inicio > c.ultimaFalta!,
+          ),
+      );
+    }
+
+    const casoIds = [...noLimite, ...naPrimeira].map((c) => c.casoId);
+    if (casoIds.length === 0) return vazio;
+    const dados = await this.db
+      .select({
+        casoId: casos.id,
+        nome: inscricoes.nomeCompleto,
+        prontuarioId: prontuarios.id,
+      })
+      .from(casos)
+      .innerJoin(inscricoes, eq(inscricoes.id, casos.inscricaoId))
+      .leftJoin(
+        prontuarios,
+        and(
+          eq(prontuarios.casoId, casos.id),
+          eq(prontuarios.cicloAtendimento, casos.cicloAtendimento),
+        ),
+      )
+      .where(inArray(casos.id, casoIds));
+    const alerta = (c: (typeof contagens)[number]): AlertaFaltas => {
+      const caso = dados.find((d) => d.casoId === c.casoId)!;
+      return {
+        casoId: c.casoId,
+        nome: caso.nome,
+        faltas: c.faltas,
+        ultimaFalta: c.ultimaFalta!.toISOString(),
+        prontuarioId: caso.prontuarioId,
+      };
+    };
+    const porNome = (a: AlertaFaltas, b: AlertaFaltas) =>
+      a.nome.localeCompare(b.nome, 'pt-BR');
+    return {
+      limite: noLimite.map(alerta).sort(porNome),
+      primeiraFalta: naPrimeira.map(alerta).sort(porNome),
+    };
   }
 
   private cifrar(texto: string) {

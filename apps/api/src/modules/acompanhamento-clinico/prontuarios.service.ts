@@ -31,6 +31,7 @@ import { cifrar, decifrar } from '../../common/criptografia';
 import { AuditoriaService } from '../../auditoria/auditoria.service';
 import type { UsuarioAutenticado } from '../../auth/usuario-autenticado';
 import {
+  LIMITE_FALTAS_CICLO,
   STATUS_SESSAO_EM_ABERTO,
   type CancelamentoDaSessao,
   type ClassificacaoCancelamento,
@@ -40,6 +41,7 @@ import {
 import type { Evolucao } from '@clinica/shared';
 import { DB } from '../../database/database.module';
 import { acoesDeCancelamento } from '../agendamento/acoes-cancelamento';
+import { DesligamentosService } from '../assiduidade/desligamentos.service';
 import { FaltasService } from '../assiduidade/faltas.service';
 import { PoliticaProntuario } from './politica-prontuario';
 
@@ -66,6 +68,7 @@ export class ProntuariosService {
     private readonly config: ConfigService,
     private readonly auditoria: AuditoriaService,
     private readonly faltas: FaltasService,
+    private readonly desligamentos: DesligamentosService,
   ) {}
 
   // Prontuário com o conteúdo clínico, para o estagiário e o supervisor do caso e,
@@ -161,6 +164,10 @@ export class ProntuariosService {
     const sessoesRealizadas = sessoes.filter(
       (sessao) => sessao.status === 'realizada',
     ).length;
+    const [canceladas, sessoesAReagendar] = await Promise.all([
+      this.desligamentos.canceladasPorDesligamento(prontuario.casoId),
+      this.desligamentos.sessoesAReagendar(prontuario.casoId),
+    ]);
     return {
       id: prontuario.id,
       cicloAtendimento: prontuario.cicloAtendimento,
@@ -194,6 +201,8 @@ export class ProntuariosService {
         prontuario.casoId,
         usuario,
       ),
+      // Sessões canceladas pelo desligamento que ficaram para reagendar (RF38).
+      sessoesAReagendar,
       sessoes: sessoes.map(
         ({ classificacaoCancelamento, origemCancelamento, ...sessao }) => ({
           ...sessao,
@@ -202,6 +211,7 @@ export class ProntuariosService {
             origemCancelamento,
           ),
           falta: faltasDoCiclo.get(sessao.id) ?? null,
+          canceladaPorDesligamento: canceladas.has(sessao.id),
           evolucao: evolucoesRows.find((e) => e.sessaoId === sessao.id)
             ? (() => {
                 const evolucao = evolucoesRows.find(
@@ -451,13 +461,59 @@ export class ProntuariosService {
         ),
       )
       .orderBy(asc(sessoesAtendimento.inicio));
-    const faltasDoCiclo = await this.faltas.doCiclo(casoId, ciclo, true);
+    const coordenacao = usuario.perfil === 'coordenacao';
+    const [
+      faltasDoCiclo,
+      faltasNoCiclo,
+      desligamentos,
+      canceladas,
+      sessoesAReagendar,
+      vinculos,
+    ] = await Promise.all([
+      this.faltas.doCiclo(casoId, ciclo, true),
+      this.faltas.contar(casoId, undefined, ciclo),
+      // O motivo da reversão só vai para a coordenação, que reverte (RF38).
+      this.desligamentos.doCiclo(casoId, ciclo, coordenacao),
+      this.desligamentos.canceladasPorDesligamento(casoId),
+      this.desligamentos.sessoesAReagendar(casoId),
+      // Vínculos do caso, do mais antigo ao mais recente: o primeiro marca o início
+      // do ciclo; o último dá o estagiário do caso desligado (RF37).
+      this.db
+        .select({
+          nome: estagiario.nome,
+          vinculadoEm: vinculosEstagiario.vinculadoEm,
+        })
+        .from(vinculosEstagiario)
+        .innerJoin(
+          estagiario,
+          eq(estagiario.id, vinculosEstagiario.estagiarioId),
+        )
+        .where(eq(vinculosEstagiario.casoId, casoId))
+        .orderBy(asc(vinculosEstagiario.vinculadoEm)),
+    ]);
+    const vigente = desligamentos.find((d) => d.revertidoEm === null);
     const dados = {
       ...caso,
       ...linha,
       proximaSessao: proxima?.inicio ?? null,
       cicloAtendimento: ciclo,
-      faltasNoCiclo: await this.faltas.contar(casoId, undefined, ciclo),
+      faltasNoCiclo,
+      cicloDesde: vinculos[0]?.vinculadoEm ?? null,
+      ultimoEstagiario: vinculos.at(-1)?.nome ?? null,
+      // Desligamento por faltas só com o alerta pendente (RF36, RF37), pela
+      // secretaria ou pela coordenação.
+      podeDesligar:
+        (usuario.perfil === 'secretaria' || coordenacao) &&
+        caso.situacao === 'em_atendimento' &&
+        faltasNoCiclo.faltas >= LIMITE_FALTAS_CICLO,
+      desligamentos,
+      // Para o diálogo da reversão (RF38): a vaga ainda livre devolve o paciente ao
+      // mesmo estagiário.
+      vagaDoDesligamento:
+        coordenacao && vigente
+          ? await this.desligamentos.vagaDoDesligamento(vigente.id)
+          : null,
+      sessoesAReagendar,
       // A secretaria cancela por aqui (RF15, RF16).
       acoesCancelamento: await acoesDeCancelamento(this.db, casoId, usuario),
       sessoes: sessoes.map(
@@ -468,6 +524,7 @@ export class ProntuariosService {
             origemCancelamento,
           ),
           falta: faltasDoCiclo.get(sessao.id) ?? null,
+          canceladaPorDesligamento: canceladas.has(sessao.id),
         }),
       ),
     };

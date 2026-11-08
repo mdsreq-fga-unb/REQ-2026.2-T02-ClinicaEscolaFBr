@@ -50,6 +50,8 @@ const casoDoSupervisor: CasoDoSupervisor = {
   prioridade: "amarela",
   estagiario: null,
   prontuarioId: null,
+  situacao: "aguardando_vinculo",
+  vinculoEncerradoEm: null,
 };
 const estagiarios: EstagiarioDisponivel[] = [
   {

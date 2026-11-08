@@ -30,7 +30,7 @@
     "@nestjs/config": "^12.0.1",
     "@nestjs/core": "^12.3.2",
     "@nestjs/platform-express": "^12.3.2",
-    "@nestjs/swagger": "^12.0.5",
+    "@nestjs/swagger": "^12.1.0",
     "bcryptjs": "^3.0.3",
     "cookie-parser": "^1.4.7",
     "drizzle-orm": "^0.45.4",
@@ -41,7 +41,7 @@
     "zod": "^4.6.7"
   },
   "devDependencies": {
-    "@electric-sql/pglite": "^0.5.13",
+    "@electric-sql/pglite": "^0.5.15",
     "@nestjs/cli": "^12.0.11",
     "@nestjs/schematics": "^12.0.12",
     "@nestjs/testing": "^12.3.2",
@@ -52,7 +52,7 @@
     "@types/nodemailer": "^8.0.2",
     "@types/supertest": "^7.0.0",
     "jest": "^30.0.0",
-    "oxlint": "^1.90.0",
+    "oxlint": "^1.91.0",
     "oxlint-tsgolint": "^7.0.2005",
     "prettier": "^3.4.2",
     "source-map-support": "^0.5.21",
