@@ -82,7 +82,6 @@ export async function criarCasoTriado(
       responsavelLegal: "",
       celular: "",
       email: "paciente.e2e@example.com",
-      canalPreferencial: "email",
       queixa: "Queixa fictícia de teste",
       percepcaoUrgencia: "Urgência fictícia",
       historicoRelevante: "Histórico fictício",

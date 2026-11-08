@@ -33,7 +33,6 @@ const rotulos = {
   celular: "Telefone celular com DDD",
   whatsapp: "WhatsApp com DDD",
   email: "E-mail",
-  canalPreferencial: "Por qual canal prefere receber nosso contato?",
   contatoEmergenciaNome: "Nome do contato de emergência",
   contatoEmergenciaParentesco: "Grau de parentesco",
   contatoEmergenciaTelefone: "Telefone do contato de emergência",
@@ -48,15 +47,12 @@ const vazio = Object.fromEntries(
 ) as Valores;
 // Contatos e dados da ficha de identificação da Clínica Escola (DF43).
 const opcionais: Campo[] = [
-  "celular",
-  "email",
   "sexo",
   "profissao",
   "escolaridade",
   "bairro",
   "cidadeUf",
   "cep",
-  "cpfResponsavel",
   "documentoResponsavel",
   "whatsapp",
   "contatoEmergenciaNome",
@@ -112,12 +108,6 @@ const cartoes = [
     dica: "Confira tudo antes de enviar. Você pode voltar e corrigir qualquer campo.",
   },
 ];
-const CANAIS_CONTATO = [
-  ["email", "E-mail"],
-  ["whatsapp", "WhatsApp"],
-  ["ligacao", "Ligação"],
-] as const;
-
 function CampoFormulario({
   campo,
   valor,
@@ -156,46 +146,11 @@ function CampoFormulario({
       {erro}
     </p>
   );
-  // Canal preferencial: três opções lado a lado, como no protótipo. O grupo
-  // leva o aria-invalid, que o radio sozinho não aceita.
-  if (campo === "canalPreferencial") {
-    return (
-      <fieldset
-        role="radiogroup"
-        className={`${styles.campo} ${styles.largo}`}
-        aria-describedby={props["aria-describedby"]}
-        aria-invalid={props["aria-invalid"]}
-        aria-required
-      >
-        <legend className={styles.legenda}>{rotulos[campo]}</legend>
-        <div className={styles.opcoes}>
-          {CANAIS_CONTATO.map(([valorCanal, nome], indice) => (
-            <label
-              key={valorCanal}
-              className={`${styles.opcao} ${valor === valorCanal ? styles.marcada : ""} ${erro ? styles.opcaoErro : ""}`}
-            >
-              <input
-                type="radio"
-                id={indice === 0 ? campo : undefined}
-                name={campo}
-                value={valorCanal}
-                checked={valor === valorCanal}
-                onChange={() => alterar(campo, valorCanal)}
-              />
-              {nome}
-            </label>
-          ))}
-        </div>
-        {dicaEErro}
-      </fieldset>
-    );
-  }
   return (
     <div className={`${styles.campo} ${longo ? styles.largo : ""}`}>
       <label htmlFor={campo}>
         {rotulos[campo]}
-        {/* Celular e e-mail: um dos dois é obrigatório, como diz a seção. */}
-        {!props.required && !["celular", "email"].includes(campo) && (
+        {!props.required && (
           <span className={styles.opcional}> (opcional)</span>
         )}
       </label>
@@ -524,10 +479,8 @@ export function FormularioInscricao({ aberta = true }: { aberta?: boolean }) {
                               } else document.getElementById(nome)?.focus();
                             }}
                           >
-                            {nome === "canalPreferencial"
-                              ? "Canal preferencial"
-                              : rotulos[nome as Campo] || "Confirmação"}
-                            : {mensagem}
+                            {rotulos[nome as Campo] || "Confirmação"}:{" "}
+                            {mensagem}
                           </a>
                         </li>
                       ))}
@@ -572,7 +525,7 @@ export function FormularioInscricao({ aberta = true }: { aberta?: boolean }) {
                           dica: "Obrigatório para pessoas menores de 18 anos.",
                         })}
                         {campo("cpfResponsavel", {
-                          dica: "Digite os 11 números, sem pontos nem traço.",
+                          dica: "Obrigatório para pessoas menores de 18 anos. Digite os 11 números, sem pontos nem traço.",
                         })}
                         {campo("documentoResponsavel", {
                           dica: "Exemplo: certidão de nascimento ou termo de guarda. Não é necessário enviar cópia.",
@@ -590,7 +543,7 @@ export function FormularioInscricao({ aberta = true }: { aberta?: boolean }) {
                         className={`${styles.dica} ${styles.dicaSecao}`}
                         id="contatos-dica"
                       >
-                        Informe pelo menos um contato: celular e/ou e-mail.
+                        Os contatos da clínica são feitos por e-mail.
                       </p>
                       {campo("celular", {
                         tipo: "tel",
@@ -604,7 +557,6 @@ export function FormularioInscricao({ aberta = true }: { aberta?: boolean }) {
                         tipo: "email",
                         dica: "Exemplo: nome@exemplo.com.br.",
                       })}
-                      {campo("canalPreferencial")}
                     </fieldset>
                     <fieldset className={styles.grupo}>
                       <legend className={styles.secao}>
@@ -663,25 +615,14 @@ export function FormularioInscricao({ aberta = true }: { aberta?: boolean }) {
                             )
                             .map(([nome, rotulo]) => (
                               <div key={nome}>
-                                <dt>
-                                  {nome === "canalPreferencial"
-                                    ? "Canal preferencial"
-                                    : rotulo}
-                                </dt>
+                                <dt>{rotulo}</dt>
                                 <dd>
-                                  {nome === "canalPreferencial"
-                                    ? valores[nome] === "email"
-                                      ? "E-mail"
-                                      : valores[nome] === "whatsapp"
-                                        ? "WhatsApp"
-                                        : "Ligação telefônica"
-                                    : nome === "dataNascimento"
-                                      ? valores[nome]
-                                          .split("-")
-                                          .reverse()
-                                          .join("/")
-                                      : valores[nome as Campo] ||
-                                        "Não informado"}
+                                  {nome === "dataNascimento"
+                                    ? valores[nome]
+                                        .split("-")
+                                        .reverse()
+                                        .join("/")
+                                    : valores[nome as Campo] || "Não informado"}
                                 </dd>
                               </div>
                             ))}
