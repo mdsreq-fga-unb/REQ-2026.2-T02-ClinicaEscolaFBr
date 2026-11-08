@@ -5,6 +5,7 @@ import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import {
   LIMITE_FALTAS_CICLO,
+  type AcoesCancelamento,
   type ContagemFaltas,
   type DesligamentoDoCaso,
   type ResultadoDesligamento,
@@ -53,6 +54,7 @@ type DadosAdministrativos = {
   faltasNoCiclo: ContagemFaltas;
   cicloAtendimento: number;
   sessoes: SessaoDoCiclo[];
+  acoesCancelamento: AcoesCancelamento;
   podeDesligar: boolean;
   desligamentos: DesligamentoDoCaso[];
   vagaDoDesligamento: { estagiario: string; livre: boolean } | null;
@@ -323,6 +325,8 @@ export default function PacientePage() {
           podeRegistrar={secretaria && d.situacao === "em_atendimento"}
           podeJustificar={secretaria}
           chave={chave}
+          acoesCancelamento={d.acoesCancelamento}
+          casoId={d.casoId}
         />
       </section>
       {secretaria && d.situacao === "em_atendimento" && (

@@ -8,13 +8,15 @@ export const MEIOS_CONFIRMACAO = ["link", "secretaria"] as const;
 export type MeioConfirmacao = (typeof MEIOS_CONFIRMACAO)[number];
 
 // O que a página pública do link recebe: só a data e o horário da sessão, o primeiro
-// nome do paciente, a situação e o prazo para confirmar (RNF59).
+// nome do paciente, a situação, o prazo para confirmar e a antecedência mínima para
+// cancelar sem falta (RF15, RNF59).
 export type SessaoDoLink = {
   primeiroNome: string;
   inicio: string;
   situacao: "agendada" | "confirmada";
   prazoConfirmacao: string;
   podeConfirmar: boolean;
+  antecedenciaMinimaMinutos: number;
 };
 
 // Sessão cujo prazo de confirmação terminou sem resposta do paciente, para a
