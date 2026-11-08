@@ -220,7 +220,7 @@ Comandos em comentário, aceitos só de integrantes da equipe:
 - `/aceite <link da ata ou da mensagem da FBr>`: marca o D6.1.
 - `/rnf <RNF> <link da evidência>`: registra a verificação de um RNF que não é teste automático, para o D4.5 (veja a seção abaixo).
 
-Os demais critérios continuam sendo marcados por quem tem a evidência. A PR de feature (título `feat:`) precisa declarar a issue da feature; sem isso, o check "PR cita a issue da feature" falha. O workflow usa o segredo `PROJECT_TOKEN` do repositório; sem ele, apenas avisa e não altera nada.
+Os demais critérios continuam sendo marcados por quem tem a evidência. A PR de feature (título `feat:`) precisa declarar a issue da feature; sem isso, o check "PR cita a issue da feature" falha. O workflow usa o segredo `PROJECT_TOKEN` do repositório; sem ele, apenas avisa e não altera nada. Esse segredo é usado só no Project: os comentários e as edições das issues usam o token das Actions e aparecem como **github-actions[bot]**, sempre com a primeira linha "🤖 *Comentário automático do acompanhamento de features (feature-status).*", para não se confundirem com os comentários escritos pela equipe.
 
 ### Milestones dos ciclos
 

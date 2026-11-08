@@ -1,5 +1,5 @@
 {
-  "id": "8ed594f3-fd90-4009-9ceb-aa6d36f5902e",
+  "id": "18824419-7228-461a-98a7-be1054412bff",
   "prevId": "e83f555e-6c73-4464-96a5-619fb49cb478",
   "version": "7",
   "dialect": "postgresql",
@@ -1479,8 +1479,8 @@
       "checkConstraints": {},
       "isRLSEnabled": false
     },
-    "public.codigos_verificacao": {
-      "name": "codigos_verificacao",
+    "public.faltas_paciente": {
+      "name": "faltas_paciente",
       "schema": "",
       "columns": {
         "id": {
@@ -1490,63 +1490,101 @@
           "notNull": true,
           "default": "gen_random_uuid()"
         },
-        "inscricao_id": {
-          "name": "inscricao_id",
+        "sessao_id": {
+          "name": "sessao_id",
           "type": "uuid",
           "primaryKey": false,
           "notNull": true
         },
-        "identificador_chave": {
-          "name": "identificador_chave",
-          "type": "text",
+        "caso_id": {
+          "name": "caso_id",
+          "type": "uuid",
           "primaryKey": false,
           "notNull": true
         },
-        "codigo_hash": {
-          "name": "codigo_hash",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "expira_em": {
-          "name": "expira_em",
-          "type": "timestamp with time zone",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "tentativas_falhas": {
-          "name": "tentativas_falhas",
+        "ciclo_atendimento": {
+          "name": "ciclo_atendimento",
           "type": "integer",
           "primaryKey": false,
+          "notNull": true
+        },
+        "origem": {
+          "name": "origem",
+          "type": "origem_falta",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "registrada_por": {
+          "name": "registrada_por",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "registrada_pelo_paciente": {
+          "name": "registrada_pelo_paciente",
+          "type": "boolean",
+          "primaryKey": false,
           "notNull": true,
-          "default": 0
+          "default": false
         },
-        "usado_em": {
-          "name": "usado_em",
-          "type": "timestamp with time zone",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "invalidado_em": {
-          "name": "invalidado_em",
-          "type": "timestamp with time zone",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "criado_em": {
-          "name": "criado_em",
+        "registrada_em": {
+          "name": "registrada_em",
           "type": "timestamp with time zone",
           "primaryKey": false,
           "notNull": true,
           "default": "now()"
+        },
+        "justificada": {
+          "name": "justificada",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": true,
+          "default": false
+        },
+        "motivo_justificativa_cifrado": {
+          "name": "motivo_justificativa_cifrado",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "justificada_por": {
+          "name": "justificada_por",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "justificada_em": {
+          "name": "justificada_em",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "retirada_por": {
+          "name": "retirada_por",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "retirada_em": {
+          "name": "retirada_em",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": false
         }
       },
       "indexes": {
-        "codigos_verificacao_identificador_idx": {
-          "name": "codigos_verificacao_identificador_idx",
+        "faltas_caso_ciclo": {
+          "name": "faltas_caso_ciclo",
           "columns": [
             {
-              "expression": "identificador_chave",
+              "expression": "caso_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "ciclo_atendimento",
               "isExpression": false,
               "asc": true,
               "nulls": "last"
@@ -1559,120 +1597,47 @@
         }
       },
       "foreignKeys": {
-        "codigos_verificacao_inscricao_id_inscricoes_id_fk": {
-          "name": "codigos_verificacao_inscricao_id_inscricoes_id_fk",
-          "tableFrom": "codigos_verificacao",
-          "tableTo": "inscricoes",
-          "columnsFrom": ["inscricao_id"],
+        "faltas_paciente_sessao_id_sessoes_atendimento_id_fk": {
+          "name": "faltas_paciente_sessao_id_sessoes_atendimento_id_fk",
+          "tableFrom": "faltas_paciente",
+          "tableTo": "sessoes_atendimento",
+          "columnsFrom": ["sessao_id"],
           "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
-        }
-      },
-      "compositePrimaryKeys": {},
-      "uniqueConstraints": {},
-      "policies": {},
-      "checkConstraints": {
-        "codigos_verificacao_tentativas": {
-          "name": "codigos_verificacao_tentativas",
-          "value": "\"codigos_verificacao\".\"tentativas_falhas\" between 0 and 5"
-        }
-      },
-      "isRLSEnabled": false
-    },
-    "public.limites_codigo_verificacao": {
-      "name": "limites_codigo_verificacao",
-      "schema": "",
-      "columns": {
-        "identificador_chave": {
-          "name": "identificador_chave",
-          "type": "text",
-          "primaryKey": true,
-          "notNull": true
         },
-        "ultimo_envio_em": {
-          "name": "ultimo_envio_em",
-          "type": "timestamp with time zone",
-          "primaryKey": false,
-          "notNull": true
+        "faltas_paciente_caso_id_casos_id_fk": {
+          "name": "faltas_paciente_caso_id_casos_id_fk",
+          "tableFrom": "faltas_paciente",
+          "tableTo": "casos",
+          "columnsFrom": ["caso_id"],
+          "columnsTo": ["id"],
+          "onDelete": "no action",
+          "onUpdate": "no action"
         },
-        "janela_inicio": {
-          "name": "janela_inicio",
-          "type": "timestamp with time zone",
-          "primaryKey": false,
-          "notNull": true
+        "faltas_paciente_registrada_por_usuarios_id_fk": {
+          "name": "faltas_paciente_registrada_por_usuarios_id_fk",
+          "tableFrom": "faltas_paciente",
+          "tableTo": "usuarios",
+          "columnsFrom": ["registrada_por"],
+          "columnsTo": ["id"],
+          "onDelete": "no action",
+          "onUpdate": "no action"
         },
-        "envios_na_janela": {
-          "name": "envios_na_janela",
-          "type": "integer",
-          "primaryKey": false,
-          "notNull": true
+        "faltas_paciente_justificada_por_usuarios_id_fk": {
+          "name": "faltas_paciente_justificada_por_usuarios_id_fk",
+          "tableFrom": "faltas_paciente",
+          "tableTo": "usuarios",
+          "columnsFrom": ["justificada_por"],
+          "columnsTo": ["id"],
+          "onDelete": "no action",
+          "onUpdate": "no action"
         },
-        "bloqueado_ate": {
-          "name": "bloqueado_ate",
-          "type": "timestamp with time zone",
-          "primaryKey": false,
-          "notNull": false
-        }
-      },
-      "indexes": {},
-      "foreignKeys": {},
-      "compositePrimaryKeys": {},
-      "uniqueConstraints": {},
-      "policies": {},
-      "checkConstraints": {},
-      "isRLSEnabled": false
-    },
-    "public.verificacoes_identidade": {
-      "name": "verificacoes_identidade",
-      "schema": "",
-      "columns": {
-        "id": {
-          "name": "id",
-          "type": "uuid",
-          "primaryKey": true,
-          "notNull": true,
-          "default": "gen_random_uuid()"
-        },
-        "inscricao_id": {
-          "name": "inscricao_id",
-          "type": "uuid",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "token_hash": {
-          "name": "token_hash",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "criada_em": {
-          "name": "criada_em",
-          "type": "timestamp with time zone",
-          "primaryKey": false,
-          "notNull": true,
-          "default": "now()"
-        },
-        "expira_em": {
-          "name": "expira_em",
-          "type": "timestamp with time zone",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "encerrada_em": {
-          "name": "encerrada_em",
-          "type": "timestamp with time zone",
-          "primaryKey": false,
-          "notNull": false
-        }
-      },
-      "indexes": {},
-      "foreignKeys": {
-        "verificacoes_identidade_inscricao_id_inscricoes_id_fk": {
-          "name": "verificacoes_identidade_inscricao_id_inscricoes_id_fk",
-          "tableFrom": "verificacoes_identidade",
-          "tableTo": "inscricoes",
-          "columnsFrom": ["inscricao_id"],
+        "faltas_paciente_retirada_por_usuarios_id_fk": {
+          "name": "faltas_paciente_retirada_por_usuarios_id_fk",
+          "tableFrom": "faltas_paciente",
+          "tableTo": "usuarios",
+          "columnsFrom": ["retirada_por"],
           "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
@@ -1680,14 +1645,27 @@
       },
       "compositePrimaryKeys": {},
       "uniqueConstraints": {
-        "verificacoes_identidade_token_hash_unique": {
-          "name": "verificacoes_identidade_token_hash_unique",
+        "faltas_paciente_sessao_id_unique": {
+          "name": "faltas_paciente_sessao_id_unique",
           "nullsNotDistinct": false,
-          "columns": ["token_hash"]
+          "columns": ["sessao_id"]
         }
       },
       "policies": {},
-      "checkConstraints": {},
+      "checkConstraints": {
+        "faltas_autor": {
+          "name": "faltas_autor",
+          "value": "(\"faltas_paciente\".\"registrada_por\" is not null) <> \"faltas_paciente\".\"registrada_pelo_paciente\""
+        },
+        "faltas_justificativa_completa": {
+          "name": "faltas_justificativa_completa",
+          "value": "\"faltas_paciente\".\"justificada\" = (\"faltas_paciente\".\"motivo_justificativa_cifrado\" is not null and \"faltas_paciente\".\"justificada_em\" is not null)"
+        },
+        "faltas_retirada_completa": {
+          "name": "faltas_retirada_completa",
+          "value": "(\"faltas_paciente\".\"retirada_em\" is null) = (\"faltas_paciente\".\"retirada_por\" is null)"
+        }
+      },
       "isRLSEnabled": false
     }
   },
@@ -1720,7 +1698,18 @@
     "public.status_sessao": {
       "name": "status_sessao",
       "schema": "public",
-      "values": ["agendada", "realizada"]
+      "values": [
+        "agendada",
+        "confirmada",
+        "cancelada",
+        "realizada",
+        "falta_paciente"
+      ]
+    },
+    "public.origem_falta": {
+      "name": "origem_falta",
+      "schema": "public",
+      "values": ["falta", "cancelamento_fora_do_prazo"]
     }
   },
   "schemas": {},

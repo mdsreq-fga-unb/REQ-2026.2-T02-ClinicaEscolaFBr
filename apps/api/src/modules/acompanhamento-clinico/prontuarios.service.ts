@@ -5,9 +5,19 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { aliasedTable, and, eq, gt, asc, desc, isNull } from 'drizzle-orm';
+import {
+  aliasedTable,
+  and,
+  eq,
+  gt,
+  asc,
+  desc,
+  inArray,
+  isNull,
+} from 'drizzle-orm';
 import {
   atribuicoesSupervisor,
+  cancelamentosSessao,
   casos,
   inscricoes,
   prontuarios,
@@ -20,12 +30,34 @@ import {
 import { cifrar, decifrar } from '../../common/criptografia';
 import { AuditoriaService } from '../../auditoria/auditoria.service';
 import type { UsuarioAutenticado } from '../../auth/usuario-autenticado';
-import type { DadosIniciais } from '@clinica/shared';
+import {
+  LIMITE_FALTAS_CICLO,
+  STATUS_SESSAO_EM_ABERTO,
+  type CancelamentoDaSessao,
+  type ClassificacaoCancelamento,
+  type DadosIniciais,
+  type OrigemCancelamento,
+} from '@clinica/shared';
 import type { Evolucao } from '@clinica/shared';
 import { DB } from '../../database/database.module';
+import { acoesDeCancelamento } from '../agendamento/acoes-cancelamento';
+import { DesligamentosService } from '../assiduidade/desligamentos.service';
+import { FaltasService } from '../assiduidade/faltas.service';
 import { PoliticaProntuario } from './politica-prontuario';
 
 const estagiario = aliasedTable(usuarios, 'estagiario');
+
+// O que as listas mostram do cancelamento (RF15, RF16): a classificação e a origem,
+// sem a justificativa (RNF51).
+const colunasDoCancelamento = {
+  classificacaoCancelamento: cancelamentosSessao.classificacao,
+  origemCancelamento: cancelamentosSessao.origem,
+};
+const cancelamentoDaSessao = (
+  classificacao: ClassificacaoCancelamento | null,
+  origem: OrigemCancelamento | null,
+): CancelamentoDaSessao | null =>
+  classificacao && origem ? { classificacao, origem } : null;
 const supervisor = aliasedTable(usuarios, 'supervisor');
 
 @Injectable()
@@ -35,6 +67,8 @@ export class ProntuariosService {
     private readonly politica: PoliticaProntuario,
     private readonly config: ConfigService,
     private readonly auditoria: AuditoriaService,
+    private readonly faltas: FaltasService,
+    private readonly desligamentos: DesligamentosService,
   ) {}
 
   // Prontuário com o conteúdo clínico, para o estagiário e o supervisor do caso e,
@@ -90,9 +124,16 @@ export class ProntuariosService {
         inicio: sessoesAtendimento.inicio,
         termino: sessoesAtendimento.termino,
         estagiarioId: sessoesAtendimento.estagiarioId,
+        estagiario: estagiario.nome,
         status: sessoesAtendimento.status,
+        ...colunasDoCancelamento,
       })
       .from(sessoesAtendimento)
+      .innerJoin(estagiario, eq(estagiario.id, sessoesAtendimento.estagiarioId))
+      .leftJoin(
+        cancelamentosSessao,
+        eq(cancelamentosSessao.sessaoId, sessoesAtendimento.id),
+      )
       .where(
         and(
           eq(sessoesAtendimento.casoId, prontuario.casoId),
@@ -114,9 +155,19 @@ export class ProntuariosService {
       .innerJoin(usuarios, eq(usuarios.id, evolucoes.registradaPor))
       .where(eq(evolucoes.prontuarioId, id))
       .orderBy(asc(evolucoes.registradaEm));
+    // Quem abre o prontuário pode justificar a falta ou é a coordenação: vê o motivo.
+    const faltasDoCiclo = await this.faltas.doCiclo(
+      prontuario.casoId,
+      prontuario.cicloAtendimento,
+      true,
+    );
     const sessoesRealizadas = sessoes.filter(
       (sessao) => sessao.status === 'realizada',
     ).length;
+    const [canceladas, sessoesAReagendar] = await Promise.all([
+      this.desligamentos.canceladasPorDesligamento(prontuario.casoId),
+      this.desligamentos.sessoesAReagendar(prontuario.casoId),
+    ]);
     return {
       id: prontuario.id,
       cicloAtendimento: prontuario.cicloAtendimento,
@@ -135,23 +186,48 @@ export class ProntuariosService {
         estagiarios: historicoEstagiarios,
         supervisores: historicoSupervisores,
       },
-      sessoes: sessoes.map((sessao) => ({
-        ...sessao,
-        evolucao: evolucoesRows.find((e) => e.sessaoId === sessao.id)
-          ? (() => {
-              const evolucao = evolucoesRows.find(
-                (e) => e.sessaoId === sessao.id,
-              )!;
-              return {
-                id: evolucao.id,
-                queixa: abrir(evolucao.queixa),
-                planejamento: abrir(evolucao.planejamento),
-                registradaPor: evolucao.autor,
-                registradaEm: evolucao.registradaEm,
-              };
-            })()
-          : null,
-      })),
+      // A contagem é a do ciclo deste prontuário, o mesmo das sessões listadas.
+      faltasNoCiclo: await this.faltas.contar(
+        prontuario.casoId,
+        undefined,
+        prontuario.cicloAtendimento,
+      ),
+      // Os botões de falta seguem a regra da API (vínculo e atribuição vigentes),
+      // e não o estagiário de cada sessão.
+      acoesFalta: await this.faltas.acoesPermitidas(prontuario.casoId, usuario),
+      // O cancelamento segue a mesma ideia (RF15, RF16).
+      acoesCancelamento: await acoesDeCancelamento(
+        this.db,
+        prontuario.casoId,
+        usuario,
+      ),
+      // Sessões canceladas pelo desligamento que ficaram para reagendar (RF38).
+      sessoesAReagendar,
+      sessoes: sessoes.map(
+        ({ classificacaoCancelamento, origemCancelamento, ...sessao }) => ({
+          ...sessao,
+          cancelamento: cancelamentoDaSessao(
+            classificacaoCancelamento,
+            origemCancelamento,
+          ),
+          falta: faltasDoCiclo.get(sessao.id) ?? null,
+          canceladaPorDesligamento: canceladas.has(sessao.id),
+          evolucao: evolucoesRows.find((e) => e.sessaoId === sessao.id)
+            ? (() => {
+                const evolucao = evolucoesRows.find(
+                  (e) => e.sessaoId === sessao.id,
+                )!;
+                return {
+                  id: evolucao.id,
+                  queixa: abrir(evolucao.queixa),
+                  planejamento: abrir(evolucao.planejamento),
+                  registradaPor: evolucao.autor,
+                  registradaEm: evolucao.registradaEm,
+                };
+              })()
+            : null,
+        }),
+      ),
       sessoesRealizadas,
       fechamentoAvaliativoPendente:
         sessoesRealizadas > 0 && sessoesRealizadas % 10 === 0,
@@ -200,7 +276,7 @@ export class ProntuariosService {
         .where(
           and(
             eq(sessoesAtendimento.id, sessaoId),
-            eq(sessoesAtendimento.status, 'agendada'),
+            inArray(sessoesAtendimento.status, STATUS_SESSAO_EM_ABERTO),
           ),
         )
         .returning({ id: sessoesAtendimento.id });
@@ -351,13 +427,107 @@ export class ProntuariosService {
       .where(
         and(
           eq(sessoesAtendimento.casoId, casoId),
-          eq(sessoesAtendimento.status, 'agendada'),
+          inArray(sessoesAtendimento.status, STATUS_SESSAO_EM_ABERTO),
           gt(sessoesAtendimento.inicio, new Date()),
         ),
       )
       .orderBy(asc(sessoesAtendimento.inicio))
       .limit(1);
-    const dados = { ...caso, ...linha, proximaSessao: proxima?.inicio ?? null };
+    // Sessões do ciclo com as faltas (RF34, RF35): a secretaria registra e justifica a
+    // falta por aqui. Nenhum conteúdo clínico entra na resposta (RF55).
+    const [{ ciclo }] = await this.db
+      .select({ ciclo: casos.cicloAtendimento })
+      .from(casos)
+      .where(eq(casos.id, casoId));
+    const sessoes = await this.db
+      .select({
+        id: sessoesAtendimento.id,
+        inicio: sessoesAtendimento.inicio,
+        termino: sessoesAtendimento.termino,
+        estagiario: estagiario.nome,
+        status: sessoesAtendimento.status,
+        ...colunasDoCancelamento,
+      })
+      .from(sessoesAtendimento)
+      .innerJoin(estagiario, eq(estagiario.id, sessoesAtendimento.estagiarioId))
+      .leftJoin(
+        cancelamentosSessao,
+        eq(cancelamentosSessao.sessaoId, sessoesAtendimento.id),
+      )
+      .where(
+        and(
+          eq(sessoesAtendimento.casoId, casoId),
+          eq(sessoesAtendimento.cicloAtendimento, ciclo),
+        ),
+      )
+      .orderBy(asc(sessoesAtendimento.inicio));
+    const coordenacao = usuario.perfil === 'coordenacao';
+    const [
+      faltasDoCiclo,
+      faltasNoCiclo,
+      desligamentos,
+      canceladas,
+      sessoesAReagendar,
+      vinculos,
+    ] = await Promise.all([
+      this.faltas.doCiclo(casoId, ciclo, true),
+      this.faltas.contar(casoId, undefined, ciclo),
+      // O motivo da reversão só vai para a coordenação, que reverte (RF38).
+      this.desligamentos.doCiclo(casoId, ciclo, coordenacao),
+      this.desligamentos.canceladasPorDesligamento(casoId),
+      this.desligamentos.sessoesAReagendar(casoId),
+      // Vínculos do caso, do mais antigo ao mais recente: o primeiro marca o início
+      // do ciclo; o último dá o estagiário do caso desligado (RF37).
+      this.db
+        .select({
+          nome: estagiario.nome,
+          vinculadoEm: vinculosEstagiario.vinculadoEm,
+        })
+        .from(vinculosEstagiario)
+        .innerJoin(
+          estagiario,
+          eq(estagiario.id, vinculosEstagiario.estagiarioId),
+        )
+        .where(eq(vinculosEstagiario.casoId, casoId))
+        .orderBy(asc(vinculosEstagiario.vinculadoEm)),
+    ]);
+    const vigente = desligamentos.find((d) => d.revertidoEm === null);
+    const dados = {
+      ...caso,
+      ...linha,
+      proximaSessao: proxima?.inicio ?? null,
+      cicloAtendimento: ciclo,
+      faltasNoCiclo,
+      cicloDesde: vinculos[0]?.vinculadoEm ?? null,
+      ultimoEstagiario: vinculos.at(-1)?.nome ?? null,
+      // Desligamento por faltas só com o alerta pendente (RF36, RF37), pela
+      // secretaria ou pela coordenação.
+      podeDesligar:
+        (usuario.perfil === 'secretaria' || coordenacao) &&
+        caso.situacao === 'em_atendimento' &&
+        faltasNoCiclo.faltas >= LIMITE_FALTAS_CICLO,
+      desligamentos,
+      // Para o diálogo da reversão (RF38): a vaga ainda livre devolve o paciente ao
+      // mesmo estagiário.
+      vagaDoDesligamento:
+        coordenacao && vigente
+          ? await this.desligamentos.vagaDoDesligamento(vigente.id)
+          : null,
+      sessoesAReagendar,
+      // A secretaria cancela por aqui (RF15, RF16).
+      acoesCancelamento: await acoesDeCancelamento(this.db, casoId, usuario),
+      sessoes: sessoes.map(
+        ({ classificacaoCancelamento, origemCancelamento, ...sessao }) => ({
+          ...sessao,
+          cancelamento: cancelamentoDaSessao(
+            classificacaoCancelamento,
+            origemCancelamento,
+          ),
+          falta: faltasDoCiclo.get(sessao.id) ?? null,
+          canceladaPorDesligamento: canceladas.has(sessao.id),
+        }),
+      ),
+    };
     if (usuario.perfil !== 'coordenacao') return dados;
     const [prontuario] = await this.db
       .select({ id: prontuarios.id })

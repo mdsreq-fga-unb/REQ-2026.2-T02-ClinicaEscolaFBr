@@ -5,4 +5,8 @@ export * from "./acesso";
 export * from "./agendamento";
 export * from "./inscricao";
 export * from "./casos";
+export * from "./assiduidade";
+export * from "./confirmacao";
+export * from "./cancelamento";
+export * from "./agenda";
 export * from "./verificacao";

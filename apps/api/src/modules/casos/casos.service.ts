@@ -15,12 +15,15 @@ import {
   desc,
   eq,
   inArray,
+  isNull,
   ne,
+  notInArray,
 } from 'drizzle-orm';
 import {
   atribuicoesSupervisor,
   casos,
   decisoesPrioridade,
+  desligamentosPorFaltas,
   inscricoes,
   prontuarios,
   usuarios,
@@ -43,6 +46,7 @@ import { AuditoriaService } from '../../auditoria/auditoria.service';
 import { decifrar } from '../../common/criptografia';
 import { DB } from '../../database/database.module';
 import { ParametrosService } from '../../parametros/parametros.service';
+import { DesligamentosService } from '../assiduidade/desligamentos.service';
 
 const estagiario = aliasedTable(usuarios, 'estagiario');
 const supervisor = aliasedTable(usuarios, 'supervisor');
@@ -63,6 +67,7 @@ export class CasosService {
     private readonly auditoria: AuditoriaService,
     private readonly parametros: ParametrosService,
     private readonly config: ConfigService,
+    private readonly desligamentos: DesligamentosService,
   ) {}
 
   // Prioridade clínica vigente de cada inscrição: a decisão mais recente (RNF5).
@@ -140,7 +145,9 @@ export class CasosService {
     return new Set(casoIds.filter((id) => !ocupados.has(id)));
   }
 
-  // Casos ativos de um supervisor: atribuição vigente e caso não encerrado.
+  // Casos ativos de um supervisor: atribuição vigente e caso em andamento. O caso
+  // desligado por faltas não está em atendimento e não conta no limite (DF17); o
+  // que aguarda vaga conta, porque volta ao atendimento (RF38).
   private async casosAtivos(tx: Pick<Db, 'select'>, supervisorId?: string) {
     return tx
       .select({
@@ -152,7 +159,7 @@ export class CasosService {
       .where(
         and(
           eq(atribuicoesSupervisor.vigente, true),
-          ne(casos.situacao, 'encerrado'),
+          notInArray(casos.situacao, ['encerrado', 'desligado_por_faltas']),
           supervisorId
             ? eq(atribuicoesSupervisor.supervisorId, supervisorId)
             : undefined,
@@ -310,7 +317,8 @@ export class CasosService {
   }
 
   // RF21: casos sob a responsabilidade do supervisor, com o estagiário e o
-  // prontuário do ciclo, quando já existem.
+  // prontuário do ciclo, quando já existem. O caso desligado por faltas continua na
+  // lista, com a data em que o vínculo foi encerrado (RF37).
   async meusCasos(usuario: UsuarioAutenticado): Promise<CasoDoSupervisor[]> {
     const linhas = await this.db
       .select({
@@ -318,6 +326,8 @@ export class CasosService {
         inscricaoId: inscricoes.id,
         numero: inscricoes.numero,
         nome: inscricoes.nomeCompleto,
+        situacao: casos.situacao,
+        ciclo: casos.cicloAtendimento,
         estagiario: estagiario.nome,
         prontuarioId: prontuarios.id,
       })
@@ -348,6 +358,26 @@ export class CasosService {
       )
       .orderBy(asc(inscricoes.criadaEm));
     const cores = await this.prioridades(linhas.map((l) => l.inscricaoId));
+    const desligados = linhas.filter(
+      (l) => l.situacao === 'desligado_por_faltas',
+    );
+    const decisoes = desligados.length
+      ? await this.db
+          .select({
+            casoId: desligamentosPorFaltas.casoId,
+            decididoEm: desligamentosPorFaltas.decididoEm,
+          })
+          .from(desligamentosPorFaltas)
+          .where(
+            and(
+              inArray(
+                desligamentosPorFaltas.casoId,
+                desligados.map((l) => l.casoId),
+              ),
+              isNull(desligamentosPorFaltas.revertidoEm),
+            ),
+          )
+      : [];
     return linhas.map((l) => ({
       casoId: l.casoId,
       numero: l.numero,
@@ -355,6 +385,10 @@ export class CasosService {
       prioridade: cores.get(l.inscricaoId) ?? null,
       estagiario: l.estagiario,
       prontuarioId: l.prontuarioId,
+      situacao: l.situacao,
+      vinculoEncerradoEm:
+        decisoes.find((d) => d.casoId === l.casoId)?.decididoEm.toISOString() ??
+        null,
     }));
   }
 
@@ -438,6 +472,13 @@ export class CasosService {
         if (caso.situacao === 'encerrado') {
           throw new ConflictException('Este caso está encerrado.');
         }
+        // Um vínculo novo devolveria o caso desligado ao atendimento sem registrar a
+        // reversão (RF38). O caso que aguarda vaga já foi revertido e aceita.
+        if (caso.situacao === 'desligado_por_faltas') {
+          throw new ConflictException(
+            'Caso desligado por faltas: só a coordenação reverte o desligamento.',
+          );
+        }
 
         const [atual] = await tx
           .select({ id: vinculosEstagiario.id })
@@ -454,6 +495,11 @@ export class CasosService {
           );
         }
 
+        // A linha do estagiário fica bloqueada até o fim, para que uma desativação
+        // simultânea não deixe o caso com uma conta desativada (RF21, RF54): o
+        // vínculo que chega durante a desativação relê a conta e é recusado. A
+        // desativação que começa depois do vínculo espera ele terminar e segue;
+        // trocar o estagiário de um caso já vinculado é a transferência (RF25).
         const [escolhido] = await tx
           .select({ id: usuarios.id, nome: usuarios.nome })
           .from(usuarios)
@@ -463,7 +509,8 @@ export class CasosService {
               eq(usuarios.perfil, 'estagiario'),
               eq(usuarios.situacao, 'ativo'),
             ),
-          );
+          )
+          .for('update');
         if (!escolhido) {
           throw new UnprocessableEntityException(
             'Estagiário com conta ativa não encontrado.',
@@ -474,6 +521,12 @@ export class CasosService {
           .insert(vinculosEstagiario)
           .values({ casoId, estagiarioId, vinculadoPor: autor.id })
           .returning();
+        // O paciente novo ocupa a vaga liberada por um desligamento (RF37).
+        const vagaOcupada = await this.desligamentos.ocuparVaga(
+          tx,
+          estagiarioId,
+          vinculo.id,
+        );
 
         // Um prontuário por caso e ciclo (RF66): se ele já existe no ciclo, o
         // vínculo passa a usá-lo, sem criar outro.
@@ -517,6 +570,7 @@ export class CasosService {
               situacao: 'em_atendimento',
               prontuarioId,
               prontuarioCriado: Boolean(criado),
+              vagaOcupada,
             },
           },
           tx,

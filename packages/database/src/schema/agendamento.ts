@@ -9,11 +9,15 @@ import {
   timestamp,
   uuid,
 } from "drizzle-orm/pg-core";
-import { STATUS_SESSAO } from "@clinica/shared";
+import { MEIOS_CONFIRMACAO, STATUS_SESSAO } from "@clinica/shared";
 import { usuarios } from "./base";
 import { casos } from "./casos";
 
 export const statusSessaoEnum = pgEnum("status_sessao", STATUS_SESSAO);
+export const meioConfirmacaoEnum = pgEnum(
+  "meio_confirmacao",
+  MEIOS_CONFIRMACAO,
+);
 
 // Sessão de atendimento (RF10): 50 minutos mais o intervalo de 10 minutos para
 // anotações, que fica reservado na agenda do estagiário (DF18).
@@ -44,8 +48,16 @@ export const sessoesAtendimento = pgTable(
     mensagemWhatsappEm: timestamp("mensagem_whatsapp_em", {
       withTimezone: true,
     }),
+    // Quando e por onde a presença foi confirmada (RF14). Quem da secretaria
+    // registrou fica na auditoria (RNF10).
+    confirmadaEm: timestamp("confirmada_em", { withTimezone: true }),
+    confirmadaPor: meioConfirmacaoEnum("confirmada_por"),
   },
   (t) => [
+    check(
+      "sessoes_confirmacao_completa",
+      sql`(${t.confirmadaEm} is null) = (${t.confirmadaPor} is null)`,
+    ),
     check("sessoes_termino_apos_inicio", sql`${t.termino} > ${t.inicio}`),
     check(
       "sessoes_intervalo_apos_termino",

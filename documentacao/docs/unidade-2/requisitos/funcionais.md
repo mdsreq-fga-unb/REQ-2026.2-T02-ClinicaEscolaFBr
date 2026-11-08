@@ -46,9 +46,9 @@ As funcionalidades destinadas ao público externo devem observar os requisitos d
 O sistema deve permitir que o interessado realize uma solicitação de atendimento psicológico por meio de formulário eletrônico, acessível a partir de link divulgado no site e nas redes sociais da FBr, informando seus dados cadastrais e a queixa que motivou a busca pelo atendimento.
 
 - O formulário deve exigir, como campos obrigatórios — confirmados pela Clínica Escola na reunião de 26/08/2026 ([ata](../../unidade-1/reunioes.md)) —, os seguintes: nome completo, data de nascimento, CPF, RG, endereço, estado civil e a queixa (motivo da busca pelo atendimento); quando o interessado for menor de idade, o formulário deve exigir também o nome do responsável legal.
-- Para viabilizar os lembretes e a verificação de identidade previstos nos RF13 e RF52, o interessado deve informar pelo menos um canal de contato válido entre telefone celular e e-mail e indicar o canal preferencial: **e-mail**, **WhatsApp** ou **ligação** (os dois últimos exigem o celular). Quem escolhe e-mail recebe as mensagens automáticas do sistema; quem escolhe WhatsApp ou ligação é contatado pela secretaria. O SMS não é usado.
+- Para viabilizar os lembretes e a verificação de identidade previstos nos RF13 e RF52, o interessado deve informar o **e-mail** e o **telefone celular**, os dois obrigatórios, e a inscrição avisa que os contatos da clínica são feitos por e-mail ([DF48](decisoes-fbr.md#df48)). A inscrição não pede mais a escolha do canal preferencial. As mensagens automáticas do sistema vão por e-mail, e o celular fica para os contatos da secretaria por WhatsApp ou ligação. O SMS não é usado. As inscrições feitas antes da DF48, com o canal escolhido e às vezes só o celular, continuam seguindo a [DF24](decisoes-fbr.md#df24).
 - O formulário também deve coletar, para a triagem, a percepção de urgência e um campo de histórico relevante informado pelo interessado, ambos como declarações do próprio solicitante.
-- O formulário também deve coletar os dados da ficha de identificação da Clínica Escola que os campos acima não cobrem ([DF43](decisoes-fbr.md#df43)): sexo, profissão, escolaridade, bairro, cidade, CEP, WhatsApp, contato de emergência e, para menor de idade, o CPF e o documento que comprova a responsabilidade legal. Até a FBr definir a obrigatoriedade desses dados, eles são opcionais; essa regra é uma proposta da equipe.
+- O formulário também deve coletar os dados da ficha de identificação da Clínica Escola que os campos acima não cobrem ([DF43](decisoes-fbr.md#df43)): sexo, profissão, escolaridade, bairro, cidade, CEP, WhatsApp, contato de emergência e, para menor de idade, o CPF e o documento que comprova a responsabilidade legal. Até a FBr definir a obrigatoriedade desses dados, eles são opcionais; essa regra é uma proposta da equipe. A exceção é o CPF do responsável legal, obrigatório na inscrição de menor de idade ([DF47](decisoes-fbr.md#df47)), porque o consentimento do RF57 é dado pelo responsável.
 - O CPF e o RG são coletados apenas como texto informado pelo próprio interessado — a Clínica Escola não exige, nem o sistema deve solicitar, o envio de cópia digitalizada desses documentos.
 - O sistema deve validar o formato dos dados de contato, verificar os campos obrigatórios e solicitar a confirmação do interessado antes de registrar a inscrição.
 - O formulário deve exibir, de forma fixa e sempre visível, um aviso textual com os contatos de emergência do CVV (188) e do SAMU (192), conforme solicitado pela Clínica Escola FBr na validação do MVP ([10.2.4](backlog.md#1024-validacao-do-mvp-com-o-cliente)) — condição vinculada ao adiamento da sinalização automática de pontos de atenção (RF5) para uma entrega posterior.
@@ -69,7 +69,7 @@ _Critérios de aceitação:_
 
 - O CPF e o RG são informados por digitação, sem envio de cópia digitalizada ou foto dos documentos: o CPF com os 11 números e o RG como está no documento, aceitando números, letras e pontuação, sem exigir o órgão emissor.
 
-- O formato dos canais informados é validado, pelo menos um canal (celular ou e-mail) é exigido e o canal preferencial (e-mail, WhatsApp ou ligação) fica registrado; WhatsApp ou ligação sem celular informado é recusado.
+- O formato do e-mail e do celular é validado, e o envio sem um dos dois é bloqueado, com o campo indicado; a inscrição mostra o aviso de que os contatos da clínica são feitos por e-mail.
 
 - Queixa, percepção de urgência e histórico relevante são obrigatórios e ficam identificados como declarações do interessado.
 
@@ -77,7 +77,7 @@ _Critérios de aceitação:_
 
 - Antes do registro, o interessado revisa os dados informados e confirma o envio; sem essa confirmação, a solicitação não é registrada.
 
-- Para interessado menor de idade, calculado pela data de nascimento, o envio sem o nome do responsável legal é bloqueado e o campo é indicado.
+- Para interessado menor de idade, calculado pela data de nascimento, o envio sem o nome ou sem o CPF do responsável legal é bloqueado e o campo é indicado.
 
 _Rastreabilidade:_ Feature "Registrar solicitação de atendimento on-line" → CP1 — Inscrição on-line → OE1/OE4. Restrição transversal: CP12 — Segurança, sigilo e controle de acesso.{{ origem("RF1") }}
 
@@ -326,6 +326,7 @@ Os canais de contato com o paciente (e-mail, WhatsApp e ligação, sem SMS), a d
 
 - O sistema deve permitir que a secretaria ou o estagiário responsável agende uma sessão para um paciente já vinculado a um estagiário (CP5), informando a data e o horário de início.
 - O horário de término é calculado pela duração padrão da sessão (parâmetro de agendamento, padrão de 50 minutos) e pode ser ajustado por quem agenda, desde que seja posterior ao início.
+- A data e o horário de início não podem estar no passado, e os horários de início e de término são escolhidos de 10 em 10 minutos ([DF49](decisoes-fbr.md#df49)).
 - Depois do término, o estagiário tem o intervalo para anotações (parâmetro de agendamento, padrão de 10 minutos), que fica reservado na sua agenda.
 - Duas sessões do mesmo estagiário se sobrepõem quando o intervalo entre o início de uma e o fim do seu intervalo para anotações tem algum instante em comum com o da outra; para o mesmo paciente, considera-se só o intervalo entre o início e o término. Uma sessão que começa exatamente no fim do intervalo para anotações da anterior não se sobrepõe.
 - O sistema deve impedir o agendamento de sessões sobrepostas para o mesmo estagiário ou para o mesmo paciente, e deve registrar o status inicial da sessão como "agendada", com paciente, estagiário, data, horário de início e horário de término associados.
@@ -345,6 +346,8 @@ _Critérios de aceitação:_
 - Com uma sessão do paciente das 14h00 às 14h50, uma nova sessão do mesmo paciente iniciando às 14h30 é bloqueada.
 - Paciente sem estagiário responsável vinculado não pode ter sessão agendada.
 - Horário de término ajustado para antes do início, ou igual a ele, é recusado, com a indicação do erro.
+- Data ou horário de início no passado é recusado, com a indicação do erro.
+- Os campos de início e de término só oferecem horários de 10 em 10 minutos (DF49).
 - Estagiário que não é o responsável pelo paciente, supervisor e coordenação não conseguem agendar sessão para o paciente.
 
 _Rastreabilidade:_ Feature "Agendar sessão do paciente" → CP4 — Agendamento, confirmação e remarcação → OE3/OE4. Dependência: RF21 (CP5 — vínculo do paciente ao estagiário responsável); integração: RF1 (canal de contato preferencial) e RF14 (link de confirmação de presença); restrição transversal: CP12 — Segurança, sigilo e controle de acesso.{{ origem("RF10") }}

@@ -2,6 +2,7 @@ import { readdirSync, readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { PGlite } from '@electric-sql/pglite';
 import { btree_gist } from '@electric-sql/pglite/contrib/btree_gist';
+import type { Logger } from 'drizzle-orm/logger';
 import { drizzle } from 'drizzle-orm/pglite';
 import * as schema from '@clinica/database';
 import type { Db } from '@clinica/database';
@@ -18,7 +19,9 @@ export type BancoDeTeste = {
   fechar: () => Promise<void>;
 };
 
-export async function criarBancoDeTeste(): Promise<BancoDeTeste> {
+export async function criarBancoDeTeste(
+  logger?: Logger,
+): Promise<BancoDeTeste> {
   const cliente = new PGlite({ extensions: { btree_gist } });
   const arquivos = readdirSync(PASTA_MIGRATIONS)
     .filter((f) => f.endsWith('.sql'))
@@ -29,7 +32,7 @@ export async function criarBancoDeTeste(): Promise<BancoDeTeste> {
       if (comando.trim()) await cliente.exec(comando);
     }
   }
-  const db = drizzle(cliente, { schema }) as unknown as Db;
+  const db = drizzle(cliente, { schema, logger }) as unknown as Db;
   // Esvazia as tabelas entre os testes, mantendo os parâmetros iniciais.
   const limpar = () =>
     cliente.exec(

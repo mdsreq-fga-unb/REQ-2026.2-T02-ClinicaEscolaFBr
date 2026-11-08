@@ -97,7 +97,7 @@ Os protótipos também podem ser abertos no projeto de design, onde é possível
 
 ### RF14 — Sessões sem confirmação na agenda { #rf14 }
 
-[RF14](../unidade-2/requisitos/funcionais.md#rf14) · issue [#142](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/issues/142). Na Agenda, a secretaria vê as sessões cujo prazo de confirmação acabou sem resposta do paciente, com os contatos e a opção de registrar a confirmação feita por telefone. Também aparece o estado vazio.
+[RF14](../unidade-2/requisitos/funcionais.md#rf14) · issue [#142](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/issues/142). Na Agenda, a secretaria vê as sessões cujo prazo de confirmação acabou sem resposta do paciente, com o canal preferencial, o caminho para os contatos e a opção de registrar a confirmação feita por telefone. Também aparece o estado vazio.
 
 [![Agenda da secretaria: sessões sem confirmação e estado vazio](../assets/prototipos-ciclo-4/2-1-agenda-confirmacao.webp)](../assets/prototipos-ciclo-4/2-1-agenda-confirmacao.webp){ target="_blank" }
 

@@ -54,8 +54,36 @@
     {
       "idx": 7,
       "version": "7",
-      "when": 1793851276294,
-      "tag": "0007_verificacao_de_identidade",
+      "when": 1793991869138,
+      "tag": "0007_faltas_do_paciente",
+      "breakpoints": true
+    },
+    {
+      "idx": 8,
+      "version": "7",
+      "when": 1794057872805,
+      "tag": "0008_desligamento_por_faltas",
+      "breakpoints": true
+    },
+    {
+      "idx": 9,
+      "version": "7",
+      "when": 1794101942737,
+      "tag": "0009_confirmacao_de_presenca",
+      "breakpoints": true
+    },
+    {
+      "idx": 10,
+      "version": "7",
+      "when": 1794102366296,
+      "tag": "0010_cancelamento_de_sessao",
+      "breakpoints": true
+    },
+    {
+      "idx": 11,
+      "version": "7",
+      "when": 1794158280965,
+      "tag": "0011_verificacao_de_identidade",
       "breakpoints": true
     }
   ]

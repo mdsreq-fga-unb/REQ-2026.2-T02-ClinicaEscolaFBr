@@ -72,7 +72,7 @@ rfs:
   lider: Jônatas
   issue: 88
   estado: Código inspecionado
-  origem: [DF02, DF07, DF24, DF35, DF43]
+  origem: [DF02, DF07, DF24, DF35, DF43, DF47, DF48]
 
 - id: RF2
   nome: Emitir comprovante de inscrição
@@ -163,7 +163,7 @@ rfs:
   ciclo: 4
   ordem: 32
   lider: Jônatas
-  depende: [RF52]
+  depende: [RF52, RF7]
   issue: 155
   estado: Planejada
   origem: [DF40]
@@ -191,7 +191,7 @@ rfs:
   depende: [RF21]
   issue: 96
   estado: Código inspecionado
-  origem: [DF01, DF18, DF24]
+  origem: [DF01, DF18, DF24, DF49]
   entrega: 'parcial no Ciclo 3: o link de confirmação de presença já é gerado e enviado no agendamento, mas a página que o recebe só chega com o RF14, no Ciclo 4'
 
 - id: RF11
@@ -206,7 +206,7 @@ rfs:
   lider: Nicolas
   depende: [RF10, RF21]
   issue: 141
-  estado: Planejada
+  estado: Código concluído
 
 - id: RF12
   nome: Reagendar sessão do paciente
@@ -239,7 +239,7 @@ rfs:
   lider: Nicolas
   depende: [RF10]
   issue: 142
-  estado: Planejada
+  estado: Código concluído
   origem: [DF24, DF45]
 
 - id: RF15
@@ -254,7 +254,7 @@ rfs:
   lider: Nicolas
   depende: [RF10]
   issue: 143
-  estado: Planejada
+  estado: Código concluído
   origem: [DF10, DF20, DF24]
 
 - id: RF16
@@ -269,7 +269,7 @@ rfs:
   lider: Nicolas
   depende: [RF10, RF21]
   issue: 144
-  estado: Planejada
+  estado: Código concluído
   origem: [DF10]
 
 - id: RF17
@@ -571,7 +571,7 @@ rfs:
   lider: Gabriel
   depende: [RF10, RF14, RF15]
   issue: 150
-  estado: Planejada
+  estado: Promovida para a versão integrada
 
 - id: RF35
   nome: Contabilizar faltas do paciente no ciclo
@@ -585,7 +585,7 @@ rfs:
   lider: Gabriel
   depende: [RF15, RF34]
   issue: 151
-  estado: Planejada
+  estado: Promovida para a versão integrada
   origem: [DF20]
 
 - id: RF36
@@ -600,7 +600,7 @@ rfs:
   lider: Gabriel
   depende: [RF35]
   issue: 152
-  estado: Planejada
+  estado: Código concluído
 
 - id: RF37
   nome: Desligar paciente por faltas e liberar vaga
@@ -614,7 +614,7 @@ rfs:
   lider: Gabriel
   depende: [RF36]
   issue: 153
-  estado: Planejada
+  estado: Código concluído
 
 - id: RF38
   nome: Reverter desligamento de paciente por faltas
@@ -628,7 +628,7 @@ rfs:
   lider: Gabriel
   depende: [RF37]
   issue: 154
-  estado: Planejada
+  estado: Código concluído
 
 - id: RF39
   nome: Consolidar faltas do estagiário para a supervisão
@@ -838,7 +838,7 @@ rfs:
   lider: Joaquim
   issue: 47
   estado: Código concluído
-  origem: [DF24, DF40]
+  origem: [DF24, DF40, DF48]
 
 - id: RF53
   nome: Cadastrar usuário institucional com perfil de acesso
@@ -908,7 +908,7 @@ rfs:
   lider: Jônatas
   issue: 52
   estado: Planejada
-  origem: [DF44]
+  origem: [DF44, DF47]
 
 - id: RF65
   nome: Registrar revogação do consentimento
@@ -1524,6 +1524,8 @@ decisoes:
 - id: DF24
   data: 23/10/2026
   fonte: validação do protótipo
+  substituida_em_parte_por: DF48
+  parte_substituida: na escolha do canal preferencial; com a DF48, o e-mail e o celular são obrigatórios, e os contatos da clínica são feitos por e-mail
   decisao: O contato com o paciente é por e-mail, WhatsApp ou ligação; o SMS foi descartado. Quem escolhe e-mail recebe as mensagens automáticas; quem escolhe celular é contatado pela secretaria, por WhatsApp ou ligação. A ata em PDF registra também o e-mail como descartado, mas a gravação da reunião mostra que a escolha entre e-mail e celular foi mantida; a correção foi registrada pela equipe em 24/10/2026. Pela mesma regra, o código de verificação de identidade vai só por e-mail, e quem informou só o celular consulta a fila e pede a declaração na secretaria.
 
 - id: DF25
@@ -1638,6 +1640,21 @@ decisoes:
   data: 31/10/2026
   fonte: respostas da FBr
   decisao: A FBr, que hospeda o sistema no próprio servidor, cuida das cópias de segurança e de onde elas ficam guardadas.
+
+- id: DF47
+  data: 06/11/2026
+  fonte: validação do Ciclo 3
+  decisao: Na inscrição de menor de idade, o CPF do responsável legal é obrigatório, para não ser confundido com o do paciente. Decidido por Thiago Viana na reunião de validação, confirmando a proposta da equipe para o consentimento (RF57); a confirmação de Robson Araújo foi pedida por e-mail.
+
+- id: DF48
+  data: 06/11/2026
+  fonte: validação do Ciclo 3
+  decisao: A inscrição deixa de pedir a escolha do canal preferencial de contato. O e-mail e o telefone celular passam a ser obrigatórios, e a inscrição avisa que os contatos da clínica são feitos por e-mail. Decidido por Thiago Viana na reunião de validação; a confirmação de Robson Araújo foi pedida por e-mail.
+
+- id: DF49
+  data: 06/11/2026
+  fonte: validação do Ciclo 3
+  decisao: No agendamento, os horários de início e de término são escolhidos de 10 em 10 minutos, e não minuto a minuto, porque a sessão tem 50 minutos de atendimento e 10 de anotações (DF18). Decidido por Thiago Viana na reunião de validação.
 
 
 conjuntos:

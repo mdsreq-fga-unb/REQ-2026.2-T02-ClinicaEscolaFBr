@@ -29,6 +29,11 @@ export function Dialogo({
   children: ReactNode;
 }) {
   const ref = useRef<HTMLDialogElement>(null);
+  // O fechamento feito pelo próprio componente, ao sair da tela, também dispara o
+  // evento "close", depois de a limpeza terminar. No desenvolvimento, o React
+  // monta, desmonta e monta de novo o efeito: sem esta marca, o "close" da
+  // primeira montagem chegaria com o diálogo já reaberto e o fecharia.
+  const fechadoPeloComponente = useRef(false);
   const idTitulo = useId();
   useEffect(() => {
     const dialogo = ref.current;
@@ -39,14 +44,23 @@ export function Dialogo({
         : null;
     if (!dialogo.open) dialogo.showModal();
     return () => {
-      if (dialogo.open) dialogo.close();
+      if (dialogo.open) {
+        fechadoPeloComponente.current = true;
+        dialogo.close();
+      }
       if (origem?.isConnected) origem.focus();
     };
   }, [aberto]);
   return (
     <dialog
       ref={ref}
-      onClose={aoFechar}
+      onClose={() => {
+        if (fechadoPeloComponente.current) {
+          fechadoPeloComponente.current = false;
+          return;
+        }
+        aoFechar();
+      }}
       role={alerta ? "alertdialog" : undefined}
       aria-labelledby={idTitulo}
       className={cn(
@@ -99,8 +113,11 @@ export function Dialogo({
         <div
           className={cn(
             "sticky bottom-0 flex justify-end gap-3 border-t border-border bg-card px-4 pt-3 pb-4 max-md:[&>*]:w-full",
-            !alerta &&
-              "max-md:[&:has([data-principal])>:not([data-principal])]:hidden",
+            // No alerta, os dois botões ficam empilhados no celular, com o
+            // principal em cima; nos outros, só o principal aparece.
+            alerta
+              ? "max-md:flex-col-reverse"
+              : "max-md:[&:has([data-principal])>:not([data-principal])]:hidden",
             lateral ? "md:px-6 md:py-4" : "md:px-6 md:pt-4 md:pb-5",
           )}
         >
