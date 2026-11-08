@@ -156,6 +156,43 @@ describe("Agendar sessão (RF10)", () => {
     expect(screen.getByText("10:00 às 10:50")).toBeTruthy();
   });
 
+  it.each([
+    ["o início", "15:05", undefined],
+    ["o término", "15:00", "15:55"],
+  ])(
+    "recusa %s fora dos 10 em 10 minutos sem chamar a API (DF49)",
+    async (_campo, inicio, termino) => {
+      const chamadas = simularApi();
+      abrirTela();
+      await escolherPaciente("Sérgio");
+      preencherHorario(inicio, termino);
+      fireEvent.click(botaoAgendar());
+      expect(
+        await screen.findByText(
+          "Os horários da sessão andam de 10 em 10 minutos.",
+        ),
+      ).toBeTruthy();
+      expect(chamadas.some((c) => c.metodo === "POST")).toBe(false);
+    },
+  );
+
+  it("recusa data no passado sem chamar a API", async () => {
+    const chamadas = simularApi();
+    abrirTela();
+    await escolherPaciente("Sérgio");
+    preencherHorario("15:00");
+    fireEvent.change(screen.getByLabelText("Data"), {
+      target: { value: "2020-01-06" },
+    });
+    fireEvent.click(botaoAgendar());
+    expect(
+      await screen.findByText(
+        "A sessão precisa ser agendada para uma data e um horário futuros.",
+      ),
+    ).toBeTruthy();
+    expect(chamadas.some((c) => c.metodo === "POST")).toBe(false);
+  });
+
   it("recusa término anterior ao início sem chamar a API", async () => {
     const chamadas = simularApi();
     abrirTela();
