@@ -209,7 +209,7 @@ rfs:
   lider: Nicolas
   depende: [RF10, RF21]
   issue: 141
-  estado: Planejada
+  estado: Código concluído
 
 - id: RF12
   nome: Reagendar sessão do paciente

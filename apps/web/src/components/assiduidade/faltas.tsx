@@ -810,7 +810,7 @@ export function AcoesFaltaDaSessao({
 
 // Registro da falta (RF34), pela secretaria ou pelo estagiário responsável, com o
 // resumo da sessão, como na prancha 3-1.
-function DialogoRegistrarFalta({
+export function DialogoRegistrarFalta({
   nome,
   sessao,
   limite,

@@ -35,9 +35,11 @@ export const MENU_POR_PERFIL: Record<Perfil, ItemMenu[]> = {
     agenda,
     agendar,
   ],
+  // A "Agenda" do supervisor (RF11) foi proposta à FBr na prancha 4-2.
   supervisor: [
     triagem,
     distribuicao,
+    agenda,
     { rotulo: "Meus casos", href: "/meus-casos", Icone: Folder },
   ],
   coordenacao: [
