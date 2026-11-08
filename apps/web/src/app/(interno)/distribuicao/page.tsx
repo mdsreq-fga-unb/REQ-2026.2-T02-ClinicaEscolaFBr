@@ -1,17 +1,20 @@
 "use client";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { Check, Lock } from "lucide-react";
+import Link from "next/link";
 import { useState } from "react";
 import type {
   CasoAguardando,
   CasoJaDistribuido,
   ResultadoDistribuicao,
   SupervisorDisponivel,
+  VagaLiberada,
 } from "@clinica/shared";
+import { CartaoVagaLiberada } from "@/components/assiduidade/desligamento";
 import { Aviso } from "@/components/comum/aviso";
 import { Dialogo } from "@/components/comum/dialogo";
 import { Prioridade } from "@/components/casos/prioridade";
-import { Button } from "@/components/ui/button";
+import { Button, buttonVariants } from "@/components/ui/button";
 import { api, ErroApi } from "@/lib/api";
 import { dataBr } from "@/lib/formato";
 import { useSessao } from "@/lib/sessao";
@@ -200,7 +203,9 @@ function useDistribuirCaso({
 }
 
 // Casos aguardando distribuição (RF18) e distribuição a supervisor (RF20). A
-// coordenação distribui; o supervisor só consulta.
+// coordenação distribui; o supervisor só consulta. Para a coordenação, também as
+// vagas liberadas por desligamento (RF37) e as reversões que aguardam estagiário
+// (RF38).
 export default function DistribuicaoPage() {
   const { data: sessao } = useSessao();
   const cliente = useQueryClient();
@@ -209,6 +214,25 @@ export default function DistribuicaoPage() {
   const podeVer =
     sessao?.perfil === "coordenacao" || sessao?.perfil === "supervisor";
   const coordena = sessao?.perfil === "coordenacao";
+
+  const vagas = useQuery({
+    queryKey: ["vagas", "liberadas"],
+    queryFn: () => api<VagaLiberada[]>("/vagas/liberadas"),
+    enabled: coordena,
+  });
+  const reversoes = useQuery({
+    queryKey: ["casos", "aguardando-vaga"],
+    queryFn: () =>
+      api<
+        {
+          casoId: string;
+          numero: string;
+          nome: string;
+          supervisor: string | null;
+        }[]
+      >("/casos/aguardando-vaga"),
+    enabled: coordena,
+  });
 
   const lista = useQuery({
     queryKey: ["casos", "aguardando"],
@@ -259,6 +283,10 @@ export default function DistribuicaoPage() {
           {mensagem.supervisor}.
         </Aviso>
       )}
+
+      {vagas.data?.map((vaga) => (
+        <CartaoVagaLiberada key={vaga.id} vaga={vaga} supervisor={false} />
+      ))}
 
       {lista.isPending && podeVer && <p role="status">Carregando casos…</p>}
       {lista.isError && (
@@ -335,6 +363,46 @@ export default function DistribuicaoPage() {
             </ul>
           </div>
         </>
+      )}
+
+      {reversoes.data && reversoes.data.length > 0 && (
+        <section aria-labelledby="reversoes" className="ui-cartao">
+          <h2 id="reversoes" className="ui-h2">
+            Reversões aguardando estagiário
+          </h2>
+          <p className="ui-dica">
+            Desligamentos revertidos com a vaga já ocupada ou o estagiário
+            desativado. O supervisor do caso vincula um estagiário em “Meus
+            casos”; se o supervisor também precisar mudar, use a transferência
+            de caso.
+          </p>
+          <ul className="flex flex-col gap-2">
+            {reversoes.data.map((caso) => (
+              <li
+                key={caso.casoId}
+                className="flex flex-wrap items-center justify-between gap-3 rounded-lg border border-border px-3.5 py-2.5"
+              >
+                <span className="text-[15px]">
+                  <span className="ui-numero">{caso.numero}</span> ·{" "}
+                  <span className="font-semibold">{caso.nome}</span>
+                  <span className="ui-meta block">
+                    Supervisor: {caso.supervisor ?? "—"}
+                  </span>
+                </span>
+                <Link
+                  href={`/pacientes/${caso.casoId}`}
+                  aria-label={`Abrir ficha de ${caso.nome}`}
+                  className={buttonVariants({
+                    variant: "outline",
+                    className: "max-sm:w-full",
+                  })}
+                >
+                  Abrir ficha
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </section>
       )}
 
       {aberto && (

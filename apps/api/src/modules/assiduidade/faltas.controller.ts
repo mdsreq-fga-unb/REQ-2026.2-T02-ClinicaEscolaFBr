@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Get,
   HttpCode,
   Param,
   ParseUUIDPipe,
@@ -23,11 +24,20 @@ import {
 import { ZodValidationPipe } from '../../common/zod-validation.pipe';
 import { FaltasService } from './faltas.service';
 
-// Falta do paciente (RF34). O perfil é conferido aqui; o vínculo com o caso, no serviço.
+// Falta do paciente (RF34) e alerta do limite (RF36). O perfil é conferido aqui; o
+// vínculo com o caso, no serviço.
 @Controller()
 @UseGuards(AutenticadoGuard, PerfisGuard)
 export class FaltasController {
   constructor(private readonly faltas: FaltasService) {}
+
+  // A faixa do topo da área interna consulta em toda página; o supervisor recebe a
+  // lista vazia, porque o alerta não é dele (RF36).
+  @Get('faltas/alertas')
+  @Perfis('secretaria', 'estagiario', 'supervisor', 'coordenacao')
+  alertas(@UsuarioAtual() usuario: UsuarioAutenticado) {
+    return this.faltas.alertas(usuario);
+  }
 
   @Post('sessoes/:id/falta')
   @Perfis('secretaria', 'estagiario')
