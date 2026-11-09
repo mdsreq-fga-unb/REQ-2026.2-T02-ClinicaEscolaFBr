@@ -70,6 +70,52 @@ plugins:
       render_by_default: false
       on_error_fail: true
       on_undefined: strict
+  # Os endereços anteriores à reorganização em produto, requisitos, processo,
+  # construção e histórico continuam funcionando: cada um vira uma página que
+  # leva ao endereço novo, com o mesmo trecho (#âncora) do link.
+  - redirects:
+      redirect_maps:
+        analise-ux-capitulo-10.md: historico/unidade-2/analise-ux.md
+        organizacao-e-atualizacao.md: visao-geral/organizacao-e-atualizacao.md
+        unidade-1/cenario-atual.md: produto/cenario-atual.md
+        unidade-1/engenharia-requisitos.md: processo/engenharia-requisitos.md
+        unidade-1/estrategia-esw.md: processo/estrategia-esw.md
+        unidade-1/estudos/fdd.md: processo/estudo-fdd.md
+        unidade-1/gestao/boas-praticas-github.md: processo/boas-praticas-github.md
+        unidade-1/gestao/cronograma.md: historico/unidade-1/cronograma.md
+        unidade-1/gestao/equipe-comunicacao.md: processo/equipe-e-cliente.md
+        unidade-1/index.md: historico/unidade-1/index.md
+        unidade-1/intervencao-social.md: produto/intervencao-social.md
+        unidade-1/licoes-aprendidas.md: historico/unidade-1/licoes-aprendidas.md
+        unidade-1/referencias.md: historico/unidade-1/referencias.md
+        unidade-1/reunioes.md: historico/unidade-1/reunioes.md
+        unidade-1/solucao-proposta.md: produto/solucao-proposta.md
+        unidade-2/gestao/cronograma.md: historico/unidade-2/cronograma.md
+        unidade-2/index.md: historico/unidade-2/index.md
+        unidade-2/licoes-aprendidas.md: historico/unidade-2/licoes-aprendidas.md
+        unidade-2/requisitos/analise-feedback.md: requisitos/analise-feedback.md
+        unidade-2/requisitos/backlog.md: requisitos/priorizacao-e-mvp.md
+        unidade-2/requisitos/decisoes-fbr.md: requisitos/decisoes-fbr.md
+        unidade-2/requisitos/dor-dod.md: requisitos/dor-dod.md
+        unidade-2/requisitos/funcionais.md: requisitos/funcionais.md
+        unidade-2/requisitos/nao-funcionais.md: requisitos/nao-funcionais.md
+        unidade-2/reunioes.md: historico/unidade-2/reunioes.md
+        unidade-3/arquitetura.md: construcao/arquitetura.md
+        unidade-3/copia-de-seguranca.md: construcao/copia-de-seguranca.md
+        unidade-3/gestao/cronograma.md: historico/unidade-3/cronograma.md
+        unidade-3/implantacao.md: construcao/implantacao.md
+        unidade-3/index.md: historico/unidade-3/index.md
+        unidade-3/licoes-aprendidas.md: historico/unidade-3/licoes-aprendidas.md
+        unidade-3/projeto-features-ciclo-3.md: construcao/projeto-features.md
+        unidade-3/projeto-features-ciclo-4.md: construcao/projeto-features.md
+        unidade-3/projeto-features.md: construcao/projeto-features.md
+        unidade-3/prototipos-ciclo-3.md: construcao/prototipos.md
+        unidade-3/prototipos-ciclo-4.md: construcao/prototipos.md
+        unidade-3/prototipos.md: construcao/prototipos.md
+        unidade-3/reunioes.md: historico/unidade-3/reunioes.md
+        unidade-3/seguranca-da-implantacao.md: construcao/implantacao.md
+        unidade-3/termo-consentimento.md: construcao/termo-consentimento.md
+        unidade-3/teste-de-carga.md: construcao/teste-de-carga.md
 
 # Avisos que, com "mkdocs build --strict" no docs-check, impedem a publicação:
 # páginas fora do menu, links para páginas inexistentes e âncoras inválidas.
@@ -105,55 +151,53 @@ markdown_extensions:
 
 nav:
   - Início: index.md
-  - Visão geral do projeto:
+  - Visão geral:
+      - Organização e atualização: visao-geral/organizacao-e-atualizacao.md
       - Cronograma geral: visao-geral/cronograma.md
       - Features e backlog: visao-geral/backlog.md
       - Execução do processo: visao-geral/execucao-do-processo.md
-  - Unidade 1 — Visão e planejamento:
-      - Início da unidade: unidade-1/index.md
-      - 1. Cenário Atual: unidade-1/cenario-atual.md
-      - 2. Solução Proposta: unidade-1/solucao-proposta.md
-      - 3. Intervenção Social: unidade-1/intervencao-social.md
-      - 4. Estratégia de ESW: unidade-1/estrategia-esw.md
-      - 5. Engenharia de Requisitos: unidade-1/engenharia-requisitos.md
-      - Gestão do Projeto:
-          - 6. Cronograma e Entregas: unidade-1/gestao/cronograma.md
-          - 7. Interação entre Equipe e Cliente: unidade-1/gestao/equipe-comunicacao.md
-          - Boas práticas no GitHub: unidade-1/gestao/boas-praticas-github.md
-          - Reuniões: unidade-1/reunioes.md
-      - Estudos e referências:
-          - Estudo de FDD: unidade-1/estudos/fdd.md
-          - Lições Aprendidas: unidade-1/licoes-aprendidas.md
-          - Referências: unidade-1/referencias.md
-  - Unidade 2 — Requisitos e priorização:
-      - Início da unidade: unidade-2/index.md
-      - 8. Requisitos de Software:
-          - 8.1 Requisitos Funcionais: unidade-2/requisitos/funcionais.md
-          - 8.2 Requisitos Não Funcionais: unidade-2/requisitos/nao-funcionais.md
-          - 8.3 Análise do Feedback: unidade-2/requisitos/analise-feedback.md
-          - 8.4 Registro de Decisões com a FBr: unidade-2/requisitos/decisoes-fbr.md
-      - 9. DoR e DoD: unidade-2/requisitos/dor-dod.md
-      - 10. Backlog de Produto: unidade-2/requisitos/backlog.md
-      - Gestão do Projeto:
-          - Cronograma e Entregas: unidade-2/gestao/cronograma.md
-          - Reuniões: unidade-2/reunioes.md
-      - Aprendizados e documentação:
-          - Lições Aprendidas: unidade-2/licoes-aprendidas.md
-          - Análise de UX do site: analise-ux-capitulo-10.md
-  - Unidade 3 — Construção do MVP:
-      - Início da unidade: unidade-3/index.md
-      - Arquitetura técnica: unidade-3/arquitetura.md
-      - Projeto das features do Ciclo 3: unidade-3/projeto-features-ciclo-3.md
-      - Protótipos do Ciclo 3: unidade-3/prototipos-ciclo-3.md
-      - Projeto das features do Ciclo 4: unidade-3/projeto-features-ciclo-4.md
-      - Protótipos do Ciclo 4: unidade-3/prototipos-ciclo-4.md
-      - Termo de consentimento (versão 0.1): unidade-3/termo-consentimento.md
-      - Implantação: unidade-3/implantacao.md
-      - Cópia de segurança e restauração: unidade-3/copia-de-seguranca.md
-      - Segurança da implantação: unidade-3/seguranca-da-implantacao.md
-      - Teste de carga: unidade-3/teste-de-carga.md
-      - Gestão do Projeto:
-          - Cronograma e Entregas: unidade-3/gestao/cronograma.md
-          - Reuniões: unidade-3/reunioes.md
-      - Aprendizados:
-          - Lições Aprendidas: unidade-3/licoes-aprendidas.md
+  - Produto e requisitos:
+      - Produto:
+          - Cenário atual: produto/cenario-atual.md
+          - Solução proposta: produto/solucao-proposta.md
+          - Intervenção social: produto/intervencao-social.md
+      - Requisitos:
+          - Requisitos funcionais: requisitos/funcionais.md
+          - Requisitos não funcionais: requisitos/nao-funcionais.md
+          - Análise do feedback: requisitos/analise-feedback.md
+          - Decisões com a FBr: requisitos/decisoes-fbr.md
+          - DoR e DoD: requisitos/dor-dod.md
+          - Priorização e MVP: requisitos/priorizacao-e-mvp.md
+  - Processo e equipe:
+      - Estratégia de ESW: processo/estrategia-esw.md
+      - Engenharia de requisitos: processo/engenharia-requisitos.md
+      - Equipe e cliente: processo/equipe-e-cliente.md
+      - Boas práticas no GitHub: processo/boas-praticas-github.md
+      - Estudo de FDD: processo/estudo-fdd.md
+  - Construção do MVP:
+      - Arquitetura técnica: construcao/arquitetura.md
+      - Projeto das features: construcao/projeto-features.md
+      - Protótipos: construcao/prototipos.md
+      - Termo de consentimento (versão 0.1): construcao/termo-consentimento.md
+      - Implantação e operação:
+          - Implantação e segurança: construcao/implantacao.md
+          - Cópia de segurança e restauração: construcao/copia-de-seguranca.md
+          - Teste de carga: construcao/teste-de-carga.md
+  - Histórico das unidades:
+      - Unidade 3 (em andamento):
+          - Início da unidade: historico/unidade-3/index.md
+          - Cronograma e Entregas: historico/unidade-3/cronograma.md
+          - Reuniões: historico/unidade-3/reunioes.md
+          - Lições Aprendidas: historico/unidade-3/licoes-aprendidas.md
+      - Unidade 2 (entregue em 13/10):
+          - Início da unidade: historico/unidade-2/index.md
+          - Cronograma e Entregas: historico/unidade-2/cronograma.md
+          - Reuniões: historico/unidade-2/reunioes.md
+          - Lições Aprendidas: historico/unidade-2/licoes-aprendidas.md
+          - Análise de UX do site: historico/unidade-2/analise-ux.md
+      - Unidade 1 (entregue em 07/09):
+          - Início da unidade: historico/unidade-1/index.md
+          - Cronograma e Entregas: historico/unidade-1/cronograma.md
+          - Reuniões: historico/unidade-1/reunioes.md
+          - Lições Aprendidas: historico/unidade-1/licoes-aprendidas.md
+          - Referências: historico/unidade-1/referencias.md

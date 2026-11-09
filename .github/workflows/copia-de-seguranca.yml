@@ -5,7 +5,7 @@ name: Cópia de segurança
 # migrations e as permissões e sobe a API com o banco restaurado. Roda quando os
 # scripts ou as migrations mudam, manualmente e toda semana. O agendamento semanal
 # só vale a partir da main (o GitHub roda o schedule pela branch padrão).
-# Procedimento: documentacao/docs/unidade-3/copia-de-seguranca.md
+# Procedimento: documentacao/docs/construcao/copia-de-seguranca.md
 on:
   schedule:
     - cron: "0 10 * * 1"
