@@ -333,7 +333,7 @@ O Gabriel demonstrou as features do Ciclo 3 no ambiente de validação, do ponto
 | RF54 — Desativar usuário institucional | Sim | A desativação de uma conta de teste, com os registros dela mantidos |
 | RF51 — Encerrar sessão do usuário | Sim | A saída da conta, encerrando a sessão do usuário |
 
-**Aceite:** o Thiago aceitou, pela FBr, as features demonstradas sem ajustes: RF2, RF4, RF6, RF18, RF20, RF21, RF66, RF55, RF50, RF54 e RF51. O RF1, o RF10 e o RF53 ficam sem aceite até os ajustes da seção 2 serem feitos e mostrados à FBr. Como o Robson, que registra o aceite pela FBr ([DF39](../unidade-2/requisitos/decisoes-fbr.md#df39)), não participou, a confirmação dele é pedida por e-mail.
+**Aceite:** o Thiago aceitou, pela FBr, as features demonstradas sem ajustes: RF2, RF4, RF6, RF18, RF20, RF21, RF66, RF55, RF50, RF54 e RF51. O RF1, o RF10 e o RF53 ficam sem aceite até os ajustes da seção 2 serem feitos e mostrados à FBr. Como o Robson, que registra o aceite pela FBr ([DF39](../../requisitos/decisoes-fbr.md#df39)), não participou, a confirmação dele é pedida por e-mail.
 
 ### 2. Ajustes pedidos pela FBr
 
