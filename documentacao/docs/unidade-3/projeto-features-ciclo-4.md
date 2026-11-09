@@ -67,6 +67,7 @@ O RF52 não mostra dados por conta própria: ele confirma a identidade e entrega
 
 - `POST /verificacao/codigo`: recebe o identificador, que pode ser o CPF (com ou sem pontuação) ou o número da inscrição (`AAAA-NNNNN`). Responde sempre `202` com a mesma mensagem, ou `429` com `segundosRestantes` (pedido antes de 60 segundos) ou `bloqueadoAte` (limite de 3 códigos em 60 minutos).
 - `POST /verificacao/conferir`: recebe o identificador e o código. Com o código certo, responde `200` e grava o cookie `verificacao`. Em qualquer outro caso, responde `400` com a mesma mensagem.
+- `GET /verificacao`: devolve o número da inscrição liberada e o fim do prazo da verificação, para a página `/consultar` saber se a pessoa já confirmou a identidade. Sem verificação válida, responde `401`.
 - `POST /verificacao/encerrar`: encerra a verificação e apaga o cookie.
 
 O `VerificacaoGuard` lê o cookie `verificacao`, confere se a verificação está dentro do prazo e não foi encerrada e preenche `req.inscricaoVerificada` com o id da inscrição. Sem verificação válida, a rota responde `401` sem nenhum dado. O cookie é `httpOnly`, `Secure` e `SameSite=Lax`, como o da sessão do RF50, e só o hash do token fica no banco.
@@ -86,12 +87,12 @@ sequenceDiagram
     else 3 envios nos últimos 60 min
         A-->>W: 429 com o horário de liberação
     else envio permitido
-        A->>DB: busca a inscrição (pelo número, ou a mais recente do CPF)
-        opt a inscrição existe e tem e-mail
-            A->>DB: invalida o código anterior e cria outro, válido por 10 min
-            A--)M: envia o código, sem esperar o envio
-        end
         A-->>W: 202 com a mesma mensagem em todos os casos
+        A->>DB: depois da resposta, busca a inscrição (pelo número, ou a mais recente do CPF)
+        opt a inscrição existe, tem e-mail e recebeu menos de 3 códigos em 60 min
+            A->>DB: invalida o código anterior da inscrição e cria outro, válido por 10 min
+            A--)M: envia o código
+        end
     end
     P->>W: código de 6 dígitos
     W->>A: POST /verificacao/conferir
@@ -119,15 +120,17 @@ sequenceDiagram
 
 **Decisões de projeto** (a conferir na inspeção):
 
-1. **Identificador guardado como chave, e não em texto.** `identificadorChave` é um HMAC-SHA256 do identificador normalizado (`cpf:<11 dígitos>` ou `numero:<AAAA-NNNNN>`), com uma chave do servidor. O CPF não fica gravado nas tabelas novas.
-2. **Limites pelo identificador, e não pela inscrição.** Os limites valem igual para um CPF ou número que existe e para um que não existe, para que o `429` não revele a inscrição; é a mesma ideia do bloqueio do RF50 para e-mail sem conta. Como o CPF e o número são identificadores diferentes, alternando os dois uma mesma inscrição pode receber até 6 códigos por hora. O risco é aceito: cada código aceita só 5 tentativas.
+1. **Identificador guardado como chave, e não em texto.** `identificadorChave` é um HMAC-SHA256 do identificador normalizado (`cpf:<11 dígitos>` ou `numero:<AAAA-NNNNN>`), com uma chave do servidor. O CPF não fica gravado nas tabelas novas. Na implementação, a chave do HMAC é derivada da `CHAVE_DADOS` (HKDF), para não exigir outra variável na implantação; se a `CHAVE_DADOS` for trocada, os códigos e as verificações em curso deixam de valer, e a pessoa pede um novo código.
+2. **Limites pelo identificador, pela inscrição e pela origem.** Os limites do `429` valem igual para um CPF ou número que existe e para um que não existe, para que a resposta não revele a inscrição; é a mesma ideia do bloqueio do RF50 para e-mail sem conta. Na implementação, entraram mais dois limites, que não mudam a resposta:
+    - **Por inscrição:** no máximo 3 códigos em 60 minutos, somando o CPF e o número, e só um código vale por vez; o código novo invalida o anterior da inscrição, venha ele de qualquer dos dois identificadores. Assim, alternar o CPF e o número não dobra as tentativas. Quando a inscrição já recebeu 3 códigos, o pedido responde o mesmo `202`, e nada é enviado.
+    - **Por origem:** 30 pedidos de código e 30 conferências a cada 10 minutos por endereço (`LIMITE_VERIFICACAO_POR_ORIGEM`), como o limite da inscrição do RF1. Sem ele, alguém poderia pedir códigos para muitas inscrições de uma vez, já que os números são sequenciais, e tentar adivinhar todos.
 3. **CPF com mais de uma inscrição:** vale a mais recente, que é a que está na fila.
 4. **Duração da verificação:** 15 minutos, sem renovação (`MINUTOS_VERIFICACAO`). O RF52 não define esse prazo. Ele é curto porque a consulta é rápida e pode ser feita num computador compartilhado. Depois do prazo, a pessoa pede um novo código.
-5. **Envio do e-mail fora da resposta:** a API responde sem esperar o envio, para que o tempo de resposta não indique se a inscrição existe ou tem e-mail.
+5. **Envio do e-mail fora da resposta:** a API responde logo depois de reservar o envio no limite do identificador. A busca da inscrição, a gravação do código e o e-mail acontecem depois da resposta, para que o tempo dela não indique se a inscrição existe ou tem e-mail.
 6. **Código:** gerado com `crypto.randomInt` e guardado como HMAC, nunca em texto.
 7. **Auditoria:** a verificação concluída grava `verificar_identidade` na auditoria, sem usuário e com a inscrição como entidade, para rastrear o acesso aos dados dela. O pedido de código não altera dado da inscrição e não é auditado.
 
-**Telas:** página pública `/consultar`, em dois passos (identificador e código), usada pelo RF8 antes de mostrar a posição na fila. O código é digitado num campo único com `inputmode="numeric"` e `autocomplete="one-time-code"`. As mensagens de erro usam `role="alert"` e recebem o foco, e o botão de reenvio mostra o tempo restante. As telas estão nos [protótipos do Ciclo 4](prototipos-ciclo-4.md#rf52).
+**Telas:** página pública `/consultar`, em dois passos (identificador e código), usada pelo RF8 antes de mostrar a posição na fila. O componente da verificação recebe o conteúdo que aparece depois dela, e é ali que o RF8 e a CP10 entram; até lá, a página mostra só a confirmação da identidade, o número da inscrição e o botão para encerrar a consulta. O código é digitado num campo único com `inputmode="numeric"` e `autocomplete="one-time-code"`. As mensagens de erro usam `role="alert"` e recebem o foco, e o botão de reenvio mostra o tempo restante. As telas estão nos [protótipos do Ciclo 4](prototipos-ciclo-4.md#rf52).
 
 **Dados de teste:**
 
@@ -276,6 +279,13 @@ sequenceDiagram
     Até a resposta, a tela não tem esses elementos.
 
 **Telas:** item "Fila de espera" no menu da coordenação (proposta levada à FBr em 06/11), com a posição, a prioridade e a entrada na fila, e a seção "Prioridade pendente". A marca "Voltou à fila" só aparece com o RF43, do Ciclo 6. Protótipo: [prancha 6-1](prototipos-ciclo-4.md#rf7).
+
+**Estados e mensagens esperadas — RF7:**
+- **Fila vazia:** quando não houver casos elegíveis na fila, apresentar "Não há inscritos na fila de espera". A seção "Prioridade pendente" permanece disponível quando houver inscrições sem classificação clínica.
+- **Prioridade pendente:** apresentar separadamente as inscrições ainda sem prioridade confirmada, com número da inscrição, nome e data da inscrição, sem atribuir posição na fila.
+- **Acesso negado:** para usuários sem perfil autorizado, apresentar "Você não tem acesso à fila de espera". A API deve retornar HTTP 403 sem expor informações dos inscritos.
+- **Mudança de prioridade:** após uma nova classificação clínica confirmada, apresentar a fila na ordem recalculada, sem afirmar que existe histórico das posições anteriores.
+- **Histórico de mudanças:** não apresentar botão, painel de histórico, selo de posição atualizada ou mensagem de tentativa registrada enquanto essas funcionalidades não forem definidas pela FBr e suportadas pelo projeto.
 
 **Dados de teste:** três casos vermelhos, amarelos e verdes inscritos em ordem trocada; dois casos amarelos inscritos em dias diferentes; um caso que muda de verde para vermelha; um caso `aguardando_vinculo` (continua na fila); um caso que recebe estagiário, um desligado e um encerrado (saem da fila); uma inscrição sem prioridade; a secretaria, o estagiário e o supervisor tentando abrir a fila (403); a lista do RF18 na mesma ordem depois da troca para o `FilaService`; um caso existente, criado antes da migration, com a `entradaNaFilaEm` preenchida pela data da inscrição.
 

@@ -316,6 +316,12 @@ function SessaoAgendada({
   );
 }
 
+// Os horários andam de 10 em 10 minutos (DF49).
+const HORARIO_DE_DEZ_EM_DEZ =
+  "Os horários da sessão andam de 10 em 10 minutos.";
+const emDezMinutos = (horario: string) =>
+  Number(horario.slice(3, 5)) % 10 === 0;
+
 // Agendamento de sessão pela secretaria ou pelo estagiário responsável (RF10).
 export default function AgendarSessaoPage() {
   const { data: sessao } = useSessao();
@@ -356,6 +362,11 @@ export default function AgendarSessaoPage() {
         setErros({ inicio: `${motivo}${livre}` });
       } else if (erro.status === 422 && erro.message.startsWith("O término")) {
         setErros({ termino: erro.message });
+      } else if (
+        erro.status === 422 &&
+        /^(A sessão precisa|Os horários)/.test(erro.message)
+      ) {
+        setErros({ inicio: erro.message });
       }
     },
   });
@@ -411,9 +422,21 @@ export default function AgendarSessaoPage() {
     const novos: Erros = {};
     if (!paciente) novos.paciente = "Escolha o paciente.";
     if (!data) novos.data = "Informe a data.";
-    if (!inicio) novos.inicio = "Informe o início.";
+    if (!inicio) {
+      novos.inicio = "Informe o início.";
+    } else if (!emDezMinutos(inicio)) {
+      novos.inicio = HORARIO_DE_DEZ_EM_DEZ;
+    } else if (
+      data &&
+      new Date(emBrasilia(data, inicio)).getTime() <= Date.now()
+    ) {
+      novos.inicio =
+        "A sessão precisa ser agendada para uma data e um horário futuros.";
+    }
     if (!termino) {
       novos.termino = "Informe o término.";
+    } else if (terminoEditado && !emDezMinutos(termino)) {
+      novos.termino = HORARIO_DE_DEZ_EM_DEZ;
     } else if (inicio && termino <= inicio) {
       novos.termino = `O término precisa ser depois do início (${inicio}). Exemplo: ${somarMinutos(inicio, DURACAO)}.`;
     }
@@ -441,7 +464,7 @@ export default function AgendarSessaoPage() {
         <p className="ui-subtitulo">
           Atendimento presencial na clínica: {DURACAO} minutos de sessão e{" "}
           {ANOTACOES} minutos de anotações. O paciente recebe um link para
-          confirmar a sessão pelo canal preferencial.
+          confirmar a sessão.
         </p>
       </div>
 
@@ -507,6 +530,7 @@ export default function AgendarSessaoPage() {
                 <input
                   {...props}
                   type="time"
+                  step={600}
                   className={classeEntrada}
                   value={inicio}
                   onChange={(e) => mudarInicio(e.target.value)}
@@ -518,6 +542,7 @@ export default function AgendarSessaoPage() {
                 <input
                   {...props}
                   type="time"
+                  step={600}
                   className={classeEntrada}
                   aria-invalid={
                     props["aria-invalid"] ?? (conflito ? true : undefined)
