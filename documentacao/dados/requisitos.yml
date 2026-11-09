@@ -153,7 +153,7 @@ rfs:
   lider: Jônatas
   depende: [RF6]
   issue: 140
-  estado: Em design
+  estado: Design inspecionado
   origem: [DF16, DF33]
 
 - id: RF8
@@ -168,7 +168,7 @@ rfs:
   lider: Jônatas
   depende: [RF52, RF7]
   issue: 155
-  estado: Planejada
+  estado: Design inspecionado
   origem: [DF40]
 
 - id: RF9
@@ -209,7 +209,7 @@ rfs:
   lider: Nicolas
   depende: [RF10, RF21]
   issue: 141
-  estado: Código concluído
+  estado: Código inspecionado
 
 - id: RF12
   nome: Reagendar sessão do paciente
@@ -242,7 +242,7 @@ rfs:
   lider: Nicolas
   depende: [RF10]
   issue: 142
-  estado: Código concluído
+  estado: Código inspecionado
   origem: [DF24, DF45]
 
 - id: RF15
@@ -257,7 +257,7 @@ rfs:
   lider: Nicolas
   depende: [RF10]
   issue: 143
-  estado: Código concluído
+  estado: Código inspecionado
   origem: [DF10, DF20, DF24]
 
 - id: RF16
@@ -272,7 +272,8 @@ rfs:
   lider: Nicolas
   depende: [RF10, RF21]
   issue: 144
-  estado: Código concluído
+  estado: Design inspecionado
+  entrega: 'parcial no Ciclo 4: o registro do cancelamento já está integrado, mas a contagem da ausência nas faltas do estagiário só se completa com o RF39, no Ciclo 5, e o RF40, no Ciclo 6'
   origem: [DF10]
 
 - id: RF17
@@ -603,7 +604,7 @@ rfs:
   lider: Gabriel
   depende: [RF35]
   issue: 152
-  estado: Código concluído
+  estado: Promovida para a versão integrada
 
 - id: RF37
   nome: Desligar paciente por faltas e liberar vaga
@@ -617,7 +618,7 @@ rfs:
   lider: Gabriel
   depende: [RF36]
   issue: 153
-  estado: Código concluído
+  estado: Promovida para a versão integrada
 
 - id: RF38
   nome: Reverter desligamento de paciente por faltas
@@ -631,7 +632,7 @@ rfs:
   lider: Gabriel
   depende: [RF37]
   issue: 154
-  estado: Código concluído
+  estado: Promovida para a versão integrada
 
 - id: RF39
   nome: Consolidar faltas do estagiário para a supervisão
@@ -841,7 +842,7 @@ rfs:
   lider: Joaquim
   depende: [RF1]
   issue: 47
-  estado: Código concluído
+  estado: Código inspecionado
   origem: [DF24, DF40, DF48]
 
 - id: RF53
