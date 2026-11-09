@@ -6,6 +6,7 @@ for (const pagina of [
   "/inscricao",
   "/painel",
   "/entrar",
+  "/consultar",
   "/agendar-sessao",
   "/triagem",
   "/distribuicao",
