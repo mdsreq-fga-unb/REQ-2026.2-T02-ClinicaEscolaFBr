@@ -4,7 +4,7 @@ import { trocarChaveDados } from '../common/troca-de-chave';
 // Troca da chave dos dados de saúde (RNF51). Roda com o dono do banco e com a API
 // parada; depois, configure a nova chave em CHAVE_DADOS e faça o redeploy.
 // Procedimento completo, com o roteiro no Coolify:
-// documentacao/docs/unidade-3/seguranca-da-implantacao.md
+// documentacao/docs/construcao/implantacao.md
 //
 // Uso (na imagem da API, ou de apps/api depois do build):
 //   DATABASE_URL=<dono do banco> CHAVE_DADOS_ANTIGA=... CHAVE_DADOS_NOVA=... \

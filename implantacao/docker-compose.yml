@@ -1,7 +1,7 @@
 # Implantação no Coolify da FBr: um projeto com dois ambientes (production, da
 # main, e validacao, da development), cada um com este compose. As imagens vêm
 # do GHCR, compiladas pelo workflow "Implantação"; os valores ficam nas variáveis
-# de cada ambiente no Coolify. Procedimento: documentacao/docs/unidade-3/implantacao.md
+# de cada ambiente no Coolify. Procedimento: documentacao/docs/construcao/implantacao.md
 # A API escuta na 3333 e a web na 3000, as portas das imagens; no Coolify, o
 # domínio de cada uma leva a porta (https://api.clinica.fbr.edu.br:3333), que
 # vira a porta do proxy e não aparece no endereço.

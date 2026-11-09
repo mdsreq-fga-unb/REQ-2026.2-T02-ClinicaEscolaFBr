@@ -78,6 +78,13 @@
       "when": 1794102366296,
       "tag": "0010_cancelamento_de_sessao",
       "breakpoints": true
+    },
+    {
+      "idx": 11,
+      "version": "7",
+      "when": 1794158280965,
+      "tag": "0011_verificacao_de_identidade",
+      "breakpoints": true
     }
   ]
 }

@@ -3,7 +3,7 @@ name: Implantação
 # da FBr: a main vai para a produção e a development, para a validação. Cada
 # ambiente do GitHub (producao, validacao) guarda o UUID do recurso no Coolify e
 # os valores que entram no build da web. Procedimento:
-# documentacao/docs/unidade-3/implantacao.md
+# documentacao/docs/construcao/implantacao.md
 on:
   push:
     branches: [main, development]

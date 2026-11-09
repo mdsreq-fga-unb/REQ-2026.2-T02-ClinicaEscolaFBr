@@ -1,0 +1,377 @@
+# Reuniões da Unidade 3
+
+Esta página reúne os registros das reuniões realizadas durante a Unidade 3 para planejamento, acompanhamento, verificação e validação das features construídas no projeto Clínica Escola FBr.
+
+## Reunião de planejamento do Ciclo 3: issues, DoR e estrutura do projeto
+
+**Data:** 15/10/2026
+**Local:** Reunião on-line (Google Meet)
+**Participantes:** Gabriel da Cunha Barbaceli; Jônatas Davi Oliveira Farias; Luís Henrique; Maria Clara Canuto; Nicolas Lopes da Costa.
+
+![Registro da reunião de planejamento do Ciclo 3: issues, DoR e estrutura do projeto](../../assets/reuniao-7.jpeg)
+
+_Figura 14 — Registro da reunião de planejamento do Ciclo 3: issues, DoR e estrutura do projeto, realizada em 15/10/2026._
+
+[Consultar ata completa em PDF](../../assets/atas-reunioes/Ata_Reuniao_Ciclo_3_Planejamento_Issues_DOR_15-10-2026.pdf)
+
+### Resumo
+
+A reunião teve como objetivo organizar as atividades iniciais do Ciclo 3, alinhar o planejamento das issues e do DoR e preparar a estrutura do projeto para a Unidade 3.
+
+### 1. Planejamento do Ciclo 3
+
+- A divisão das atividades de construção do Ciclo 3 será compartilhada no grupo da equipe.
+- O planejamento deve considerar as issues que o professor publicar no GitHub, identificando itens urgentes e dependências para as etapas seguintes.
+- A distribuição definitiva das features e a confirmação do cronograma da semana seguinte ficaram pendentes até a publicação e a análise dessas issues.
+
+### 2. Issues e estrutura do projeto
+
+- Os modelos de issue já estão criados para features, bugs, tarefas técnicas e documentação.
+- Os itens do [Backlog de Produto](../../requisitos/priorizacao-e-mvp.md#101-backlog-do-produto) devem ser convertidos em issues no GitHub.
+- A estrutura da Unidade 3 deve incluir a organização das pastas e dos arquivos necessários ao trabalho.
+
+### 3. Definition of Ready (DoR)
+
+- Neste primeiro ciclo, cada integrante fica responsável por levantar o DoR da feature em que vai trabalhar.
+- Para os ciclos seguintes, foi sugerido antecipar o levantamento do DoR para o ciclo anterior, evitando atrasos no início do desenvolvimento. A divisão dessa atividade entre duas pessoas ainda não foi definida.
+
+### 4. Base técnica e revisão
+
+- A branch com o esqueleto técnico do projeto está pronta, como rascunho. A revisão e a aprovação para o merge na branch principal ocorrem após a liberação das issues pelo professor.
+- Foi proposta a revisão por dois integrantes, com oportunidade para que todo o grupo examine a estrutura e registre dúvidas no canal de comunicação da equipe.
+- Gabriel avisará Joaquim sobre a liberação da permissão de administrador do repositório.
+
+### 5. Próximos passos e responsabilidades
+
+- Todos os integrantes: analisar as issues assim que forem publicadas e levantar o DoR das próprias features neste primeiro ciclo.
+- Gabriel: compartilhar a divisão de atividades do Ciclo 3, avisar Joaquim sobre a permissão de administrador e ajustar o cronograma se houver itens urgentes.
+- Equipe: converter os itens do backlog em issues e revisar a branch técnica após a liberação das issues pelo professor, com dois revisores a confirmar.
+
+### Encerramento
+
+O planejamento detalhado do Ciclo 3 depende da publicação das issues pelo professor. Os modelos de issue e a branch técnica estão preparados; após a análise das issues, a equipe define a distribuição das tarefas, valida a base técnica e ajusta o cronograma conforme as prioridades identificadas.
+
+## Reunião de PRs, requisitos DoR e planejamento de implementação do Ciclo 3
+
+**Data:** 22/10/2026
+**Local:** Reunião on-line (Google Meet)
+**Participantes:** Gabriel da Cunha Barbaceli; Jônatas Davi Oliveira Farias; Luís Henrique Luna; Joaquim José da Fonseca Viana.
+
+![Registro da reunião de PRs, requisitos DoR e planejamento de implementação do Ciclo 3](../../assets/reuniao-8.jpeg)
+
+_Figura 15 — Registro da reunião de PRs, requisitos DoR e planejamento de implementação do Ciclo 3, realizada em 22/10/2026._
+
+[Consultar ata completa em PDF](../../assets/atas-reunioes/Ata_Reuniao_Ciclo_3_PRs_DORA_22-10-2026.pdf)
+
+### Resumo
+
+A reunião teve como objetivo alinhar a revisão das pull requests, a validação dos requisitos DoR e a organização da implementação do Ciclo 3.
+
+### 1. Pull requests e dependências
+
+- Duas pull requests já revisadas foram aprovadas. Permanece aberta a PR de ajuste do Dependabot, com Jônatas como revisor: a atualização automática para TypeScript 7 causou incompatibilidades. O projeto permanecerá no TypeScript 5 até haver compatibilidade estável.
+- Após a aprovação do ajuste, o Dependabot deverá recriar a PR de atualização. Se os problemas persistirem, será feita correção manual.
+- A PR de Joaquim deve ser conferida em relação às issues recém-publicadas pelo professor. Após os ajustes necessários, será revisada e enviada novamente para aprovação.
+
+### 2. Requisitos DoR e preparação do Ciclo 3
+
+- Cada responsável por feature deve revisar sua issue e marcar o requisito DoR 8.1, confirmando entendimento e capacidade de estimar e implementar a feature.
+- O requisito 7.3, referente à validação do protótipo, deverá ser marcado após a reunião com a Clínica Escola FBr, prevista para 23/10.
+- Na issue 97, falta confirmar com a FBr o modelo da ficha de anamnese e do contrato terapêutico. Os demais itens do DoR foram considerados prontos, sujeitos à resolução dessas pendências.
+
+### 3. Implementação paralela e regras de trabalho
+
+- Gabriel preparará o esquema de banco de dados para as features do Ciclo 3, com previsão de conclusão na manhã de sábado, 24/10, permitindo o desenvolvimento em paralelo com dados mockados.
+- Cada feature deverá ter uma branch própria. Alterações posteriores em tabelas devem ser feitas por novas migrations; mudanças em tabelas compartilhadas devem ser alinhadas entre os responsáveis envolvidos.
+- Gabriel ficará responsável por integrar as implementações e testar o fluxo completo, com previsão para 27/10, se não houver imprevistos.
+
+### 4. Ajustes nos requisitos e protótipo
+
+- Foi alinhado que a dependência entre os requisitos funcionais 1 e 2 pode permanecer marcada, pois ambos serão desenvolvidos no mesmo ciclo.
+- Foi discutida a possibilidade de antecipar para o Ciclo 3 o termo de consentimento previsto para o Ciclo 4, por ser uma dependência do requisito funcional 1. Não houve decisão definitiva sobre essa antecipação.
+- Há uma inconsistência entre o requisito funcional 1 e o protótipo quanto ao RG: o requisito prevê apenas os números, enquanto o protótipo solicita também órgão emissor e estado. Jônatas enviará a Gabriel uma lista dos pontos e justificativas para avaliação e possível ajuste do protótipo.
+
+### 5. Revisões, reunião com a FBr e prazos
+
+- Luís e Joaquim devem revisar as issues antes de 25/10, se possível, para permitir correções antes da entrega. A implementação poderá ser concluída até a manhã de 27/10.
+- Na reunião com a FBr prevista para 23/10, a equipe apresentará o andamento do projeto e o protótipo do Ciclo 3 para validação e buscará respostas às dúvidas urgentes, incluindo a definição sobre o domínio do sistema.
+- Gabriel compartilhará o roteiro da reunião no grupo. Se não conseguir apresentar por estar no aeroporto ou precisar sair antes, Jônatas poderá dar continuidade.
+- Quem encontrar dificuldades com prazo ou implementação deve avisar no grupo para que a equipe possa ajudar e evitar acúmulo de tarefas nos ciclos seguintes.
+
+### Encerramento
+
+Ficaram encaminhadas a revisão das PRs e issues, a conclusão das pendências do DoR e a preparação do banco de dados para desenvolvimento paralelo. O próximo passo é validar o protótipo e esclarecer dependências com a FBr em 23/10, avançando para a implementação e integração até 27/10.
+
+## Reunião de validação do protótipo do Ciclo 3 com a FBr
+
+**Data:** 23/10/2026
+**Horário:** Iniciada às 14h26; retomada às 15h29 após instabilidade de conexão.
+**Participantes:** Gabriel da Cunha Barbaceli; Joaquim José da Fonseca Viana; Maria Clara Canuto; Thiago Viana; Robson; Nicolas Lopes da Costa.
+
+![Registro da reunião de validação do protótipo do Ciclo 3 com a Clínica Escola FBr](../../assets/reuniao-3-cliente.jpeg)
+
+_Figura 16 — Registro da reunião de validação do protótipo do Ciclo 3 com a Clínica Escola FBr, realizada em 23/10/2026._
+
+[Consultar ata completa em PDF](../../assets/atas-reunioes/Ata_Reuniao_Ciclo3_Validacao_Prototipo_FBr_23-10-2026.pdf)
+
+!!! note "Correção de 24/10/2026"
+    Conferido com a gravação da reunião, o resumo abaixo corrige três pontos da ata em PDF: o e-mail continua como canal de contato (só o SMS foi descartado), as 2 faltas que levam ao desligamento valem consecutivas ou não, e os 10 dias para o pagamento contam do vínculo com o estagiário. Também registra três pontos ditos na reunião e não incluídos na ata: a ausência de prazo de triagem, a consulta, pela coordenação, do conteúdo clínico de todos os prontuários e a volta à fila de quem perde a vaga por falta de pagamento. As decisões estão no [Registro de Decisões com a FBr](../../requisitos/decisoes-fbr.md).
+
+### Objetivo
+
+Apresentar o andamento do projeto e o protótipo de alta fidelidade do Ciclo 3 à Clínica Escola FBr, validando as regras de negócio pendentes antes do início do desenvolvimento.
+
+### Contexto
+
+A equipe apresentou à FBr o protótipo de alta fidelidade das funcionalidades do Ciclo 3 — inscrição, triagem, distribuição de casos, vinculação de estagiário, agendamento e prontuário — para validação antes do início da implementação. Devido à instabilidade na conexão de Gabriel, Maria assumiu a apresentação de parte das telas.
+
+### 1. Regras de negócio definidas
+
+- **Prazo de pagamento:** o paciente selecionado terá 10 dias para pagar e efetivar a vaga, contados do vínculo com o estagiário. Sem pagamento, perde a vaga e volta para a fila, com a mesma prioridade clínica e a data da volta. Enquanto o prazo corre, o agendamento da 2ª sessão em diante fica bloqueado.
+- **Prioridade em caso de empate:** considerar primeiro a gravidade clínica e, em seguida, a data de inscrição.
+- **Limite de casos:** cada supervisor poderá acompanhar até 50 casos, limite ajustado para comportar o crescimento do número de estagiários. Para estagiários, não haverá limite fixo; a quantidade dependerá da disponibilidade.
+- **Duração da sessão:** 50 minutos de atendimento, seguidos de 10 minutos para anotações.
+- **Cancelamento pelo paciente:** permitido até 1 hora antes da sessão, com justificativa. O desligamento continua ao atingir 2 faltas no ciclo, consecutivas ou não, e o cancelamento fora desse prazo conta como falta.
+- **Lembrete de sessão:** notificação automática enviada com até 24 horas de antecedência.
+- **Capacidade simultânea:** estimativa de 30 usuários em horário de pico.
+- **Registro de evolução:** campos obrigatórios para data, evolução da queixa (até 10 linhas) e planejamento. Deve haver fechamento avaliativo a cada 10 sessões.
+- **Canais de contato:** o paciente escolhe entre e-mail, WhatsApp e ligação. Quem escolhe e-mail recebe as mensagens automáticas; quem escolhe WhatsApp ou ligação é contatado pela secretaria. O SMS foi descartado devido ao baixo acesso tecnológico do público.
+- **Prazo de triagem:** a clínica não adota prazo de triagem; a inscrição aguarda conforme as vagas e só é chamada quando uma vaga é liberada.
+- **Acesso da coordenação ao prontuário:** a coordenação consulta o conteúdo clínico de todos os prontuários, além das tentativas de acesso negado.
+- **Login:** o acesso será bloqueado por 15 minutos após 3 tentativas incorretas, reduzidas de 5 para 3 por sugestão da coordenação de Psicologia.
+- **Especialidades:** não haverá divisão por área; todos os atendimentos serão tratados como psicologia clínica geral. O conceito de área de especialidade será removido do cadastro, dos critérios de distribuição e dos itens de menu.
+
+### 2. Validação do protótipo e ajustes
+
+Foram apresentadas e aprovadas pela FBr as telas de inscrição (desktop e mobile), erro de preenchimento, triagem, revisão e comprovante, login, ativação de conta, painel de usuários, listagem de triagem, atribuição de prioridade clínica, distribuição para supervisores, vinculação de estagiário, agendamento de sessão e prontuário. Foram acordados os seguintes ajustes:
+
+- Remover campos, telas e opções de menu relacionados à área de especialidade, incluindo os pontos de triagem e distribuição.
+- Manter e-mail, WhatsApp e ligação como canais de contato, removendo o SMS.
+- Manter os campos de anamnese e contrato terapêutico do prontuário como ilustrativos até o recebimento do material oficial da coordenação.
+- Configurar a ativação da conta por link enviado pela coordenação, com validade de 72 horas.
+
+### 3. Responsabilidades
+
+- **Coordenação de Psicologia da FBr:** enviar o modelo da ficha de anamnese, o modelo do contrato terapêutico e os arquivos de triagem.
+- **Gabriel:** ajustar o protótipo conforme os pontos discutidos, incluindo a remoção da área de especialidade e a atualização dos canais de contato; gravar e enviar à FBr um vídeo demonstrativo do protótipo atualizado para aprovação ponto a ponto; integrar e testar as funcionalidades do Ciclo 3.
+
+### 4. Prazos e próximos passos
+
+- **27/10/2026:** funcionalidades do Ciclo 3 integradas e prontas para teste real pela FBr.
+- **01/12/2026:** site funcional internamente, com todas as funcionalidades testadas, ainda sem publicação.
+- **07/12/2026:** previsão de publicação do site no domínio da Clínica Escola FBr.
+- **06/11/2026:** próxima reunião com a FBr, na sexta-feira, no mesmo horário.
+
+### Encerramento
+
+O protótipo de alta fidelidade do Ciclo 3 foi validado pela FBr, com ajustes pontuais a aplicar antes do desenvolvimento. A coordenação de Psicologia enviará os modelos de anamnese e contrato terapêutico, além dos arquivos de triagem. Gabriel atualizará o protótipo, enviará um vídeo demonstrativo para aprovação final e dará sequência à implementação, com entrega das funcionalidades prevista para 27/10.
+
+## Reunião de fechamento do Ciclo 3, planejamento do Ciclo 4 e deploy automático
+
+**Data:** 29/10/2026
+**Local:** Reunião on-line (Google Meet)
+**Participantes:** Gabriel da Cunha Barbaceli; Maria Clara Canuto; Luís Henrique Luna; Joaquim José da Fonseca Viana; Nicolas Lopes da Costa.
+
+![Registro da reunião de fechamento do Ciclo 3, planejamento do Ciclo 4 e deploy automático](../../assets/reuniao-9.jpeg)
+
+_Figura 17 — Registro da reunião de fechamento do Ciclo 3, planejamento do Ciclo 4 e deploy automático, realizada em 29/10/2026._
+
+[Consultar ata completa em PDF](../../assets/atas-reunioes/Ata_Reuniao_Ciclo_3_Fechamento_Ciclo_4_Deploy_29-10-2026.pdf)
+
+!!! note "Correção de 29/10/2026"
+    Conferido com a transcrição da reunião, o resumo abaixo corrige dois pontos da ata em PDF: a #165 é uma pull request, e não uma issue, e o que o token do GitHub dá acesso são as imagens privadas do sistema no GitHub Container Registry (GHCR), e não pacotes do Turborepo.
+
+### Resumo
+
+A reunião teve como objetivo consolidar as pendências do Ciclo 3, alinhar o novo fluxo de deploy e organizar o planejamento e as atividades do Ciclo 4.
+
+### 1. Fechamento do Ciclo 3
+
+- As features previstas foram entregues dentro do prazo de 27/10. Ficaram pendentes a inspeção de código de parte das features, as evidências dos requisitos não funcionais e alguns registros nas issues.
+- Cinco pull requests abertas automatizam o registro das evidências dos requisitos não funcionais nas issues. Depois da aprovação delas, as evidências são adicionadas sozinhas.
+- A demonstração das features e o aceite pela Clínica Escola FBr estão previstos para a reunião de 06/11.
+- Situação das features: as de Gabriel e Joaquim estão com o design e o código inspecionados; as de Jônatas e Nicolas, com o código inspecionado; as de Luís têm uma feature com o código inspecionado e outra com o código concluído; as de Maria Clara estão com o código concluído, faltando marcar alguns itens.
+
+### 2. Pull requests e pendências
+
+- Luís fará a inspeção de código das features construídas por Gabriel, já que o autor do código não pode inspecioná-lo. Gabriel enviará no grupo exemplos de inspeções de código já registradas, como referência.
+- Nas issues em que Gabriel fez a inspeção de design, o Líder da feature registra o `/de-acordo` ou aponta o que precisa ser corrigido. Esse registro permite que a automação marque os itens pendentes.
+- Nicolas revisará de novo a pull request #165, que trava outras PRs, depois dos ajustes feitos por Gabriel.
+- Gabriel já corrigiu os apontamentos de Joaquim na #177 e corrigirá os das outras duas PRs ainda no dia da reunião ou no sábado.
+- Ajustes de interface percebidos nos testes, como o destaque da entrada no sistema, devem se resolver com as features dos próximos ciclos. Mudanças de design são feitas primeiro no protótipo e só vão para o código depois de aceitas.
+
+### 3. Deploy e fluxo de validação
+
+- As novas alterações vão por pull request para a branch `development`. O merge nela publica automaticamente no ambiente de validação.
+- Depois da validação, incluindo a apresentação e o aceite da FBr, a equipe combina com a clínica quando publicar em produção. O merge na `main` publica na produção.
+- O ambiente de validação está na VPS da FBr, com subdomínios criados no DNS da clínica. O envio de e-mails usa o SMTP do Google Workspace da FBr, e a recuperação de senha por código e a entrada no sistema foram testadas nesse ambiente.
+- As imagens do sistema no GHCR continuam privadas, porque tornar pacotes públicos depende de uma configuração da organização. O servidor as baixa com um token do GitHub somente de leitura.
+
+### 4. Planejamento do Ciclo 4
+
+- O Ciclo 4 vai de 28/10 a 10/11, com 20 features no planejamento e 19 a construir. A divisão detalhada será enviada no grupo.
+- O planejamento inicial do backlog já foi feito, mas ainda há itens do DoR a completar antes do início da construção.
+- Os protótipos de todas as features do Ciclo 4 ficarão num único projeto, a partir do protótipo já feito por Joaquim, com o link, as imagens e o PDF publicados no GitHub Pages, como no Ciclo 3.
+
+### 5. Próximos passos e responsabilidades
+
+- **Gabriel:** enviar o cronograma e os exemplos de inspeção no grupo; concluir os ajustes das revisões; testar manualmente todas as funcionalidades no fim de semana; preparar o roteiro da reunião com a FBr e enviar a ela o link da validação depois dos testes.
+- **Luís:** fazer a inspeção de código das features construídas por Gabriel e registrar o `/de-acordo` nas próprias issues.
+- **Nicolas:** revisar a pull request #165.
+- **Joaquim:** preparar os protótipos de todas as features do Ciclo 4 e publicá-los no GitHub Pages; cobrar da FBr as respostas pendentes.
+- **Equipe:** concluir os itens pendentes do DoR e os registros de inspeção e de evidências, e avisar no grupo se surgir alguma dificuldade com prazos ou com a implementação.
+
+### 6. Reunião com a FBr e datas
+
+- **06/11/2026, às 14h30:** reunião com a FBr para demonstrar as funcionalidades do Ciclo 3 no ambiente de validação e validar os protótipos do Ciclo 4. Todos os participantes desta reunião (Gabriel, Maria Clara, Luís, Joaquim e Nicolas) confirmaram presença.
+- **10/11/2026:** término previsto do Ciclo 4.
+- **17/11/2026:** fechamento da Unidade 3. As poucas issues ainda abertas pelo professor podem ser tratadas até essa data.
+
+### Encerramento
+
+O Ciclo 3 foi entregue no prazo, restando inspeções, evidências e a validação com a FBr. O fluxo de deploy automático para a validação e a produção foi alinhado, e o Ciclo 4 segue com a conclusão do DoR, a preparação dos protótipos e a construção das 19 features previstas.
+
+## Reunião do Ciclo 4: inspeção de design, validação e pendências
+
+**Data:** 05/11/2026
+**Local:** Reunião on-line (Google Meet)
+**Participantes:** Gabriel da Cunha Barbaceli; Luís Henrique Luna; Jônatas Davi Oliveira Farias; Nicolas Lopes da Costa.
+
+![Registro da reunião do Ciclo 4: inspeção de design, validação e pendências](../../assets/reuniao-10.jpeg)
+
+_Figura 18 — Registro da reunião do Ciclo 4: inspeção de design, validação e pendências, realizada em 05/11/2026._
+
+[Consultar ata completa em PDF](../../assets/atas-reunioes/Ata_Reuniao_Ciclo_4_Inspecao_Design_Validacao_Pendencias_05-11-2026.pdf)
+
+!!! note "Correção de 05/11/2026"
+    O resumo abaixo corrige um ponto da ata em PDF: o Gabriel escreveu o projeto das 18 features do Ciclo 4 que faltavam ([#203](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/pull/203)), e não a inspeção de design delas. Como autor do projeto, ele não inspeciona nenhuma dessas features, e a inspeção de cada uma fica com o Líder e o revisor da issue, como registra o [Projeto das features do Ciclo 4](../../construcao/projeto-features.md#roteiro-da-inspecao-de-design).
+
+### Resumo
+
+A reunião teve como objetivo alinhar a inspeção de design das features do Ciclo 4, revisar as pendências e preparar a validação com a Clínica Escola FBr de 06/11.
+
+### 1. Inspeção de design do Ciclo 4
+
+- A inspeção de design precisa ser feita antes da construção, para reduzir o risco de retrabalho.
+- O Gabriel escreveu o projeto das 18 features que faltavam e o organizou na pull request #203, com o Nicolas e o Joaquim como revisores.
+- Nas features em que o Gabriel seria o revisor da issue, outro integrante faz a inspeção no lugar dele, para que o autor do projeto não inspecione o próprio trabalho: o Jônatas, com o Nicolas (RF11, RF14, RF15 e RF16), e a Maria Clara, com o Luís (RF69).
+- Cada Líder confere o projeto das suas features e registra a inspeção na issue, e o outro participante confirma com `/de-acordo`.
+- O prazo para concluir as inspeções e as revisões é sábado à tarde (07/11/2026). O Gabriel envia no grupo a distribuição de Líderes e revisores.
+
+### 2. Situação das entregas e pendências
+
+- As atividades previstas desde 29/10 foram concluídas no prazo e já estão na branch `development`, exceto a inspeção de design.
+- Continua pendente a inspeção de código das features do Luís, cobrada pelo Gabriel.
+- Os Líderes de cada feature devem marcar o R8.1 e o R8.3 do DoR, que registram que o Líder entende o que a issue pede e tem as integrações e a massa de teste.
+- Os Líderes também devem marcar o R7.2, com os estados vazios e as mensagens que os protótipos já mostram.
+- As respostas da FBr às perguntas enviadas pela equipe já estão incorporadas aos requisitos.
+
+### 3. Validação com a FBr
+
+- A reunião de validação com a FBr está marcada para 06/11/2026, às 14h30. Os participantes confirmaram disponibilidade, e um integrante pode entrar depois, por causa de aula.
+- O Gabriel demonstra as funcionalidades do Ciclo 3 no ambiente de validação, seguindo um roteiro preparado para a demonstração.
+- O teste de usabilidade do RNF22 é aplicado pela FBr depois da reunião. O kit, com as orientações e as etapas do teste, já foi enviado por e-mail ao Robson.
+- O retorno da FBr sobre a validação e o teste de usabilidade é necessário para fechar as issues do Ciclo 3.
+- Os protótipos do Ciclo 4 também são apresentados para validação, e as dúvidas e pendências reunidas pela equipe são levadas à FBr.
+
+### 4. Ajuste no ambiente de validação
+
+- A página de erro 404 aparecia em inglês. A pull request #204 a coloca em português e dentro do sistema, com o Joaquim como revisor.
+- O ajuste evita confusão durante o teste de usabilidade, caso alguém abra uma página de uma funcionalidade ainda não construída.
+
+### 5. Próximos passos e responsabilidades
+
+- **Gabriel:** enviar no grupo a distribuição das inspeções e das revisões; encaminhar as pendências de cada integrante; conduzir a demonstração do Ciclo 3 na reunião com a FBr; tirar dúvidas sobre os materiais publicados.
+- **Líderes de feature:** inspecionar o design das suas features; marcar o R8.1 e o R8.3; marcar o R7.2 com os estados vazios e as mensagens dos protótipos.
+- **Revisores designados:** conferir a consistência das inspeções de design.
+- **Joaquim:** revisar a pull request #204. Se participar da reunião com a FBr, pode apresentar os protótipos do Ciclo 4.
+- **Luís:** concluir a inspeção de código cobrada pelo Gabriel.
+- **Nicolas:** seguir as orientações enviadas pelo Gabriel e tirar as dúvidas que restarem.
+
+### 6. Datas
+
+- **06/11/2026, às 14h30:** reunião de demonstração e validação com a FBr.
+- **07/11/2026, à tarde:** prazo para concluir as inspeções de design e as revisões.
+- **10/11/2026:** entrega do Ciclo 4.
+
+### Encerramento
+
+A equipe combinou concluir as inspeções de design até sábado à tarde e tratar as pendências do DoR e dos protótipos. A próxima etapa é validar com a FBr as entregas do Ciclo 3 e os protótipos do Ciclo 4 e, então, avançar com a construção.
+
+## Reunião de validação do Ciclo 3 com a FBr
+
+**Data:** 06/11/2026
+**Local:** Reunião on-line (Google Meet)
+**Participantes:** pela FBr, Thiago Viana; pela equipe, Gabriel da Cunha Barbaceli, Nicolas Lopes da Costa, Luís Henrique Luna e Jônatas Davi Oliveira Farias, que entrou depois do início. O Robson não pôde participar, por causa de outras reuniões no mesmo horário.
+
+![Registro da reunião de validação do Ciclo 3 com a Clínica Escola FBr](../../assets/reuniao-4-cliente.jpeg)
+
+_Figura 19 — Registro da reunião de validação do Ciclo 3 com a Clínica Escola FBr, realizada em 06/11/2026._
+
+[Consultar ata completa em PDF](../../assets/atas-reunioes/Ata_Reuniao_Validacao_Ciclo_3_FBr_06-11-2026.pdf)
+
+### Resumo
+
+O Gabriel demonstrou as features do Ciclo 3 no ambiente de validação, do ponto de vista do paciente e da equipe. O Thiago aprovou o andamento e pediu sete ajustes: quatro na inscrição e três no agendamento e no e-mail da sessão. Como ele estava com pouco tempo, os protótipos do Ciclo 4 e as pendências não foram apresentados e seguiram por e-mail e pelo grupo da FBr. O Thiago aceitou as features demonstradas, menos as três que tiveram ajustes (RF1, RF10 e RF53), que voltam para o aceite depois das correções. Como o Robson, que registra o aceite pela FBr ([DF39](../../requisitos/decisoes-fbr.md#df39)), não participou, a confirmação dele é pedida por e-mail.
+
+### 1. Demonstração das features do Ciclo 3
+
+| Feature | Demonstrada | O que foi mostrado |
+| --- | --- | --- |
+| RF1 — Registrar solicitação de atendimento on-line | Sim | As três etapas, os erros com o link para cada campo, os dados do responsável para menor e a revisão |
+| RF2 — Emitir comprovante de inscrição | Sim | Número, data e hora, aviso de que a inscrição não garante vaga, CVV e SAMU, impressão em PDF |
+| RF4 — Organizar informações da inscrição para triagem | Sim | A inscrição nova na triagem, com o tempo de espera e a declaração completa |
+| RF6 — Registrar prioridade clínica do inscrito | Sim | A classificação sem opção pré-marcada, o registro com autor e data e o histórico de decisões |
+| RF18 — Listar casos aguardando distribuição | Sim | A ordem pela prioridade e pela data e hora da inscrição |
+| RF20 — Distribuir caso a supervisor | Sim | Os supervisores disponíveis abaixo do limite de 50 casos e a confirmação; o supervisor só consulta |
+| RF21 — Vincular paciente a estagiário responsável | Sim | Os estagiários ativos, com os pacientes de cada um, e o vínculo |
+| RF66 — Criar e inicializar o prontuário do paciente | Sim | O prontuário criado no vínculo, com os dados da inscrição e o histórico de responsáveis |
+| RF55 — Restringir acesso ao prontuário do paciente | Sim | A secretaria tentando abrir o prontuário, com o acesso negado e a tentativa registrada |
+| RF10 — Agendar sessão do paciente | Sim, com dois erros | O bloqueio do caso sem estagiário, o agendamento e o e-mail com o link de confirmação; aceitou uma data passada e um início depois do término |
+| RF50 — Autenticar usuário institucional | Sim | A entrada com os perfis de coordenação, supervisor, estagiário e secretaria, cada um com o seu menu |
+| RF53 — Cadastrar usuário institucional com perfil de acesso | Sim | A lista de usuários, o cadastro com convite por e-mail e a conta de coordenação do Thiago, ativada durante a reunião |
+| RF54 — Desativar usuário institucional | Sim | A desativação de uma conta de teste, com os registros dela mantidos |
+| RF51 — Encerrar sessão do usuário | Sim | A saída da conta, encerrando a sessão do usuário |
+
+**Aceite:** o Thiago aceitou, pela FBr, as features demonstradas sem ajustes: RF2, RF4, RF6, RF18, RF20, RF21, RF66, RF55, RF50, RF54 e RF51. O RF1, o RF10 e o RF53 ficam sem aceite até os ajustes da seção 2 serem feitos e mostrados à FBr. Como o Robson, que registra o aceite pela FBr ([DF39](../unidade-2/requisitos/decisoes-fbr.md#df39)), não participou, a confirmação dele é pedida por e-mail.
+
+### 2. Ajustes pedidos pela FBr
+
+| # | Ajuste | Afeta | Situação |
+| --- | --- | --- | --- |
+| 1 | Avaliar se o RG continua obrigatório, com a nova Carteira de Identidade Nacional (CIN); o CPF continua obrigatório | RF1 | A confirmar com o Robson, nas [pendências de validação](../../requisitos/analise-feedback.md#pendencias-de-validacao-com-a-fbr) |
+| 2 | O CPF do responsável legal é obrigatório na inscrição de menor de idade | RF1, RF57 | Decidido ([DF47](../../requisitos/decisoes-fbr.md#df47)) |
+| 3 | Os dados de endereço e contato devem ser completos e obrigatórios | RF1 | A confirmar com o Robson, nas pendências de validação |
+| 4 | Sai a escolha do canal preferencial: o e-mail e o telefone passam a ser obrigatórios, com um aviso de que os contatos da clínica são feitos por e-mail | RF1, RF8, RF52 | Decidido ([DF48](../../requisitos/decisoes-fbr.md#df48)) |
+| 5 | O agendamento não pode aceitar data passada nem início depois do término | RF10 | Erro da equipe, a corrigir |
+| 6 | Os horários da sessão andam de 10 em 10 minutos | RF10 | Decidido ([DF49](../../requisitos/decisoes-fbr.md#df49)) |
+| 7 | O e-mail da sessão ganha cabeçalho e rodapé com a identidade e as informações da FBr, sem ficar carregado a ponto de cair no spam | RF10, RF53 | A fazer |
+
+O Thiago também perguntou se a coordenação e o supervisor terão um painel para acompanhar se os atendimentos acontecem no horário e se os pacientes comparecem. O Gabriel mostrou, nos [protótipos do Ciclo 4](../../construcao/prototipos.md), a agenda dos estagiários (RF11) e o alerta de limite de faltas (RF36), e explicou que o acompanhamento e a avaliação do estagiário entram nos ciclos seguintes.
+
+### 3. Protótipos e pendências do Ciclo 4
+
+Não foram apresentados, porque o Thiago estava com pouco tempo. O link dos protótipos, com as quatro propostas a validar, foi enviado por e-mail, com o pedido de resposta até 09/11, e as pendências que só a FBr resolve foram enviadas no grupo da FBr. O R7.3 das features do Ciclo 4 continua pendente até essa validação, registrado no DoR de cada issue.
+
+### 4. Teste de usabilidade (RNF22)
+
+- A FBr aplica o teste a partir de agora, com a coordenação, supervisores e estagiários sem treinamento prévio. O Thiago e o Robson se ajudam na aplicação.
+- Quem aplica dá a tarefa, não explica a tela e anota as dificuldades; se a pessoa precisar de ajuda, anota a ajuda e o motivo.
+- As contas dos participantes são criadas pela coordenação no ambiente de validação.
+- O prazo desejado para a planilha voltar é 13/11/2026: as features do Ciclo 3 só passam a concluídas depois desse retorno.
+
+### 5. Próximos passos e responsabilidades
+
+- **Gabriel:** enviar ao Thiago o e-mail com o kit, o termo, os protótipos e o pedido de confirmação do aceite pelo Robson; enviar as pendências no grupo da FBr; registrar as decisões DF47 a DF49.
+- **Nicolas:** corrigir o agendamento (data passada, início depois do término e horários de 10 em 10 minutos).
+- **Jônatas:** ajustar a inscrição (CPF do responsável, e-mail e telefone obrigatórios, sem a escolha do canal, com o aviso).
+- **Thiago:** confirmar com o Robson o RG e a obrigatoriedade do endereço e do contato.
+- **Thiago e Robson:** aplicar o teste de usabilidade e devolver a planilha até 13/11; validar os protótipos do Ciclo 4 até 09/11. O Robson confirma o aceite por e-mail.
+- **Robson:** ativar a conta de coordenação na validação antes de o convite vencer, em 08/11.
+
+### Encerramento
+
+O Thiago elogiou o sistema e a equipe e disse que a FBr começa os testes o quanto antes. As dúvidas seguem pelo grupo da FBr.
+
+!!! note "Correção (07/11/2026)"
+    Esta ata foi corrigida em 07/11/2026. A versão anterior registrava que não houve aceite por feature e que o RF51 não foi demonstrado. Na reunião, o RF51 foi demonstrado e aceito, e o Thiago aceitou as features que não tiveram ajustes; as que tiveram ajustes (RF1, RF10 e RF53) ficam sem aceite até as correções.
