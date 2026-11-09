@@ -86,7 +86,7 @@ rfs:
   lider: Jônatas
   depende: [RF1]
   issue: 89
-  estado: Promovida para a versão integrada
+  estado: Demonstrada
 
 - id: RF3
   nome: Registrar inscrição assistida
@@ -150,14 +150,14 @@ rfs:
   lider: Jônatas
   depende: [RF6]
   issue: 140
-  estado: Planejada
+  estado: Em design
   origem: [DF16, DF33]
 
 - id: RF8
   nome: Consultar posição individual na fila
   cp: CP3
   valor: 4
-  justificativa: Melhora a experiência, mas a fila funciona sem essa consulta
+  justificativa: 'Valor dado pela FBr: a consulta pelo site é o canal definido para o inscrito acompanhar a fila (DF40); sem ela, o retorno ao inscrito depende de contato da secretaria'
   esforco: [2, 3, 2]
   mvp: true
   ciclo: 4
@@ -231,7 +231,7 @@ rfs:
   nome: Confirmar presença em sessão agendada
   cp: CP4
   valor: 4
-  justificativa: Alimenta assiduidade (CP9), mas dá pra registrar manualmente
+  justificativa: 'Valor dado pela FBr: a confirmação até 24 horas antes (DF45) é como a clínica sabe com antecedência quem vem; sem ela, a secretaria teria de contatar cada paciente da agenda'
   esforco: [3, 3, 3]
   mvp: true
   ciclo: 4
@@ -298,7 +298,7 @@ rfs:
   lider: Maria Clara
   depende: [RF6]
   issue: 92
-  estado: Código concluído
+  estado: Código inspecionado
   origem: [DF16]
 
 - id: RF19
@@ -323,7 +323,7 @@ rfs:
   lider: Maria Clara
   depende: [RF18, RF6]
   issue: 94
-  estado: Código concluído
+  estado: Código inspecionado
   origem: [DF17, DF26]
 
 - id: RF21
@@ -338,7 +338,7 @@ rfs:
   lider: Maria Clara
   depende: [RF20, RF53, RF54]
   issue: 95
-  estado: Código concluído
+  estado: Código inspecionado
   origem: [DF17, DF27]
 
 - id: RF22
@@ -429,7 +429,7 @@ rfs:
   lider: Luís Henrique
   depende: [RF21]
   issue: 97
-  estado: Código concluído
+  estado: Código inspecionado
 
 - id: RF69
   nome: Registrar anamnese e contrato terapêutico do paciente
@@ -443,7 +443,7 @@ rfs:
   lider: Luís Henrique
   depende: [RF66]
   issue: 130
-  estado: Planejada
+  estado: Em design
   origem: [DF20, DF37, DF41]
 
 - id: RF28
@@ -836,8 +836,9 @@ rfs:
   ciclo: 4
   ordem: 31
   lider: Joaquim
+  depende: [RF1]
   issue: 47
-  estado: Planejada
+  estado: Em design
   origem: [DF24, DF40, DF48]
 
 - id: RF53
@@ -906,6 +907,7 @@ rfs:
   ciclo: 4
   ordem: 33
   lider: Jônatas
+  depende: [RF1]
   issue: 52
   estado: Planejada
   origem: [DF44, DF47]
