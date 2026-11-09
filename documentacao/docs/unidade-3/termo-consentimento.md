@@ -16,7 +16,7 @@ Ao se inscrever, você nos passa dados pessoais e dados sobre a sua saúde. A Le
 A Faculdade Brasília (FBr), [CNPJ], [ENDEREÇO], é a responsável pelos seus dados. O sistema da Clínica Escola funciona nos servidores da própria FBr.
 
 - **Identificação:** nome, data de nascimento, CPF, RG, estado civil e, se você quiser informar, sexo, profissão e escolaridade.
-- **Endereço e contato:** endereço, bairro, cidade, CEP, celular, WhatsApp, e-mail e o canal por onde prefere receber nosso contato.
+- **Endereço e contato:** endereço, bairro, cidade, CEP, e-mail, celular e, se você quiser informar, WhatsApp.
 - **Contato de emergência, se você quiser informar:** nome, grau de parentesco e telefone.
 - **Responsável legal, para menores de 18 anos:** nome, CPF e o documento que comprova a responsabilidade.
 - **Sobre a sua saúde:** o motivo da busca pelo atendimento, como você percebe a urgência e o histórico que quiser contar.
@@ -29,7 +29,7 @@ Se você for atendido, o prontuário passa a guardar também a anamnese, os regi
 - Organizar a fila de espera e avisar quando houver vaga.
 - Agendar as sessões, confirmar a presença e emitir declarações de comparecimento.
 - Fazer e guardar o prontuário, como exigem as normas do Conselho Federal de Psicologia.
-- Falar com você, ou com o seu contato de emergência se for preciso, pelo canal que você escolheu.
+- Falar com você, ou com o seu contato de emergência se for preciso. Os avisos do sistema vão para o seu e-mail, e a secretaria pode ligar para o seu celular ou escrever pelo WhatsApp.
 
 Usamos seus dados de saúde com o seu consentimento, dado de forma específica e destacada neste termo (Lei nº 13.709/2018, art. 11, I). Sem esse aceite, não conseguimos registrar a inscrição pelo site, e você pode procurar a secretaria da clínica. Não usamos seus dados para propaganda nem os vendemos ou repassamos a empresas. O uso dos atendimentos em pesquisa depende de outro termo, que você pode aceitar ou não ao assinar o contrato na primeira sessão.
 
