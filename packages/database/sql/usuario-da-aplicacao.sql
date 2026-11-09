@@ -8,7 +8,7 @@
 -- Na implantação, o serviço "migrador" roda este script depois das migrations, a
 -- cada deploy, e define a senha do clinica_app (CLINICA_APP_SENHA). No
 -- desenvolvimento, rode com o dono do banco depois de cada `pnpm db:migrate`.
--- Procedimento: documentacao/docs/unidade-3/seguranca-da-implantacao.md
+-- Procedimento: documentacao/docs/construcao/implantacao.md
 
 DO $$
 BEGIN

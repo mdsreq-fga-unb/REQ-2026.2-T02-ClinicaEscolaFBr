@@ -14,7 +14,7 @@
 #   e o acesso ao banco descrito em comum.sh (na VPS, CONTEINER_BANCO)
 #
 # Precisa de gpg e sha256sum, e do pg_dump quando não usa CONTEINER_BANCO.
-# Procedimento completo: documentacao/docs/unidade-3/copia-de-seguranca.md
+# Procedimento completo: documentacao/docs/construcao/copia-de-seguranca.md
 set -euo pipefail
 # A cópia e o log só podem ser lidos pelo dono.
 umask 077
