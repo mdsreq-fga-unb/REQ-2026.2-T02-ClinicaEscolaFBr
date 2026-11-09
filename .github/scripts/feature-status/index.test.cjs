@@ -55,6 +55,8 @@ let comentarios;
 let arquivos;
 let item;
 let avisos;
+// Permissão de cada pessoa no repositório (quem não está aqui não tem acesso).
+let permissoes;
 
 const github = {
   rest: {
@@ -83,6 +85,18 @@ const github = {
       listForRepo: () => {},
     },
     pulls: { listFiles: () => {} },
+    repos: {
+      getCollaboratorPermissionLevel: async ({ username }) => {
+        const role_name = permissoes[username];
+        if (!role_name) throw new Error("não é colaborador");
+        return {
+          data: {
+            role_name,
+            permission: role_name === "maintain" ? "write" : role_name,
+          },
+        };
+      },
+    },
   },
   paginate: async (metodo) => {
     if (metodo === github.rest.pulls.listFiles)
@@ -168,6 +182,7 @@ const comentario = (body, login, associacao = "MEMBER") => ({
 
 beforeEach(() => {
   process.env.TEM_TOKEN = "true";
+  permissoes = {};
   delete process.env.RELATORIO_RNFS;
   issue = {
     number: 88,
@@ -330,6 +345,45 @@ test("aprovação de quem não é da equipe não marca o D3.1", async () => {
     pull_request: pr(),
   });
   assert.doesNotMatch(issue.body, /- \[x\] D3\.1/);
+});
+
+test("aprovação de membro com a participação privada (CONTRIBUTOR no evento) marca o D3.1 pela permissão no repositório", async () => {
+  permissoes = { nicolas: "write" };
+  item = { Status: "Em Construção" };
+  await rodar("pull_request_review", {
+    review: {
+      state: "approved",
+      user: { login: "nicolas" },
+      author_association: "CONTRIBUTOR",
+      html_url: "https://r",
+    },
+    pull_request: pr(),
+  });
+  assert.match(issue.body, /- \[x\] D3\.1/);
+  assert.match(comentarios.at(-1).body, /aprovada por @nicolas/);
+});
+
+test("aprovação de quem só tem leitura no repositório não marca o D3.1", async () => {
+  permissoes = { visitante: "read" };
+  await rodar("pull_request_review", {
+    review: {
+      state: "approved",
+      user: { login: "visitante" },
+      author_association: "CONTRIBUTOR",
+      html_url: "https://r",
+    },
+    pull_request: pr(),
+  });
+  assert.doesNotMatch(issue.body, /- \[x\] D3\.1/);
+});
+
+test("comando de membro com a participação privada (CONTRIBUTOR no evento) também vale", async () => {
+  permissoes = { nicolas: "maintain" };
+  await rodar("issue_comment", {
+    issue,
+    comment: comentario("/demonstrada https://ata", "nicolas", "CONTRIBUTOR"),
+  });
+  assert.match(issue.body, /- \[x\] D5\.1/);
 });
 
 test("/de-acordo de quem registrou a inspeção é recusado; de outro integrante, marca o D1.8", async () => {
