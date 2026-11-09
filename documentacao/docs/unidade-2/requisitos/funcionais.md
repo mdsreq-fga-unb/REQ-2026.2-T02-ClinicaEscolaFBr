@@ -479,14 +479,16 @@ _Rastreabilidade:_ Feature "Registrar cancelamento de sessão pelo estagiário" 
 
 **RF17 — Notificar paciente sobre ausência do estagiário**{ #rf17 }
 
-Quando uma sessão for cancelada por ausência do estagiário (RF16), o sistema deve notificar o paciente com a maior antecedência possível, oferecendo a opção de reagendamento (RF12), pelo canal preferencial (RF1): com e-mail, a notificação é automática; com WhatsApp ou ligação, a secretaria recebe o aviso com o botão "Enviar pelo WhatsApp" e a mensagem pronta.
+Quando uma sessão for cancelada por ausência do estagiário (RF16), o sistema deve notificar o paciente por e-mail no momento do registro do cancelamento, já que os contatos da clínica são feitos por e-mail ([DF48](decisoes-fbr.md#df48)). A notificação informa o dia, a data e o horário da sessão cancelada e avisa que o cancelamento não conta como falta do paciente, sem informar o motivo da ausência. Como o reagendamento (RF12) ficou para uma entrega posterior, a notificação diz que a secretaria vai entrar em contato para marcar outro horário, e a nova sessão é criada pelo agendamento (RF10). Quando o paciente não tiver e-mail (inscrições anteriores à DF48) ou o envio falhar, a secretaria recebe o aviso com o botão "Enviar pelo WhatsApp" e a mensagem pronta, com o mesmo conteúdo.
 
 _Critérios de aceitação:_
 
-- A sessão cancelada por ausência do estagiário gera notificação imediata, por e-mail, ao paciente com e-mail como canal preferencial, com a opção de reagendar.
-- Para paciente com WhatsApp ou ligação como canal preferencial, o cancelamento gera imediatamente o aviso à secretaria, com o botão "Enviar pelo WhatsApp" e a mensagem pronta.
+- O registro do cancelamento por ausência do estagiário envia, no mesmo momento, o e-mail ao paciente com o dia, a data e o horário da sessão, sem o motivo da ausência.
+- O e-mail informa que o cancelamento não conta como falta e que a secretaria vai entrar em contato para marcar outro horário.
+- Para paciente sem e-mail, o cancelamento gera o aviso à secretaria, com o botão "Enviar pelo WhatsApp" e a mensagem pronta.
+- Se o envio do e-mail falhar, o cancelamento continua registrado e a secretaria recebe o mesmo aviso.
 
-_Rastreabilidade:_ Feature "Notificar paciente sobre ausência do estagiário" → CP4 — Agendamento, confirmação e remarcação → OE3. Dependência: RF16.{{ origem("RF17") }}
+_Rastreabilidade:_ Feature "Notificar paciente sobre ausência do estagiário" → CP4 — Agendamento, confirmação e remarcação → OE3. Dependência: RF16. Integração: RF12 (fora do MVP).{{ origem("RF17") }}
 
 {{ registro("RF17") }}
 
@@ -746,6 +748,7 @@ O sistema deve permitir que o estagiário responsável, ou o supervisor do caso,
 _Critérios de aceitação:_
 
 - A correção feita pelo próprio estagiário dentro do prazo permitido preserva a versão original e registra a nova versão com autor, data/hora e motivo.
+- A correção sem motivo é recusada, e o registro continua como estava.
 - Depois da data-limite registrada para o semestre, nem o estagiário nem o supervisor conseguem corrigir a evolução.
 - A coordenação registra a data-limite de correção do semestre, e a alteração guarda o valor anterior, o novo, o autor e a data/hora.
 - Sem data-limite registrada para o semestre, a correção é permitida e a coordenação é avisada de que o parâmetro está pendente.
@@ -1004,12 +1007,13 @@ O escopo da CP9 também prevê o controle das faltas do estagiário, mencionado 
 
 **RF39 — Consolidar faltas do estagiário para a supervisão**{ #rf39 }
 
-O sistema deve permitir que o supervisor consulte, para os estagiários sob sua supervisão, a relação de sessões canceladas por ausência real do estagiário (RF16) em um período selecionado — excluindo os cancelamentos administrativos para remarcação (RF16), que não são falta. Esta consulta não aplica, por si só, contagem de limite ou consequência — a contagem cumulativa é tratada no RF40 e a sinalização de reprovação, no RF63.
+O sistema deve permitir que o supervisor consulte, para os estagiários sob sua supervisão, e que a coordenação consulte, para qualquer estagiário (RNF35), a relação de sessões canceladas por ausência real do estagiário (RF16) em um período selecionado — excluindo os cancelamentos administrativos para remarcação (RF16), que não são falta. Cada linha mostra o nome do estagiário, a data e o horário da sessão e a data/hora do registro, sem o nome do paciente nem o motivo da ausência. Esta consulta não aplica, por si só, contagem de limite ou consequência — a contagem cumulativa é tratada no RF40 e a sinalização de reprovação, no RF63.
 
 _Critérios de aceitação:_
 
-- A consulta do supervisor às faltas de estagiário sob sua supervisão lista as sessões canceladas por ausência real (RF16) no período escolhido, sem os cancelamentos administrativos para remarcação.
-- Usuário sem vínculo de supervisão com o estagiário não acessa a relação de faltas.
+- A consulta do supervisor às faltas de estagiário sob sua supervisão, ou da coordenação às de qualquer estagiário, lista as sessões canceladas por ausência real (RF16) no período escolhido, sem os cancelamentos administrativos para remarcação.
+- Cada linha mostra o nome do estagiário, a data e o horário da sessão e a data/hora do registro, sem o nome do paciente nem o motivo da ausência.
+- Usuário que não seja a coordenação nem o supervisor do estagiário não acessa a relação de faltas.
 
 _Rastreabilidade:_ Feature "Consolidar faltas do estagiário para a supervisão" → CP9 — Controle de assiduidade e alertas → OE4/OE3. Dependência: RF16 (CP4). Restrição transversal: CP12 — Segurança, sigilo e controle de acesso.{{ origem("RF39") }}
 
@@ -1152,13 +1156,14 @@ Este conjunto reúne quatro features que permitem que a secretaria ou o próprio
 
 **RF44 — Listar sessões com comparecimento registrado do paciente**{ #rf44 }
 
-O sistema deve listar, para um usuário com perfil autorizado (secretaria) ou para o próprio paciente/responsável, após verificação de identidade (RF52, CP12) — já que esse público não possui conta nem senha —, as sessões do paciente nas quais a presença foi registrada, para que o usuário escolha a sessão a declarar. Quando não houver sessão elegível, o sistema deve informar isso de forma clara, sem exibir erro técnico.
+O sistema deve listar, para um usuário com perfil autorizado (secretaria) ou para o próprio paciente/responsável, após verificação de identidade (RF52, CP12) — já que esse público não possui conta nem senha —, as sessões do paciente nas quais a presença foi registrada, para que o usuário escolha a sessão a declarar. Sessão com presença registrada é a sessão com o status "realizada", marcada pelo estagiário responsável no prontuário. Até a emissão da declaração (RF45, Ciclo 6), a lista é só de consulta, sem a ação de escolher a sessão. Quando não houver sessão elegível, o sistema deve informar isso de forma clara, sem exibir erro técnico.
 
 _Critérios de aceitação:_
 
 - A lista de sessões elegíveis mostra somente sessões com presença registrada, com data, horário e nome do estagiário.
 - Paciente ou responsável com identidade verificada (RF52) vê somente as próprias sessões.
 - Paciente sem sessão com presença registrada recebe o aviso de que não há sessões disponíveis para declaração.
+- Usuário interno sem perfil de secretaria não acessa a lista, e paciente ou responsável sem identidade verificada (RF52) não vê nenhuma sessão (RNF38).
 
 _Rastreabilidade:_ Feature "Listar sessões com comparecimento registrado do paciente" → CP10 — Registros administrativos do atendimento → OE6/OE4. Dependência: RF52 (CP12).{{ origem("RF44") }}
 
@@ -1236,7 +1241,7 @@ O sistema deve permitir que um usuário com perfil de coordenação consulte, pa
 - **Indicadores de posição** (1 e 4): retratam a situação em um único instante, a **data de referência**, que é o fim do dia da data final do intervalo; quando a data final é o dia da consulta, a data de referência é o momento da consulta.
 - **Indicadores de fluxo** (2 e 3): consideram os eventos ocorridos em todo o intervalo, da data inicial à data final, inclusive.
 
-Considera-se **paciente em atendimento ativo** em uma data aquele que, nessa data, possui vínculo vigente com um estagiário (CP5) e não foi desligado nem teve o atendimento encerrado.
+Considera-se **paciente em atendimento ativo** em uma data aquele que, nessa data, possui vínculo vigente com um estagiário (CP5) e não foi desligado nem teve o atendimento encerrado. Enquanto o encerramento por alta (RF68, Ciclo 6) não existir, o paciente deixa de estar em atendimento ativo pelo desligamento por faltas (RF37) ou pelo fim do vínculo.
 
 1. **Vagas ocupadas** (posição) — quantidade de pacientes em atendimento ativo na data de referência, apresentada em relação ao total de vagas ofertadas no semestre que contém a data de referência (ex.: 82 de 100 vagas, 82,0%).
     - O total de vagas ofertadas é o parâmetro "vagas ofertadas no semestre", registrado pela coordenação nesta feature para cada semestre. A alteração do parâmetro guarda o valor anterior, o novo, o autor e a data/hora. Se não houver valor registrado para o semestre, o sistema deve exibir apenas a quantidade de vagas ocupadas e informar que o total ofertado não foi registrado, sem estimar o valor.
@@ -1253,6 +1258,7 @@ _Critérios de aceitação:_
 - Intervalo com data final posterior à data da consulta, ou com data inicial posterior à final, é recusado e o motivo é informado.
 - A coordenação registra as vagas ofertadas de cada semestre, e a alteração guarda o valor anterior, o novo, o autor e a data/hora.
 - Sem vagas ofertadas registradas para o semestre, "vagas ocupadas" mostra só a quantidade ocupada e informa que o total não foi registrado.
+- Usuário sem perfil de coordenação não consulta os indicadores nem registra as vagas ofertadas.
 
 _Rastreabilidade:_ Feature "Consultar indicadores operacionais" → CP11 — Indicadores e relatórios institucionais → OE6/OE4. Dependência: RF37 e RF38 (CP9), RF21 (CP5). Integração: RF9 (CP3, fora do MVP), que divulga as vagas ofertadas registradas aqui.{{ origem("RF48") }}
 
@@ -1402,11 +1408,14 @@ _Rastreabilidade:_ Feature "Restringir acesso ao prontuário do paciente" → CP
 
 **RF56 — Consultar registro de acessos ao prontuário**{ #rf56 }
 
-O sistema deve permitir que um usuário com perfil de coordenação consulte o registro de acessos ao prontuário de um paciente, informando, para cada acesso, o usuário, o perfil, a data/hora e a operação realizada (visualização, criação ou alteração), com filtro por paciente, por usuário e por período. A consulta mostra quem acessou, mas não o conteúdo clínico acessado.
+O sistema deve permitir que um usuário com perfil de coordenação consulte o registro de acessos ao prontuário de um paciente, informando, para cada acesso, o usuário, o perfil, a data/hora e a operação realizada (visualização, criação ou alteração), com filtro por paciente, por usuário e por período. As tentativas negadas pelo RF55 também aparecem no registro, identificadas como "acesso negado" ([DF29](decisoes-fbr.md#df29)). A consulta mostra quem acessou, mas não o conteúdo clínico acessado.
 
 _Critérios de aceitação:_
 
 - Cada visualização do prontuário gera uma entrada no registro de acessos com nome, perfil, data/hora e a operação "visualização", consultável pela coordenação.
+- Cada criação ou alteração no prontuário gera uma entrada com a operação correspondente.
+- Os filtros por paciente, por usuário e por período mostram somente as entradas que atendem a eles.
+- A consulta não mostra o conteúdo clínico acessado.
 - Tentativas negadas pelo RF55 aparecem no registro identificadas como "acesso negado".
 - Usuário sem perfil de coordenação não consulta o registro de acessos.
 
