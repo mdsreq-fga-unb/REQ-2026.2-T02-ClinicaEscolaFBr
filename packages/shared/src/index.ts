@@ -9,3 +9,4 @@ export * from "./assiduidade";
 export * from "./confirmacao";
 export * from "./cancelamento";
 export * from "./agenda";
+export * from "./verificacao";

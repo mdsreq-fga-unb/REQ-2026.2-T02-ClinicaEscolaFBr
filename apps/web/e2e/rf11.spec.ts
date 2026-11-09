@@ -91,7 +91,7 @@ test.describe.serial("Agenda de sessões do estagiário (RF11)", () => {
     await expect(
       page.getByRole("heading", { name: "Agenda dos estagiários" }),
     ).toBeVisible();
-    const campo = page.getByLabel("Estagiário");
+    const campo = page.getByRole("combobox", { name: "Estagiário" });
     await campo.selectOption({ label: "Ana Beatriz E2E" });
     await expect(page).toHaveURL(/\/agenda\?estagiario=/);
     await expect(

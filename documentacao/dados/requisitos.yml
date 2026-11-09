@@ -838,7 +838,7 @@ rfs:
   lider: Joaquim
   depende: [RF1]
   issue: 47
-  estado: Em design
+  estado: Código concluído
   origem: [DF24, DF40, DF48]
 
 - id: RF53
