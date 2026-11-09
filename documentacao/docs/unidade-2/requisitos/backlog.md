@@ -127,6 +127,15 @@ O corte de MVP foi definido a partir da própria escala de valor de negócio usa
 
 **Inclusão a pedido do cliente:** o [RF33](funcionais.md#rf33) — Gerar relatório final de evolução, *Should have* de esforço alto (fora pela regra 3), entrou no MVP em 24/10/2026. Na validação do MVP ([10.2.4](#1024-validacao-do-mvp-com-o-cliente)), a FBr pediu o relatório pronto antes do fim do semestre, e o requisito já estava completamente especificado. Ele é construído no Ciclo 6, até 01/12/2026, junto com a reprovação do estagiário (RF63/RF64).
 
+**Limite de capacidade**{ #limite-de-capacidade }
+
+A regra 1 diz o que entra no MVP pelo valor, mas não garante que caiba no prazo. Por isso, a capacidade da equipe é conferida ciclo a ciclo, pela [carga por Líder de Feature e ciclo](../../visao-geral/cronograma.md#carga-por-lider-de-feature-e-ciclo), e, no fechamento de cada ciclo, pelo que foi realizado. Quando as features de valor 4 de um ciclo passam do que a equipe consegue construir, inspecionar e testar, a equipe resolve nesta ordem:
+
+1. **Redistribuição:** a feature passa para outro integrante do mesmo ciclo, sem mudar o escopo nem o prazo (foi o que aconteceu no Ciclo 3, quando as features da Maria Clara foram construídas pelo Gabriel).
+2. **Versão menor da capacidade:** a feature entra com uma entrega parcial, registrada no catálogo e combinada com a FBr, como a vaga liberada do RF37, que mostra o próximo inscrito elegível só quando a fila de espera do RF7 existir.
+3. **Prazo:** a feature passa para o ciclo seguinte, com o motivo e o impacto registrados no fechamento do ciclo.
+4. **Escopo:** só depois das três anteriores, a equipe leva à FBr a saída de uma feature do MVP, que fica registrada como decisão no [Registro de Decisões com a FBr (8.4)](decisoes-fbr.md).
+
 <details class="revision-note" markdown>
 <summary>Por que os demais RFs fora do MVP não foram promovidos</summary>
 

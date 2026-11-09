@@ -10,6 +10,9 @@ const P = require("./projeto.cjs");
 const R = require("./rnfs.cjs");
 
 const MEMBROS = ["OWNER", "MEMBER", "COLLABORATOR"];
+// Permissões no repositório de quem é da equipe, conferidas quando a associação do
+// evento não basta.
+const PERMISSOES_DA_EQUIPE = ["admin", "maintain", "write"];
 const BRANCHES_DE_INTEGRACAO = ["development", "main"];
 const { ehFeature } = L;
 
@@ -39,6 +42,30 @@ module.exports = async ({ github, api = github, context, core }) => {
   let projeto;
   const obterProjeto = async () =>
     (projeto ??= await P.carregarProjeto(github));
+
+  // Integrante da equipe. No evento de review, o GitHub manda a associação de quem é
+  // membro da organização com a participação privada como CONTRIBUTOR (foi o que
+  // aconteceu na aprovação da #212, e o D3.1 não foi marcado). Nesse caso, vale a
+  // permissão da pessoa no repositório.
+  const daEquipe = async (associacao, login) => {
+    if (MEMBROS.includes(associacao)) return true;
+    try {
+      const { data } = await github.rest.repos.getCollaboratorPermissionLevel({
+        owner,
+        repo,
+        username: login,
+      });
+      return [data.role_name, data.permission].some((p) =>
+        PERMISSOES_DA_EQUIPE.includes(p),
+      );
+    } catch {
+      return false;
+    }
+  };
+  const ignorar = (login, associacao, motivo) =>
+    core.info(
+      `@${login} (${associacao}) não tem permissão de escrita no repositório: ${motivo} ignorado.`,
+    );
 
   const buscarIssue = async (numero) =>
     (await api.rest.issues.get({ owner, repo, issue_number: numero })).data;
@@ -198,8 +225,10 @@ module.exports = async ({ github, api = github, context, core }) => {
     const issue = carga.issue;
     const rnf = R.lerComandoRnf(carga.comment.body);
     if (rnf && ehFeature(issue)) {
-      if (!MEMBROS.includes(carga.comment.author_association)) return;
       const autor = carga.comment.user.login;
+      const associacao = carga.comment.author_association;
+      if (!(await daEquipe(associacao, autor)))
+        return ignorar(autor, associacao, "o /rnf");
       if (rnf.rnfs.length === 0 || !rnf.link) {
         await comentar(
           issue.number,
@@ -223,7 +252,9 @@ module.exports = async ({ github, api = github, context, core }) => {
     const autor = carga.comment.user.login;
     const regra = L.COMANDOS[lido.comando];
 
-    if (!MEMBROS.includes(carga.comment.author_association)) return;
+    const associacao = carga.comment.author_association;
+    if (!(await daEquipe(associacao, autor)))
+      return ignorar(autor, associacao, `o /${lido.comando}`);
     if (regra.exigeLink && !lido.link) {
       await comentar(
         issue.number,
@@ -295,7 +326,9 @@ module.exports = async ({ github, api = github, context, core }) => {
     const pr = carga.pull_request;
     const revisor = carga.review.user.login;
     if (revisor === pr.user.login) return;
-    if (!MEMBROS.includes(carga.review.author_association)) return;
+    const associacao = carga.review.author_association;
+    if (!(await daEquipe(associacao, revisor)))
+      return ignorar(revisor, associacao, "a aprovação");
     for (const issue of await featuresDaPr(pr)) {
       const atualizada = await marcar(issue, ["D3.1"]);
       if (atualizada !== issue) {

@@ -195,6 +195,36 @@ describe('Agendamento de sessão (RF10)', () => {
     await request(app.getHttpServer()).get('/sessoes/pacientes').expect(401);
   });
 
+  it('recusa data ou horário no passado', async () => {
+    const passado = new Date(Date.now() - 60 * 60_000);
+    passado.setUTCMinutes(0, 0, 0);
+    const { body } = await agendar('secretaria', {
+      casoId: pacientes.sergio,
+      inicio: passado.toISOString(),
+    }).expect(422);
+    expect(body.message).toMatch(/futuros/);
+  });
+
+  it.each([
+    ['o início', { inicio: as('10:05') }],
+    ['o término', { inicio: as('10:00'), termino: as('10:55') }],
+  ])('recusa %s fora dos 10 em 10 minutos (DF49)', async (_campo, horarios) => {
+    const { body } = await agendar('secretaria', {
+      casoId: pacientes.sergio,
+      ...horarios,
+    }).expect(422);
+    expect(body.message).toMatch(/10 em 10 minutos/);
+  });
+
+  it('recusa início depois do término', async () => {
+    const { body } = await agendar('secretaria', {
+      casoId: pacientes.sergio,
+      inicio: as('15:00'),
+      termino: as('14:30'),
+    }).expect(422);
+    expect(body.message).toMatch(/O término precisa ser depois do início/);
+  });
+
   it('a secretaria agenda informando só o início: término pela duração padrão, status agendada, auditoria e link por e-mail (RF10, RNF10)', async () => {
     const { body } = await agendar('secretaria', {
       casoId: pacientes.sergio,

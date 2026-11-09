@@ -280,6 +280,13 @@ sequenceDiagram
 
 **Telas:** item "Fila de espera" no menu da coordenação (proposta levada à FBr em 06/11), com a posição, a prioridade e a entrada na fila, e a seção "Prioridade pendente". A marca "Voltou à fila" só aparece com o RF43, do Ciclo 6. Protótipo: [prancha 6-1](prototipos-ciclo-4.md#rf7).
 
+**Estados e mensagens esperadas — RF7:**
+- **Fila vazia:** quando não houver casos elegíveis na fila, apresentar "Não há inscritos na fila de espera". A seção "Prioridade pendente" permanece disponível quando houver inscrições sem classificação clínica.
+- **Prioridade pendente:** apresentar separadamente as inscrições ainda sem prioridade confirmada, com número da inscrição, nome e data da inscrição, sem atribuir posição na fila.
+- **Acesso negado:** para usuários sem perfil autorizado, apresentar "Você não tem acesso à fila de espera". A API deve retornar HTTP 403 sem expor informações dos inscritos.
+- **Mudança de prioridade:** após uma nova classificação clínica confirmada, apresentar a fila na ordem recalculada, sem afirmar que existe histórico das posições anteriores.
+- **Histórico de mudanças:** não apresentar botão, painel de histórico, selo de posição atualizada ou mensagem de tentativa registrada enquanto essas funcionalidades não forem definidas pela FBr e suportadas pelo projeto.
+
 **Dados de teste:** três casos vermelhos, amarelos e verdes inscritos em ordem trocada; dois casos amarelos inscritos em dias diferentes; um caso que muda de verde para vermelha; um caso `aguardando_vinculo` (continua na fila); um caso que recebe estagiário, um desligado e um encerrado (saem da fila); uma inscrição sem prioridade; a secretaria, o estagiário e o supervisor tentando abrir a fila (403); a lista do RF18 na mesma ordem depois da troca para o `FilaService`; um caso existente, criado antes da migration, com a `entradaNaFilaEm` preenchida pela data da inscrição.
 
 ---
