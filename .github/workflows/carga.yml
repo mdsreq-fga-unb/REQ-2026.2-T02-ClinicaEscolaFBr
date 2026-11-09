@@ -6,7 +6,7 @@ name: Carga
 #   mas não é evidência, porque o RNF pede um ambiente igual ao de produção.
 # - Com "api" e "homologacao": roda contra a homologação, e o resultado entra no
 #   D4.5 das features pelo Feature Status (artefato rnfs-carga).
-# Procedimento: documentacao/docs/unidade-3/teste-de-carga.md
+# Procedimento: documentacao/docs/construcao/teste-de-carga.md
 on:
   workflow_dispatch:
     inputs:
