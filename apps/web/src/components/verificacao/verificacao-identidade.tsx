@@ -31,6 +31,9 @@ type Mensagem = {
 
 const ERRO_CODIGO = "Digite os 6 números do código mais recente.";
 
+// Maior espera que o setTimeout aceita; acima disso, ele dispara na hora.
+const MAIOR_ESPERA = 2_147_483_647;
+
 const tempo = (segundos: number) =>
   `${Math.floor(segundos / 60)}:${String(segundos % 60).padStart(2, "0")}`;
 
@@ -88,6 +91,38 @@ export function VerificacaoIdentidade({
       ativo = false;
     };
   }, []);
+
+  // A tela encerra a consulta sozinha quando a verificação vence. O servidor já
+  // recusa o acesso depois do prazo, mas os dados não podem continuar à vista
+  // numa aba esquecida aberta, num computador compartilhado (RNF6).
+  useEffect(() => {
+    if (etapa !== "confirmada" || !verificacao) return;
+    const expira = new Date(verificacao.expiraEm).getTime();
+    let espera: ReturnType<typeof setTimeout>;
+    const expirar = () => {
+      setVerificacao(null);
+      setIdentificador("");
+      setCodigo("");
+      setReenvioEm(null);
+      setEtapa("identificacao");
+      setMensagem({
+        tipo: "alerta",
+        titulo: "A consulta expirou.",
+        texto:
+          "Por segurança, a consulta fica liberada por 15 minutos. Para consultar de novo, peça um novo código.",
+        chave: Date.now(),
+      });
+    };
+    const agendar = () => {
+      const restante = expira - Date.now();
+      espera =
+        restante <= 0
+          ? setTimeout(expirar)
+          : setTimeout(agendar, Math.min(restante, MAIOR_ESPERA));
+    };
+    agendar();
+    return () => clearTimeout(espera);
+  }, [etapa, verificacao]);
 
   // Contagem do reenvio e do bloqueio, segundo a segundo.
   const esperando =
@@ -215,8 +250,24 @@ export function VerificacaoIdentidade({
     }
   }
 
+  // Só diz que a consulta foi encerrada quando o servidor confirma. Se a
+  // chamada falhar, a verificação continua valendo, e a pessoa precisa saber
+  // disso para tentar de novo antes de deixar o computador.
   async function encerrar() {
-    await api("/verificacao/encerrar", { method: "POST" }).catch(() => {});
+    if (enviando || !verificacao) return;
+    setEnviando(true);
+    try {
+      await api("/verificacao/encerrar", { method: "POST" });
+    } catch {
+      avisar({
+        tipo: "erro",
+        titulo: "Não foi possível encerrar a consulta.",
+        texto: `Tente de novo em instantes. Até lá, a consulta continua liberada neste navegador até as ${horaBr(new Date(verificacao.expiraEm))}.`,
+      });
+      return;
+    } finally {
+      setEnviando(false);
+    }
     setVerificacao(null);
     setIdentificador("");
     setCodigo("");
@@ -302,11 +353,13 @@ export function VerificacaoIdentidade({
               novo código.
             </Aviso>
             {children?.(verificacao)}
+            {aviso}
             <div className={styles.botoes}>
               <button
                 type="button"
                 className={base.secundario}
                 onClick={encerrar}
+                disabled={enviando}
               >
                 Encerrar consulta
               </button>

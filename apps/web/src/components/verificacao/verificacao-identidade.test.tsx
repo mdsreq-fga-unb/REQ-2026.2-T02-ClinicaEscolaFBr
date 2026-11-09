@@ -103,7 +103,7 @@ describe("Verificação de identidade na consulta da inscrição (RF52)", () => 
       "/verificacao/conferir": [
         {
           status: 200,
-          corpo: { numero: "2026-00487", expiraEm: "2026-11-05T18:20:00Z" },
+          corpo: { numero: "2026-00487", expiraEm: "2099-11-05T18:20:00Z" },
         },
       ],
     });
@@ -226,7 +226,7 @@ describe("Verificação de identidade na consulta da inscrição (RF52)", () => 
       "/verificacao": [
         {
           status: 200,
-          corpo: { numero: "2026-00512", expiraEm: "2026-11-05T18:20:00Z" },
+          corpo: { numero: "2026-00512", expiraEm: "2099-11-05T18:20:00Z" },
         },
       ],
       "/verificacao/encerrar": [{ status: 204 }],
@@ -242,5 +242,90 @@ describe("Verificação de identidade na consulta da inscrição (RF52)", () => 
         String(url).endsWith("/verificacao/encerrar"),
       ),
     ).toBe(true);
+  });
+
+  it("se o servidor não encerrar a consulta, a tela avisa e não diz que encerrou (RF52, RNF6)", async () => {
+    simularApi({
+      "/verificacao": [
+        {
+          status: 200,
+          corpo: { numero: "2026-00512", expiraEm: "2099-11-05T18:20:00Z" },
+        },
+      ],
+      "/verificacao/encerrar": [
+        { status: 500, corpo: { message: "Erro interno" } },
+        { status: 204 },
+      ],
+    });
+    render(<VerificacaoIdentidade />);
+    const encerrar = await screen.findByRole("button", {
+      name: "Encerrar consulta",
+    });
+    fireEvent.click(encerrar);
+    const alerta = await screen.findByRole("alert");
+    expect(alerta).toHaveTextContent("Não foi possível encerrar a consulta.");
+    expect(alerta).toHaveTextContent(/continua liberada .* até as 15:20/);
+    await waitFor(() => expect(alerta).toHaveFocus());
+    expect(screen.queryByText("Consulta encerrada.")).toBeNull();
+    expect(screen.getByText("Identidade confirmada.")).toBeVisible();
+
+    // Na segunda tentativa, o servidor encerra.
+    await waitFor(() => expect(encerrar).toBeEnabled());
+    fireEvent.click(encerrar);
+    expect(await screen.findByText("Consulta encerrada.")).toBeVisible();
+    expect(screen.queryByText(/2026-00512/)).toBeNull();
+  });
+
+  it("quando a verificação vence, a tela encerra a consulta e retira os dados (RF52, RNF6)", async () => {
+    vi.useFakeTimers({ shouldAdvanceTime: true });
+    vi.setSystemTime(new Date("2026-11-05T18:05:00Z"));
+    simularApi({
+      "/verificacao": [
+        {
+          status: 200,
+          corpo: { numero: "2026-00512", expiraEm: "2026-11-05T18:20:00Z" },
+        },
+      ],
+    });
+    render(
+      <VerificacaoIdentidade>
+        {(v) => <p>Posição da inscrição {v.numero}</p>}
+      </VerificacaoIdentidade>,
+    );
+    expect(
+      await screen.findByText("Posição da inscrição 2026-00512"),
+    ).toBeVisible();
+
+    // Um minuto antes do fim, a consulta continua liberada.
+    await act(async () => {
+      vi.advanceTimersByTime(14 * 60_000);
+    });
+    expect(screen.getByText("Posição da inscrição 2026-00512")).toBeVisible();
+
+    await act(async () => {
+      vi.advanceTimersByTime(60_000);
+    });
+    expect(await screen.findByText("A consulta expirou.")).toBeVisible();
+    expect(screen.queryByText(/2026-00512/)).toBeNull();
+    expect(screen.queryByText("Identidade confirmada.")).toBeNull();
+    expect(screen.getByLabelText("CPF ou número da inscrição")).toHaveValue("");
+  });
+
+  it("verificação que já venceu ao abrir a página é encerrada na hora (RF52, RNF6)", async () => {
+    simularApi({
+      "/verificacao": [
+        {
+          status: 200,
+          corpo: { numero: "2026-00512", expiraEm: "2020-01-01T00:00:00Z" },
+        },
+      ],
+    });
+    render(
+      <VerificacaoIdentidade>
+        {(v) => <p>Posição da inscrição {v.numero}</p>}
+      </VerificacaoIdentidade>,
+    );
+    expect(await screen.findByText("A consulta expirou.")).toBeVisible();
+    expect(screen.queryByText(/2026-00512/)).toBeNull();
   });
 });
