@@ -87,6 +87,9 @@ Para uma equipe de seis integrantes, com disponibilidade variável ao longo do s
 
 ## 4.4 FDD adaptado ao projeto
 
+!!! info "Execução"
+    As evidências de execução de cada processo do FDD (o modelo abrangente integrado e as revisões dele, a revisão da lista de features, o planejamento com capacidade, o acompanhamento pelos marcos e o fechamento dos ciclos) estão em [Execução do processo](../visao-geral/execucao-do-processo.md).
+
 Na forma descrita por Palmer e Felsing (2002), o FDD pressupõe papéis especializados — seis papéis principais, além de papéis de apoio — e a modelagem do domínio conduzida por um arquiteto-chefe com experiência nessa atividade. Este projeto tem **seis estudantes em formação e prazo de um semestre letivo**. O processo adotado é, portanto, uma **adaptação do FDD**, e não a sua aplicação integral. As adaptações são as seguintes:
 
 | Elemento do FDD original | Como é aplicado no projeto | Motivo da adaptação |

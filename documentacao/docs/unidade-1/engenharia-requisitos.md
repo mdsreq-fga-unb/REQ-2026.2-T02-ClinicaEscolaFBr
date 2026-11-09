@@ -7,6 +7,9 @@ O processo de ER separa técnicas, práticas, ferramentas e resultados. Entrevis
 
 ## 5.1 Atividades e Técnicas de ER
 
+!!! info "Execução"
+    Os documentos da clínica analisados, a representação usada, a verificação por checklist e a validação com cada público estão em [Execução do processo — Engenharia de requisitos na prática](../visao-geral/execucao-do-processo.md#6-engenharia-de-requisitos-na-pratica).
+
 ### Elicitação e Descoberta
 
 - **Entrevistas:** serão realizadas com coordenação e secretaria, estagiários, supervisores, equipe de TI, pacientes ou seus representantes e responsáveis por crianças e adolescentes, com o objetivo de compreender o processo atual, identificar necessidades, expectativas, regras de negócio, restrições e problemas relacionados à gestão dos atendimentos.
