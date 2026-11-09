@@ -164,7 +164,11 @@ describe('Cancelamento de sessão (RF15 e RF16)', () => {
       .returning();
     const [novo] = await db
       .insert(casos)
-      .values({ inscricaoId: inscricao.id, situacao: 'em_atendimento' })
+      .values({
+        inscricaoId: inscricao.id,
+        entradaNaFilaEm: inscricao.criadaEm,
+        situacao: 'em_atendimento',
+      })
       .returning();
     await db.insert(atribuicoesSupervisor).values({
       casoId: novo.id,

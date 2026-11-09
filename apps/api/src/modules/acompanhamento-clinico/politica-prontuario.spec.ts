@@ -20,6 +20,7 @@ import {
   CHAVE_TESTE,
   criarBancoDeTeste,
 } from '../../test-utils/banco-de-teste';
+import { FilaService } from '../fila/fila.service';
 import { DesligamentosService } from '../assiduidade/desligamentos.service';
 import { FaltasService } from '../assiduidade/faltas.service';
 import { PoliticaProntuario } from './politica-prontuario';
@@ -90,7 +91,11 @@ describe('Restrição de acesso ao prontuário (RF55)', () => {
       .returning();
     const [caso] = await db
       .insert(casos)
-      .values({ inscricaoId: inscricao.id, situacao: 'em_atendimento' })
+      .values({
+        entradaNaFilaEm: inscricao.criadaEm,
+        inscricaoId: inscricao.id,
+        situacao: 'em_atendimento',
+      })
       .returning();
     casoId = caso.id;
     await db.insert(atribuicoesSupervisor).values({
@@ -125,7 +130,12 @@ describe('Restrição de acesso ao prontuário (RF55)', () => {
       config,
       new AuditoriaService(db),
       new FaltasService(db, config, new AuditoriaService(db)),
-      new DesligamentosService(db, config, new AuditoriaService(db)),
+      new DesligamentosService(
+        db,
+        config,
+        new AuditoriaService(db),
+        new FilaService(db, config),
+      ),
     );
   });
 

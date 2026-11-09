@@ -48,6 +48,7 @@ import {
 } from '../../auditoria/auditoria.service';
 import type { UsuarioAutenticado } from '../../auth/usuario-autenticado';
 import { cifrar, decifrar } from '../../common/criptografia';
+import { FilaService } from '../fila/fila.service';
 import { DB } from '../../database/database.module';
 
 const SEM_ALERTA =
@@ -74,6 +75,7 @@ export class DesligamentosService {
     @Inject(DB) private readonly db: Db,
     private readonly config: ConfigService,
     private readonly auditoria: AuditoriaService,
+    private readonly fila: FilaService,
   ) {}
 
   // RF37: a secretaria ou a coordenação desliga o paciente com o alerta do RF36
@@ -249,11 +251,12 @@ export class DesligamentosService {
 
   // RF37: vagas liberadas que ainda aguardam um paciente novo. A coordenação vê
   // todas; o supervisor, as dos casos que supervisionava. O próximo inscrito
-  // elegível vem da fila de espera do RF7, que ainda não existe: por enquanto, vazio.
+  // elegível vem da ordenação central do RF7.
   async vagasAbertas(usuario: UsuarioAutenticado): Promise<VagaLiberada[]> {
     const linhas = await this.db
       .select({
         id: vagasLiberadas.id,
+        supervisorId: vagasLiberadas.supervisorId,
         estagiario: estagiario.nome,
         supervisor: supervisor.nome,
         liberadaEm: vagasLiberadas.liberadaEm,
@@ -271,12 +274,19 @@ export class DesligamentosService {
         ),
       )
       .orderBy(asc(vagasLiberadas.liberadaEm));
+    const proximos = new Map(
+      await Promise.all(
+        [...new Set(linhas.map((v) => v.supervisorId))].map(
+          async (id) => [id, await this.fila.proximoElegivel(id)] as const,
+        ),
+      ),
+    );
     return linhas.map((v) => ({
       id: v.id,
       estagiario: v.estagiario,
       supervisor: v.supervisor,
       liberadaEm: v.liberadaEm.toISOString(),
-      proximoInscrito: null,
+      proximoInscrito: proximos.get(v.supervisorId) ?? null,
     }));
   }
 

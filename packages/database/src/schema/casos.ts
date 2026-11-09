@@ -54,6 +54,9 @@ export const casos = pgTable("casos", {
   situacao: situacaoCasoEnum("situacao")
     .notNull()
     .default("aguardando_distribuicao"),
+  entradaNaFilaEm: timestamp("entrada_na_fila_em", {
+    withTimezone: true,
+  }).notNull(),
   cicloAtendimento: integer("ciclo_atendimento").notNull().default(1),
   criadoEm: timestamp("criado_em", { withTimezone: true })
     .notNull()

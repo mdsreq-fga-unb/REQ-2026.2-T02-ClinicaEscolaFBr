@@ -44,6 +44,7 @@ export const MENU_POR_PERFIL: Record<Perfil, ItemMenu[]> = {
   ],
   coordenacao: [
     triagem,
+    { rotulo: "Fila de espera", href: "/fila", Icone: Users },
     distribuicao,
     pacientes,
     { rotulo: "Usuários", href: "/usuarios", Icone: Users },

@@ -1,4 +1,9 @@
 import { Module } from '@nestjs/common';
-
-@Module({})
+import { FilaController } from './fila.controller';
+import { FilaService } from './fila.service';
+@Module({
+  controllers: [FilaController],
+  providers: [FilaService],
+  exports: [FilaService],
+})
 export class FilaModule {}

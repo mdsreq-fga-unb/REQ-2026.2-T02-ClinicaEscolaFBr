@@ -139,7 +139,10 @@ describe('Distribuição de casos (RF18, RF20 e RF21)', () => {
     });
     const [caso] = await db
       .insert(casos)
-      .values({ inscricaoId: inscricao.id })
+      .values({
+        entradaNaFilaEm: inscricao.criadaEm,
+        inscricaoId: inscricao.id,
+      })
       .returning();
     return caso.id;
   }
