@@ -269,7 +269,8 @@ rfs:
   lider: Nicolas
   depende: [RF10, RF21]
   issue: 144
-  estado: Código concluído
+  estado: Design inspecionado
+  entrega: 'parcial no Ciclo 4: o registro do cancelamento já está integrado, mas a contagem da ausência nas faltas do estagiário só se completa com o RF39, no Ciclo 5, e o RF40, no Ciclo 6'
   origem: [DF10]
 
 - id: RF17
