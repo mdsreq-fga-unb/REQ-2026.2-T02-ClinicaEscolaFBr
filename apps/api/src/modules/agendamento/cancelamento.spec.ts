@@ -327,7 +327,7 @@ describe('Cancelamento de sessão (RF15 e RF16)', () => {
   });
 
   describe('pelo link, sem login (RF15, RNF59)', () => {
-    it('no prazo: cancela, guarda a justificativa cifrada, usa o link e audita o paciente, sem falta', async () => {
+    it('no prazo: cancela, guarda a justificativa cifrada, usa o link e audita o paciente, sem falta (RF15, RNF10)', async () => {
       const { id, token, inicio } = await criarSessao(3 * 60);
 
       const resposta = await cancelarPeloLink(token, JUSTIFICATIVA).expect(200);
@@ -576,7 +576,7 @@ describe('Cancelamento de sessão (RF15 e RF16)', () => {
   });
 
   describe('ausência do estagiário (RF16)', () => {
-    it('pelo estagiário: cancela como ausência, sem falta do paciente, e avisa por e-mail', async () => {
+    it('pelo estagiário: cancela como ausência, sem falta do paciente, e avisa por e-mail (RF16, RNF10)', async () => {
       const { id } = await criarSessao(3 * 60);
 
       const { body } = await ausencia('ana', id).expect(200);

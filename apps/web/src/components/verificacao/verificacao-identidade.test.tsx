@@ -77,7 +77,9 @@ describe("Verificação de identidade na consulta da inscrição (RF52)", () => 
     expect(
       screen.getByRole("button", { name: /Reenviar código \(em 1:00\)/ }),
     ).toBeDisabled();
-    expect(screen.getByLabelText("Código de 6 dígitos")).toHaveFocus();
+    await waitFor(() =>
+      expect(screen.getByLabelText("Código de 6 dígitos")).toHaveFocus(),
+    );
     expect(corpoDe(fetch, "/verificacao/codigo")).toEqual([
       { identificador: "529.982.247-25" },
     ]);
@@ -89,7 +91,9 @@ describe("Verificação de identidade na consulta da inscrição (RF52)", () => 
     expect(
       await screen.findByText(/Digite o CPF com 11 números/),
     ).toBeVisible();
-    expect(screen.getByLabelText("CPF ou número da inscrição")).toHaveFocus();
+    await waitFor(() =>
+      expect(screen.getByLabelText("CPF ou número da inscrição")).toHaveFocus(),
+    );
     expect(screen.getByLabelText("CPF ou número da inscrição")).toHaveAttribute(
       "aria-invalid",
       "true",
