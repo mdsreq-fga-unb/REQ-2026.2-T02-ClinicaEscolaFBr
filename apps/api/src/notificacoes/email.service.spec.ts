@@ -17,6 +17,8 @@ describe('Envio de e-mail', () => {
       new ConfigService({ SMTP_HOST: 'localhost', SMTP_PORT: '1025' }),
     );
     expect(criarTransporte).toHaveBeenCalledWith({
+      pool: true,
+      maxConnections: 10,
       host: 'localhost',
       port: 1025,
       secure: false,
@@ -75,6 +77,25 @@ describe('Envio de e-mail', () => {
     expect(text).not.toContain('<');
   });
 
+  it('reaproveita as conexões com o servidor de e-mail e as fecha ao desligar (RF10, RNF12)', () => {
+    const fecharTransporte = jest.fn();
+    criarTransporte.mockReturnValueOnce({
+      sendMail: jest.fn(),
+      close: fecharTransporte,
+    });
+    const servico = new EmailService(
+      new ConfigService({
+        SMTP_HOST: 'smtp-relay.gmail.com',
+        SMTP_PORT: '587',
+      }),
+    );
+    expect(criarTransporte).toHaveBeenCalledWith(
+      expect.objectContaining({ pool: true }),
+    );
+    servico.onModuleDestroy();
+    expect(fecharTransporte).toHaveBeenCalledTimes(1);
+  });
+
   it('na implantação, usa o relay do Google Workspace, sem usuário e com o domínio no EHLO', async () => {
     const servico = new EmailService(
       new ConfigService({
@@ -85,6 +106,8 @@ describe('Envio de e-mail', () => {
       }),
     );
     expect(criarTransporte).toHaveBeenCalledWith({
+      pool: true,
+      maxConnections: 10,
       host: 'smtp-relay.gmail.com',
       port: 587,
       secure: false,
@@ -114,6 +137,8 @@ describe('Envio de e-mail', () => {
       }),
     );
     expect(criarTransporte).toHaveBeenCalledWith({
+      pool: true,
+      maxConnections: 10,
       host: 'smtp.gmail.com',
       port: 465,
       secure: true,
