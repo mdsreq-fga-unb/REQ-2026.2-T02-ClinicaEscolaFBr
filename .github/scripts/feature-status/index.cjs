@@ -151,11 +151,20 @@ module.exports = async ({ github, api = github, context, core }) => {
       issue_number: issue.number,
       per_page: 100,
     });
+    // Na listagem de comentários, quem é membro da organização com a participação
+    // privada também chega como CONTRIBUTOR, e o /rnf dele ficava de fora. Vale a
+    // mesma regra dos comandos: a permissão da pessoa no repositório.
+    const daEquipeNoRnf = [];
+    for (const c of comentarios) {
+      if (!R.lerComandoRnf(c.body)) continue;
+      if (await daEquipe(c.author_association, c.user?.login))
+        daEquipeNoRnf.push({ ...c, author_association: "MEMBER" });
+    }
     const linhas = R.avaliarRnfs({
       rnfs,
       rfs: R.rfsDaFeature(issue.title, corpo),
       testes: relatorio.testes,
-      registros: R.registrosManuais(comentarios, MEMBROS),
+      registros: R.registrosManuais(daEquipeNoRnf, MEMBROS),
     });
     const texto = R.comentarioRnfs(linhas, process.env.EXECUCAO_RNFS);
     const anterior = comentarios.find((c) =>
