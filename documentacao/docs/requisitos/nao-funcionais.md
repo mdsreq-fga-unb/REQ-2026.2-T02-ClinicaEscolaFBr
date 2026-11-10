@@ -626,7 +626,7 @@ Rastreabilidade: Feature "Validar autenticidade da declaração" → CP10 — Re
 
 Os quatro indicadores exibidos pelo RF48 (vagas ocupadas, tempo médio de espera, taxa de evasão e distribuição de casos por supervisor) devem refletir todos os registros incluídos ou alterados no sistema até, no máximo, 15 minutos antes do momento em que a consulta é feita (ex.: um paciente desligado às 10h00 deve estar refletido na taxa de evasão a partir, no mais tardar, das 10h15).
 
-A conformidade deve ser verificada por teste: registrar um desligamento fictício e confirmar que a consulta seguinte, feita em até 15 minutos, já o considera na taxa de evasão.
+A conformidade deve ser verificada por teste: registrar um desligamento fictício e confirmar que uma consulta feita 15 minutos depois já o considera na taxa de evasão.
 
 Classificação: confiabilidade (URPS+).
 Rastreabilidade: Feature "Consultar indicadores operacionais" → CP11 — Indicadores e relatórios institucionais.{{ origem("RNF46") }}
