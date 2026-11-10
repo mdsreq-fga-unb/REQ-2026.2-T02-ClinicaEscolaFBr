@@ -288,7 +288,7 @@ rfs:
   lider: Nicolas
   depende: [RF16]
   estado: Planejada
-  origem: [DF24]
+  origem: [DF24, DF48]
 
 - id: RF18
   nome: Listar casos aguardando distribuição
@@ -741,6 +741,7 @@ rfs:
   lider: Maria Clara
   depende: [RF52]
   estado: Planejada
+  entrega: 'parcial no Ciclo 5: a lista é só de consulta; a escolha da sessão para a declaração chega com o RF45, no Ciclo 6'
 
 - id: RF45
   nome: Emitir declaração de comparecimento do paciente
@@ -786,6 +787,7 @@ rfs:
   depende: [RF37, RF38, RF21]
   issue: 22
   estado: Planejada
+  entrega: 'parcial no Ciclo 5: até o encerramento por alta (RF68), do Ciclo 6, o atendimento ativo considera só o desligamento por faltas e o fim do vínculo sem um novo vínculo'
 
 - id: RF49
   nome: Exportar relatório institucional em PDF

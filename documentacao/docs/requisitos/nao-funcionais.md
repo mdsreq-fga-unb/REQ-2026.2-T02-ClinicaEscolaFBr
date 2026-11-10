@@ -626,6 +626,8 @@ Rastreabilidade: Feature "Validar autenticidade da declaração" → CP10 — Re
 
 Os quatro indicadores exibidos pelo RF48 (vagas ocupadas, tempo médio de espera, taxa de evasão e distribuição de casos por supervisor) devem refletir todos os registros incluídos ou alterados no sistema até, no máximo, 15 minutos antes do momento em que a consulta é feita (ex.: um paciente desligado às 10h00 deve estar refletido na taxa de evasão a partir, no mais tardar, das 10h15).
 
+A conformidade deve ser verificada por teste: registrar um desligamento fictício e confirmar que uma consulta feita 15 minutos depois já o considera na taxa de evasão.
+
 Classificação: confiabilidade (URPS+).
 Rastreabilidade: Feature "Consultar indicadores operacionais" → CP11 — Indicadores e relatórios institucionais.{{ origem("RNF46") }}
 {{ registro("RNF46") }}
@@ -635,6 +637,8 @@ Rastreabilidade: Feature "Consultar indicadores operacionais" → CP11 — Indic
 **RNF47 — Tempo de geração do relatório institucional**{ #rnf47 }
 
 O sistema deve exibir em tela os indicadores operacionais (RF48) e gerar o arquivo PDF do relatório institucional (RF49) em até 5 segundos cada, contados, respectivamente, do acionamento da consulta até a exibição completa dos indicadores e do acionamento da exportação até o arquivo ficar disponível para download, para qualquer período de referência de até 12 meses e com até 10 usuários realizando consultas ou exportações simultaneamente.
+
+A conformidade deve ser verificada por teste de carga automatizado, com 10 usuários simultâneos e período de 12 meses, medindo o tempo das consultas e das exportações.
 
 Classificação: desempenho (URPS+).
 Rastreabilidade: Features "Consultar indicadores operacionais" e "Exportar relatório institucional em PDF" → CP11 — Indicadores e relatórios institucionais.{{ origem("RNF47") }}
