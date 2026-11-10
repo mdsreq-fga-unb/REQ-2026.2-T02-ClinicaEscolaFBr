@@ -1,0 +1,4 @@
+ALTER TABLE "transferencias_casos" ADD CONSTRAINT "transferencias_casos_caso_id_casos_id_fk" FOREIGN KEY ("caso_id") REFERENCES "public"."casos"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
+ALTER TABLE "transferencias_casos" ADD CONSTRAINT "transferencias_casos_estagiario_origem_id_usuarios_id_fk" FOREIGN KEY ("estagiario_origem_id") REFERENCES "public"."usuarios"("id") ON DELETE no action ON UPDATE no action;--> statement-breakpoint
+ALTER TABLE "transferencias_casos" ADD CONSTRAINT "transferencias_casos_estagiario_destino_id_usuarios_id_fk" FOREIGN KEY ("estagiario_destino_id") REFERENCES "public"."usuarios"("id") ON DELETE no action ON UPDATE no action;--> statement-breakpoint
+ALTER TABLE "transferencias_casos" ADD CONSTRAINT "transferencias_casos_autorizado_por_id_usuarios_id_fk" FOREIGN KEY ("autorizado_por_id") REFERENCES "public"."usuarios"("id") ON DELETE no action ON UPDATE no action;

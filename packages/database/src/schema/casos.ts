@@ -1,4 +1,4 @@
-import { sql } from "drizzle-orm";
+import { sql, relations } from "drizzle-orm";
 import {
   boolean,
   type AnyPgColumn,
@@ -113,4 +113,41 @@ export const vinculosEstagiario = pgTable(
       .on(t.casoId)
       .where(sql`${t.vigente}`),
   ],
+);
+
+// Tranferencia de casos (RF25)
+export const transferenciasCasos = pgTable("transferencias_casos", {
+  id: uuid("id").defaultRandom().primaryKey(),
+  casoId: uuid("caso_id")
+    .references(() => casos.id, { onDelete: "cascade" })
+    .notNull(),
+  estagiarioOrigemId: uuid("estagiario_origem_id").references(
+    () => usuarios.id,
+  ),
+  estagiarioDestinoId: uuid("estagiario_destino_id")
+    .references(() => usuarios.id)
+    .notNull(),
+  autorizadoPorId: uuid("autorizado_por_id")
+    .references(() => usuarios.id)
+    .notNull(),
+  motivo: text("motivo").notNull(),
+  criadoEm: timestamp("criado_em").defaultNow().notNull(),
+});
+
+export const transferenciasCasosRelations = relations(
+  transferenciasCasos,
+  ({ one }) => ({
+    caso: one(casos, {
+      fields: [transferenciasCasos.casoId],
+      references: [casos.id],
+    }),
+    estagiarioDestino: one(usuarios, {
+      fields: [transferenciasCasos.estagiarioDestinoId],
+      references: [usuarios.id],
+    }),
+    autorizadoPor: one(usuarios, {
+      fields: [transferenciasCasos.autorizadoPorId],
+      references: [usuarios.id],
+    }),
+  }),
 );
