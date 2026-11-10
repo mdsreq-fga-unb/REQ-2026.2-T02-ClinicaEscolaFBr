@@ -86,6 +86,8 @@ export async function criarCasoTriado(
       percepcaoUrgencia: "Urgência fictícia",
       historicoRelevante: "Histórico fictício",
       confirmado: true,
+      aceiteTermo: true,
+      versaoTermo: "0.1",
       chaveEnvio: randomUUID(),
     },
   });

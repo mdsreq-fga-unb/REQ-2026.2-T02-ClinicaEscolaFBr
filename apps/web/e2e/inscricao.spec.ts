@@ -97,7 +97,8 @@ for (const largura of [320, 360, 768, 1024, 1366, 1920]) {
     );
     await continuar(page);
     await expect(page.getByText("Rua Fictícia corrigida, 20")).toBeVisible();
-    await page.getByRole("checkbox").check();
+    await page.locator("#confirmado").check();
+    await page.locator("#aceiteTermo").check();
     const gravacao = page.waitForResponse(
       (res) =>
         res.url().endsWith("/inscricoes") && res.request().method() === "POST",
@@ -158,7 +159,8 @@ test("menor: erro, responsável, teclado e preservação dos dados", async ({
   await continuar(page);
   await preencherTriagem(page);
   await continuar(page);
-  await page.getByRole("checkbox").check();
+  await page.locator("#confirmado").check();
+  await page.locator("#aceiteTermo").check();
   await enviar(page);
   await verificarComprovante(page);
   await verificarTela(page, info, "menor-comprovante");
@@ -183,7 +185,8 @@ test("HTTP 503 preserva os dados e repete a chave sem revelar detalhes", async (
     if (req.url().endsWith("/inscricoes") && req.method() === "POST")
       enviados.push(req.postDataJSON().chaveEnvio);
   });
-  await page.getByRole("checkbox").check();
+  await page.locator("#confirmado").check();
+  await page.locator("#aceiteTermo").check();
   await enviar(page);
   await expect(page.getByRole("main").getByRole("alert")).toContainText(
     "Não foi possível confirmar",
@@ -211,7 +214,8 @@ test("resposta perdida depois do commit: retry recupera o mesmo comprovante", as
     },
     { times: 1 },
   );
-  await page.getByRole("checkbox").check();
+  await page.locator("#confirmado").check();
+  await page.locator("#aceiteTermo").check();
   await enviar(page);
   await expect(page.getByRole("main").getByRole("alert")).toContainText(
     "Não foi possível confirmar",
@@ -287,7 +291,8 @@ test("no comprovante, o teclado percorre os controles com foco visível de pelo 
 }) => {
   await page.setViewportSize({ width: 320, height: 900 });
   await revisar(page);
-  await page.getByRole("checkbox").check();
+  await page.locator("#confirmado").check();
+  await page.locator("#aceiteTermo").check();
   await enviar(page);
   await expect(
     page.getByRole("heading", { name: "Inscrição recebida" }),
@@ -318,7 +323,8 @@ test("offline preserva o envio até a conexão voltar", async ({
   context,
 }) => {
   await revisar(page);
-  await page.getByRole("checkbox").check();
+  await page.locator("#confirmado").check();
+  await page.locator("#aceiteTermo").check();
   await context.setOffline(true);
   await enviar(page);
   await expect(page.getByRole("main").getByRole("alert")).toContainText(
@@ -350,7 +356,8 @@ test("timeout real não confirma; repetição mantém a mesma chave", async ({
     },
     { times: 1 },
   );
-  await page.getByRole("checkbox").check();
+  await page.locator("#confirmado").check();
+  await page.locator("#aceiteTermo").check();
   await enviar(page);
   await expect(page.getByRole("main").getByRole("alert")).toContainText(
     "Não foi possível confirmar",

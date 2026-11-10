@@ -74,7 +74,8 @@ test.describe("Leitor de tela na inscrição e no comprovante (RNF56)", () => {
     await continuar(page);
     await preencherTriagem(page);
     await continuar(page);
-    await page.getByRole("checkbox").check();
+    await page.locator("#confirmado").check();
+    await page.locator("#aceiteTermo").check();
     await enviar(page);
     const titulo = page.getByRole("heading", { name: "Inscrição recebida" });
     // O título do comprovante recebe o foco do teclado ao aparecer.

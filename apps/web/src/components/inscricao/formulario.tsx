@@ -10,7 +10,9 @@ import {
   menorDeIdade,
   triagemInscricaoSchema,
   type ComprovanteInscricao,
+  type TermoVigente,
 } from "@clinica/shared";
+import { buscarTermoVigente, Termo } from "./termo";
 import styles from "./inscricao.module.css";
 
 // A ordem dos rótulos é a ordem da revisão.
@@ -199,6 +201,36 @@ export function FormularioInscricao({ aberta = true }: { aberta?: boolean }) {
   const [valores, setValores] = useState<Valores>(vazio);
   const [erros, setErros] = useState<Record<string, string>>({});
   const [confirmado, setConfirmado] = useState(false);
+  const [aceiteTermo, setAceiteTermo] = useState(false);
+  const [termo, setTermo] = useState<TermoVigente | null>(null);
+  const [falhaTermo, setFalhaTermo] = useState(false);
+  const [tentativaTermo, setTentativaTermo] = useState(0);
+  const [termoAtualizado, setTermoAtualizado] = useState(false);
+  const avisoTermo = useRef<HTMLParagraphElement>(null);
+  useEffect(() => {
+    if (!aberta) return;
+    let ativo = true;
+    buscarTermoVigente()
+      .then((t) => {
+        if (ativo) setTermo(t);
+      })
+      .catch(() => {
+        if (ativo) setFalhaTermo(true);
+      });
+    return () => {
+      ativo = false;
+    };
+  }, [aberta, tentativaTermo]);
+  useEffect(() => {
+    if (termoAtualizado) avisoTermo.current?.focus();
+  }, [termoAtualizado, termo]);
+  function recarregarTermo() {
+    setAceiteTermo(false);
+    setTermo(null);
+    setFalhaTermo(false);
+    setTentativaTermo((n) => n + 1);
+  }
+
   const [enviando, setEnviando] = useState(false);
   const [falha, setFalha] = useState("");
   const [comprovante, setComprovante] = useState<ComprovanteInscricao | null>(
@@ -224,6 +256,7 @@ export function FormularioInscricao({ aberta = true }: { aberta?: boolean }) {
   function alterar(campo: Campo, valor: string) {
     setValores((antes) => ({ ...antes, [campo]: valor }));
     setConfirmado(false);
+    setAceiteTermo(false);
     setFalha("");
   }
   function mudarEtapa(proxima: number) {
@@ -249,7 +282,13 @@ export function FormularioInscricao({ aberta = true }: { aberta?: boolean }) {
     const conteudo = JSON.stringify(dados);
     if (!envio.current || envio.current.conteudo !== conteudo)
       envio.current = { chave: crypto.randomUUID(), conteudo };
-    const payload = { ...dados, confirmado, chaveEnvio: envio.current.chave };
+    const payload = {
+      ...dados,
+      confirmado,
+      aceiteTermo,
+      versaoTermo: termo?.versao ?? "",
+      chaveEnvio: envio.current.chave,
+    };
     const schema =
       etapa === 0
         ? dadosInscricaoSchema
@@ -282,6 +321,15 @@ export function FormularioInscricao({ aberta = true }: { aberta?: boolean }) {
         credentials: "omit",
         signal: AbortSignal.timeout(20000),
       });
+      if (resposta.status === 409) {
+        const erro = await resposta.json();
+        if (erro.codigo === "termo_desatualizado") {
+          recarregarTermo();
+          setTermoAtualizado(true);
+          setErros({});
+          return;
+        }
+      }
       if (resposta.status === 400) {
         // Aceitar somente caminhos conhecidos e mensagens do contrato local;
         // nunca mostrar o corpo arbitrário de erro retornado pelo servidor.
@@ -292,7 +340,8 @@ export function FormularioInscricao({ aberta = true }: { aberta?: boolean }) {
           const nome = erro?.path?.[0];
           if (
             typeof nome === "string" &&
-            (nome in rotulos || nome === "confirmado")
+            (nome in rotulos ||
+              ["confirmado", "aceiteTermo", "versaoTermo"].includes(nome))
           )
             mensagens[nome] = "Confira este campo e tente novamente.";
         }
@@ -471,7 +520,7 @@ export function FormularioInscricao({ aberta = true }: { aberta?: boolean }) {
                             href={`#${nome}`}
                             onClick={(event) => {
                               event.preventDefault();
-                              if (etapa === 2 && nome !== "confirmado") {
+                              if (etapa === 2 && nome in rotulos) {
                                 focoPendente.current = nome;
                                 setEtapa(
                                   nome in triagemInscricaoSchema.shape ? 1 : 0,
@@ -629,23 +678,6 @@ export function FormularioInscricao({ aberta = true }: { aberta?: boolean }) {
                         </dl>
                       </section>
                     ))}
-                    <div className={styles.aviso}>
-                      <strong>
-                        A inscrição não garante vaga nem agendamento.
-                      </strong>
-                      <p>
-                        O atendimento depende da triagem e da disponibilidade de
-                        vagas.
-                      </p>
-                    </div>
-                    <aside
-                      className={styles.reserva}
-                      aria-label="Consentimento futuro"
-                    >
-                      Espaço reservado para o termo e aceite de tratamento de
-                      dados, sujeito à aprovação da FBr em uma próxima etapa do
-                      projeto (RF57).
-                    </aside>
                     <label className={styles.confirmacao}>
                       <input
                         id="confirmado"
@@ -666,6 +698,73 @@ export function FormularioInscricao({ aberta = true }: { aberta?: boolean }) {
                     {erros.confirmado && (
                       <p id="confirmado-erro" className={styles.erroCampo}>
                         {erros.confirmado}
+                      </p>
+                    )}
+                    <div className={styles.aviso}>
+                      <strong>
+                        A inscrição não garante vaga nem agendamento.
+                      </strong>
+                      <p>
+                        O atendimento depende da triagem e da disponibilidade de
+                        vagas.
+                      </p>
+                    </div>
+                    {termoAtualizado && (
+                      <p role="alert" ref={avisoTermo} tabIndex={-1}>
+                        O termo foi atualizado. Leia a nova versão e marque sua
+                        concordância novamente. Seus dados foram mantidos.
+                      </p>
+                    )}
+                    {termo ? (
+                      <Termo key={termo.versao} termo={termo} />
+                    ) : falhaTermo ? (
+                      <div role="alert">
+                        Não foi possível carregar o termo.{" "}
+                        <button type="button" onClick={recarregarTermo}>
+                          Tentar carregar novamente
+                        </button>
+                      </div>
+                    ) : (
+                      <p role="status">Carregando termo…</p>
+                    )}
+                    {menor && (
+                      <p>
+                        Para menores de 18 anos, quem lê e aceita é o
+                        responsável legal. Este aceite não substitui a
+                        autorização assinada na clínica antes do primeiro
+                        atendimento.
+                      </p>
+                    )}
+                    <label className={styles.confirmacao}>
+                      <input
+                        id="aceiteTermo"
+                        type="checkbox"
+                        checked={aceiteTermo}
+                        disabled={enviando || !termo}
+                        onChange={(e) => setAceiteTermo(e.target.checked)}
+                        aria-invalid={!!erros.aceiteTermo}
+                        aria-describedby={
+                          erros.aceiteTermo ? "aceiteTermo-erro" : undefined
+                        }
+                      />
+                      <span>
+                        {menor
+                          ? `Sou o responsável legal de ${valores.nomeCompleto}, li este termo e concordo com o tratamento dos dados pessoais e de saúde dele pela Clínica Escola da FBr, para as finalidades descritas.`
+                          : "Li este termo e concordo com o tratamento dos meus dados pessoais e de saúde pela Clínica Escola da FBr, para as finalidades descritas."}
+                      </span>
+                    </label>
+                    {erros.aceiteTermo && (
+                      <p id="aceiteTermo-erro" className={styles.erroCampo}>
+                        {erros.aceiteTermo}
+                      </p>
+                    )}
+                    {erros.versaoTermo && (
+                      <p
+                        id="versaoTermo"
+                        tabIndex={-1}
+                        className={styles.erroCampo}
+                      >
+                        Aguarde o carregamento do termo antes de enviar.
                       </p>
                     )}
                   </>

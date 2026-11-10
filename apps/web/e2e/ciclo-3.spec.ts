@@ -44,6 +44,8 @@ test.describe.serial("Integração do Ciclo 3", () => {
         percepcaoUrgencia: "Urgência fictícia",
         historicoRelevante: "Histórico fictício",
         confirmado: true,
+        aceiteTermo: true,
+        versaoTermo: "0.1",
         chaveEnvio: randomUUID(),
       },
     });

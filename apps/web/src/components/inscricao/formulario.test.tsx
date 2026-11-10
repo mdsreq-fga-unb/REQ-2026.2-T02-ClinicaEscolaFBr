@@ -7,6 +7,21 @@ import {
   waitFor,
 } from "@testing-library/react";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+import { buscarTermoVigente } from "./termo";
+vi.mock("./termo", async (importOriginal) => ({
+  ...(await importOriginal<typeof import("./termo")>()),
+  buscarTermoVigente: vi.fn(),
+}));
+const termoTeste = {
+  versao: "0.1",
+  titulo: "Termo de consentimento",
+  introducao: "Texto para teste",
+  provisoria: true,
+  vigenteDesde: "2026-11-06T03:00:00.000Z",
+  topicos: [
+    { titulo: "Seus direitos", corpo: "Procure a secretaria para revogar." },
+  ],
+};
 import { FormularioInscricao } from "./formulario";
 
 const recibo = { numero: "2026-00042", criadaEm: "2026-10-25T18:00:00.000Z" };
@@ -40,12 +55,21 @@ const enviar = () =>
   fireEvent.click(
     screen.getByRole("button", { name: "Confirmar e enviar inscrição" }),
   );
-const confirmar = () => fireEvent.click(screen.getByRole("checkbox"));
+const confirmar = async () => {
+  await waitFor(() =>
+    expect(document.getElementById("aceiteTermo")).not.toBeDisabled(),
+  );
+  fireEvent.click(document.getElementById("confirmado")!);
+  fireEvent.click(document.getElementById("aceiteTermo")!);
+};
 const response = (body: unknown = recibo, status = 201) =>
   new Response(JSON.stringify(body), { status });
 
 describe("Formulário RF1/RF2", () => {
-  beforeEach(() => vi.stubEnv("NEXT_PUBLIC_API_URL", "http://localhost:3333"));
+  beforeEach(() => {
+    vi.stubEnv("NEXT_PUBLIC_API_URL", "http://localhost:3333");
+    vi.mocked(buscarTermoVigente).mockResolvedValue(termoTeste);
+  });
   afterEach(() => {
     cleanup();
     vi.restoreAllMocks();
@@ -144,7 +168,7 @@ describe("Formulário RF1/RF2", () => {
     triagem();
     continuar();
     expect(screen.queryByText("52998224725")).toBeNull();
-    confirmar();
+    await confirmar();
     enviar();
     await waitFor(() => expect(fetch).toHaveBeenCalledTimes(1));
     expect(JSON.parse(fetch.mock.calls[0][1].body)).toMatchObject({
@@ -180,9 +204,9 @@ describe("Formulário RF1/RF2", () => {
       );
     },
   );
-  it("revisa, corrige dados e triagem sem perder valores; alteração exige nova confirmação", () => {
+  it("revisa, corrige dados e triagem sem perder valores; alteração exige nova confirmação", async () => {
     revisao();
-    confirmar();
+    await confirmar();
     fireEvent.click(screen.getByRole("button", { name: "Editar dados" }));
     expect(document.getElementById("email")).toHaveValue("teste@example.com");
     preencher("nomeCompleto", "Nome corrigido");
@@ -191,27 +215,25 @@ describe("Formulário RF1/RF2", () => {
       "Queixa fictícia privada",
     );
     continuar();
-    expect(screen.getByRole("checkbox")).not.toBeChecked();
+    expect(
+      screen.getByRole("checkbox", { name: /Revisei os dados/ }),
+    ).not.toBeChecked();
     expect(screen.getByText("Nome corrigido")).toBeInTheDocument();
     fireEvent.click(screen.getByRole("button", { name: "Editar triagem" }));
     preencher("queixa", "Declaração corrigida");
     continuar();
     expect(screen.getByText("Declaração corrigida")).toBeInTheDocument();
   });
-  it("não envia sem confirmação; reserva RF57 sem inventar aceite", () => {
+  it("não envia sem confirmação e consentimento independentes", () => {
     const fetch = vi.fn();
     vi.stubGlobal("fetch", fetch);
     revisao();
     enviar();
     expect(fetch).not.toHaveBeenCalled();
-    expect(screen.getAllByRole("checkbox")).toHaveLength(1);
+    expect(screen.getAllByRole("checkbox")).toHaveLength(2);
     expect(
-      screen.getByRole("complementary", { name: "Consentimento futuro" }),
-    ).toHaveTextContent("aprovação da FBr");
-    expect(screen.getByRole("checkbox")).toHaveAttribute(
-      "aria-describedby",
-      "confirmado-erro",
-    );
+      screen.getByRole("checkbox", { name: /Revisei os dados/ }),
+    ).toHaveAttribute("aria-describedby", "confirmado-erro");
   });
   it("aguarda resposta confirmada e bloqueia envio duplo", async () => {
     let resolver!: (valor: Response) => void;
@@ -223,7 +245,7 @@ describe("Formulário RF1/RF2", () => {
     );
     vi.stubGlobal("fetch", fetch);
     revisao();
-    confirmar();
+    await confirmar();
     enviar();
     expect(screen.queryByText("2026-00042")).not.toBeInTheDocument();
     expect(screen.getByRole("button", { name: "Enviando…" })).toBeDisabled();
@@ -273,7 +295,7 @@ describe("Formulário RF1/RF2", () => {
         fetch.mockResolvedValueOnce(response({ numero: "erro" }));
       vi.stubGlobal("fetch", fetch);
       revisao();
-      confirmar();
+      await confirmar();
       enviar();
       await screen.findByRole("alert");
       expect(document.body).not.toHaveTextContent("SQL: dado clínico privado");
@@ -301,7 +323,7 @@ describe("Formulário RF1/RF2", () => {
         ),
     );
     revisao();
-    confirmar();
+    await confirmar();
     enviar();
     await waitFor(() =>
       expect(
@@ -331,6 +353,57 @@ describe("Formulário RF1/RF2", () => {
       if (etapa === 1) triagem();
       if (etapa < 2) continuar();
     }
+  });
+  it("recarrega termo atualizado, desmarca aceite, mantém dados e permite nova tentativa", async () => {
+    const fetch = vi
+      .fn()
+      .mockResolvedValueOnce(
+        response({ codigo: "termo_desatualizado", versaoVigente: "0.2" }, 409),
+      )
+      .mockResolvedValue(response());
+    vi.stubGlobal("fetch", fetch);
+    revisao();
+    await confirmar();
+    vi.mocked(buscarTermoVigente).mockResolvedValue({
+      ...termoTeste,
+      versao: "0.2",
+    });
+    enviar();
+    await waitFor(() => expect(screen.getByRole("alert")).toHaveFocus());
+    expect(document.getElementById("aceiteTermo")).not.toBeChecked();
+    expect(screen.getByText("Pessoa Fictícia")).toBeInTheDocument();
+    await waitFor(() =>
+      expect(document.getElementById("aceiteTermo")).not.toBeDisabled(),
+    );
+    fireEvent.click(document.getElementById("aceiteTermo")!);
+    enviar();
+    await screen.findByText("2026-00042");
+    expect(JSON.parse(fetch.mock.calls[1][1].body)).toMatchObject({
+      versaoTermo: "0.2",
+      aceiteTermo: true,
+    });
+    expect(JSON.parse(fetch.mock.calls[1][1].body).chaveEnvio).toBe(
+      JSON.parse(fetch.mock.calls[0][1].body).chaveEnvio,
+    );
+  });
+  it("mostra falha do termo, mantém aceite bloqueado e permite recarregar", async () => {
+    vi.mocked(buscarTermoVigente).mockRejectedValueOnce(new Error("offline"));
+    revisao();
+    await screen.findByText(/Não foi possível carregar o termo/);
+    expect(document.getElementById("aceiteTermo")).toBeDisabled();
+    fireEvent.click(
+      screen.getByRole("button", { name: "Tentar carregar novamente" }),
+    );
+    await waitFor(() =>
+      expect(document.getElementById("aceiteTermo")).not.toBeDisabled(),
+    );
+    fireEvent.click(screen.getByRole("button", { name: "Seus direitos" }));
+    expect(
+      screen.getByRole("button", { name: "Seus direitos" }),
+    ).toHaveAttribute("aria-expanded", "true");
+    expect(
+      screen.getByText("Procure a secretaria para revogar."),
+    ).toBeVisible();
   });
 });
 
