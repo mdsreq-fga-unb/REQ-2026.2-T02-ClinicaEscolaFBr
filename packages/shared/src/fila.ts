@@ -14,3 +14,11 @@ export type FilaEspera = {
   inscritos: InscritoNaFila[];
   pendentes: { numero: string; nome: string; criadaEm: string }[];
 };
+
+export type SituacaoInscricao = {
+  numero: string;
+  situacao:
+    "aguardando_triagem" | "na_fila" | "em_atendimento" | "procure_secretaria";
+  posicao: number | null;
+  consultadaEm: string;
+};

@@ -168,7 +168,7 @@ rfs:
   lider: Jônatas
   depende: [RF52, RF7]
   issue: 155
-  estado: Design inspecionado
+  estado: Código concluído
   origem: [DF40]
 
 - id: RF9

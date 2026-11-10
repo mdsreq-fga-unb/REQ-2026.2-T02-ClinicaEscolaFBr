@@ -744,7 +744,7 @@ _Construída no Ciclo 4._
 **Rotas** (módulo `fila`, num controller próprio, separado do `GET /fila`, que tem os guards internos na classe):
 
 - `GET /fila/minha-situacao` (pública, com o `VerificacaoGuard` do RF52). Usa só a inscrição ligada à verificação, em `req.inscricaoVerificada`, e devolve uma de quatro situações, pela `casos.situacao`. Não devolve a prioridade nem nenhum dado clínico. Responde com `Cache-Control: no-store`, porque a consulta pode ser feita num computador compartilhado.
-- `GET /fila/situacao?numero=` (secretaria): a consulta presencial, para quem informou só o celular (RF52, [DF24](../requisitos/decisoes-fbr.md#df24)) e para quem recebeu "procure a secretaria". Devolve a mesma resposta da rota pública, com a situação e a posição, sem a cor (RNF17). A secretaria confere a identidade da pessoa no balcão, e a consulta fica na auditoria.
+- `GET /fila/situacao?numero=` (secretaria): a consulta presencial, para inscrições legadas sem e-mail, pessoas com dificuldade na verificação e quem recebeu "procure a secretaria". Novas inscrições exigem e-mail e celular ([DF48](../requisitos/decisoes-fbr.md#df48)). Devolve a mesma resposta da rota pública, com a situação e a posição, sem a cor (RNF17). A secretaria confere a identidade da pessoa no balcão, e a consulta fica na auditoria.
 
 | Situação do caso | Resposta |
 | --- | --- |
@@ -792,7 +792,7 @@ sequenceDiagram
 
 **Dados de teste:** uma inscrição sem prioridade, uma na posição 3, uma `aguardando_vinculo` (continua na fila), uma em atendimento, uma encerrada e uma desligada (procure a secretaria), cada uma com e-mail para o código; uma verificação expirada (401); uma consulta antes e depois de outro caso passar à frente; a inscrição A verificada pedindo a rota com o número de B na query (a resposta continua sendo a de A); a secretaria consultando pelo número (sem a cor) e o estagiário tentando a mesma rota (403). O teste de compreensão do aviso (RNF7) entra no teste de usabilidade da área pública, com o RF52.
 
-**Dependências e riscos:** o RF8 usa o `FilaService` e a `entradaNaFilaEm` do RF7 (#140), as situações novas do RF37 e do RF38 e a verificação do RF52 (#202, ainda aberta). Se entrar antes do RF37 e do RF38, trata só o `encerrado` como "procure a secretaria". O RF7 entra no `depende` do RF8 no `requisitos.yml`, ao lado do RF52.
+**Integração do Ciclo 4:** a implementação parte da `development` com RF7 (PR #233) e RF52 (PR #202) já integradas. Usa o `FilaService` existente, em uma transação de leitura consistente, e o `VerificacaoGuard` existente. Não cria migration nem um segundo mecanismo de identidade. A secretaria consulta pelo número em `/pacientes`; a rota pública ignora identificadores enviados pelo cliente e usa exclusivamente a inscrição verificada. Casos encerrados ou desligados retornam "procure a secretaria". O cache de consulta é descartado ao desmontar o componente e o resultado é ocultado ao expirar a verificação. Os testes de API e navegador cobrem identidade, autorização, atualização da posição e expiração; o teste de compreensão com usuários continua sendo uma atividade de validação.
 
 ---
 
