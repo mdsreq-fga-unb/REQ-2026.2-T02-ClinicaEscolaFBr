@@ -146,7 +146,11 @@ describe('Confirmação de presença (RF14)', () => {
       .returning();
     const [novo] = await db
       .insert(casos)
-      .values({ inscricaoId: inscricao.id, situacao: 'em_atendimento' })
+      .values({
+        inscricaoId: inscricao.id,
+        entradaNaFilaEm: inscricao.criadaEm,
+        situacao: 'em_atendimento',
+      })
       .returning();
     await db.insert(vinculosEstagiario).values({
       casoId: novo.id,

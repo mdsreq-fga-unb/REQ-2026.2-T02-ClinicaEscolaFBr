@@ -79,7 +79,10 @@ describe('Travas do banco no schema do Ciclo 3', () => {
       .returning();
     const [caso] = await db
       .insert(casos)
-      .values({ inscricaoId: inscricao.id })
+      .values({
+        entradaNaFilaEm: inscricao.criadaEm,
+        inscricaoId: inscricao.id,
+      })
       .returning();
     return { inscricaoId: inscricao.id, casoId: caso.id };
   };

@@ -31,7 +31,6 @@ import {
   type Db,
 } from '@clinica/database';
 import {
-  CORES,
   type CasoAguardando,
   type CasoDoSupervisor,
   type CasoJaDistribuido,
@@ -46,6 +45,7 @@ import { AuditoriaService } from '../../auditoria/auditoria.service';
 import { decifrar } from '../../common/criptografia';
 import { DB } from '../../database/database.module';
 import { ParametrosService } from '../../parametros/parametros.service';
+import { FilaService } from '../fila/fila.service';
 import { DesligamentosService } from '../assiduidade/desligamentos.service';
 
 const estagiario = aliasedTable(usuarios, 'estagiario');
@@ -68,6 +68,7 @@ export class CasosService {
     private readonly parametros: ParametrosService,
     private readonly config: ConfigService,
     private readonly desligamentos: DesligamentosService,
+    private readonly fila: FilaService,
   ) {}
 
   // Prioridade clínica vigente de cada inscrição: a decisão mais recente (RNF5).
@@ -95,54 +96,19 @@ export class CasosService {
     return vigentes;
   }
 
-  // RF18: casos triados sem supervisor, por prioridade clínica e, na mesma
-  // prioridade, da inscrição mais antiga para a mais recente. Sem a queixa.
+  // RF18 usa a mesma ordem do RF7, restringindo aos casos sem supervisor.
   async aguardandoDistribuicao(): Promise<CasoAguardando[]> {
-    const linhas = await this.db
-      .select({
-        casoId: casos.id,
-        inscricaoId: inscricoes.id,
-        numero: inscricoes.numero,
-        nome: inscricoes.nomeCompleto,
-        dataInscricao: inscricoes.criadaEm,
-      })
-      .from(casos)
-      .innerJoin(inscricoes, eq(inscricoes.id, casos.inscricaoId))
-      .where(eq(casos.situacao, 'aguardando_distribuicao'));
-    const semSupervisor = await this.semAtribuicao(linhas.map((l) => l.casoId));
-    // Só casos triados: a prioridade clínica confirmada é o que os torna casos (RF6).
-    const cores = await this.prioridades(linhas.map((l) => l.inscricaoId));
-    return linhas
-      .filter((l) => semSupervisor.has(l.casoId) && cores.has(l.inscricaoId))
-      .map((l) => ({
-        casoId: l.casoId,
-        numero: l.numero,
-        nome: l.nome,
-        prioridade: cores.get(l.inscricaoId)!,
-        dataInscricao: l.dataInscricao.toISOString(),
-      }))
-      .sort(
-        (a, b) =>
-          CORES.indexOf(a.prioridade) - CORES.indexOf(b.prioridade) ||
-          a.dataInscricao.localeCompare(b.dataInscricao) ||
-          a.numero.localeCompare(b.numero),
-      );
-  }
-
-  // Casos, entre os informados, sem atribuição de supervisor vigente.
-  private async semAtribuicao(casoIds: string[]) {
-    if (casoIds.length === 0) return new Set<string>();
-    const comSupervisor = await this.db
-      .select({ casoId: atribuicoesSupervisor.casoId })
-      .from(atribuicoesSupervisor)
-      .where(
-        and(
-          inArray(atribuicoesSupervisor.casoId, casoIds),
-          eq(atribuicoesSupervisor.vigente, true),
-        ),
-      );
-    const ocupados = new Set(comSupervisor.map((c) => c.casoId));
-    return new Set(casoIds.filter((id) => !ocupados.has(id)));
+    return (await this.fila.ordenada())
+      .filter(
+        (i) => i.situacao === 'aguardando_distribuicao' && !i.supervisorId,
+      )
+      .map(({ casoId, numero, nome, prioridade, dataInscricao }) => ({
+        casoId,
+        numero,
+        nome,
+        prioridade,
+        dataInscricao,
+      }));
   }
 
   // Casos ativos de um supervisor: atribuição vigente e caso em andamento. O caso

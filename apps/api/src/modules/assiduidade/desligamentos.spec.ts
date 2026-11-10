@@ -8,6 +8,7 @@ import {
   auditoria,
   cancelamentosSessao,
   casos,
+  decisoesPrioridade,
   desligamentoFaltas,
   desligamentosPorFaltas,
   faltasPaciente,
@@ -20,6 +21,7 @@ import {
 } from '@clinica/database';
 import { AuditoriaModule } from '../../auditoria/auditoria.module';
 import type { UsuarioAutenticado } from '../../auth/usuario-autenticado';
+import { cifrar } from '../../common/criptografia';
 import { DB } from '../../database/database.module';
 import { ParametrosModule } from '../../parametros/parametros.module';
 import { AcompanhamentoClinicoModule } from '../acompanhamento-clinico/acompanhamento-clinico.module';
@@ -133,7 +135,11 @@ describe('Alerta, desligamento por faltas e reversão (RF36, RF37, RF38)', () =>
       .returning();
     const [caso] = await db
       .insert(casos)
-      .values({ inscricaoId: inscricao.id, situacao: 'em_atendimento' })
+      .values({
+        entradaNaFilaEm: inscricao.criadaEm,
+        inscricaoId: inscricao.id,
+        situacao: 'em_atendimento',
+      })
       .returning();
     await db.insert(atribuicoesSupervisor).values({
       casoId: caso.id,
@@ -374,6 +380,40 @@ describe('Alerta, desligamento por faltas e reversão (RF36, RF37, RF38)', () =>
       expect((await vagas('carla')).body).toEqual(esperado);
       expect((await vagas('ricardo')).body).toEqual([]);
       await http().get('/vagas/liberadas').set(como('secretaria')).expect(403);
+    });
+
+    it('RF7 fornece o próximo elegível do supervisor na vaga liberada (RF37)', async () => {
+      const desligado = await casoNoLimite();
+      await desligar(desligado, 'coordenacao').expect(201);
+      const proximo = await criarCaso('Próxima Pessoa Fictícia');
+      const [casoPendente] = await db
+        .select()
+        .from(casos)
+        .where(eq(casos.id, proximo));
+      await db.insert(decisoesPrioridade).values({
+        inscricaoId: casoPendente.inscricaoId,
+        corCifrada: cifrar('amarela', CHAVE_TESTE),
+        decididaPor: pessoas.carla.id,
+      });
+      await db
+        .update(vinculosEstagiario)
+        .set({ vigente: false })
+        .where(eq(vinculosEstagiario.casoId, proximo));
+      await db
+        .update(casos)
+        .set({ situacao: 'aguardando_vinculo' })
+        .where(eq(casos.id, proximo));
+      const resposta = await http()
+        .get('/vagas/liberadas')
+        .set(como('coordenacao'))
+        .expect(200);
+      expect(resposta.body).toEqual([
+        expect.objectContaining({
+          proximoInscrito: expect.objectContaining({
+            nome: 'Próxima Pessoa Fictícia',
+          }),
+        }),
+      ]);
     });
 
     it('o supervisor não vincula estagiário ao caso desligado (409), e o caso desligado sai do limite de casos do supervisor', async () => {

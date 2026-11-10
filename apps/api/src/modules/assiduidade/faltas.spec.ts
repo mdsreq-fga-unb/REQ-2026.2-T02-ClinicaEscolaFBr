@@ -128,6 +128,7 @@ describe('Falta do paciente e contagem no ciclo (RF34, RF35)', () => {
     const [caso] = await db
       .insert(casos)
       .values({
+        entradaNaFilaEm: inscricao.criadaEm,
         inscricaoId: inscricao.id,
         situacao: 'em_atendimento',
         cicloAtendimento: ciclo,
