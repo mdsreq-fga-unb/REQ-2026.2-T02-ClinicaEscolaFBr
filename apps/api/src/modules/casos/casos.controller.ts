@@ -65,9 +65,11 @@ export class CasosController {
     return this.casos.distribuir(id, dados.supervisorId, autor);
   }
 
-  // RF21
+  // RF21 e RF23: "Meus casos" do supervisor e "Meus pacientes" do estagiário. Cada
+  // um vê só os casos sob a própria responsabilidade. O filtro por estagiário do
+  // supervisor é feito na tela, pelo id de cada caso da lista.
   @Get('casos/meus')
-  @Perfis('supervisor')
+  @Perfis('supervisor', 'estagiario')
   @Header('Cache-Control', 'no-store')
   meus(@UsuarioAtual() usuario: UsuarioAutenticado) {
     return this.casos.meusCasos(usuario);

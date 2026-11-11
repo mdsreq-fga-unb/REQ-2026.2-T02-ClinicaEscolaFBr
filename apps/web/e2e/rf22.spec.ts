@@ -181,7 +181,7 @@ test("o estagiário responsável vê os responsáveis, e o de outro caso tem o a
 
   await page.goto(`/pacientes/${casos.pendente}`);
   await expect(
-    page.getByText("Você não tem acesso a este caso."),
+    page.getByRole("heading", { name: "Você não tem acesso a este caso" }),
   ).toBeVisible();
   await expect(page.getByText(nomes.pendente)).toHaveCount(0);
   await semViolacoes(page);
