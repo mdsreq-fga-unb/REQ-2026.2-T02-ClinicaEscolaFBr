@@ -17,17 +17,21 @@ for (const largura of [320, 1366]) {
     playwright,
   }, info) => {
     const nome = `Paciente fictício RF8 ${Date.now()}`;
-    const email = "paciente.e2e@example.com";
-    await criarCasoTriado(playwright, nome);
+    // E-mail só deste teste: os outros e2e também mandam e-mail ao paciente
+    // padrão, e o código lido seria o de outra inscrição.
+    const email = `paciente.rf8.${largura}.${Date.now()}@example.com`;
+    await criarCasoTriado(playwright, nome, email);
     await request.post(`${API}/auth/login`, {
       data: { email: EQUIPE.coordenacao.email, senha: SENHA_EQUIPE },
     });
     const fila = await (await request.get(`${API}/fila`)).json();
-    const {
-      numero,
-      inscricaoId: chaveEnvio,
-      posicao,
-    } = fila.inscritos.find((i: { nome: string }) => i.nome === nome);
+    const { numero, inscricaoId: chaveEnvio } = fila.inscritos.find(
+      (i: { nome: string }) => i.nome === nome,
+    );
+    const lerPosicao = async (): Promise<number> =>
+      (await (await request.get(`${API}/fila`)).json()).inscritos.find(
+        (i: { nome: string }) => i.nome === nome,
+      ).posicao;
     const coordenacao = await entrar(browser, "coordenacao");
     await coordenacao.setViewportSize({ width: largura, height: 900 });
     if (largura < 768)
@@ -84,11 +88,25 @@ for (const largura of [320, 1366]) {
       })
       .toBe(6);
     await page.getByLabel("Código de 6 dígitos").fill(codigo);
+    const posicaoAntes = await lerPosicao();
     await page.getByRole("button", { name: "Confirmar", exact: true }).click();
     await expect(
       page.getByRole("heading", { name: "Na fila de espera" }),
     ).toBeVisible();
-    await expect(page.getByText(`${posicao}ª`, { exact: true })).toBeVisible();
+    // Os outros e2e mudam a fila ao mesmo tempo: a posição mostrada fica entre a
+    // da fila antes e a de depois da consulta.
+    const textoPosicao = page.getByText(/^\d+ª$/);
+    await expect(textoPosicao).toBeVisible();
+    const posicaoMostrada = Number(
+      (await textoPosicao.innerText()).replace("ª", ""),
+    );
+    const posicaoDepois = await lerPosicao();
+    expect(posicaoMostrada).toBeGreaterThanOrEqual(
+      Math.min(posicaoAntes, posicaoDepois),
+    );
+    expect(posicaoMostrada).toBeLessThanOrEqual(
+      Math.max(posicaoAntes, posicaoDepois),
+    );
     await expect(page.locator("main")).not.toContainText("Amarela");
     expect(
       await page.evaluate(
@@ -103,7 +121,8 @@ for (const largura of [320, 1366]) {
     const banco = new URL(process.env.DATABASE_URL!);
     if (
       !["localhost", "127.0.0.1"].includes(banco.hostname) ||
-      !banco.pathname.startsWith("/clinica_rf1_test_")
+      // No CI, o banco é o do serviço descartável do próprio job.
+      (!banco.pathname.startsWith("/clinica_rf1_test_") && !process.env.CI)
     )
       throw new Error("Use somente banco local descartável de teste");
     const db = createDb(banco.href);
