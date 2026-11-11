@@ -19,7 +19,7 @@ describe('Validação da evolução, da anamnese e do contrato', () => {
     planoProximaSessao: 'Retomar o diário de sono.',
   };
 
-  it('a evolução segue a ficha da DF38: sem um dos quatro obrigatórios não salva, e cada campo é indicado (RF28)', () => {
+  it('a evolução segue a ficha da DF38: sem um dos quatro obrigatórios não salva, e cada campo é indicado (RF28, RNF25, RNF27, RNF30)', () => {
     const resultado = evolucaoSchema.safeParse({
       humorAparencia: ' ',
       conteudoTrabalhado: '',
@@ -40,7 +40,7 @@ describe('Validação da evolução, da anamnese e do contrato', () => {
     ]);
   });
 
-  it('intervenções e encaminhamentos pode ficar em branco e vira null (RF28)', () => {
+  it('intervenções e encaminhamentos pode ficar em branco e vira null (RF28, RNF25, RNF27, RNF30)', () => {
     const semIntervencoes: Partial<typeof evolucaoCompleta> = {
       ...evolucaoCompleta,
     };
@@ -57,7 +57,7 @@ describe('Validação da evolução, da anamnese e do contrato', () => {
   });
 
   it.each(Object.keys(evolucaoCompleta))(
-    'o campo %s da evolução com mais de 1.000 caracteres é recusado, com a indicação do limite (RF28)',
+    'o campo %s da evolução com mais de 1.000 caracteres é recusado, com a indicação do limite (RF28, RNF25, RNF27, RNF30)',
     (campo) => {
       const resultado = evolucaoSchema.safeParse({
         ...evolucaoCompleta,
@@ -68,7 +68,7 @@ describe('Validação da evolução, da anamnese e do contrato', () => {
     },
   );
 
-  it('a evolução não tem limite de linhas: 30 linhas e 1.000 caracteres são aceitos (RF28)', () => {
+  it('a evolução não tem limite de linhas: 30 linhas e 1.000 caracteres são aceitos (RF28, RNF25, RNF27, RNF30)', () => {
     expect(
       evolucaoSchema.safeParse({
         ...evolucaoCompleta,
@@ -83,7 +83,7 @@ describe('Validação da evolução, da anamnese e do contrato', () => {
     ).toBe(true);
   });
 
-  it('a anamnese só com a queixa principal é aceita, e as outras seções viram null (RF69, DF37)', () => {
+  it('a anamnese só com a queixa principal é aceita, e as outras seções viram null (RF69, RNF25, RNF51, RNF52, DF37)', () => {
     expect(anamneseSchema.parse({ queixaPrincipal: 'Ansiedade.' })).toEqual({
       queixaPrincipal: 'Ansiedade.',
       historiaProblemaAtual: null,
@@ -94,7 +94,7 @@ describe('Validação da evolução, da anamnese e do contrato', () => {
     });
   });
 
-  it('a anamnese sem queixa principal não é salva (RF69)', () => {
+  it('a anamnese sem queixa principal não é salva (RF69, RNF25, RNF51, RNF52)', () => {
     const resultado = anamneseSchema.safeParse({
       queixaPrincipal: '  ',
       historicoFamiliar: 'Pais separados.',
@@ -103,7 +103,7 @@ describe('Validação da evolução, da anamnese e do contrato', () => {
     expect(mensagens(resultado)).toEqual(['Informe a queixa principal.']);
   });
 
-  it('a seção da anamnese com 1.001 caracteres é recusada, com a indicação da seção (RF69)', () => {
+  it('a seção da anamnese com 1.001 caracteres é recusada, com a indicação da seção (RF69, RNF25, RNF51, RNF52)', () => {
     const resultado = anamneseSchema.safeParse({
       queixaPrincipal: 'Ansiedade.',
       historicoMedico: 'a'.repeat(1001),
@@ -112,7 +112,7 @@ describe('Validação da evolução, da anamnese e do contrato', () => {
     expect(mensagens(resultado)).toEqual(['Use no máximo 1.000 caracteres.']);
   });
 
-  it('o contrato da clínica exige confirmar a guarda da via assinada, e o aceite do termo para pesquisa é opcional (RF69, DF41)', () => {
+  it('o contrato da clínica exige confirmar a guarda da via assinada, e o aceite do termo para pesquisa é opcional (RF69, RNF25, RNF51, RNF52, DF41)', () => {
     const base = { dataAssinaturaContrato: '2026-10-01' };
     expect(mensagens(contratoSchema.safeParse(base))).toContain(
       'Confirme que a via assinada do contrato está guardada na clínica.',
@@ -121,7 +121,7 @@ describe('Validação da evolução, da anamnese e do contrato', () => {
     expect(ok.aceiteTclePesquisa).toBe(false);
   });
 
-  it('a data de assinatura do contrato não pode estar no futuro (RF69)', () => {
+  it('a data de assinatura do contrato não pode estar no futuro (RF69, RNF25, RNF51, RNF52)', () => {
     const dados = { viaContratoGuardada: true };
     expect(
       contratoSchema.safeParse({

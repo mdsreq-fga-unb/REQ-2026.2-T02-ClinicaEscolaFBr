@@ -22,7 +22,7 @@ import {
 } from "@/components/comum/campo";
 import { Dados } from "@/components/comum/dados";
 import { Button } from "@/components/ui/button";
-import { api } from "@/lib/api";
+import { api, ErroApi } from "@/lib/api";
 import { dataBr, dataHoraBr } from "@/lib/formato";
 
 type ErrosDe<T> = Partial<Record<keyof T, string>>;
@@ -39,6 +39,22 @@ function errosPorCampo<T>(issues: { path: PropertyKey[]; message: string }[]) {
 
 const NAO_INFORMADO = "Não informado";
 const milhar = (n: number) => n.toLocaleString("pt-BR");
+const DICAS_SECAO: Record<SecaoAnamnese, string> = {
+  queixaPrincipal: "Trazido da inscrição. Você pode completar.",
+  historiaProblemaAtual:
+    "Descreva o início, o curso e os impactos do problema atual.",
+  historicoFamiliar: "Registre informações relevantes sobre a família.",
+  desenvolvimento: "Registre aspectos relevantes do desenvolvimento.",
+  historicoMedico: "Inclua histórico de saúde e tratamentos relevantes.",
+  aspectosPsicossociais:
+    "Registre contexto social, familiar, escolar e de trabalho.",
+};
+
+function focarPrimeiroErro() {
+  requestAnimationFrame(() => {
+    document.querySelector<HTMLElement>("[aria-invalid='true']")?.focus();
+  });
+}
 
 // Envio com o botão travado enquanto a resposta não chega, para não registrar duas
 // vezes; a resposta 409 de um segundo envio aparece como erro do formulário.
@@ -46,19 +62,34 @@ function useEnvio(prontuarioId: string) {
   const cache = useQueryClient();
   const [erro, setErro] = useState<string | null>(null);
   const [salvando, setSalvando] = useState(false);
-  async function enviar(caminho: string, corpo: unknown) {
+  async function enviar(
+    caminho: string,
+    corpo: unknown,
+    aoConcluir?: (resultado: unknown) => void,
+    aoConflitar?: () => void,
+  ) {
     setErro(null);
     setSalvando(true);
     try {
-      await api(`/prontuarios/${prontuarioId}${caminho}`, {
-        method: "POST",
-        body: JSON.stringify(corpo),
-      });
+      const resultado = await api<unknown>(
+        `/prontuarios/${prontuarioId}${caminho}`,
+        {
+          method: "POST",
+          body: JSON.stringify(corpo),
+        },
+      );
+      aoConcluir?.(resultado);
       await cache.invalidateQueries({ queryKey: ["prontuario", prontuarioId] });
     } catch (falha) {
       setErro(
         falha instanceof Error ? falha.message : "Não foi possível salvar.",
       );
+      if (falha instanceof ErroApi && falha.status === 409) {
+        aoConflitar?.();
+        await cache.invalidateQueries({
+          queryKey: ["prontuario", prontuarioId],
+        });
+      }
     } finally {
       setSalvando(false);
     }
@@ -84,6 +115,11 @@ function CampoTexto({
     <Campo
       rotulo={opcional ? `${rotulo} (opcional)` : rotulo}
       dica={`${milhar(valor.length)} de ${milhar(LIMITE_CAMPO_CLINICO)} caracteres`}
+      dicaClassName={
+        valor.length > LIMITE_CAMPO_CLINICO
+          ? "font-semibold text-destructive"
+          : undefined
+      }
       erro={erro}
     >
       {(props) => (
@@ -131,6 +167,7 @@ export function FormularioAnamnese({
     const resultado = anamneseSchema.safeParse(dados);
     if (!resultado.success) {
       setErros(errosPorCampo<Anamnese>(resultado.error.issues));
+      focarPrimeiroErro();
       return;
     }
     setErros({});
@@ -152,17 +189,30 @@ export function FormularioAnamnese({
         obrigatória; as seções em branco ficam como “{NAO_INFORMADO}”. Depois de
         salva, a anamnese não pode ser alterada.
       </p>
-      {SECOES_ANAMNESE.map(([secao, rotulo]) => (
-        <CampoTexto
-          key={secao}
-          rotulo={rotulo}
-          opcional={secao !== "queixaPrincipal"}
-          valor={dados[secao]}
-          erro={erros[secao]}
-          aoMudar={(valor) => setDados({ ...dados, [secao]: valor })}
+      {Object.keys(erros).length > 0 && (
+        <Aviso
+          tipo="erro"
+          titulo="A anamnese não foi salva. Corrija o campo indicado. O que você já escreveu foi mantido."
         />
-      ))}
+      )}
       {erro && <Aviso tipo="erro" titulo={erro} />}
+      <div className="grid gap-4 min-[1366px]:grid-cols-2">
+        {SECOES_ANAMNESE.map(([secao, rotulo], indice) => (
+          <div key={secao} className="flex min-w-0 flex-col gap-2">
+            <p className="ui-rotulo">
+              {["I", "II", "III", "IV", "V", "VI"][indice]} · {rotulo}
+            </p>
+            <p className="ui-dica">{DICAS_SECAO[secao]}</p>
+            <CampoTexto
+              rotulo={rotulo}
+              opcional={secao !== "queixaPrincipal"}
+              valor={dados[secao]}
+              erro={erros[secao]}
+              aoMudar={(valor) => setDados({ ...dados, [secao]: valor })}
+            />
+          </div>
+        ))}
+      </div>
       <div className="flex justify-end">
         <Button type="submit" disabled={salvando}>
           {salvando ? "Salvando…" : "Salvar anamnese"}
@@ -215,6 +265,7 @@ export function FormularioContrato({ prontuarioId }: { prontuarioId: string }) {
     const resultado = contratoSchema.safeParse(dados);
     if (!resultado.success) {
       setErros(errosPorCampo<Contrato>(resultado.error.issues));
+      focarPrimeiroErro();
       return;
     }
     setErros({});
@@ -236,6 +287,13 @@ export function FormularioContrato({ prontuarioId }: { prontuarioId: string }) {
         assinado em papel na primeira sessão. Registre aqui a assinatura e a
         guarda da via.
       </p>
+      {Object.keys(erros).length > 0 && (
+        <Aviso
+          tipo="erro"
+          titulo="O contrato não foi salvo. Corrija o campo indicado. O que você já escreveu foi mantido."
+        />
+      )}
+      {erro && <Aviso tipo="erro" titulo={erro} />}
       <Campo
         rotulo="Data de assinatura do contrato"
         erro={erros.dataAssinaturaContrato}
@@ -293,7 +351,6 @@ export function FormularioContrato({ prontuarioId }: { prontuarioId: string }) {
           </p>
         )}
       </div>
-      {erro && <Aviso tipo="erro" titulo={erro} />}
       <div className="flex justify-end">
         <Button type="submit" disabled={salvando}>
           {salvando ? "Salvando…" : "Salvar contrato"}
@@ -355,16 +412,25 @@ export function LeituraContrato({
 function DadosDaSessao({
   numeroNoCiclo,
   inicio,
+  paciente,
+  estagiario,
+  supervisor,
 }: {
   numeroNoCiclo: number | null;
   inicio: string;
+  paciente?: string;
+  estagiario?: string;
+  supervisor?: string;
 }) {
   return (
     <Dados
       itens={[
+        ...(paciente ? [["Paciente", paciente] as [string, string]] : []),
         ["Sessão no ciclo", numeroNoCiclo ? `${numeroNoCiclo}ª` : "—"],
         ["Data e horário", dataHoraBr(inicio)],
         ["Comparecimento", "Sim"],
+        ...(estagiario ? [["Estagiário", estagiario] as [string, string]] : []),
+        ...(supervisor ? [["Supervisor", supervisor] as [string, string]] : []),
       ]}
     />
   );
@@ -376,11 +442,26 @@ export function FormularioEvolucao({
   sessaoId,
   inicio,
   numeroNoCiclo,
+  paciente,
+  estagiario,
+  supervisor,
+  aoRegistrar,
+  aoConflitar,
+  ocultarDadosDaSessao = false,
 }: {
   prontuarioId: string;
   sessaoId: string;
   inicio: string;
   numeroNoCiclo: number | null;
+  paciente?: string;
+  estagiario?: string;
+  supervisor?: string;
+  aoRegistrar?: (resultado: {
+    numeroNoCiclo: number;
+    fechamentoAvaliativo: boolean;
+  }) => void;
+  aoConflitar?: () => void;
+  ocultarDadosDaSessao?: boolean;
 }) {
   const [dados, setDados] = useState<Record<CampoEvolucao, string>>({
     humorAparencia: "",
@@ -397,10 +478,30 @@ export function FormularioEvolucao({
     const resultado = evolucaoSchema.safeParse(dados);
     if (!resultado.success) {
       setErros(errosPorCampo<Evolucao>(resultado.error.issues));
+      focarPrimeiroErro();
       return;
     }
     setErros({});
-    void enviar(`/sessoes/${sessaoId}/evolucoes`, resultado.data);
+    void enviar(
+      `/sessoes/${sessaoId}/evolucoes`,
+      resultado.data,
+      (resposta) => {
+        if (
+          typeof resposta === "object" &&
+          resposta !== null &&
+          "numeroNoCiclo" in resposta &&
+          "fechamentoAvaliativo" in resposta
+        ) {
+          aoRegistrar?.(
+            resposta as {
+              numeroNoCiclo: number;
+              fechamentoAvaliativo: boolean;
+            },
+          );
+        }
+      },
+      aoConflitar,
+    );
   }
 
   return (
@@ -410,24 +511,40 @@ export function FormularioEvolucao({
       className="mt-4 flex flex-col gap-4 rounded-[12px] border border-border bg-muted p-4"
     >
       <h4 className="text-[15px] font-bold text-marca">
-        Registrar evolução · sessão de {dataHoraBr(inicio)}
+        Registro de evolução · sessão de {dataHoraBr(inicio)}
       </h4>
-      <DadosDaSessao numeroNoCiclo={numeroNoCiclo} inicio={inicio} />
+      {!ocultarDadosDaSessao && (
+        <DadosDaSessao
+          numeroNoCiclo={numeroNoCiclo}
+          inicio={inicio}
+          paciente={paciente}
+          estagiario={estagiario}
+          supervisor={supervisor}
+        />
+      )}
       <p className="ui-dica">
         O registro fica vinculado a esta sessão e não pode ser alterado depois
         de salvo.
       </p>
-      {CAMPOS_EVOLUCAO.map(([campo, rotulo]) => (
-        <CampoTexto
-          key={campo}
-          rotulo={rotulo}
-          opcional={campo === "intervencoesEncaminhamentos"}
-          valor={dados[campo]}
-          erro={erros[campo]}
-          aoMudar={(valor) => setDados({ ...dados, [campo]: valor })}
+      {Object.keys(erros).length > 0 && (
+        <Aviso
+          tipo="erro"
+          titulo="A evolução não foi salva. Corrija o campo indicado. O que você já escreveu foi mantido."
         />
-      ))}
+      )}
       {erro && <Aviso tipo="erro" titulo={erro} />}
+      <div className="grid gap-4 min-[1366px]:grid-cols-2">
+        {CAMPOS_EVOLUCAO.map(([campo, rotulo]) => (
+          <CampoTexto
+            key={campo}
+            rotulo={rotulo}
+            opcional={campo === "intervencoesEncaminhamentos"}
+            valor={dados[campo]}
+            erro={erros[campo]}
+            aoMudar={(valor) => setDados({ ...dados, [campo]: valor })}
+          />
+        ))}
+      </div>
       <div className="flex justify-end">
         <Button type="submit" disabled={salvando}>
           {salvando ? "Salvando…" : "Salvar evolução"}

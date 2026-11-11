@@ -1424,6 +1424,8 @@ sequenceDiagram
 
 **Dados de teste:** um prontuário completo (dados iniciais, sessões realizadas, uma falta e evoluções) e um recém-criado; um caso transferido (RF25); a coordenação lendo; um estagiário sem vínculo (403).
 
+**Na implementação (PR do RF27):** a página inclui a barra fixa "Ir para" com foco visível; a lista de sessões tem as colunas Sessão, Situação e Evolução e se adapta a cartões em telas estreitas; as evoluções ficam em seção própria, fechadas por padrão. Dados iniciais mostram queixa e total de seções preenchidas e abrem a leitura completa em página somente leitura. O histórico de responsáveis também começa fechado. Alta e relatório ausentes aparecem como "Sem registro neste ciclo"; correções, complementos, validação, alta e relatório continuam dependentes de RF29, RF30, RF67, RF68 e RF33. A página inclui testes web de prontuário completo e vazio e um fluxo e2e com verificação de acessibilidade e larguras entre 320 e 1920 px.
+
 ---
 
 ### RF66 — Criar e inicializar o prontuário do paciente ([#97](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/issues/97))
@@ -1493,6 +1495,8 @@ sequenceDiagram
 
 **Dados de teste:** um prontuário novo; uma anamnese só com a queixa principal e outra completa; uma seção com 1.001 caracteres; um contrato sem a via guardada; uma segunda anamnese no mesmo prontuário (409); o supervisor tentando registrar (403); um registro antigo, com o texto único.
 
+**Na implementação (PR do RF69):** cada seção numerada tem dica, contador de caracteres e erro associado; o primeiro campo inválido recebe foco e o formulário anuncia no topo que os dados digitados foram mantidos. O supervisor lê anamnese e contrato na página "Dados iniciais · paciente", com trilha de navegação e indicação "Só leitura". O formulário de registro continua no prontuário do estagiário responsável; após `409`, a consulta é invalidada para mostrar o registro existente. Testes web cobrem preenchimento inicial, campos vazios, limite, erros, foco, bloqueio durante envio e conflito.
+
 ---
 
 ## Registro de evolução (CP7)
@@ -1544,6 +1548,8 @@ sequenceDiagram
 **Telas:** formulário de evolução aberto pela ação "Registrar evolução" do prontuário, com os dados da sessão só para leitura e os cinco campos; o aviso de fechamento avaliativo no topo do prontuário e em "Meus casos" do supervisor. Protótipo: [prancha 5-3](prototipos.md#rf28).
 
 **Dados de teste:** uma sessão realizada; sessões agendada, confirmada, cancelada e com falta (422); uma sessão de outro paciente (403); um estagiário com o vínculo revogado (403); o supervisor e a coordenação tentando registrar (403); uma segunda evolução na mesma sessão (409); uma evolução sem técnicas utilizadas; um campo com 1.001 caracteres; um paciente com 9 sessões realizadas que registra a 10ª; uma evolução antiga, com os dois campos.
+
+**Na implementação (PR do RF28):** "Registrar evolução" abre uma página própria com trilha, botão "Cancelar" e os dados completos da sessão; o formulário usa duas colunas em telas largas. Após salvar, a página mostra a confirmação e abre a evolução no prontuário. Se outro envio já tiver gravado a evolução, o `409` invalida a consulta e carrega o registro existente. No prontuário, a tabela de sessões indica o registro, a ausência de aplicação ou a ação permitida; a seção separada de Evoluções mantém cada item recolhido, exceto o recém-salvo. O aviso de fechamento permanece conforme comportamento atual até a FBr definir sua duração. Testes web cobrem os estados do formulário, e o fluxo e2e mede axe e responsividade de 320 a 1920 px.
 
 ---
 

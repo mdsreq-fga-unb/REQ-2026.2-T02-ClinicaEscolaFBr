@@ -1,5 +1,7 @@
 import { randomUUID } from "node:crypto";
+import { eq } from "drizzle-orm";
 import { expect, test } from "@playwright/test";
+import { createDb, prontuarios, sessoesAtendimento } from "@clinica/database";
 import { API, entrar, fecharContextos, semViolacoes } from "./apoio";
 import { EQUIPE } from "./equipe";
 
@@ -12,6 +14,19 @@ import { EQUIPE } from "./equipe";
 const paciente = `Paciente Integração ${Date.now()}`;
 let numero = "";
 let prontuarioId = "";
+
+function hojeEmCuiaba() {
+  const partes = new Intl.DateTimeFormat("en-CA", {
+    timeZone: "America/Cuiaba",
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+  }).formatToParts(new Date());
+  const valor = Object.fromEntries(
+    partes.map(({ type, value }) => [type, value]),
+  );
+  return `${valor.year}-${valor.month}-${valor.day}`;
+}
 
 // Dia útil daqui a algumas semanas, no formato AAAA-MM-DD, para não colidir com
 // sessões de execuções anteriores no mesmo banco.
@@ -149,7 +164,100 @@ test.describe.serial("Integração do Ciclo 3", () => {
     await expect(
       page.getByRole("heading", { name: `Prontuário · ${paciente}` }),
     ).toBeVisible();
-    await expect(page.getByText("A sessão ainda não aconteceu.")).toBeVisible();
+    await expect(
+      page.getByRole("cell", { name: "Não se aplica" }),
+    ).toBeVisible();
+    await semViolacoes(page);
+  });
+
+  test("o estagiário registra anamnese, contrato e evolução pela tela em larguras de 320 a 1920 px (RF27, RF28, RF69, RNF25, RNF27, RNF30, RNF51, RNF52, RNF56, RNF58)", async ({
+    browser,
+  }) => {
+    const page = await entrar(browser, "estagiario");
+    const dbUrl =
+      process.env.DATABASE_URL ??
+      "postgresql://clinica:clinica@localhost:5432/clinica";
+    const host = new URL(dbUrl).hostname;
+    if (!["localhost", "127.0.0.1", "::1", "[::1]"].includes(host)) {
+      throw new Error("Este e2e só altera horários no banco local de teste.");
+    }
+    const db = createDb(dbUrl);
+    const [prontuario] = await db
+      .select({ casoId: prontuarios.casoId })
+      .from(prontuarios)
+      .where(eq(prontuarios.id, prontuarioId));
+    const [sessao] = await db
+      .select({ id: sessoesAtendimento.id })
+      .from(sessoesAtendimento)
+      .where(eq(sessoesAtendimento.casoId, prontuario.casoId))
+      .limit(1);
+    expect(sessao).toBeTruthy();
+    const inicio = new Date("2001-01-01T13:00:00.000Z");
+    await db
+      .update(sessoesAtendimento)
+      .set({
+        inicio,
+        termino: new Date("2001-01-01T13:50:00.000Z"),
+        fimIntervaloAnotacoes: new Date("2001-01-01T14:00:00.000Z"),
+      })
+      .where(eq(sessoesAtendimento.id, sessao.id));
+    await db.$client.end();
+
+    await page.goto(`/prontuarios/${prontuarioId}`);
+    await expect(
+      page.getByRole("heading", { name: `Prontuário · ${paciente}` }),
+    ).toBeVisible();
+    const queixa = page.getByLabel("Queixa principal");
+    await queixa.fill("Queixa fictícia de integração");
+    await semViolacoes(page);
+    await page.getByRole("button", { name: "Salvar anamnese" }).click();
+    await expect(
+      page.getByRole("button", { name: "Salvar anamnese" }),
+    ).toHaveCount(0);
+
+    await page
+      .getByLabel("Data de assinatura do contrato")
+      .fill(hojeEmCuiaba());
+    await page.getByLabel(/A via assinada do contrato está guardada/).check();
+    await semViolacoes(page);
+    await page.getByRole("button", { name: "Salvar contrato" }).click();
+    await expect(
+      page.getByRole("button", { name: "Salvar contrato" }),
+    ).toHaveCount(0);
+
+    await page
+      .getByRole("button", { name: "Marcar sessão como realizada" })
+      .click();
+    const registrar = page.getByRole("link", { name: "Registrar evolução" });
+    await expect(registrar).toBeVisible();
+    await registrar.click();
+    await expect(
+      page.getByRole("heading", { name: "Registro de evolução" }),
+    ).toBeVisible();
+    for (const [rotulo, valor] of [
+      ["Humor e aparência do paciente", "Tranquilo e atento."],
+      ["Conteúdo trabalhado", "Rotina de sono."],
+      ["Técnicas utilizadas", "Escuta qualificada."],
+      ["Plano para a próxima sessão", "Retomar o tema."],
+    ])
+      await page.getByLabel(new RegExp(rotulo)).fill(valor);
+
+    for (const largura of [320, 360, 375, 768, 1024, 1366, 1920]) {
+      await page.setViewportSize({ width: largura, height: 1000 });
+      expect(
+        await page.evaluate(() => document.documentElement.scrollWidth),
+        `rolagem horizontal em ${largura}px`,
+      ).toBeLessThanOrEqual(largura);
+      await semViolacoes(page);
+    }
+    await page.getByRole("button", { name: "Salvar evolução" }).click();
+    await expect(
+      page
+        .getByRole("status")
+        .filter({ hasText: /Evolução registrada\. A evolução da sessão nº/ }),
+    ).toBeVisible();
+    await expect(page.getByText("Retomar o tema.")).toBeVisible();
+    await expect(page.locator("details[open]")).toHaveCount(1);
     await semViolacoes(page);
   });
 
@@ -165,7 +273,10 @@ test.describe.serial("Integração do Ciclo 3", () => {
       coordenacao.getByText(/Seu acesso fica registrado/),
     ).toBeVisible();
     await expect(
-      coordenacao.getByRole("button", { name: "Salvar dados iniciais" }),
+      coordenacao.getByRole("button", { name: "Salvar anamnese" }),
+    ).toHaveCount(0);
+    await expect(
+      coordenacao.getByRole("button", { name: "Salvar contrato" }),
     ).toHaveCount(0);
 
     const secretaria = await entrar(browser, "secretaria");

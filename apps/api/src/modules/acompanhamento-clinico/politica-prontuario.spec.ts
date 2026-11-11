@@ -141,7 +141,7 @@ describe('Restrição de acesso ao prontuário (RF55)', () => {
 
   const acessos = () => db.select().from(acessosProntuario);
 
-  it('o estagiário responsável vê o conteúdo clínico, e o acesso é registrado', async () => {
+  it('o estagiário responsável vê o conteúdo clínico, e o acesso é registrado (RF27, RNF25, RNF51, RNF52)', async () => {
     const prontuario = await servico.consultar(
       prontuarioId,
       pessoas.estagiarioA,
@@ -163,13 +163,13 @@ describe('Restrição de acesso ao prontuário (RF55)', () => {
     ]);
   });
 
-  it('o supervisor do caso vê o conteúdo clínico', async () => {
+  it('o supervisor do caso vê o conteúdo clínico (RF27, RNF25, RNF51, RNF52)', async () => {
     await expect(
       servico.consultar(prontuarioId, pessoas.supervisor),
     ).resolves.toMatchObject({ id: prontuarioId });
   });
 
-  it('a coordenação vê o conteúdo clínico de qualquer prontuário, e o acesso é registrado (DF32)', async () => {
+  it('a coordenação vê o conteúdo clínico de qualquer prontuário, e o acesso é registrado (DF32) (RF27, RNF25, RNF51, RNF52)', async () => {
     const prontuario = await servico.consultar(
       prontuarioId,
       pessoas.coordenacao,
@@ -187,7 +187,7 @@ describe('Restrição de acesso ao prontuário (RF55)', () => {
     ]);
   });
 
-  it('a coordenação não tem acesso de escrita ao prontuário', async () => {
+  it('a coordenação não tem acesso de escrita ao prontuário (RF27, RNF25, RNF51, RNF52)', async () => {
     await expect(
       politica.exigirAcesso(
         pessoas.coordenacao,
@@ -201,7 +201,7 @@ describe('Restrição de acesso ao prontuário (RF55)', () => {
   });
 
   it.each(['estagiarioB', 'outroSupervisor', 'secretaria'])(
-    '%s tem o acesso negado na API, e a tentativa é registrada (RNF25)',
+    '%s tem o acesso negado na API, e a tentativa é registrada (RNF25) (RF27, RNF25, RNF51, RNF52)',
     async (quem) => {
       await expect(
         servico.consultar(prontuarioId, pessoas[quem]),
@@ -216,7 +216,7 @@ describe('Restrição de acesso ao prontuário (RF55)', () => {
     },
   );
 
-  it('prontuário inexistente recebe a mesma resposta negada, sem revelar que não existe (RNF25)', async () => {
+  it('prontuário inexistente recebe a mesma resposta negada, sem revelar que não existe (RNF25) (RF27, RNF25, RNF51, RNF52)', async () => {
     await expect(
       servico.consultar(
         '00000000-0000-4000-8000-000000000000',
@@ -227,7 +227,7 @@ describe('Restrição de acesso ao prontuário (RF55)', () => {
     expect(registro).toMatchObject({ permitido: false, prontuarioId: null });
   });
 
-  it('a negação continua depois que o vínculo do estagiário deixa de ser vigente', async () => {
+  it('a negação continua depois que o vínculo do estagiário deixa de ser vigente (RF27, RNF25, RNF51, RNF52)', async () => {
     await db
       .update(vinculosEstagiario)
       .set({ vigente: false })
@@ -237,7 +237,7 @@ describe('Restrição de acesso ao prontuário (RF55)', () => {
     ).rejects.toMatchObject({ status: 403 });
   });
 
-  it('os dados administrativos não trazem conteúdo clínico (RNF25)', async () => {
+  it('os dados administrativos não trazem conteúdo clínico (RNF25) (RF27, RNF25, RNF51, RNF52)', async () => {
     const dados = await servico.dadosAdministrativos(
       casoId,
       pessoas.secretaria,
@@ -261,7 +261,7 @@ describe('Restrição de acesso ao prontuário (RF55)', () => {
     }
   });
 
-  it('só a coordenação recebe o id do prontuário nos dados administrativos', async () => {
+  it('só a coordenação recebe o id do prontuário nos dados administrativos (RF27, RNF25, RNF51, RNF52)', async () => {
     await expect(
       servico.dadosAdministrativos(casoId, pessoas.coordenacao),
     ).resolves.toMatchObject({ prontuarioId });
@@ -294,7 +294,7 @@ describe('Restrição de acesso ao prontuário (RF55)', () => {
         .where(eq(prontuarios.id, prontuarioId));
     });
 
-    it('o formulário vem com a queixa da inscrição só para o estagiário responsável e só enquanto a anamnese não existe', async () => {
+    it('o formulário vem com a queixa da inscrição só para o estagiário responsável e só enquanto a anamnese não existe (RF69, RNF25, RNF51, RNF52)', async () => {
       const doEstagiario = await servico.consultar(
         prontuarioId,
         pessoas.estagiarioA,
@@ -319,7 +319,7 @@ describe('Restrição de acesso ao prontuário (RF55)', () => {
       expect(depois.dadosIniciais.queixaDaInscricao).toBeNull();
     });
 
-    it('a anamnese só com a queixa principal é salva cifrada, com autor e data/hora, e as outras seções ficam em branco', async () => {
+    it('a anamnese só com a queixa principal é salva cifrada, com autor e data/hora, e as outras seções ficam em branco (RF69, RNF25, RNF51, RNF52)', async () => {
       await expect(
         servico.registrarAnamnese(
           prontuarioId,
@@ -347,7 +347,7 @@ describe('Restrição de acesso ao prontuário (RF55)', () => {
       expect(dadosIniciais.contrato).toBeNull();
     });
 
-    it('a anamnese completa guarda as seis seções', async () => {
+    it('a anamnese completa guarda as seis seções (RF69, RNF25, RNF51, RNF52)', async () => {
       const completa = {
         queixaPrincipal: 'Ansiedade.',
         historiaProblemaAtual: 'Começou há um ano.',
@@ -368,7 +368,7 @@ describe('Restrição de acesso ao prontuário (RF55)', () => {
       expect(dadosIniciais.anamnese).toMatchObject(completa);
     });
 
-    it('a segunda anamnese no mesmo prontuário é recusada com 409', async () => {
+    it('a segunda anamnese no mesmo prontuário é recusada com 409 (RF69, RNF25, RNF51, RNF52)', async () => {
       await servico.registrarAnamnese(
         prontuarioId,
         anamneseSo('Primeira.'),
@@ -388,7 +388,7 @@ describe('Restrição de acesso ao prontuário (RF55)', () => {
       expect(dadosIniciais.anamnese?.queixaPrincipal).toBe('Primeira.');
     });
 
-    it('o contrato é salvo à parte, com autor e data/hora, e o segundo é recusado com 409', async () => {
+    it('o contrato é salvo à parte, com autor e data/hora, e o segundo é recusado com 409 (RF69, RNF25, RNF51, RNF52)', async () => {
       await expect(
         servico.registrarContrato(prontuarioId, contrato, pessoas.estagiarioA),
       ).resolves.toEqual({ registrado: true });
@@ -414,7 +414,7 @@ describe('Restrição de acesso ao prontuário (RF55)', () => {
     });
 
     it.each(['supervisor', 'coordenacao', 'secretaria', 'estagiarioB'])(
-      '%s não registra anamnese nem contrato (403), e a tentativa fica registrada',
+      '%s não registra anamnese nem contrato (403), e a tentativa fica registrada (RF69, RNF25, RNF51, RNF52)',
       async (quem) => {
         await expect(
           servico.registrarAnamnese(
@@ -441,7 +441,7 @@ describe('Restrição de acesso ao prontuário (RF55)', () => {
       },
     );
 
-    it('o registro antigo, de texto único, aparece como a queixa principal, com o autor dos dados iniciais', async () => {
+    it('o registro antigo, de texto único, aparece como a queixa principal, com o autor dos dados iniciais (RF69, RNF25, RNF51, RNF52)', async () => {
       await db
         .update(prontuarios)
         .set({
@@ -511,7 +511,7 @@ describe('Restrição de acesso ao prontuário (RF55)', () => {
       horas = 0;
     });
 
-    it('a evolução válida fica cifrada, ligada à sessão, ao prontuário e ao ciclo, com autor e data/hora, e o original é imutável', async () => {
+    it('a evolução válida fica cifrada, ligada à sessão, ao prontuário e ao ciclo, com autor e data/hora, e o original é imutável (RF28, RNF25, RNF27, RNF30)', async () => {
       const agendada = await sessao('agendada');
       await servico.marcarSessaoRealizada(
         prontuarioId,
@@ -556,7 +556,7 @@ describe('Restrição de acesso ao prontuário (RF55)', () => {
       ).rejects.toThrow();
     });
 
-    it('a segunda evolução da mesma sessão é recusada com 409', async () => {
+    it('a segunda evolução da mesma sessão é recusada com 409 (RF28, RNF25, RNF27, RNF30)', async () => {
       const realizada = await sessao('realizada');
       await registrar(realizada);
       await expect(registrar(realizada)).rejects.toMatchObject({
@@ -565,7 +565,7 @@ describe('Restrição de acesso ao prontuário (RF55)', () => {
     });
 
     it.each(['agendada', 'confirmada', 'cancelada', 'falta_paciente'] as const)(
-      'sessão %s não aceita evolução (422)',
+      'sessão %s não aceita evolução (422) (RF28, RNF25, RNF27, RNF30)',
       async (status) => {
         const naoRealizada = await sessao(status);
         await expect(registrar(naoRealizada)).rejects.toMatchObject({
@@ -575,7 +575,7 @@ describe('Restrição de acesso ao prontuário (RF55)', () => {
       },
     );
 
-    it('sessão de outro paciente não aceita evolução por este prontuário (403)', async () => {
+    it('sessão de outro paciente não aceita evolução por este prontuário (403) (RF28, RNF25, RNF27, RNF30)', async () => {
       const [outraInscricao] = await db
         .insert(inscricoes)
         .values({
@@ -603,7 +603,7 @@ describe('Restrição de acesso ao prontuário (RF55)', () => {
       await expect(registrar(deOutro)).rejects.toMatchObject({ status: 403 });
     });
 
-    it('estagiário com o vínculo revogado não registra evolução (403)', async () => {
+    it('estagiário com o vínculo revogado não registra evolução (403) (RF28, RNF25, RNF27, RNF30)', async () => {
       const realizada = await sessao('realizada');
       await db
         .update(vinculosEstagiario)
@@ -615,7 +615,7 @@ describe('Restrição de acesso ao prontuário (RF55)', () => {
     });
 
     it.each(['supervisor', 'coordenacao', 'estagiarioB'])(
-      '%s não registra evolução (403)',
+      '%s não registra evolução (403) (RF28, RNF25, RNF27, RNF30)',
       async (quem) => {
         const realizada = await sessao('realizada');
         await expect(registrar(realizada, pessoas[quem])).rejects.toMatchObject(
@@ -624,7 +624,7 @@ describe('Restrição de acesso ao prontuário (RF55)', () => {
       },
     );
 
-    it('o aviso de fechamento avaliativo vem na 10ª e na 20ª sessão realizadas do ciclo, e não na 9ª nem na 11ª', async () => {
+    it('o aviso de fechamento avaliativo vem na 10ª e na 20ª sessão realizadas do ciclo, e não na 9ª nem na 11ª (RF28, RNF25, RNF27, RNF30)', async () => {
       // Criadas da mais recente para a mais antiga: a última da lista é a 1ª do ciclo.
       const ids: string[] = [];
       for (let i = 0; i < 21; i++) ids.unshift(await sessao('realizada'));
@@ -644,7 +644,7 @@ describe('Restrição de acesso ao prontuário (RF55)', () => {
       });
     });
 
-    it('a evolução registrada fora de ordem usa o número da própria sessão, e não o total no momento do registro', async () => {
+    it('a evolução registrada fora de ordem usa o número da própria sessão, e não o total no momento do registro (RF28, RNF25, RNF27, RNF30)', async () => {
       const ids: string[] = [];
       for (let i = 0; i < 10; i++) ids.unshift(await sessao('realizada'));
       // A 10ª é registrada primeiro: o aviso vem com ela.
@@ -663,7 +663,7 @@ describe('Restrição de acesso ao prontuário (RF55)', () => {
       expect(consulta.fechamentoAvaliativoPendente).toBe(true);
     });
 
-    it('a evolução antiga, com queixa e planejamento, continua legível com os campos antigos', async () => {
+    it('a evolução antiga, com queixa e planejamento, continua legível com os campos antigos (RF28, RNF25, RNF27, RNF30)', async () => {
       const realizada = await sessao('realizada');
       await db.insert(evolucoes).values({
         prontuarioId,
@@ -683,7 +683,7 @@ describe('Restrição de acesso ao prontuário (RF55)', () => {
       });
     });
 
-    it('o banco recusa evolução sem a ficha completa, nem a antiga nem a da DF38', async () => {
+    it('o banco recusa evolução sem a ficha completa, nem a antiga nem a da DF38 (RF28, RNF25, RNF27, RNF30)', async () => {
       const realizada = await sessao('realizada');
       await expect(
         db.insert(evolucoes).values({
@@ -696,7 +696,7 @@ describe('Restrição de acesso ao prontuário (RF55)', () => {
     });
   });
 
-  it('o registro de acessos não pode ser alterado nem apagado (RNF52)', async () => {
+  it('o registro de acessos não pode ser alterado nem apagado (RF27, RF28, RF69, RNF52)', async () => {
     await servico.consultar(prontuarioId, pessoas.estagiarioA);
     await expect(
       db.update(acessosProntuario).set({ permitido: false }),
