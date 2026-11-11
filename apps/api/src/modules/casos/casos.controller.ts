@@ -6,11 +6,14 @@ import {
   Param,
   ParseUUIDPipe,
   Post,
+  Query,
   UseGuards,
 } from '@nestjs/common';
 import {
+  buscaListaPacientesSchema,
   distribuicaoSchema,
   vinculoEstagiarioSchema,
+  type BuscaListaPacientes,
   type Distribuicao,
   type VinculoEstagiario,
 } from '@clinica/shared';
@@ -80,5 +83,29 @@ export class CasosController {
     @UsuarioAtual() autor: UsuarioAutenticado,
   ) {
     return this.casos.vincularEstagiario(id, dados.estagiarioId, autor);
+  }
+
+  // RF22: lista de Pacientes, com os responsáveis de cada caso. Só a secretaria e a
+  // coordenação; nada de dado clínico (RNF17), e sem cache por ter nome de paciente.
+  @Get('pacientes')
+  @Perfis('secretaria', 'coordenacao')
+  @Header('Cache-Control', 'no-store')
+  pacientes(
+    @Query(new ZodValidationPipe(buscaListaPacientesSchema))
+    filtro: BuscaListaPacientes,
+    @UsuarioAtual() usuario: UsuarioAutenticado,
+  ) {
+    return this.casos.listaDePacientes(filtro.busca || undefined, usuario);
+  }
+
+  // RF22: responsáveis pelo caso. Sem @Perfis: o serviço decide, porque o
+  // estagiário e o supervisor só veem os casos em que são responsáveis.
+  @Get('casos/:id/responsaveis')
+  @Header('Cache-Control', 'no-store')
+  responsaveis(
+    @Param('id', ParseUUIDPipe) id: string,
+    @UsuarioAtual() usuario: UsuarioAutenticado,
+  ) {
+    return this.casos.responsaveis(id, usuario);
   }
 }

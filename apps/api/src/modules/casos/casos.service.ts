@@ -38,10 +38,11 @@ import {
   type CasoJaDistribuido,
   type Cor,
   type EstagiarioDisponivel,
-  type PacienteDaLista,
+  type ListaDePacientes,
   type ResponsaveisDoCaso,
   type ResultadoDistribuicao,
   type ResultadoVinculo,
+  type SituacaoCaso,
   type SupervisorDisponivel,
 } from '@clinica/shared';
 import type { UsuarioAutenticado } from '../../auth/usuario-autenticado';
@@ -601,12 +602,36 @@ export class CasosService {
       .leftJoin(estagiario, eq(estagiario.id, vinculosEstagiario.estagiarioId));
   }
 
+  // Nome, número só para quem pode vê-lo, responsáveis e situação (RNF17).
+  private paraResposta(
+    l: {
+      casoId: string;
+      nome: string;
+      numero: string;
+      situacao: SituacaoCaso;
+      supervisor: string | null;
+      estagiario: string | null;
+    },
+    usuario: UsuarioAutenticado,
+  ): ResponsaveisDoCaso {
+    return {
+      casoId: l.casoId,
+      nome: l.nome,
+      ...(usuario.perfil === 'secretaria' ? {} : { numero: l.numero }),
+      situacao: l.situacao,
+      supervisor: l.supervisor ?? null,
+      estagiario: l.estagiario ?? null,
+    };
+  }
+
   // RF22: lista de Pacientes da secretaria e da coordenação, com os responsáveis
-  // de cada caso. O número da inscrição vem só para a coordenação (RNF17).
+  // de cada caso. O número da inscrição vem só para a coordenação (RNF17). Busca um
+  // a mais que o limite para saber se a lista foi cortada, sem contar a tabela
+  // inteira (RNF21).
   async listaDePacientes(
     busca: string | undefined,
     usuario: UsuarioAutenticado,
-  ): Promise<PacienteDaLista[]> {
+  ): Promise<ListaDePacientes> {
     const linhas = await this.consultaDeResponsaveis()
       .where(
         busca
@@ -614,15 +639,13 @@ export class CasosService {
           : undefined,
       )
       .orderBy(asc(inscricoes.nomeCompleto), asc(casos.id))
-      .limit(LIMITE_LISTA_PACIENTES);
-    return linhas.map((l) => ({
-      casoId: l.casoId,
-      nome: l.nome,
-      ...(usuario.perfil === 'coordenacao' ? { numero: l.numero } : {}),
-      situacao: l.situacao,
-      supervisor: l.supervisor ?? null,
-      estagiario: l.estagiario ?? null,
-    }));
+      .limit(LIMITE_LISTA_PACIENTES + 1);
+    return {
+      pacientes: linhas
+        .slice(0, LIMITE_LISTA_PACIENTES)
+        .map((l) => this.paraResposta(l, usuario)),
+      cortada: linhas.length > LIMITE_LISTA_PACIENTES,
+    };
   }
 
   // RF22: secretaria e coordenação consultam qualquer caso; o estagiário e o
@@ -649,11 +672,6 @@ export class CasosService {
     if (!permitido) {
       throw new ForbiddenException('Você não tem acesso a este caso.');
     }
-    return {
-      casoId: linha.casoId,
-      situacao: linha.situacao,
-      supervisor: linha.supervisor ?? null,
-      estagiario: linha.estagiario ?? null,
-    };
+    return this.paraResposta(linha, usuario);
   }
 }

@@ -1,82 +1,108 @@
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { cleanup, render, screen } from "@testing-library/react";
+import { cleanup, render, screen, within } from "@testing-library/react";
 import { afterEach, describe, expect, it, vi } from "vitest";
+import type { Perfil, ResponsaveisDoCaso } from "@clinica/shared";
 import { QuadroResponsaveis } from "./responsaveis";
 
-function simularApi(status: number, corpo: unknown) {
-  vi.stubGlobal(
-    "fetch",
-    vi.fn(
-      async () =>
-        new Response(JSON.stringify(corpo), {
-          status,
-          headers: { "Content-Type": "application/json" },
-        }),
-    ),
+const COMPLETO: ResponsaveisDoCaso = {
+  casoId: "c1",
+  nome: "Mariana Alves Toledo",
+  situacao: "em_atendimento",
+  supervisor: "Ricardo Menezes",
+  estagiario: "Ana Beatriz Costa",
+};
+const SEM_ESTAGIARIO: ResponsaveisDoCaso = {
+  ...COMPLETO,
+  nome: "Roberto Carvalho",
+  numero: "2026-00377",
+  situacao: "aguardando_vinculo",
+  supervisor: "Patrícia Nogueira",
+  estagiario: null,
+};
+const SEM_NINGUEM: ResponsaveisDoCaso = {
+  ...COMPLETO,
+  nome: "Luana Martins",
+  numero: "2026-00455",
+  situacao: "aguardando_distribuicao",
+  supervisor: null,
+  estagiario: null,
+};
+
+function abrir(
+  responsaveis: ResponsaveisDoCaso,
+  perfil: Perfil,
+  aoVincular?: () => void,
+) {
+  render(
+    <QuadroResponsaveis
+      responsaveis={responsaveis}
+      perfil={perfil}
+      aoVincular={aoVincular}
+    />,
   );
+  return screen.getByRole("region", { name: "Responsáveis pelo caso" });
 }
 
-function abrir() {
-  const client = new QueryClient({
-    defaultOptions: { queries: { retry: false } },
-  });
-  render(
-    <QueryClientProvider client={client}>
-      <QuadroResponsaveis casoId="c1" />
-    </QueryClientProvider>,
-  );
-}
+// Rótulos e valores dos dois cartões, na ordem da prancha 2-3.
+const cartoes = (quadro: HTMLElement) =>
+  Array.from(quadro.querySelectorAll("dl")).map((dl) => [
+    dl.querySelector("dt")?.textContent,
+    dl.querySelector("dd")?.textContent,
+  ]);
 
 describe("Quadro de responsáveis da ficha (RF22)", () => {
-  afterEach(() => {
-    cleanup();
-    vi.unstubAllGlobals();
+  afterEach(cleanup);
+
+  it("mostra o estagiário e o supervisor responsáveis, nessa ordem, sem dado clínico (RF22, RNF17)", () => {
+    const quadro = abrir(COMPLETO, "secretaria");
+    expect(cartoes(quadro)).toEqual([
+      ["Estagiário responsável", "Ana Beatriz Costa"],
+      ["Supervisor responsável", "Ricardo Menezes"],
+    ]);
+    expect(quadro.textContent).not.toMatch(/prioridade|queixa|prontu/i);
+    // Com os dois responsáveis, não há orientação nem ação.
+    expect(within(quadro).queryByRole("button")).toBeNull();
+    expect(within(quadro).queryByRole("link")).toBeNull();
   });
 
-  it("mostra o supervisor e o estagiário responsáveis (RF22)", async () => {
-    simularApi(200, {
-      casoId: "c1",
-      situacao: "em_atendimento",
-      supervisor: "Carla Mendes Souza",
-      estagiario: "Ana Beatriz Costa",
-    });
-    abrir();
-    expect(await screen.findByText("Carla Mendes Souza")).toBeTruthy();
-    expect(screen.getByText("Ana Beatriz Costa")).toBeTruthy();
-    expect(screen.queryByText("Pendente de distribuição")).toBeNull();
-  });
-
-  it("caso sem estagiário mostra só esse campo como pendente de distribuição (RF22)", async () => {
-    simularApi(200, {
-      casoId: "c1",
-      situacao: "aguardando_vinculo",
-      supervisor: "Carla Mendes Souza",
-      estagiario: null,
-    });
-    abrir();
-    expect(await screen.findByText("Carla Mendes Souza")).toBeTruthy();
-    expect(screen.getAllByText("Pendente de distribuição")).toHaveLength(1);
-  });
-
-  it("caso sem supervisor nem estagiário mostra os dois como pendentes de distribuição (RF22)", async () => {
-    simularApi(200, {
-      casoId: "c1",
-      situacao: "aguardando_distribuicao",
-      supervisor: null,
-      estagiario: null,
-    });
-    abrir();
-    expect(await screen.findAllByText("Pendente de distribuição")).toHaveLength(
-      2,
-    );
-  });
-
-  it("quando a API nega o acesso, mostra o erro e nenhum nome (RF22)", async () => {
-    simularApi(403, { message: "Você não tem acesso a este caso." });
-    abrir();
+  it("caso sem estagiário: o selo 'Aguardando vínculo de estagiário' no lugar do nome, e o supervisor vincula pelo quadro (RF22, RF21)", () => {
+    const aoVincular = vi.fn();
+    const quadro = abrir(SEM_ESTAGIARIO, "supervisor", aoVincular);
+    expect(cartoes(quadro)).toEqual([
+      ["Estagiário responsável", "Aguardando vínculo de estagiário"],
+      ["Supervisor responsável", "Patrícia Nogueira"],
+    ]);
     expect(
-      await screen.findByText("Não foi possível carregar os responsáveis."),
+      within(quadro).getByText(
+        "O caso fica aguardando o vínculo até você vincular um estagiário.",
+      ),
     ).toBeTruthy();
-    expect(screen.queryByText("Supervisor")).toBeNull();
+    within(quadro).getByRole("button", { name: "Vincular estagiário" }).click();
+    expect(aoVincular).toHaveBeenCalledOnce();
+  });
+
+  it("caso sem estagiário, para a secretaria: só o selo, sem a ação do supervisor (RF22, RNF16)", () => {
+    const quadro = abrir(SEM_ESTAGIARIO, "secretaria");
+    expect(
+      within(quadro).getByText("Aguardando vínculo de estagiário"),
+    ).toBeTruthy();
+    expect(within(quadro).queryByRole("button")).toBeNull();
+  });
+
+  it("caso sem supervisor: os dois cartões com 'Pendente de distribuição', e a coordenação vai à distribuição (RF22)", () => {
+    const quadro = abrir(SEM_NINGUEM, "coordenacao");
+    expect(cartoes(quadro)).toEqual([
+      ["Estagiário responsável", "Pendente de distribuição"],
+      ["Supervisor responsável", "Pendente de distribuição"],
+    ]);
+    expect(
+      within(quadro).getByText(
+        "O caso ainda não foi distribuído a um supervisor.",
+      ),
+    ).toBeTruthy();
+    expect(
+      within(quadro)
+        .getByRole("link", { name: "Ir para Distribuição de casos" })
+        .getAttribute("href"),
+    ).toBe("/distribuicao");
   });
 });

@@ -10,7 +10,7 @@ import {
   vinculosEstagiario,
   type Db,
 } from '@clinica/database';
-import type { SituacaoCaso } from '@clinica/shared';
+import { LIMITE_LISTA_PACIENTES, type SituacaoCaso } from '@clinica/shared';
 import { AuditoriaModule } from '../../auditoria/auditoria.module';
 import type { UsuarioAutenticado } from '../../auth/usuario-autenticado';
 import { cifrar } from '../../common/criptografia';
@@ -167,15 +167,35 @@ describe('Consulta de responsáveis pelo caso (RF22)', () => {
       for (const quem of ['secretaria', 'coordenacao', 'ana', 'carla']) {
         const r = await responsaveis(casoId, quem);
         expect([quem, r.status]).toEqual([quem, 200]);
-        // Só estes campos: nada de queixa, prioridade, número ou prontuário.
+        // Só estes campos: nada de queixa, prioridade ou prontuário. O número da
+        // inscrição não vai para a secretaria, como na lista.
         expect(r.body).toEqual({
           casoId,
+          nome: 'Mariana Alves Toledo',
+          ...(quem === 'secretaria'
+            ? {}
+            : { numero: expect.stringMatching(/^2026-\d{5}$/) }),
           situacao: 'em_atendimento',
           supervisor: 'Carla Mendes Souza',
           estagiario: 'Ana Beatriz Costa',
         });
-        expect(JSON.stringify(r.body)).not.toMatch(/sigilos|2026-|prontuario/i);
+        expect(JSON.stringify(r.body)).not.toMatch(
+          /sigilos|prontuario|prioridade/i,
+        );
+        if (quem === 'secretaria') {
+          expect(JSON.stringify(r.body)).not.toMatch(/2026-/);
+        }
       }
+    });
+
+    it('a resposta não fica em cache (RF22, RNF17)', async () => {
+      const casoId = await criarCaso('Mariana Alves Toledo', {});
+      expect(
+        (await responsaveis(casoId, 'secretaria')).headers['cache-control'],
+      ).toBe('no-store');
+      expect((await lista('secretaria')).headers['cache-control']).toBe(
+        'no-store',
+      );
     });
 
     it('caso sem estagiário vem com o estagiário nulo, e sem os dois vem com ambos nulos (RF22)', async () => {
@@ -186,19 +206,22 @@ describe('Consulta de responsáveis pelo caso (RF22)', () => {
       const semNinguem = await criarCaso('Paulo Nunes', {});
       expect((await responsaveis(semEstagiario, 'secretaria')).body).toEqual({
         casoId: semEstagiario,
+        nome: 'Rafael Gomes',
         situacao: 'aguardando_vinculo',
         supervisor: 'Carla Mendes Souza',
         estagiario: null,
       });
       expect((await responsaveis(semNinguem, 'coordenacao')).body).toEqual({
         casoId: semNinguem,
+        nome: 'Paulo Nunes',
+        numero: expect.stringMatching(/^2026-\d{5}$/),
         situacao: 'aguardando_distribuicao',
         supervisor: null,
         estagiario: null,
       });
     });
 
-    it('o vínculo e a atribuição encerrados não contam como responsáveis (RF22)', async () => {
+    it('o vínculo e a atribuição encerrados não contam como responsáveis, e quem saiu perde a consulta (RF22, RNF17)', async () => {
       const casoId = await criarCaso('Ex Responsáveis', {
         supervisor: 'carla',
         estagiario: 'ana',
@@ -213,7 +236,7 @@ describe('Consulta de responsáveis pelo caso (RF22)', () => {
       expect((await responsaveis(casoId, 'carla')).status).toBe(403);
     });
 
-    it('estagiário e supervisor sem vínculo com o caso têm o acesso negado, sem dado (RF22, RNF16)', async () => {
+    it('estagiário e supervisor sem vínculo com o caso têm o acesso negado, sem dado (RF22, RNF16, RNF17)', async () => {
       const casoId = await criarCaso('Mariana Alves Toledo', {
         supervisor: 'carla',
         estagiario: 'ana',
@@ -226,7 +249,7 @@ describe('Consulta de responsáveis pelo caso (RF22)', () => {
       }
     });
 
-    it('caso inexistente: 404 para a secretaria e a coordenação, e o mesmo 403 do negado para os demais (RNF25)', async () => {
+    it('caso inexistente: 404 para a secretaria e a coordenação, e o mesmo 403 do negado para os demais (RF22, RNF17, RNF25)', async () => {
       const inexistente = '8f14e45f-ceea-467f-a0e6-0a8e3b3c0f10';
       expect((await responsaveis(inexistente, 'secretaria')).status).toBe(404);
       expect((await responsaveis(inexistente, 'coordenacao')).status).toBe(404);
@@ -242,7 +265,7 @@ describe('Consulta de responsáveis pelo caso (RF22)', () => {
       expect(naoExiste.body).toEqual(negado.body);
     });
 
-    it('sem sessão, a resposta é 401, e o id inválido é recusado (RF22)', async () => {
+    it('sem sessão, a resposta é 401, e o id inválido é recusado (RF22, RNF17)', async () => {
       const casoId = await criarCaso('Mariana', {});
       expect((await http().get(`/casos/${casoId}/responsaveis`)).status).toBe(
         401,
@@ -265,13 +288,15 @@ describe('Consulta de responsáveis pelo caso (RF22)', () => {
       await criarCaso('Paulo Nunes', {});
       const r = await lista('secretaria');
       expect(r.status).toBe(200);
-      expect(r.body).toHaveLength(3);
-      expect(r.body.map((p: { nome: string }) => p.nome)).toEqual([
+      expect(r.body.cortada).toBe(false);
+      const pacientes = r.body.pacientes;
+      expect(pacientes).toHaveLength(3);
+      expect(pacientes.map((p: { nome: string }) => p.nome)).toEqual([
         'Mariana Alves Toledo',
         'Paulo Nunes',
         'Rafael Gomes',
       ]);
-      for (const paciente of r.body) {
+      for (const paciente of pacientes) {
         expect(Object.keys(paciente).sort()).toEqual([
           'casoId',
           'estagiario',
@@ -281,12 +306,15 @@ describe('Consulta de responsáveis pelo caso (RF22)', () => {
         ]);
       }
       expect(JSON.stringify(r.body)).not.toMatch(/sigilos|2026-/);
-      expect(r.body[0]).toMatchObject({
+      expect(pacientes[0]).toMatchObject({
         supervisor: 'Carla Mendes Souza',
         estagiario: 'Ana Beatriz Costa',
       });
-      expect(r.body[1]).toMatchObject({ supervisor: null, estagiario: null });
-      expect(r.body[2]).toMatchObject({
+      expect(pacientes[1]).toMatchObject({
+        supervisor: null,
+        estagiario: null,
+      });
+      expect(pacientes[2]).toMatchObject({
         supervisor: 'Carla Mendes Souza',
         estagiario: null,
       });
@@ -300,8 +328,8 @@ describe('Consulta de responsáveis pelo caso (RF22)', () => {
       });
       const r = await lista('coordenacao');
       expect(r.status).toBe(200);
-      expect(r.body[0].numero).toMatch(/^2026-\d{5}$/);
-      expect(Object.keys(r.body[0]).sort()).toEqual([
+      expect(r.body.pacientes[0].numero).toMatch(/^2026-\d{5}$/);
+      expect(Object.keys(r.body.pacientes[0]).sort()).toEqual([
         'casoId',
         'estagiario',
         'nome',
@@ -317,7 +345,7 @@ describe('Consulta de responsáveis pelo caso (RF22)', () => {
       await criarCaso('Marcos Pereira', {});
       await criarCaso('Paulo Nunes', {});
       const nomes = async (busca: string) =>
-        (await lista('secretaria', busca)).body.map(
+        (await lista('secretaria', busca)).body.pacientes.map(
           (p: { nome: string }) => p.nome,
         );
       expect(await nomes('mar')).toEqual([
@@ -327,15 +355,45 @@ describe('Consulta de responsáveis pelo caso (RF22)', () => {
       expect(await nomes('%')).toEqual([]);
       expect(await nomes('_')).toEqual([]);
       expect(await nomes('zzz')).toEqual([]);
+      // Busca longa demais é recusada pela validação.
+      expect((await lista('secretaria', 'a'.repeat(121))).status).toBe(400);
     });
 
-    it('sem pacientes, a lista vem vazia (RF22)', async () => {
+    it('sem pacientes, a lista vem vazia (RF22, RNF17)', async () => {
       const r = await lista('secretaria');
       expect(r.status).toBe(200);
-      expect(r.body).toEqual([]);
+      expect(r.body).toEqual({ pacientes: [], cortada: false });
     });
 
-    it('estagiário e supervisor não acessam a lista de Pacientes (RF22, RNF16)', async () => {
+    it(`com mais de ${LIMITE_LISTA_PACIENTES} pacientes, a lista traz só os primeiros e avisa que foi cortada (RF22, RNF21)`, async () => {
+      for (let i = 0; i <= LIMITE_LISTA_PACIENTES; i += 1) {
+        await criarCaso(`Paciente ${String(i).padStart(3, '0')}`, {});
+      }
+      const inicio = performance.now();
+      const r = await lista('secretaria');
+      const duracao = performance.now() - inicio;
+      expect(r.status).toBe(200);
+      expect(r.body.cortada).toBe(true);
+      expect(r.body.pacientes).toHaveLength(LIMITE_LISTA_PACIENTES);
+      // A busca pelo nome encontra quem ficou de fora.
+      const fora = await lista(
+        'secretaria',
+        `Paciente ${LIMITE_LISTA_PACIENTES}`,
+      );
+      expect(fora.body).toEqual({
+        pacientes: [
+          expect.objectContaining({
+            nome: `Paciente ${LIMITE_LISTA_PACIENTES}`,
+          }),
+        ],
+        cortada: false,
+      });
+      // RNF21: a lista cheia responde dentro dos 3 s (aqui, uma requisição só; a
+      // carga de 30 usuários fica no teste de carga).
+      expect(duracao).toBeLessThan(3000);
+    }, 60_000);
+
+    it('estagiário e supervisor não acessam a lista de Pacientes (RF22, RNF16, RNF17)', async () => {
       await criarCaso('Mariana Alves Toledo', {
         supervisor: 'carla',
         estagiario: 'ana',
