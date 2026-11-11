@@ -39,6 +39,7 @@ import {
   DialogoTransferir,
 } from "@/components/casos/transferir";
 import { DialogoVincular } from "@/components/casos/vincular";
+import { AcessoNegado } from "@/components/comum/acesso-negado";
 import { Aviso } from "@/components/comum/aviso";
 import { Dados } from "@/components/comum/dados";
 import { Button, buttonVariants } from "@/components/ui/button";
@@ -163,18 +164,15 @@ export default function PacientePage() {
     responsaveis.error.status === 403
   )
     return (
-      <div className="flex flex-col gap-6">
-        <Aviso tipo="erro" titulo="Você não tem acesso a este caso.">
-          Só o estagiário e o supervisor responsáveis, a secretaria e a
-          coordenação consultam os responsáveis pelo caso.
-        </Aviso>
-        <Link
-          href={voltar.href}
-          className={buttonVariants({ className: "w-fit max-sm:w-full" })}
-        >
-          Voltar para {voltar.rotulo}
-        </Link>
-      </div>
+      <AcessoNegado
+        titulo="Você não tem acesso a este caso"
+        voltar={voltar.href}
+        rotuloVoltar={voltar.rotulo}
+      >
+        Só o estagiário e o supervisor responsáveis, a secretaria e a
+        coordenação consultam os responsáveis pelo caso. Se você acha que
+        deveria ter acesso, fale com o supervisor do caso.
+      </AcessoNegado>
     );
   if (
     responsaveis.isError ||

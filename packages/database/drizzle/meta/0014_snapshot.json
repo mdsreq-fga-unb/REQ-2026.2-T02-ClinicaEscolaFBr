@@ -1,5 +1,5 @@
 {
-  "id": "4635432e-9191-4b29-a204-7c485b2cdee0",
+  "id": "77bdfadc-1bae-46be-9006-293791a16c78",
   "prevId": "31bcdfc4-89e8-437b-9864-14ad17724272",
   "version": "7",
   "dialect": "postgresql",
@@ -1457,13 +1457,43 @@
           "name": "queixa_cifrada",
           "type": "text",
           "primaryKey": false,
-          "notNull": true
+          "notNull": false
         },
         "planejamento_cifrado": {
           "name": "planejamento_cifrado",
           "type": "text",
           "primaryKey": false,
-          "notNull": true
+          "notNull": false
+        },
+        "humor_aparencia_cifrado": {
+          "name": "humor_aparencia_cifrado",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "conteudo_trabalhado_cifrado": {
+          "name": "conteudo_trabalhado_cifrado",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "tecnicas_utilizadas_cifrado": {
+          "name": "tecnicas_utilizadas_cifrado",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "intervencoes_encaminhamentos_cifrado": {
+          "name": "intervencoes_encaminhamentos_cifrado",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "plano_proxima_sessao_cifrado": {
+          "name": "plano_proxima_sessao_cifrado",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
         },
         "registrada_por": {
           "name": "registrada_por",
@@ -1518,7 +1548,12 @@
         }
       },
       "policies": {},
-      "checkConstraints": {},
+      "checkConstraints": {
+        "evolucoes_ficha_completa": {
+          "name": "evolucoes_ficha_completa",
+          "value": "(\"evolucoes\".\"queixa_cifrada\" IS NOT NULL AND \"evolucoes\".\"planejamento_cifrado\" IS NOT NULL) OR (\"evolucoes\".\"humor_aparencia_cifrado\" IS NOT NULL AND \"evolucoes\".\"conteudo_trabalhado_cifrado\" IS NOT NULL AND \"evolucoes\".\"tecnicas_utilizadas_cifrado\" IS NOT NULL AND \"evolucoes\".\"plano_proxima_sessao_cifrado\" IS NOT NULL)"
+        }
+      },
       "isRLSEnabled": false
     },
     "public.prontuarios": {
@@ -1598,6 +1633,30 @@
           "type": "timestamp with time zone",
           "primaryKey": false,
           "notNull": false
+        },
+        "anamnese_por": {
+          "name": "anamnese_por",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "anamnese_em": {
+          "name": "anamnese_em",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "contrato_por": {
+          "name": "contrato_por",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "contrato_em": {
+          "name": "contrato_em",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": false
         }
       },
       "indexes": {},
@@ -1625,6 +1684,24 @@
           "tableFrom": "prontuarios",
           "tableTo": "usuarios",
           "columnsFrom": ["dados_iniciais_por"],
+          "columnsTo": ["id"],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "prontuarios_anamnese_por_usuarios_id_fk": {
+          "name": "prontuarios_anamnese_por_usuarios_id_fk",
+          "tableFrom": "prontuarios",
+          "tableTo": "usuarios",
+          "columnsFrom": ["anamnese_por"],
+          "columnsTo": ["id"],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "prontuarios_contrato_por_usuarios_id_fk": {
+          "name": "prontuarios_contrato_por_usuarios_id_fk",
+          "tableFrom": "prontuarios",
+          "tableTo": "usuarios",
+          "columnsFrom": ["contrato_por"],
           "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"

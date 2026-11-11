@@ -1,5 +1,11 @@
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { cleanup, fireEvent, render, screen } from "@testing-library/react";
+import {
+  cleanup,
+  fireEvent,
+  render,
+  screen,
+  within,
+} from "@testing-library/react";
 import { afterEach, beforeAll, describe, expect, it, vi } from "vitest";
 import MeusCasosPage from "./page";
 
@@ -133,7 +139,9 @@ describe("Vincular paciente a estagiário responsável (RF21)", () => {
     fireEvent.click(botao);
     expect(await screen.findByText("2 pacientes em atendimento")).toBeTruthy();
     expect(screen.getByText("Nenhum paciente em atendimento")).toBeTruthy();
-    fireEvent.click(screen.getByLabelText(/Ana Beatriz Costa/));
+    fireEvent.click(
+      within(screen.getByRole("dialog")).getByLabelText(/Ana Beatriz Costa/),
+    );
     fireEvent.click(screen.getByRole("button", { name: "Confirmar vínculo" }));
     expect(
       await screen.findByText(

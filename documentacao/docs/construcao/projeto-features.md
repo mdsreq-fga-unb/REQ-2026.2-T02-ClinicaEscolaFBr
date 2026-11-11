@@ -949,7 +949,7 @@ sequenceDiagram
     - o supervisor chega pelo nome do paciente em "Meus casos";
     - o quadro mostra a orientação de cada perfil: a coordenação vai à distribuição, e o supervisor vincula o estagiário pelo diálogo do RF21. O vínculo só é oferecido nas situações em que o RF21 o aceita (`aguardando_vinculo` e `aguardando_vaga`): o caso desligado por faltas volta pela reversão (RF38);
     - o botão "Transferir caso" da coordenação (RF25) passa para dentro do quadro, como na prancha 4-3.
-- **Trilha do estagiário:** aponta para "Meus pacientes", que é do RF23. Até o RF23 entrar, essa página dá 404, como o item do menu.
+- **Trilha do estagiário:** aponta para "Meus pacientes", que é do RF23 e já existe.
 
 ---
 
@@ -982,6 +982,19 @@ sequenceDiagram
 **Telas:** "Meus pacientes" do estagiário (a página que hoje dá 404 depois da entrada, #160) e "Meus casos" do supervisor, com o filtro por estagiário. Protótipo: [prancha 4-1](prototipos.md#rf23).
 
 **Dados de teste:** dois estagiários do mesmo supervisor, com dois casos cada; um caso aguardando vínculo; um estagiário sem casos (estado vazio); um estagiário abrindo o prontuário de um caso do outro (403).
+
+**Na implementação (PR do RF23):**
+
+- **Rota:** `GET /casos/meus` aceita o estagiário e o supervisor e responde com `Cache-Control: no-store`. O estagiário recebe só os casos com vínculo vigente dele; o supervisor, os casos com atribuição vigente dele, que já incluem os dos seus estagiários. O caso encerrado não entra. A resposta ganhou os campos:
+    - `estagiarioId`: o estagiário do vínculo vigente;
+    - `estagiarioAnterior` e `estagiarioAnteriorId`: o último estagiário do caso desligado por faltas (RF37), que a prancha mostra ao supervisor junto com a data;
+    - `supervisor`: o supervisor do caso, mostrado na lista do estagiário.
+- **Filtro por estagiário (diferença do projeto):** o projeto previa `GET /casos/meus?estagiarioId`. A lista do supervisor é pequena (o limite é de 50 casos ativos por supervisor, parâmetro do RF20), e as opções do filtro vêm dela, então o filtro é feito na tela e a rota não aceita o `estagiarioId`. A opção do filtro é o id do estagiário (`estagiarioId`, ou `estagiarioAnteriorId` no caso desligado), e o nome é só o rótulo: dois estagiários com o mesmo nome são duas opções. Se a opção escolhida sai da lista (o caso foi transferido, por exemplo), o filtro volta para "Todos".
+- **Caso desligado por faltas (diferença da prancha 4-1):** a prancha mostra o caso desligado ("Desligado por faltas · Em 28/10/2026") também ao estagiário, com "Ver ficha" e "Abrir prontuário". O desligamento (RF37) encerra o vínculo, e o RF55 não deixa o estagiário sem vínculo vigente abrir o prontuário. Por isso o caso desligado aparece só para o supervisor, com o último estagiário e a data, e sai de "Meus pacientes". Quando a reversão do desligamento (RF38) volta o caso ao atendimento, com um novo vínculo, ele volta à lista do estagiário.
+- **"Meus pacientes":** é a página inicial do estagiário (#160). Tem o resumo por situação, a tabela (a partir de 1024 px; abaixo disso, cartões), o supervisor de cada caso e o estado vazio. A prioridade clínica é a exceção do RNF17 para os próprios casos; a queixa e os dados de triagem não vêm na resposta.
+- **"Meus casos":** ganhou as colunas da prancha e perdeu o número da inscrição (RNF17). O filtro é um grupo de opções ("Todos", cada estagiário e "Sem estagiário"), que só aparece quando há mais de uma opção, e a quantidade de casos filtrados é anunciada ao leitor de tela.
+- **Acesso direto negado:** o prontuário de outro caso e a ficha de outro caso (`/pacientes/:casoId`, aberta por "Ver ficha") mostram a mesma tela da prancha 4-1: cadeado, orientação, "Voltar para meus pacientes" (ou "meus casos", ou "pacientes") e "Tentativa registrada em …", sem o nome do paciente. A tela é o componente `AcessoNegado`, que as duas páginas usam. Para a informação ser verdadeira, `GET /casos/:id/responsaveis` passou a registrar a tentativa negada na auditoria (`consultar_responsaveis_negada`, RNF52), como o prontuário já fazia. A ficha antes mostrava o aviso vermelho do RF22.
+- **Evidência dos RNFs:** os testes de leitor de tela do RNF24 (VoiceOver) cobrem "Meus pacientes" e o filtro de "Meus casos", e o teste de carga do RNF21 inclui o estagiário abrindo "Meus pacientes" e o RF23 na lista de RFs.
 
 ---
 
@@ -1186,7 +1199,7 @@ sequenceDiagram
 | `403` sem sessão para quem não supervisiona; o estagiário nunca vê a agenda de outro | Sem vínculo de supervisão, não acessa a agenda |
 | Para o estagiário, a consulta filtra as sessões pelos casos com vínculo vigente dele, inclusive as sessões passadas (RNF16, RF25) | Encerrado o vínculo, por transferência ou desligamento, as sessões do caso e o nome do paciente deixam de aparecer |
 
-**Telas:** item "Agenda" do estagiário e, para o supervisor, "Agenda" com a escolha do estagiário (proposta levada à FBr). A sessão realizada leva ao prontuário. Depois da entrada, o estagiário cai hoje na `/meus-pacientes`, que dá 404 e é construída pelo RF23 (#160). A "Agenda" da secretaria, que também dá 404 hoje, é construída pelo RF14, com a seção "Sem confirmação". Protótipo: [prancha 4-2](prototipos.md#rf11).
+**Telas:** item "Agenda" do estagiário e, para o supervisor, "Agenda" com a escolha do estagiário (proposta levada à FBr). A sessão realizada leva ao prontuário. Depois da entrada, o estagiário cai em `/meus-pacientes`, construída pelo RF23 (#160). A "Agenda" da secretaria, que também dá 404 hoje, é construída pelo RF14, com a seção "Sem confirmação". Protótipo: [prancha 4-2](prototipos.md#rf11).
 
 **Na implementação (PR do RF11):**
 
@@ -1418,7 +1431,13 @@ sequenceDiagram
 
 **Telas:** o prontuário nas seções do modelo da clínica, com a barra "Ir para", as evoluções e o histórico de responsáveis fechados e "Marcar sessão como realizada" na sessão que já terminou, como hoje. Protótipo: [prancha 5-1](prototipos.md#rf27).
 
+**Verificável no Ciclo 4:** os critérios 2 (elemento sem registro aparece como ausente) e 4 (sem vínculo não acessa; a coordenação só lê) ficam completos. O critério 1 fica parcial: as evoluções aparecem sem correções, complementos e validação (RF29, RF30 e RF67, Ciclos 5 e 6), e a alta (RF68) e o relatório final (RF33) aparecem como "Sem registro neste ciclo". O critério 3 (o novo responsável vê os registros anteriores) só pode ser verificado depois do RF25 ([#147](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/issues/147)). O texto das partes dos ciclos seguintes está como ponto a confirmar na prancha 5-1.
+
+**RNFs:** RNF25 (inclui o antigo RNF26), RNF51 (o conteúdo clínico só é decifrado depois da política de acesso) e RNF52.
+
 **Dados de teste:** um prontuário completo (dados iniciais, sessões realizadas, uma falta e evoluções) e um recém-criado; um caso transferido (RF25); a coordenação lendo; um estagiário sem vínculo (403).
+
+**Na implementação (PR do RF27):** a página inclui a barra fixa "Ir para" com foco visível; a lista de sessões tem as colunas Sessão, Situação e Evolução e se adapta a cartões em telas estreitas; as evoluções ficam em seção própria, fechadas por padrão. Dados iniciais mostram queixa e total de seções preenchidas e abrem a leitura completa em página somente leitura. O histórico de responsáveis também começa fechado. Alta e relatório ausentes aparecem como "Sem registro neste ciclo"; correções, complementos, validação, alta e relatório continuam dependentes de RF29, RF30, RF67, RF68 e RF33. A página inclui testes web de prontuário completo e vazio e um fluxo e2e com verificação de acessibilidade e larguras entre 320 e 1920 px.
 
 ---
 
@@ -1489,6 +1508,8 @@ sequenceDiagram
 
 **Dados de teste:** um prontuário novo; uma anamnese só com a queixa principal e outra completa; uma seção com 1.001 caracteres; um contrato sem a via guardada; uma segunda anamnese no mesmo prontuário (409); o supervisor tentando registrar (403); um registro antigo, com o texto único.
 
+**Na implementação (PR do RF69):** cada seção numerada tem dica, contador de caracteres e erro associado; o primeiro campo inválido recebe foco e o formulário anuncia no topo que os dados digitados foram mantidos. O supervisor lê anamnese e contrato na página "Dados iniciais · paciente", com trilha de navegação e indicação "Só leitura". O formulário de registro continua no prontuário do estagiário responsável; após `409`, a consulta é invalidada para mostrar o registro existente. Testes web cobrem preenchimento inicial, campos vazios, limite, erros, foco, bloqueio durante envio e conflito.
+
 ---
 
 ## Registro de evolução (CP7)
@@ -1530,13 +1551,18 @@ sequenceDiagram
 | Só aceita sessão `realizada` | Sessão não realizada não aceita evolução |
 | O número da sessão no ciclo, a data, o horário e o comparecimento vêm da sessão, sem campo no formulário | O registro mostra os dados da sessão, sem digitação |
 | Quatro obrigatórios e `intervencoesEncaminhamentos` opcional, cada um com até 1.000 caracteres (proposta da equipe) | Sem um obrigatório, não salva; mais de 1.000 caracteres é recusado |
+| Uma evolução original por sessão: o segundo envio para a mesma sessão devolve `409` | A sessão com evolução não aceita outra; mudanças seguem a correção (RF29) e o complemento (RF30) |
 | O aviso é calculado pelo número da sessão da evolução no ciclo (a ordem dela entre as realizadas), e não pelo total no momento do registro: aparece só quando esse número é múltiplo de 10, e não se repete nas evoluções seguintes | Na 10ª sessão realizada do ciclo, os dois veem o aviso |
+
+**Fechamento avaliativo:** o RF28 só mostra o aviso. O registro do fechamento depende do relatório final (RF33, Ciclo 6). Por quanto tempo o aviso fica visível para o supervisor ainda está em aberto e entrou nas pendências de validação.
 
 **Decisão de projeto:** as evoluções já registradas com os campos antigos aparecem no prontuário com os rótulos "Evolução da queixa" e "Planejamento", sem migração do conteúdo, porque não dá para separar o texto nos campos novos sem mudar o que foi escrito.
 
 **Telas:** formulário de evolução aberto pela ação "Registrar evolução" do prontuário, com os dados da sessão só para leitura e os cinco campos; o aviso de fechamento avaliativo no topo do prontuário e em "Meus casos" do supervisor. Protótipo: [prancha 5-3](prototipos.md#rf28).
 
-**Dados de teste:** uma sessão realizada; sessões agendada, cancelada e com falta (422); um estagiário sem vínculo (403); uma evolução sem técnicas utilizadas; um campo com 1.001 caracteres; um paciente com 9 sessões realizadas que registra a 10ª; uma evolução antiga, com os dois campos.
+**Dados de teste:** uma sessão realizada; sessões agendada, confirmada, cancelada e com falta (422); uma sessão de outro paciente (403); um estagiário com o vínculo revogado (403); o supervisor e a coordenação tentando registrar (403); uma segunda evolução na mesma sessão (409); uma evolução sem técnicas utilizadas; um campo com 1.001 caracteres; um paciente com 9 sessões realizadas que registra a 10ª; uma evolução antiga, com os dois campos.
+
+**Na implementação (PR do RF28):** "Registrar evolução" abre uma página própria com trilha, botão "Cancelar" e os dados completos da sessão; o formulário usa duas colunas em telas largas. Após salvar, a página mostra a confirmação e abre a evolução no prontuário. Se outro envio já tiver gravado a evolução, o `409` invalida a consulta e carrega o registro existente. No prontuário, a tabela de sessões indica o registro, a ausência de aplicação ou a ação permitida; a seção separada de Evoluções mantém cada item recolhido, exceto o recém-salvo. O aviso de fechamento permanece conforme comportamento atual até a FBr definir sua duração. Testes web cobrem os estados do formulário, e o fluxo e2e mede axe e responsividade de 320 a 1920 px.
 
 ---
 

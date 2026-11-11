@@ -9,6 +9,7 @@ export function Campo({
   id: idExterno,
   rotulo,
   dica,
+  dicaClassName,
   erro,
   publico = false,
   className,
@@ -18,6 +19,7 @@ export function Campo({
   id?: string;
   rotulo: string;
   dica?: string;
+  dicaClassName?: string;
   erro?: string;
   publico?: boolean;
   className?: string;
@@ -46,7 +48,7 @@ export function Campo({
         {rotulo}
       </label>
       {dica && (
-        <p id={idDica} className="ui-dica">
+        <p id={idDica} className={cn("ui-dica", dicaClassName)}>
           {dica}
         </p>
       )}

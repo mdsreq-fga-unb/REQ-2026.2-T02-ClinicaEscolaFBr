@@ -11,3 +11,4 @@ export * from "./cancelamento";
 export * from "./agenda";
 export * from "./verificacao";
 export * from "./fila";
+export * from "./casos";
