@@ -76,3 +76,59 @@ export type ResultadoVinculo = {
   estagiario: string;
   prontuarioId: string;
 };
+
+// Transferência de caso (RF25). O supervisor responsável troca só o estagiário, por
+// outro estagiário dele; a coordenação troca o supervisor e, se indicar, o
+// estagiário, ou só o estagiário.
+export const TIPOS_TRANSFERENCIA = ["estagiario", "supervisor"] as const;
+export type TipoTransferencia = (typeof TIPOS_TRANSFERENCIA)[number];
+
+export const LIMITE_MOTIVO_TRANSFERENCIA = 1000;
+
+export const transferenciaSchema = z
+  .object({
+    estagiarioId: z.uuid("Escolha o novo estagiário responsável.").optional(),
+    supervisorId: z.uuid("Escolha o novo supervisor responsável.").optional(),
+    motivo: z
+      .string()
+      .trim()
+      .min(1, "Informe o motivo da transferência.")
+      .max(
+        LIMITE_MOTIVO_TRANSFERENCIA,
+        `Use no máximo ${LIMITE_MOTIVO_TRANSFERENCIA.toLocaleString("pt-BR")} caracteres.`,
+      ),
+  })
+  .refine((d) => d.estagiarioId || d.supervisorId, {
+    message: "Escolha o novo responsável pelo caso.",
+    path: ["estagiarioId"],
+  });
+export type Transferencia = z.infer<typeof transferenciaSchema>;
+
+type Pessoa = { id: string; nome: string };
+
+// O que o diálogo "Transferir caso" mostra: o caso, os responsáveis atuais e as
+// opções de quem abre. O supervisor recebe só os estagiários dele; a coordenação,
+// os supervisores ativos, com os casos ativos e o limite (DF17), e os estagiários
+// ativos.
+export type OpcoesTransferencia = {
+  casoId: string;
+  numero: string;
+  paciente: string;
+  supervisorAtual: Pessoa | null;
+  estagiarioAtual: Pessoa | null;
+  estagiarios: EstagiarioDisponivel[];
+  supervisores: SupervisorDisponivel[];
+};
+
+export type ResultadoTransferencia = {
+  casoId: string;
+  numero: string;
+  paciente: string;
+  supervisor: string | null;
+  estagiario: string | null;
+  // Sessões futuras do estagiário anterior, canceladas como administrativas e a
+  // reagendar com o novo estagiário.
+  sessoesCanceladas: number;
+  // Início das sessões futuras canceladas, para reagendar com o novo estagiário.
+  sessoesAReagendar: string[];
+};

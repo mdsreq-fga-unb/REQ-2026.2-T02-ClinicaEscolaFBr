@@ -16,6 +16,7 @@ const SO_INSERCAO_CONHECIDAS = [
   'auditoria',
   'evolucoes',
   'decisoes_prioridade',
+  'transferencias_caso',
 ];
 
 describe('Usuário da aplicação no banco (RF55 e RF66)', () => {

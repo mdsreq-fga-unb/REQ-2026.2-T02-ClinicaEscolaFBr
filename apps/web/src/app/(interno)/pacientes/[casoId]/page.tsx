@@ -1,5 +1,5 @@
 "use client";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import Link from "next/link";
 import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -10,6 +10,7 @@ import {
   type DesligamentoDoCaso,
   type ResultadoDesligamento,
   type ResultadoReversao,
+  type ResultadoTransferencia,
   type SessaoAReagendar,
   type SituacaoCaso,
 } from "@clinica/shared";
@@ -26,6 +27,10 @@ import {
   SessoesComFaltas,
   type SessaoDoCiclo,
 } from "@/components/assiduidade/faltas";
+import {
+  AvisoTransferencia,
+  DialogoTransferir,
+} from "@/components/casos/transferir";
 import { Aviso } from "@/components/comum/aviso";
 import { Dados } from "@/components/comum/dados";
 import { Button, buttonVariants } from "@/components/ui/button";
@@ -63,7 +68,16 @@ type DadosAdministrativos = {
 
 type Resultado =
   | { tipo: "desligado"; dados: ResultadoDesligamento }
-  | { tipo: "revertido"; dados: ResultadoReversao };
+  | { tipo: "revertido"; dados: ResultadoReversao }
+  | { tipo: "transferido"; dados: ResultadoTransferencia };
+
+// Situações em que a coordenação transfere o caso a outro supervisor ou
+// estagiário (RF25). O caso que aguarda distribuição vai pela distribuição (RF20).
+const TRANSFERIVEIS: SituacaoCaso[] = [
+  "em_atendimento",
+  "aguardando_vinculo",
+  "aguardando_vaga",
+];
 
 const celularBr = (c: string | null) =>
   c ? c.replace(/^(\d{2})(\d{4,5})(\d{4})$/, "($1) $2-$3") : "—";
@@ -81,7 +95,10 @@ export default function PacientePage() {
     const relogio = setInterval(() => setAgora(Date.now()), 60_000);
     return () => clearInterval(relogio);
   }, []);
-  const [dialogo, setDialogo] = useState<"desligar" | "reverter" | null>(null);
+  const [dialogo, setDialogo] = useState<
+    "desligar" | "reverter" | "transferir" | null
+  >(null);
+  const cliente = useQueryClient();
   const [resultado, setResultado] = useState<Resultado | null>(null);
   const chave = ["paciente", casoId];
   const consulta = useQuery({
@@ -151,6 +168,9 @@ export default function PacientePage() {
           e a vaga ficou liberada aguardando realocação.
         </Aviso>
       )}
+      {resultado?.tipo === "transferido" && (
+        <AvisoTransferencia resultado={resultado.dados} />
+      )}
       {resultado?.tipo === "revertido" &&
         (resultado.dados.situacao === "em_atendimento" ? (
           <Aviso tipo="sucesso" focar titulo="Desligamento revertido.">
@@ -202,6 +222,17 @@ export default function PacientePage() {
                 }}
               >
                 Reverter desligamento
+              </Button>
+            )}
+            {d.supervisor && TRANSFERIVEIS.includes(d.situacao) && (
+              <Button
+                variant="outline"
+                onClick={() => {
+                  setResultado(null);
+                  setDialogo("transferir");
+                }}
+              >
+                Transferir caso
               </Button>
             )}
           </div>
@@ -355,6 +386,19 @@ export default function PacientePage() {
           aoConcluir={(dados) => {
             setDialogo(null);
             setResultado({ tipo: "desligado", dados });
+          }}
+        />
+      )}
+      {dialogo === "transferir" && (
+        <DialogoTransferir
+          casoId={d.casoId}
+          coordenacao
+          aoFechar={() => setDialogo(null)}
+          aoConcluir={(dados) => {
+            setDialogo(null);
+            setResultado({ tipo: "transferido", dados });
+            void cliente.invalidateQueries({ queryKey: chave });
+            void cliente.invalidateQueries({ queryKey: ["casos"] });
           }}
         />
       )}
