@@ -1,5 +1,5 @@
 {
   "extends": "@repo/typescript-config/base.json",
   "compilerOptions": { "outDir": "dist" },
-  "include": ["src", "../database/src/schema/distribuicao.ts"]
+  "include": ["src"]
 }

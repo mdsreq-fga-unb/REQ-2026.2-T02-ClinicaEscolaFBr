@@ -1,5 +1,5 @@
 {
-  "id": "4b91f2ba-92f0-43ad-a3b5-ce9cf8e074af",
+  "id": "4635432e-9191-4b29-a204-7c485b2cdee0",
   "prevId": "31bcdfc4-89e8-437b-9864-14ad17724272",
   "version": "7",
   "dialect": "postgresql",
@@ -788,8 +788,8 @@
       "checkConstraints": {},
       "isRLSEnabled": false
     },
-    "public.transferencias_casos": {
-      "name": "transferencias_casos",
+    "public.transferencias_caso": {
+      "name": "transferencias_caso",
       "schema": "",
       "columns": {
         "id": {
@@ -805,44 +805,175 @@
           "primaryKey": false,
           "notNull": true
         },
-        "estagiario_origem_id": {
-          "name": "estagiario_origem_id",
+        "tipo": {
+          "name": "tipo",
+          "type": "tipo_transferencia_caso",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "supervisor_anterior_id": {
+          "name": "supervisor_anterior_id",
           "type": "uuid",
           "primaryKey": false,
           "notNull": false
         },
-        "estagiario_destino_id": {
-          "name": "estagiario_destino_id",
+        "supervisor_novo_id": {
+          "name": "supervisor_novo_id",
           "type": "uuid",
           "primaryKey": false,
-          "notNull": true
+          "notNull": false
         },
-        "autorizado_por_id": {
-          "name": "autorizado_por_id",
+        "estagiario_anterior_id": {
+          "name": "estagiario_anterior_id",
           "type": "uuid",
           "primaryKey": false,
-          "notNull": true
+          "notNull": false
         },
-        "motivo": {
-          "name": "motivo",
+        "estagiario_novo_id": {
+          "name": "estagiario_novo_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "atribuicao_anterior_id": {
+          "name": "atribuicao_anterior_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "vinculo_anterior_id": {
+          "name": "vinculo_anterior_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "motivo_cifrado": {
+          "name": "motivo_cifrado",
           "type": "text",
           "primaryKey": false,
           "notNull": true
         },
-        "criado_em": {
-          "name": "criado_em",
-          "type": "timestamp",
+        "transferido_por": {
+          "name": "transferido_por",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "transferido_em": {
+          "name": "transferido_em",
+          "type": "timestamp with time zone",
           "primaryKey": false,
           "notNull": true,
           "default": "now()"
         }
       },
-      "indexes": {},
-      "foreignKeys": {},
+      "indexes": {
+        "transferencias_caso_caso": {
+          "name": "transferencias_caso_caso",
+          "columns": [
+            {
+              "expression": "caso_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "transferido_em",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {
+        "transferencias_caso_caso_id_casos_id_fk": {
+          "name": "transferencias_caso_caso_id_casos_id_fk",
+          "tableFrom": "transferencias_caso",
+          "tableTo": "casos",
+          "columnsFrom": ["caso_id"],
+          "columnsTo": ["id"],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "transferencias_caso_supervisor_anterior_id_usuarios_id_fk": {
+          "name": "transferencias_caso_supervisor_anterior_id_usuarios_id_fk",
+          "tableFrom": "transferencias_caso",
+          "tableTo": "usuarios",
+          "columnsFrom": ["supervisor_anterior_id"],
+          "columnsTo": ["id"],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "transferencias_caso_supervisor_novo_id_usuarios_id_fk": {
+          "name": "transferencias_caso_supervisor_novo_id_usuarios_id_fk",
+          "tableFrom": "transferencias_caso",
+          "tableTo": "usuarios",
+          "columnsFrom": ["supervisor_novo_id"],
+          "columnsTo": ["id"],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "transferencias_caso_estagiario_anterior_id_usuarios_id_fk": {
+          "name": "transferencias_caso_estagiario_anterior_id_usuarios_id_fk",
+          "tableFrom": "transferencias_caso",
+          "tableTo": "usuarios",
+          "columnsFrom": ["estagiario_anterior_id"],
+          "columnsTo": ["id"],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "transferencias_caso_estagiario_novo_id_usuarios_id_fk": {
+          "name": "transferencias_caso_estagiario_novo_id_usuarios_id_fk",
+          "tableFrom": "transferencias_caso",
+          "tableTo": "usuarios",
+          "columnsFrom": ["estagiario_novo_id"],
+          "columnsTo": ["id"],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "transferencias_caso_atribuicao_anterior_id_atribuicoes_supervisor_id_fk": {
+          "name": "transferencias_caso_atribuicao_anterior_id_atribuicoes_supervisor_id_fk",
+          "tableFrom": "transferencias_caso",
+          "tableTo": "atribuicoes_supervisor",
+          "columnsFrom": ["atribuicao_anterior_id"],
+          "columnsTo": ["id"],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "transferencias_caso_vinculo_anterior_id_vinculos_estagiario_id_fk": {
+          "name": "transferencias_caso_vinculo_anterior_id_vinculos_estagiario_id_fk",
+          "tableFrom": "transferencias_caso",
+          "tableTo": "vinculos_estagiario",
+          "columnsFrom": ["vinculo_anterior_id"],
+          "columnsTo": ["id"],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "transferencias_caso_transferido_por_usuarios_id_fk": {
+          "name": "transferencias_caso_transferido_por_usuarios_id_fk",
+          "tableFrom": "transferencias_caso",
+          "tableTo": "usuarios",
+          "columnsFrom": ["transferido_por"],
+          "columnsTo": ["id"],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
       "compositePrimaryKeys": {},
       "uniqueConstraints": {},
       "policies": {},
-      "checkConstraints": {},
+      "checkConstraints": {
+        "transferencias_caso_novo_responsavel": {
+          "name": "transferencias_caso_novo_responsavel",
+          "value": "\"transferencias_caso\".\"supervisor_novo_id\" is not null or \"transferencias_caso\".\"estagiario_novo_id\" is not null"
+        }
+      },
       "isRLSEnabled": false
     },
     "public.vinculos_estagiario": {
@@ -2422,6 +2553,11 @@
         "desligado_por_faltas",
         "aguardando_vaga"
       ]
+    },
+    "public.tipo_transferencia_caso": {
+      "name": "tipo_transferencia_caso",
+      "schema": "public",
+      "values": ["estagiario", "supervisor"]
     },
     "public.meio_confirmacao": {
       "name": "meio_confirmacao",

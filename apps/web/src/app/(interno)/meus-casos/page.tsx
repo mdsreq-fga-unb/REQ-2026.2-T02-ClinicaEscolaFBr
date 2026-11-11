@@ -6,6 +6,7 @@ import { useState } from "react";
 import type {
   CasoDoSupervisor,
   EstagiarioDisponivel,
+  ResultadoTransferencia,
   ResultadoVinculo,
   VagaLiberada,
 } from "@clinica/shared";
@@ -16,6 +17,10 @@ import {
 import { Aviso } from "@/components/comum/aviso";
 import { Dialogo } from "@/components/comum/dialogo";
 import { Prioridade } from "@/components/casos/prioridade";
+import {
+  AvisoTransferencia,
+  DialogoTransferir,
+} from "@/components/casos/transferir";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { api, ErroApi } from "@/lib/api";
 import { dataBr } from "@/lib/formato";
@@ -156,6 +161,13 @@ export default function MeusCasosPage() {
   const cliente = useQueryClient();
   const [aberto, setAberto] = useState<CasoDoSupervisor | null>(null);
   const [mensagem, setMensagem] = useState<ResultadoVinculo | null>(null);
+  // Caso aberto na transferência para outro estagiário (RF25) e o resultado dela.
+  const [transferindo, setTransferindo] = useState<CasoDoSupervisor | null>(
+    null,
+  );
+  const [transferido, setTransferido] = useState<ResultadoTransferencia | null>(
+    null,
+  );
   const supervisor = sessao?.perfil === "supervisor";
 
   const lista = useQuery({
@@ -182,7 +194,35 @@ export default function MeusCasosPage() {
     !caso.estagiario &&
     (caso.situacao === "aguardando_vinculo" ||
       caso.situacao === "aguardando_vaga");
-  const acao = (caso: CasoDoSupervisor, largo = false) =>
+  // O caso em atendimento passa a outro estagiário do supervisor (RF25).
+  const transfere = (caso: CasoDoSupervisor) =>
+    Boolean(caso.estagiario) && caso.situacao === "em_atendimento";
+  const acao = (caso: CasoDoSupervisor, largo = false) => (
+    <div
+      className={
+        largo
+          ? "flex flex-col gap-2"
+          : "flex flex-wrap items-center justify-end gap-1"
+      }
+    >
+      {acaoPrincipal(caso, largo)}
+      {transfere(caso) && (
+        <Button
+          variant={largo ? "outline" : "ghost"}
+          aria-label={`Transferir o caso de ${caso.nome}`}
+          className={largo ? "w-full" : undefined}
+          onClick={() => {
+            setMensagem(null);
+            setTransferido(null);
+            setTransferindo(caso);
+          }}
+        >
+          Transferir caso
+        </Button>
+      )}
+    </div>
+  );
+  const acaoPrincipal = (caso: CasoDoSupervisor, largo: boolean) =>
     !vincula(caso) && caso.prontuarioId ? (
       <Link
         href={`/prontuarios/${caso.prontuarioId}`}
@@ -200,6 +240,7 @@ export default function MeusCasosPage() {
         className={largo ? "w-full" : undefined}
         onClick={() => {
           setMensagem(null);
+          setTransferido(null);
           setAberto(caso);
         }}
       >
@@ -236,6 +277,8 @@ export default function MeusCasosPage() {
           O prontuário do caso foi criado.
         </Aviso>
       )}
+
+      {transferido && <AvisoTransferencia resultado={transferido} />}
 
       {vagas.data?.map((vaga) => (
         <CartaoVagaLiberada key={vaga.id} vaga={vaga} supervisor />
@@ -328,6 +371,20 @@ export default function MeusCasosPage() {
             void cliente.invalidateQueries({ queryKey: ["casos"] });
             void cliente.invalidateQueries({ queryKey: ["estagiarios"] });
             void cliente.invalidateQueries({ queryKey: ["vagas"] });
+          }}
+        />
+      )}
+      {transferindo && (
+        <DialogoTransferir
+          key={transferindo.casoId}
+          casoId={transferindo.casoId}
+          coordenacao={false}
+          aoFechar={() => setTransferindo(null)}
+          aoConcluir={(resultado) => {
+            setTransferindo(null);
+            setTransferido(resultado);
+            void cliente.invalidateQueries({ queryKey: ["casos"] });
+            void cliente.invalidateQueries({ queryKey: ["estagiarios"] });
           }}
         />
       )}

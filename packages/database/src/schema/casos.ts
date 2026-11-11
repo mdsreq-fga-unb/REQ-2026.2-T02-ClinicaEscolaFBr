@@ -1,6 +1,7 @@
-import { sql, relations } from "drizzle-orm";
+import { sql } from "drizzle-orm";
 import {
   boolean,
+  check,
   type AnyPgColumn,
   integer,
   pgEnum,
@@ -11,7 +12,7 @@ import {
   uniqueIndex,
   uuid,
 } from "drizzle-orm/pg-core";
-import { SITUACOES_CASO } from "@clinica/shared";
+import { SITUACOES_CASO, TIPOS_TRANSFERENCIA } from "@clinica/shared";
 import { usuarios } from "./base";
 import { inscricoes } from "./inscricao";
 
@@ -115,39 +116,51 @@ export const vinculosEstagiario = pgTable(
   ],
 );
 
-// Tranferencia de casos (RF25)
-export const transferenciasCasos = pgTable("transferencias_casos", {
-  id: uuid("id").defaultRandom().primaryKey(),
-  casoId: uuid("caso_id")
-    .references(() => casos.id, { onDelete: "cascade" })
-    .notNull(),
-  estagiarioOrigemId: uuid("estagiario_origem_id").references(
-    () => usuarios.id,
-  ),
-  estagiarioDestinoId: uuid("estagiario_destino_id")
-    .references(() => usuarios.id)
-    .notNull(),
-  autorizadoPorId: uuid("autorizado_por_id")
-    .references(() => usuarios.id)
-    .notNull(),
-  motivo: text("motivo").notNull(),
-  criadoEm: timestamp("criado_em").defaultNow().notNull(),
-});
+export const tipoTransferenciaEnum = pgEnum(
+  "tipo_transferencia_caso",
+  TIPOS_TRANSFERENCIA,
+);
 
-export const transferenciasCasosRelations = relations(
-  transferenciasCasos,
-  ({ one }) => ({
-    caso: one(casos, {
-      fields: [transferenciasCasos.casoId],
-      references: [casos.id],
-    }),
-    estagiarioDestino: one(usuarios, {
-      fields: [transferenciasCasos.estagiarioDestinoId],
-      references: [usuarios.id],
-    }),
-    autorizadoPor: one(usuarios, {
-      fields: [transferenciasCasos.autorizadoPorId],
-      references: [usuarios.id],
-    }),
-  }),
+// Transferência de caso (RF25): troca do estagiário pelo supervisor responsável, ou
+// do supervisor e, se indicado, do estagiário pela coordenação. Guarda os
+// responsáveis anteriores e os novos, ligada ao vínculo e à atribuição que ela
+// encerrou. O motivo pode trazer informação de saúde e fica cifrado (RNF51). Só
+// inserção, para o histórico existir inteiro mesmo sem a tela do RF26.
+export const transferenciasCaso = pgTable(
+  "transferencias_caso",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    casoId: uuid("caso_id")
+      .notNull()
+      .references(() => casos.id),
+    tipo: tipoTransferenciaEnum("tipo").notNull(),
+    supervisorAnteriorId: uuid("supervisor_anterior_id").references(
+      () => usuarios.id,
+    ),
+    supervisorNovoId: uuid("supervisor_novo_id").references(() => usuarios.id),
+    estagiarioAnteriorId: uuid("estagiario_anterior_id").references(
+      () => usuarios.id,
+    ),
+    estagiarioNovoId: uuid("estagiario_novo_id").references(() => usuarios.id),
+    atribuicaoAnteriorId: uuid("atribuicao_anterior_id").references(
+      () => atribuicoesSupervisor.id,
+    ),
+    vinculoAnteriorId: uuid("vinculo_anterior_id").references(
+      () => vinculosEstagiario.id,
+    ),
+    motivoCifrado: text("motivo_cifrado").notNull(),
+    transferidoPor: uuid("transferido_por")
+      .notNull()
+      .references(() => usuarios.id),
+    transferidoEm: timestamp("transferido_em", { withTimezone: true })
+      .notNull()
+      .defaultNow(),
+  },
+  (t) => [
+    index("transferencias_caso_caso").on(t.casoId, t.transferidoEm),
+    check(
+      "transferencias_caso_novo_responsavel",
+      sql`${t.supervisorNovoId} is not null or ${t.estagiarioNovoId} is not null`,
+    ),
+  ],
 );

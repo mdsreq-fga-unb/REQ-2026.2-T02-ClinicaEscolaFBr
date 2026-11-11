@@ -1001,7 +1001,7 @@ sequenceDiagram
         A->>DB: transação: encerra o vínculo e, se for o caso, a atribuição vigentes
         A->>DB: cria o novo vínculo e, se for o caso, a nova atribuição
         A->>DB: TransferenciaCaso com os anteriores, os novos, o motivo e o autor
-        A->>DB: auditoria (RNF16)
+        A->>DB: auditoria (RNF18)
         A-->>U: transferido, com o mesmo prontuário
     end
 ```
@@ -1023,6 +1023,25 @@ sequenceDiagram
 **Telas:** "Transferir caso" na ficha do caso, com os casos ativos de cada opção, o motivo e a confirmação. Protótipo: [prancha 4-3](prototipos.md#rf25).
 
 **Dados de teste:** um caso com sessões futuras transferido entre dois estagiários do mesmo supervisor; uma tentativa do supervisor A com estagiário do supervisor B e outra com um estagiário sem caso (403); um supervisor com 50 casos, desabilitado na escolha da coordenação; uma transferência pela coordenação para outro supervisor, com e sem novo estagiário; uma sem motivo; o estagiário anterior tentando abrir o prontuário depois (403).
+
+**Na implementação (PR do RF25):**
+
+- **Rotas:** `GET /casos/:id/transferencia` devolve o caso, os responsáveis atuais e as opções de quem pede: para o supervisor, os estagiários dele com conta ativa, sem o atual, com os pacientes em atendimento de cada um; para a coordenação, todos os estagiários ativos e os supervisores ativos, com os casos ativos e o limite. `POST /casos/:id/transferencia` faz a transferência. As duas rotas são do supervisor responsável e da coordenação; para a secretaria, o estagiário e outro supervisor, `403`.
+- **Situações:** a transferência vale para o caso `em_atendimento`, `aguardando_vinculo` e `aguardando_vaga`. O caso que aguarda distribuição vai pela distribuição (RF20), e o desligado por faltas, pela reversão (RF38): `422` com a orientação. O caso sem estagiário não é transferido pelo supervisor, que usa "Vincular estagiário" (RF21).
+- **Coordenação:** escolhe o novo supervisor e, se quiser, o novo estagiário, ou mantém o supervisor ("Manter …") e troca só o estagiário. Sem novo estagiário, o vínculo anterior é encerrado e o caso fica `aguardando_vinculo`, em "Meus casos" do novo supervisor, que vincula o estagiário pelo RF21 com o mesmo prontuário.
+- **Mesmo prontuário:** o vínculo novo aponta para o prontuário do ciclo, que não muda; o acesso segue o vínculo e a atribuição vigentes (RF55).
+- **Sessões futuras:** canceladas como `administrativo`, com a origem de quem transferiu e sem falta. A resposta traz o horário de cada uma, e o aviso de sucesso as lista para a secretaria reagendar em "Agendar sessão".
+- **Motivo:** obrigatório, até 1.000 caracteres, gravado cifrado em `transferencias_caso.motivo_cifrado` (RNF51) e fora da auditoria. A auditoria `transferir_caso` (RNF18) guarda os responsáveis anteriores e os novos.
+- **Histórico:** a migration `0013_transferencia_de_caso` cria a tabela `transferencias_caso` com a trava `impedir_alteracao_registro`, como as outras tabelas só de inserção. A consulta do histórico é do RF26, fora do MVP.
+- **Concorrência:** o caso, o estagiário e o supervisor escolhidos são travados (`FOR UPDATE`) na transação; duas transferências ao mesmo tempo resultam em uma só, e a outra recebe `409`.
+- **Telas:** o supervisor transfere em "Meus casos", no caso em atendimento com estagiário; a coordenação, pelo botão "Transferir caso" na ficha do paciente. O formulário segue a prancha 4-3: o resumo do caso, a escolha com os pacientes ou os casos de cada opção, o supervisor no limite desabilitado, o motivo, o aviso de quem perde e quem ganha o acesso, o resumo de erros com links para os campos e a confirmação com "De", "Para" e "Motivo".
+- **Diferenças da prancha 4-3:**
+    - O resumo mostra o número da inscrição, porque o prontuário não tem número próprio.
+    - O botão fica em "Meus casos" e na ficha do paciente, porque o painel "Responsáveis pelo caso" do RF22 ainda não existe.
+    - Não há a lista do histórico de transferências, que é do RF26.
+    - A opção "Manter …" deixa a coordenação trocar só o estagiário, como o RF25 permite.
+    - Para a coordenação, a lista mostra todos os estagiários ativos, e não só os do novo supervisor: pela definição de "estagiário do supervisor", quem ainda não tem caso não é de nenhum supervisor, e a transferência para ele é feita pela coordenação.
+    - O supervisor no limite de 50 casos aparece com o aviso da prancha, mas desabilitado, pela decisão 3 acima, até a FBr responder a proposta.
 
 ---
 
