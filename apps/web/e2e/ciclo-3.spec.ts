@@ -237,7 +237,7 @@ test.describe.serial("Integração do Ciclo 3", () => {
     await expect(registrar).toBeVisible();
     await registrar.click();
     await expect(
-      page.getByRole("heading", { name: "Registro de evolução" }),
+      page.getByRole("heading", { level: 1, name: "Registro de evolução" }),
     ).toBeVisible();
     for (const [rotulo, valor] of [
       ["Humor e aparência do paciente", "Tranquilo e atento."],
