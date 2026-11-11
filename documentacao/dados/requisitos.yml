@@ -287,6 +287,7 @@ rfs:
   ordem: 34
   lider: Nicolas
   depende: [RF16]
+  issue: 223
   estado: Planejada
   origem: [DF24, DF48]
 
@@ -476,6 +477,7 @@ rfs:
   ordem: 35
   lider: Luís Henrique
   depende: [RF28]
+  issue: 224
   estado: Planejada
   origem: [DF11]
 
@@ -647,6 +649,7 @@ rfs:
   ordem: 36
   lider: Nicolas
   depende: [RF16]
+  issue: 225
   estado: Planejada
 
 - id: RF40
@@ -742,6 +745,7 @@ rfs:
   ordem: 38
   lider: Maria Clara
   depende: [RF52]
+  issue: 226
   estado: Planejada
   entrega: 'parcial no Ciclo 5: a lista é só de consulta; a escolha da sessão para a declaração chega com o RF45, no Ciclo 6'
 

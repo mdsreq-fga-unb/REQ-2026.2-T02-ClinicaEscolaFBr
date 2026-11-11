@@ -8,6 +8,7 @@ As telas estão organizadas pelo fluxo do sistema, uma seção por feature, e ca
 | --- | --- | --- | --- |
 | Ciclo 3 | [Abrir no Claude Design](https://claude.ai/artifact/Ad1CLwRmS2AFtZHDj8vtwo#page-dcb81aee8d83){ target="_blank" rel="noopener" } | [PDF de 24/10/2026 (24 MB)](../assets/prototipos-ciclo-3/prototipos-ciclo-3.pdf){ target="_blank" rel="noopener" } | Aprovados com ajustes na [reunião de 23/10/2026](../historico/unidade-3/reunioes.md#reuniao-de-validacao-do-prototipo-do-ciclo-3-com-a-fbr) |
 | Ciclo 4 | [Abrir o projeto de design](https://claude.ai/artifact/46j4XDcdd3JK7Dev5ixcDW){ target="_blank" rel="noopener" } | [PDF (13 MB)](../assets/prototipos-ciclo-4/prototipos-ciclo-4.pdf){ target="_blank" rel="noopener" } | Enviados à FBr em 06/11/2026, com as propostas abaixo ([ata](../historico/unidade-3/reunioes.md#reuniao-de-validacao-do-ciclo-3-com-a-fbr)) |
+| Ciclo 5 | [Abrir o projeto de design](https://claude.ai/artifact/JNqq7TRz9RTdhKT7pMey2J#page-dcb81aee8d83){ target="_blank" rel="noopener" } | [PDF (11 MB)](../assets/prototipos-ciclo-5/prototipos-ciclo-5.pdf){ target="_blank" rel="noopener" } | Ainda não enviados à FBr |
 
 O Claude Design do Ciclo 3 e as imagens da inscrição (RF1) e do prontuário (RF66) já têm as decisões de 31/10/2026: os dados da ficha de identificação e o contrato da Clínica Escola. Os protótipos do Ciclo 4 seguem as cores, a tipografia e os componentes aprovados no Ciclo 3 e, para reduzir a rolagem, mostram aberto só o que é usado na hora: o conteúdo de consulta começa fechado e abre com um botão, as seções sem registro ocupam uma linha só e os campos com erro ficam sempre à vista.
 
@@ -218,6 +219,12 @@ _Ciclo 4._ [RF15](../requisitos/funcionais.md#rf15) e [RF16](../requisitos/funci
 
 [![Cancelar sessão: pedido do paciente no prazo e fora do prazo, cancelamento para remarcar, sessão já iniciada, ausência do estagiário, erro e acesso negado](../assets/prototipos-ciclo-4/2-2-cancelar-sessao.webp)](../assets/prototipos-ciclo-4/2-2-cancelar-sessao.webp){ target="_blank" }
 
+### RF17 — Notificar paciente sobre ausência do estagiário { #rf17 }
+
+_Ciclo 5._ [RF17](../requisitos/funcionais.md#rf17) · issue [#223](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/issues/223). O e-mail ao paciente, sem o motivo da ausência, e o aviso à secretaria com a mensagem pronta para o WhatsApp, quando o paciente não tem e-mail ou o envio falha.
+
+[![Notificação da ausência: e-mail ao paciente, paciente sem e-mail, falha no envio e celular](../assets/prototipos-ciclo-5/5-1-aviso-ausencia.webp)](../assets/prototipos-ciclo-5/5-1-aviso-ausencia.webp){ target="_blank" }
+
 ## 6. Prontuário e evolução
 
 ### RF66 e RF55 — Criar o prontuário e restringir o acesso { #rf66-rf55 }
@@ -243,6 +250,18 @@ _Ciclo 4._ [RF69](../requisitos/funcionais.md#rf69) · issue [#130](https://gith
 _Ciclo 4._ [RF28](../requisitos/funcionais.md#rf28) · issue [#149](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/issues/149). O estagiário registra a evolução pelo prontuário, na seção "Sessões do ciclo", como o sistema já faz: depois que a sessão termina, ele a marca como realizada, e então a ação "Registrar evolução" abre o formulário. Depois de salva, a evolução não pode ser editada. Na agenda, a sessão realizada leva ao prontuário. Aparecem os erros, a evolução salva, o aviso de fechamento avaliativo na 10ª sessão, as ações de cada sessão no prontuário (sem "Registrar evolução" antes de a sessão ser marcada como realizada) e o acesso negado. O complemento de 10/11/2026, pedido na inspeção de design, acrescenta o registro negado ao supervisor e à coordenação (403), a sessão não realizada (422), o carregamento, o envio em andamento, o segundo envio para a mesma sessão (409) e as versões a 360 e 320 px.
 
 [![Registrar evolução: formulário, erros, evolução salva, aviso de fechamento avaliativo, ações da sessão no prontuário, acesso negado, registro negado ao supervisor e à coordenação, sessão não realizada, carregamento, segundo envio e versões a 360 e 320 px](../assets/prototipos-ciclo-4/5-3-evolucao.webp)](../assets/prototipos-ciclo-4/5-3-evolucao.webp){ target="_blank" }
+
+### RF29 — Corrigir evolução registrada { #rf29 }
+
+_Ciclo 5._ [RF29](../requisitos/funcionais.md#rf29) · issue [#224](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/issues/224). A correção com motivo obrigatório, a recusa sem motivo, as versões preservadas, o fim do prazo e o registro da data-limite pela coordenação.
+
+[![Corrigir evolução: formulário, recusa sem motivo, versões, depois da data-limite, parâmetro da coordenação e celular](../assets/prototipos-ciclo-5/6-1-corrigir-evolucao.webp)](../assets/prototipos-ciclo-5/6-1-corrigir-evolucao.webp){ target="_blank" }
+
+### RF56 — Consultar registro de acessos ao prontuário { #rf56 }
+
+_Ciclo 5._ [RF56](../requisitos/funcionais.md#rf56) · issue [#51](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/issues/51). A coordenação filtra por paciente, usuário e período e vê quem acessou, sem o conteúdo clínico. As tentativas negadas aparecem identificadas.
+
+[![Registro de acessos: lista com tentativa negada, sem resultados, acesso negado e celular](../assets/prototipos-ciclo-5/6-2-registro-acessos.webp)](../assets/prototipos-ciclo-5/6-2-registro-acessos.webp){ target="_blank" }
 
 ## 7. Faltas e desligamento
 
@@ -276,7 +295,41 @@ _Ciclo 4._ [RF38](../requisitos/funcionais.md#rf38) · issue [#154](https://gith
 
 [![Reverter desligamento: diálogo, erro sem motivo, vaga ainda livre, vaga já ocupada, visão da secretaria e sessões a reagendar](../assets/prototipos-ciclo-4/3-5-reversao.webp)](../assets/prototipos-ciclo-4/3-5-reversao.webp){ target="_blank" }
 
-## 8. Navegação interna por perfil { #navegacao }
+### RF39 — Consolidar faltas do estagiário para a supervisão { #rf39 }
+
+_Ciclo 5._ [RF39](../requisitos/funcionais.md#rf39) · issue [#225](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/issues/225). A relação de faltas para o supervisor e a coordenação, sem o nome do paciente e sem o motivo da ausência.
+
+[![Faltas do estagiário: relação do supervisor, coordenação sem faltas no período, acesso negado e celular](../assets/prototipos-ciclo-5/7-1-faltas-estagiario.webp)](../assets/prototipos-ciclo-5/7-1-faltas-estagiario.webp){ target="_blank" }
+
+## 8. Contribuição social e declarações
+
+### RF41 — Registrar pagamento da contribuição social do paciente { #rf41 }
+
+_Ciclo 5._ [RF41](../requisitos/funcionais.md#rf41) · issue [#43](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/issues/43). O registro pela secretaria com o valor do parâmetro, o bloqueio do segundo pagamento, a correção com a versão anterior e a alteração do valor pela coordenação.
+
+[![Contribuição social: pendente, registrar, segundo pagamento bloqueado, efetivada e corrigida, corrigir, valor da coordenação e celular](../assets/prototipos-ciclo-5/8-1-contribuicao-social.webp)](../assets/prototipos-ciclo-5/8-1-contribuicao-social.webp){ target="_blank" }
+
+### RF44 — Listar sessões com comparecimento registrado do paciente { #rf44 }
+
+_Ciclo 5._ [RF44](../requisitos/funcionais.md#rf44) · issue [#226](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/issues/226). A lista para o paciente ou responsável com identidade verificada e para a secretaria. Até a emissão da declaração (RF45, Ciclo 6), é só de consulta. O aviso sobre a declaração é uma proposta da equipe.
+
+[![Sessões com presença registrada: lista do paciente, ficha da secretaria, sem sessões, celular e acesso negado](../assets/prototipos-ciclo-5/8-2-sessoes-comparecimento.webp)](../assets/prototipos-ciclo-5/8-2-sessoes-comparecimento.webp){ target="_blank" }
+
+## 9. Indicadores
+
+### RF48 — Consultar indicadores operacionais { #rf48 }
+
+_Ciclo 5._ [RF48](../requisitos/funcionais.md#rf48) · issue [#22](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/issues/22). Os quatro indicadores para a coordenação, o registro das vagas ofertadas e os estados sem vagas registradas, intervalo recusado, período sem registros, carregando e acesso negado.
+
+**No computador**
+
+[![Indicadores operacionais no computador: consulta, vagas não registradas, registrar vagas, intervalo recusado, período sem registros, carregando e acesso negado](../assets/prototipos-ciclo-5/9-1-indicadores-computador.webp)](../assets/prototipos-ciclo-5/9-1-indicadores-computador.webp){ target="_blank" }
+
+**No celular**
+
+[![Indicadores operacionais no celular: consulta, registrar vagas, intervalo recusado e acesso negado](../assets/prototipos-ciclo-5/9-2-indicadores-celular.webp)](../assets/prototipos-ciclo-5/9-2-indicadores-celular.webp){ target="_blank" }
+
+## 10. Navegação interna por perfil { #navegacao }
 
 _Ciclo 3._ Menu de cada perfil (secretaria, estagiário, supervisor e coordenação) e o menu no celular.
 
