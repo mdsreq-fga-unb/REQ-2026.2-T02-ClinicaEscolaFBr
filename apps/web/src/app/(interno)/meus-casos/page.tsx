@@ -155,7 +155,11 @@ function DialogoVincular({
   );
 }
 
-// Casos sob a supervisão de quem está na sessão, com o vínculo do estagiário (RF21).
+const TODOS = "__todos";
+const SEM_ESTAGIARIO = "__sem";
+
+// Casos sob a supervisão de quem está na sessão, com o vínculo do estagiário (RF21)
+// e o filtro por estagiário (RF23, prancha 4-1).
 export default function MeusCasosPage() {
   const { data: sessao } = useSessao();
   const cliente = useQueryClient();
@@ -169,6 +173,7 @@ export default function MeusCasosPage() {
     null,
   );
   const supervisor = sessao?.perfil === "supervisor";
+  const [filtro, setFiltro] = useState<string>(TODOS);
 
   const lista = useQuery({
     queryKey: ["casos", "meus"],
@@ -251,8 +256,11 @@ export default function MeusCasosPage() {
   const semEstagiario = (
     <span className="text-muted-foreground italic">Sem estagiário</span>
   );
+  // O caso desligado por faltas (RF37) mostra o último estagiário, e a data do
+  // desligamento fica abaixo da situação (prancha 4-1).
   const estagiarioDo = (caso: CasoDoSupervisor) =>
     caso.estagiario ??
+    caso.estagiarioAnterior ??
     (caso.vinculoEncerradoEm ? (
       <span className="text-muted-foreground">
         Vínculo encerrado em {dataBr(caso.vinculoEncerradoEm)}
@@ -260,12 +268,46 @@ export default function MeusCasosPage() {
     ) : (
       semEstagiario
     ));
+  const situacaoDo = (caso: CasoDoSupervisor) => (
+    <div className="flex flex-col items-start gap-1">
+      <SeloSituacaoCaso situacao={caso.situacao} />
+      {caso.vinculoEncerradoEm && (
+        <span className="ui-meta">Em {dataBr(caso.vinculoEncerradoEm)}</span>
+      )}
+    </div>
+  );
+
+  // Filtro por estagiário (RF23): os estagiários dos casos da lista, e "Sem
+  // estagiário" para os que aguardam o vínculo.
+  const todos = lista.data ?? [];
+  const opcoes = [
+    ...new Map(
+      todos
+        .filter((c) => c.estagiario ?? c.estagiarioAnterior)
+        .map((c) => {
+          const nome = (c.estagiario ?? c.estagiarioAnterior)!;
+          return [nome, nome] as const;
+        }),
+    ).keys(),
+  ].sort((a, b) => a.localeCompare(b, "pt-BR"));
+  const temSemEstagiario = todos.some(
+    (c) => !c.estagiario && !c.estagiarioAnterior,
+  );
+  const visiveis = todos.filter((c) =>
+    filtro === TODOS
+      ? true
+      : filtro === SEM_ESTAGIARIO
+        ? !c.estagiario && !c.estagiarioAnterior
+        : (c.estagiario ?? c.estagiarioAnterior) === filtro,
+  );
 
   return (
     <div className="flex flex-col gap-6">
       <div>
         <h1 className="ui-titulo">Meus casos</h1>
-        <p className="ui-subtitulo">Casos sob a sua supervisão.</p>
+        <p className="ui-subtitulo">
+          Casos sob a sua responsabilidade e os dos seus estagiários.
+        </p>
       </div>
 
       {mensagem && (
@@ -303,61 +345,84 @@ export default function MeusCasosPage() {
         </div>
       )}
       {lista.data && lista.data.length > 0 && (
-        <>
-          <div className="ui-painel max-md:hidden">
-            <table className="ui-tabela">
-              <caption className="sr-only">Casos sob a sua supervisão</caption>
-              <thead>
-                <tr>
-                  <th scope="col">Nº da inscrição</th>
-                  <th scope="col">Paciente</th>
-                  <th scope="col">Prioridade clínica</th>
-                  <th scope="col">Estagiário</th>
-                  <th scope="col">Situação</th>
-                  <th scope="col">
-                    <span className="sr-only">Ações</span>
-                  </th>
-                </tr>
-              </thead>
-              <tbody>
-                {lista.data.map((caso) => (
-                  <tr key={caso.casoId}>
-                    <td className="ui-numero">{caso.numero}</td>
-                    <td className="font-semibold">{caso.nome}</td>
-                    <td>
-                      {caso.prioridade && <Prioridade cor={caso.prioridade} />}
-                    </td>
-                    <td>{estagiarioDo(caso)}</td>
-                    <td>
-                      <SeloSituacaoCaso situacao={caso.situacao} />
-                    </td>
-                    <td className="text-right">{acao(caso)}</td>
-                  </tr>
+        <div className="ui-painel">
+          {(opcoes.length > 1 || (opcoes.length > 0 && temSemEstagiario)) && (
+            <fieldset className="flex min-w-0 flex-col gap-2 border-b border-border p-4 sm:px-5">
+              <legend className="ui-rotulo float-left mb-2 w-full">
+                Estagiário
+              </legend>
+              <div className="flex flex-wrap gap-2">
+                {[
+                  [TODOS, "Todos"],
+                  ...opcoes.map((nome) => [nome, nome]),
+                  ...(temSemEstagiario
+                    ? [[SEM_ESTAGIARIO, "Sem estagiário"]]
+                    : []),
+                ].map(([valor, rotulo]) => (
+                  <label key={valor} className="ui-opcao w-auto">
+                    <input
+                      type="radio"
+                      name="filtro-estagiario"
+                      value={valor}
+                      checked={filtro === valor}
+                      onChange={() => setFiltro(valor)}
+                    />
+                    <span>{rotulo}</span>
+                  </label>
                 ))}
-              </tbody>
-            </table>
-          </div>
-          <ul className="ui-lista-celular md:hidden">
-            {lista.data.map((caso) => (
+              </div>
+            </fieldset>
+          )}
+          <p role="status" className="sr-only">
+            {filtro === TODOS
+              ? ""
+              : `${visiveis.length} ${visiveis.length === 1 ? "caso" : "casos"}.`}
+          </p>
+          <table className="ui-tabela max-lg:hidden">
+            <caption className="sr-only">
+              Casos sob a sua responsabilidade e os dos seus estagiários
+            </caption>
+            <thead>
+              <tr>
+                <th scope="col">Paciente</th>
+                <th scope="col">Prioridade clínica</th>
+                <th scope="col">Situação do caso</th>
+                <th scope="col">Estagiário responsável</th>
+                <th scope="col">
+                  <span className="sr-only">Ações</span>
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              {visiveis.map((caso) => (
+                <tr key={caso.casoId}>
+                  <td className="font-semibold">{caso.nome}</td>
+                  <td>
+                    {caso.prioridade && <Prioridade cor={caso.prioridade} />}
+                  </td>
+                  <td>{situacaoDo(caso)}</td>
+                  <td>{estagiarioDo(caso)}</td>
+                  <td className="text-right">{acao(caso)}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+          <ul className="ui-lista-celular p-3 lg:hidden">
+            {visiveis.map((caso) => (
               <li key={caso.casoId} className="ui-item-celular">
                 <div className="flex items-center justify-between gap-2">
-                  <span className="ui-numero">{caso.numero}</span>
+                  <p className="text-[17px] font-semibold">{caso.nome}</p>
                   {caso.prioridade && <Prioridade cor={caso.prioridade} />}
                 </div>
-                <p className="text-[17px] font-semibold">{caso.nome}</p>
                 <p className="text-sm text-muted-foreground">
-                  {caso.estagiario
-                    ? `Estagiário: ${caso.estagiario}`
-                    : estagiarioDo(caso)}
+                  Estagiário responsável: {estagiarioDo(caso)}
                 </p>
-                <div>
-                  <SeloSituacaoCaso situacao={caso.situacao} />
-                </div>
+                {situacaoDo(caso)}
                 {acao(caso, true)}
               </li>
             ))}
           </ul>
-        </>
+        </div>
       )}
 
       {aberto && (

@@ -6,13 +6,16 @@ import {
   Param,
   ParseUUIDPipe,
   Post,
+  Query,
   UseGuards,
 } from '@nestjs/common';
 import {
   distribuicaoSchema,
+  filtroMeusCasosSchema,
   transferenciaSchema,
   vinculoEstagiarioSchema,
   type Distribuicao,
+  type FiltroMeusCasos,
   type Transferencia,
   type VinculoEstagiario,
 } from '@clinica/shared';
@@ -63,11 +66,17 @@ export class CasosController {
   }
 
   // RF21
+  // RF21 e RF23: "Meus casos" do supervisor, com o filtro por estagiário, e "Meus
+  // pacientes" do estagiário. Cada um vê só os casos sob a própria responsabilidade.
   @Get('casos/meus')
-  @Perfis('supervisor')
+  @Perfis('supervisor', 'estagiario')
   @Header('Cache-Control', 'no-store')
-  meus(@UsuarioAtual() usuario: UsuarioAutenticado) {
-    return this.casos.meusCasos(usuario);
+  meus(
+    @Query(new ZodValidationPipe(filtroMeusCasosSchema))
+    filtro: FiltroMeusCasos,
+    @UsuarioAtual() usuario: UsuarioAutenticado,
+  ) {
+    return this.casos.meusCasos(usuario, filtro.estagiarioId);
   }
 
   @Get('estagiarios/disponiveis')

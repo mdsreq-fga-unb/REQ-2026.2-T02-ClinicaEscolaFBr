@@ -52,6 +52,9 @@ const casoDoSupervisor: CasoDoSupervisor = {
   prontuarioId: null,
   situacao: "aguardando_vinculo",
   vinculoEncerradoEm: null,
+  estagiarioId: null,
+  estagiarioAnterior: null,
+  supervisor: "Carla Mendes E2E",
 };
 const estagiarios: EstagiarioDisponivel[] = [
   {
