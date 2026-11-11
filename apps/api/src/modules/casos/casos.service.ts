@@ -14,6 +14,7 @@ import {
   count,
   desc,
   eq,
+  ilike,
   inArray,
   isNull,
   ne,
@@ -31,17 +32,22 @@ import {
   type Db,
 } from '@clinica/database';
 import {
+  LIMITE_LISTA_PACIENTES,
   type CasoAguardando,
   type CasoDoSupervisor,
   type CasoJaDistribuido,
   type Cor,
   type EstagiarioDisponivel,
+  type ListaDePacientes,
+  type ResponsaveisDoCaso,
   type ResultadoDistribuicao,
   type ResultadoVinculo,
+  type SituacaoCaso,
   type SupervisorDisponivel,
 } from '@clinica/shared';
 import type { UsuarioAutenticado } from '../../auth/usuario-autenticado';
 import { AuditoriaService } from '../../auditoria/auditoria.service';
+import { escaparLike } from '../../common/busca';
 import { decifrar } from '../../common/criptografia';
 import { DB } from '../../database/database.module';
 import { ParametrosService } from '../../parametros/parametros.service';
@@ -557,5 +563,115 @@ export class CasosService {
       }
       throw erro;
     }
+  }
+
+  // Responsáveis vigentes de cada caso: o supervisor da atribuição vigente e o
+  // estagiário do vínculo vigente (RF22). Sem dado clínico (RNF17).
+  private consultaDeResponsaveis() {
+    return this.db
+      .select({
+        casoId: casos.id,
+        situacao: casos.situacao,
+        numero: inscricoes.numero,
+        nome: inscricoes.nomeCompleto,
+        supervisorId: atribuicoesSupervisor.supervisorId,
+        supervisor: supervisor.nome,
+        estagiarioId: vinculosEstagiario.estagiarioId,
+        estagiario: estagiario.nome,
+      })
+      .from(casos)
+      .innerJoin(inscricoes, eq(inscricoes.id, casos.inscricaoId))
+      .leftJoin(
+        atribuicoesSupervisor,
+        and(
+          eq(atribuicoesSupervisor.casoId, casos.id),
+          eq(atribuicoesSupervisor.vigente, true),
+        ),
+      )
+      .leftJoin(
+        supervisor,
+        eq(supervisor.id, atribuicoesSupervisor.supervisorId),
+      )
+      .leftJoin(
+        vinculosEstagiario,
+        and(
+          eq(vinculosEstagiario.casoId, casos.id),
+          eq(vinculosEstagiario.vigente, true),
+        ),
+      )
+      .leftJoin(estagiario, eq(estagiario.id, vinculosEstagiario.estagiarioId));
+  }
+
+  // Nome, número só para quem pode vê-lo, responsáveis e situação (RNF17).
+  private paraResposta(
+    l: {
+      casoId: string;
+      nome: string;
+      numero: string;
+      situacao: SituacaoCaso;
+      supervisor: string | null;
+      estagiario: string | null;
+    },
+    usuario: UsuarioAutenticado,
+  ): ResponsaveisDoCaso {
+    return {
+      casoId: l.casoId,
+      nome: l.nome,
+      ...(usuario.perfil === 'secretaria' ? {} : { numero: l.numero }),
+      situacao: l.situacao,
+      supervisor: l.supervisor ?? null,
+      estagiario: l.estagiario ?? null,
+    };
+  }
+
+  // RF22: lista de Pacientes da secretaria e da coordenação, com os responsáveis
+  // de cada caso. O número da inscrição vem só para a coordenação (RNF17). Busca um
+  // a mais que o limite para saber se a lista foi cortada, sem contar a tabela
+  // inteira (RNF21).
+  async listaDePacientes(
+    busca: string | undefined,
+    usuario: UsuarioAutenticado,
+  ): Promise<ListaDePacientes> {
+    const linhas = await this.consultaDeResponsaveis()
+      .where(
+        busca
+          ? ilike(inscricoes.nomeCompleto, `%${escaparLike(busca)}%`)
+          : undefined,
+      )
+      .orderBy(asc(inscricoes.nomeCompleto), asc(casos.id))
+      .limit(LIMITE_LISTA_PACIENTES + 1);
+    return {
+      pacientes: linhas
+        .slice(0, LIMITE_LISTA_PACIENTES)
+        .map((l) => this.paraResposta(l, usuario)),
+      cortada: linhas.length > LIMITE_LISTA_PACIENTES,
+    };
+  }
+
+  // RF22: secretaria e coordenação consultam qualquer caso; o estagiário e o
+  // supervisor, só os que têm vínculo ou atribuição vigente nele. Para quem não
+  // tem acesso, o caso inexistente responde como o negado, sem revelar o que
+  // existe (RNF25).
+  async responsaveis(
+    casoId: string,
+    usuario: UsuarioAutenticado,
+  ): Promise<ResponsaveisDoCaso> {
+    const [linha] = await this.consultaDeResponsaveis().where(
+      eq(casos.id, casoId),
+    );
+    const amplo =
+      usuario.perfil === 'secretaria' || usuario.perfil === 'coordenacao';
+    if (!linha && amplo) throw new NotFoundException('Caso não encontrado.');
+    const permitido =
+      amplo ||
+      (!!linha &&
+        ((usuario.perfil === 'estagiario' &&
+          linha.estagiarioId === usuario.id) ||
+          (usuario.perfil === 'supervisor' &&
+            linha.supervisorId === usuario.id)));
+    if (!permitido) {
+      throw new ForbiddenException('Você não tem acesso a este caso.');
+    }
+    return this.paraResposta(linha, usuario);
   }
 }
