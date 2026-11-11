@@ -1,5 +1,11 @@
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { cleanup, fireEvent, render, screen } from "@testing-library/react";
+import {
+  cleanup,
+  fireEvent,
+  render,
+  screen,
+  waitFor,
+} from "@testing-library/react";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import MeusCasosPage from "./page";
 
@@ -128,7 +134,10 @@ describe("Meus casos do supervisor com o filtro por estagiário (RF23)", () => {
       "Mariana Alves Toledo",
       "Sérgio Antunes Freitas",
     ]);
-    expect(screen.getByRole("status").textContent).toBe("2 casos.");
+    // A contagem é anunciada logo depois da opção marcada.
+    await waitFor(() =>
+      expect(screen.getByRole("status").textContent).toBe("2 casos."),
+    );
 
     fireEvent.click(screen.getByRole("radio", { name: "Sem estagiário" }));
     expect(pacientes()).toEqual(["Rafael Gomes Ribeiro"]);

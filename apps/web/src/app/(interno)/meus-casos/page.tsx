@@ -2,7 +2,7 @@
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { FolderOpen } from "lucide-react";
 import Link from "next/link";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import type {
   CasoDoSupervisor,
   ResultadoTransferencia,
@@ -30,6 +30,28 @@ const SEM_ESTAGIARIO = "__sem";
 
 // Casos sob a supervisão de quem está na sessão, com o vínculo do estagiário (RF21)
 // e o filtro por estagiário (RF23, prancha 4-1).
+// Quantos casos ficaram depois do filtro (RF23, RNF24). A região de status fica
+// sempre montada e só o texto muda: esvaziado na troca e escrito um pouco depois,
+// quando o leitor de tela já terminou de falar a opção marcada. Escrito no mesmo
+// instante, o anúncio competia com essa fala e às vezes não era lido, e duas
+// opções com a mesma contagem não eram anunciadas de novo.
+function AnuncioAtrasado({ chave, texto }: { chave: string; texto: string }) {
+  const [falado, setFalado] = useState("");
+  useEffect(() => {
+    const limpa = setTimeout(() => setFalado(""), 0);
+    const fala = setTimeout(() => setFalado(texto), 400);
+    return () => {
+      clearTimeout(limpa);
+      clearTimeout(fala);
+    };
+  }, [chave, texto]);
+  return (
+    <p role="status" className="sr-only">
+      {falado}
+    </p>
+  );
+}
+
 export default function MeusCasosPage() {
   const { data: sessao } = useSessao();
   const cliente = useQueryClient();
@@ -261,11 +283,14 @@ export default function MeusCasosPage() {
               </div>
             </fieldset>
           )}
-          <p role="status" className="sr-only">
-            {escolha === TODOS
-              ? ""
-              : `${visiveis.length} ${visiveis.length === 1 ? "caso" : "casos"}.`}
-          </p>
+          <AnuncioAtrasado
+            chave={escolha}
+            texto={
+              escolha === TODOS
+                ? ""
+                : `${visiveis.length} ${visiveis.length === 1 ? "caso" : "casos"}.`
+            }
+          />
           <table className="ui-tabela max-lg:hidden">
             <caption className="sr-only">
               Casos sob a sua responsabilidade e os dos seus estagiários
