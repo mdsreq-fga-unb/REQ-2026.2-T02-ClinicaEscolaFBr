@@ -418,7 +418,7 @@ rfs:
   lider: Luís Henrique
   depende: [RF66, RF21]
   issue: 148
-  estado: Planejada
+  estado: Código concluído
   origem: [DF32]
 
 - id: RF66
@@ -447,7 +447,7 @@ rfs:
   lider: Luís Henrique
   depende: [RF66]
   issue: 130
-  estado: Em design
+  estado: Código concluído
   origem: [DF20, DF37, DF41]
 
 - id: RF28
@@ -462,7 +462,7 @@ rfs:
   lider: Luís Henrique
   depende: [RF10, RF21]
   issue: 149
-  estado: Planejada
+  estado: Código concluído
   origem: [DF23, DF38]
 
 - id: RF29

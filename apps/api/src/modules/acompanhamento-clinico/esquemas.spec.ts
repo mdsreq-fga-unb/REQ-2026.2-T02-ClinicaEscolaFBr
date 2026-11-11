@@ -1,66 +1,137 @@
 import {
-  dadosIniciaisSchema,
+  anamneseSchema,
+  contratoSchema,
   evolucaoSchema,
   hojeEmBrasilia,
 } from '@clinica/shared';
 
-describe('Validação da evolução e dos dados iniciais', () => {
+describe('Validação da evolução, da anamnese e do contrato', () => {
   const mensagens = (r: { error?: { issues: { message: string }[] } }) =>
     r.error?.issues.map((i) => i.message) ?? [];
+  const campos = (r: { error?: { issues: { path: PropertyKey[] }[] } }) =>
+    r.error?.issues.map((i) => i.path[0]) ?? [];
 
-  it('a evolução sem queixa ou sem planejamento é recusada, com a indicação de cada campo (RF28)', () => {
+  const evolucaoCompleta = {
+    humorAparencia: 'Humor estável, aparência cuidada.',
+    conteudoTrabalhado: 'Rotina de sono.',
+    tecnicasUtilizadas: 'Psicoeducação.',
+    intervencoesEncaminhamentos: 'Encaminhada ao clínico geral.',
+    planoProximaSessao: 'Retomar o diário de sono.',
+  };
+
+  it('a evolução segue a ficha da DF38: sem um dos quatro obrigatórios não salva, e cada campo é indicado (RF28, RNF25, RNF27, RNF30)', () => {
     const resultado = evolucaoSchema.safeParse({
-      queixa: ' ',
-      planejamento: '',
+      humorAparencia: ' ',
+      conteudoTrabalhado: '',
+      tecnicasUtilizadas: '',
+      planoProximaSessao: '',
     });
+    expect(campos(resultado)).toEqual([
+      'humorAparencia',
+      'conteudoTrabalhado',
+      'tecnicasUtilizadas',
+      'planoProximaSessao',
+    ]);
     expect(mensagens(resultado)).toEqual([
-      'Escreva a evolução da queixa.',
-      'Escreva o planejamento da próxima sessão.',
+      'Descreva o humor e a aparência do paciente.',
+      'Descreva o conteúdo trabalhado.',
+      'Informe as técnicas utilizadas.',
+      'Escreva o plano para a próxima sessão.',
     ]);
   });
 
-  it('a evolução da queixa com mais de 1.000 caracteres ou de 10 linhas é recusada (RF28)', () => {
+  it('intervenções e encaminhamentos pode ficar em branco e vira null (RF28, RNF25, RNF27, RNF30)', () => {
+    const semIntervencoes: Partial<typeof evolucaoCompleta> = {
+      ...evolucaoCompleta,
+    };
+    delete semIntervencoes.intervencoesEncaminhamentos;
     expect(
-      mensagens(
-        evolucaoSchema.safeParse({
-          queixa: 'a'.repeat(1001),
-          planejamento: 'p',
-        }),
-      ),
-    ).toContain('Use no máximo 1.000 caracteres.');
+      evolucaoSchema.parse(semIntervencoes).intervencoesEncaminhamentos,
+    ).toBeNull();
     expect(
-      mensagens(
-        evolucaoSchema.safeParse({
-          queixa: Array(11).fill('linha').join('\n'),
-          planejamento: 'p',
-        }),
-      ),
-    ).toContain('Use no máximo 10 linhas.');
+      evolucaoSchema.parse({
+        ...evolucaoCompleta,
+        intervencoesEncaminhamentos: '  ',
+      }).intervencoesEncaminhamentos,
+    ).toBeNull();
   });
 
-  it('o contrato da clínica exige confirmar a guarda da via assinada, e o aceite do termo para pesquisa é opcional (RF69, DF41)', () => {
-    const base = { anamnese: 'a', dataAssinaturaContrato: '2026-10-01' };
-    expect(mensagens(dadosIniciaisSchema.safeParse(base))).toContain(
+  it.each(Object.keys(evolucaoCompleta))(
+    'o campo %s da evolução com mais de 1.000 caracteres é recusado, com a indicação do limite (RF28, RNF25, RNF27, RNF30)',
+    (campo) => {
+      const resultado = evolucaoSchema.safeParse({
+        ...evolucaoCompleta,
+        [campo]: 'a'.repeat(1001),
+      });
+      expect(campos(resultado)).toEqual([campo]);
+      expect(mensagens(resultado)).toEqual(['Use no máximo 1.000 caracteres.']);
+    },
+  );
+
+  it('a evolução não tem limite de linhas: 30 linhas e 1.000 caracteres são aceitos (RF28, RNF25, RNF27, RNF30)', () => {
+    expect(
+      evolucaoSchema.safeParse({
+        ...evolucaoCompleta,
+        conteudoTrabalhado: Array(30).fill('linha').join('\n'),
+      }).success,
+    ).toBe(true);
+    expect(
+      evolucaoSchema.safeParse({
+        ...evolucaoCompleta,
+        humorAparencia: 'a'.repeat(1000),
+      }).success,
+    ).toBe(true);
+  });
+
+  it('a anamnese só com a queixa principal é aceita, e as outras seções viram null (RF69, RNF25, RNF51, RNF52, DF37)', () => {
+    expect(anamneseSchema.parse({ queixaPrincipal: 'Ansiedade.' })).toEqual({
+      queixaPrincipal: 'Ansiedade.',
+      historiaProblemaAtual: null,
+      historicoFamiliar: null,
+      desenvolvimento: null,
+      historicoMedico: null,
+      aspectosPsicossociais: null,
+    });
+  });
+
+  it('a anamnese sem queixa principal não é salva (RF69, RNF25, RNF51, RNF52)', () => {
+    const resultado = anamneseSchema.safeParse({
+      queixaPrincipal: '  ',
+      historicoFamiliar: 'Pais separados.',
+    });
+    expect(campos(resultado)).toEqual(['queixaPrincipal']);
+    expect(mensagens(resultado)).toEqual(['Informe a queixa principal.']);
+  });
+
+  it('a seção da anamnese com 1.001 caracteres é recusada, com a indicação da seção (RF69, RNF25, RNF51, RNF52)', () => {
+    const resultado = anamneseSchema.safeParse({
+      queixaPrincipal: 'Ansiedade.',
+      historicoMedico: 'a'.repeat(1001),
+    });
+    expect(campos(resultado)).toEqual(['historicoMedico']);
+    expect(mensagens(resultado)).toEqual(['Use no máximo 1.000 caracteres.']);
+  });
+
+  it('o contrato da clínica exige confirmar a guarda da via assinada, e o aceite do termo para pesquisa é opcional (RF69, RNF25, RNF51, RNF52, DF41)', () => {
+    const base = { dataAssinaturaContrato: '2026-10-01' };
+    expect(mensagens(contratoSchema.safeParse(base))).toContain(
       'Confirme que a via assinada do contrato está guardada na clínica.',
     );
-    const ok = dadosIniciaisSchema.parse({
-      ...base,
-      viaContratoGuardada: true,
-    });
+    const ok = contratoSchema.parse({ ...base, viaContratoGuardada: true });
     expect(ok.aceiteTclePesquisa).toBe(false);
   });
 
-  it('a data de assinatura do contrato não pode estar no futuro (RF69)', () => {
-    const dados = { anamnese: 'a', viaContratoGuardada: true };
+  it('a data de assinatura do contrato não pode estar no futuro (RF69, RNF25, RNF51, RNF52)', () => {
+    const dados = { viaContratoGuardada: true };
     expect(
-      dadosIniciaisSchema.safeParse({
+      contratoSchema.safeParse({
         ...dados,
         dataAssinaturaContrato: hojeEmBrasilia(),
       }).success,
     ).toBe(true);
     expect(
       mensagens(
-        dadosIniciaisSchema.safeParse({
+        contratoSchema.safeParse({
           ...dados,
           dataAssinaturaContrato: '2999-01-01',
         }),

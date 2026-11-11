@@ -141,12 +141,12 @@ describe('Restrição de acesso ao prontuário (RF55)', () => {
 
   const acessos = () => db.select().from(acessosProntuario);
 
-  it('o estagiário responsável vê o conteúdo clínico, e o acesso é registrado', async () => {
+  it('o estagiário responsável vê o conteúdo clínico, e o acesso é registrado (RF27, RNF25, RNF51, RNF52)', async () => {
     const prontuario = await servico.consultar(
       prontuarioId,
       pessoas.estagiarioA,
     );
-    expect(prontuario.dadosIniciais.anamnese).toBe(
+    expect(prontuario.dadosIniciais.anamnese?.queixaPrincipal).toBe(
       'Relata cansaço e desânimo.',
     );
     expect(prontuario).toMatchObject({
@@ -163,18 +163,18 @@ describe('Restrição de acesso ao prontuário (RF55)', () => {
     ]);
   });
 
-  it('o supervisor do caso vê o conteúdo clínico', async () => {
+  it('o supervisor do caso vê o conteúdo clínico (RF27, RNF25, RNF51, RNF52)', async () => {
     await expect(
       servico.consultar(prontuarioId, pessoas.supervisor),
     ).resolves.toMatchObject({ id: prontuarioId });
   });
 
-  it('a coordenação vê o conteúdo clínico de qualquer prontuário, e o acesso é registrado (DF32)', async () => {
+  it('a coordenação vê o conteúdo clínico de qualquer prontuário, e o acesso é registrado (DF32) (RF27, RNF25, RNF51, RNF52)', async () => {
     const prontuario = await servico.consultar(
       prontuarioId,
       pessoas.coordenacao,
     );
-    expect(prontuario.dadosIniciais.anamnese).toBe(
+    expect(prontuario.dadosIniciais.anamnese?.queixaPrincipal).toBe(
       'Relata cansaço e desânimo.',
     );
     expect(await acessos()).toEqual([
@@ -187,7 +187,7 @@ describe('Restrição de acesso ao prontuário (RF55)', () => {
     ]);
   });
 
-  it('a coordenação não tem acesso de escrita ao prontuário', async () => {
+  it('a coordenação não tem acesso de escrita ao prontuário (RF27, RNF25, RNF51, RNF52)', async () => {
     await expect(
       politica.exigirAcesso(
         pessoas.coordenacao,
@@ -201,7 +201,7 @@ describe('Restrição de acesso ao prontuário (RF55)', () => {
   });
 
   it.each(['estagiarioB', 'outroSupervisor', 'secretaria'])(
-    '%s tem o acesso negado na API, e a tentativa é registrada (RNF25)',
+    '%s tem o acesso negado na API, e a tentativa é registrada (RNF25) (RF27, RNF25, RNF51, RNF52)',
     async (quem) => {
       await expect(
         servico.consultar(prontuarioId, pessoas[quem]),
@@ -216,7 +216,7 @@ describe('Restrição de acesso ao prontuário (RF55)', () => {
     },
   );
 
-  it('prontuário inexistente recebe a mesma resposta negada, sem revelar que não existe (RNF25)', async () => {
+  it('prontuário inexistente recebe a mesma resposta negada, sem revelar que não existe (RNF25) (RF27, RNF25, RNF51, RNF52)', async () => {
     await expect(
       servico.consultar(
         '00000000-0000-4000-8000-000000000000',
@@ -227,7 +227,7 @@ describe('Restrição de acesso ao prontuário (RF55)', () => {
     expect(registro).toMatchObject({ permitido: false, prontuarioId: null });
   });
 
-  it('a negação continua depois que o vínculo do estagiário deixa de ser vigente', async () => {
+  it('a negação continua depois que o vínculo do estagiário deixa de ser vigente (RF27, RNF25, RNF51, RNF52)', async () => {
     await db
       .update(vinculosEstagiario)
       .set({ vigente: false })
@@ -237,7 +237,7 @@ describe('Restrição de acesso ao prontuário (RF55)', () => {
     ).rejects.toMatchObject({ status: 403 });
   });
 
-  it('os dados administrativos não trazem conteúdo clínico (RNF25)', async () => {
+  it('os dados administrativos não trazem conteúdo clínico (RNF25) (RF27, RNF25, RNF51, RNF52)', async () => {
     const dados = await servico.dadosAdministrativos(
       casoId,
       pessoas.secretaria,
@@ -261,7 +261,7 @@ describe('Restrição de acesso ao prontuário (RF55)', () => {
     }
   });
 
-  it('só a coordenação recebe o id do prontuário nos dados administrativos', async () => {
+  it('só a coordenação recebe o id do prontuário nos dados administrativos (RF27, RNF25, RNF51, RNF52)', async () => {
     await expect(
       servico.dadosAdministrativos(casoId, pessoas.coordenacao),
     ).resolves.toMatchObject({ prontuarioId });
@@ -272,108 +272,431 @@ describe('Restrição de acesso ao prontuário (RF55)', () => {
     expect(daSecretaria).not.toHaveProperty('prontuarioId');
   });
 
-  it('RF69 cifra os dados iniciais e não permite substituir o primeiro registro (RNF51)', async () => {
-    await db
-      .update(prontuarios)
-      .set({ anamneseCifrada: null })
-      .where(eq(prontuarios.id, prontuarioId));
-    await expect(
-      servico.registrarDadosIniciais(
+  describe('RF69 — anamnese e contrato terapêutico', () => {
+    const contrato = {
+      aceiteTclePesquisa: true,
+      viaContratoGuardada: true as const,
+      dataAssinaturaContrato: '2026-10-27',
+    };
+    const anamneseSo = (queixaPrincipal: string) => ({
+      queixaPrincipal,
+      historiaProblemaAtual: null,
+      historicoFamiliar: null,
+      desenvolvimento: null,
+      historicoMedico: null,
+      aspectosPsicossociais: null,
+    });
+
+    beforeEach(async () => {
+      await db
+        .update(prontuarios)
+        .set({ anamneseCifrada: null })
+        .where(eq(prontuarios.id, prontuarioId));
+    });
+
+    it('o formulário vem com a queixa da inscrição só para o estagiário responsável e só enquanto a anamnese não existe (RF69, RNF25, RNF51, RNF52)', async () => {
+      const doEstagiario = await servico.consultar(
         prontuarioId,
-        {
-          anamnese: 'Relato de teste protegido',
-          aceiteTclePesquisa: true,
-          viaContratoGuardada: true,
-          dataAssinaturaContrato: '2026-10-27',
-        },
         pessoas.estagiarioA,
-      ),
-    ).resolves.toEqual({ registrado: true });
-    const [linha] = await db
-      .select()
-      .from(prontuarios)
-      .where(eq(prontuarios.id, prontuarioId));
-    expect(linha.anamneseCifrada).not.toContain('Relato de teste protegido');
-    await expect(
-      servico.registrarDadosIniciais(
+      );
+      expect(doEstagiario.dadosIniciais).toMatchObject({
+        anamnese: null,
+        contrato: null,
+        queixaDaInscricao: 'Cansaço e desânimo há quatro meses.',
+      });
+      // As outras respostas da triagem (RF4) não vêm junto.
+      expect(JSON.stringify(doEstagiario)).not.toMatch(/Terapia em 2021|media/);
+      for (const quem of ['supervisor', 'coordenacao']) {
+        const leitura = await servico.consultar(prontuarioId, pessoas[quem]);
+        expect(leitura.dadosIniciais.queixaDaInscricao).toBeNull();
+      }
+      await servico.registrarAnamnese(
         prontuarioId,
-        {
-          anamnese: 'Substituição proibida',
-          aceiteTclePesquisa: false,
-          viaContratoGuardada: true,
-          dataAssinaturaContrato: '2026-10-27',
-        },
+        anamneseSo('Cansaço.'),
         pessoas.estagiarioA,
-      ),
-    ).rejects.toMatchObject({ status: 409 });
+      );
+      const depois = await servico.consultar(prontuarioId, pessoas.estagiarioA);
+      expect(depois.dadosIniciais.queixaDaInscricao).toBeNull();
+    });
+
+    it('a anamnese só com a queixa principal é salva cifrada, com autor e data/hora, e as outras seções ficam em branco (RF69, RNF25, RNF51, RNF52)', async () => {
+      await expect(
+        servico.registrarAnamnese(
+          prontuarioId,
+          anamneseSo('Queixa sigilosa de teste'),
+          pessoas.estagiarioA,
+        ),
+      ).resolves.toEqual({ registrada: true });
+      const [linha] = await db
+        .select()
+        .from(prontuarios)
+        .where(eq(prontuarios.id, prontuarioId));
+      expect(linha.anamneseCifrada).not.toContain('Queixa sigilosa');
+      expect(linha.anamnesePor).toBe(pessoas.estagiarioA.id);
+      expect(linha.anamneseEm).toBeInstanceOf(Date);
+      // O contrato continua sem registro: as partes são independentes.
+      expect(linha.contratoEm).toBeNull();
+      const { dadosIniciais } = await servico.consultar(
+        prontuarioId,
+        pessoas.supervisor,
+      );
+      expect(dadosIniciais.anamnese).toMatchObject({
+        ...anamneseSo('Queixa sigilosa de teste'),
+        registradaPor: 'Ana Beatriz Costa',
+      });
+      expect(dadosIniciais.contrato).toBeNull();
+    });
+
+    it('a anamnese completa guarda as seis seções (RF69, RNF25, RNF51, RNF52)', async () => {
+      const completa = {
+        queixaPrincipal: 'Ansiedade.',
+        historiaProblemaAtual: 'Começou há um ano.',
+        historicoFamiliar: 'Pais separados.',
+        desenvolvimento: 'Sem intercorrências.',
+        historicoMedico: 'Hipotireoidismo.',
+        aspectosPsicossociais: 'Mora sozinha.',
+      };
+      await servico.registrarAnamnese(
+        prontuarioId,
+        completa,
+        pessoas.estagiarioA,
+      );
+      const { dadosIniciais } = await servico.consultar(
+        prontuarioId,
+        pessoas.estagiarioA,
+      );
+      expect(dadosIniciais.anamnese).toMatchObject(completa);
+    });
+
+    it('a segunda anamnese no mesmo prontuário é recusada com 409 (RF69, RNF25, RNF51, RNF52)', async () => {
+      await servico.registrarAnamnese(
+        prontuarioId,
+        anamneseSo('Primeira.'),
+        pessoas.estagiarioA,
+      );
+      await expect(
+        servico.registrarAnamnese(
+          prontuarioId,
+          anamneseSo('Substituição proibida.'),
+          pessoas.estagiarioA,
+        ),
+      ).rejects.toMatchObject({ status: 409 });
+      const { dadosIniciais } = await servico.consultar(
+        prontuarioId,
+        pessoas.estagiarioA,
+      );
+      expect(dadosIniciais.anamnese?.queixaPrincipal).toBe('Primeira.');
+    });
+
+    it('o contrato é salvo à parte, com autor e data/hora, e o segundo é recusado com 409 (RF69, RNF25, RNF51, RNF52)', async () => {
+      await expect(
+        servico.registrarContrato(prontuarioId, contrato, pessoas.estagiarioA),
+      ).resolves.toEqual({ registrado: true });
+      const { dadosIniciais } = await servico.consultar(
+        prontuarioId,
+        pessoas.estagiarioA,
+      );
+      expect(dadosIniciais.anamnese).toBeNull();
+      expect(dadosIniciais.contrato).toMatchObject({
+        dataAssinatura: '2026-10-27',
+        aceiteTclePesquisa: true,
+        viaGuardada: true,
+        textoLivre: null,
+        registradoPor: 'Ana Beatriz Costa',
+      });
+      await expect(
+        servico.registrarContrato(
+          prontuarioId,
+          { ...contrato, aceiteTclePesquisa: false },
+          pessoas.estagiarioA,
+        ),
+      ).rejects.toMatchObject({ status: 409 });
+    });
+
+    it.each(['supervisor', 'coordenacao', 'secretaria', 'estagiarioB'])(
+      '%s não registra anamnese nem contrato (403), e a tentativa fica registrada (RF69, RNF25, RNF51, RNF52)',
+      async (quem) => {
+        await expect(
+          servico.registrarAnamnese(
+            prontuarioId,
+            anamneseSo('Tentativa.'),
+            pessoas[quem],
+          ),
+        ).rejects.toMatchObject({ status: 403 });
+        await expect(
+          servico.registrarContrato(prontuarioId, contrato, pessoas[quem]),
+        ).rejects.toMatchObject({ status: 403 });
+        const [linha] = await db
+          .select()
+          .from(prontuarios)
+          .where(eq(prontuarios.id, prontuarioId));
+        expect(linha.anamneseCifrada).toBeNull();
+        expect(linha.dataAssinaturaContrato).toBeNull();
+        expect((await acessos()).map((a) => [a.operacao, a.permitido])).toEqual(
+          [
+            ['registrar_anamnese', false],
+            ['registrar_contrato', false],
+          ],
+        );
+      },
+    );
+
+    it('o registro antigo, de texto único, aparece como a queixa principal, com o autor dos dados iniciais (RF69, RNF25, RNF51, RNF52)', async () => {
+      await db
+        .update(prontuarios)
+        .set({
+          anamneseCifrada: cifrar('Texto único antigo.', CHAVE_TESTE),
+          dataAssinaturaContrato: '2026-10-01',
+          viaContratoGuardada: true,
+          dadosIniciaisPor: pessoas.estagiarioA.id,
+          dadosIniciaisEm: new Date('2026-10-02T12:00:00Z'),
+        })
+        .where(eq(prontuarios.id, prontuarioId));
+      const { dadosIniciais } = await servico.consultar(
+        prontuarioId,
+        pessoas.supervisor,
+      );
+      expect(dadosIniciais.anamnese).toMatchObject({
+        ...anamneseSo('Texto único antigo.'),
+        registradaPor: 'Ana Beatriz Costa',
+        registradaEm: new Date('2026-10-02T12:00:00Z'),
+      });
+      expect(dadosIniciais.contrato).toMatchObject({
+        dataAssinatura: '2026-10-01',
+        registradoPor: 'Ana Beatriz Costa',
+      });
+    });
   });
 
-  it('RF28 exige sessão realizada do ciclo e mantém a evolução original cifrada e imutável', async () => {
-    const inicio = new Date(Date.now() - 3_600_000);
-    const termino = new Date(Date.now() - 1_800_000);
-    const fimIntervaloAnotacoes = new Date(Date.now() - 1_200_000);
-    const [sessao] = await db
-      .insert(sessoesAtendimento)
-      .values({
-        casoId,
-        cicloAtendimento: 1,
-        estagiarioId: pessoas.estagiarioA.id,
-        inicio,
-        termino,
-        fimIntervaloAnotacoes,
-        agendadaPor: pessoas.supervisor.id,
-      })
-      .returning();
-    await servico.marcarSessaoRealizada(
-      prontuarioId,
-      sessao.id,
-      pessoas.estagiarioA,
-    );
-    await expect(
-      servico.registrarEvolucao(
+  describe('RF28 — evolução da sessão realizada', () => {
+    const ficha = {
+      humorAparencia: 'Humor confidencial',
+      conteudoTrabalhado: 'Conteúdo confidencial',
+      tecnicasUtilizadas: 'Técnica confidencial',
+      intervencoesEncaminhamentos: null,
+      planoProximaSessao: 'Plano confidencial',
+    };
+    let horas = 0;
+    // Sessões sem sobreposição, uma a cada dia para trás.
+    const sessao = async (
+      status:
+        | 'agendada'
+        | 'confirmada'
+        | 'cancelada'
+        | 'realizada'
+        | 'falta_paciente',
+      extra: { casoId?: string; estagiarioId?: string } = {},
+    ) => {
+      horas += 24;
+      const inicio = new Date(Date.now() - horas * 3_600_000);
+      const [nova] = await db
+        .insert(sessoesAtendimento)
+        .values({
+          casoId: extra.casoId ?? casoId,
+          cicloAtendimento: 1,
+          estagiarioId: extra.estagiarioId ?? pessoas.estagiarioA.id,
+          inicio,
+          termino: new Date(inicio.getTime() + 50 * 60_000),
+          fimIntervaloAnotacoes: new Date(inicio.getTime() + 60 * 60_000),
+          agendadaPor: pessoas.supervisor.id,
+          status,
+        })
+        .returning();
+      return nova.id;
+    };
+    const registrar = (sessaoId: string, quem = pessoas.estagiarioA) =>
+      servico.registrarEvolucao(prontuarioId, sessaoId, ficha, quem);
+
+    beforeEach(() => {
+      horas = 0;
+    });
+
+    it('a evolução válida fica cifrada, ligada à sessão, ao prontuário e ao ciclo, com autor e data/hora, e o original é imutável (RF28, RNF25, RNF27, RNF30)', async () => {
+      const agendada = await sessao('agendada');
+      await servico.marcarSessaoRealizada(
         prontuarioId,
-        sessao.id,
-        {
-          queixa: 'Evolução confidencial',
-          planejamento: 'Planejamento confidencial',
-        },
+        agendada,
         pessoas.estagiarioA,
-      ),
-    ).resolves.toMatchObject({ registrada: true });
-    const [linha] = await db
-      .select()
-      .from(evolucoes)
-      .where(eq(evolucoes.sessaoId, sessao.id));
-    expect(linha.queixaCifrada).not.toContain('Evolução confidencial');
-    await expect(
-      servico.consultar(prontuarioId, pessoas.estagiarioA),
-    ).resolves.toMatchObject({
-      sessoes: [
+      );
+      await expect(registrar(agendada)).resolves.toMatchObject({
+        registrada: true,
+        numeroNoCiclo: 1,
+        fechamentoAvaliativo: false,
+      });
+      const [linha] = await db
+        .select()
+        .from(evolucoes)
+        .where(eq(evolucoes.sessaoId, agendada));
+      expect(linha).toMatchObject({
+        prontuarioId,
+        registradaPor: pessoas.estagiarioA.id,
+        queixaCifrada: null,
+        intervencoesEncaminhamentosCifrado: null,
+      });
+      expect(JSON.stringify(linha)).not.toContain('confidencial');
+      const { sessoes } = await servico.consultar(
+        prontuarioId,
+        pessoas.supervisor,
+      );
+      expect(sessoes).toEqual([
         expect.objectContaining({
+          id: agendada,
           status: 'realizada',
+          numeroNoCiclo: 1,
           evolucao: expect.objectContaining({
-            queixa: 'Evolução confidencial',
+            ...ficha,
+            queixa: null,
+            planejamento: null,
+            registradaPor: 'Ana Beatriz Costa',
           }),
         }),
-      ],
+      ]);
+      await expect(
+        db.update(evolucoes).set({ humorAparenciaCifrado: 'alteração' }),
+      ).rejects.toThrow();
     });
-    await expect(
-      servico.registrarEvolucao(
+
+    it('a segunda evolução da mesma sessão é recusada com 409 (RF28, RNF25, RNF27, RNF30)', async () => {
+      const realizada = await sessao('realizada');
+      await registrar(realizada);
+      await expect(registrar(realizada)).rejects.toMatchObject({
+        status: 409,
+      });
+    });
+
+    it.each(['agendada', 'confirmada', 'cancelada', 'falta_paciente'] as const)(
+      'sessão %s não aceita evolução (422) (RF28, RNF25, RNF27, RNF30)',
+      async (status) => {
+        const naoRealizada = await sessao(status);
+        await expect(registrar(naoRealizada)).rejects.toMatchObject({
+          status: 422,
+        });
+        expect(await db.select().from(evolucoes)).toEqual([]);
+      },
+    );
+
+    it('sessão de outro paciente não aceita evolução por este prontuário (403) (RF28, RNF25, RNF27, RNF30)', async () => {
+      const [outraInscricao] = await db
+        .insert(inscricoes)
+        .values({
+          numero: '2026-00399',
+          nomeCompleto: 'Outro Paciente Teste',
+          dataNascimento: '1990-01-01',
+          cpf: '52998224725',
+          rg: '1.234.567',
+          endereco: 'SQN 105',
+          estadoCivil: 'solteiro',
+          celular: '61991234567',
+          email: 'outro@exemplo.com.br',
+          canalPreferencial: 'email',
+        })
+        .returning();
+      const [outroCaso] = await db
+        .insert(casos)
+        .values({
+          entradaNaFilaEm: outraInscricao.criadaEm,
+          inscricaoId: outraInscricao.id,
+          situacao: 'em_atendimento',
+        })
+        .returning();
+      const deOutro = await sessao('realizada', { casoId: outroCaso.id });
+      await expect(registrar(deOutro)).rejects.toMatchObject({ status: 403 });
+    });
+
+    it('estagiário com o vínculo revogado não registra evolução (403) (RF28, RNF25, RNF27, RNF30)', async () => {
+      const realizada = await sessao('realizada');
+      await db
+        .update(vinculosEstagiario)
+        .set({ vigente: false })
+        .where(eq(vinculosEstagiario.casoId, casoId));
+      await expect(registrar(realizada)).rejects.toMatchObject({
+        status: 403,
+      });
+    });
+
+    it.each(['supervisor', 'coordenacao', 'estagiarioB'])(
+      '%s não registra evolução (403) (RF28, RNF25, RNF27, RNF30)',
+      async (quem) => {
+        const realizada = await sessao('realizada');
+        await expect(registrar(realizada, pessoas[quem])).rejects.toMatchObject(
+          { status: 403 },
+        );
+      },
+    );
+
+    it('o aviso de fechamento avaliativo vem na 10ª e na 20ª sessão realizadas do ciclo, e não na 9ª nem na 11ª (RF28, RNF25, RNF27, RNF30)', async () => {
+      // Criadas da mais recente para a mais antiga: a última da lista é a 1ª do ciclo.
+      const ids: string[] = [];
+      for (let i = 0; i < 21; i++) ids.unshift(await sessao('realizada'));
+      const avisos: Record<number, boolean> = {};
+      for (const [indice, id] of ids.entries()) {
+        const resposta = await registrar(id);
+        expect(resposta.numeroNoCiclo).toBe(indice + 1);
+        avisos[indice + 1] = resposta.fechamentoAvaliativo;
+      }
+      expect(avisos).toMatchObject({
+        9: false,
+        10: true,
+        11: false,
+        19: false,
+        20: true,
+        21: false,
+      });
+    });
+
+    it('a evolução registrada fora de ordem usa o número da própria sessão, e não o total no momento do registro (RF28, RNF25, RNF27, RNF30)', async () => {
+      const ids: string[] = [];
+      for (let i = 0; i < 10; i++) ids.unshift(await sessao('realizada'));
+      // A 10ª é registrada primeiro: o aviso vem com ela.
+      await expect(registrar(ids[9])).resolves.toMatchObject({
+        numeroNoCiclo: 10,
+        fechamentoAvaliativo: true,
+      });
+      await expect(registrar(ids[0])).resolves.toMatchObject({
+        numeroNoCiclo: 1,
+        fechamentoAvaliativo: false,
+      });
+      const consulta = await servico.consultar(
         prontuarioId,
-        sessao.id,
-        {
-          queixa: 'Segunda evolução',
-          planejamento: 'Segundo plano',
-        },
+        pessoas.supervisor,
+      );
+      expect(consulta.fechamentoAvaliativoPendente).toBe(true);
+    });
+
+    it('a evolução antiga, com queixa e planejamento, continua legível com os campos antigos (RF28, RNF25, RNF27, RNF30)', async () => {
+      const realizada = await sessao('realizada');
+      await db.insert(evolucoes).values({
+        prontuarioId,
+        sessaoId: realizada,
+        queixaCifrada: cifrar('Queixa antiga', CHAVE_TESTE),
+        planejamentoCifrado: cifrar('Plano antigo', CHAVE_TESTE),
+        registradaPor: pessoas.estagiarioA.id,
+      });
+      const { sessoes } = await servico.consultar(
+        prontuarioId,
         pessoas.estagiarioA,
-      ),
-    ).rejects.toMatchObject({ status: 409 });
-    await expect(
-      db.update(evolucoes).set({ queixaCifrada: 'alteração' }),
-    ).rejects.toThrow();
+      );
+      expect(sessoes[0].evolucao).toMatchObject({
+        queixa: 'Queixa antiga',
+        planejamento: 'Plano antigo',
+        humorAparencia: null,
+      });
+    });
+
+    it('o banco recusa evolução sem a ficha completa, nem a antiga nem a da DF38 (RF28, RNF25, RNF27, RNF30)', async () => {
+      const realizada = await sessao('realizada');
+      await expect(
+        db.insert(evolucoes).values({
+          prontuarioId,
+          sessaoId: realizada,
+          humorAparenciaCifrado: 'x',
+          registradaPor: pessoas.estagiarioA.id,
+        }),
+      ).rejects.toThrow();
+    });
   });
 
-  it('o registro de acessos não pode ser alterado nem apagado (RNF52)', async () => {
+  it('o registro de acessos não pode ser alterado nem apagado (RF27, RF28, RF69, RNF52)', async () => {
     await servico.consultar(prontuarioId, pessoas.estagiarioA);
     await expect(
       db.update(acessosProntuario).set({ permitido: false }),
