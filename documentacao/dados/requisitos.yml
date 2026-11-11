@@ -371,7 +371,7 @@ rfs:
   lider: Maria Clara
   depende: [RF21]
   issue: 146
-  estado: Planejada
+  estado: Código concluído
 
 - id: RF24
   nome: Visualizar distribuição de casos por supervisor
