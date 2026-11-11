@@ -7,6 +7,7 @@ import { useParams } from "next/navigation";
 import { useState } from "react";
 import type { StatusSessao } from "@clinica/shared";
 import { Aviso } from "@/components/comum/aviso";
+import { AcessoNegadoAoProntuario } from "@/components/prontuario/acesso-negado";
 import {
   FormularioEvolucao,
   LeituraEvolucao,
@@ -49,9 +50,7 @@ export default function RegistrarEvolucaoPage() {
 
   if (consulta.isPending) return <p role="status">Carregando sessão…</p>;
   if (consulta.error instanceof ErroApi && consulta.error.status === 403)
-    return (
-      <Aviso tipo="erro" titulo="Você não tem acesso a este prontuário." />
-    );
+    return <AcessoNegadoAoProntuario perfil={usuario?.perfil} />;
   if (consulta.isError || !consulta.data)
     return (
       <Aviso

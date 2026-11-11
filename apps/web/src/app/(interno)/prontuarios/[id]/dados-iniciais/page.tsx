@@ -7,6 +7,10 @@ import { ArrowLeft, Lock } from "lucide-react";
 import type { Anamnese } from "@clinica/shared";
 import { Aviso } from "@/components/comum/aviso";
 import {
+  AcessoNegadoAoProntuario,
+  voltarDoPerfil,
+} from "@/components/prontuario/acesso-negado";
+import {
   LeituraAnamnese,
   LeituraContrato,
 } from "@/components/prontuario/fichas";
@@ -42,20 +46,12 @@ export default function DadosIniciaisPage() {
     queryFn: () => api<DadosIniciais>(`/prontuarios/${id}`),
     retry: false,
   });
-  const voltar =
-    sessao?.perfil === "supervisor"
-      ? "/meus-casos"
-      : sessao?.perfil === "estagiario"
-        ? "/meus-pacientes"
-        : "/pacientes";
+  const voltar = voltarDoPerfil(sessao?.perfil).href;
 
   if (consulta.isPending)
     return <p role="status">Carregando dados iniciais…</p>;
-  if (consulta.error instanceof ErroApi && consulta.error.status === 403) {
-    return (
-      <Aviso tipo="erro" titulo="Você não tem acesso a este prontuário." />
-    );
-  }
+  if (consulta.error instanceof ErroApi && consulta.error.status === 403)
+    return <AcessoNegadoAoProntuario perfil={sessao?.perfil} />;
   if (consulta.isError || !consulta.data)
     return (
       <Aviso tipo="erro" titulo="Não foi possível abrir os dados iniciais." />

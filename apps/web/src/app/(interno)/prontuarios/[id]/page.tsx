@@ -21,9 +21,12 @@ import {
   SeloSessao,
 } from "@/components/assiduidade/faltas";
 import { SessoesAReagendar } from "@/components/assiduidade/desligamento";
-import { AcessoNegado } from "@/components/comum/acesso-negado";
 import { Aviso } from "@/components/comum/aviso";
 import { Dados } from "@/components/comum/dados";
+import {
+  AcessoNegadoAoProntuario,
+  voltarDoPerfil,
+} from "@/components/prontuario/acesso-negado";
 import {
   FormularioAnamnese,
   FormularioContrato,
@@ -143,32 +146,11 @@ export default function ProntuarioPage() {
     queryFn: () => api<Prontuario>(`/prontuarios/${id}`),
     retry: false,
   });
-  const voltar =
-    sessao?.perfil === "supervisor"
-      ? "/meus-casos"
-      : sessao?.perfil === "estagiario"
-        ? "/meus-pacientes"
-        : "/pacientes";
+  const { href: voltar, rotulo: rotuloVoltar } = voltarDoPerfil(sessao?.perfil);
 
   if (consulta.isPending) return <p role="status">Carregando prontuário…</p>;
-  const rotuloVoltar =
-    sessao?.perfil === "supervisor"
-      ? "Meus casos"
-      : sessao?.perfil === "estagiario"
-        ? "Meus pacientes"
-        : "Pacientes";
   if (consulta.error instanceof ErroApi && consulta.error.status === 403)
-    return (
-      <AcessoNegado
-        titulo="Você não tem acesso a este prontuário"
-        voltar={voltar}
-        rotuloVoltar={rotuloVoltar}
-      >
-        O prontuário só pode ser aberto pelo estagiário responsável pelo caso,
-        pelo supervisor dele e pela coordenação. Se você acha que deveria ter
-        acesso, fale com o supervisor do caso.
-      </AcessoNegado>
-    );
+    return <AcessoNegadoAoProntuario perfil={sessao?.perfil} />;
   if (consulta.isError || !consulta.data)
     return <Aviso tipo="erro" titulo="Não foi possível abrir o prontuário." />;
 
