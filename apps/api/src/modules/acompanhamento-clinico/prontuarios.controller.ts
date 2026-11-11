@@ -9,9 +9,11 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import {
-  dadosIniciaisSchema,
+  anamneseSchema,
+  contratoSchema,
   evolucaoSchema,
-  type DadosIniciais,
+  type Anamnese,
+  type Contrato,
   type Evolucao,
 } from '@clinica/shared';
 import { Perfis } from '../../auth/perfis.decorator';
@@ -40,14 +42,25 @@ export class ProntuariosController {
     return this.prontuarios.consultar(id, usuario);
   }
 
-  @Post('prontuarios/:id/dados-iniciais')
+  // Anamnese e contrato salvos separados, cada um uma vez (RF69).
+  @Post('prontuarios/:id/anamnese')
   @Header('Cache-Control', 'no-store')
-  registrarDadosIniciais(
+  registrarAnamnese(
     @Param('id', ParseUUIDPipe) id: string,
-    @Body(new ZodValidationPipe(dadosIniciaisSchema)) dados: DadosIniciais,
+    @Body(new ZodValidationPipe(anamneseSchema)) dados: Anamnese,
     @UsuarioAtual() usuario: UsuarioAutenticado,
   ) {
-    return this.prontuarios.registrarDadosIniciais(id, dados, usuario);
+    return this.prontuarios.registrarAnamnese(id, dados, usuario);
+  }
+
+  @Post('prontuarios/:id/contrato')
+  @Header('Cache-Control', 'no-store')
+  registrarContrato(
+    @Param('id', ParseUUIDPipe) id: string,
+    @Body(new ZodValidationPipe(contratoSchema)) dados: Contrato,
+    @UsuarioAtual() usuario: UsuarioAutenticado,
+  ) {
+    return this.prontuarios.registrarContrato(id, dados, usuario);
   }
 
   @Post('prontuarios/:id/sessoes/:sessaoId/realizada')

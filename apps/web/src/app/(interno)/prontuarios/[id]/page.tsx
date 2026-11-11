@@ -3,15 +3,12 @@ import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { Eye, Lock } from "lucide-react";
 import Link from "next/link";
 import { useParams } from "next/navigation";
-import { useEffect, useState, type FormEvent } from "react";
+import { useEffect, useState } from "react";
 import {
-  dadosIniciaisSchema,
-  evolucaoSchema,
   type AcoesCancelamento,
+  type Anamnese,
   type CancelamentoDaSessao,
   type ContagemFaltas,
-  type DadosIniciais,
-  type Evolucao,
   type FaltaDaSessao,
   type SessaoAReagendar,
   type StatusSessao,
@@ -25,235 +22,20 @@ import {
 } from "@/components/assiduidade/faltas";
 import { SessoesAReagendar } from "@/components/assiduidade/desligamento";
 import { Aviso } from "@/components/comum/aviso";
-import {
-  Campo,
-  classeTextoLongo,
-  classeEntrada,
-} from "@/components/comum/campo";
 import { Dados } from "@/components/comum/dados";
+import {
+  FormularioAnamnese,
+  FormularioContrato,
+  FormularioEvolucao,
+  LeituraAnamnese,
+  LeituraContrato,
+  LeituraEvolucao,
+  type EvolucaoRegistrada,
+} from "@/components/prontuario/fichas";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { api, ErroApi } from "@/lib/api";
 import { dataBr, dataHoraBr, idade, NOMES_SITUACAO_CASO } from "@/lib/formato";
 import { useSessao } from "@/lib/sessao";
-
-type ErrosDe<T> = Partial<Record<keyof T, string>>;
-
-// Erros do esquema compartilhado, um por campo (RNF1).
-function errosPorCampo<T>(issues: { path: PropertyKey[]; message: string }[]) {
-  const erros: ErrosDe<T> = {};
-  for (const problema of issues) {
-    const campo = problema.path[0] as keyof T;
-    erros[campo] ??= problema.message;
-  }
-  return erros;
-}
-
-function FormularioDadosIniciais({ prontuarioId }: { prontuarioId: string }) {
-  const cache = useQueryClient();
-  const [dados, setDados] = useState({
-    anamnese: "",
-    dataAssinaturaContrato: "",
-    aceiteTclePesquisa: false,
-    viaContratoGuardada: false,
-  });
-  const [erros, setErros] = useState<ErrosDe<DadosIniciais>>({});
-  const [erro, setErro] = useState<string | null>(null);
-  const [salvando, setSalvando] = useState(false);
-
-  async function salvar(evento: FormEvent<HTMLFormElement>) {
-    evento.preventDefault();
-    setErro(null);
-    const resultado = dadosIniciaisSchema.safeParse(dados);
-    if (!resultado.success) {
-      setErros(errosPorCampo<DadosIniciais>(resultado.error.issues));
-      return;
-    }
-    setErros({});
-    setSalvando(true);
-    try {
-      await api(`/prontuarios/${prontuarioId}/dados-iniciais`, {
-        method: "POST",
-        body: JSON.stringify(resultado.data),
-      });
-      await cache.invalidateQueries({ queryKey: ["prontuario", prontuarioId] });
-    } catch (falha) {
-      setErro(
-        falha instanceof Error ? falha.message : "Não foi possível salvar.",
-      );
-    } finally {
-      setSalvando(false);
-    }
-  }
-
-  return (
-    <form noValidate onSubmit={salvar} className="flex flex-col gap-5">
-      <Campo rotulo="Anamnese" erro={erros.anamnese}>
-        {(props) => (
-          <textarea
-            {...props}
-            value={dados.anamnese}
-            onChange={(e) => setDados({ ...dados, anamnese: e.target.value })}
-            className={classeTextoLongo}
-          />
-        )}
-      </Campo>
-      <fieldset className="flex min-w-0 flex-col gap-4 rounded-[12px] border border-border bg-muted p-4">
-        <legend className="ui-rotulo px-1">Contrato terapêutico</legend>
-        <p className="ui-dica">
-          O contrato é o “Contrato de Prestação de Serviço” da Clínica Escola,
-          assinado em papel na primeira sessão. Registre aqui a assinatura e a
-          guarda da via.
-        </p>
-        <Campo
-          rotulo="Data de assinatura do contrato"
-          erro={erros.dataAssinaturaContrato}
-          className="max-w-[280px]"
-        >
-          {(props) => (
-            <input
-              {...props}
-              type="date"
-              value={dados.dataAssinaturaContrato}
-              onChange={(e) =>
-                setDados({ ...dados, dataAssinaturaContrato: e.target.value })
-              }
-              className={classeEntrada}
-            />
-          )}
-        </Campo>
-        <label className="flex cursor-pointer items-start gap-3 text-[15px]">
-          <input
-            type="checkbox"
-            checked={dados.aceiteTclePesquisa}
-            onChange={(e) =>
-              setDados({ ...dados, aceiteTclePesquisa: e.target.checked })
-            }
-            className="mt-0.5 size-5 shrink-0 accent-primary"
-          />
-          <span>
-            O paciente aceitou o termo de consentimento livre e esclarecido para
-            pesquisa
-            <span className="ui-meta"> (opcional)</span>
-          </span>
-        </label>
-        <div className="flex flex-col gap-1.5">
-          <label className="flex cursor-pointer items-start gap-3 text-[15px]">
-            <input
-              type="checkbox"
-              checked={dados.viaContratoGuardada}
-              aria-invalid={erros.viaContratoGuardada ? true : undefined}
-              aria-describedby={
-                erros.viaContratoGuardada ? "via-guardada-erro" : undefined
-              }
-              onChange={(e) =>
-                setDados({ ...dados, viaContratoGuardada: e.target.checked })
-              }
-              className="mt-0.5 size-5 shrink-0 accent-primary"
-            />
-            <span>A via assinada do contrato está guardada na clínica</span>
-          </label>
-          {erros.viaContratoGuardada && (
-            <p
-              id="via-guardada-erro"
-              className="text-sm font-semibold text-destructive"
-            >
-              {erros.viaContratoGuardada}
-            </p>
-          )}
-        </div>
-      </fieldset>
-      {erro && <Aviso tipo="erro" titulo={erro} />}
-      <div className="flex justify-end">
-        <Button type="submit" disabled={salvando}>
-          {salvando ? "Salvando…" : "Salvar dados iniciais"}
-        </Button>
-      </div>
-    </form>
-  );
-}
-
-// Evolução da sessão realizada (RF28): os campos obrigatórios e os limites são
-// conferidos antes do envio, com o erro junto de cada campo.
-function FormularioEvolucao({
-  prontuarioId,
-  sessaoId,
-  inicio,
-}: {
-  prontuarioId: string;
-  sessaoId: string;
-  inicio: string;
-}) {
-  const cache = useQueryClient();
-  const [dados, setDados] = useState({ queixa: "", planejamento: "" });
-  const [erros, setErros] = useState<ErrosDe<Evolucao>>({});
-  const [erro, setErro] = useState<string | null>(null);
-  async function salvar(evento: FormEvent<HTMLFormElement>) {
-    evento.preventDefault();
-    setErro(null);
-    const resultado = evolucaoSchema.safeParse(dados);
-    if (!resultado.success) {
-      setErros(errosPorCampo<Evolucao>(resultado.error.issues));
-      return;
-    }
-    setErros({});
-    try {
-      await api(`/prontuarios/${prontuarioId}/sessoes/${sessaoId}/evolucoes`, {
-        method: "POST",
-        body: JSON.stringify(resultado.data),
-      });
-      await cache.invalidateQueries({ queryKey: ["prontuario", prontuarioId] });
-    } catch (falha) {
-      setErro(
-        falha instanceof Error ? falha.message : "Não foi possível salvar.",
-      );
-    }
-  }
-  return (
-    <form
-      noValidate
-      onSubmit={salvar}
-      className="mt-4 flex flex-col gap-4 rounded-[12px] border border-border bg-muted p-4"
-    >
-      <h4 className="text-[15px] font-bold text-marca">
-        Registrar evolução · sessão de {dataHoraBr(inicio)}
-      </h4>
-      <p className="ui-dica">
-        O registro fica vinculado a esta sessão e não pode ser alterado depois
-        de salvo.
-      </p>
-      <Campo
-        rotulo="Evolução da queixa"
-        dica="Até 10 linhas e 1.000 caracteres."
-        erro={erros.queixa}
-      >
-        {(props) => (
-          <textarea
-            {...props}
-            value={dados.queixa}
-            onChange={(e) => setDados({ ...dados, queixa: e.target.value })}
-            className={classeTextoLongo}
-          />
-        )}
-      </Campo>
-      <Campo rotulo="Planejamento da próxima sessão" erro={erros.planejamento}>
-        {(props) => (
-          <textarea
-            {...props}
-            value={dados.planejamento}
-            onChange={(e) =>
-              setDados({ ...dados, planejamento: e.target.value })
-            }
-            className={classeTextoLongo}
-          />
-        )}
-      </Campo>
-      {erro && <Aviso tipo="erro" titulo={erro} />}
-      <div className="flex justify-end">
-        <Button type="submit">Salvar evolução</Button>
-      </div>
-    </form>
-  );
-}
 
 function AcaoSessao({
   prontuarioId,
@@ -302,13 +84,22 @@ type Prontuario = {
   supervisor: string | null;
   vinculadoEm: string | null;
   dadosIniciais: {
-    anamnese: string | null;
-    contrato: string | null;
-    dataAssinaturaContrato: string | null;
-    aceiteTclePesquisa: boolean | null;
-    viaContratoGuardada: boolean | null;
-    registradoEm: string | null;
-    registradoPor: string | null;
+    anamnese:
+      | (Anamnese & {
+          registradaEm: string | null;
+          registradaPor: string | null;
+        })
+      | null;
+    contrato: null | {
+      textoLivre: string | null;
+      dataAssinatura: string | null;
+      aceiteTclePesquisa: boolean | null;
+      viaGuardada: boolean | null;
+      registradoEm: string | null;
+      registradoPor: string | null;
+    };
+    // Só para o estagiário responsável, enquanto a anamnese não existe (RF69).
+    queixaDaInscricao: string | null;
   };
   historicoResponsaveis: {
     estagiarios: { nome: string; desde: string; vigente: boolean }[];
@@ -324,13 +115,8 @@ type Prontuario = {
     falta: FaltaDaSessao | null;
     cancelamento: CancelamentoDaSessao | null;
     canceladaPorDesligamento: boolean;
-    evolucao: null | {
-      id: string;
-      queixa: string;
-      planejamento: string;
-      registradaPor: string;
-      registradaEm: string;
-    };
+    numeroNoCiclo: number | null;
+    evolucao: EvolucaoRegistrada | null;
   }[];
   alta: null | { data: string; motivo: string };
   relatorioFinal: null | { estado: string };
@@ -409,8 +195,8 @@ export default function ProntuarioPage() {
     return <Aviso tipo="erro" titulo="Não foi possível abrir o prontuário." />;
 
   const p = consulta.data;
-  const { anamnese, contrato, dataAssinaturaContrato, registradoEm } =
-    p.dadosIniciais;
+  const { anamnese, contrato, queixaDaInscricao } = p.dadosIniciais;
+  const estagiario = sessao?.perfil === "estagiario";
   const cartao = "ui-cartao";
   return (
     <div className="flex flex-col gap-6">
@@ -468,61 +254,35 @@ export default function ProntuarioPage() {
         <h2 id="dados-iniciais" className="ui-h2">
           Dados iniciais
         </h2>
-        {anamnese || dataAssinaturaContrato ? (
-          <>
-            <div className="flex flex-col gap-1.5">
-              <h3 className="ui-rotulo">Anamnese</h3>
-              <p className="rounded-lg border border-border bg-muted p-3 text-[15px] leading-[1.55] whitespace-pre-wrap">
-                {anamnese ?? "Não registrada."}
-              </p>
-            </div>
-            <div className="flex flex-col gap-3">
-              <h3 className="ui-rotulo">Contrato terapêutico</h3>
-              {/* Registros anteriores à DF41 têm o contrato em texto livre. */}
-              {contrato && (
-                <p className="rounded-lg border border-border bg-muted p-3 text-[15px] leading-[1.55] whitespace-pre-wrap">
-                  {contrato}
-                </p>
-              )}
-              <Dados
-                itens={[
-                  [
-                    "Data de assinatura do contrato",
-                    dataBr(dataAssinaturaContrato),
-                  ],
-                  [
-                    "Termo de consentimento para pesquisa",
-                    p.dadosIniciais.aceiteTclePesquisa === null
-                      ? "Não informado"
-                      : p.dadosIniciais.aceiteTclePesquisa
-                        ? "Aceito"
-                        : "Não aceito",
-                  ],
-                  [
-                    "Via assinada",
-                    p.dadosIniciais.viaContratoGuardada
-                      ? "Guardada na clínica"
-                      : "Não informado",
-                  ],
-                ]}
-              />
-            </div>
-            <p className="ui-meta">
-              Registrado por{" "}
-              {p.dadosIniciais.registradoPor ?? "responsável não identificado"}{" "}
-              em {dataHoraBr(registradoEm)}
-            </p>
-          </>
+        {!anamnese && !contrato && (
+          <Aviso
+            tipo="info"
+            titulo="A anamnese e o contrato terapêutico ainda não foram registrados."
+          />
+        )}
+        {/* Anamnese e contrato são salvos separados, cada um uma vez (RF69). */}
+        {anamnese ? (
+          <LeituraAnamnese anamnese={anamnese} />
+        ) : estagiario ? (
+          <FormularioAnamnese
+            prontuarioId={p.id}
+            queixaDaInscricao={queixaDaInscricao}
+          />
         ) : (
-          <>
-            <Aviso
-              tipo="info"
-              titulo="A anamnese e o contrato terapêutico ainda não foram registrados."
-            />
-            {sessao?.perfil === "estagiario" && (
-              <FormularioDadosIniciais prontuarioId={p.id} />
-            )}
-          </>
+          contrato && (
+            <p className="ui-dica">A anamnese ainda não foi registrada.</p>
+          )
+        )}
+        {contrato ? (
+          <LeituraContrato contrato={contrato} />
+        ) : estagiario ? (
+          <FormularioContrato prontuarioId={p.id} />
+        ) : (
+          anamnese && (
+            <p className="ui-dica">
+              O contrato terapêutico ainda não foi registrado.
+            </p>
+          )
         )}
       </section>
       <SessoesAReagendar
@@ -575,24 +335,17 @@ export default function ProntuarioPage() {
                     <DetalheFalta falta={atendimento.falta} />
                   )}
                   {atendimento.evolucao ? (
-                    <div className="mt-2 flex flex-col gap-2 text-[15px]">
-                      <p>
-                        <strong>Evolução:</strong> {atendimento.evolucao.queixa}
-                      </p>
-                      <p>
-                        <strong>Planejamento:</strong>{" "}
-                        {atendimento.evolucao.planejamento}
-                      </p>
-                      <p className="ui-meta">
-                        Registrada por {atendimento.evolucao.registradaPor} em{" "}
-                        {dataHoraBr(atendimento.evolucao.registradaEm)}
-                      </p>
-                    </div>
+                    <LeituraEvolucao
+                      evolucao={atendimento.evolucao}
+                      inicio={atendimento.inicio}
+                      numeroNoCiclo={atendimento.numeroNoCiclo}
+                    />
                   ) : responsavel && atendimento.status === "realizada" ? (
                     <FormularioEvolucao
                       prontuarioId={p.id}
                       sessaoId={atendimento.id}
                       inicio={atendimento.inicio}
+                      numeroNoCiclo={atendimento.numeroNoCiclo}
                     />
                   ) : (
                     !atendimento.falta && (
