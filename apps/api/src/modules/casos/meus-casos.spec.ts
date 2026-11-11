@@ -105,11 +105,7 @@ describe('Casos sob responsabilidade do estagiário ou supervisor (RF23)', () =>
     'x-usuario-teste': JSON.stringify(pessoas[quem]),
   });
   const http = () => request(app.getHttpServer());
-  const meus = (quem: string, estagiarioId?: string) =>
-    http()
-      .get('/casos/meus')
-      .query(estagiarioId ? { estagiarioId } : {})
-      .set(como(quem));
+  const meus = (quem: string) => http().get('/casos/meus').set(como(quem));
   const nomes = (corpo: { nome: string }[]) => corpo.map((c) => c.nome);
 
   // Caso com a queixa guardada, para provar que não vaza (RNF17), a prioridade, o
@@ -253,21 +249,37 @@ describe('Casos sob responsabilidade do estagiário ou supervisor (RF23)', () =>
     expect(JSON.stringify(r.body)).not.toMatch(/Paulo Nunes|sigilos/);
   });
 
-  it('o supervisor filtra os casos pelo estagiário, sem ver os de outro supervisor (RF23, RNF16)', async () => {
+  it('cada caso traz o id do estagiário, para o filtro da tela; dois estagiários com o mesmo nome têm ids diferentes (RF23)', async () => {
     await cenario();
-    const r = await meus('ricardo', pessoas.camila.id);
-    expect(r.status).toBe(200);
-    expect(nomes(r.body)).toEqual([
-      'Gustavo Henrique Dias',
-      'Beatriz Oliveira Santos',
-    ]);
-    // Estagiário de outro supervisor: nada vaza pelo filtro (RNF16).
-    expect((await meus('ricardo', pessoas.joao.id)).body).toEqual([]);
-    // O estagiário não usa o filtro para ver casos de outro.
-    expect(nomes((await meus('ana', pessoas.camila.id)).body)).toEqual([
-      'Mariana Alves Toledo',
-      'Tatiane Moreira Lopes',
-    ]);
+    const [homonimo] = await db
+      .insert(usuarios)
+      .values({
+        nome: 'Camila Souza',
+        email: 'camila2@fbr.edu.br',
+        perfil: 'estagiario',
+      })
+      .returning();
+    const lucas = await criarCaso('Lucas Ferreira Prado', {
+      supervisor: 'ricardo',
+      estagiario: 'camila',
+    });
+    // O caso do Lucas passa ao estagiário homônimo.
+    await db
+      .update(vinculosEstagiario)
+      .set({ estagiarioId: homonimo.id })
+      .where(eq(vinculosEstagiario.casoId, lucas.casoId));
+    const r = (await meus('ricardo')).body as {
+      estagiario: string | null;
+      estagiarioId: string | null;
+    }[];
+    const camilas = r.filter((c) => c.estagiario === 'Camila Souza');
+    expect(new Set(camilas.map((c) => c.estagiarioId))).toEqual(
+      new Set([pessoas.camila.id, homonimo.id]),
+    );
+    // A Ana não recebe o id da Camila, que não tem caso em comum com ela.
+    expect(JSON.stringify((await meus('ana')).body)).not.toContain(
+      pessoas.camila.id,
+    );
   });
 
   it('estagiário sem casos recebe a lista vazia (RF23)', async () => {
@@ -335,18 +347,19 @@ describe('Casos sob responsabilidade do estagiário ou supervisor (RF23)', () =>
       nome: 'Mariana Alves Toledo',
       situacao: 'desligado_por_faltas',
       estagiario: null,
+      estagiarioId: null,
       estagiarioAnterior: 'Ana Beatriz Costa',
+      estagiarioAnteriorId: pessoas.ana.id,
     });
     expect(caso.vinculoEncerradoEm).toBeTruthy();
   });
 
-  it('só o estagiário e o supervisor consultam; sem sessão é 401, o filtro inválido é recusado e a resposta não fica em cache (RF23, RNF16, RNF17)', async () => {
+  it('só o estagiário e o supervisor consultam; sem sessão é 401 e a resposta não fica em cache (RF23, RNF16, RNF17)', async () => {
     await cenario();
     for (const quem of ['secretaria', 'coordenacao']) {
       expect([quem, (await meus(quem)).status]).toEqual([quem, 403]);
     }
     expect((await http().get('/casos/meus')).status).toBe(401);
-    expect((await meus('ricardo', 'nao-e-uuid')).status).toBe(400);
     expect((await meus('ana')).headers['cache-control']).toBe('no-store');
   });
 });

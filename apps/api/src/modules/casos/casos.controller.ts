@@ -12,12 +12,10 @@ import {
 import {
   buscaListaPacientesSchema,
   distribuicaoSchema,
-  filtroMeusCasosSchema,
   transferenciaSchema,
   vinculoEstagiarioSchema,
   type BuscaListaPacientes,
   type Distribuicao,
-  type FiltroMeusCasos,
   type Transferencia,
   type VinculoEstagiario,
 } from '@clinica/shared';
@@ -67,18 +65,14 @@ export class CasosController {
     return this.casos.distribuir(id, dados.supervisorId, autor);
   }
 
-  // RF21
-  // RF21 e RF23: "Meus casos" do supervisor, com o filtro por estagiário, e "Meus
-  // pacientes" do estagiário. Cada um vê só os casos sob a própria responsabilidade.
+  // RF21 e RF23: "Meus casos" do supervisor e "Meus pacientes" do estagiário. Cada
+  // um vê só os casos sob a própria responsabilidade. O filtro por estagiário do
+  // supervisor é feito na tela, pelo id de cada caso da lista.
   @Get('casos/meus')
   @Perfis('supervisor', 'estagiario')
   @Header('Cache-Control', 'no-store')
-  meus(
-    @Query(new ZodValidationPipe(filtroMeusCasosSchema))
-    filtro: FiltroMeusCasos,
-    @UsuarioAtual() usuario: UsuarioAutenticado,
-  ) {
-    return this.casos.meusCasos(usuario, filtro.estagiarioId);
+  meus(@UsuarioAtual() usuario: UsuarioAutenticado) {
+    return this.casos.meusCasos(usuario);
   }
 
   @Get('estagiarios/disponiveis')

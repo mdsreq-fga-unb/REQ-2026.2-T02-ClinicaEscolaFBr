@@ -158,27 +158,35 @@ export default function MeusCasosPage() {
   );
 
   // Filtro por estagiário (RF23): os estagiários dos casos da lista, e "Sem
-  // estagiário" para os que aguardam o vínculo.
+  // estagiário" para os que aguardam o vínculo. A opção é o id do estagiário, e o
+  // nome é só o rótulo: dois estagiários com o mesmo nome são duas opções.
   const todos = lista.data ?? [];
+  const idDoEstagiario = (caso: CasoDoSupervisor) =>
+    caso.estagiarioId ?? caso.estagiarioAnteriorId;
   const opcoes = [
     ...new Map(
-      todos
-        .filter((c) => c.estagiario ?? c.estagiarioAnterior)
-        .map((c) => {
-          const nome = (c.estagiario ?? c.estagiarioAnterior)!;
-          return [nome, nome] as const;
-        }),
-    ).keys(),
-  ].sort((a, b) => a.localeCompare(b, "pt-BR"));
-  const temSemEstagiario = todos.some(
-    (c) => !c.estagiario && !c.estagiarioAnterior,
-  );
+      todos.flatMap((c) => {
+        const id = idDoEstagiario(c);
+        const nome = c.estagiario ?? c.estagiarioAnterior;
+        return id && nome ? [[id, nome] as const] : [];
+      }),
+    ),
+  ].sort(([, a], [, b]) => a.localeCompare(b, "pt-BR"));
+  const temSemEstagiario = todos.some((c) => !idDoEstagiario(c));
+  // Se a opção escolhida sai da lista (o caso foi transferido, por exemplo), volta
+  // para "Todos", em vez de deixar uma lista vazia sem opção marcada.
+  const escolha =
+    filtro === TODOS ||
+    (filtro === SEM_ESTAGIARIO && temSemEstagiario) ||
+    opcoes.some(([id]) => id === filtro)
+      ? filtro
+      : TODOS;
   const visiveis = todos.filter((c) =>
-    filtro === TODOS
+    escolha === TODOS
       ? true
-      : filtro === SEM_ESTAGIARIO
-        ? !c.estagiario && !c.estagiarioAnterior
-        : (c.estagiario ?? c.estagiarioAnterior) === filtro,
+      : escolha === SEM_ESTAGIARIO
+        ? !idDoEstagiario(c)
+        : idDoEstagiario(c) === escolha,
   );
 
   return (
@@ -234,7 +242,7 @@ export default function MeusCasosPage() {
               <div className="flex flex-wrap gap-2">
                 {[
                   [TODOS, "Todos"],
-                  ...opcoes.map((nome) => [nome, nome]),
+                  ...opcoes.map(([id, nome]) => [id, nome]),
                   ...(temSemEstagiario
                     ? [[SEM_ESTAGIARIO, "Sem estagiário"]]
                     : []),
@@ -244,7 +252,7 @@ export default function MeusCasosPage() {
                       type="radio"
                       name="filtro-estagiario"
                       value={valor}
-                      checked={filtro === valor}
+                      checked={escolha === valor}
                       onChange={() => setFiltro(valor)}
                     />
                     <span>{rotulo}</span>
@@ -254,7 +262,7 @@ export default function MeusCasosPage() {
             </fieldset>
           )}
           <p role="status" className="sr-only">
-            {filtro === TODOS
+            {escolha === TODOS
               ? ""
               : `${visiveis.length} ${visiveis.length === 1 ? "caso" : "casos"}.`}
           </p>

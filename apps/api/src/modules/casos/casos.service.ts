@@ -291,14 +291,11 @@ export class CasosService {
   // RF21: casos sob a responsabilidade do supervisor, com o estagiário e o
   // prontuário do ciclo, quando já existem. O caso desligado por faltas continua na
   // lista, com a data em que o vínculo foi encerrado (RF37).
-  async meusCasos(
-    usuario: UsuarioAutenticado,
-    estagiarioId?: string,
-  ): Promise<CasoDoSupervisor[]> {
+  async meusCasos(usuario: UsuarioAutenticado): Promise<CasoDoSupervisor[]> {
     // RF23: o estagiário vê só os casos com vínculo vigente dele; o supervisor, os
-    // casos com atribuição vigente dele, que já incluem os dos seus estagiários, e
-    // pode filtrar por um deles. Os dois deixam de ver o caso ao perder o vínculo
-    // ou a atribuição (transferência, RF25; desligamento, RF37).
+    // casos com atribuição vigente dele, que já incluem os dos seus estagiários (o
+    // filtro por estagiário é da tela). Os dois deixam de ver o caso ao perder o
+    // vínculo ou a atribuição (transferência, RF25; desligamento, RF37).
     const doEstagiario = usuario.perfil === 'estagiario';
     const linhas = await this.db
       .select({
@@ -342,9 +339,6 @@ export class CasosService {
           doEstagiario
             ? eq(vinculosEstagiario.estagiarioId, usuario.id)
             : eq(atribuicoesSupervisor.supervisorId, usuario.id),
-          !doEstagiario && estagiarioId
-            ? eq(vinculosEstagiario.estagiarioId, estagiarioId)
-            : undefined,
         ),
       )
       .orderBy(asc(inscricoes.criadaEm));
@@ -372,6 +366,7 @@ export class CasosService {
       ? await this.db
           .selectDistinctOn([vinculosEstagiario.casoId], {
             casoId: vinculosEstagiario.casoId,
+            id: estagiario.id,
             nome: estagiario.nome,
           })
           .from(vinculosEstagiario)
@@ -387,6 +382,9 @@ export class CasosService {
       : [];
     return linhas.map((l) => {
       const decisao = decisoes.find((d) => d.casoId === l.casoId);
+      const anterior = decisao
+        ? anteriores.find((a) => a.casoId === l.casoId)
+        : undefined;
       return {
         casoId: l.casoId,
         numero: l.numero,
@@ -394,9 +392,8 @@ export class CasosService {
         prioridade: cores.get(l.inscricaoId) ?? null,
         estagiario: l.estagiario,
         estagiarioId: l.estagiarioId,
-        estagiarioAnterior: decisao
-          ? (anteriores.find((a) => a.casoId === l.casoId)?.nome ?? null)
-          : null,
+        estagiarioAnterior: anterior?.nome ?? null,
+        estagiarioAnteriorId: anterior?.id ?? null,
         supervisor: l.supervisor,
         prontuarioId: l.prontuarioId,
         situacao: l.situacao,
@@ -711,6 +708,14 @@ export class CasosService {
           (usuario.perfil === 'supervisor' &&
             linha.supervisorId === usuario.id)));
     if (!permitido) {
+      // A tentativa fica registrada, como no acesso negado ao prontuário (RNF52):
+      // é o que a tela de acesso negado da prancha 4-1 informa.
+      await this.auditoria.registrar({
+        usuarioId: usuario.id,
+        operacao: 'consultar_responsaveis_negada',
+        entidade: 'casos',
+        entidadeId: casoId,
+      });
       throw new ForbiddenException('Você não tem acesso a este caso.');
     }
     return this.paraResposta(linha, usuario);

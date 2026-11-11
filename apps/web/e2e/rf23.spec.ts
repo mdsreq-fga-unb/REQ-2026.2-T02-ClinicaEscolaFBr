@@ -21,6 +21,7 @@ import { EQUIPE } from "./equipe";
 let doEstagiario = "";
 let deOutro = "";
 let prontuarioDeOutro = "";
+let casoDeOutro = "";
 const semEstagiario = `RF23 sem estagiário ${Date.now()}`;
 
 const url = () =>
@@ -35,6 +36,7 @@ test.beforeAll(async ({ playwright }) => {
   // Caso de outro estagiário, com prontuário, que o da semente não pode abrir.
   const outro = await criarPacienteComSessoes(playwright, []);
   deOutro = outro.paciente;
+  casoDeOutro = outro.casoId;
   // Caso do supervisor da semente que ainda aguarda o vínculo (RF21).
   await criarCasoTriado(playwright, semEstagiario);
   const db = createDb(url());
@@ -124,6 +126,21 @@ test("o estagiário tem o acesso direto negado ao prontuário de um caso de outr
   await page.getByRole("link", { name: "Voltar para meus pacientes" }).click();
   await expect(page).toHaveURL(/\/meus-pacientes$/);
   await semViolacoes(page);
+});
+
+test("o estagiário tem o acesso direto negado à ficha de um caso de outro, na mesma tela do prontuário (RF23, RNF16, RNF56)", async ({
+  browser,
+}) => {
+  const page = await entrar(browser, "estagiario");
+  await page.goto(`/pacientes/${casoDeOutro}`);
+  await expect(
+    page.getByRole("heading", { name: "Você não tem acesso a este caso" }),
+  ).toBeVisible();
+  await expect(page.getByText(/Tentativa registrada em/)).toBeVisible();
+  await expect(page.getByText(deOutro)).toHaveCount(0);
+  await semViolacoes(page);
+  await page.getByRole("link", { name: "Voltar para meus pacientes" }).click();
+  await expect(page).toHaveURL(/\/meus-pacientes$/);
 });
 
 test("o supervisor filtra 'Meus casos' pelo estagiário, sem violações WCAG (RF23, RNF16, RNF24, RNF56)", async ({

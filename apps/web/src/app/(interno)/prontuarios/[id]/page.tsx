@@ -24,6 +24,7 @@ import {
   SeloSessao,
 } from "@/components/assiduidade/faltas";
 import { SessoesAReagendar } from "@/components/assiduidade/desligamento";
+import { AcessoNegado } from "@/components/comum/acesso-negado";
 import { Aviso } from "@/components/comum/aviso";
 import {
   Campo,
@@ -31,7 +32,7 @@ import {
   classeEntrada,
 } from "@/components/comum/campo";
 import { Dados } from "@/components/comum/dados";
-import { Button, buttonVariants } from "@/components/ui/button";
+import { Button } from "@/components/ui/button";
 import { api, ErroApi } from "@/lib/api";
 import { dataBr, dataHoraBr, idade, NOMES_SITUACAO_CASO } from "@/lib/formato";
 import { useSessao } from "@/lib/sessao";
@@ -342,36 +343,6 @@ type Prontuario = {
   acoesCancelamento: AcoesCancelamento;
 };
 
-// Acesso negado: a mesma tela para qualquer recusa, sem o nome do paciente (RNF25).
-function AcessoNegado({
-  voltar,
-  rotuloVoltar,
-}: {
-  voltar: string;
-  rotuloVoltar: string;
-}) {
-  const [registradoEm] = useState(() => new Date().toISOString());
-  return (
-    <div className="mx-auto mt-10 flex max-w-[640px] flex-col items-center gap-3.5 px-4 py-10 text-center md:px-10 md:py-[72px]">
-      <span aria-hidden className="ui-vazio-icone">
-        <Lock className="size-7" />
-      </span>
-      <h1 className="ui-titulo">Você não tem acesso a este prontuário</h1>
-      <p className="text-base">
-        O prontuário só pode ser aberto pelo estagiário responsável pelo caso,
-        pelo supervisor dele e pela coordenação. Se você acha que deveria ter
-        acesso, fale com o supervisor do caso.
-      </p>
-      <Link href={voltar} className={buttonVariants()}>
-        Voltar para {rotuloVoltar.toLowerCase()}
-      </Link>
-      <p className="ui-meta">
-        Tentativa registrada em {dataHoraBr(registradoEm)}.
-      </p>
-    </div>
-  );
-}
-
 // Prontuário, para o estagiário responsável e o supervisor do caso e, só para
 // consulta, para a coordenação (RF55, DF32).
 export default function ProntuarioPage() {
@@ -404,7 +375,17 @@ export default function ProntuarioPage() {
         ? "Meus pacientes"
         : "Pacientes";
   if (consulta.error instanceof ErroApi && consulta.error.status === 403)
-    return <AcessoNegado voltar={voltar} rotuloVoltar={rotuloVoltar} />;
+    return (
+      <AcessoNegado
+        titulo="Você não tem acesso a este prontuário"
+        voltar={voltar}
+        rotuloVoltar={rotuloVoltar}
+      >
+        O prontuário só pode ser aberto pelo estagiário responsável pelo caso,
+        pelo supervisor dele e pela coordenação. Se você acha que deveria ter
+        acesso, fale com o supervisor do caso.
+      </AcessoNegado>
+    );
   if (consulta.isError || !consulta.data)
     return <Aviso tipo="erro" titulo="Não foi possível abrir o prontuário." />;
 

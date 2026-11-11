@@ -11,6 +11,7 @@ const caso = (nome: string, extra: Record<string, unknown> = {}) => ({
   estagiario: "Ana Beatriz Costa",
   estagiarioId: "e1",
   estagiarioAnterior: null,
+  estagiarioAnteriorId: null,
   supervisor: "Ricardo Menezes",
   prontuarioId: `p-${nome}`,
   situacao: "em_atendimento",
@@ -33,19 +34,20 @@ const CASOS = [
     estagiario: null,
     estagiarioId: null,
     estagiarioAnterior: "Ana Beatriz Costa",
+    estagiarioAnteriorId: "e1",
     situacao: "desligado_por_faltas",
     vinculoEncerradoEm: "2026-10-28T13:00:00.000Z",
   }),
 ];
 
-function simularApi() {
+function simularApi(casos: unknown[] = CASOS) {
   vi.stubGlobal(
     "fetch",
     vi.fn(async (url: string) => {
       const [status, corpo] = url.endsWith("/auth/sessao")
         ? [200, { id: "u1", nome: "Ricardo", perfil: "supervisor" }]
         : url.endsWith("/casos/meus")
-          ? [200, CASOS]
+          ? [200, casos]
           : url.endsWith("/vagas/liberadas")
             ? [200, []]
             : [404, {}];
@@ -133,5 +135,39 @@ describe("Meus casos do supervisor com o filtro por estagiário (RF23)", () => {
 
     fireEvent.click(screen.getByRole("radio", { name: "Todos" }));
     expect(pacientes()).toHaveLength(4);
+  });
+
+  it("dois estagiários com o mesmo nome são duas opções, e cada uma filtra só os casos do seu id (RF23)", async () => {
+    simularApi([
+      caso("Mariana Alves Toledo"),
+      caso("Gustavo Henrique Dias", {
+        estagiario: "Ana Beatriz Costa",
+        estagiarioId: "e9",
+      }),
+      caso("Sérgio Antunes Freitas", {
+        estagiario: null,
+        estagiarioId: null,
+        estagiarioAnterior: "Ana Beatriz Costa",
+        estagiarioAnteriorId: "e9",
+        situacao: "desligado_por_faltas",
+        vinculoEncerradoEm: "2026-10-28T13:00:00.000Z",
+      }),
+    ]);
+    abrir();
+    const grupo = await screen.findByRole("group", { name: "Estagiário" });
+    expect(
+      Array.from(grupo.querySelectorAll("label")).map((l) => l.textContent),
+    ).toEqual(["Todos", "Ana Beatriz Costa", "Ana Beatriz Costa"]);
+    const [primeira, segunda] = screen.getAllByRole("radio", {
+      name: "Ana Beatriz Costa",
+    });
+
+    fireEvent.click(primeira!);
+    expect(pacientes()).toEqual(["Mariana Alves Toledo"]);
+    fireEvent.click(segunda!);
+    expect(pacientes()).toEqual([
+      "Gustavo Henrique Dias",
+      "Sérgio Antunes Freitas",
+    ]);
   });
 });

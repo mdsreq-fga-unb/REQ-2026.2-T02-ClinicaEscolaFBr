@@ -4,7 +4,7 @@ Procedimento do teste de desempenho do [RNF12](../requisitos/nao-funcionais.md#r
 
 ## Cenário de referência
 
-- **Carga:** 30 pessoas da equipe usando o sistema ao mesmo tempo, por 10 minutos, cada uma com a sua conta. Um terço é coordenação, que lista e distribui casos; um terço são supervisores, que veem os seus casos e vinculam estagiários; um terço é secretaria, que consulta a lista de Pacientes e os responsáveis pelo caso, busca pacientes e agenda sessões.
+- **Carga:** 30 pessoas da equipe usando o sistema ao mesmo tempo, por 10 minutos, cada uma com a sua conta. Um quarto é coordenação, que lista e distribui casos; um quarto são supervisores, que veem os seus casos e vinculam estagiários; um quarto é secretaria, que consulta a lista de Pacientes e os responsáveis pelo caso, busca pacientes e agenda sessões; um quarto são estagiários, que abrem "Meus pacientes".
 - **Massa de dados:** dois semestres de operação, com 360 inscrições, 200 pacientes em atendimento e 4.000 sessões, criados pelo `semear-carga`.
 - **Ambiente:** a homologação, com a mesma configuração do servidor de produção.
 
@@ -13,7 +13,7 @@ Cada operação tem o seu limite: o RNF só passa se **todas** as operações de
 As operações medidas são as que existem hoje:
 
 - **RNF12:** buscar paciente e agendar sessão (RF10). Remarcar, confirmar presença e cancelar entram quando forem construídos (Ciclo 4).
-- **RNF21:** listar casos pendentes, ver a disponibilidade dos supervisores, distribuir (RF18, RF20), ver os próprios casos e vincular estagiário (RF21), e a lista de Pacientes e os responsáveis pelo caso (RF22), consultados pela secretaria.
+- **RNF21:** listar casos pendentes, ver a disponibilidade dos supervisores, distribuir (RF18, RF20), ver os próprios casos e vincular estagiário (RF21), a lista de Pacientes e os responsáveis pelo caso (RF22), consultados pela secretaria, e os casos sob a responsabilidade do estagiário ("Meus pacientes") e do supervisor ("Meus casos") (RF23).
 
 ## Arquivos
 

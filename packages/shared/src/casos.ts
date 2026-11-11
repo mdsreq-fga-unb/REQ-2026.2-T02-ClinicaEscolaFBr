@@ -49,11 +49,13 @@ export type CasoDoSupervisor = {
   nome: string;
   prioridade: Cor | null;
   estagiario: string | null;
-  // Estagiário do vínculo vigente, para o filtro do supervisor (RF23).
+  // Estagiário do vínculo vigente, para o filtro do supervisor (RF23). O filtro usa
+  // o id, e não o nome, porque dois estagiários podem ter o mesmo nome.
   estagiarioId: string | null;
   // Estagiário do vínculo encerrado pelo desligamento (RF37), mostrado na lista
-  // do supervisor junto com a data (prancha 4-1).
+  // do supervisor junto com a data (prancha 4-1), e o id dele para o mesmo filtro.
   estagiarioAnterior: string | null;
+  estagiarioAnteriorId: string | null;
   // Supervisor do caso, mostrado na lista do estagiário (RF23).
   supervisor: string | null;
   prontuarioId: string | null;
@@ -64,12 +66,6 @@ export type CasoDoSupervisor = {
 
 // Caso da lista "Meus pacientes" do estagiário e "Meus casos" do supervisor (RF23).
 export type CasoSobResponsabilidade = CasoDoSupervisor;
-
-// Filtro de "Meus casos" pelo estagiário (RF23). Só o supervisor usa.
-export const filtroMeusCasosSchema = z.object({
-  estagiarioId: z.uuid("Estagiário inválido.").optional(),
-});
-export type FiltroMeusCasos = z.infer<typeof filtroMeusCasosSchema>;
 
 // Estagiário com conta ativa, com os pacientes em atendimento (RF21).
 export type EstagiarioDisponivel = {

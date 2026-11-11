@@ -4,6 +4,7 @@ import { Test } from '@nestjs/testing';
 import request from 'supertest';
 import {
   atribuicoesSupervisor,
+  auditoria,
   casos,
   inscricoes,
   usuarios,
@@ -247,6 +248,25 @@ describe('Consulta de responsáveis pelo caso (RF22)', () => {
         expect([quem, r.status]).toEqual([quem, 403]);
         expect(JSON.stringify(r.body)).not.toMatch(/Ana|Carla|Mariana/);
       }
+    });
+
+    it('a tentativa negada fica registrada na auditoria, com quem tentou e o caso, e o acesso permitido não gera registro (RF22, RF23, RNF52)', async () => {
+      const casoId = await criarCaso('Mariana Alves Toledo', {
+        supervisor: 'carla',
+        estagiario: 'ana',
+        situacao: 'em_atendimento',
+      });
+      expect((await responsaveis(casoId, 'ana')).status).toBe(200);
+      expect(await db.select().from(auditoria)).toEqual([]);
+      expect((await responsaveis(casoId, 'joao')).status).toBe(403);
+      const registros = await db.select().from(auditoria);
+      expect(registros).toHaveLength(1);
+      expect(registros[0]).toMatchObject({
+        usuarioId: pessoas.joao.id,
+        operacao: 'consultar_responsaveis_negada',
+        entidade: 'casos',
+        entidadeId: casoId,
+      });
     });
 
     it('caso inexistente: 404 para a secretaria e a coordenação, e o mesmo 403 do negado para os demais (RF22, RNF17, RNF25)', async () => {

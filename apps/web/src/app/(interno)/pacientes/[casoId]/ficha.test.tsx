@@ -128,15 +128,20 @@ describe("Ficha do paciente com os responsáveis (RF22)", () => {
     ]);
     abrir();
     expect(
-      await screen.findByText("Você não tem acesso a este caso."),
+      await screen.findByRole("heading", {
+        name: "Você não tem acesso a este caso",
+      }),
     ).toBeTruthy();
+    // A mesma tela da prancha 4-1, com a orientação e a tentativa registrada.
+    expect(screen.getByText(/fale com o supervisor do caso/)).toBeTruthy();
+    expect(screen.getByText(/Tentativa registrada em/)).toBeTruthy();
     expect(
       screen.queryByRole("region", { name: "Responsáveis pelo caso" }),
     ).toBeNull();
     expect(document.body.textContent).not.toMatch(/Roberto|Patrícia/);
     expect(
       screen
-        .getByRole("link", { name: "Voltar para Meus pacientes" })
+        .getByRole("link", { name: "Voltar para meus pacientes" })
         .getAttribute("href"),
     ).toBe("/meus-pacientes");
   });
