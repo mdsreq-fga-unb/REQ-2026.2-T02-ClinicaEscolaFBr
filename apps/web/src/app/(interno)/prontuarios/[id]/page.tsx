@@ -24,6 +24,8 @@ import { SessoesAReagendar } from "@/components/assiduidade/desligamento";
 import { Aviso } from "@/components/comum/aviso";
 import { Dados } from "@/components/comum/dados";
 import {
+  FormularioAnamnese,
+  FormularioContrato,
   LeituraEvolucao,
   type EvolucaoRegistrada,
 } from "@/components/prontuario/fichas";
@@ -421,7 +423,6 @@ export default function ProntuarioPage() {
                       <Link
                         className={buttonVariants({
                           variant: "outline",
-                          size: "sm",
                         })}
                         href={`/prontuarios/${p.id}/sessoes/${atendimento.id}/evolucao`}
                       >

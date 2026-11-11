@@ -1,7 +1,6 @@
 import { randomUUID } from "node:crypto";
-import { eq } from "drizzle-orm";
 import { expect, test } from "@playwright/test";
-import { createDb, prontuarios, sessoesAtendimento } from "@clinica/database";
+import { createDb } from "@clinica/database";
 import { API, entrar, fecharContextos, semViolacoes } from "./apoio";
 import { EQUIPE } from "./equipe";
 
@@ -182,25 +181,31 @@ test.describe.serial("Integração do Ciclo 3", () => {
       throw new Error("Este e2e só altera horários no banco local de teste.");
     }
     const db = createDb(dbUrl);
-    const [prontuario] = await db
-      .select({ casoId: prontuarios.casoId })
-      .from(prontuarios)
-      .where(eq(prontuarios.id, prontuarioId));
-    const [sessao] = await db
-      .select({ id: sessoesAtendimento.id })
-      .from(sessoesAtendimento)
-      .where(eq(sessoesAtendimento.casoId, prontuario.casoId))
-      .limit(1);
+    const {
+      rows: [prontuario],
+    } = await db.$client.query<{ casoId: string }>(
+      'SELECT caso_id AS "casoId" FROM prontuarios WHERE id = $1',
+      [prontuarioId],
+    );
+    const {
+      rows: [sessao],
+    } = await db.$client.query<{ id: string }>(
+      "SELECT id FROM sessoes_atendimento WHERE caso_id = $1 LIMIT 1",
+      [prontuario.casoId],
+    );
     expect(sessao).toBeTruthy();
     const inicio = new Date("2001-01-01T13:00:00.000Z");
-    await db
-      .update(sessoesAtendimento)
-      .set({
+    await db.$client.query(
+      `UPDATE sessoes_atendimento
+       SET inicio = $1, termino = $2, fim_intervalo_anotacoes = $3
+       WHERE id = $4`,
+      [
         inicio,
-        termino: new Date("2001-01-01T13:50:00.000Z"),
-        fimIntervaloAnotacoes: new Date("2001-01-01T14:00:00.000Z"),
-      })
-      .where(eq(sessoesAtendimento.id, sessao.id));
+        new Date("2001-01-01T13:50:00.000Z"),
+        new Date("2001-01-01T14:00:00.000Z"),
+        sessao.id,
+      ],
+    );
     await db.$client.end();
 
     await page.goto(`/prontuarios/${prontuarioId}`);
