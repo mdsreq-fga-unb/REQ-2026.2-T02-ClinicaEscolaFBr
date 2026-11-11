@@ -4,8 +4,8 @@
 // 95 do tempo de resposta de cada operação, com o limite do seu RNF:
 //   RNF12 (até 2 s): agendar sessão (RF10). Remarcar, confirmar e cancelar
 //     entram quando forem construídos (Ciclo 4).
-//   RNF21 (até 3 s): listar casos, distribuir (RF18, RF20) e vincular (RF21).
-//     A consulta de responsáveis (RF22) entra quando for construída.
+//   RNF21 (até 3 s): listar casos, distribuir (RF18, RF20), vincular (RF21) e
+//     consultar os responsáveis pelo caso (RF22).
 //
 // Uso: k6 run -e API=http://localhost:3333 -e SENHA_CARGA=... scripts/carga/rnf12-rnf21.js
 // Opções: -e USUARIOS=30 -e DURACAO=10m -e RELATORIO=relatorio-testes/carga.json
@@ -31,8 +31,9 @@ const RNFS = {
   },
   RNF21: {
     limite: 3000,
-    rfs: "RF18, RF20, RF21",
-    descricao: "listagens de casos, distribuição e vínculo",
+    rfs: "RF18, RF20, RF21, RF22",
+    descricao:
+      "listagens de casos, distribuição, vínculo e consulta de responsáveis",
     operacoes: [
       "listar_pendentes",
       "disponibilidade",
@@ -40,6 +41,8 @@ const RNFS = {
       "meus_casos",
       "estagiarios_disponiveis",
       "vincular",
+      "lista_pacientes",
+      "responsaveis",
     ],
   },
 };
@@ -159,10 +162,22 @@ function supervisor() {
   }
 }
 
-// A secretaria busca o paciente e agenda a sessão (RF10), num horário só desta
-// pessoa simulada e desta repetição, para não haver conflito entre elas.
+// A secretaria consulta a lista de Pacientes e os responsáveis de um caso (RF22),
+// busca o paciente e agenda a sessão (RF10), num horário só desta pessoa simulada
+// e desta repetição, para não haver conflito entre elas.
 function secretaria() {
   entrar(conta("secretaria"));
+  const lista = http.get(`${API}/pacientes`, medir("RNF21", "lista_pacientes"));
+  check(lista, { "lista de pacientes": (r) => r.status === 200 });
+  const naLista = lista.status === 200 ? lista.json().pacientes : [];
+  if (naLista.length) {
+    const caso = naLista[(__VU * 7 + __ITER) % naLista.length];
+    const res = http.get(
+      `${API}/casos/${caso.casoId}/responsaveis`,
+      medir("RNF21", "responsaveis"),
+    );
+    check(res, { responsaveis: (r) => r.status === 200 });
+  }
   const busca = http.get(
     `${API}/sessoes/pacientes?busca=Paciente%20Carga`,
     medir("RNF12", "buscar_paciente"),

@@ -217,7 +217,7 @@ export class TriagemService {
     const chave = this.config.getOrThrow<string>('CHAVE_DADOS');
     return this.db.transaction(async (tx) => {
       const [inscricao] = await tx
-        .select({ id: inscricoes.id })
+        .select({ id: inscricoes.id, criadaEm: inscricoes.criadaEm })
         .from(inscricoes)
         .where(eq(inscricoes.id, inscricaoId))
         .for('update');
@@ -255,7 +255,11 @@ export class TriagemService {
       if (!anterior) {
         await tx
           .insert(casos)
-          .values({ inscricaoId, situacao: 'aguardando_distribuicao' })
+          .values({
+            inscricaoId,
+            situacao: 'aguardando_distribuicao',
+            entradaNaFilaEm: inscricao.criadaEm,
+          })
           .onConflictDoNothing({ target: casos.inscricaoId });
       }
 

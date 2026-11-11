@@ -14,6 +14,7 @@ import {
   count,
   desc,
   eq,
+  ilike,
   inArray,
   isNull,
   ne,
@@ -31,21 +32,26 @@ import {
   type Db,
 } from '@clinica/database';
 import {
-  CORES,
+  LIMITE_LISTA_PACIENTES,
   type CasoAguardando,
   type CasoDoSupervisor,
   type CasoJaDistribuido,
   type Cor,
   type EstagiarioDisponivel,
+  type ListaDePacientes,
+  type ResponsaveisDoCaso,
   type ResultadoDistribuicao,
   type ResultadoVinculo,
+  type SituacaoCaso,
   type SupervisorDisponivel,
 } from '@clinica/shared';
 import type { UsuarioAutenticado } from '../../auth/usuario-autenticado';
 import { AuditoriaService } from '../../auditoria/auditoria.service';
+import { escaparLike } from '../../common/busca';
 import { decifrar } from '../../common/criptografia';
 import { DB } from '../../database/database.module';
 import { ParametrosService } from '../../parametros/parametros.service';
+import { FilaService } from '../fila/fila.service';
 import { DesligamentosService } from '../assiduidade/desligamentos.service';
 
 const estagiario = aliasedTable(usuarios, 'estagiario');
@@ -68,6 +74,7 @@ export class CasosService {
     private readonly parametros: ParametrosService,
     private readonly config: ConfigService,
     private readonly desligamentos: DesligamentosService,
+    private readonly fila: FilaService,
   ) {}
 
   // Prioridade clínica vigente de cada inscrição: a decisão mais recente (RNF5).
@@ -95,54 +102,19 @@ export class CasosService {
     return vigentes;
   }
 
-  // RF18: casos triados sem supervisor, por prioridade clínica e, na mesma
-  // prioridade, da inscrição mais antiga para a mais recente. Sem a queixa.
+  // RF18 usa a mesma ordem do RF7, restringindo aos casos sem supervisor.
   async aguardandoDistribuicao(): Promise<CasoAguardando[]> {
-    const linhas = await this.db
-      .select({
-        casoId: casos.id,
-        inscricaoId: inscricoes.id,
-        numero: inscricoes.numero,
-        nome: inscricoes.nomeCompleto,
-        dataInscricao: inscricoes.criadaEm,
-      })
-      .from(casos)
-      .innerJoin(inscricoes, eq(inscricoes.id, casos.inscricaoId))
-      .where(eq(casos.situacao, 'aguardando_distribuicao'));
-    const semSupervisor = await this.semAtribuicao(linhas.map((l) => l.casoId));
-    // Só casos triados: a prioridade clínica confirmada é o que os torna casos (RF6).
-    const cores = await this.prioridades(linhas.map((l) => l.inscricaoId));
-    return linhas
-      .filter((l) => semSupervisor.has(l.casoId) && cores.has(l.inscricaoId))
-      .map((l) => ({
-        casoId: l.casoId,
-        numero: l.numero,
-        nome: l.nome,
-        prioridade: cores.get(l.inscricaoId)!,
-        dataInscricao: l.dataInscricao.toISOString(),
-      }))
-      .sort(
-        (a, b) =>
-          CORES.indexOf(a.prioridade) - CORES.indexOf(b.prioridade) ||
-          a.dataInscricao.localeCompare(b.dataInscricao) ||
-          a.numero.localeCompare(b.numero),
-      );
-  }
-
-  // Casos, entre os informados, sem atribuição de supervisor vigente.
-  private async semAtribuicao(casoIds: string[]) {
-    if (casoIds.length === 0) return new Set<string>();
-    const comSupervisor = await this.db
-      .select({ casoId: atribuicoesSupervisor.casoId })
-      .from(atribuicoesSupervisor)
-      .where(
-        and(
-          inArray(atribuicoesSupervisor.casoId, casoIds),
-          eq(atribuicoesSupervisor.vigente, true),
-        ),
-      );
-    const ocupados = new Set(comSupervisor.map((c) => c.casoId));
-    return new Set(casoIds.filter((id) => !ocupados.has(id)));
+    return (await this.fila.ordenada())
+      .filter(
+        (i) => i.situacao === 'aguardando_distribuicao' && !i.supervisorId,
+      )
+      .map(({ casoId, numero, nome, prioridade, dataInscricao }) => ({
+        casoId,
+        numero,
+        nome,
+        prioridade,
+        dataInscricao,
+      }));
   }
 
   // Casos ativos de um supervisor: atribuição vigente e caso em andamento. O caso
@@ -591,5 +563,115 @@ export class CasosService {
       }
       throw erro;
     }
+  }
+
+  // Responsáveis vigentes de cada caso: o supervisor da atribuição vigente e o
+  // estagiário do vínculo vigente (RF22). Sem dado clínico (RNF17).
+  private consultaDeResponsaveis() {
+    return this.db
+      .select({
+        casoId: casos.id,
+        situacao: casos.situacao,
+        numero: inscricoes.numero,
+        nome: inscricoes.nomeCompleto,
+        supervisorId: atribuicoesSupervisor.supervisorId,
+        supervisor: supervisor.nome,
+        estagiarioId: vinculosEstagiario.estagiarioId,
+        estagiario: estagiario.nome,
+      })
+      .from(casos)
+      .innerJoin(inscricoes, eq(inscricoes.id, casos.inscricaoId))
+      .leftJoin(
+        atribuicoesSupervisor,
+        and(
+          eq(atribuicoesSupervisor.casoId, casos.id),
+          eq(atribuicoesSupervisor.vigente, true),
+        ),
+      )
+      .leftJoin(
+        supervisor,
+        eq(supervisor.id, atribuicoesSupervisor.supervisorId),
+      )
+      .leftJoin(
+        vinculosEstagiario,
+        and(
+          eq(vinculosEstagiario.casoId, casos.id),
+          eq(vinculosEstagiario.vigente, true),
+        ),
+      )
+      .leftJoin(estagiario, eq(estagiario.id, vinculosEstagiario.estagiarioId));
+  }
+
+  // Nome, número só para quem pode vê-lo, responsáveis e situação (RNF17).
+  private paraResposta(
+    l: {
+      casoId: string;
+      nome: string;
+      numero: string;
+      situacao: SituacaoCaso;
+      supervisor: string | null;
+      estagiario: string | null;
+    },
+    usuario: UsuarioAutenticado,
+  ): ResponsaveisDoCaso {
+    return {
+      casoId: l.casoId,
+      nome: l.nome,
+      ...(usuario.perfil === 'secretaria' ? {} : { numero: l.numero }),
+      situacao: l.situacao,
+      supervisor: l.supervisor ?? null,
+      estagiario: l.estagiario ?? null,
+    };
+  }
+
+  // RF22: lista de Pacientes da secretaria e da coordenação, com os responsáveis
+  // de cada caso. O número da inscrição vem só para a coordenação (RNF17). Busca um
+  // a mais que o limite para saber se a lista foi cortada, sem contar a tabela
+  // inteira (RNF21).
+  async listaDePacientes(
+    busca: string | undefined,
+    usuario: UsuarioAutenticado,
+  ): Promise<ListaDePacientes> {
+    const linhas = await this.consultaDeResponsaveis()
+      .where(
+        busca
+          ? ilike(inscricoes.nomeCompleto, `%${escaparLike(busca)}%`)
+          : undefined,
+      )
+      .orderBy(asc(inscricoes.nomeCompleto), asc(casos.id))
+      .limit(LIMITE_LISTA_PACIENTES + 1);
+    return {
+      pacientes: linhas
+        .slice(0, LIMITE_LISTA_PACIENTES)
+        .map((l) => this.paraResposta(l, usuario)),
+      cortada: linhas.length > LIMITE_LISTA_PACIENTES,
+    };
+  }
+
+  // RF22: secretaria e coordenação consultam qualquer caso; o estagiário e o
+  // supervisor, só os que têm vínculo ou atribuição vigente nele. Para quem não
+  // tem acesso, o caso inexistente responde como o negado, sem revelar o que
+  // existe (RNF25).
+  async responsaveis(
+    casoId: string,
+    usuario: UsuarioAutenticado,
+  ): Promise<ResponsaveisDoCaso> {
+    const [linha] = await this.consultaDeResponsaveis().where(
+      eq(casos.id, casoId),
+    );
+    const amplo =
+      usuario.perfil === 'secretaria' || usuario.perfil === 'coordenacao';
+    if (!linha && amplo) throw new NotFoundException('Caso não encontrado.');
+    const permitido =
+      amplo ||
+      (!!linha &&
+        ((usuario.perfil === 'estagiario' &&
+          linha.estagiarioId === usuario.id) ||
+          (usuario.perfil === 'supervisor' &&
+            linha.supervisorId === usuario.id)));
+    if (!permitido) {
+      throw new ForbiddenException('Você não tem acesso a este caso.');
+    }
+    return this.paraResposta(linha, usuario);
   }
 }

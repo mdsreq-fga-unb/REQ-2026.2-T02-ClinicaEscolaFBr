@@ -10,3 +10,4 @@ export * from "./confirmacao";
 export * from "./cancelamento";
 export * from "./agenda";
 export * from "./verificacao";
+export * from "./fila";

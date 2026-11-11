@@ -125,6 +125,7 @@ describe('Agendamento de sessão (RF10)', () => {
     const [caso] = await db
       .insert(casos)
       .values({
+        entradaNaFilaEm: inscricao.criadaEm,
         inscricaoId: inscricao.id,
         situacao: estagiario ? 'em_atendimento' : 'aguardando_vinculo',
       })

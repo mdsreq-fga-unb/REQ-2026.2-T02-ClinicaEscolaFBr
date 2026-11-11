@@ -135,7 +135,7 @@ async function principal() {
             criadaEm: new Date(inicio + i * 12 * 3_600_000),
           })),
         )
-        .returning({ id: inscricoes.id });
+        .returning({ id: inscricoes.id, criadaEm: inscricoes.criadaEm });
       await tx.insert(decisoesPrioridade).values(
         novas.map((n, i) => ({
           inscricaoId: n.id,
@@ -150,6 +150,7 @@ async function principal() {
         .values(
           novas.map((n, i) => ({
             inscricaoId: n.id,
+            entradaNaFilaEm: n.criadaEm,
             situacao:
               i < PACIENTES_EM_ATENDIMENTO
                 ? ('em_atendimento' as const)
