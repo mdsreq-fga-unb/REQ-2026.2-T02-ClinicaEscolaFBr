@@ -6,11 +6,14 @@ import {
   Param,
   ParseUUIDPipe,
   Post,
+  Query,
   UseGuards,
 } from '@nestjs/common';
 import {
+  buscaListaPacientesSchema,
   distribuicaoSchema,
   vinculoEstagiarioSchema,
+  type BuscaListaPacientes,
   type Distribuicao,
   type VinculoEstagiario,
 } from '@clinica/shared';
@@ -24,7 +27,8 @@ import {
 import { ZodValidationPipe } from '../../common/zod-validation.pipe';
 import { CasosService } from './casos.service';
 
-// Distribuição de casos (CP5). Secretaria e estagiário não acessam nenhuma rota.
+// Distribuição de casos (CP5). Na distribuição e no vínculo, secretaria e estagiário
+// não acessam rota nenhuma; a consulta de responsáveis (RF22) é a exceção.
 @Controller()
 @UseGuards(AutenticadoGuard, PerfisGuard)
 export class CasosController {
@@ -80,5 +84,28 @@ export class CasosController {
     @UsuarioAtual() autor: UsuarioAutenticado,
   ) {
     return this.casos.vincularEstagiario(id, dados.estagiarioId, autor);
+  }
+
+  // RF22: a lista de Pacientes da secretaria e da coordenação, sem dado clínico.
+  @Get('pacientes')
+  @Perfis('secretaria', 'coordenacao')
+  @Header('Cache-Control', 'no-store')
+  pacientes(
+    @Query(new ZodValidationPipe(buscaListaPacientesSchema))
+    filtro: BuscaListaPacientes,
+    @UsuarioAtual() usuario: UsuarioAutenticado,
+  ) {
+    return this.casos.listaDePacientes(filtro.busca, usuario);
+  }
+
+  // RF22: o estagiário e o supervisor responsáveis, para quem tem acesso ao caso.
+  @Get('casos/:id/responsaveis')
+  @Perfis('secretaria', 'coordenacao', 'estagiario', 'supervisor')
+  @Header('Cache-Control', 'no-store')
+  responsaveis(
+    @Param('id', ParseUUIDPipe) id: string,
+    @UsuarioAtual() usuario: UsuarioAutenticado,
+  ) {
+    return this.casos.responsaveis(id, usuario);
   }
 }

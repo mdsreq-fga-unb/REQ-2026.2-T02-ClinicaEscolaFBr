@@ -26,6 +26,7 @@ import {
   SessoesComFaltas,
   type SessaoDoCiclo,
 } from "@/components/assiduidade/faltas";
+import { QuadroResponsaveis } from "@/components/casos/responsaveis";
 import { Aviso } from "@/components/comum/aviso";
 import { Dados } from "@/components/comum/dados";
 import { Button, buttonVariants } from "@/components/ui/button";
@@ -272,6 +273,7 @@ export default function PacientePage() {
           />
         </section>
       </div>
+      <QuadroResponsaveis casoId={d.casoId} />
       <HistoricoFaltas
         id="historico-faltas"
         contagem={d.faltasNoCiclo}

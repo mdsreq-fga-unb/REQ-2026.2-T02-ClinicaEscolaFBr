@@ -76,3 +76,31 @@ export type ResultadoVinculo = {
   estagiario: string;
   prontuarioId: string;
 };
+
+// Consulta de responsáveis (RF22). Só nomes e a situação do caso: nunca a queixa,
+// a prioridade clínica nem o prontuário (RNF17).
+
+// Quantos pacientes a lista devolve de uma vez (RNF21).
+export const LIMITE_LISTA_PACIENTES = 200;
+
+// Busca da lista de Pacientes pelo nome.
+export const buscaListaPacientesSchema = z.object({
+  busca: z.string().trim().max(120).optional(),
+});
+export type BuscaListaPacientes = z.infer<typeof buscaListaPacientesSchema>;
+
+// Responsáveis vigentes do caso. O campo que falta vem como null, e a tela mostra
+// "pendente de distribuição", sem nome.
+export type ResponsaveisDoCaso = {
+  casoId: string;
+  situacao: SituacaoCaso;
+  supervisor: string | null;
+  estagiario: string | null;
+};
+
+// Linha da lista de Pacientes (secretaria e coordenação). O número da inscrição
+// vem só para a coordenação (RNF17).
+export type PacienteDaLista = ResponsaveisDoCaso & {
+  nome: string;
+  numero?: string;
+};

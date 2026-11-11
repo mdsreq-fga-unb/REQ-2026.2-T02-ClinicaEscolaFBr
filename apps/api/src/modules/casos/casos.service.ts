@@ -14,6 +14,7 @@ import {
   count,
   desc,
   eq,
+  ilike,
   inArray,
   isNull,
   ne,
@@ -31,17 +32,21 @@ import {
   type Db,
 } from '@clinica/database';
 import {
+  LIMITE_LISTA_PACIENTES,
   type CasoAguardando,
   type CasoDoSupervisor,
   type CasoJaDistribuido,
   type Cor,
   type EstagiarioDisponivel,
+  type PacienteDaLista,
+  type ResponsaveisDoCaso,
   type ResultadoDistribuicao,
   type ResultadoVinculo,
   type SupervisorDisponivel,
 } from '@clinica/shared';
 import type { UsuarioAutenticado } from '../../auth/usuario-autenticado';
 import { AuditoriaService } from '../../auditoria/auditoria.service';
+import { escaparLike } from '../../common/busca';
 import { decifrar } from '../../common/criptografia';
 import { DB } from '../../database/database.module';
 import { ParametrosService } from '../../parametros/parametros.service';
@@ -557,5 +562,98 @@ export class CasosService {
       }
       throw erro;
     }
+  }
+
+  // Responsáveis vigentes de cada caso: o supervisor da atribuição vigente e o
+  // estagiário do vínculo vigente (RF22). Sem dado clínico (RNF17).
+  private consultaDeResponsaveis() {
+    return this.db
+      .select({
+        casoId: casos.id,
+        situacao: casos.situacao,
+        numero: inscricoes.numero,
+        nome: inscricoes.nomeCompleto,
+        supervisorId: atribuicoesSupervisor.supervisorId,
+        supervisor: supervisor.nome,
+        estagiarioId: vinculosEstagiario.estagiarioId,
+        estagiario: estagiario.nome,
+      })
+      .from(casos)
+      .innerJoin(inscricoes, eq(inscricoes.id, casos.inscricaoId))
+      .leftJoin(
+        atribuicoesSupervisor,
+        and(
+          eq(atribuicoesSupervisor.casoId, casos.id),
+          eq(atribuicoesSupervisor.vigente, true),
+        ),
+      )
+      .leftJoin(
+        supervisor,
+        eq(supervisor.id, atribuicoesSupervisor.supervisorId),
+      )
+      .leftJoin(
+        vinculosEstagiario,
+        and(
+          eq(vinculosEstagiario.casoId, casos.id),
+          eq(vinculosEstagiario.vigente, true),
+        ),
+      )
+      .leftJoin(estagiario, eq(estagiario.id, vinculosEstagiario.estagiarioId));
+  }
+
+  // RF22: lista de Pacientes da secretaria e da coordenação, com os responsáveis
+  // de cada caso. O número da inscrição vem só para a coordenação (RNF17).
+  async listaDePacientes(
+    busca: string | undefined,
+    usuario: UsuarioAutenticado,
+  ): Promise<PacienteDaLista[]> {
+    const linhas = await this.consultaDeResponsaveis()
+      .where(
+        busca
+          ? ilike(inscricoes.nomeCompleto, `%${escaparLike(busca)}%`)
+          : undefined,
+      )
+      .orderBy(asc(inscricoes.nomeCompleto), asc(casos.id))
+      .limit(LIMITE_LISTA_PACIENTES);
+    return linhas.map((l) => ({
+      casoId: l.casoId,
+      nome: l.nome,
+      ...(usuario.perfil === 'coordenacao' ? { numero: l.numero } : {}),
+      situacao: l.situacao,
+      supervisor: l.supervisor ?? null,
+      estagiario: l.estagiario ?? null,
+    }));
+  }
+
+  // RF22: secretaria e coordenação consultam qualquer caso; o estagiário e o
+  // supervisor, só os que têm vínculo ou atribuição vigente nele. Para quem não
+  // tem acesso, o caso inexistente responde como o negado, sem revelar o que
+  // existe (RNF25).
+  async responsaveis(
+    casoId: string,
+    usuario: UsuarioAutenticado,
+  ): Promise<ResponsaveisDoCaso> {
+    const [linha] = await this.consultaDeResponsaveis().where(
+      eq(casos.id, casoId),
+    );
+    const amplo =
+      usuario.perfil === 'secretaria' || usuario.perfil === 'coordenacao';
+    if (!linha && amplo) throw new NotFoundException('Caso não encontrado.');
+    const permitido =
+      amplo ||
+      (!!linha &&
+        ((usuario.perfil === 'estagiario' &&
+          linha.estagiarioId === usuario.id) ||
+          (usuario.perfil === 'supervisor' &&
+            linha.supervisorId === usuario.id)));
+    if (!permitido) {
+      throw new ForbiddenException('Você não tem acesso a este caso.');
+    }
+    return {
+      casoId: linha.casoId,
+      situacao: linha.situacao,
+      supervisor: linha.supervisor ?? null,
+      estagiario: linha.estagiario ?? null,
+    };
   }
 }
