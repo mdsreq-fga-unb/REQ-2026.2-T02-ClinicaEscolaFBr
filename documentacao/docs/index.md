@@ -133,7 +133,7 @@ Registro cronológico das versões e alterações do documento de visão e dos a
 | 09/11/2026 | 3.56 | Catálogo de requisitos: estado das features do Ciclo 4 igual ao das issues (RF7, RF8 e RF16 com o design inspecionado, o RF16 com a entrega parcial registrada; RF11, RF14, RF15 e RF52 com o código inspecionado; RF36, RF37 e RF38 promovidas para a versão integrada) | Gabriel da Cunha Barbaceli |
 | 10/11/2026 | 3.58 | RF25 com o código concluído: transferência de caso pelo supervisor responsável, para outro estagiário dele, e pela coordenação, para outro supervisor e, se quiser, outro estagiário; sessões futuras canceladas para reagendar, motivo cifrado, histórico só de inserção e as diferenças da prancha 4-3 registradas no projeto das features | Gabriel da Cunha Barbaceli |
 | 11/11/2026 | 3.59 | RF22 com o código concluído: lista de Pacientes com os responsáveis e a situação de distribuição de cada caso, e o quadro "Responsáveis pelo caso" na ficha para a secretaria, a coordenação e o estagiário e o supervisor responsáveis, como na prancha 2-3 | Gabriel da Cunha Barbaceli |
-| 11/11/2026 | 3.61 | Fechamento do Ciclo 4 no Cronograma geral, feature a feature e marco a marco, com a lição do ciclo; o Ciclo 4 passa a "Encerrado" e o Ciclo 5 a "Em andamento" | Gabriel da Cunha Barbaceli |
+| 11/11/2026 | 3.62 | Fechamento do Ciclo 4 no Cronograma geral, feature a feature e marco a marco, com a lição do ciclo; o Ciclo 4 passa a "Encerrado" e o Ciclo 5 a "Em andamento" | Gabriel da Cunha Barbaceli |
 
 
 A versão 1.6 está registrada com a data do commit (04/09/2026), posterior à da versão 1.7; a numeração foi mantida para preservar as referências já feitas a essas versões.
