@@ -12,9 +12,11 @@ import {
 import {
   buscaListaPacientesSchema,
   distribuicaoSchema,
+  transferenciaSchema,
   vinculoEstagiarioSchema,
   type BuscaListaPacientes,
   type Distribuicao,
+  type Transferencia,
   type VinculoEstagiario,
 } from '@clinica/shared';
 import { Perfis } from '../../auth/perfis.decorator';
@@ -26,12 +28,16 @@ import {
 } from '../../auth/usuario-autenticado';
 import { ZodValidationPipe } from '../../common/zod-validation.pipe';
 import { CasosService } from './casos.service';
+import { TransferenciaService } from './transferencia.service';
 
 // Distribuição e consulta de casos (CP5). Cada rota é restrita ao perfil autorizado.
 @Controller()
 @UseGuards(AutenticadoGuard, PerfisGuard)
 export class CasosController {
-  constructor(private readonly casos: CasosService) {}
+  constructor(
+    private readonly casos: CasosService,
+    private readonly transferencias: TransferenciaService,
+  ) {}
 
   // RF18: a coordenação distribui; o supervisor só consulta.
   @Get('casos/aguardando-distribuicao')
@@ -107,5 +113,27 @@ export class CasosController {
     @UsuarioAtual() usuario: UsuarioAutenticado,
   ) {
     return this.casos.responsaveis(id, usuario);
+  }
+
+  // RF25: o supervisor responsável troca o estagiário por outro estagiário dele; a
+  // coordenação troca o supervisor e, se indicar, o estagiário (RNF16).
+  @Get('casos/:id/transferencia')
+  @Perfis('supervisor', 'coordenacao')
+  @Header('Cache-Control', 'no-store')
+  opcoesTransferencia(
+    @Param('id', ParseUUIDPipe) id: string,
+    @UsuarioAtual() usuario: UsuarioAutenticado,
+  ) {
+    return this.transferencias.opcoes(id, usuario);
+  }
+
+  @Post('casos/:id/transferencia')
+  @Perfis('supervisor', 'coordenacao')
+  transferir(
+    @Param('id', ParseUUIDPipe) id: string,
+    @Body(new ZodValidationPipe(transferenciaSchema)) dados: Transferencia,
+    @UsuarioAtual() autor: UsuarioAutenticado,
+  ) {
+    return this.transferencias.transferir(id, dados, autor);
   }
 }

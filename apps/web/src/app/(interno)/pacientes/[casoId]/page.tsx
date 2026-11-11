@@ -12,6 +12,7 @@ import {
   type ResultadoReversao,
   type ResultadoVinculo,
   type ResponsaveisDoCaso,
+  type ResultadoTransferencia,
   type SessaoAReagendar,
   type SituacaoCaso,
   situacaoDistribuicao,
@@ -33,6 +34,10 @@ import {
   QuadroResponsaveis,
   SeloDistribuicao,
 } from "@/components/casos/responsaveis";
+import {
+  AvisoTransferencia,
+  DialogoTransferir,
+} from "@/components/casos/transferir";
 import { DialogoVincular } from "@/components/casos/vincular";
 import { Aviso } from "@/components/comum/aviso";
 import { Dados } from "@/components/comum/dados";
@@ -72,7 +77,16 @@ type DadosAdministrativos = {
 type Resultado =
   | { tipo: "desligado"; dados: ResultadoDesligamento }
   | { tipo: "revertido"; dados: ResultadoReversao }
-  | { tipo: "vinculado"; dados: ResultadoVinculo };
+  | { tipo: "vinculado"; dados: ResultadoVinculo }
+  | { tipo: "transferido"; dados: ResultadoTransferencia };
+
+// Situações em que a coordenação transfere o caso a outro supervisor ou
+// estagiário (RF25). O caso que aguarda distribuição vai pela distribuição (RF20).
+const TRANSFERIVEIS: SituacaoCaso[] = [
+  "em_atendimento",
+  "aguardando_vinculo",
+  "aguardando_vaga",
+];
 
 const celularBr = (c: string | null) =>
   c ? c.replace(/^(\d{2})(\d{4,5})(\d{4})$/, "($1) $2-$3") : "—";
@@ -100,10 +114,12 @@ export default function PacientePage() {
     const relogio = setInterval(() => setAgora(Date.now()), 60_000);
     return () => clearInterval(relogio);
   }, []);
-  const [dialogo, setDialogo] = useState<"desligar" | "reverter" | null>(null);
+  const [dialogo, setDialogo] = useState<
+    "desligar" | "reverter" | "transferir" | null
+  >(null);
+  const cliente = useQueryClient();
   const [resultado, setResultado] = useState<Resultado | null>(null);
   const [vinculando, setVinculando] = useState(false);
-  const cliente = useQueryClient();
   const perfil = sessao?.perfil;
   const secretaria = perfil === "secretaria";
   const coordenacao = perfil === "coordenacao";
@@ -190,8 +206,10 @@ export default function PacientePage() {
     </Aviso>
   );
   // O supervisor do caso vincula o estagiário pelo quadro (prancha 2-3, RF21).
-  const quadro = (
+  // A transferência (RF25) fica dentro do quadro, como na prancha 4-3.
+  const quadro = (acoes?: ReactNode) => (
     <QuadroResponsaveis
+      acoes={acoes}
       responsaveis={r}
       perfil={perfil}
       aoVincular={
@@ -224,7 +242,7 @@ export default function PacientePage() {
         {avisoVinculo}
         <h1 className="ui-titulo">{r.nome}</h1>
         {secretaria && avisoClinico}
-        {quadro}
+        {quadro()}
         <section aria-labelledby="identificacao" className="ui-cartao">
           <h2 id="identificacao" className="ui-h2">
             Identificação
@@ -301,6 +319,9 @@ export default function PacientePage() {
           e a vaga ficou liberada aguardando realocação.
         </Aviso>
       )}
+      {resultado?.tipo === "transferido" && (
+        <AvisoTransferencia resultado={resultado.dados} />
+      )}
       {resultado?.tipo === "revertido" &&
         (resultado.dados.situacao === "em_atendimento" ? (
           <Aviso tipo="sucesso" focar titulo="Desligamento revertido.">
@@ -359,7 +380,19 @@ export default function PacientePage() {
       </div>
 
       {d.prontuarioId === undefined && avisoClinico}
-      {quadro}
+      {quadro(
+        coordenacao && d.supervisor && TRANSFERIVEIS.includes(d.situacao) ? (
+          <Button
+            variant="outline"
+            onClick={() => {
+              setResultado(null);
+              setDialogo("transferir");
+            }}
+          >
+            Transferir caso
+          </Button>
+        ) : undefined,
+      )}
       {/* Lado a lado só a partir de 1024 px: com o menu, em 768 px cada cartão
           ficaria com uns 200 px, e os dados quebrariam no meio das palavras. */}
       <div className="grid items-start gap-5 lg:grid-cols-2">
@@ -499,6 +532,19 @@ export default function PacientePage() {
           aoConcluir={(dados) => {
             setDialogo(null);
             setResultado({ tipo: "desligado", dados });
+          }}
+        />
+      )}
+      {dialogo === "transferir" && (
+        <DialogoTransferir
+          casoId={d.casoId}
+          coordenacao
+          aoFechar={() => setDialogo(null)}
+          aoConcluir={(dados) => {
+            setDialogo(null);
+            setResultado({ tipo: "transferido", dados });
+            void cliente.invalidateQueries({ queryKey: chave });
+            void cliente.invalidateQueries({ queryKey: ["casos"] });
           }}
         />
       )}
