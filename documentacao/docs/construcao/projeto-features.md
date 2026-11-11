@@ -1373,6 +1373,10 @@ sequenceDiagram
 
 **Telas:** o prontuário nas seções do modelo da clínica, com a barra "Ir para", as evoluções e o histórico de responsáveis fechados e "Marcar sessão como realizada" na sessão que já terminou, como hoje. Protótipo: [prancha 5-1](prototipos.md#rf27).
 
+**Verificável no Ciclo 4:** os critérios 2 (elemento sem registro aparece como ausente) e 4 (sem vínculo não acessa; a coordenação só lê) ficam completos. O critério 1 fica parcial: as evoluções aparecem sem correções, complementos e validação (RF29, RF30 e RF67, Ciclos 5 e 6), e a alta (RF68) e o relatório final (RF33) aparecem como "Sem registro neste ciclo". O critério 3 (o novo responsável vê os registros anteriores) só pode ser verificado depois do RF25 ([#147](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/issues/147)). O texto das partes dos ciclos seguintes está como ponto a confirmar na prancha 5-1.
+
+**RNFs:** RNF25 (inclui o antigo RNF26), RNF51 (o conteúdo clínico só é decifrado depois da política de acesso) e RNF52.
+
 **Dados de teste:** um prontuário completo (dados iniciais, sessões realizadas, uma falta e evoluções) e um recém-criado; um caso transferido (RF25); a coordenação lendo; um estagiário sem vínculo (403).
 
 ---
@@ -1485,13 +1489,16 @@ sequenceDiagram
 | Só aceita sessão `realizada` | Sessão não realizada não aceita evolução |
 | O número da sessão no ciclo, a data, o horário e o comparecimento vêm da sessão, sem campo no formulário | O registro mostra os dados da sessão, sem digitação |
 | Quatro obrigatórios e `intervencoesEncaminhamentos` opcional, cada um com até 1.000 caracteres (proposta da equipe) | Sem um obrigatório, não salva; mais de 1.000 caracteres é recusado |
+| Uma evolução original por sessão: o segundo envio para a mesma sessão devolve `409` | A sessão com evolução não aceita outra; mudanças seguem a correção (RF29) e o complemento (RF30) |
 | O aviso é calculado pelo número da sessão da evolução no ciclo (a ordem dela entre as realizadas), e não pelo total no momento do registro: aparece só quando esse número é múltiplo de 10, e não se repete nas evoluções seguintes | Na 10ª sessão realizada do ciclo, os dois veem o aviso |
+
+**Fechamento avaliativo:** o RF28 só mostra o aviso. O registro do fechamento depende do relatório final (RF33, Ciclo 6). Por quanto tempo o aviso fica visível para o supervisor ainda está em aberto e entrou nas pendências de validação.
 
 **Decisão de projeto:** as evoluções já registradas com os campos antigos aparecem no prontuário com os rótulos "Evolução da queixa" e "Planejamento", sem migração do conteúdo, porque não dá para separar o texto nos campos novos sem mudar o que foi escrito.
 
 **Telas:** formulário de evolução aberto pela ação "Registrar evolução" do prontuário, com os dados da sessão só para leitura e os cinco campos; o aviso de fechamento avaliativo no topo do prontuário e em "Meus casos" do supervisor. Protótipo: [prancha 5-3](prototipos.md#rf28).
 
-**Dados de teste:** uma sessão realizada; sessões agendada, cancelada e com falta (422); um estagiário sem vínculo (403); uma evolução sem técnicas utilizadas; um campo com 1.001 caracteres; um paciente com 9 sessões realizadas que registra a 10ª; uma evolução antiga, com os dois campos.
+**Dados de teste:** uma sessão realizada; sessões agendada, confirmada, cancelada e com falta (422); uma sessão de outro paciente (403); um estagiário com o vínculo revogado (403); o supervisor e a coordenação tentando registrar (403); uma segunda evolução na mesma sessão (409); uma evolução sem técnicas utilizadas; um campo com 1.001 caracteres; um paciente com 9 sessões realizadas que registra a 10ª; uma evolução antiga, com os dois campos.
 
 ---
 
