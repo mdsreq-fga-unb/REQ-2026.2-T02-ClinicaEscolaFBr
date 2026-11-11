@@ -102,6 +102,14 @@ test("o estagiário entra direto em 'Meus pacientes' e vê só os casos vinculad
   await expect(tabela).not.toContainText(deOutro);
   await expect(tabela).not.toContainText(/queixa/i);
   await semViolacoes(page);
+
+  // "Ver ficha" leva aos responsáveis pelo caso (RF22).
+  await page
+    .getByRole("link", { name: `Ver ficha de ${doEstagiario}` })
+    .click();
+  await expect(
+    page.getByRole("region", { name: "Responsáveis pelo caso" }),
+  ).toContainText(EQUIPE.supervisor.nome);
 });
 
 test("o estagiário tem o acesso direto negado ao prontuário de um caso de outro, sem o nome do paciente (RF23, RNF16, RNF56)", async ({

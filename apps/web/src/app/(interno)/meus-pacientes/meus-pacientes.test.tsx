@@ -84,7 +84,7 @@ describe("Meus pacientes do estagiário (RF23)", () => {
       "Amarela",
       "Em atendimento",
       "Ricardo Menezes",
-      "Abrir prontuário",
+      "Ver fichaAbrir prontuário",
     ]);
     expect(document.body.textContent).not.toMatch(/2026-00001|queixa/i);
   });
@@ -102,9 +102,13 @@ describe("Meus pacientes do estagiário (RF23)", () => {
     ).toEqual(["2em atendimento", "1em atendimento · aguardando vaga"]);
   });
 
-  it("cada paciente abre o próprio prontuário (RF23, RNF24)", async () => {
+  it("cada paciente abre a própria ficha e o próprio prontuário (RF23, RF22, RNF24)", async () => {
     simularApi();
     abrir();
+    const [ficha] = await screen.findAllByRole("link", {
+      name: "Ver ficha de Mariana Alves Toledo",
+    });
+    expect(ficha.getAttribute("href")).toBe("/pacientes/Mariana Alves Toledo");
     const [link] = await screen.findAllByRole("link", {
       name: "Abrir prontuário de Mariana Alves Toledo",
     });

@@ -925,6 +925,32 @@ sequenceDiagram
 
 **Dados de teste:** um caso em atendimento, um aguardando vínculo (sem estagiário) e um aguardando distribuição (sem os dois); um estagiário de outro caso (403).
 
+**Na implementação (PR do RF22):**
+
+- **Rotas:**
+    - `GET /pacientes?busca` devolve `{ pacientes, cortada }`. A lista vem em ordem alfabética, com até 200 pacientes. Quando há mais, `cortada` é `true`, e a tela pede para buscar pelo nome. A busca usa `ILIKE` com `%` e `_` escapados.
+    - `GET /casos/:id/responsaveis` não tem `@Perfis`: o serviço libera a secretaria e a coordenação, e o estagiário e o supervisor só nos casos com vínculo ou atribuição vigente. Para eles, o caso inexistente responde como o negado (`403`), sem revelar o que existe.
+    - As duas rotas respondem com `Cache-Control: no-store`.
+- **Número da inscrição:** não vem para a secretaria (RNF17). Vem para a coordenação e para o estagiário e o supervisor responsáveis, que já o veem nas próprias telas.
+- **Situação de distribuição:** a prancha 2-3 tem três selos, calculados pelos responsáveis vigentes (`situacaoDistribuicao`, em `@clinica/shared`):
+    - "Distribuído", com os dois responsáveis;
+    - "Aguardando vínculo de estagiário", só com o supervisor;
+    - "Pendente de distribuição", sem supervisor.
+
+    O nome que falta aparece como "—".
+- **Lista de Pacientes:**
+    - a busca espera a pessoa parar de digitar (300 ms) antes de consultar a API;
+    - a contagem "Mostrando N pacientes." é anunciada ao leitor de tela;
+    - a tabela aparece a partir de 1024 px, e abaixo disso a lista vira cartões.
+- **Ficha do paciente:**
+    - o quadro "Responsáveis pelo caso" fica no topo, depois do aviso do conteúdo clínico;
+    - a secretaria e a coordenação veem a ficha completa (RF55) a partir da distribuição;
+    - antes da distribuição, e para o estagiário e o supervisor responsáveis, a ficha mostra só o quadro e a identificação, como na prancha;
+    - o supervisor chega pelo nome do paciente em "Meus casos";
+    - o quadro mostra a orientação de cada perfil: a coordenação vai à distribuição, e o supervisor vincula o estagiário pelo diálogo do RF21. O vínculo só é oferecido nas situações em que o RF21 o aceita (`aguardando_vinculo` e `aguardando_vaga`): o caso desligado por faltas volta pela reversão (RF38);
+    - o botão "Transferir caso" da coordenação (RF25) passa para dentro do quadro, como na prancha 4-3.
+- **Trilha do estagiário:** aponta para "Meus pacientes", que é do RF23. Até o RF23 entrar, essa página dá 404, como o item do menu.
+
 ---
 
 ### RF23 — Consultar casos sob responsabilidade do estagiário ou supervisor ([#146](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/issues/146))

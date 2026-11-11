@@ -36,19 +36,40 @@ export default function MeusPacientesPage() {
     return <Aviso tipo="erro" titulo="Acesso restrito aos estagiários." />;
   }
 
-  const prontuario = (caso: CasoSobResponsabilidade, largo = false) =>
-    caso.prontuarioId && (
+  // "Ver ficha" leva aos responsáveis pelo caso (RF22); "Abrir prontuário", ao
+  // conteúdo clínico (RF55).
+  const acoes = (caso: CasoSobResponsabilidade, largo = false) => (
+    <div
+      className={
+        largo
+          ? "flex flex-col gap-2"
+          : "flex flex-wrap items-center justify-end gap-1"
+      }
+    >
       <Link
-        href={`/prontuarios/${caso.prontuarioId}`}
-        aria-label={`Abrir prontuário de ${caso.nome}`}
+        href={`/pacientes/${caso.casoId}`}
+        aria-label={`Ver ficha de ${caso.nome}`}
         className={buttonVariants({
-          variant: "outline",
+          variant: largo ? "outline" : "ghost",
           className: largo ? "w-full" : undefined,
         })}
       >
-        Abrir prontuário
+        Ver ficha
       </Link>
-    );
+      {caso.prontuarioId && (
+        <Link
+          href={`/prontuarios/${caso.prontuarioId}`}
+          aria-label={`Abrir prontuário de ${caso.nome}`}
+          className={buttonVariants({
+            variant: "outline",
+            className: largo ? "w-full" : undefined,
+          })}
+        >
+          Abrir prontuário
+        </Link>
+      )}
+    </div>
+  );
   const casos = lista.data;
 
   return (
@@ -120,7 +141,7 @@ export default function MeusPacientesPage() {
                       <SeloSituacaoCaso situacao={caso.situacao} />
                     </td>
                     <td>{caso.supervisor ?? "—"}</td>
-                    <td className="text-right">{prontuario(caso)}</td>
+                    <td className="text-right">{acoes(caso)}</td>
                   </tr>
                 ))}
               </tbody>
@@ -138,7 +159,7 @@ export default function MeusPacientesPage() {
                   <p className="text-sm text-muted-foreground">
                     Supervisor: {caso.supervisor ?? "—"}
                   </p>
-                  {prontuario(caso, true)}
+                  {acoes(caso, true)}
                 </li>
               ))}
             </ul>

@@ -93,6 +93,58 @@ export type ResultadoVinculo = {
   prontuarioId: string;
 };
 
+// Consulta de responsáveis (RF22). Só nomes e a situação do caso: nunca a queixa,
+// a prioridade clínica nem o prontuário (RNF17).
+
+// Quantos pacientes a lista devolve de uma vez (RNF21). Com mais que isso, a lista
+// vem cortada, e a tela pede para buscar pelo nome.
+export const LIMITE_LISTA_PACIENTES = 200;
+
+// Busca da lista de Pacientes pelo nome.
+export const buscaListaPacientesSchema = z.object({
+  busca: z.string().trim().max(120).optional(),
+});
+export type BuscaListaPacientes = z.infer<typeof buscaListaPacientesSchema>;
+
+// Responsáveis vigentes do caso. O campo que falta vem como null, e a tela mostra
+// "—" e o selo da situação de distribuição, sem nome. O número da inscrição não vem
+// para a secretaria (RNF17).
+export type ResponsaveisDoCaso = {
+  casoId: string;
+  nome: string;
+  numero?: string;
+  situacao: SituacaoCaso;
+  supervisor: string | null;
+  estagiario: string | null;
+};
+
+// Linha da lista de Pacientes (secretaria e coordenação).
+export type PacienteDaLista = ResponsaveisDoCaso;
+
+export type ListaDePacientes = {
+  pacientes: PacienteDaLista[];
+  // Há mais pacientes do que o limite: a lista mostra só os primeiros.
+  cortada: boolean;
+};
+
+// Situação de distribuição (prancha 2-3): o caso tem os dois responsáveis, só o
+// supervisor, ou nenhum.
+export const SITUACOES_DISTRIBUICAO = [
+  "distribuido",
+  "aguardando_estagiario",
+  "pendente",
+] as const;
+export type SituacaoDistribuicao = (typeof SITUACOES_DISTRIBUICAO)[number];
+
+export const situacaoDistribuicao = (
+  r: Pick<ResponsaveisDoCaso, "supervisor" | "estagiario">,
+): SituacaoDistribuicao =>
+  !r.supervisor
+    ? "pendente"
+    : r.estagiario
+      ? "distribuido"
+      : "aguardando_estagiario";
+
 // Transferência de caso (RF25). O supervisor responsável troca só o estagiário, por
 // outro estagiário dele; a coordenação troca o supervisor e, se indicar, o
 // estagiário, ou só o estagiário.
