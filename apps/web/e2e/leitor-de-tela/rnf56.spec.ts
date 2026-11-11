@@ -62,6 +62,16 @@ test.describe("Leitor de tela na inscrição e no comprovante (RNF56)", () => {
     await simularRotas(
       page,
       {
+        // O termo de consentimento (RF57) vem da API, e sem ele o aceite fica
+        // desabilitado.
+        "GET /termo/vigente": () => ({
+          versao: "0.1",
+          titulo: "Termo de consentimento fictício",
+          introducao: "Texto fictício do termo, só para o teste.",
+          topicos: [{ titulo: "Finalidade", corpo: "Texto fictício." }],
+          provisoria: true,
+          vigenteDesde: "2026-11-01T00:00:00.000Z",
+        }),
         "POST /inscricoes": () => ({
           numero: NUMERO,
           criadaEm: "2026-10-28T13:00:00.000Z",
