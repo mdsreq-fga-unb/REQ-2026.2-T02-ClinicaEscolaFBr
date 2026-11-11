@@ -357,7 +357,7 @@ rfs:
   lider: Maria Clara
   depende: [RF21]
   issue: 145
-  estado: Planejada
+  estado: Código concluído
 
 - id: RF23
   nome: Consultar casos sob responsabilidade do estagiário ou supervisor

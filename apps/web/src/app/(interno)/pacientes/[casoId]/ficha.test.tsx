@@ -86,6 +86,23 @@ describe("Ficha do paciente com os responsáveis (RF22)", () => {
     expect(screen.queryByText("Dados cadastrais")).toBeNull();
   });
 
+  it('no caso desligado por faltas, o supervisor não recebe o "Vincular estagiário", porque o caso volta pela reversão (RF22, RF21, RF38, RNF16)', async () => {
+    simularApi("supervisor", [
+      200,
+      { ...ROBERTO, situacao: "desligado_por_faltas" },
+    ]);
+    abrir();
+    const quadro = await screen.findByRole("region", {
+      name: "Responsáveis pelo caso",
+    });
+    expect(
+      within(quadro).queryByRole("button", { name: "Vincular estagiário" }),
+    ).toBeNull();
+    expect(quadro.textContent).not.toContain(
+      "O caso fica aguardando o vínculo",
+    );
+  });
+
   it("o estagiário responsável vê os dois nomes (RF22, RNF17)", async () => {
     simularApi("estagiario", [
       200,

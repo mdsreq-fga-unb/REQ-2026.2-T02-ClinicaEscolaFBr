@@ -88,6 +88,9 @@ const TRANSFERIVEIS: SituacaoCaso[] = [
   "aguardando_vaga",
 ];
 
+// Situações em que o supervisor do caso vincula o estagiário (RF21, RF38).
+const VINCULAVEIS: SituacaoCaso[] = ["aguardando_vinculo", "aguardando_vaga"];
+
 const celularBr = (c: string | null) =>
   c ? c.replace(/^(\d{2})(\d{4,5})(\d{4})$/, "($1) $2-$3") : "—";
 
@@ -205,15 +208,21 @@ export default function PacientePage() {
       estagiário responsável, ao seu supervisor e à coordenação.
     </Aviso>
   );
-  // O supervisor do caso vincula o estagiário pelo quadro (prancha 2-3, RF21).
-  // A transferência (RF25) fica dentro do quadro, como na prancha 4-3.
+  // O supervisor do caso vincula o estagiário pelo quadro (prancha 2-3, RF21),
+  // nas mesmas situações de "Meus casos": o caso desligado por faltas volta pela
+  // reversão (RF38), e o encerrado não recebe estagiário. A transferência (RF25)
+  // fica dentro do quadro, como na prancha 4-3.
+  const vincula =
+    perfil === "supervisor" &&
+    Boolean(r.numero) &&
+    VINCULAVEIS.includes(r.situacao);
   const quadro = (acoes?: ReactNode) => (
     <QuadroResponsaveis
       acoes={acoes}
       responsaveis={r}
       perfil={perfil}
       aoVincular={
-        perfil === "supervisor" && r.numero
+        vincula
           ? () => {
               setResultado(null);
               setVinculando(true);
@@ -222,7 +231,7 @@ export default function PacientePage() {
       }
     />
   );
-  const dialogoVincular = vinculando && r.numero && (
+  const dialogoVincular = vinculando && vincula && r.numero && (
     <DialogoVincular
       caso={{ casoId: r.casoId, numero: r.numero, nome: r.nome }}
       aoFechar={() => setVinculando(false)}
