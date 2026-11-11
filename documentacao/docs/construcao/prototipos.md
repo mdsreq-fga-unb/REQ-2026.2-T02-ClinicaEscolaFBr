@@ -19,9 +19,9 @@ O Claude Design do Ciclo 3 e as imagens da inscrição (RF1) e do prontuário (R
 
 !!! question "Propostas para validar com a FBr"
     - **Itens novos no menu:** "Agenda" para o supervisor (agenda dos seus estagiários, RF11) e "Fila de espera" para a coordenação (RF7). Os dois estão marcados como proposta nas telas.
-    - **Fila (RF8):** o inscrito vê uma de três situações, "Aguardando triagem", "Na fila de espera" (com a posição na fila inteira) e "Em atendimento".
+    - **Fila (RF8):** o inscrito vê uma de três situações, "Aguardando triagem", "Na fila de espera" (com a posição na fila inteira) e "Em atendimento". Em 11/11/2026, a FBr respondeu com "em triagem" e "em atendimento", e a equipe perguntou se "Na fila de espera" continua.
     - **Reversão do desligamento (RF38):** a coordenação escolhe, no diálogo, quais faltas deixam de contar.
-    - **Transferência (RF25):** a coordenação pode escolher um supervisor que já está no limite de 50 casos, com aviso.
+    - **Transferência (RF25):** a coordenação pode escolher um supervisor que já está no limite de 50 casos, com aviso. Aprovada pela FBr em 11/11/2026 ([DF50](../requisitos/decisoes-fbr.md#df50)).
 
 ## 1. Público: inscrição, termo, verificação, fila e link da sessão
 

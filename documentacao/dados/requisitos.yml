@@ -75,7 +75,7 @@ rfs:
   lider: Jônatas
   issue: 88
   estado: Código inspecionado
-  origem: [DF02, DF07, DF24, DF35, DF43, DF47, DF48]
+  origem: [DF02, DF07, DF24, DF35, DF43, DF47, DF48, DF51]
 
 - id: RF2
   nome: Emitir comprovante de inscrição
@@ -395,7 +395,7 @@ rfs:
   depende: [RF21]
   issue: 147
   estado: Código concluído
-  origem: [DF08, DF09, DF28]
+  origem: [DF08, DF09, DF28, DF50]
 
 - id: RF26
   nome: Consultar histórico de responsáveis do caso
@@ -561,7 +561,7 @@ rfs:
   depende: [RF28, RF32]
   issue: 131
   estado: Planejada
-  origem: [DF04, DF12, DF23, DF36, DF42]
+  origem: [DF04, DF12, DF23, DF36, DF42, DF54]
 
 - id: RF34
   nome: Registrar falta do paciente na sessão
@@ -576,6 +576,7 @@ rfs:
   depende: [RF10, RF14, RF15]
   issue: 150
   estado: Promovida para a versão integrada
+  origem: [DF52]
 
 - id: RF35
   nome: Contabilizar faltas do paciente no ciclo
@@ -619,6 +620,7 @@ rfs:
   depende: [RF36]
   issue: 153
   estado: Promovida para a versão integrada
+  origem: [DF53]
 
 - id: RF38
   nome: Reverter desligamento de paciente por faltas
@@ -672,7 +674,7 @@ rfs:
   lider: Nicolas
   depende: [RF40]
   estado: Planejada
-  origem: [DF12]
+  origem: [DF12, DF54]
 
 - id: RF64
   nome: Registrar decisão institucional sobre a reprovação do estagiário
@@ -686,7 +688,7 @@ rfs:
   lider: Nicolas
   depende: [RF63]
   estado: Planejada
-  origem: [DF12]
+  origem: [DF12, DF54]
 
 - id: RF41
   nome: Registrar pagamento da contribuição social do paciente
@@ -1495,6 +1497,8 @@ decisoes:
 - id: DF17
   data: 23/10/2026
   fonte: validação do protótipo
+  substituida_em_parte_por: DF50
+  parte_substituida: na transferência de caso; com a DF50, a coordenação pode passar o caso a um supervisor no limite, com aviso
   decisao: Cada supervisor acompanha até 50 casos; o estagiário não tem limite fixo de casos.
 
 - id: DF18
@@ -1632,6 +1636,8 @@ decisoes:
 - id: DF43
   data: 31/10/2026
   fonte: respostas da FBr
+  substituida_em_parte_por: DF51
+  parte_substituida: no contato de emergência, que com a DF51 passa a ser obrigatório
   decisao: Os dados da ficha de identificação da Clínica Escola que a inscrição ainda não pedia já podem ser coletados na inscrição.
 
 - id: DF44
@@ -1663,6 +1669,31 @@ decisoes:
   data: 06/11/2026
   fonte: validação do Ciclo 3
   decisao: No agendamento, os horários de início e de término são escolhidos de 10 em 10 minutos, e não minuto a minuto, porque a sessão tem 50 minutos de atendimento e 10 de anotações (DF18). Decidido por Thiago Viana na reunião de validação.
+
+- id: DF50
+  data: 11/11/2026
+  fonte: respostas da FBr por WhatsApp
+  decisao: Na transferência de caso (RF25), a coordenação pode escolher um supervisor que já acompanha o limite de casos (DF17), com um aviso na tela. Respondido por Robson Araújo.
+
+- id: DF51
+  data: 11/11/2026
+  fonte: respostas da FBr por WhatsApp
+  decisao: O contato de emergência da ficha de identificação passa a ser obrigatório na inscrição. Robson Araújo pediu também os "dados mínimos para reconhecimento" do paciente, e quais são foi perguntado a ele.
+
+- id: DF52
+  data: 11/11/2026
+  fonte: respostas da FBr por WhatsApp
+  decisao: O motivo da justificativa de falta continua visível para a secretaria e fica disponível para os órgãos fiscalizadores (CRP, CFP e Secretaria de Saúde), que podem pedir para vê-lo. Respondido por Robson Araújo.
+
+- id: DF53
+  data: 11/11/2026
+  fonte: respostas da FBr por WhatsApp
+  decisao: Os estagiários avisam os pacientes desligados por faltas, por fora do sistema. Respondido por Robson Araújo.
+
+- id: DF54
+  data: 11/11/2026
+  fonte: respostas da FBr por WhatsApp
+  decisao: O relatório final de evolução e a reprovação do estagiário ficam prontos até 05/12/2026, data final da evolução do estágio. Respondido por Robson Araújo.
 
 
 conjuntos:
