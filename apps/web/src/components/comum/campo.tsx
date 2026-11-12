@@ -6,15 +6,20 @@ import { cn } from "@/lib/utils";
 // Nas páginas públicas (`publico`), o rótulo e o campo seguem o tamanho maior do
 // protótipo.
 export function Campo({
+  id: idExterno,
   rotulo,
   dica,
+  dicaClassName,
   erro,
   publico = false,
   className,
   children,
 }: {
+  // Id do controle, para quando um resumo de erros precisa levar até ele.
+  id?: string;
   rotulo: string;
   dica?: string;
+  dicaClassName?: string;
   erro?: string;
   publico?: boolean;
   className?: string;
@@ -24,7 +29,8 @@ export function Campo({
     "aria-invalid"?: boolean;
   }) => ReactNode;
 }) {
-  const id = useId();
+  const gerado = useId();
+  const id = idExterno ?? gerado;
   const idDica = `${id}-dica`;
   const idErro = `${id}-erro`;
   const descritores = [dica && idDica, erro && idErro]
@@ -42,7 +48,7 @@ export function Campo({
         {rotulo}
       </label>
       {dica && (
-        <p id={idDica} className="ui-dica">
+        <p id={idDica} className={cn("ui-dica", dicaClassName)}>
           {dica}
         </p>
       )}

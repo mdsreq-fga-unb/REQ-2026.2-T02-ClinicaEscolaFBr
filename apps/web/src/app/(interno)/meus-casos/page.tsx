@@ -1,11 +1,11 @@
 "use client";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { FolderOpen } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
 import type {
   CasoDoSupervisor,
-  EstagiarioDisponivel,
+  ResultadoTransferencia,
   ResultadoVinculo,
   VagaLiberada,
 } from "@clinica/shared";
@@ -14,149 +14,36 @@ import {
   SeloSituacaoCaso,
 } from "@/components/assiduidade/desligamento";
 import { Aviso } from "@/components/comum/aviso";
-import { Dialogo } from "@/components/comum/dialogo";
 import { Prioridade } from "@/components/casos/prioridade";
+import {
+  AvisoTransferencia,
+  DialogoTransferir,
+} from "@/components/casos/transferir";
+import { DialogoVincular } from "@/components/casos/vincular";
 import { Button, buttonVariants } from "@/components/ui/button";
-import { api, ErroApi } from "@/lib/api";
+import { api } from "@/lib/api";
 import { dataBr } from "@/lib/formato";
 import { useSessao } from "@/lib/sessao";
 
-const pacientes = (n: number) =>
-  n === 0
-    ? "Nenhum paciente em atendimento"
-    : `${n} ${n === 1 ? "paciente" : "pacientes"} em atendimento`;
+const TODOS = "__todos";
+const SEM_ESTAGIARIO = "__sem";
 
-// Vínculo do estagiário responsável pelo supervisor do caso (RF21). Só aparecem
-// estagiários com conta ativa, e o prontuário do caso nasce junto (RF66).
-function DialogoVincular({
-  caso,
-  aoConcluir,
-  aoFechar,
-}: {
-  caso: CasoDoSupervisor;
-  aoConcluir: (resultado: ResultadoVinculo) => void;
-  aoFechar: () => void;
-}) {
-  const [escolhido, setEscolhido] = useState<string | null>(null);
-  const estagiarios = useQuery({
-    queryKey: ["estagiarios", "disponiveis"],
-    queryFn: () => api<EstagiarioDisponivel[]>("/estagiarios/disponiveis"),
-  });
-  const vinculo = useMutation({
-    mutationFn: (estagiarioId: string) =>
-      api<ResultadoVinculo>(`/casos/${caso.casoId}/estagiario`, {
-        method: "POST",
-        body: JSON.stringify({ estagiarioId }),
-      }),
-    onSuccess: aoConcluir,
-  });
-  const lista = estagiarios.data ?? [];
-  const erro = vinculo.error instanceof ErroApi ? vinculo.error : null;
-  const formulario = `vincular-${caso.casoId}`;
-
-  return (
-    <Dialogo
-      aberto
-      aoFechar={aoFechar}
-      titulo="Vincular estagiário"
-      rodape={
-        <>
-          <Button type="button" variant="outline" onClick={aoFechar}>
-            {lista.length === 0 ? "Fechar" : "Cancelar"}
-          </Button>
-          {lista.length > 0 && (
-            <Button
-              type="submit"
-              form={formulario}
-              data-principal
-              disabled={!escolhido || vinculo.isPending}
-            >
-              Confirmar vínculo
-            </Button>
-          )}
-        </>
-      }
-    >
-      <p className="rounded-[12px] border border-border bg-muted px-4 py-3.5 text-[15px]">
-        <b>
-          {caso.numero} · {caso.nome}
-        </b>
-        {caso.prioridade && (
-          <>
-            {" "}
-            · Prioridade{" "}
-            {caso.prioridade.charAt(0).toUpperCase() + caso.prioridade.slice(1)}
-          </>
-        )}
-      </p>
-
-      {estagiarios.isPending && <p role="status">Carregando estagiários…</p>}
-      {estagiarios.isError && (
-        <Aviso tipo="erro" titulo="Não foi possível carregar os estagiários." />
-      )}
-      {estagiarios.data && lista.length === 0 && (
-        <Aviso
-          tipo="alerta"
-          titulo="Não há estagiários disponíveis para vínculo."
-        >
-          Só estagiários com conta ativa podem ser vinculados. Se alguém da
-          equipe ainda não ativou a conta, peça que use o convite ou fale com a
-          coordenação.
-        </Aviso>
-      )}
-      {lista.length > 0 && (
-        <form
-          id={formulario}
-          onSubmit={(evento) => {
-            evento.preventDefault();
-            if (escolhido) vinculo.mutate(escolhido);
-          }}
-          className="flex flex-col gap-4"
-        >
-          <fieldset className="flex min-w-0 flex-col gap-2">
-            <legend className="ui-rotulo mb-1.5">Estagiário ativo</legend>
-            {lista.map((e) => (
-              <label key={e.id} className="ui-opcao">
-                <input
-                  type="radio"
-                  name="estagiario"
-                  value={e.id}
-                  checked={escolhido === e.id}
-                  onChange={() => setEscolhido(e.id)}
-                />
-                <span>
-                  <b className="block">{e.nome}</b>
-                  <span className="text-sm text-muted-foreground">
-                    {pacientes(e.pacientesEmAtendimento)}
-                  </span>
-                </span>
-              </label>
-            ))}
-          </fieldset>
-          <p className="ui-dica">
-            Ao confirmar, o prontuário do caso é criado e o estagiário passa a
-            ser o responsável pelo atendimento.
-          </p>
-        </form>
-      )}
-      {erro && (
-        <Aviso tipo="erro" titulo="Não foi possível vincular o estagiário.">
-          {[403, 409, 422].includes(erro.status)
-            ? erro.message
-            : "Tente novamente em instantes."}
-        </Aviso>
-      )}
-    </Dialogo>
-  );
-}
-
-// Casos sob a supervisão de quem está na sessão, com o vínculo do estagiário (RF21).
+// Casos sob a supervisão de quem está na sessão, com o vínculo do estagiário (RF21)
+// e o filtro por estagiário (RF23, prancha 4-1).
 export default function MeusCasosPage() {
   const { data: sessao } = useSessao();
   const cliente = useQueryClient();
   const [aberto, setAberto] = useState<CasoDoSupervisor | null>(null);
   const [mensagem, setMensagem] = useState<ResultadoVinculo | null>(null);
+  // Caso aberto na transferência para outro estagiário (RF25) e o resultado dela.
+  const [transferindo, setTransferindo] = useState<CasoDoSupervisor | null>(
+    null,
+  );
+  const [transferido, setTransferido] = useState<ResultadoTransferencia | null>(
+    null,
+  );
   const supervisor = sessao?.perfil === "supervisor";
+  const [filtro, setFiltro] = useState<string>(TODOS);
 
   const lista = useQuery({
     queryKey: ["casos", "meus"],
@@ -182,7 +69,35 @@ export default function MeusCasosPage() {
     !caso.estagiario &&
     (caso.situacao === "aguardando_vinculo" ||
       caso.situacao === "aguardando_vaga");
-  const acao = (caso: CasoDoSupervisor, largo = false) =>
+  // O caso em atendimento passa a outro estagiário do supervisor (RF25).
+  const transfere = (caso: CasoDoSupervisor) =>
+    Boolean(caso.estagiario) && caso.situacao === "em_atendimento";
+  const acao = (caso: CasoDoSupervisor, largo = false) => (
+    <div
+      className={
+        largo
+          ? "flex flex-col gap-2"
+          : "flex flex-wrap items-center justify-end gap-1"
+      }
+    >
+      {acaoPrincipal(caso, largo)}
+      {transfere(caso) && (
+        <Button
+          variant={largo ? "outline" : "ghost"}
+          aria-label={`Transferir o caso de ${caso.nome}`}
+          className={largo ? "w-full" : undefined}
+          onClick={() => {
+            setMensagem(null);
+            setTransferido(null);
+            setTransferindo(caso);
+          }}
+        >
+          Transferir caso
+        </Button>
+      )}
+    </div>
+  );
+  const acaoPrincipal = (caso: CasoDoSupervisor, largo: boolean) =>
     !vincula(caso) && caso.prontuarioId ? (
       <Link
         href={`/prontuarios/${caso.prontuarioId}`}
@@ -200,6 +115,7 @@ export default function MeusCasosPage() {
         className={largo ? "w-full" : undefined}
         onClick={() => {
           setMensagem(null);
+          setTransferido(null);
           setAberto(caso);
         }}
       >
@@ -207,11 +123,24 @@ export default function MeusCasosPage() {
       </Button>
     );
 
+  // O nome abre a ficha do paciente, com os responsáveis pelo caso (RF22).
+  const ficha = (caso: CasoDoSupervisor) => (
+    <Link
+      href={`/pacientes/${caso.casoId}`}
+      className="text-primary underline underline-offset-2"
+    >
+      {caso.nome}
+    </Link>
+  );
+
   const semEstagiario = (
     <span className="text-muted-foreground italic">Sem estagiário</span>
   );
+  // O caso desligado por faltas (RF37) mostra o último estagiário, e a data do
+  // desligamento fica abaixo da situação (prancha 4-1).
   const estagiarioDo = (caso: CasoDoSupervisor) =>
     caso.estagiario ??
+    caso.estagiarioAnterior ??
     (caso.vinculoEncerradoEm ? (
       <span className="text-muted-foreground">
         Vínculo encerrado em {dataBr(caso.vinculoEncerradoEm)}
@@ -219,12 +148,54 @@ export default function MeusCasosPage() {
     ) : (
       semEstagiario
     ));
+  const situacaoDo = (caso: CasoDoSupervisor) => (
+    <div className="flex flex-col items-start gap-1">
+      <SeloSituacaoCaso situacao={caso.situacao} />
+      {caso.vinculoEncerradoEm && (
+        <span className="ui-meta">Em {dataBr(caso.vinculoEncerradoEm)}</span>
+      )}
+    </div>
+  );
+
+  // Filtro por estagiário (RF23): os estagiários dos casos da lista, e "Sem
+  // estagiário" para os que aguardam o vínculo. A opção é o id do estagiário, e o
+  // nome é só o rótulo: dois estagiários com o mesmo nome são duas opções.
+  const todos = lista.data ?? [];
+  const idDoEstagiario = (caso: CasoDoSupervisor) =>
+    caso.estagiarioId ?? caso.estagiarioAnteriorId;
+  const opcoes = [
+    ...new Map(
+      todos.flatMap((c) => {
+        const id = idDoEstagiario(c);
+        const nome = c.estagiario ?? c.estagiarioAnterior;
+        return id && nome ? [[id, nome] as const] : [];
+      }),
+    ),
+  ].sort(([, a], [, b]) => a.localeCompare(b, "pt-BR"));
+  const temSemEstagiario = todos.some((c) => !idDoEstagiario(c));
+  // Se a opção escolhida sai da lista (o caso foi transferido, por exemplo), volta
+  // para "Todos", em vez de deixar uma lista vazia sem opção marcada.
+  const escolha =
+    filtro === TODOS ||
+    (filtro === SEM_ESTAGIARIO && temSemEstagiario) ||
+    opcoes.some(([id]) => id === filtro)
+      ? filtro
+      : TODOS;
+  const visiveis = todos.filter((c) =>
+    escolha === TODOS
+      ? true
+      : escolha === SEM_ESTAGIARIO
+        ? !idDoEstagiario(c)
+        : idDoEstagiario(c) === escolha,
+  );
 
   return (
     <div className="flex flex-col gap-6">
       <div>
         <h1 className="ui-titulo">Meus casos</h1>
-        <p className="ui-subtitulo">Casos sob a sua supervisão.</p>
+        <p className="ui-subtitulo">
+          Casos sob a sua responsabilidade e os dos seus estagiários.
+        </p>
       </div>
 
       {mensagem && (
@@ -236,6 +207,8 @@ export default function MeusCasosPage() {
           O prontuário do caso foi criado.
         </Aviso>
       )}
+
+      {transferido && <AvisoTransferencia resultado={transferido} />}
 
       {vagas.data?.map((vaga) => (
         <CartaoVagaLiberada key={vaga.id} vaga={vaga} supervisor />
@@ -260,61 +233,84 @@ export default function MeusCasosPage() {
         </div>
       )}
       {lista.data && lista.data.length > 0 && (
-        <>
-          <div className="ui-painel max-md:hidden">
-            <table className="ui-tabela">
-              <caption className="sr-only">Casos sob a sua supervisão</caption>
-              <thead>
-                <tr>
-                  <th scope="col">Nº da inscrição</th>
-                  <th scope="col">Paciente</th>
-                  <th scope="col">Prioridade clínica</th>
-                  <th scope="col">Estagiário</th>
-                  <th scope="col">Situação</th>
-                  <th scope="col">
-                    <span className="sr-only">Ações</span>
-                  </th>
-                </tr>
-              </thead>
-              <tbody>
-                {lista.data.map((caso) => (
-                  <tr key={caso.casoId}>
-                    <td className="ui-numero">{caso.numero}</td>
-                    <td className="font-semibold">{caso.nome}</td>
-                    <td>
-                      {caso.prioridade && <Prioridade cor={caso.prioridade} />}
-                    </td>
-                    <td>{estagiarioDo(caso)}</td>
-                    <td>
-                      <SeloSituacaoCaso situacao={caso.situacao} />
-                    </td>
-                    <td className="text-right">{acao(caso)}</td>
-                  </tr>
+        <div className="ui-painel">
+          {(opcoes.length > 1 || (opcoes.length > 0 && temSemEstagiario)) && (
+            <fieldset className="flex min-w-0 flex-col gap-2 border-b border-border p-4 sm:px-5">
+              <legend className="ui-rotulo float-left mb-2 w-full">
+                Estagiário
+              </legend>
+              <div className="flex flex-wrap gap-2">
+                {[
+                  [TODOS, "Todos"],
+                  ...opcoes.map(([id, nome]) => [id, nome]),
+                  ...(temSemEstagiario
+                    ? [[SEM_ESTAGIARIO, "Sem estagiário"]]
+                    : []),
+                ].map(([valor, rotulo]) => (
+                  <label key={valor} className="ui-opcao w-auto">
+                    <input
+                      type="radio"
+                      name="filtro-estagiario"
+                      value={valor}
+                      checked={escolha === valor}
+                      onChange={() => setFiltro(valor)}
+                    />
+                    <span>{rotulo}</span>
+                  </label>
                 ))}
-              </tbody>
-            </table>
-          </div>
-          <ul className="ui-lista-celular md:hidden">
-            {lista.data.map((caso) => (
+              </div>
+            </fieldset>
+          )}
+          <p role="status" className="sr-only">
+            {escolha === TODOS
+              ? ""
+              : `${visiveis.length} ${visiveis.length === 1 ? "caso" : "casos"}.`}
+          </p>
+          <table className="ui-tabela max-lg:hidden">
+            <caption className="sr-only">
+              Casos sob a sua responsabilidade e os dos seus estagiários
+            </caption>
+            <thead>
+              <tr>
+                <th scope="col">Paciente</th>
+                <th scope="col">Prioridade clínica</th>
+                <th scope="col">Situação do caso</th>
+                <th scope="col">Estagiário responsável</th>
+                <th scope="col">
+                  <span className="sr-only">Ações</span>
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              {visiveis.map((caso) => (
+                <tr key={caso.casoId}>
+                  <td className="font-semibold">{ficha(caso)}</td>
+                  <td>
+                    {caso.prioridade && <Prioridade cor={caso.prioridade} />}
+                  </td>
+                  <td>{situacaoDo(caso)}</td>
+                  <td>{estagiarioDo(caso)}</td>
+                  <td className="text-right">{acao(caso)}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+          <ul className="ui-lista-celular p-3 lg:hidden">
+            {visiveis.map((caso) => (
               <li key={caso.casoId} className="ui-item-celular">
                 <div className="flex items-center justify-between gap-2">
-                  <span className="ui-numero">{caso.numero}</span>
+                  <p className="text-[17px] font-semibold">{ficha(caso)}</p>
                   {caso.prioridade && <Prioridade cor={caso.prioridade} />}
                 </div>
-                <p className="text-[17px] font-semibold">{caso.nome}</p>
                 <p className="text-sm text-muted-foreground">
-                  {caso.estagiario
-                    ? `Estagiário: ${caso.estagiario}`
-                    : estagiarioDo(caso)}
+                  Estagiário responsável: {estagiarioDo(caso)}
                 </p>
-                <div>
-                  <SeloSituacaoCaso situacao={caso.situacao} />
-                </div>
+                {situacaoDo(caso)}
                 {acao(caso, true)}
               </li>
             ))}
           </ul>
-        </>
+        </div>
       )}
 
       {aberto && (
@@ -328,6 +324,20 @@ export default function MeusCasosPage() {
             void cliente.invalidateQueries({ queryKey: ["casos"] });
             void cliente.invalidateQueries({ queryKey: ["estagiarios"] });
             void cliente.invalidateQueries({ queryKey: ["vagas"] });
+          }}
+        />
+      )}
+      {transferindo && (
+        <DialogoTransferir
+          key={transferindo.casoId}
+          casoId={transferindo.casoId}
+          coordenacao={false}
+          aoFechar={() => setTransferindo(null)}
+          aoConcluir={(resultado) => {
+            setTransferindo(null);
+            setTransferido(resultado);
+            void cliente.invalidateQueries({ queryKey: ["casos"] });
+            void cliente.invalidateQueries({ queryKey: ["estagiarios"] });
           }}
         />
       )}

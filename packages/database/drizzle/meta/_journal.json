@@ -92,6 +92,20 @@
       "when": 1794250868423,
       "tag": "0012_entrada_na_fila",
       "breakpoints": true
+    },
+    {
+      "idx": 13,
+      "version": "7",
+      "when": 1794356289901,
+      "tag": "0013_transferencia_de_caso",
+      "breakpoints": true
+    },
+    {
+      "idx": 14,
+      "version": "7",
+      "when": 1794412329099,
+      "tag": "0014_fichas_anamnese_e_evolucao",
+      "breakpoints": true
     }
   ]
 }

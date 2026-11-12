@@ -4,8 +4,9 @@
 // 95 do tempo de resposta de cada operação, com o limite do seu RNF:
 //   RNF12 (até 2 s): agendar sessão (RF10). Remarcar, confirmar e cancelar
 //     entram quando forem construídos (Ciclo 4).
-//   RNF21 (até 3 s): listar casos, distribuir (RF18, RF20) e vincular (RF21).
-//     A consulta de responsáveis (RF22) entra quando for construída.
+//   RNF21 (até 3 s): listar casos, distribuir (RF18, RF20), vincular (RF21) e
+//     consultar os responsáveis pelo caso (RF22), e o estagiário e o supervisor
+//     consultarem os casos sob a sua responsabilidade (RF23).
 //
 // Uso: k6 run -e API=http://localhost:3333 -e SENHA_CARGA=... scripts/carga/rnf12-rnf21.js
 // Opções: -e USUARIOS=30 -e DURACAO=10m -e RELATORIO=relatorio-testes/carga.json
@@ -15,7 +16,9 @@ import { check, sleep } from "k6";
 const API = __ENV.API || "http://localhost:3333";
 const DOMINIO = "carga.fbr.edu.br";
 // Cada pessoa simulada usa a sua conta (semear-carga cria 10 de cada papel).
-const conta = (papel) => `${papel}${1 + Math.floor((__VU - 1) / 3)}@${DOMINIO}`;
+const PAPEIS = 4;
+const conta = (papel) =>
+  `${papel}${1 + Math.floor((__VU - 1) / PAPEIS)}@${DOMINIO}`;
 
 const USUARIOS = Number(__ENV.USUARIOS || 30);
 const DURACAO = __ENV.DURACAO || "10m";
@@ -31,15 +34,19 @@ const RNFS = {
   },
   RNF21: {
     limite: 3000,
-    rfs: "RF18, RF20, RF21",
-    descricao: "listagens de casos, distribuição e vínculo",
+    rfs: "RF18, RF20, RF21, RF22, RF23",
+    descricao:
+      "listagens de casos, distribuição, vínculo, consulta de responsáveis e casos sob responsabilidade",
     operacoes: [
       "listar_pendentes",
       "disponibilidade",
       "distribuir",
       "meus_casos",
+      "meus_pacientes",
       "estagiarios_disponiveis",
       "vincular",
+      "lista_pacientes",
+      "responsaveis",
     ],
   },
 };
@@ -72,7 +79,7 @@ const segundos = (texto) =>
 // poucos, para a fila durar a carga inteira, e os vínculos seguem o mesmo ritmo.
 // Cada pessoa da coordenação (e cada supervisor) grava no máximo uma vez por
 // intervalo, começando num momento diferente das outras.
-const POR_PAPEL = Math.ceil(USUARIOS / 3);
+const POR_PAPEL = Math.ceil(USUARIOS / PAPEIS);
 const INTERVALO_GRAVACAO = (segundos(DURACAO) * 1000 * POR_PAPEL) / 150;
 let proximaGravacao = null;
 function podeGravar() {
@@ -133,7 +140,14 @@ function coordenacao() {
   }
 }
 
-// O supervisor vê os seus casos e vincula um estagiário aos que não têm (RF21).
+// O estagiário abre "Meus pacientes", a página inicial dele (RF23).
+function estagiario() {
+  entrar(conta("estagiario"));
+  const meus = http.get(`${API}/casos/meus`, medir("RNF21", "meus_pacientes"));
+  check(meus, { "meus pacientes": (r) => r.status === 200 });
+}
+
+// O supervisor vê os seus casos e vincula um estagiário aos que não têm (RF21, RF23).
 function supervisor() {
   entrar(conta("supervisor"));
   const meus = http.get(`${API}/casos/meus`, medir("RNF21", "meus_casos"));
@@ -159,10 +173,22 @@ function supervisor() {
   }
 }
 
-// A secretaria busca o paciente e agenda a sessão (RF10), num horário só desta
-// pessoa simulada e desta repetição, para não haver conflito entre elas.
+// A secretaria consulta a lista de Pacientes e os responsáveis de um caso (RF22),
+// busca o paciente e agenda a sessão (RF10), num horário só desta pessoa simulada
+// e desta repetição, para não haver conflito entre elas.
 function secretaria() {
   entrar(conta("secretaria"));
+  const lista = http.get(`${API}/pacientes`, medir("RNF21", "lista_pacientes"));
+  check(lista, { "lista de pacientes": (r) => r.status === 200 });
+  const naLista = lista.status === 200 ? lista.json().pacientes : [];
+  if (naLista.length) {
+    const caso = naLista[(__VU * 7 + __ITER) % naLista.length];
+    const res = http.get(
+      `${API}/casos/${caso.casoId}/responsaveis`,
+      medir("RNF21", "responsaveis"),
+    );
+    check(res, { responsaveis: (r) => r.status === 200 });
+  }
   const busca = http.get(
     `${API}/sessoes/pacientes?busca=Paciente%20Carga`,
     medir("RNF12", "buscar_paciente"),
@@ -186,12 +212,13 @@ function secretaria() {
   check(res, { agendou: (r) => [201, 409].includes(r.status) });
 }
 
-// Cerca de um terço das pessoas em cada papel, como no pico estimado pela equipe.
+// Cerca de um quarto das pessoas em cada papel, como no pico estimado pela equipe.
 export default function () {
-  const papel = (__VU - 1) % 3;
+  const papel = (__VU - 1) % PAPEIS;
   if (papel === 0) coordenacao();
   else if (papel === 1) supervisor();
-  else secretaria();
+  else if (papel === 2) secretaria();
+  else estagiario();
   sleep(1 + Math.random() * 2);
 }
 
