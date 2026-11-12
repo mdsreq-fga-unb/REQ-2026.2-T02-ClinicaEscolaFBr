@@ -14,6 +14,10 @@ export const dataHoraBr = (valor: string | null | undefined) =>
     ? `${dataBr(valor)}, ${new Date(valor).toLocaleTimeString("pt-BR", { hour: "2-digit", minute: "2-digit", timeZone: FUSO })}`
     : "—";
 
+// Data de hoje em Brasília, no formato AAAA-MM-DD dos campos de data.
+export const hojeBr = () =>
+  new Intl.DateTimeFormat("en-CA", { timeZone: FUSO }).format(new Date());
+
 // Só a hora (HH:MM), no horário de Brasília.
 export const horaBr = (data: Date) =>
   data.toLocaleTimeString("pt-BR", {
