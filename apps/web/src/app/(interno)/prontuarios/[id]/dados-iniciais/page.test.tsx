@@ -89,6 +89,9 @@ describe("leitura dos dados iniciais (RF27, RF69, RNF25, RNF51, RNF52)", () => {
         .getByRole("link", { name: "Voltar para meus casos" })
         .getAttribute("href"),
     ).toBe("/meus-casos");
-    expect(screen.queryByText(/Paciente|Anamnese|Contrato/)).toBeNull();
+    // Só o título da tela negada: nenhuma seção dos dados iniciais aparece.
+    expect(screen.getAllByRole("heading").map((h) => h.textContent)).toEqual([
+      "Você não tem acesso a este prontuário",
+    ]);
   });
 });

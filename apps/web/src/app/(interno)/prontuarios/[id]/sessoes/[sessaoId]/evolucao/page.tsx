@@ -61,6 +61,9 @@ export default function RegistrarEvolucaoPage() {
 
   const paciente = consulta.data;
   const sessao = paciente.sessoes.find((item) => item.id === sessaoId);
+  // Aqui a pessoa já tem acesso ao prontuário: só a sessão não pertence a ele (um
+  // endereço de outra sessão, por exemplo). Por isso é um aviso, e não a tela de
+  // acesso negado, que fica para quem não pode abrir o prontuário (RNF25).
   if (!sessao)
     return <Aviso tipo="erro" titulo="Você não tem acesso a esta sessão." />;
   const podeRegistrar =

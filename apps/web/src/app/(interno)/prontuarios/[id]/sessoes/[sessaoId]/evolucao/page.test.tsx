@@ -153,8 +153,10 @@ describe("registro de evolução em tela própria (RF28, RNF25, RNF27, RNF30)", 
         .getByRole("link", { name: "Voltar para meus pacientes" })
         .getAttribute("href"),
     ).toBe("/meus-pacientes");
-    expect(
-      screen.queryByText(/Paciente|Registro de evolução|Salvar/),
-    ).toBeNull();
+    // Só o título da tela negada: nem os dados da sessão nem o formulário.
+    expect(screen.getAllByRole("heading").map((h) => h.textContent)).toEqual([
+      "Você não tem acesso a este prontuário",
+    ]);
+    expect(screen.queryByRole("button", { name: /Salvar/ })).toBeNull();
   });
 });
