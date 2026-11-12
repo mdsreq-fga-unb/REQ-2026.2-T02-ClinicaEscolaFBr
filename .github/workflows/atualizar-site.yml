@@ -1,0 +1,47 @@
+# Publica de novo o site quando o estado de uma feature ou de um ciclo muda no
+# GitHub. O site é publicado a partir da development (deploy-docs.yaml), e, na
+# publicação, lê o "Estado da feature" das issues e os milestones dos ciclos.
+# Os eventos de issue, de milestone e de agendamento só disparam workflows da
+# branch padrão (main): por isso este workflow fica aqui e só pede a publicação
+# da development, sem publicar nada da main.
+name: Atualizar site pelo GitHub
+
+on:
+  issues:
+    types: [opened, edited, closed, reopened, milestoned, demilestoned]
+  milestone:
+    types: [created, edited, opened, closed, deleted]
+  # O robô de acompanhamento edita as issues com o token das Actions, e essas
+  # edições não disparam o evento "issues": o fim da execução dele dispara.
+  workflow_run:
+    workflows: [Feature Status]
+    types: [completed]
+  schedule:
+    # Todo dia às 8h de Brasília, depois do acompanhamento diário das features.
+    - cron: "30 11 * * *"
+  workflow_dispatch:
+
+permissions:
+  # Para disparar o deploy-docs na development.
+  actions: write
+
+# Várias mudanças seguidas viram uma publicação só: cada execução espera um
+# pouco, e a seguinte cancela a anterior que ainda está esperando.
+concurrency:
+  group: atualizar-site
+  cancel-in-progress: true
+
+jobs:
+  publicar:
+    # Das issues, só as de feature ("CPn — …") mudam o site.
+    if: github.event_name != 'issues' || startsWith(github.event.issue.title, 'CP')
+    runs-on: ubuntu-latest
+    steps:
+      - name: Esperar outras mudanças
+        if: github.event_name != 'schedule' && github.event_name != 'workflow_dispatch'
+        run: sleep 120
+
+      - name: Publicar a development
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: gh workflow run deploy-docs.yaml --ref development --repo "$GITHUB_REPOSITORY"
