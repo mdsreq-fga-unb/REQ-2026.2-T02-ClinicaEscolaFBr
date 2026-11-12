@@ -51,7 +51,7 @@ O sistema deve permitir que o interessado realize uma solicitação de atendimen
 - O formulário deve exigir, como campos obrigatórios — confirmados pela Clínica Escola na reunião de 26/08/2026 ([ata](../historico/unidade-1/reunioes.md)) —, os seguintes: nome completo, data de nascimento, CPF, RG, endereço, estado civil e a queixa (motivo da busca pelo atendimento); quando o interessado for menor de idade, o formulário deve exigir também o nome do responsável legal.
 - Para viabilizar os lembretes e a verificação de identidade previstos nos RF13 e RF52, o interessado deve informar o **e-mail** e o **telefone celular**, os dois obrigatórios, e a inscrição avisa que os contatos da clínica são feitos por e-mail ([DF48](decisoes-fbr.md#df48)). A inscrição não pede mais a escolha do canal preferencial. As mensagens automáticas do sistema vão por e-mail, e o celular fica para os contatos da secretaria por WhatsApp ou ligação. O SMS não é usado. As inscrições feitas antes da DF48, com o canal escolhido e às vezes só o celular, continuam seguindo a [DF24](decisoes-fbr.md#df24).
 - O formulário também deve coletar, para a triagem, a percepção de urgência e um campo de histórico relevante informado pelo interessado, ambos como declarações do próprio solicitante.
-- O formulário também deve coletar os dados da ficha de identificação da Clínica Escola que os campos acima não cobrem ([DF43](decisoes-fbr.md#df43)): sexo, profissão, escolaridade, bairro, cidade, CEP, WhatsApp, contato de emergência e, para menor de idade, o CPF e o documento que comprova a responsabilidade legal. Até a FBr definir a obrigatoriedade desses dados, eles são opcionais; essa regra é uma proposta da equipe. A exceção é o CPF do responsável legal, obrigatório na inscrição de menor de idade ([DF47](decisoes-fbr.md#df47)), porque o consentimento do RF57 é dado pelo responsável.
+- O formulário também deve coletar os dados da ficha de identificação da Clínica Escola que os campos acima não cobrem ([DF43](decisoes-fbr.md#df43)): sexo, profissão, escolaridade, bairro, cidade, CEP, WhatsApp, contato de emergência e, para menor de idade, o CPF e o documento que comprova a responsabilidade legal. O contato de emergência é obrigatório ([DF51](decisoes-fbr.md#df51)), e o CPF do responsável legal também, na inscrição de menor de idade ([DF47](decisoes-fbr.md#df47)), porque o consentimento do RF57 é dado pelo responsável. Os demais continuam opcionais até a FBr dizer quais são os dados mínimos para o reconhecimento do paciente; essa regra é uma proposta da equipe.
 - O CPF e o RG são coletados apenas como texto informado pelo próprio interessado — a Clínica Escola não exige, nem o sistema deve solicitar, o envio de cópia digitalizada desses documentos.
 - O sistema deve validar o formato dos dados de contato, verificar os campos obrigatórios e solicitar a confirmação do interessado antes de registrar a inscrição.
 - O formulário deve exibir, de forma fixa e sempre visível, um aviso textual com os contatos de emergência do CVV (188) e do SAMU (192), conforme solicitado pela Clínica Escola FBr na validação do MVP ([validação do MVP](priorizacao-e-mvp.md#1024-validacao-do-mvp-com-o-cliente)) — condição vinculada ao adiamento da sinalização automática de pontos de atenção (RF5) para uma entrega posterior.
@@ -478,7 +478,7 @@ _Rastreabilidade:_ Feature "Registrar cancelamento de sessão pelo estagiário" 
 
 {{ registro("RF16") }}
 
-#### Feature — Notificar paciente sobre ausência do estagiário
+#### Feature — Notificar paciente sobre ausência do estagiário [#223](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/issues/223)
 
 **RF17 — Notificar paciente sobre ausência do estagiário**{ #rf17 }
 
@@ -623,11 +623,14 @@ _Rastreabilidade:_ Feature "Visualizar distribuição de casos por supervisor" �
 
 O sistema deve permitir a transferência de um caso ativo, preservando o histórico do paciente (sessões, evolução e vínculos anteriores), com os seguintes limites por perfil, coerentes com o RNF16: o **supervisor responsável pelo caso** pode transferi-lo apenas para outro estagiário sob a sua própria supervisão; transferir o caso para outro supervisor — por exemplo, ao término do estágio, na saída do estagiário ou por reorganização da carga — é ação exclusiva da **coordenação**, que pode transferir qualquer caso, para qualquer supervisor ou estagiário. A transferência deve exigir a indicação do novo responsável e do motivo, e deve ficar registrada com responsável anterior, novo responsável, data/hora e motivo, vinculada à atribuição anterior. A partir da transferência, o responsável anterior perde o acesso ao caso, e o novo responsável passa a ter acesso a todo o histórico. Esse registro deve ser mantido no sistema mesmo enquanto a tela dedicada à sua consulta (RF26) ficar para uma entrega posterior, de modo que o histórico de transferências exista integralmente no banco desde já.
 
+Na transferência, a coordenação pode escolher um supervisor que já acompanha o limite de casos do RF20, com um aviso ([DF50](decisoes-fbr.md#df50)); a distribuição de um caso novo (RF20) continua recusando esse supervisor.
+
 _Critérios de aceitação:_
 
 - A transferência, pelo supervisor responsável, de caso para outro estagiário sob sua supervisão registra o novo responsável, mantém o histórico do paciente disponível a ele e revoga o acesso do estagiário anterior.
 - O supervisor A não consegue transferir seu caso para estagiário do supervisor B; o sistema orienta a transferência pela coordenação.
 - A transferência de caso ativo pela coordenação para outro supervisor registra o novo supervisor e, quando indicado, o novo estagiário, preserva o histórico e revoga o acesso dos responsáveis anteriores.
+- A transferência pela coordenação para um supervisor que já acompanha o limite de casos é registrada, com o aviso de que o limite foi ultrapassado.
 
 _Rastreabilidade:_ Feature "Transferir caso para outro estagiário ou supervisor" → CP5 — Distribuição de casos entre supervisores e estagiários → OE5. Dependência: RF21; restrição transversal: RNF16.{{ origem("RF25") }}
 
@@ -742,7 +745,7 @@ _Rastreabilidade:_ Feature "Registrar evolução da sessão realizada" → CP7 �
 
 {{ registro("RF28") }}
 
-#### Feature — Corrigir evolução registrada
+#### Feature — Corrigir evolução registrada [#224](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/issues/224)
 
 **RF29 — Corrigir evolução registrada**{ #rf29 }
 
@@ -974,6 +977,8 @@ O sistema deve permitir que a secretaria ou a coordenação registre o desligame
 
 A **realocação** da vaga a outro inscrito não é automática nem faz parte deste requisito: ela é confirmada pelo supervisor do estagiário ao vincular o novo paciente (RF21), depois de a coordenação distribuir o caso a esse supervisor, quando ainda não estiver distribuído (RF20). Conforme confirmado pela Clínica Escola, a vaga deve ser liberada em até uma semana após o desligamento; a liberação em até 5 segundos definida no RNF34 já atende a essa exigência com folga.
 
+O estagiário responsável avisa o paciente do desligamento, por fora do sistema ([DF53](decisoes-fbr.md#df53)), e a confirmação do desligamento lembra esse aviso.
+
 _Critérios de aceitação:_
 
 - A confirmação do desligamento pela secretaria ou pela coordenação, para paciente com alerta de limite pendente (RF36), registra a decisão com data e responsável e muda o status para "desligado por faltas".
@@ -1006,7 +1011,7 @@ _Rastreabilidade:_ Feature "Reverter desligamento de paciente por faltas" → CP
 
 O escopo da CP9 também prevê o controle das faltas do estagiário, mencionado na Solução Proposta. Em resposta posterior à reunião de 26/08/2026, a Clínica Escola confirmou a regra de consequência: 3 faltas do estagiário reprovam o campo de estágio (RF40). As features abaixo separam quatro ações com regras distintas: a consulta das ausências do estagiário já registradas pela CP4 (RF16) pela supervisão (RF39), a contagem das faltas no semestre (RF40), a sinalização da reprovação ao atingir o limite (RF63) e o registro da decisão institucional da coordenação, que encerra a sinalização (RF64).
 
-#### Feature — Consolidar faltas do estagiário para a supervisão
+#### Feature — Consolidar faltas do estagiário para a supervisão [#225](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/issues/225)
 
 **RF39 — Consolidar faltas do estagiário para a supervisão**{ #rf39 }
 
@@ -1155,7 +1160,7 @@ _Rastreabilidade:_ Feature "Bloquear agendamento por contribuição social pende
 
 Este conjunto reúne quatro features que permitem que a secretaria ou o próprio paciente/responsável obtenham a declaração de comparecimento às sessões, contendo data, horário e nome do estagiário que realizou o atendimento, e validem sua autenticidade. O objetivo é atender de imediato uma demanda recorrente dos pacientes, sem trabalho manual da secretaria. A feature de emissão consolidada por período, antes cogitada como quinta feature, foi retirada da lista: a Clínica Escola confirmou que essa necessidade já é atendida pelo relatório final de atendimento (CP8).
 
-#### Feature — Listar sessões com comparecimento registrado do paciente
+#### Feature — Listar sessões com comparecimento registrado do paciente [#226](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/issues/226)
 
 **RF44 — Listar sessões com comparecimento registrado do paciente**{ #rf44 }
 
