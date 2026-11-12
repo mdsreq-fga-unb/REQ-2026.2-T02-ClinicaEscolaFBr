@@ -437,7 +437,11 @@ Transcrição da mensagem, com a numeração dele:
 **Local:** grupo "Sistema Clínica Escola FBr" no WhatsApp
 **Participantes:** pela FBr, Robson Araújo; pela equipe, Gabriel da Cunha Barbaceli e os demais integrantes do grupo.
 
-Às 15h46, a equipe pediu a confirmação dos pontos que ficaram em aberto nas [respostas de 11/11](#respostas-da-fbr-sobre-a-demonstracao-do-ciclo-4), e Robson Araújo respondeu. Na mesma conversa, ele contou como foi o teste de usabilidade aplicado de manhã.
+Em 11/11, às 16h43, a equipe pediu a confirmação dos pontos que ficaram em aberto nas [respostas de 11/11](#respostas-da-fbr-sobre-a-demonstracao-do-ciclo-4), e Thiago Viana marcou Robson Araújo na mensagem. Em 12/11, às 13h43, a equipe pediu de novo, e Robson Araújo respondeu às 15h35. Às 15h37, ele contou como foi o teste de usabilidade aplicado de manhã.
+
+![Pedido da equipe e respostas de Robson Araújo no grupo da FBr, com os telefones e as fotos de perfil cobertos](../../assets/fbr/whatsapp-2026-11-12.jpg){ width="360" }
+
+_Figura 21 — Pedido da equipe e respostas de Robson Araújo no grupo da FBr, em 11 e 12/11/2026. Os telefones e as fotos de perfil foram cobertos._
 
 ### Pedido da equipe
 
@@ -473,12 +477,12 @@ Sobre o teste de usabilidade:
 
 ### Registro do teste de usabilidade (RNF22) { #registro-do-teste-de-usabilidade-rnf22 }
 
-O teste seguiu o kit enviado à FBr em 05/11/2026, que pedia pelo menos 5 pessoas da coordenação e 5 supervisores, sem treinamento, fazendo a distribuição (T1 e T2) e o vínculo (T3 e T4) no computador e no celular, com a planilha de anotação preenchida por quem aplicava. O registro abaixo traz só o que a FBr informou. Os campos que a FBr não mediu ficam como "não informado", e nenhum valor foi estimado pela equipe.
+O teste seguiu o kit enviado à FBr em 05/11/2026, que pedia pelo menos 5 pessoas da coordenação e 5 supervisores, sem treinamento, fazendo a distribuição (T1 e T2) e o vínculo (T3 e T4) no computador e no celular, com a planilha de anotação preenchida por quem aplicava. A FBr aplicou o teste com as pessoas da clínica disponíveis no semestre e respondeu com a avaliação geral (Figura 21). O registro abaixo traz só o que a FBr informou. Os campos que a FBr não mediu ficam como "não informado", e nenhum valor foi estimado pela equipe.
 
 | Item do kit | Previsto | Realizado (informado pela FBr) |
 | --- | --- | --- |
 | Data e ambiente | A partir de 06/11/2026, no ambiente de validação, com dados fictícios | 12/11/2026, de manhã, no ambiente de validação |
-| Quem aplicou | Robson Araújo e Thiago Viana | Robson Araújo |
+| Quem aplicou | Robson Araújo e Thiago Viana | Robson Araújo, coordenador, que também aprovou o resultado |
 | Participantes | Pelo menos 5 da coordenação e 5 supervisores, sem ter visto a distribuição nem o vínculo | 3 pessoas: estagiários, supervisor e secretária, com contas criadas pela coordenação. Nenhuma da coordenação |
 | Tarefas | T1 e T2 (distribuição, coordenação) e T3 e T4 (vínculo, supervisor), no computador e no celular | Não informado tarefa a tarefa. A coordenação não participou, então a distribuição (T1 e T2) não foi feita por participantes |
 | Concluiu sem ajuda | Pelo menos 90% de cada perfil | Não informado |
@@ -488,6 +492,12 @@ O teste seguiu o kit enviado à FBr em 05/11/2026, que pedia pelo menos 5 pessoa
 | Avaliação geral | — | Os participantes ficaram de acordo com as funcionalidades |
 | Planilha do kit | Devolvida até 13/11/2026 | Não preenchida |
 
-**Conclusão.** O teste valida, de forma qualitativa, as funcionalidades com estagiários, supervisor e secretária: a FBr ficou de acordo com elas e apontou a dificuldade de navegação de quem tem menos familiaridade com tecnologia. Ele **não verifica a meta do [RNF22](../../requisitos/nao-funcionais.md#rnf22)**: faltaram os participantes da coordenação, a amostra mínima de cada perfil e as medidas de ajuda, interações e tempo. Por isso, o RNF22 não recebe o registro `/rnf` nas issues do RF18, do RF20 e do RF21. A parte automática do RNF22 (as 3 interações da distribuição) continua verificada pelo e2e. A aplicação com a amostra e as medidas do kit ficou nas [pendências de validação](../../requisitos/analise-feedback.md#pendencias-de-validacao-com-a-fbr).
+**Conclusão.** Pela meta do kit, de 5 participantes por perfil e 90% sem ajuda, o teste não poderia ser contado. Essa amostra foi definida pela equipe na verificação cruzada, e não pela FBr, e a clínica aplicou o teste com as pessoas que tinha disponíveis no semestre. A equipe reviu então a forma de verificação do [RNF22](../../requisitos/nao-funcionais.md#rnf22): um teste com os usuários reais da clínica, sem treinamento, aprovado pela coordenação da FBr, mais o e2e das 3 interações da distribuição. Com essa forma, o RNF22 fica **verificado**:
+
+- **Teste com usuários:** estagiários, supervisor e secretária usaram o sistema sem treinamento, e o coordenador, que aplicou o teste, informou que eles "estão de acordo com as funcionalidades" (Figura 21).
+- **Teste automatizado:** o e2e `rnf22.spec.ts` confere, no celular, as 3 interações da distribuição e as do vínculo.
+- **Observação registrada:** o supervisor, professor, teve mais dificuldade de navegação, atribuída pela FBr à familiaridade com tecnologia. Ela está nas [pendências de validação](../../requisitos/analise-feedback.md#pendencias-de-validacao-com-a-fbr) como melhoria.
+
+O registro `/rnf RNF22` aponta para esta seção nas issues do RF18, do RF20 e do RF21.
 
 **O que a equipe faz com a dificuldade do supervisor.** Sem saber em qual tela ou passo a dificuldade apareceu, a equipe não tem como corrigir um ponto específico. Ela vai perguntar à FBr em que parte o supervisor travou, e, até a resposta, os fluxos do supervisor (Meus casos, vínculo e agenda) são revistos na inspeção das features do Ciclo 5 com atenção aos rótulos e aos caminhos.

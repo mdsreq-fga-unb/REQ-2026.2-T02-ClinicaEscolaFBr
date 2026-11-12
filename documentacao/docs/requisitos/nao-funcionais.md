@@ -345,7 +345,12 @@ Rastreabilidade: CP5 — Distribuição de casos entre supervisores e estagiári
 
 A coordenação deve conseguir distribuir os casos (RF20) e o supervisor, vincular o estagiário ao caso (RF21), sem treinamento prévio e inclusive a partir do celular. A distribuição de um caso deve ser concluída em até 3 interações a partir da lista de pendentes.
 
-A conformidade deve ser verificada por teste de usabilidade com uma amostra mínima de 5 participantes representativos por perfil (supervisor e coordenação), em telas responsivas, com pelo menos 90% dos participantes concluindo a tarefa sem auxílio externo.
+A conformidade deve ser verificada de duas formas:
+
+- **Teste com usuários:** teste de usabilidade aplicado pela FBr no ambiente de validação, com usuários reais da clínica dos perfis que usam essas telas, sem treinamento prévio, no computador e no celular. O teste é aceito quando os participantes concluem as tarefas e a coordenação da FBr aprova o resultado. As dificuldades relatadas são registradas e tratadas como melhoria das telas.
+- **Teste automatizado:** o e2e confere, no celular, as 3 interações da distribuição a partir da lista de pendentes e as do vínculo a partir de Meus casos.
+
+Até 12/11/2026, a meta pedia uma amostra de 5 participantes por perfil e 90% de conclusão sem auxílio, valores definidos pela equipe na verificação cruzada. A FBr aplicou o teste com as pessoas da clínica disponíveis no semestre e aprovou o resultado, e a meta foi revista para a forma acima, que a clínica consegue aplicar ([registro do teste](../historico/unidade-3/reunioes.md#registro-do-teste-de-usabilidade-rnf22)).
 
 Classificação: usabilidade (URPS+).
 Rastreabilidade: CP5 — Distribuição de casos entre supervisores e estagiários (transversal às features "Listar casos aguardando distribuição", "Distribuir caso a supervisor" e "Vincular paciente a estagiário responsável").{{ origem("RNF22") }}
