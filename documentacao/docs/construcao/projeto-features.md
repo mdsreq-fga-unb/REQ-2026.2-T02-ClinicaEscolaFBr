@@ -10,9 +10,12 @@ As seções seguem as características de produto (CP), na ordem do fluxo do sis
 !!! info "Quem escreveu o projeto do Ciclo 4"
     Por causa do prazo do ciclo, o projeto das features do Ciclo 4 foi escrito pelo Gabriel em 05/11/2026, menos o do RF52, escrito pelo Joaquim. Para que nenhum projeto seja inspecionado por quem o escreveu, a inspeção de cada feature é feita pelo Líder de Feature com o revisor da issue, e o código continua com cada Líder.
 
+!!! info "Projeto do Ciclo 5"
+    O projeto do RF41, do RF44 e do RF48 foi escrito pelo Gabriel em 12/11/2026, a partir das pranchas do Ciclo 5. A inspeção de cada um é feita pelo Líder de Feature com o revisor da issue, como no Ciclo 4. O projeto do RF17, do RF29, do RF39 e do RF56 entra nesta página na PR de cada feature.
+
 ## Convenções
 
-- **API:** NestJS, um módulo por área do FDD (`acesso`, `inscricao`, `triagem`, `casos`, `agendamento`, `acompanhamento-clinico`). As rotas internas exigem sessão e usam o `PerfisGuard` com o decorator `@Perfis(...)`. As rotas públicas (inscrição e ativação de conta) não exigem sessão.
+- **API:** NestJS, um módulo por área do FDD (`acesso`, `inscricao`, `triagem`, `casos`, `agendamento`, `acompanhamento-clinico`, `assiduidade`, `fila`, `administrativo` e `institucional`). As rotas internas exigem sessão e usam o `PerfisGuard` com o decorator `@Perfis(...)`. As rotas públicas (inscrição e ativação de conta) não exigem sessão.
 - **Banco:** PostgreSQL com Drizzle, em `packages/database`. Os nomes de tabela e coluna seguem o português sem acento, como as tabelas `usuarios` e `auditoria` da base técnica.
 - **Validação:** esquemas Zod em `packages/shared`, usados tanto pela API quanto pela interface.
 - **Auditoria:** toda operação que altera dados relevantes chama o `AuditoriaService`, que grava na tabela `auditoria` (somente inserção) o autor, a operação, a entidade, o estado anterior e o novo.
@@ -204,6 +207,62 @@ classDiagram
 ```
 
 `LimiteCodigoVerificacao` não tem chave estrangeira: ele é guardado pelo identificador informado, exista ou não uma inscrição com ele.
+
+### Classes do Ciclo 5 { #modelo-detalhado-do-ciclo-5 }
+
+Classes novas do Ciclo 5 e as colunas novas de classes que já existem. O `Caso`, o `VinculoEstagiario` e a `AtribuicaoSupervisor` aparecem só com os atributos usados aqui.
+
+```mermaid
+classDiagram
+    direction LR
+    class Caso {
+      +uuid id
+      +int cicloAtendimento
+    }
+    class VinculoEstagiario {
+      +datetime vinculadoEm
+      +bool vigente
+      +datetime encerradoEm
+    }
+    class AtribuicaoSupervisor {
+      +datetime atribuidoEm
+      +bool vigente
+      +datetime encerradaEm
+    }
+    class PagamentoContribuicao {
+      +uuid id
+      +int cicloAtendimento
+      +int versao
+      +int valorCentavos
+      +date pagoEm
+      +FormaPagamento forma
+      +string motivoCorrecao
+      +uuid registradoPor
+      +datetime registradoEm
+    }
+    class AlteracaoParametro {
+      +uuid id
+      +string chave
+      +string valorAnterior
+      +string valorNovo
+      +uuid alteradoPor
+      +datetime alteradoEm
+    }
+    class VagasOfertadas {
+      +string semestre
+      +int total
+      +uuid alteradoPor
+      +datetime alteradoEm
+    }
+    Caso "1" -- "0..*" PagamentoContribuicao : versões por ciclo
+    Caso "1" -- "0..*" VinculoEstagiario
+    Caso "1" -- "0..*" AtribuicaoSupervisor
+```
+
+- **`PagamentoContribuicao` (RF41):** só inserção, como a `Evolucao`. A versão 1 é o registro, e cada correção é uma versão nova, com o motivo obrigatório. Vale a versão de maior número do caso no ciclo. O banco garante `unique (caso_id, ciclo_atendimento, versao)`, `motivo_correcao` nulo só na versão 1 (`check`) e o trigger `impedir_alteracao_registro` contra `update` e `delete`. O valor é guardado em centavos, copiado do parâmetro no momento do registro, para a mudança do parâmetro não alterar o que já foi pago. A forma é o enum `forma_pagamento` (`dinheiro`, `pix`, `cartao`).
+- **`AlteracaoParametro` (RF41 e RF48):** o histórico das mudanças da tabela `parametros`, só inserção. A tabela `parametros` continua com o valor vigente, e a mudança grava as duas na mesma transação. Serve para o "Última alteração: de R$ 30,00 para R$ 35,00…" da prancha 8-1.
+- **`VagasOfertadas` (RF48):** uma linha por semestre (`2026/1`, `2026/2`), com o total vigente. A alteração grava uma `AlteracaoParametro` com a chave `vagas_ofertadas:2026/2`. O semestre de uma data é `AAAA/1` de janeiro a junho e `AAAA/2` de julho a dezembro, pelo horário de Brasília.
+- **`encerradoEm` e `encerradaEm` (RF48):** hoje o vínculo e a atribuição só têm `vigente`, e os indicadores de posição precisam saber quem estava em atendimento numa data passada. A transferência (RF25) e o desligamento (RF37) passam a preencher a data junto com o `vigente = false`. A migration preenche os registros antigos com o `transferido_em` da transferência que os encerrou e com o `decidido_em` do desligamento. A reversão (RF38) já cria um vínculo novo, e por isso o histórico continua certo.
 
 ## Acesso e segurança (CP12)
 
@@ -1875,6 +1934,162 @@ sequenceDiagram
 **Dependências e riscos:** a migration dos status sai na primeira PR que entrar entre o RF14, o RF15 (Nicolas) e o RF34, pela regra única da CP4. Se o RF34 entrar antes, ele leva a migration e os ajustes; até o RF14 e o RF15 entrarem, os testes do RF34 criam as sessões confirmadas e canceladas direto no banco, como no Ciclo 3. O RF7 (Jônatas) traz a fila. Nenhuma integração externa: não há e-mail, SMS nem PDF na CP9.
 
 ---
+
+## Registros administrativos (CP10)
+
+### RF41 — Registrar pagamento da contribuição social do paciente ([#43](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/issues/43))
+
+_Ciclo 5._
+
+**Rotas** (módulo `administrativo`):
+
+- `GET /casos/:id/contribuicao` (secretaria): a situação no ciclo atual do caso. Traz `pendente` ou `efetivada`, o prazo (10 dias corridos a partir do primeiro vínculo do ciclo, RF21), a versão vigente e as anteriores, cada uma com o autor e a data/hora.
+- `POST /casos/:id/contribuicao` (secretaria): recebe `pagoEm` e `forma`. O valor não vem do pedido: a API lê o parâmetro `valor_contribuicao_centavos` na mesma transação.
+- `POST /casos/:id/contribuicao/correcao` (secretaria): recebe `valorCentavos`, `pagoEm`, `forma` e `motivo` (obrigatório) e grava a versão seguinte.
+- `GET /parametros/valor-contribuicao` e `PUT /parametros/valor-contribuicao` (coordenação): o valor vigente com a última alteração, e a alteração, que recebe só o `valorCentavos`.
+
+```mermaid
+sequenceDiagram
+    actor S as Secretaria
+    participant A as API (administrativo)
+    participant DB as Banco
+    S->>A: POST /casos/:id/contribuicao (pagoEm, forma)
+    A->>DB: transação: trava o caso (FOR UPDATE) e lê o ciclo atual
+    alt caso sem vínculo no ciclo
+        A-->>S: 422, a contribuição só é devida depois do vínculo
+    else já existe pagamento no ciclo
+        A-->>S: 409 com a data do pagamento registrado
+    else data no futuro ou forma inválida
+        A-->>S: 400 com o campo indicado
+    else
+        A->>DB: lê valor_contribuicao_centavos (parametros)
+        A->>DB: insere PagamentoContribuicao versão 1 com o valor lido
+        A->>DB: auditoria (RNF10, RNF36)
+        A-->>S: efetivada, com valor, data, forma, autor e data/hora
+    end
+```
+
+| Regra | Critério de aceitação |
+| --- | --- |
+| O valor é lido do parâmetro na transação e copiado para o registro | O registro marca a contribuição como efetivada e guarda o valor vigente, a data, a forma, quem registrou e quando |
+| O caso é travado com `FOR UPDATE`, e o `unique (caso_id, ciclo_atendimento, versao)` segura dois envios ao mesmo tempo; o segundo recebe `409` com o `pagoEm` da versão vigente | O segundo pagamento no mesmo ciclo é bloqueado, informando a data do já registrado |
+| `@Perfis('secretaria')` nas rotas do pagamento | Quem não é secretaria não registra pagamento (403) |
+| `PUT /parametros/valor-contribuicao` grava `parametros` e `AlteracaoParametro` na mesma transação; o registro já feito guarda o próprio valor | A alteração pela coordenação registra o valor anterior, o novo, o autor e a data/hora e vale só para os pagamentos seguintes |
+| `@Perfis('coordenacao')` nas rotas do parâmetro | Quem não é coordenação não altera o valor (403) |
+| A correção insere a versão seguinte, com o motivo; o trigger recusa `update` e `delete` | A correção exige o motivo, gera nova versão com autor e data/hora e mantém a anterior consultável |
+
+**Decisões de projeto:** o parâmetro começa em 3500 centavos (R$ 35,00), pela migration, como os outros de `PARAMETROS_PADRAO`. O "ciclo de atendimento" é o `casos.ciclo_atendimento`, que já separa as faltas e o prontuário; a inscrição num semestre novo abre um ciclo novo e uma contribuição nova. A correção pode mudar o valor, porque o erro pode estar nele (prancha 8-1). Nenhum dado de pagamento passa pela API como cobrança: o sistema só registra o que a secretaria recebeu por fora (RF41). O bloqueio da 2ª sessão sem pagamento é do RF43, no Ciclo 6; aqui o prazo só aparece no cartão.
+
+**Telas:** cartão "Contribuição social · Ciclo N" na ficha do paciente (`/pacientes/[casoId]`), visto pela secretaria, com o selo "Pendente" e o prazo, ou "Efetivada" com valor, data e forma; "Registrar pagamento" e "Corrigir pagamento" abrem o formulário no lugar do cartão, e, no celular, os botões ficam em largura total. A versão anterior aparece abaixo da vigente, com "Registrado por… em…". O `409` mostra o aviso "Este ciclo já tem pagamento registrado." com a data. O valor da coordenação fica numa página nova, "Parâmetros" (`/parametros`), no menu da coordenação: a prancha não diz onde fica o cartão, e a página é uma proposta da equipe. Protótipo: [prancha 8-1](prototipos.md#rf41).
+
+**Acessibilidade (RNF56 a RNF58):** as formas de pagamento são um grupo de rádio com legenda; o erro de cada campo fica ligado por `aria-describedby`, e o aviso do topo recebe o foco; o selo tem texto, e não só cor; a data usa o mesmo campo do agendamento (RF10).
+
+**Dados de teste:** um caso vinculado há 3 dias (pendente, prazo em 7 dias); o registro em Pix; o segundo registro (409 com a data); dois registros ao mesmo tempo (um passa, o outro recebe 409); a correção sem motivo (400) e com motivo (versão 2, a 1 consultável); o estagiário e a coordenação tentando registrar (403); a coordenação mudando de R$ 35,00 para R$ 40,00 e o registro seguinte com R$ 40,00, sem mudar o anterior; a secretaria tentando mudar o valor (403); o `clinica_app` tentando apagar uma versão (recusado pelo banco).
+
+**Dependências e riscos:** usa o vínculo do RF21 para o prazo. A situação para a secretaria, a coordenação e o estagiário (lista com filtro e indicação na agenda) é do RF42, e o bloqueio, do RF43, os dois no Ciclo 6.
+
+---
+
+### RF44 — Listar sessões com comparecimento registrado do paciente ([#226](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/issues/226))
+
+_Ciclo 5._
+
+**Rotas** (módulo `administrativo`):
+
+- `GET /declaracoes/minhas-sessoes` (pública, com o `VerificacaoGuard` do RF52): as sessões `realizada` da inscrição em `req.inscricaoVerificada`, de todos os ciclos, da mais recente para a mais antiga. Cada uma traz só a data, o horário e o nome do estagiário. Responde com `Cache-Control: no-store`.
+- `GET /pacientes/:casoId/sessoes-realizadas` (secretaria): a mesma lista, para a ficha do paciente.
+
+```mermaid
+sequenceDiagram
+    actor P as Paciente ou responsável
+    participant W as Web (/declaracoes)
+    participant A as API (administrativo)
+    participant DB as Banco
+    P->>W: confirma a identidade (RF52)
+    W->>A: GET /declaracoes/minhas-sessoes
+    alt verificação ausente ou expirada
+        A-->>W: 401, e a tela pede a verificação de novo
+    else
+        A->>DB: sessões realizada da inscrição verificada
+        A-->>W: lista (ou vazia), sem dado clínico
+        W-->>P: tabela, ou "Não há sessões disponíveis para declaração"
+    end
+```
+
+| Regra | Critério de aceitação |
+| --- | --- |
+| Filtra `status = 'realizada'`; a resposta só tem data, horário e nome do estagiário | A lista mostra só as sessões com presença registrada, com data, horário e estagiário |
+| A rota pública só usa a inscrição da verificação e não recebe id (RNF6) | O paciente ou responsável verificado vê só as próprias sessões |
+| Lista vazia volta `200` com `[]`, e a tela mostra o estado vazio | Sem sessão com presença, aparece o aviso de que não há sessões para declaração |
+| `@Perfis('secretaria')` na rota interna; `401` sem verificação na pública | Usuário interno sem perfil de secretaria não acessa; sem verificação, nenhuma sessão aparece (RNF38) |
+
+**Decisões de projeto:** a lista não tem ação até o RF45 (Ciclo 6). O aviso "A emissão da declaração pelo sistema ainda não está disponível. Para pedir a sua, procure a secretaria da clínica." é uma proposta da equipe, como diz a prancha. As sessões de ciclos anteriores entram, porque a declaração pode ser pedida depois do fim do atendimento.
+
+**Telas:** página `/declaracoes`, depois dos dois passos do RF52 (o mesmo componente do RF8), com "Inscrição AAAA-NNNNN", o aviso, a tabela (cartões no celular) e "Encerrar consulta". Na ficha da secretaria, a seção "Sessões com presença registrada". O estagiário, o supervisor e a coordenação que abrem a rota interna veem a tela "Você não tem acesso a esta lista". Protótipo: [prancha 8-2](prototipos.md#rf44).
+
+**Acessibilidade (RNF56 a RNF58):** tabela com `caption` e cabeçalhos; o estado vazio é um título com o texto; a página é conferida a 320 px.
+
+**Dados de teste:** uma inscrição com três sessões realizadas, uma cancelada, uma com falta e uma agendada (só as três aparecem); uma inscrição sem sessão realizada (estado vazio); a inscrição A verificada pedindo a rota (só as de A); a rota sem verificação (401); o estagiário, o supervisor e a coordenação na rota interna (403).
+
+**Dependências e riscos:** depende do RF52 (#47), já integrado, e da sessão `realizada`, marcada no prontuário (RF28). A emissão é do RF45.
+
+---
+
+## Indicadores e relatórios institucionais (CP11)
+
+### RF48 — Consultar indicadores operacionais ([#22](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/issues/22))
+
+_Ciclo 5._
+
+**Rotas** (módulo `institucional`, todas `@Perfis('coordenacao')`):
+
+- `GET /indicadores?inicio=AAAA-MM-DD&fim=AAAA-MM-DD`: os quatro indicadores. Recusa com `400` o fim depois do dia da consulta ou o início depois do fim, com o campo e o motivo.
+- `GET /vagas-ofertadas/:semestre` e `PUT /vagas-ofertadas/:semestre`: o total do semestre, com a última alteração, e a alteração, que recebe o `total` (inteiro maior que zero).
+
+| Indicador | Cálculo (SQL, numa transação só leitura `REPEATABLE READ`) |
+| --- | --- |
+| Data de referência | Fim do dia `fim` em Brasília; se `fim` é hoje, o momento da consulta |
+| Em atendimento ativo em D | Caso com um vínculo de estagiário em que `vinculado_em <= D` e (`encerrado_em` nulo ou `> D`). O desligamento encerra o vínculo, e a transferência troca por outro sem intervalo |
+| 1. Vagas ocupadas | Casos ativos na data de referência, sobre o `VagasOfertadas` do semestre dela; sem registro, só a quantidade e `totalRegistrado: false` |
+| 2. Tempo médio de espera | Para cada caso cuja primeira sessão `realizada` está no intervalo: dias corridos entre a data da inscrição e a dessa sessão; média com uma casa |
+| 3. Taxa de evasão | Desligamentos por faltas com `decidido_em` no intervalo e `revertido_em` nulo, sobre os casos ativos em pelo menos um dia do intervalo (vínculo iniciado até o fim e não encerrado antes do início); denominador zero dá 0,0% |
+| 4. Distribuição por supervisor | Todos os supervisores ativos, com a contagem dos casos ativos na data de referência cuja atribuição de supervisor também estava vigente nela (`atribuido_em <= D` e `encerrada_em` nula ou `> D`); quem tem zero aparece |
+
+```mermaid
+sequenceDiagram
+    actor C as Coordenação
+    participant A as API (institucional)
+    participant DB as Banco
+    C->>A: GET /indicadores?inicio&fim
+    alt intervalo inválido
+        A-->>C: 400 com o campo e o motivo, sem indicador
+    else
+        A->>DB: transação só leitura: as quatro consultas na mesma foto
+        A->>DB: VagasOfertadas do semestre da data de referência
+        A-->>C: indicadores, data de referência e textos do período
+    end
+```
+
+| Regra | Critério de aceitação |
+| --- | --- |
+| A data de referência é o fim de `fim`; os de fluxo usam `inicio` a `fim`, inclusive | Na consulta de 01/08 a 31/08 feita em 15/09, os de posição refletem o fim de 31/08, e os de fluxo, de 01/08 a 31/08 |
+| `fim` igual a hoje usa `now()` | Com fim no dia da consulta, os de posição refletem o momento da consulta |
+| `revertido_em is null` no numerador | O desligamento revertido não entra na evasão |
+| Cada indicador sempre volta um número; divisão por zero dá 0 | Indicador sem registros aparece como zero, nunca em branco |
+| Validação do intervalo com Zod no `@clinica/shared` | O intervalo inválido é recusado com o motivo |
+| `PUT /vagas-ofertadas/:semestre` grava a linha e a `AlteracaoParametro` na mesma transação | A coordenação registra as vagas do semestre, com o valor anterior, o novo, o autor e a data/hora |
+| `totalRegistrado: false` sem linha do semestre | Sem vagas registradas, aparece só a quantidade ocupada e o aviso |
+| `@Perfis('coordenacao')` em todas as rotas | Quem não é coordenação não consulta nem registra (403) |
+
+**Decisões de projeto:** os indicadores são calculados na hora, sem tabela de resumo, porque o volume da clínica é pequeno; o RNF21 é medido no teste de carga. A posição numa data passada depende do `encerradoEm`, criado neste ciclo (ver o [modelo do Ciclo 5](#modelo-detalhado-do-ciclo-5)); os vínculos encerrados antes da migration recebem a data pela transferência ou pelo desligamento. A data de inscrição é a `inscricoes.criada_em`, e não a `entrada_na_fila_em`, porque o RF48 fala da inscrição. Nenhum nome de paciente sai na resposta.
+
+**Telas:** página "Indicadores" (`/indicadores`), no menu da coordenação, com as datas e "Consultar"; a frase do período ("Vagas ocupadas e distribuição mostram a situação ao fim de…"); os três cartões e a tabela por supervisor; "Alterar vagas ofertadas" (ou "Registrar vagas ofertadas", no aviso) abre o diálogo com a última alteração; o intervalo recusado marca o campo e mostra o aviso "Não foi possível consultar este período."; "Calculando os indicadores…" com o esqueleto dos cartões. O supervisor e os outros perfis veem "Você não tem acesso aos indicadores operacionais", com a volta para a página inicial do perfil. Abre com o mês corrente até hoje. Protótipo: [pranchas 9-1 e 9-2](prototipos.md#rf48).
+
+**Acessibilidade (RNF56 a RNF58):** o resultado é anunciado com `role="status"` ao terminar; a barra das vagas tem o número em texto; a tabela tem `caption`; o diálogo prende o foco e o devolve ao link que o abriu; os cartões viram uma coluna no celular.
+
+**Dados de teste:** um mês com vínculos, uma transferência, dois desligamentos (um revertido) e primeiras sessões dentro e fora do intervalo, com os valores esperados de cada indicador calculados à mão; a mesma consulta feita "depois", com um vínculo encerrado após o fim do intervalo (continua contado); o fim igual a hoje; um período sem registros (todos 0); o semestre sem vagas registradas; o fim no futuro e o início depois do fim (400); um supervisor sem casos (aparece com 0); a secretaria, o supervisor e o estagiário (403).
+
+**Dependências e riscos:** depende do RF21, do RF25, do RF37 e do RF38, já integrados, e da migration do `encerradoEm`, que mexe em tabelas usadas pela transferência e pelo desligamento: as duas passam a gravar a data e ganham teste. O RF9, fora do MVP, vai divulgar as vagas registradas aqui.
 
 ## Roteiro da inspeção de design
 
