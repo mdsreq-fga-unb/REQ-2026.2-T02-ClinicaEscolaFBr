@@ -2,7 +2,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { cleanup, render, screen, waitFor } from "@testing-library/react";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import ProntuarioPage from "./page";
-import { api } from "@/lib/api";
+import { api, ErroApi } from "@/lib/api";
 
 vi.mock("next/navigation", () => ({ useParams: () => ({ id: "p1" }) }));
 vi.mock("@/lib/api", async (importOriginal) => ({
@@ -199,5 +199,39 @@ describe("elementos mínimos do prontuário (RF27, RNF25, RNF51, RNF52)", () => 
     const summary = screen.getByText(/Ver evolução/);
     expect(summary.closest("details")?.open).toBe(false);
     expect(screen.getByText("Ver histórico de responsáveis (1)")).toBeTruthy();
+  });
+
+  it("quem não tem acesso vê a tela de acesso negado da prancha, sem o nome do paciente nem as seções do prontuário (RF27, RNF25)", async () => {
+    vi.mocked(api).mockImplementation(async (path: string) => {
+      if (path === "/auth/sessao")
+        return { id: "u2", nome: "Outro", perfil: "estagiario" } as never;
+      throw new ErroApi(403, "Você não tem acesso a este prontuário.");
+    });
+    const client = new QueryClient({
+      defaultOptions: { queries: { retry: false } },
+    });
+    render(
+      <QueryClientProvider client={client}>
+        <ProntuarioPage />
+      </QueryClientProvider>,
+    );
+    expect(
+      await screen.findByRole("heading", {
+        level: 1,
+        name: "Você não tem acesso a este prontuário",
+      }),
+    ).toBeTruthy();
+    expect(screen.getByText(/Tentativa registrada em/)).toBeTruthy();
+    await waitFor(() =>
+      expect(
+        screen
+          .getByRole("link", { name: "Voltar para meus pacientes" })
+          .getAttribute("href"),
+      ).toBe("/meus-pacientes"),
+    );
+    // Só o título da tela negada: nenhuma seção do prontuário aparece.
+    expect(screen.getAllByRole("heading").map((h) => h.textContent)).toEqual([
+      "Você não tem acesso a este prontuário",
+    ]);
   });
 });

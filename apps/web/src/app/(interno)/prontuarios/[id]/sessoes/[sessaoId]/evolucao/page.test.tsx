@@ -127,4 +127,36 @@ describe("registro de evolução em tela própria (RF28, RNF25, RNF27, RNF30)", 
       screen.queryByRole("button", { name: "Salvar evolução" }),
     ).toBeNull();
   });
+
+  it("quem não tem acesso vê a tela de acesso negado da prancha, sem o nome do paciente nem indicação da sessão (RF28, RNF25)", async () => {
+    vi.mocked(api).mockRejectedValueOnce(
+      new ErroApi(403, "Você não tem acesso a este prontuário."),
+    );
+    const client = new QueryClient({
+      defaultOptions: { queries: { retry: false } },
+    });
+    render(
+      <QueryClientProvider client={client}>
+        <RegistrarEvolucaoPage />
+      </QueryClientProvider>,
+    );
+    expect(
+      await screen.findByRole("heading", {
+        level: 1,
+        name: "Você não tem acesso a este prontuário",
+      }),
+    ).toBeTruthy();
+    expect(screen.getByText(/fale com o supervisor do caso/)).toBeTruthy();
+    expect(screen.getByText(/Tentativa registrada em/)).toBeTruthy();
+    expect(
+      screen
+        .getByRole("link", { name: "Voltar para meus pacientes" })
+        .getAttribute("href"),
+    ).toBe("/meus-pacientes");
+    // Só o título da tela negada: nem os dados da sessão nem o formulário.
+    expect(screen.getAllByRole("heading").map((h) => h.textContent)).toEqual([
+      "Você não tem acesso a este prontuário",
+    ]);
+    expect(screen.queryByRole("button", { name: /Salvar/ })).toBeNull();
+  });
 });

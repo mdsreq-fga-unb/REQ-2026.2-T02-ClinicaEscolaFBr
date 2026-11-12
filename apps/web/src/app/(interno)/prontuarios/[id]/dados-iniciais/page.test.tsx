@@ -2,7 +2,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { cleanup, render, screen } from "@testing-library/react";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import DadosIniciaisPage from "./page";
-import { api } from "@/lib/api";
+import { api, ErroApi } from "@/lib/api";
 
 vi.mock("next/navigation", () => ({ useParams: () => ({ id: "p1" }) }));
 vi.mock("@/lib/api", async (importOriginal) => ({
@@ -62,5 +62,36 @@ describe("leitura dos dados iniciais (RF27, RF69, RNF25, RNF51, RNF52)", () => {
         .getByRole("link", { name: "Voltar ao prontuário" })
         .getAttribute("href"),
     ).toContain("/prontuarios/p1");
+  });
+
+  it("quem não tem acesso vê a tela de acesso negado da prancha, sem o nome do paciente nem indicação dos dados iniciais (RF27, RF69, RNF25)", async () => {
+    vi.mocked(api).mockRejectedValueOnce(
+      new ErroApi(403, "Você não tem acesso a este prontuário."),
+    );
+    const client = new QueryClient({
+      defaultOptions: { queries: { retry: false } },
+    });
+    render(
+      <QueryClientProvider client={client}>
+        <DadosIniciaisPage />
+      </QueryClientProvider>,
+    );
+    expect(
+      await screen.findByRole("heading", {
+        level: 1,
+        name: "Você não tem acesso a este prontuário",
+      }),
+    ).toBeTruthy();
+    expect(screen.getByText(/fale com o supervisor do caso/)).toBeTruthy();
+    expect(screen.getByText(/Tentativa registrada em/)).toBeTruthy();
+    expect(
+      screen
+        .getByRole("link", { name: "Voltar para meus casos" })
+        .getAttribute("href"),
+    ).toBe("/meus-casos");
+    // Só o título da tela negada: nenhuma seção dos dados iniciais aparece.
+    expect(screen.getAllByRole("heading").map((h) => h.textContent)).toEqual([
+      "Você não tem acesso a este prontuário",
+    ]);
   });
 });
