@@ -164,6 +164,7 @@ Com base nos requisitos funcionais consultados em 08/10/2026 e atualizada em 24/
 - **Requisitos funcionais e não funcionais:** o DoR verifica a qualidade desses documentos. As correções decorrentes da verificação cruzada devem estar aplicadas antes da avaliação.
 - **Análise do feedback:** concentra as pendências de validação com a FBr citadas no R4.2.
 - **Backlog de Produto (10):** fonte para o R1.5, sobre o pertencimento ao MVP e a ordem de entrega.
+- **Estratégia de verificação e validação:** situa o DoR e o DoD entre os demais momentos de V&V, com o nível de rigor de cada feature ([Verificação e validação](../processo/verificacao-e-validacao.md)).
 
 ### Revisão deste documento { #918-revisao-deste-documento }
 
