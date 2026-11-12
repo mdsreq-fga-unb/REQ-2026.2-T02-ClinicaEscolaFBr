@@ -375,3 +375,58 @@ O Thiago elogiou o sistema e a equipe e disse que a FBr começa os testes o quan
 
 !!! note "Correção (07/11/2026)"
     Esta ata foi corrigida em 07/11/2026. A versão anterior registrava que não houve aceite por feature e que o RF51 não foi demonstrado. Na reunião, o RF51 foi demonstrado e aceito, e o Thiago aceitou as features que não tiveram ajustes; as que tiveram ajustes (RF1, RF10 e RF53) ficam sem aceite até as correções.
+
+## Respostas da FBr sobre a demonstração do Ciclo 4 { #respostas-da-fbr-sobre-a-demonstracao-do-ciclo-4 }
+
+**Data:** 11/11/2026
+**Local:** grupo "Sistema Clínica Escola FBr" no WhatsApp
+**Participantes:** pela FBr, Robson Araújo, que respondeu, e Thiago Viana, que recebeu a mensagem; pela equipe, Gabriel da Cunha Barbaceli e os demais integrantes do grupo.
+
+A demonstração do incremento do Ciclo 4 foi enviada à FBr por e-mail. Às 12h06, a equipe pediu no grupo o "de acordo" da demonstração e as respostas das pendências de validação. Às 16h01, Robson Araújo respondeu.
+
+![Mensagem da equipe e resposta de Robson Araújo no grupo da FBr, com o telefone e a foto de perfil cobertos](../../assets/fbr/whatsapp-2026-11-11.jpg){ width="360" }
+
+_Figura 20 — Pedido da equipe e resposta de Robson Araújo no grupo da FBr, em 11/11/2026. O telefone e a foto de perfil foram cobertos._
+
+### Pedido da equipe
+
+1. **Demonstração do Ciclo 4:** se a FBr viu a demonstração, e o "de acordo" ou o que mudar em cada tela.
+2. **Termo de consentimento (RF57):** a aprovação do texto provisório, a base legal para tratar os dados de saúde e o canal para o paciente exercer os demais direitos de titular.
+3. **Propostas dos protótipos de 06/11:**
+    - os itens "Agenda" no menu do supervisor e "Fila de espera" no da coordenação;
+    - as três situações na consulta da posição na fila (RF8);
+    - a escolha das faltas na reversão do desligamento (RF38);
+    - a transferência para um supervisor no limite de 50 casos (RF25).
+4. **Teste de usabilidade da distribuição de casos (RNF22):** se foi aplicado, e o resultado.
+5. **Outros pontos:**
+    - a obrigatoriedade do endereço e do contato de emergência na inscrição (RF1);
+    - a leitura do motivo da justificativa de falta pela secretaria (RF34);
+    - quem avisa o paciente desligado por faltas (RF37);
+    - a data de entrega do relatório final e da reprovação do estagiário (RF33, RF63 e RF64).
+
+### Resposta de Robson Araújo
+
+Transcrição da mensagem, com a numeração dele:
+
+> 1. Esta tudo certo, só to aguardando 3 pessoas poderem fazer o teste, que irá ocorrer amanhã, to cadastrando 1 supervisor e 2 estagiários para isso!
+> 2. Seria seria interessante o Jurídico ver esse termo para um boa elaboração;
+> 3. Em triagem se nao for selecionado; se for selecionado e estiver esperando contato ou resposta do mesmo em atendimento;
+> 4. No caso de transferência, pode extrapolar o limite;
+> 5. Os testes estava selecionando e explicando o que será realizado, ocorrerá amanha no período matutino ate as 13 hs;
+> 6. Contato de emergência são obrigatória!!! Dados mínimos para reconhecimento tbm; O motivo de falta tbm deve aparecer, e sim os órgãos fiscalizadores podem pedir p ver CRP, CFP, Secretaria de Saúde; Os estagiários avisam os pacientes desligados por falta; deixa ate o dia 05/122 data final de evolução do estágio!!
+
+### Resultado
+
+| Ponto | Resposta | Registro |
+| --- | --- | --- |
+| Demonstração do Ciclo 4 | "Esta tudo certo" | "De acordo" da demonstração: D5 e D6 das features do Ciclo 4 demonstradas |
+| Termo de consentimento (RF57) | O Jurídico da FBr deve revisar o termo | Continua provisório; a pendência de validação foi atualizada |
+| Situações na consulta da fila (RF8) | "Em triagem" enquanto não é selecionado; "em atendimento" quando é selecionado e aguarda contato ou resposta | Resposta parcial; a equipe perguntou se "Na fila de espera" continua |
+| Transferência acima do limite (RF25) | A coordenação pode extrapolar o limite | [DF50](../../requisitos/decisoes-fbr.md#df50) |
+| Teste de usabilidade (RNF22) | Aplicado em 12/11, de manhã, com 1 supervisor e 2 estagiários | O resultado vem depois do teste |
+| Contato de emergência (RF1) | Obrigatório, com os "dados mínimos para reconhecimento" | [DF51](../../requisitos/decisoes-fbr.md#df51); a equipe perguntou quais são os dados mínimos |
+| Motivo da justificativa de falta (RF34) | Deve aparecer, e os órgãos fiscalizadores (CRP, CFP e Secretaria de Saúde) podem pedir para ver | [DF52](../../requisitos/decisoes-fbr.md#df52) |
+| Aviso ao paciente desligado (RF37) | Os estagiários avisam | [DF53](../../requisitos/decisoes-fbr.md#df53) |
+| Relatório final e reprovação do estagiário (RF33, RF63 e RF64) | Até 05/12, data final da evolução do estágio (a mensagem diz "05/122") | [DF54](../../requisitos/decisoes-fbr.md#df54) |
+
+**Sem resposta:** os itens "Agenda" e "Fila de espera" no menu, a escolha das faltas na reversão do desligamento (RF38) e a base legal e o canal dos direitos do titular (RF57). A equipe voltou a perguntar no grupo, junto com a confirmação do RF8 e dos dados mínimos do RF1.

@@ -193,6 +193,22 @@ describe("Agendar sessão (RF10)", () => {
     expect(chamadas.some((c) => c.metodo === "POST")).toBe(false);
   });
 
+  it("não oferece no calendário dias que já passaram, pela data de Brasília", async () => {
+    // 02h30 em UTC ainda é 23h30 do dia 11 em Brasília.
+    vi.useFakeTimers({ toFake: ["Date"] });
+    vi.setSystemTime(new Date("2026-11-12T02:30:00Z"));
+    try {
+      simularApi();
+      abrirTela();
+      await escolherPaciente("Sérgio");
+      expect((screen.getByLabelText("Data") as HTMLInputElement).min).toBe(
+        "2026-11-11",
+      );
+    } finally {
+      vi.useRealTimers();
+    }
+  });
+
   it("recusa término anterior ao início sem chamar a API", async () => {
     const chamadas = simularApi();
     abrirTela();

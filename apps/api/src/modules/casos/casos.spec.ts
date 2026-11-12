@@ -544,10 +544,14 @@ describe('Distribuição de casos (RF18, RF20 e RF21)', () => {
       ).body.prontuarioId as string;
       // Só um dos dois recebe a anamnese e o contrato (RF69).
       await http()
-        .post(`/prontuarios/${preenchido}/dados-iniciais`)
+        .post(`/prontuarios/${preenchido}/anamnese`)
+        .set(como('ana'))
+        .send({ queixaPrincipal: 'Anamnese sigilosa' })
+        .expect(201);
+      await http()
+        .post(`/prontuarios/${preenchido}/contrato`)
         .set(como('ana'))
         .send({
-          anamnese: 'Anamnese sigilosa',
           viaContratoGuardada: true,
           dataAssinaturaContrato: '2026-10-01',
         })

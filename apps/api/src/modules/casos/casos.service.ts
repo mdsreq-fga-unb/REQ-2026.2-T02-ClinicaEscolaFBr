@@ -14,6 +14,7 @@ import {
   count,
   desc,
   eq,
+  ilike,
   inArray,
   isNull,
   ne,
@@ -31,17 +32,22 @@ import {
   type Db,
 } from '@clinica/database';
 import {
+  LIMITE_LISTA_PACIENTES,
   type CasoAguardando,
   type CasoDoSupervisor,
   type CasoJaDistribuido,
   type Cor,
   type EstagiarioDisponivel,
+  type ListaDePacientes,
+  type ResponsaveisDoCaso,
   type ResultadoDistribuicao,
   type ResultadoVinculo,
+  type SituacaoCaso,
   type SupervisorDisponivel,
 } from '@clinica/shared';
 import type { UsuarioAutenticado } from '../../auth/usuario-autenticado';
 import { AuditoriaService } from '../../auditoria/auditoria.service';
+import { escaparLike } from '../../common/busca';
 import { decifrar } from '../../common/criptografia';
 import { DB } from '../../database/database.module';
 import { ParametrosService } from '../../parametros/parametros.service';
@@ -286,6 +292,11 @@ export class CasosService {
   // prontuário do ciclo, quando já existem. O caso desligado por faltas continua na
   // lista, com a data em que o vínculo foi encerrado (RF37).
   async meusCasos(usuario: UsuarioAutenticado): Promise<CasoDoSupervisor[]> {
+    // RF23: o estagiário vê só os casos com vínculo vigente dele; o supervisor, os
+    // casos com atribuição vigente dele, que já incluem os dos seus estagiários (o
+    // filtro por estagiário é da tela). Os dois deixam de ver o caso ao perder o
+    // vínculo ou a atribuição (transferência, RF25; desligamento, RF37).
+    const doEstagiario = usuario.perfil === 'estagiario';
     const linhas = await this.db
       .select({
         casoId: casos.id,
@@ -294,12 +305,18 @@ export class CasosService {
         nome: inscricoes.nomeCompleto,
         situacao: casos.situacao,
         ciclo: casos.cicloAtendimento,
+        estagiarioId: vinculosEstagiario.estagiarioId,
         estagiario: estagiario.nome,
+        supervisor: supervisor.nome,
         prontuarioId: prontuarios.id,
       })
       .from(atribuicoesSupervisor)
       .innerJoin(casos, eq(casos.id, atribuicoesSupervisor.casoId))
       .innerJoin(inscricoes, eq(inscricoes.id, casos.inscricaoId))
+      .leftJoin(
+        supervisor,
+        eq(supervisor.id, atribuicoesSupervisor.supervisorId),
+      )
       .leftJoin(
         vinculosEstagiario,
         and(
@@ -317,9 +334,11 @@ export class CasosService {
       )
       .where(
         and(
-          eq(atribuicoesSupervisor.supervisorId, usuario.id),
           eq(atribuicoesSupervisor.vigente, true),
           ne(casos.situacao, 'encerrado'),
+          doEstagiario
+            ? eq(vinculosEstagiario.estagiarioId, usuario.id)
+            : eq(atribuicoesSupervisor.supervisorId, usuario.id),
         ),
       )
       .orderBy(asc(inscricoes.criadaEm));
@@ -327,7 +346,8 @@ export class CasosService {
     const desligados = linhas.filter(
       (l) => l.situacao === 'desligado_por_faltas',
     );
-    const decisoes = desligados.length
+    const idsDesligados = desligados.map((l) => l.casoId);
+    const decisoes = idsDesligados.length
       ? await this.db
           .select({
             casoId: desligamentosPorFaltas.casoId,
@@ -336,26 +356,50 @@ export class CasosService {
           .from(desligamentosPorFaltas)
           .where(
             and(
-              inArray(
-                desligamentosPorFaltas.casoId,
-                desligados.map((l) => l.casoId),
-              ),
+              inArray(desligamentosPorFaltas.casoId, idsDesligados),
               isNull(desligamentosPorFaltas.revertidoEm),
             ),
           )
       : [];
-    return linhas.map((l) => ({
-      casoId: l.casoId,
-      numero: l.numero,
-      nome: l.nome,
-      prioridade: cores.get(l.inscricaoId) ?? null,
-      estagiario: l.estagiario,
-      prontuarioId: l.prontuarioId,
-      situacao: l.situacao,
-      vinculoEncerradoEm:
-        decisoes.find((d) => d.casoId === l.casoId)?.decididoEm.toISOString() ??
-        null,
-    }));
+    // O estagiário do último vínculo de cada caso desligado (RF37).
+    const anteriores = idsDesligados.length
+      ? await this.db
+          .selectDistinctOn([vinculosEstagiario.casoId], {
+            casoId: vinculosEstagiario.casoId,
+            id: estagiario.id,
+            nome: estagiario.nome,
+          })
+          .from(vinculosEstagiario)
+          .innerJoin(
+            estagiario,
+            eq(estagiario.id, vinculosEstagiario.estagiarioId),
+          )
+          .where(inArray(vinculosEstagiario.casoId, idsDesligados))
+          .orderBy(
+            vinculosEstagiario.casoId,
+            desc(vinculosEstagiario.vinculadoEm),
+          )
+      : [];
+    return linhas.map((l) => {
+      const decisao = decisoes.find((d) => d.casoId === l.casoId);
+      const anterior = decisao
+        ? anteriores.find((a) => a.casoId === l.casoId)
+        : undefined;
+      return {
+        casoId: l.casoId,
+        numero: l.numero,
+        nome: l.nome,
+        prioridade: cores.get(l.inscricaoId) ?? null,
+        estagiario: l.estagiario,
+        estagiarioId: l.estagiarioId,
+        estagiarioAnterior: anterior?.nome ?? null,
+        estagiarioAnteriorId: anterior?.id ?? null,
+        supervisor: l.supervisor,
+        prontuarioId: l.prontuarioId,
+        situacao: l.situacao,
+        vinculoEncerradoEm: decisao?.decididoEm.toISOString() ?? null,
+      };
+    });
   }
 
   // RF21: só estagiários com conta ativa (RF54 retira os desativados), com os
@@ -557,5 +601,123 @@ export class CasosService {
       }
       throw erro;
     }
+  }
+
+  // Responsáveis vigentes de cada caso: o supervisor da atribuição vigente e o
+  // estagiário do vínculo vigente (RF22). Sem dado clínico (RNF17).
+  private consultaDeResponsaveis() {
+    return this.db
+      .select({
+        casoId: casos.id,
+        situacao: casos.situacao,
+        numero: inscricoes.numero,
+        nome: inscricoes.nomeCompleto,
+        supervisorId: atribuicoesSupervisor.supervisorId,
+        supervisor: supervisor.nome,
+        estagiarioId: vinculosEstagiario.estagiarioId,
+        estagiario: estagiario.nome,
+      })
+      .from(casos)
+      .innerJoin(inscricoes, eq(inscricoes.id, casos.inscricaoId))
+      .leftJoin(
+        atribuicoesSupervisor,
+        and(
+          eq(atribuicoesSupervisor.casoId, casos.id),
+          eq(atribuicoesSupervisor.vigente, true),
+        ),
+      )
+      .leftJoin(
+        supervisor,
+        eq(supervisor.id, atribuicoesSupervisor.supervisorId),
+      )
+      .leftJoin(
+        vinculosEstagiario,
+        and(
+          eq(vinculosEstagiario.casoId, casos.id),
+          eq(vinculosEstagiario.vigente, true),
+        ),
+      )
+      .leftJoin(estagiario, eq(estagiario.id, vinculosEstagiario.estagiarioId));
+  }
+
+  // Nome, número só para quem pode vê-lo, responsáveis e situação (RNF17).
+  private paraResposta(
+    l: {
+      casoId: string;
+      nome: string;
+      numero: string;
+      situacao: SituacaoCaso;
+      supervisor: string | null;
+      estagiario: string | null;
+    },
+    usuario: UsuarioAutenticado,
+  ): ResponsaveisDoCaso {
+    return {
+      casoId: l.casoId,
+      nome: l.nome,
+      ...(usuario.perfil === 'secretaria' ? {} : { numero: l.numero }),
+      situacao: l.situacao,
+      supervisor: l.supervisor ?? null,
+      estagiario: l.estagiario ?? null,
+    };
+  }
+
+  // RF22: lista de Pacientes da secretaria e da coordenação, com os responsáveis
+  // de cada caso. O número da inscrição vem só para a coordenação (RNF17). Busca um
+  // a mais que o limite para saber se a lista foi cortada, sem contar a tabela
+  // inteira (RNF21).
+  async listaDePacientes(
+    busca: string | undefined,
+    usuario: UsuarioAutenticado,
+  ): Promise<ListaDePacientes> {
+    const linhas = await this.consultaDeResponsaveis()
+      .where(
+        busca
+          ? ilike(inscricoes.nomeCompleto, `%${escaparLike(busca)}%`)
+          : undefined,
+      )
+      .orderBy(asc(inscricoes.nomeCompleto), asc(casos.id))
+      .limit(LIMITE_LISTA_PACIENTES + 1);
+    return {
+      pacientes: linhas
+        .slice(0, LIMITE_LISTA_PACIENTES)
+        .map((l) => this.paraResposta(l, usuario)),
+      cortada: linhas.length > LIMITE_LISTA_PACIENTES,
+    };
+  }
+
+  // RF22: secretaria e coordenação consultam qualquer caso; o estagiário e o
+  // supervisor, só os que têm vínculo ou atribuição vigente nele. Para quem não
+  // tem acesso, o caso inexistente responde como o negado, sem revelar o que
+  // existe (RNF25).
+  async responsaveis(
+    casoId: string,
+    usuario: UsuarioAutenticado,
+  ): Promise<ResponsaveisDoCaso> {
+    const [linha] = await this.consultaDeResponsaveis().where(
+      eq(casos.id, casoId),
+    );
+    const amplo =
+      usuario.perfil === 'secretaria' || usuario.perfil === 'coordenacao';
+    if (!linha && amplo) throw new NotFoundException('Caso não encontrado.');
+    const permitido =
+      amplo ||
+      (!!linha &&
+        ((usuario.perfil === 'estagiario' &&
+          linha.estagiarioId === usuario.id) ||
+          (usuario.perfil === 'supervisor' &&
+            linha.supervisorId === usuario.id)));
+    if (!permitido) {
+      // A tentativa fica registrada, como no acesso negado ao prontuário (RNF52):
+      // é o que a tela de acesso negado da prancha 4-1 informa.
+      await this.auditoria.registrar({
+        usuarioId: usuario.id,
+        operacao: 'consultar_responsaveis_negada',
+        entidade: 'casos',
+        entidadeId: casoId,
+      });
+      throw new ForbiddenException('Você não tem acesso a este caso.');
+    }
+    return this.paraResposta(linha, usuario);
   }
 }

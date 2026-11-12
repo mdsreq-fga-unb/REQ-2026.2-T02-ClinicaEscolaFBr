@@ -1,5 +1,5 @@
 {
-  "id": "5cff9108-458f-4a2b-a362-8e899aeb91fc",
+  "id": "77bdfadc-1bae-46be-9006-293791a16c78",
   "prevId": "31bcdfc4-89e8-437b-9864-14ad17724272",
   "version": "7",
   "dialect": "postgresql",
@@ -477,24 +477,6 @@
           "primaryKey": false,
           "notNull": false
         },
-        "versao_termo_aceita": {
-          "name": "versao_termo_aceita",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "termo_aceito_em": {
-          "name": "termo_aceito_em",
-          "type": "timestamp with time zone",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "aceite_pelo_responsavel": {
-          "name": "aceite_pelo_responsavel",
-          "type": "boolean",
-          "primaryKey": false,
-          "notNull": false
-        },
         "criada_em": {
           "name": "criada_em",
           "type": "timestamp with time zone",
@@ -504,17 +486,7 @@
         }
       },
       "indexes": {},
-      "foreignKeys": {
-        "inscricoes_versao_termo_aceita_versoes_termo_versao_fk": {
-          "name": "inscricoes_versao_termo_aceita_versoes_termo_versao_fk",
-          "tableFrom": "inscricoes",
-          "tableTo": "versoes_termo",
-          "columnsFrom": ["versao_termo_aceita"],
-          "columnsTo": ["versao"],
-          "onDelete": "no action",
-          "onUpdate": "no action"
-        }
-      },
+      "foreignKeys": {},
       "compositePrimaryKeys": {},
       "uniqueConstraints": {
         "inscricoes_numero_unique": {
@@ -525,14 +497,6 @@
       },
       "policies": {},
       "checkConstraints": {
-        "inscricoes_aceite_com_versao": {
-          "name": "inscricoes_aceite_com_versao",
-          "value": "(\"inscricoes\".\"versao_termo_aceita\" is null) = (\"inscricoes\".\"termo_aceito_em\" is null)"
-        },
-        "inscricoes_aceite_com_responsavel": {
-          "name": "inscricoes_aceite_com_responsavel",
-          "value": "(\"inscricoes\".\"versao_termo_aceita\" is null) = (\"inscricoes\".\"aceite_pelo_responsavel\" is null)"
-        },
         "inscricoes_algum_contato": {
           "name": "inscricoes_algum_contato",
           "value": "\"inscricoes\".\"celular\" is not null or \"inscricoes\".\"email\" is not null"
@@ -554,55 +518,6 @@
           "value": "\"inscricoes\".\"cep\" is null or \"inscricoes\".\"cep\" ~ '^[0-9]{8}$'"
         }
       },
-      "isRLSEnabled": false
-    },
-    "public.versoes_termo": {
-      "name": "versoes_termo",
-      "schema": "",
-      "columns": {
-        "versao": {
-          "name": "versao",
-          "type": "text",
-          "primaryKey": true,
-          "notNull": true
-        },
-        "titulo": {
-          "name": "titulo",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "introducao": {
-          "name": "introducao",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "topicos": {
-          "name": "topicos",
-          "type": "jsonb",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "vigente_desde": {
-          "name": "vigente_desde",
-          "type": "timestamp with time zone",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "provisoria": {
-          "name": "provisoria",
-          "type": "boolean",
-          "primaryKey": false,
-          "notNull": true
-        }
-      },
-      "indexes": {},
-      "foreignKeys": {},
-      "compositePrimaryKeys": {},
-      "uniqueConstraints": {},
-      "policies": {},
-      "checkConstraints": {},
       "isRLSEnabled": false
     },
     "public.atribuicoes_supervisor": {
@@ -871,6 +786,194 @@
       "uniqueConstraints": {},
       "policies": {},
       "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.transferencias_caso": {
+      "name": "transferencias_caso",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "caso_id": {
+          "name": "caso_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "tipo": {
+          "name": "tipo",
+          "type": "tipo_transferencia_caso",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "supervisor_anterior_id": {
+          "name": "supervisor_anterior_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "supervisor_novo_id": {
+          "name": "supervisor_novo_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "estagiario_anterior_id": {
+          "name": "estagiario_anterior_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "estagiario_novo_id": {
+          "name": "estagiario_novo_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "atribuicao_anterior_id": {
+          "name": "atribuicao_anterior_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "vinculo_anterior_id": {
+          "name": "vinculo_anterior_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "motivo_cifrado": {
+          "name": "motivo_cifrado",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "transferido_por": {
+          "name": "transferido_por",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "transferido_em": {
+          "name": "transferido_em",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {
+        "transferencias_caso_caso": {
+          "name": "transferencias_caso_caso",
+          "columns": [
+            {
+              "expression": "caso_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "transferido_em",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {
+        "transferencias_caso_caso_id_casos_id_fk": {
+          "name": "transferencias_caso_caso_id_casos_id_fk",
+          "tableFrom": "transferencias_caso",
+          "tableTo": "casos",
+          "columnsFrom": ["caso_id"],
+          "columnsTo": ["id"],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "transferencias_caso_supervisor_anterior_id_usuarios_id_fk": {
+          "name": "transferencias_caso_supervisor_anterior_id_usuarios_id_fk",
+          "tableFrom": "transferencias_caso",
+          "tableTo": "usuarios",
+          "columnsFrom": ["supervisor_anterior_id"],
+          "columnsTo": ["id"],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "transferencias_caso_supervisor_novo_id_usuarios_id_fk": {
+          "name": "transferencias_caso_supervisor_novo_id_usuarios_id_fk",
+          "tableFrom": "transferencias_caso",
+          "tableTo": "usuarios",
+          "columnsFrom": ["supervisor_novo_id"],
+          "columnsTo": ["id"],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "transferencias_caso_estagiario_anterior_id_usuarios_id_fk": {
+          "name": "transferencias_caso_estagiario_anterior_id_usuarios_id_fk",
+          "tableFrom": "transferencias_caso",
+          "tableTo": "usuarios",
+          "columnsFrom": ["estagiario_anterior_id"],
+          "columnsTo": ["id"],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "transferencias_caso_estagiario_novo_id_usuarios_id_fk": {
+          "name": "transferencias_caso_estagiario_novo_id_usuarios_id_fk",
+          "tableFrom": "transferencias_caso",
+          "tableTo": "usuarios",
+          "columnsFrom": ["estagiario_novo_id"],
+          "columnsTo": ["id"],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "transferencias_caso_atribuicao_anterior_id_atribuicoes_supervisor_id_fk": {
+          "name": "transferencias_caso_atribuicao_anterior_id_atribuicoes_supervisor_id_fk",
+          "tableFrom": "transferencias_caso",
+          "tableTo": "atribuicoes_supervisor",
+          "columnsFrom": ["atribuicao_anterior_id"],
+          "columnsTo": ["id"],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "transferencias_caso_vinculo_anterior_id_vinculos_estagiario_id_fk": {
+          "name": "transferencias_caso_vinculo_anterior_id_vinculos_estagiario_id_fk",
+          "tableFrom": "transferencias_caso",
+          "tableTo": "vinculos_estagiario",
+          "columnsFrom": ["vinculo_anterior_id"],
+          "columnsTo": ["id"],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "transferencias_caso_transferido_por_usuarios_id_fk": {
+          "name": "transferencias_caso_transferido_por_usuarios_id_fk",
+          "tableFrom": "transferencias_caso",
+          "tableTo": "usuarios",
+          "columnsFrom": ["transferido_por"],
+          "columnsTo": ["id"],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {
+        "transferencias_caso_novo_responsavel": {
+          "name": "transferencias_caso_novo_responsavel",
+          "value": "\"transferencias_caso\".\"supervisor_novo_id\" is not null or \"transferencias_caso\".\"estagiario_novo_id\" is not null"
+        }
+      },
       "isRLSEnabled": false
     },
     "public.vinculos_estagiario": {
@@ -1354,13 +1457,43 @@
           "name": "queixa_cifrada",
           "type": "text",
           "primaryKey": false,
-          "notNull": true
+          "notNull": false
         },
         "planejamento_cifrado": {
           "name": "planejamento_cifrado",
           "type": "text",
           "primaryKey": false,
-          "notNull": true
+          "notNull": false
+        },
+        "humor_aparencia_cifrado": {
+          "name": "humor_aparencia_cifrado",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "conteudo_trabalhado_cifrado": {
+          "name": "conteudo_trabalhado_cifrado",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "tecnicas_utilizadas_cifrado": {
+          "name": "tecnicas_utilizadas_cifrado",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "intervencoes_encaminhamentos_cifrado": {
+          "name": "intervencoes_encaminhamentos_cifrado",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "plano_proxima_sessao_cifrado": {
+          "name": "plano_proxima_sessao_cifrado",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
         },
         "registrada_por": {
           "name": "registrada_por",
@@ -1415,7 +1548,12 @@
         }
       },
       "policies": {},
-      "checkConstraints": {},
+      "checkConstraints": {
+        "evolucoes_ficha_completa": {
+          "name": "evolucoes_ficha_completa",
+          "value": "(\"evolucoes\".\"queixa_cifrada\" IS NOT NULL AND \"evolucoes\".\"planejamento_cifrado\" IS NOT NULL) OR (\"evolucoes\".\"humor_aparencia_cifrado\" IS NOT NULL AND \"evolucoes\".\"conteudo_trabalhado_cifrado\" IS NOT NULL AND \"evolucoes\".\"tecnicas_utilizadas_cifrado\" IS NOT NULL AND \"evolucoes\".\"plano_proxima_sessao_cifrado\" IS NOT NULL)"
+        }
+      },
       "isRLSEnabled": false
     },
     "public.prontuarios": {
@@ -1495,6 +1633,30 @@
           "type": "timestamp with time zone",
           "primaryKey": false,
           "notNull": false
+        },
+        "anamnese_por": {
+          "name": "anamnese_por",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "anamnese_em": {
+          "name": "anamnese_em",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "contrato_por": {
+          "name": "contrato_por",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "contrato_em": {
+          "name": "contrato_em",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": false
         }
       },
       "indexes": {},
@@ -1522,6 +1684,24 @@
           "tableFrom": "prontuarios",
           "tableTo": "usuarios",
           "columnsFrom": ["dados_iniciais_por"],
+          "columnsTo": ["id"],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "prontuarios_anamnese_por_usuarios_id_fk": {
+          "name": "prontuarios_anamnese_por_usuarios_id_fk",
+          "tableFrom": "prontuarios",
+          "tableTo": "usuarios",
+          "columnsFrom": ["anamnese_por"],
+          "columnsTo": ["id"],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "prontuarios_contrato_por_usuarios_id_fk": {
+          "name": "prontuarios_contrato_por_usuarios_id_fk",
+          "tableFrom": "prontuarios",
+          "tableTo": "usuarios",
+          "columnsFrom": ["contrato_por"],
           "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
@@ -2450,6 +2630,11 @@
         "desligado_por_faltas",
         "aguardando_vaga"
       ]
+    },
+    "public.tipo_transferencia_caso": {
+      "name": "tipo_transferencia_caso",
+      "schema": "public",
+      "values": ["estagiario", "supervisor"]
     },
     "public.meio_confirmacao": {
       "name": "meio_confirmacao",

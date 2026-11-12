@@ -16,11 +16,47 @@ export const corSchema = z.enum(CORES);
 export type Cor = z.infer<typeof corSchema>;
 export const prioridadeSchema = z.object({ cor: corSchema });
 
+// Limite de cada campo de texto da anamnese e da evolução (RF69, RF28): proposta da
+// equipe, nas pendências de validação com a FBr.
+export const LIMITE_CAMPO_CLINICO = 1000;
+const MENSAGEM_LIMITE = "Use no máximo 1.000 caracteres.";
+
+const textoObrigatorio = (mensagem: string) =>
+  z.string().trim().min(1, mensagem).max(LIMITE_CAMPO_CLINICO, MENSAGEM_LIMITE);
+// Campo opcional: em branco vira null, para aparecer como "não informado".
+const textoOpcional = z
+  .string()
+  .trim()
+  .max(LIMITE_CAMPO_CLINICO, MENSAGEM_LIMITE)
+  .nullish()
+  .transform((texto) => (texto ? texto : null));
+
+// Anamnese nas seis seções da "Ficha de anamnese" da Clínica Escola (RF69, DF37).
+// Só a queixa principal é obrigatória (proposta da equipe).
+export const SECOES_ANAMNESE = [
+  ["queixaPrincipal", "Queixa principal"],
+  ["historiaProblemaAtual", "História do problema atual"],
+  ["historicoFamiliar", "Histórico familiar"],
+  ["desenvolvimento", "Desenvolvimento (infantil e adolescente)"],
+  ["historicoMedico", "Histórico médico"],
+  ["aspectosPsicossociais", "Aspectos psicossociais"],
+] as const;
+export type SecaoAnamnese = (typeof SECOES_ANAMNESE)[number][0];
+
+export const anamneseSchema = z.object({
+  queixaPrincipal: textoObrigatorio("Informe a queixa principal."),
+  historiaProblemaAtual: textoOpcional,
+  historicoFamiliar: textoOpcional,
+  desenvolvimento: textoOpcional,
+  historicoMedico: textoOpcional,
+  aspectosPsicossociais: textoOpcional,
+});
+export type Anamnese = z.infer<typeof anamneseSchema>;
+
 // O contrato terapêutico é o "Contrato de Prestação de Serviço" da Clínica Escola,
 // assinado em papel na primeira sessão; o prontuário guarda a data de assinatura,
 // o aceite do termo de consentimento para pesquisa e a guarda da via (DF41).
-export const dadosIniciaisSchema = z.object({
-  anamnese: z.string().trim().min(1, "Informe a anamnese."),
+export const contratoSchema = z.object({
   aceiteTclePesquisa: z.boolean().default(false),
   viaContratoGuardada: z.literal(true, {
     error: "Confirme que a via assinada do contrato está guardada na clínica.",
@@ -32,24 +68,35 @@ export const dadosIniciaisSchema = z.object({
       "A data de assinatura não pode estar no futuro.",
     ),
 });
-export type DadosIniciais = z.infer<typeof dadosIniciaisSchema>;
+export type Contrato = z.infer<typeof contratoSchema>;
+
+// Evolução da sessão realizada, na ficha "Registro de evolução" da Clínica Escola
+// (RF28, DF38). Intervenções e encaminhamentos pode ficar em branco; os outros são
+// obrigatórios (proposta da equipe).
+export const CAMPOS_EVOLUCAO = [
+  ["humorAparencia", "Humor e aparência do paciente"],
+  ["conteudoTrabalhado", "Conteúdo trabalhado"],
+  ["tecnicasUtilizadas", "Técnicas utilizadas"],
+  ["intervencoesEncaminhamentos", "Intervenções e encaminhamentos"],
+  ["planoProximaSessao", "Plano para a próxima sessão"],
+] as const;
+export type CampoEvolucao = (typeof CAMPOS_EVOLUCAO)[number][0];
 
 export const evolucaoSchema = z.object({
-  queixa: z
-    .string()
-    .trim()
-    .min(1, "Escreva a evolução da queixa.")
-    .max(1000, "Use no máximo 1.000 caracteres.")
-    .refine(
-      (texto) => texto.split(/\r?\n/).length <= 10,
-      "Use no máximo 10 linhas.",
-    ),
-  planejamento: z
-    .string()
-    .trim()
-    .min(1, "Escreva o planejamento da próxima sessão."),
+  humorAparencia: textoObrigatorio(
+    "Descreva o humor e a aparência do paciente.",
+  ),
+  conteudoTrabalhado: textoObrigatorio("Descreva o conteúdo trabalhado."),
+  tecnicasUtilizadas: textoObrigatorio("Informe as técnicas utilizadas."),
+  intervencoesEncaminhamentos: textoOpcional,
+  planoProximaSessao: textoObrigatorio(
+    "Escreva o plano para a próxima sessão.",
+  ),
 });
 export type Evolucao = z.infer<typeof evolucaoSchema>;
+
+// A cada 10 sessões realizadas no ciclo, o fechamento avaliativo (RF28, DF23).
+export const SESSOES_POR_FECHAMENTO_AVALIATIVO = 10;
 
 // Situação do caso ao longo da distribuição (RF18 a RF21), do desligamento por
 // faltas (RF37) e da reversão que encontra a vaga já ocupada (RF38).

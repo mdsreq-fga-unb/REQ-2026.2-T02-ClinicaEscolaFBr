@@ -3,7 +3,7 @@ import { btree_gist } from '@electric-sql/pglite/contrib/btree_gist';
 import { readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 
-describe('RF57: migration após RF7 e RF52', () => {
+describe('RF57: migration depois das do RF7, do RF52, do RF25 e do RF27', () => {
   it('preserva inscrições legadas sem presumir aceite e impede alterar a versão publicada', async () => {
     const db = new PGlite({ extensions: { btree_gist } });
     const pasta = resolve(__dirname, '../../../../packages/database/drizzle');
@@ -19,7 +19,7 @@ describe('RF57: migration após RF7 e RF52', () => {
       const journal = JSON.parse(
         readFileSync(resolve(pasta, 'meta/_journal.json'), 'utf8'),
       ) as { entries: { idx: number; tag: string }[] };
-      for (const { tag } of journal.entries.filter((e) => e.idx <= 12))
+      for (const { tag } of journal.entries.filter((e) => e.idx <= 14))
         await aplicar(tag);
       const { rows } = await db.query<{ id: string }>(
         `insert into inscricoes(numero,nome_completo,data_nascimento,cpf,rg,endereco,estado_civil,email,canal_preferencial,criada_em) values ('2026-00001','Pessoa fictícia','1990-01-01','52998224725','123','Rua fictícia','Solteiro(a)','ficticio@example.com','email','2026-01-02T03:04:05Z') returning id`,
@@ -32,7 +32,7 @@ describe('RF57: migration após RF7 e RF52', () => {
         `insert into verificacoes_identidade(inscricao_id,token_hash,expira_em) values ($1,'ficticio','2026-01-03T03:04:05Z')`,
         [rows[0].id],
       );
-      await aplicar('0013_consentimento_versionado');
+      await aplicar('0015_consentimento_versionado');
       expect(
         (
           await db.query(
