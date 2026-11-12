@@ -335,15 +335,15 @@ Os canais de contato com o paciente (e-mail, WhatsApp e ligação, sem SMS), a d
 - O sistema deve impedir o agendamento de sessões sobrepostas para o mesmo estagiário ou para o mesmo paciente, e deve registrar o status inicial da sessão como "agendada", com paciente, estagiário, data, horário de início e horário de término associados.
 - O agendamento não deve ocorrer para pacientes sem estagiário responsável vinculado.
 - O registro de auditoria do agendamento segue o RNF10.
-- Ao confirmar o agendamento, o link de confirmação de presença utilizado pelo RF14 deve chegar ao paciente pelo canal preferencial informado na inscrição (RF1): com **e-mail**, o sistema envia automaticamente; com **WhatsApp** ou **ligação**, o sistema mostra a quem agendou um botão "Enviar pelo WhatsApp", que abre o WhatsApp com a mensagem pronta para o celular do paciente (data, horário e link), e registra quando o botão foi usado. Para quem prefere ligação, a mensagem também serve de roteiro da ligação.
+- Ao confirmar o agendamento, o sistema envia automaticamente ao **e-mail** do paciente o link de confirmação de presença utilizado pelo RF14, já que a inscrição pede o e-mail e os contatos da clínica são feitos por ele ([DF48](decisoes-fbr.md#df48)). Nas inscrições anteriores à [DF48](decisoes-fbr.md#df48), em que o paciente escolheu **WhatsApp** ou **ligação** como canal preferencial, o sistema mostra a quem agendou um botão "Enviar pelo WhatsApp", que abre o WhatsApp com a mensagem pronta para o celular do paciente (data, horário e link), e registra quando o botão foi usado. Para quem preferiu ligação, a mensagem também serve de roteiro da ligação.
 
-**Entrega parcial no Ciclo 3.** O agendamento entregue no Ciclo 3 já gera o link de confirmação de presença e o envia ao paciente pelo canal preferencial, como descrito acima. A página que recebe o link e registra a confirmação é a do [RF14](#rf14), prevista para o Ciclo 4: até ela ser entregue, o paciente recebe o link, mas não consegue confirmar a presença por ele. O link passa a funcionar com a entrega do RF14. Os critérios de aceitação sobre o envio do link são verificados no Ciclo 3; a confirmação pela página do link é verificada nos critérios do RF14.
+**Entrega parcial no Ciclo 3.** O agendamento entregue no Ciclo 3 já gera o link de confirmação de presença e o envia ao paciente como descrito acima. A página que recebe o link e registra a confirmação é a do [RF14](#rf14), prevista para o Ciclo 4: até ela ser entregue, o paciente recebe o link, mas não consegue confirmar a presença por ele. O link passa a funcionar com a entrega do RF14. Os critérios de aceitação sobre o envio do link são verificados no Ciclo 3; a confirmação pela página do link é verificada nos critérios do RF14.
 
 _Critérios de aceitação:_
 
 - O agendamento, pela secretaria ou pelo estagiário, de paciente com estagiário vinculado, informando só o início, registra a sessão como "agendada" com paciente, estagiário, data, início e término calculado pela duração padrão.
-- Paciente com e-mail como canal preferencial recebe o link de confirmação de presença (RF14) automaticamente no agendamento.
-- Paciente com WhatsApp ou ligação como canal preferencial: o sistema mostra o botão "Enviar pelo WhatsApp" com a mensagem pronta (data, horário e link) e registra a data e a hora em que o botão foi usado.
+- Paciente com e-mail recebe o link de confirmação de presença (RF14) automaticamente no agendamento.
+- Paciente de inscrição anterior à DF48 com WhatsApp ou ligação como canal preferencial: o sistema mostra o botão "Enviar pelo WhatsApp" com a mensagem pronta (data, horário e link) e registra a data e a hora em que o botão foi usado.
 - Com uma sessão do estagiário das 14h00 às 14h50 e intervalo para anotações até as 15h00, uma nova sessão desse estagiário iniciando às 14h50 é bloqueada e o conflito é informado.
 - Na mesma situação, uma nova sessão desse estagiário iniciando às 15h00 é permitida.
 - Com uma sessão do paciente das 14h00 às 14h50, uma nova sessão do mesmo paciente iniciando às 14h30 é bloqueada.
@@ -353,7 +353,7 @@ _Critérios de aceitação:_
 - Os campos de início e de término só oferecem horários de 10 em 10 minutos (DF49).
 - Estagiário que não é o responsável pelo paciente, supervisor e coordenação não conseguem agendar sessão para o paciente.
 
-_Rastreabilidade:_ Feature "Agendar sessão do paciente" → CP4 — Agendamento, confirmação e remarcação → OE3/OE4. Dependência: RF21 (CP5 — vínculo do paciente ao estagiário responsável); integração: RF1 (canal de contato preferencial) e RF14 (link de confirmação de presença); restrição transversal: CP12 — Segurança, sigilo e controle de acesso.{{ origem("RF10") }}
+_Rastreabilidade:_ Feature "Agendar sessão do paciente" → CP4 — Agendamento, confirmação e remarcação → OE3/OE4. Dependência: RF21 (CP5 — vínculo do paciente ao estagiário responsável); integração: RF1 (e-mail e celular do paciente) e RF14 (link de confirmação de presença); restrição transversal: CP12 — Segurança, sigilo e controle de acesso.{{ origem("RF10") }}
 
 {{ registro("RF10") }}
 
@@ -399,12 +399,12 @@ _Rastreabilidade:_ Feature "Reagendar sessão do paciente" → CP4 — Agendamen
 
 **RF13 — Enviar lembrete de sessão agendada**{ #rf13 }
 
-O sistema deve enviar automaticamente um lembrete ao paciente antes de uma sessão agendada, registrando o envio ou a eventual falha de envio conforme o RNF11. O lembrete segue o canal preferencial do paciente (RF1): com e-mail, é enviado automaticamente; com WhatsApp ou ligação, entra na lista "lembretes a enviar" da secretaria, com o botão "Enviar pelo WhatsApp" e a mensagem pronta. O SMS não é usado. O lembrete e deve conter a data, o horário e o link de confirmação de presença (RF14) já enviado no agendamento (RF10) — reforçando-o, sem exigir novo envio para que o paciente confirme presença. O momento do envio é definido pelo parâmetro "antecedência do lembrete" (padrão de 24 horas antes do início da sessão), configurável pela coordenação. Sessões agendadas quando já falta menos do que essa antecedência para o início devem ter o lembrete enviado no momento do agendamento.
+O sistema deve enviar automaticamente um lembrete ao paciente antes de uma sessão agendada, registrando o envio ou a eventual falha de envio conforme o RNF11. O lembrete é enviado automaticamente ao e-mail do paciente ([DF48](decisoes-fbr.md#df48)). Nas inscrições anteriores à [DF48](decisoes-fbr.md#df48), em que o paciente escolheu WhatsApp ou ligação como canal preferencial, o lembrete entra na lista "lembretes a enviar" da secretaria, com o botão "Enviar pelo WhatsApp" e a mensagem pronta. O SMS não é usado. O lembrete e deve conter a data, o horário e o link de confirmação de presença (RF14) já enviado no agendamento (RF10) — reforçando-o, sem exigir novo envio para que o paciente confirme presença. O momento do envio é definido pelo parâmetro "antecedência do lembrete" (padrão de 24 horas antes do início da sessão), configurável pela coordenação. Sessões agendadas quando já falta menos do que essa antecedência para o início devem ter o lembrete enviado no momento do agendamento.
 
 _Critérios de aceitação:_
 
 - Com sessão às 14h00 de quinta-feira e antecedência de 24 horas, o lembrete do paciente com e-mail é enviado às 14h00 de quarta-feira, com o envio registrado com data e hora.
-- Na mesma situação, o lembrete do paciente com WhatsApp ou ligação aparece às 14h00 de quarta-feira na lista "lembretes a enviar" da secretaria, e o uso do botão fica registrado com data e hora.
+- Na mesma situação, o lembrete do paciente de inscrição anterior à DF48 com WhatsApp ou ligação como canal aparece às 14h00 de quarta-feira na lista "lembretes a enviar" da secretaria, e o uso do botão fica registrado com data e hora.
 - Sessão agendada com menos tempo até o início do que a antecedência configurada recebe o lembrete no momento do agendamento.
 - Nova antecedência definida pela coordenação vale para as sessões futuras cujo lembrete ainda não foi enviado.
 - Falha no envio do lembrete é registrada como falha, e não como envio concluído.
@@ -419,7 +419,7 @@ _Rastreabilidade:_ Feature "Enviar lembrete de sessão agendada" → CP4 — Age
 
 O sistema deve permitir que o paciente confirme presença em uma sessão agendada até o prazo de confirmação, definido pelo parâmetro "prazo de confirmação de presença" (padrão: até 24 horas antes do início da sessão, confirmado pela Clínica Escola em 31/10/2026), configurável pela coordenação. Ao confirmar, o sistema deve atualizar o status da sessão para "confirmada" e gerar o registro de auditoria do RNF10. Sessões não confirmadas até o fim do prazo devem ser sinalizadas para a secretaria, para contato ativo com o paciente. A ausência de confirmação não é, por si só, uma falta: a falta só é registrada quando o paciente não comparece à sessão (RF34).
 
-O link de confirmação de presença chega ao paciente no momento em que a sessão é agendada (RF10), pelo canal de contato preferencial informado na inscrição (RF1) — por e-mail automático ou pela mensagem de WhatsApp enviada por quem agendou —, e segue as condições de usabilidade do RNF15 e as proteções de segurança do RNF59. O envio **automático e antecipado** de um lembrete adicional antes da sessão — com antecedência configurável — é tratado pelo RF13, que fica para uma entrega posterior; enquanto RF13 não estiver disponível, o link enviado no momento do agendamento é o único canal de confirmação, e o RF14 não depende do RF13 para funcionar.
+O link de confirmação de presença chega ao paciente no momento em que a sessão é agendada (RF10), por e-mail automático ([DF48](decisoes-fbr.md#df48)) ou, nas inscrições anteriores à DF48 com WhatsApp ou ligação como canal, pela mensagem de WhatsApp enviada por quem agendou, e segue as condições de usabilidade do RNF15 e as proteções de segurança do RNF59. O envio **automático e antecipado** de um lembrete adicional antes da sessão — com antecedência configurável — é tratado pelo RF13, que fica para uma entrega posterior; enquanto RF13 não estiver disponível, o link enviado no momento do agendamento é o único canal de confirmação, e o RF14 não depende do RF13 para funcionar.
 
 _Critérios de aceitação:_
 

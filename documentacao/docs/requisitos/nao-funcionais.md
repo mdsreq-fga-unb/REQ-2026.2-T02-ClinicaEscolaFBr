@@ -34,7 +34,7 @@ As mensagens devem identificar o campo que precisa ser corrigido e descrever a c
 
 Após a identificação de um erro de preenchimento, o sistema deve preservar os valores válidos informados nos demais campos do formulário, permitindo que o interessado conclua a inscrição sem precisar repetir todo o preenchimento.
 
-A conformidade deve ser verificada por meio de testes com campos obrigatórios vazios e entradas inválidas, incluindo telefone celular, e-mail e canal preferencial (RF1), confirmando a identificação textual dos erros e a preservação das informações válidas previamente inseridas.
+A conformidade deve ser verificada por meio de testes com campos obrigatórios vazios e entradas inválidas, incluindo telefone celular e e-mail (RF1), confirmando a identificação textual dos erros e a preservação das informações válidas previamente inseridas.
 
 Classificação: usabilidade e acessibilidade (URPS+).
 Rastreabilidade: Feature "Registrar solicitação de atendimento on-line" → CP1 — Inscrição on-line; complementa os requisitos transversais de acessibilidade da CP14.{{ origem("RNF1") }}
@@ -179,7 +179,7 @@ Rastreabilidade: CP4 — Agendamento, confirmação e remarcação (transversal 
 
 **RNF11 — Confiabilidade do envio de lembretes**{ #rnf11 }
 
-O sistema deve entregar ao provedor de e-mail pelo menos 98% dos lembretes de sessão (RF13) dos pacientes com e-mail como canal preferencial; o SMS foi descartado pela Clínica Escola em 23/10/2026 ([DF24](decisoes-fbr.md#df24)), e os lembretes por WhatsApp são enviados pela secretaria. Como o sistema não controla a chegada da mensagem ao aparelho do paciente, considera-se **entregue** o lembrete aceito pelo provedor de e-mail.
+O sistema deve entregar ao provedor de e-mail pelo menos 98% dos lembretes de sessão (RF13) dos pacientes com e-mail, que é obrigatório na inscrição desde a [DF48](decisoes-fbr.md#df48); o SMS foi descartado pela Clínica Escola em 23/10/2026 ([DF24](decisoes-fbr.md#df24)), e os lembretes por WhatsApp são enviados pela secretaria. Como o sistema não controla a chegada da mensagem ao aparelho do paciente, considera-se **entregue** o lembrete aceito pelo provedor de e-mail.
 
 - **Fórmula e janela:** taxa = lembretes aceitos pelo provedor ÷ lembretes programados por e-mail × 100, apurada por mês civil, sobre todos os lembretes programados no mês.
 - **Nova tentativa:** um lembrete recusado ou sem resposta do provedor deve ser reenviado automaticamente até 3 vezes, dentro de 1 hora após a primeira tentativa.

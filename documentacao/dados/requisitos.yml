@@ -194,7 +194,7 @@ rfs:
   depende: [RF21]
   issue: 96
   estado: Código inspecionado
-  origem: [DF01, DF18, DF24, DF49]
+  origem: [DF01, DF18, DF24, DF48, DF49]
   entrega: 'parcial no Ciclo 3: o link de confirmação de presença já é gerado e enviado no agendamento, mas a página que o recebe só chega com o RF14, no Ciclo 4'
 
 - id: RF11
@@ -228,7 +228,7 @@ rfs:
   esforco: [4, 4, 4]
   mvp: false
   lider: Nicolas
-  origem: [DF06, DF21, DF24, DF40]
+  origem: [DF06, DF21, DF24, DF40, DF48]
 
 - id: RF14
   nome: Confirmar presença em sessão agendada
@@ -243,7 +243,7 @@ rfs:
   depende: [RF10]
   issue: 142
   estado: Código inspecionado
-  origem: [DF24, DF45]
+  origem: [DF24, DF45, DF48]
 
 - id: RF15
   nome: Registrar cancelamento de sessão pelo paciente
@@ -1062,7 +1062,7 @@ rnfs:
   classificacao: Não aplicável ao MVP
   relacionado: RF13
   justificativa: Depende do lembrete automático; RF13 fica fora do MVP (o link de confirmação do RF14 é enviado no próprio agendamento, RF10). Reavaliar se RF13 for incorporado.
-  origem: [DF24]
+  origem: [DF24, DF48]
 
 - id: RNF12
   nome: Tempo de resposta nas operações de agendamento

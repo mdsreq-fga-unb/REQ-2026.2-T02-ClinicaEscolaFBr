@@ -571,7 +571,7 @@ sequenceDiagram
 | --- | --- |
 | O mesmo esquema Zod é usado na interface e na API | Envio com campo obrigatório vazio é bloqueado, e os dados são mantidos |
 | A idade é calculada a partir da data de nascimento, e o responsável legal é obrigatório para menores de 18 anos | Menor de idade sem responsável legal é bloqueado |
-| Pelo menos um contato (celular ou e-mail) e o canal preferencial (e-mail, WhatsApp ou ligação) são obrigatórios; WhatsApp e ligação exigem o celular | Formato validado, um contato exigido e o preferencial registrado |
+| E-mail e celular obrigatórios, sem a escolha do canal preferencial ([DF48](../requisitos/decisoes-fbr.md#df48)); a API grava `canal_preferencial = 'email'` nas inscrições novas, e as antigas mantêm o canal escolhido | Formato validado e os dois contatos exigidos |
 | CPF com 11 números; RG como texto livre, como está no documento, sem órgão emissor e sem upload | Nenhum envio de cópia do documento |
 | A API só grava com `confirmado: true` | Sem confirmação, a solicitação não é registrada |
 | Número no formato `AAAA-NNNNN`, com o ano do registro e a sequência `inscricoes_numero_seq`, que não reinicia a cada ano | Cada inscrição recebe um número único, como "2026-00487" |
@@ -579,7 +579,7 @@ sequenceDiagram
 | A interface só mostra a confirmação após a resposta 201 | Nenhuma confirmação sem registro efetivo |
 | Componente `AvisoEmergencia` fixo no layout do formulário | Aviso do CVV e do SAMU em todas as etapas |
 
-**Dados de teste:** um adulto com e-mail como canal preferencial; um menor com responsável legal, só celular e WhatsApp como canal; uma inscrição com ligação como canal e sem celular (recusada); uma inscrição com CPF em formato inválido; um RG com letra ("12.345.678-X").
+**Dados de teste:** um adulto com e-mail e celular; um menor com responsável legal; uma inscrição sem e-mail e outra sem celular (recusadas); uma inscrição com CPF em formato inválido; um RG com letra ("12.345.678-X").
 
 ### RF2 — Emitir comprovante de inscrição ([#89](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/issues/89))
 
@@ -1131,7 +1131,7 @@ _Construída no Ciclo 3._
 
 **Rota:** `POST /sessoes` (secretaria, ou o estagiário responsável pelo caso). Recebe o caso, o início e, opcionalmente, o término. Sem término, ele é calculado com o parâmetro `duracao_sessao_minutos` (padrão de 50). O fim do intervalo para anotações é `termino + intervalo_anotacoes_minutos` (padrão de 10) ([DF18](../requisitos/decisoes-fbr.md#df18)).
 
-**Escopo no Ciclo 3:** o agendamento gera o link de confirmação. Com e-mail como canal preferencial, a API envia o link por e-mail; com WhatsApp ou ligação, a resposta traz a mensagem pronta e o endereço `https://wa.me/55<celular>?text=<mensagem>`, e a interface mostra o botão "Enviar pelo WhatsApp", que chama `POST /sessoes/:id/whatsapp` para registrar `mensagemWhatsappEm` ([DF24](../requisitos/decisoes-fbr.md#df24)). O SMS não é usado. A página que confirma a presença entra com o RF14, no Ciclo 4.
+**Escopo no Ciclo 3:** o agendamento gera o link de confirmação. Com e-mail como canal preferencial, a API envia o link por e-mail; com WhatsApp ou ligação, a resposta traz a mensagem pronta e o endereço `https://wa.me/55<celular>?text=<mensagem>`, e a interface mostra o botão "Enviar pelo WhatsApp", que chama `POST /sessoes/:id/whatsapp` para registrar `mensagemWhatsappEm` ([DF24](../requisitos/decisoes-fbr.md#df24)). O SMS não é usado. A página que confirma a presença entra com o RF14, no Ciclo 4. Com a [DF48](../requisitos/decisoes-fbr.md#df48), a inscrição não pede mais o canal, e o botão do WhatsApp só aparece nas inscrições anteriores a ela com WhatsApp ou ligação.
 
 ```mermaid
 sequenceDiagram
@@ -1371,7 +1371,7 @@ sequenceDiagram
 
 | Regra | Critério de aceitação |
 | --- | --- |
-| O registro muda o status e avisa o paciente pelo canal preferencial | O registro com motivo atualiza a sessão e dispara a notificação ao paciente |
+| O registro muda o status e avisa o paciente por e-mail ([DF48](../requisitos/decisoes-fbr.md#df48)) | O registro com motivo atualiza a sessão e dispara a notificação ao paciente |
 | `403` para quem não é o estagiário, o supervisor do caso ou a secretaria | Quem não tem vínculo com a sessão não registra a ausência |
 | `ausencia_estagiario` fica guardado para o RF39 e o RF40, dos Ciclos 5 e 6 | A ausência real conta nas faltas do estagiário |
 | `administrativo` vem só da rota do RF15 e não entra na contagem do estagiário; o supervisor não registra esse tipo | O cancelamento para remarcar não conta |
