@@ -178,8 +178,8 @@ flowchart LR
     CI --> M["Merge"]
     M --> SITE["Site publicado<br/>(tabelas geradas do catálogo)"]
     M --> BOT["Acompanhamento automático<br/>(estado da issue e Project)"]
-    BOT --> CAT["Estado copiado para o catálogo<br/>no fechamento do ciclo"]
-    CAT --> PR
+    BOT --> SITE
+    MS["Milestone do ciclo<br/>fechado ou aberto"] --> SITE
 ```
 
 | O que muda | Como é atualizado | Quem confere |
@@ -189,8 +189,9 @@ flowchart LR
 | Priorização, MVP, backlog, situação por ciclo, índice das decisões e contagens da página inicial | Automático, geradas do catálogo pelas macros do MkDocs a cada publicação | Build estrito no CI |
 | Estado da feature na issue e Status no Project | Automático, pelo [acompanhamento das features](../processo/boas-praticas-github.md#acompanhamento-automatico-das-features), a partir do checklist, das pull requests e dos comandos `/de-acordo`, `/demonstrada` e `/aceite` | A equipe, pelos comentários do robô na issue |
 | Verificação dos RNFs (D4.5) | Automático, pelos relatórios dos testes da `development`; os RNFs sem teste usam o comando `/rnf` | A equipe, pelo comentário do robô na issue |
-| Estado da feature no catálogo | Manual, copiado da issue no fechamento do ciclo ou na pull request da feature | Revisor da pull request |
-| Publicação do site | Automática, a cada merge na `development` que mexe na documentação | Workflow de publicação |
+| Estado da feature e situação do ciclo no site | Automático na publicação: o site lê o "Estado da feature" de cada issue e a situação do milestone de cada ciclo (fechado é "Encerrado"; dos abertos, o de menor número está "Em andamento"). Do estado, vale o marco mais adiantado entre a issue e o catálogo, porque o catálogo muda na pull request que conclui o código. Se o GitHub não responder, vale o catálogo | Log do workflow de publicação, que lista o que mudou |
+| Estado da feature e situação do ciclo no catálogo | Manual, na pull request da feature e no fechamento do ciclo, para o build local e o docs-check | Revisor da pull request |
+| Publicação do site | Automática, a cada merge na `development` | Workflow de publicação |
 
 As issues de feature não copiam o texto dos requisitos: elas apontam para o RF e guardam só as decisões e as evidências da construção, para não criar versões paralelas.
 
