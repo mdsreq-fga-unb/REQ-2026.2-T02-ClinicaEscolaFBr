@@ -430,3 +430,64 @@ Transcrição da mensagem, com a numeração dele:
 | Relatório final e reprovação do estagiário (RF33, RF63 e RF64) | Até 05/12, data final da evolução do estágio (a mensagem diz "05/122") | [DF54](../../requisitos/decisoes-fbr.md#df54) |
 
 **Sem resposta:** os itens "Agenda" e "Fila de espera" no menu, a escolha das faltas na reversão do desligamento (RF38) e a base legal e o canal dos direitos do titular (RF57). A equipe voltou a perguntar no grupo, junto com a confirmação do RF8 e dos dados mínimos do RF1.
+
+## Respostas da FBr de 12/11 e teste de usabilidade { #respostas-da-fbr-de-12-11-e-teste-de-usabilidade }
+
+**Data:** 12/11/2026
+**Local:** grupo "Sistema Clínica Escola FBr" no WhatsApp
+**Participantes:** pela FBr, Robson Araújo; pela equipe, Gabriel da Cunha Barbaceli e os demais integrantes do grupo.
+
+Às 15h46, a equipe pediu a confirmação dos pontos que ficaram em aberto nas [respostas de 11/11](#respostas-da-fbr-sobre-a-demonstracao-do-ciclo-4), e Robson Araújo respondeu. Na mesma conversa, ele contou como foi o teste de usabilidade aplicado de manhã.
+
+### Pedido da equipe
+
+- **A. Situação do inscrito na consulta da fila (RF8):** a equipe entendeu que o inscrito vê "Em triagem" antes de ser chamado para o atendimento e "Em atendimento" depois de chamado, enquanto aguarda o contato ou a resposta. Perguntou se a posição na fila continua aparecendo enquanto ele está "Em triagem".
+- **B. Dados mínimos para o reconhecimento na inscrição (RF1):** além de nome, data de nascimento, CPF, celular e e-mail, quais dados passam a ser obrigatórios (por exemplo, o endereço completo), e se, no contato de emergência, bastam o nome e o telefone.
+- **C. Itens sem resposta:**
+    - os itens "Agenda", no menu do supervisor, e "Fila de espera", no da coordenação;
+    - a escolha, pela coordenação, das faltas que deixam de contar na reversão de um desligamento feito por engano (RF38).
+
+### Resposta de Robson Araújo
+
+Transcrição da mensagem:
+
+> A. Correta a compreensão; a posição na fila não para nao gerar expectativas pois a captação é semestral;
+> B. Endereço completo tbm, para eventual fiscalização.
+> C. Podem manter.
+> Pode deixar p coordenação eliminar as faltas;
+
+Sobre o teste de usabilidade:
+
+> O sistema foi testado hoje por 3 pessoas, estagiários, supervisor e secretária. Estão de acordo com as funcionalidades o professor supervisor que apresentou maior dificuldade de navegação por conta de habilidades tecnológica
+
+### Resultado
+
+| Ponto | Resposta | Registro |
+| --- | --- | --- |
+| Situação na consulta da fila (RF8) | "Em triagem" antes de ser chamado e "Em atendimento" depois, **sem a posição**, porque a captação é semestral | [DF55](../../requisitos/decisoes-fbr.md#df55); o RF8 e o RNF7 foram atualizados |
+| Dados mínimos da inscrição (RF1) | Endereço completo, para eventual fiscalização | [DF56](../../requisitos/decisoes-fbr.md#df56); o RF1 foi atualizado, e a mudança do formulário está na issue [#252](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/issues/252) |
+| Itens "Agenda" e "Fila de espera" nos menus | Podem ficar | [DF57](../../requisitos/decisoes-fbr.md#df57) |
+| Faltas que deixam de contar na reversão (RF38) | A coordenação escolhe | [DF58](../../requisitos/decisoes-fbr.md#df58) |
+
+**Sem resposta:** se, no contato de emergência, bastam o nome e o telefone, e o que o inscrito vê na consulta da fila depois do encerramento ou do desligamento do caso. Os dois continuam nas [pendências de validação](../../requisitos/analise-feedback.md#pendencias-de-validacao-com-a-fbr), com o padrão adotado até a resposta.
+
+### Registro do teste de usabilidade (RNF22) { #registro-do-teste-de-usabilidade-rnf22 }
+
+O teste seguiu o kit enviado à FBr em 05/11/2026, que pedia pelo menos 5 pessoas da coordenação e 5 supervisores, sem treinamento, fazendo a distribuição (T1 e T2) e o vínculo (T3 e T4) no computador e no celular, com a planilha de anotação preenchida por quem aplicava. O registro abaixo traz só o que a FBr informou. Os campos que a FBr não mediu ficam como "não informado", e nenhum valor foi estimado pela equipe.
+
+| Item do kit | Previsto | Realizado (informado pela FBr) |
+| --- | --- | --- |
+| Data e ambiente | A partir de 06/11/2026, no ambiente de validação, com dados fictícios | 12/11/2026, de manhã, no ambiente de validação |
+| Quem aplicou | Robson Araújo e Thiago Viana | Robson Araújo |
+| Participantes | Pelo menos 5 da coordenação e 5 supervisores, sem ter visto a distribuição nem o vínculo | 3 pessoas: estagiários, supervisor e secretária, com contas criadas pela coordenação. Nenhuma da coordenação |
+| Tarefas | T1 e T2 (distribuição, coordenação) e T3 e T4 (vínculo, supervisor), no computador e no celular | Não informado tarefa a tarefa. A coordenação não participou, então a distribuição (T1 e T2) não foi feita por participantes |
+| Concluiu sem ajuda | Pelo menos 90% de cada perfil | Não informado |
+| Interações na distribuição | No máximo 3, a partir da lista de casos pendentes | Não medido |
+| Tempo de cada tarefa | Anotado na planilha | Não medido |
+| Dificuldades observadas | Anotadas por participante | O supervisor, professor, teve mais dificuldade de navegação, que a FBr atribuiu à familiaridade com tecnologia |
+| Avaliação geral | — | Os participantes ficaram de acordo com as funcionalidades |
+| Planilha do kit | Devolvida até 13/11/2026 | Não preenchida |
+
+**Conclusão.** O teste valida, de forma qualitativa, as funcionalidades com estagiários, supervisor e secretária: a FBr ficou de acordo com elas e apontou a dificuldade de navegação de quem tem menos familiaridade com tecnologia. Ele **não verifica a meta do [RNF22](../../requisitos/nao-funcionais.md#rnf22)**: faltaram os participantes da coordenação, a amostra mínima de cada perfil e as medidas de ajuda, interações e tempo. Por isso, o RNF22 não recebe o registro `/rnf` nas issues do RF18, do RF20 e do RF21. A parte automática do RNF22 (as 3 interações da distribuição) continua verificada pelo e2e. A aplicação com a amostra e as medidas do kit ficou nas [pendências de validação](../../requisitos/analise-feedback.md#pendencias-de-validacao-com-a-fbr).
+
+**O que a equipe faz com a dificuldade do supervisor.** Sem saber em qual tela ou passo a dificuldade apareceu, a equipe não tem como corrigir um ponto específico. Ela vai perguntar à FBr em que parte o supervisor travou, e, até a resposta, os fluxos do supervisor (Meus casos, vínculo e agenda) são revistos na inspeção das features do Ciclo 5 com atenção aos rótulos e aos caminhos.

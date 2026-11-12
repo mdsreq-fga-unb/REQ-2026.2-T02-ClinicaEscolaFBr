@@ -112,13 +112,13 @@ Classificação: segurança e privacidade (URPS+).
 Rastreabilidade: Feature "Consultar posição individual na fila" → CP3 — Fila de espera e consulta de posição; relacionada à CP12 — Segurança, sigilo e controle de acesso. Dependência: RF52 — Verificar identidade do paciente ou responsável (CP12).{{ origem("RNF6") }}
 {{ registro("RNF6") }}
 
-**RNF7 — Compreensibilidade das informações sobre a posição na fila**{ #rnf7 }
+**RNF7 — Compreensibilidade das informações sobre a situação na fila**{ #rnf7 }
 
-A interface de consulta da fila de espera (RF8) deve apresentar de forma clara e legível a posição e a situação atual do inscrito, acompanhadas de informação explícita de que a posição pode variar e não representa garantia de prazo ou data de atendimento.
+A interface de consulta da fila de espera (RF8) deve apresentar de forma clara e legível a situação atual do inscrito ("Em triagem" ou "Em atendimento"), acompanhada de informação explícita de que estar em triagem não representa garantia de prazo ou data de atendimento, porque a captação de pacientes é semestral. A posição na fila não é mostrada ao inscrito ([DF55](decisoes-fbr.md#df55)).
 
 O aviso deve ser exibido junto ao resultado da consulta, sem exigir que o interessado acesse outra página, abra um documento adicional ou realize uma operação específica para visualizar essa informação.
 
-A conformidade deve ser verificada por teste de compreensão com, no mínimo, 10 participantes representativos do público externo da Clínica Escola — interessados inscritos, pacientes ou responsáveis legais, incluindo participantes com baixa familiaridade digital. Após concluir a consulta sem explicação adicional do avaliador, cada participante deve responder, com suas próprias palavras, se a posição pode mudar e se ela garante uma data de atendimento. O requisito é atendido quando pelo menos 90% dos participantes responderem corretamente às duas questões e todas as consultas apresentarem o aviso junto ao resultado.
+A conformidade deve ser verificada por teste de compreensão com, no mínimo, 10 participantes representativos do público externo da Clínica Escola — interessados inscritos, pacientes ou responsáveis legais, incluindo participantes com baixa familiaridade digital. Após concluir a consulta sem explicação adicional do avaliador, cada participante deve responder, com suas próprias palavras, em que situação está a inscrição e se essa situação garante uma data de atendimento. O requisito é atendido quando pelo menos 90% dos participantes responderem corretamente às duas questões e todas as consultas apresentarem o aviso junto ao resultado.
 
 Classificação: usabilidade (URPS+).
 Rastreabilidade: Feature "Consultar posição individual na fila" → CP3 — Fila de espera e consulta de posição → IS03 — Expectativa sobre a fila.{{ origem("RNF7") }}
