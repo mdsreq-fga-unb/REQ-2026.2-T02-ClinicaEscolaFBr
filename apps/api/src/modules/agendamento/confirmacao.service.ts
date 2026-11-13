@@ -97,7 +97,6 @@ export class ConfirmacaoService {
         estagiario: estagiario.nome,
         inicio: sessoesAtendimento.inicio,
         termino: sessoesAtendimento.termino,
-        canalPreferencial: inscricoes.canalPreferencial,
       })
       .from(sessoesAtendimento)
       .innerJoin(casos, eq(casos.id, sessoesAtendimento.casoId))
