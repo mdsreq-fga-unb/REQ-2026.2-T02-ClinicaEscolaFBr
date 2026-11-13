@@ -1,4 +1,5 @@
 import {
+  BarChart3,
   CalendarDays,
   CalendarPlus,
   FileText,
@@ -48,6 +49,8 @@ export const MENU_POR_PERFIL: Record<Perfil, ItemMenu[]> = {
     distribuicao,
     pacientes,
     { rotulo: "Usuários", href: "/usuarios", Icone: Users },
+    // Indicadores operacionais (RF48), na prancha 9-1.
+    { rotulo: "Indicadores", href: "/indicadores", Icone: BarChart3 },
   ],
 };
 
