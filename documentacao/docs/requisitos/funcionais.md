@@ -51,7 +51,7 @@ O sistema deve permitir que o interessado realize uma solicitação de atendimen
 - O formulário deve exigir, como campos obrigatórios — confirmados pela Clínica Escola na reunião de 26/08/2026 ([ata](../historico/unidade-1/reunioes.md)) —, os seguintes: nome completo, data de nascimento, CPF, RG, endereço, estado civil e a queixa (motivo da busca pelo atendimento); quando o interessado for menor de idade, o formulário deve exigir também o nome do responsável legal.
 - Para viabilizar os lembretes e a verificação de identidade previstos nos RF13 e RF52, o interessado deve informar o **e-mail** e o **telefone celular**, os dois obrigatórios, e a inscrição avisa que os contatos da clínica são feitos por e-mail ([DF48](decisoes-fbr.md#df48)). A inscrição não pede mais a escolha do canal preferencial. As mensagens automáticas do sistema vão por e-mail, e o celular fica para os contatos da secretaria por WhatsApp ou ligação. O SMS não é usado. As inscrições feitas antes da DF48, com o canal escolhido e às vezes só o celular, continuam seguindo a [DF24](decisoes-fbr.md#df24).
 - O formulário também deve coletar, para a triagem, a percepção de urgência e um campo de histórico relevante informado pelo interessado, ambos como declarações do próprio solicitante.
-- O formulário também deve coletar os dados da ficha de identificação da Clínica Escola que os campos acima não cobrem ([DF43](decisoes-fbr.md#df43)): sexo, profissão, escolaridade, bairro, cidade, CEP, WhatsApp, contato de emergência e, para menor de idade, o CPF e o documento que comprova a responsabilidade legal. O contato de emergência é obrigatório ([DF51](decisoes-fbr.md#df51)), e o CPF do responsável legal também, na inscrição de menor de idade ([DF47](decisoes-fbr.md#df47)), porque o consentimento do RF57 é dado pelo responsável. Os demais continuam opcionais até a FBr dizer quais são os dados mínimos para o reconhecimento do paciente; essa regra é uma proposta da equipe.
+- O formulário também deve coletar os dados da ficha de identificação da Clínica Escola que os campos acima não cobrem ([DF43](decisoes-fbr.md#df43)): sexo, profissão, escolaridade, bairro, cidade, CEP, WhatsApp, contato de emergência e, para menor de idade, o CPF e o documento que comprova a responsabilidade legal. O contato de emergência é obrigatório ([DF51](decisoes-fbr.md#df51)), assim como o endereço completo, com bairro, cidade e CEP, que a FBr incluiu nos dados mínimos para o reconhecimento do paciente, para eventual fiscalização ([DF56](decisoes-fbr.md#df56)). O CPF do responsável legal também é obrigatório na inscrição de menor de idade ([DF47](decisoes-fbr.md#df47)), porque o consentimento do RF57 é dado pelo responsável. Os demais (sexo, profissão, escolaridade, WhatsApp e o documento do responsável) continuam opcionais.
 - O CPF e o RG são coletados apenas como texto informado pelo próprio interessado — a Clínica Escola não exige, nem o sistema deve solicitar, o envio de cópia digitalizada desses documentos.
 - O sistema deve validar o formato dos dados de contato, verificar os campos obrigatórios e solicitar a confirmação do interessado antes de registrar a inscrição.
 - O formulário deve exibir, de forma fixa e sempre visível, um aviso textual com os contatos de emergência do CVV (188) e do SAMU (192), conforme solicitado pela Clínica Escola FBr na validação do MVP ([validação do MVP](priorizacao-e-mvp.md#1024-validacao-do-mvp-com-o-cliente)) — condição vinculada ao adiamento da sinalização automática de pontos de atenção (RF5) para uma entrega posterior.
@@ -81,6 +81,8 @@ _Critérios de aceitação:_
 - Antes do registro, o interessado revisa os dados informados e confirma o envio; sem essa confirmação, a solicitação não é registrada.
 
 - Para interessado menor de idade, calculado pela data de nascimento, o envio sem o nome ou sem o CPF do responsável legal é bloqueado e o campo é indicado.
+
+- O envio sem o contato de emergência ou sem o endereço completo (endereço, bairro, cidade e CEP) é bloqueado e o campo é indicado ([DF51](decisoes-fbr.md#df51) e [DF56](decisoes-fbr.md#df56)).
 
 _Rastreabilidade:_ Feature "Registrar solicitação de atendimento on-line" → CP1 — Inscrição on-line → OE1/OE4. Restrição transversal: CP12 — Segurança, sigilo e controle de acesso.{{ origem("RF1") }}
 
@@ -261,15 +263,15 @@ _Rastreabilidade:_ Feature "Ordenar inscritos na fila de espera" → CP3 — Fil
 
 **RF8 — Consultar posição individual na fila**{ #rf8 }
 
-O sistema deve permitir que o inscrito consulte sua posição e situação atual na fila de espera da Clínica Escola FBr, localizando a solicitação por CPF ou número de inscrição. Antes de apresentar o resultado, o fluxo deve executar a verificação de identidade definida no RF52. As condições de privacidade e de comunicação do resultado são estabelecidas, respectivamente, pelos RNF6 e RNF7.
+O sistema deve permitir que o inscrito consulte a situação atual da sua inscrição na fila de espera da Clínica Escola FBr, localizando a solicitação por CPF ou número de inscrição. Antes de apresentar o resultado, o fluxo deve executar a verificação de identidade definida no RF52. A consulta mostra **"Em triagem"** enquanto o inscrito ainda não foi chamado para o atendimento, e **"Em atendimento"** depois de chamado, inclusive enquanto ele aguarda o contato da clínica ou responde a ele ([DF55](decisoes-fbr.md#df55)). O inscrito é chamado quando o caso é vinculado a um estagiário (RF21). A posição na fila **não aparece** para o inscrito, para não gerar expectativa, porque a captação de pacientes é semestral; a ordem da fila (RF7) continua sendo vista só pela equipe. O nome da feature foi mantido para preservar a rastreabilidade. As condições de privacidade e de comunicação do resultado são estabelecidas, respectivamente, pelos RNF6 e RNF7.
 
 _Critérios de aceitação:_
 
-- Após localizar a solicitação e concluir a verificação de identidade (RF52), o inscrito vê sua posição e a situação atual da inscrição, conforme os RNF6 e RNF7.
+- Após localizar a solicitação e concluir a verificação de identidade (RF52), o inscrito vê a situação atual da inscrição ("Em triagem" ou "Em atendimento"), sem a posição na fila, conforme os RNF6 e RNF7.
 
-- Sem verificação de identidade concluída, a consulta de posição é negada, conforme o RNF6.
+- Sem verificação de identidade concluída, a consulta é negada, conforme o RNF6.
 
-- Após mudanças de prioridade ou de situação que alterem a fila, uma nova consulta autorizada mostra a posição atualizada.
+- Depois que o caso é vinculado a um estagiário (RF21), uma nova consulta autorizada mostra "Em atendimento".
 
 _Rastreabilidade:_ Feature "Consultar posição individual na fila" → CP3 — Fila de espera e consulta de posição → OE4/OE7 → IS03 — Expectativa sobre a fila. Dependência: RF52 — Verificar identidade do paciente ou responsável (CP12).{{ origem("RF8") }}
 
@@ -945,7 +947,7 @@ _Critérios de aceitação:_
 - Paciente que não confirmou a sessão no prazo (RF14), mas compareceu, não tem a contagem de faltas incrementada.
 - Falta marcada como justificada (RF34) continua contando para o limite de 2 faltas.
 - Em um novo ciclo de atendimento do mesmo paciente, a contagem começa em zero.
-- Na reversão de desligamento feito por engano (RF38), as faltas que a coordenação indicar deixam de contar, e a contagem passa a ser a das faltas mantidas (por exemplo, de duas faltas com uma retirada, a contagem volta a uma); todas as faltas continuam no histórico, com autor e data/hora da retirada.
+- Na reversão de desligamento feito por engano (RF38), as faltas que a coordenação indicar deixam de contar ([DF58](decisoes-fbr.md#df58)), e a contagem passa a ser a das faltas mantidas (por exemplo, de duas faltas com uma retirada, a contagem volta a uma); todas as faltas continuam no histórico, com autor e data/hora da retirada.
 
 _Rastreabilidade:_ Feature "Contabilizar faltas do paciente no ciclo" → CP9 — Controle de assiduidade e alertas → OE4/OE3. Dependência: RF15 (CP4), RF34.{{ origem("RF35") }}
 
@@ -994,7 +996,7 @@ _Rastreabilidade:_ Feature "Desligar paciente por faltas e liberar vaga" → CP9
 
 **RF38 — Reverter desligamento de paciente por faltas**{ #rf38 }
 
-O sistema deve permitir que um usuário com perfil de coordenação reverta um desligamento por faltas (RF37) registrado por engano, restaurando o status ativo do paciente e preservando o histórico de faltas e da decisão original de desligamento, agora marcada como revertida, com autor, data/hora e motivo da reversão. Conforme confirmado pela Clínica Escola, somente a coordenação analisa e decide cada caso de reversão — não é uma ação disponível à secretaria, ao estagiário ou ao supervisor. Caso a vaga do paciente já tenha sido realocada a outro inscrito da fila de espera (CP3) no momento da reversão, o sistema não deve remover a sessão ou o vínculo já criado para esse outro paciente; a reversão do desligamento original deve ser sinalizada à coordenação como pendente de tratamento manual da vaga (por exemplo, aguardar a próxima vaga disponível).
+O sistema deve permitir que um usuário com perfil de coordenação reverta um desligamento por faltas (RF37) registrado por engano, restaurando o status ativo do paciente e preservando o histórico de faltas e da decisão original de desligamento, agora marcada como revertida, com autor, data/hora e motivo da reversão. Na reversão, a coordenação escolhe quais faltas do desligamento deixam de contar ([DF58](decisoes-fbr.md#df58)). Conforme confirmado pela Clínica Escola, somente a coordenação analisa e decide cada caso de reversão — não é uma ação disponível à secretaria, ao estagiário ou ao supervisor. Caso a vaga do paciente já tenha sido realocada a outro inscrito da fila de espera (CP3) no momento da reversão, o sistema não deve remover a sessão ou o vínculo já criado para esse outro paciente; a reversão do desligamento original deve ser sinalizada à coordenação como pendente de tratamento manual da vaga (por exemplo, aguardar a próxima vaga disponível).
 
 _Critérios de aceitação:_
 
