@@ -1,5 +1,3 @@
-import type { Canal } from "./dominio-ciclo-3";
-
 // Confirmação de presença na sessão (RF14).
 
 // Por onde a presença foi confirmada: pelo link, pelo próprio paciente, ou pela
@@ -30,7 +28,6 @@ export type SessaoSemConfirmacao = {
   estagiario: string;
   inicio: string;
   termino: string;
-  canalPreferencial: Canal;
 };
 
 export type SessoesSemConfirmacao = {
