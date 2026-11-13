@@ -14,6 +14,7 @@ import { AdministrativoModule } from './modules/administrativo/administrativo.mo
 import { AgendamentoModule } from './modules/agendamento/agendamento.module';
 import { AssiduidadeModule } from './modules/assiduidade/assiduidade.module';
 import { CasosModule } from './modules/casos/casos.module';
+import { ConsultaFilaModule } from './modules/fila/consulta-fila.module';
 import { FilaModule } from './modules/fila/fila.module';
 import { InscricaoModule } from './modules/inscricao/inscricao.module';
 import { InstitucionalModule } from './modules/institucional/institucional.module';
@@ -33,6 +34,7 @@ import { TriagemModule } from './modules/triagem/triagem.module';
     InscricaoModule,
     TriagemModule,
     FilaModule,
+    ConsultaFilaModule,
     AgendamentoModule,
     CasosModule,
     AcompanhamentoClinicoModule,
