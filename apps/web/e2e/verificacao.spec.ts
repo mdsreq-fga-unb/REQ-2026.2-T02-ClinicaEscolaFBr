@@ -61,3 +61,56 @@ test("no celular, a verificação cabe na largura da tela, sem rolagem lateral (
   expect(larguras.pagina).toBeLessThanOrEqual(larguras.janela);
   await semViolacoes(page);
 });
+
+// Percorre a página com o Tab e confere, em cada controle, o indicador de foco do
+// RNF57: contorno sólido de pelo menos 2 px. Devolve os nomes visitados.
+async function percorrerComFoco(page: Page) {
+  const visitados: string[] = [];
+  for (let i = 0; i < 30; i++) {
+    await page.keyboard.press("Tab");
+    const foco = await page.evaluate(() => {
+      const el = document.activeElement as HTMLElement;
+      const estilo = getComputedStyle(el);
+      return {
+        nome:
+          el.getAttribute("aria-label") ||
+          (el as HTMLInputElement).labels?.[0]?.textContent?.trim() ||
+          el.textContent!.trim() ||
+          el.id,
+        tag: el.tagName,
+        largura: estilo.outlineWidth,
+        estilo: estilo.outlineStyle,
+      };
+    });
+    if (foco.tag === "BODY" || visitados.includes(foco.nome)) break;
+    expect(foco.estilo, foco.nome).not.toBe("none");
+    expect(parseFloat(foco.largura), foco.nome).toBeGreaterThanOrEqual(2);
+    visitados.push(foco.nome);
+  }
+  return visitados;
+}
+
+test("o teclado percorre as duas etapas da verificação com foco visível de pelo menos 2 px (RF52, RNF57)", async ({
+  page,
+}) => {
+  await page.setViewportSize(CELULAR);
+  await page.goto("/consultar");
+  await expect(page.getByLabel("CPF ou número da inscrição")).toBeVisible();
+
+  // Etapa 1: o campo do CPF ou do número e o "Enviar código".
+  const etapa1 = await percorrerComFoco(page);
+  expect(etapa1).toContain("CPF ou número da inscrição");
+  expect(etapa1).toContain("Enviar código");
+
+  // Etapa 2: o campo do código, o "Confirmar" e o "Usar outro CPF ou número".
+  await page.getByLabel("CPF ou número da inscrição").fill(
+    String(Date.now() + 7)
+      .slice(-11)
+      .padStart(11, "8"),
+  );
+  await page.getByRole("button", { name: "Enviar código" }).click();
+  await expect(page.getByLabel("Código de 6 dígitos")).toBeFocused();
+  const etapa2 = await percorrerComFoco(page);
+  expect(etapa2).toContain("Confirmar");
+  expect(etapa2).toContain("Usar outro CPF ou número");
+});
