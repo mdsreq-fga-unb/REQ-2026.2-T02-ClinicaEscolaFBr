@@ -140,6 +140,7 @@ Registro cronológico das versões e alterações do documento de visão e dos a
 | 11/11/2026 | 3.63 | Respostas da FBr de 11/11 sobre a demonstração do Ciclo 4: registro em Reuniões, decisões DF50 a DF54 (transferência acima do limite, contato de emergência obrigatório, motivo da justificativa de falta, aviso ao paciente desligado e prazo do relatório final), RF1, RF25 e RF37 atualizados e pendências de validação revistas | Gabriel da Cunha Barbaceli |
 
 
+| 12/11/2026 | 3.70 | RF8 ajustada à DF55: consulta sem posição, situações confirmadas, cartão com selo/aviso e evidências RNF6/RNF7/RNF56–RNF58; preservação da lista RF22 e revisão da PR #237 | Jônatas Davi Oliveira Farias |
 A versão 1.6 está registrada com a data do commit (04/09/2026), posterior à da versão 1.7; a numeração foi mantida para preservar as referências já feitas a essas versões.
 
 </details>

@@ -9,9 +9,9 @@ import { Button } from "@/components/ui/button";
 import { api, ErroApi } from "@/lib/api";
 
 // Consulta presencial da situação da inscrição pela secretaria (RF8): para quem
-// informou só o celular (RF52, DF24) ou recebeu "procure a secretaria". Fica na
+// precisa de apoio na verificação ou recebeu "procure a secretaria". Fica na
 // lista de Pacientes, como previsto no projeto da feature. A resposta não traz a
-// cor da prioridade (RNF17).
+// posição (DF55) nem a cor da prioridade (RNF17).
 export function ConsultaSituacaoPelaSecretaria() {
   const [numero, setNumero] = useState("");
   const consulta = useMutation({

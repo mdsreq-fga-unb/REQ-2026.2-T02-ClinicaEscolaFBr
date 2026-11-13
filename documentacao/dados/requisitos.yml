@@ -169,7 +169,7 @@ rfs:
   depende: [RF52, RF7]
   issue: 155
   estado: Código concluído
-  origem: [DF40]
+  origem: [DF40, DF55]
 
 - id: RF9
   nome: Manter e informar condições gerais da fila
@@ -1029,11 +1029,12 @@ rnfs:
   justificativa: A consulta individual envolve dado pessoal e exige verificação de identidade.
 
 - id: RNF7
-  nome: Compreensibilidade das informações sobre a posição na fila
+  nome: Compreensibilidade das informações sobre a situação na fila
   cp: CP3
   classificacao: Associado a RF do MVP
   relacionado: RF8
-  justificativa: Acompanha a consulta de posição e evita interpretação da posição como garantia de prazo.
+  justificativa: Acompanha a consulta da situação na fila e evita que a situação seja lida como garantia de prazo.
+  origem: [DF55]
 
 - id: RNF8
   nome: Confiabilidade das informações institucionais da fila
@@ -1699,6 +1700,11 @@ decisoes:
   fonte: respostas da FBr por WhatsApp
   decisao: O relatório final de evolução e a reprovação do estagiário ficam prontos até 05/12/2026, data final da evolução do estágio. Respondido por Robson Araújo.
 
+
+- id: DF55
+  data: 12/11/2026
+  fonte: respostas da FBr por WhatsApp
+  decisao: Na consulta da fila (RF8), o inscrito vê "Em triagem" enquanto não foi chamado para o atendimento e "Em atendimento" depois de chamado, inclusive enquanto aguarda o contato da clínica ou a resposta dele. A posição na fila não aparece para o inscrito, para não gerar expectativa, porque a captação de pacientes é semestral. Respondido por Robson Araújo.
 
 conjuntos:
 - area: Inscrição no atendimento

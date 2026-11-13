@@ -87,6 +87,9 @@ _Ciclo 4._ [RF8](../requisitos/funcionais.md#rf8) · issue [#155](https://github
 - **em atendimento:** sem posição, indicando a secretaria para dúvidas;
 - **acesso negado:** sem verificação válida ou depois de 15 minutos, sem nenhum dado da inscrição e com o botão para confirmar a identidade de novo.
 
+!!! warning "Mudança pedida pela FBr em 12/11/2026"
+    A posição na fila não aparece mais para o inscrito, e as situações passam a ser só "Em triagem" (antes de ser chamado para o atendimento) e "Em atendimento" (depois de chamado), pela [DF55](../requisitos/decisoes-fbr.md#df55). As pranchas abaixo ainda mostram a posição e as três situações: na construção, vale a DF55.
+
 **No computador**
 
 [![Posição na fila no computador: na fila de espera, aguardando triagem, em atendimento e acesso negado](../assets/prototipos-ciclo-4/1-3-fila-computador.webp)](../assets/prototipos-ciclo-4/1-3-fila-computador.webp){ target="_blank" }

@@ -5,12 +5,14 @@ import {
   criarCasoTriado,
   entrar,
   fecharContextos,
+  focoVisivel,
   semViolacoes,
+  tabAte,
 } from "./apoio";
 import { EQUIPE, SENHA_EQUIPE } from "./equipe";
 test.afterEach(fecharContextos);
-for (const largura of [320, 1366]) {
-  test(`RF8: fila, secretaria, código real e expiração em ${largura}px (RNF6, RNF7, RNF56, RNF58)`, async ({
+for (const largura of [320, 360, 768, 1024, 1366, 1920]) {
+  test(`RF8: situação sem posição, secretaria, código real e expiração em ${largura}px (DF55, RNF6, RNF7, RNF56, RNF57, RNF58)`, async ({
     page,
     browser,
     request,
@@ -28,10 +30,6 @@ for (const largura of [320, 1366]) {
     const { numero, inscricaoId: chaveEnvio } = fila.inscritos.find(
       (i: { nome: string }) => i.nome === nome,
     );
-    const lerPosicao = async (): Promise<number> =>
-      (await (await request.get(`${API}/fila`)).json()).inscritos.find(
-        (i: { nome: string }) => i.nome === nome,
-      ).posicao;
     const coordenacao = await entrar(browser, "coordenacao");
     await coordenacao.setViewportSize({ width: largura, height: 900 });
     if (largura < 768)
@@ -56,9 +54,14 @@ for (const largura of [320, 1366]) {
       .getByRole("button", { name: "Consultar situação" })
       .click();
     await expect(
-      secretaria.getByRole("heading", { name: "Na fila de espera" }),
+      secretaria
+        .getByRole("status", { name: "Situação da inscrição" })
+        .getByText("Em triagem", { exact: true }),
     ).toBeVisible();
     await expect(secretaria.locator("main")).not.toContainText("Amarela");
+    await expect(
+      secretaria.getByRole("status", { name: "Situação da inscrição" }),
+    ).not.toContainText(/posição|prioridade|\d+ª/i);
     await semViolacoes(secretaria);
     await page.setViewportSize({ width: largura, height: 900 });
     await page.goto("/consultar");
@@ -88,25 +91,23 @@ for (const largura of [320, 1366]) {
       })
       .toBe(6);
     await page.getByLabel("Código de 6 dígitos").fill(codigo);
-    const posicaoAntes = await lerPosicao();
     await page.getByRole("button", { name: "Confirmar", exact: true }).click();
     await expect(
-      page.getByRole("heading", { name: "Na fila de espera" }),
+      page
+        .getByRole("status", { name: "Situação da inscrição" })
+        .getByText("Em triagem", { exact: true }),
     ).toBeVisible();
-    // Os outros e2e mudam a fila ao mesmo tempo: a posição mostrada fica entre a
-    // da fila antes e a de depois da consulta.
-    const textoPosicao = page.getByText(/^\d+ª$/);
-    await expect(textoPosicao).toBeVisible();
-    const posicaoMostrada = Number(
-      (await textoPosicao.innerText()).replace("ª", ""),
+    const cartao = page.getByRole("status", { name: "Situação da inscrição" });
+    await expect(cartao).not.toContainText(/posição|prioridade|\d+ª/i);
+    await expect(cartao).toContainText("A captação de pacientes é semestral.");
+    await expect(cartao).toContainText(
+      "não garante prazo nem data de atendimento",
     );
-    const posicaoDepois = await lerPosicao();
-    expect(posicaoMostrada).toBeGreaterThanOrEqual(
-      Math.min(posicaoAntes, posicaoDepois),
-    );
-    expect(posicaoMostrada).toBeLessThanOrEqual(
-      Math.max(posicaoAntes, posicaoDepois),
-    );
+    const atualizar = page.getByRole("button", { name: "Atualizar situação" });
+    // Chega ao controle por teclado para verificar o foco visível da página pública.
+    await tabAte(page, atualizar);
+    await expect(atualizar).toBeFocused();
+    await focoVisivel(atualizar);
     await expect(page.locator("main")).not.toContainText("Amarela");
     expect(
       await page.evaluate(
@@ -139,8 +140,20 @@ for (const largura of [320, 1366]) {
       page.getByRole("button", { name: "Confirmar identidade" }),
     ).toBeVisible();
     await expect(
-      page.getByRole("heading", { name: "Na fila de espera" }),
+      page
+        .getByRole("status", { name: "Situação da inscrição" })
+        .getByText("Em triagem", { exact: true }),
     ).not.toBeVisible();
+    // O aviso recebe foco ao expirar; Tab chega à ação de confirmar novamente.
+    await expect(
+      page.getByRole("alert", { name: /Confirme sua identidade/ }),
+    ).toBeFocused();
+    const confirmar = page.getByRole("button", {
+      name: "Confirmar identidade",
+    });
+    await tabAte(page, confirmar);
+    await expect(confirmar).toBeFocused();
+    await focoVisivel(confirmar);
     await semViolacoes(page);
   });
 }

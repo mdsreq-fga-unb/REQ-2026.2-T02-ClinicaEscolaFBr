@@ -163,7 +163,7 @@ describe('RF8 com a verificação real RF52', () => {
       );
     }
   });
-  it('mostra aguardando triagem apenas depois de código real e ignora a inscrição da query', async () => {
+  it('mostra em triagem apenas depois de código real e ignora a inscrição da query', async () => {
     const cookie = await verificar();
     const res = await http()
       .get('/fila/minha-situacao?numero=2026-99999&inscricaoId=outra')
@@ -171,8 +171,7 @@ describe('RF8 com a verificação real RF52', () => {
       .expect(200);
     expect(res.body).toEqual({
       numero: pessoa.numero,
-      situacao: 'aguardando_triagem',
-      posicao: null,
+      situacao: 'em_triagem',
       consultadaEm: expect.any(String),
     });
     expect(res.headers['cache-control']).toBe('no-store');
@@ -182,7 +181,7 @@ describe('RF8 com a verificação real RF52', () => {
     'aguardando_vinculo',
     'aguardando_vaga',
   ] as const)(
-    'mantém %s na fila global sem divulgar clínica ou outras pessoas',
+    'informa %s como em triagem sem posição nem dados clínicos (DF55, RNF6)',
     async (situacao) => {
       await classificar(situacao);
       const res = await http()
@@ -191,8 +190,7 @@ describe('RF8 com a verificação real RF52', () => {
         .expect(200);
       expect(res.body).toEqual({
         numero: pessoa.numero,
-        situacao: 'na_fila',
-        posicao: 1,
+        situacao: 'em_triagem',
         consultadaEm: expect.any(String),
       });
       expect(JSON.stringify(res.body)).not.toMatch(
@@ -212,7 +210,11 @@ describe('RF8 com a verificação real RF52', () => {
         .get('/fila/minha-situacao')
         .set('Cookie', await verificar())
         .expect(200);
-      expect(res.body).toMatchObject({ situacao, posicao: null });
+      expect(res.body).toEqual({
+        numero: pessoa.numero,
+        situacao,
+        consultadaEm: expect.any(String),
+      });
     },
   );
   it('expiração da verificação impede nova consulta (RNF6)', async () => {
@@ -236,13 +238,11 @@ describe('RF8 com a verificação real RF52', () => {
       .expect(200);
     expect(res.body).toMatchObject({
       numero: pessoa.numero,
-      situacao: 'na_fila',
-      posicao: 1,
+      situacao: 'em_triagem',
     });
     expect(Object.keys(res.body).sort()).toEqual([
       'consultadaEm',
       'numero',
-      'posicao',
       'situacao',
     ]);
     const acessos = await db
@@ -270,33 +270,33 @@ describe('RF8 com a verificação real RF52', () => {
       .set(como())
       .expect(404);
   });
-  it('nova consulta reflete reclassificação de outro caso', async () => {
+  it('nova consulta reflete a situação atual do caso, sem posição (DF55, RNF6)', async () => {
     await classificar();
     const cookie = await verificar();
-    expect(
-      (await http().get('/fila/minha-situacao').set('Cookie', cookie)).body
-        .posicao,
-    ).toBe(1);
-    const [outra] = await db
-      .insert(inscricoes)
-      .values({
-        ...pessoa,
-        id: undefined,
-        numero: '2026-00002',
-        cpf: '11144477735',
-      })
-      .returning();
-    await db
-      .insert(casos)
-      .values({ inscricaoId: outra.id, entradaNaFilaEm: outra.criadaEm });
-    await db.insert(decisoesPrioridade).values({
-      inscricaoId: outra.id,
-      corCifrada: cifrar('vermelha', CHAVE_TESTE),
-      decididaPor: supervisor.id,
+    const consultar = () =>
+      http().get('/fila/minha-situacao').set('Cookie', cookie).expect(200);
+    expect((await consultar()).body).toEqual({
+      numero: pessoa.numero,
+      situacao: 'em_triagem',
+      consultadaEm: expect.any(String),
     });
-    expect(
-      (await http().get('/fila/minha-situacao').set('Cookie', cookie)).body
-        .posicao,
-    ).toBe(2);
+    await db
+      .update(casos)
+      .set({ situacao: 'em_atendimento' })
+      .where(eq(casos.inscricaoId, pessoa.id));
+    expect((await consultar()).body).toEqual({
+      numero: pessoa.numero,
+      situacao: 'em_atendimento',
+      consultadaEm: expect.any(String),
+    });
+    await db
+      .update(casos)
+      .set({ situacao: 'encerrado' })
+      .where(eq(casos.inscricaoId, pessoa.id));
+    expect((await consultar()).body).toEqual({
+      numero: pessoa.numero,
+      situacao: 'procure_secretaria',
+      consultadaEm: expect.any(String),
+    });
   });
 });
