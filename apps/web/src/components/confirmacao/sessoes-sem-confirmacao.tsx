@@ -1,10 +1,9 @@
 "use client";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { AlertTriangle, Check, Mail, MessageCircle, Phone } from "lucide-react";
+import { AlertTriangle, Check } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
 import type {
-  Canal,
   SessaoSemConfirmacao,
   SessoesSemConfirmacao as Lista,
 } from "@clinica/shared";
@@ -12,31 +11,15 @@ import { Aviso } from "@/components/comum/aviso";
 import { Dialogo } from "@/components/comum/dialogo";
 import { Button } from "@/components/ui/button";
 import { api, ErroApi } from "@/lib/api";
-import { dataBr, diaDaSemanaBr, horaBr, NOMES_CANAL } from "@/lib/formato";
+import { dataBr, diaDaSemanaBr, horaBr } from "@/lib/formato";
 
 const CHAVE = ["sessoes", "sem-confirmacao"];
-
-const ICONE_CANAL: Record<Canal, typeof Mail> = {
-  email: Mail,
-  whatsapp: MessageCircle,
-  ligacao: Phone,
-};
 
 const comInicialMaiuscula = (texto: string) =>
   `${texto.charAt(0).toUpperCase()}${texto.slice(1)}`;
 
 const horario = (s: SessaoSemConfirmacao) =>
   `${horaBr(new Date(s.inicio))} às ${horaBr(new Date(s.termino))}`;
-
-function CanalPreferencial({ canal }: { canal: Canal }) {
-  const Icone = ICONE_CANAL[canal];
-  return (
-    <span className="inline-flex items-center gap-1.5 whitespace-nowrap">
-      <Icone aria-hidden className="size-4" />
-      {NOMES_CANAL[canal]}
-    </span>
-  );
-}
 
 // A situação com ícone e texto, sem depender só da cor (RNF1).
 function SeloSemConfirmacao() {
@@ -232,7 +215,7 @@ export function SessoesSemConfirmacao() {
               <p className="text-[15px] text-muted-foreground">
                 O prazo de confirmação (até {prazoHoras} horas antes da sessão)
                 terminou e o paciente não confirmou a presença. Entre em contato
-                pelo canal preferencial.
+                pelo e-mail ou pelo celular do paciente, que ficam na ficha.
               </p>
               <Aviso
                 tipo="info"
@@ -252,7 +235,6 @@ export function SessoesSemConfirmacao() {
                   <th scope="col">Paciente</th>
                   <th scope="col">Sessão</th>
                   <th scope="col">Estagiário</th>
-                  <th scope="col">Canal preferencial</th>
                   <th scope="col">Situação</th>
                   <th scope="col">
                     <span className="sr-only">Ações</span>
@@ -276,9 +258,6 @@ export function SessoesSemConfirmacao() {
                     </td>
                     <td className="min-w-28 [overflow-wrap:anywhere]">
                       {s.estagiario}
-                    </td>
-                    <td>
-                      <CanalPreferencial canal={s.canalPreferencial} />
                     </td>
                     <td>
                       <SeloSemConfirmacao />
@@ -311,7 +290,6 @@ export function SessoesSemConfirmacao() {
                   <span className="text-sm text-muted-foreground">
                     {s.estagiario}
                   </span>
-                  <CanalPreferencial canal={s.canalPreferencial} />
                   <div>
                     <SeloSemConfirmacao />
                   </div>

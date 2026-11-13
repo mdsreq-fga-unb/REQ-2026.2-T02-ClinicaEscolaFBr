@@ -1226,7 +1226,7 @@ _Construída no Ciclo 4._
 
 - `GET /confirmacao/:token` (pública): devolve só a data e o horário da sessão, o primeiro nome do paciente (RNF59), a situação (`agendada` ou `confirmada`) e se ainda dá para confirmar.
 - `POST /confirmacao/:token/confirmar` (pública).
-- `GET /sessoes/sem-confirmacao` (secretaria): sessões futuras agendadas cujo prazo terminou sem confirmação, com o canal preferencial e o caminho para os contatos do paciente, que ficam na ficha, e não na linha (RNF13 e prancha 2-1).
+- `GET /sessoes/sem-confirmacao` (secretaria): sessões futuras agendadas cujo prazo terminou sem confirmação, com o caminho para os contatos do paciente, que ficam na ficha, e não na linha (RNF13 e prancha 2-1). A prancha 2-1 mostrava também o canal preferencial; com a [DF48](../requisitos/decisoes-fbr.md#df48), a inscrição não pede mais o canal, e a coluna saiu em 12/11/2026. A tela orienta o contato pelo e-mail ou pelo celular.
 - `POST /sessoes/:id/confirmacao` (secretaria): confirmação feita por telefone, como no protótipo.
 
 ```mermaid
