@@ -63,14 +63,25 @@ test("no celular, a verificação cabe na largura da tela, sem rolagem lateral (
 });
 
 // Percorre a página com o Tab e confere, em cada controle, o indicador de foco do
-// RNF57: contorno sólido de pelo menos 2 px. Devolve os nomes visitados.
+// RNF57: contorno sólido, de cor visível (não transparente) e com pelo menos 2 px.
+// Cada controle visitado é marcado, e a volta só termina quando o foco chega a um
+// controle já marcado ou sai da página: dois controles com o mesmo nome são os dois
+// conferidos. Devolve os nomes visitados.
 async function percorrerComFoco(page: Page) {
+  await page.evaluate(() =>
+    document
+      .querySelectorAll("[data-foco-visitado]")
+      .forEach((el) => el.removeAttribute("data-foco-visitado")),
+  );
   const visitados: string[] = [];
-  for (let i = 0; i < 30; i++) {
+  for (let i = 0; i < 40; i++) {
     await page.keyboard.press("Tab");
     const foco = await page.evaluate(() => {
       const el = document.activeElement as HTMLElement;
       const estilo = getComputedStyle(el);
+      const repetido = el.hasAttribute("data-foco-visitado");
+      el.setAttribute("data-foco-visitado", "");
+      const cor = estilo.outlineColor.match(/[\d.]+/g)?.map(Number) ?? [];
       return {
         nome:
           el.getAttribute("aria-label") ||
@@ -78,12 +89,18 @@ async function percorrerComFoco(page: Page) {
           el.textContent!.trim() ||
           el.id,
         tag: el.tagName,
+        repetido,
         largura: estilo.outlineWidth,
         estilo: estilo.outlineStyle,
+        // rgba com alfa 0 é transparente.
+        transparente:
+          estilo.outlineColor === "transparent" ||
+          (cor.length === 4 && cor[3] === 0),
       };
     });
-    if (foco.tag === "BODY" || visitados.includes(foco.nome)) break;
-    expect(foco.estilo, foco.nome).not.toBe("none");
+    if (foco.tag === "BODY" || foco.repetido) break;
+    expect(foco.estilo, foco.nome).toBe("solid");
+    expect(foco.transparente, foco.nome).toBe(false);
     expect(parseFloat(foco.largura), foco.nome).toBeGreaterThanOrEqual(2);
     visitados.push(foco.nome);
   }

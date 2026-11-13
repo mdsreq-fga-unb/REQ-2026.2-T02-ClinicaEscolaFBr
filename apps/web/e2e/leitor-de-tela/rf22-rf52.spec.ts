@@ -1,5 +1,6 @@
 import { voiceOverTest as test } from "@guidepup/playwright";
 import { expect } from "@playwright/test";
+import type { VoiceOverPlaywright } from "@guidepup/playwright";
 import type { ListaDePacientes } from "@clinica/shared";
 import { anexarFala, irAte, ouvirFoco, simularRotas } from "./apoio";
 
@@ -11,8 +12,10 @@ import { anexarFala, irAte, ouvirFoco, simularRotas } from "./apoio";
 // A API é simulada com os tipos de @clinica/shared, como nos outros testes desta
 // pasta.
 
-const DISTRIBUIDO = "Paciente Distribuído";
-const PENDENTE = "Paciente Pendente";
+// Nomes sem as palavras das situações, para a leitura da situação ser conferida
+// separada do nome.
+const DISTRIBUIDO = "Mariana Alves Toledo";
+const PENDENTE = "Roberto Carvalho";
 
 const lista: ListaDePacientes = {
   cortada: false,
@@ -33,6 +36,15 @@ const lista: ListaDePacientes = {
     },
   ],
 };
+
+// Como o irAte, mas voltando o cursor (VO + seta para a esquerda).
+async function voltarAte(voiceOver: VoiceOverPlaywright, texto: string) {
+  for (let i = 0; i < 30; i++) {
+    if ((await voiceOver.lastSpokenPhrase()).includes(texto)) return;
+    await voiceOver.previous();
+  }
+  throw new Error(`O VoiceOver não chegou a "${texto}" voltando o cursor.`);
+}
 
 test.describe("Leitor de tela na lista de Pacientes e na verificação de identidade", () => {
   test("com o VoiceOver, a secretaria ouve a busca, os responsáveis e a situação de cada paciente (RF22, RNF24)", async ({
@@ -113,6 +125,12 @@ test.describe("Leitor de tela na lista de Pacientes e na verificação de identi
         voiceOver,
         page.getByLabel("Código de 6 dígitos"),
         "Código de 6 dígitos",
+      );
+      // O aviso do pedido fica acima do campo: voltando o cursor, o VoiceOver lê o
+      // título e a orientação, juntos (nome acessível do Aviso).
+      await voltarAte(voiceOver, "Pedido recebido.");
+      expect(await voiceOver.lastSpokenPhrase()).toContain(
+        "enviamos para ele um código de 6 dígitos",
       );
     } finally {
       await anexarFala(test.info(), voiceOver, "fala-verificacao.json");
