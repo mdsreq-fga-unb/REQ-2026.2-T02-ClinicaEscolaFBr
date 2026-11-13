@@ -127,11 +127,9 @@ test.describe("Leitor de tela na lista de Pacientes e na verificação de identi
         "Código de 6 dígitos",
       );
       // O aviso do pedido fica acima do campo: voltando o cursor, o VoiceOver lê o
-      // título e a orientação, juntos (nome acessível do Aviso).
+      // título e, no item seguinte, a orientação sobre o código.
       await voltarAte(voiceOver, "Pedido recebido.");
-      expect(await voiceOver.lastSpokenPhrase()).toContain(
-        "enviamos para ele um código de 6 dígitos",
-      );
+      await irAte(voiceOver, "enviamos para ele um código de 6 dígitos");
     } finally {
       await anexarFala(test.info(), voiceOver, "fala-verificacao.json");
     }
