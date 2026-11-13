@@ -34,7 +34,7 @@ As mensagens devem identificar o campo que precisa ser corrigido e descrever a c
 
 Após a identificação de um erro de preenchimento, o sistema deve preservar os valores válidos informados nos demais campos do formulário, permitindo que o interessado conclua a inscrição sem precisar repetir todo o preenchimento.
 
-A conformidade deve ser verificada por meio de testes com campos obrigatórios vazios e entradas inválidas, incluindo telefone celular, e-mail e canal preferencial (RF1), confirmando a identificação textual dos erros e a preservação das informações válidas previamente inseridas.
+A conformidade deve ser verificada por meio de testes com campos obrigatórios vazios e entradas inválidas, incluindo telefone celular e e-mail (RF1), confirmando a identificação textual dos erros e a preservação das informações válidas previamente inseridas.
 
 Classificação: usabilidade e acessibilidade (URPS+).
 Rastreabilidade: Feature "Registrar solicitação de atendimento on-line" → CP1 — Inscrição on-line; complementa os requisitos transversais de acessibilidade da CP14.{{ origem("RNF1") }}
@@ -179,16 +179,16 @@ Rastreabilidade: CP4 — Agendamento, confirmação e remarcação (transversal 
 
 **RNF11 — Confiabilidade do envio de lembretes**{ #rnf11 }
 
-O sistema deve entregar ao provedor de e-mail pelo menos 98% dos lembretes de sessão (RF13) dos pacientes com e-mail como canal preferencial; o SMS foi descartado pela Clínica Escola em 23/10/2026 ([DF24](decisoes-fbr.md#df24)), e os lembretes por WhatsApp são enviados pela secretaria. Como o sistema não controla a chegada da mensagem ao aparelho do paciente, considera-se **entregue** o lembrete aceito pelo provedor de e-mail.
+O sistema deve entregar ao provedor de e-mail pelo menos 98% dos lembretes de sessão (RF13) **programados por e-mail**, isto é, dos pacientes com o e-mail como canal da inscrição, que é o caso de toda inscrição feita depois da [DF48](decisoes-fbr.md#df48). O SMS foi descartado pela Clínica Escola em 23/10/2026 ([DF24](decisoes-fbr.md#df24)). Os lembretes por WhatsApp, das inscrições anteriores à DF48 com WhatsApp ou ligação como canal, são enviados manualmente pela secretaria e ficam fora da meta: deles, só se registra o uso do botão (RF13). Como o sistema não controla a chegada da mensagem ao aparelho do paciente, considera-se **entregue** o lembrete aceito pelo provedor de e-mail.
 
 - **Fórmula e janela:** taxa = lembretes aceitos pelo provedor ÷ lembretes programados por e-mail × 100, apurada por mês civil, sobre todos os lembretes programados no mês.
 - **Nova tentativa:** um lembrete recusado ou sem resposta do provedor deve ser reenviado automaticamente até 3 vezes, dentro de 1 hora após a primeira tentativa.
 - **Falhas externas:** saem do denominador, mas continuam registradas, os lembretes que falharam por contato inválido informado na inscrição e os que falharam durante indisponibilidade do provedor registrada no seu painel de status. A qualidade do cadastro é responsabilidade da secretaria, e a indisponibilidade do provedor é acompanhada pela equipe técnica.
-- **Tratamento da falha:** quando as tentativas se esgotarem nos dois canais, a sessão deve ser sinalizada à secretaria para contato por telefone.
+- **Tratamento da falha:** quando as tentativas por e-mail se esgotarem, a sessão deve ser sinalizada à secretaria para contato por telefone.
 
 O envio e cada falha de cada lembrete devem ser registrados para consulta posterior.
 
-A conformidade deve ser verificada por teste com provedor simulado, sobre uma amostra de pelo menos 200 lembretes por canal, com falhas injetadas em 10% deles, conferindo as novas tentativas, a taxa de entrega calculada, a exclusão das falhas externas e a sinalização à secretaria; em produção, pelo relatório mensal da taxa de cada canal.
+A conformidade deve ser verificada por teste com provedor simulado, sobre uma amostra de pelo menos 200 lembretes programados por e-mail, com falhas injetadas em 10% deles, conferindo as novas tentativas, a taxa de entrega calculada, a exclusão das falhas externas e a sinalização à secretaria; em produção, pelo relatório mensal da taxa de entrega dos lembretes por e-mail.
 
 Classificação: confiabilidade (URPS+).
 Rastreabilidade: Feature "Enviar lembrete de sessão agendada" → CP4 — Agendamento, confirmação e remarcação.{{ origem("RNF11") }}
