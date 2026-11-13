@@ -5,6 +5,7 @@ import {
   render,
   screen,
   waitFor,
+  within,
 } from "@testing-library/react";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { buscarTermoVigente } from "./termo";
@@ -134,7 +135,7 @@ describe("Formulário RF1/RF2", () => {
     continuar();
     triagem();
     continuar();
-    expect(screen.getByText("52998224725")).toBeInTheDocument();
+    expect(screen.getAllByText("52998224725")).toHaveLength(2);
     expect(screen.getByText("Certidão de nascimento")).toBeInTheDocument();
     expect(screen.getByText("Estudante")).toBeInTheDocument();
     expect(screen.getByText("72500-000")).toBeInTheDocument();
@@ -354,6 +355,76 @@ describe("Formulário RF1/RF2", () => {
       if (etapa < 2) continuar();
     }
   });
+  it("RF57 identifica responsável somente para leitura, mantém aceite no quadro e permite corrigir dados (RNF56)", async () => {
+    render(<FormularioInscricao />);
+    dados(true);
+    preencher("responsavelLegal", "Responsável Fictício");
+    preencher("cpfResponsavel", "52998224725");
+    continuar();
+    triagem();
+    continuar();
+    const termo = screen.getByRole("region", {
+      name: "Termo de consentimento para tratamento de dados",
+    });
+    const identificacao = within(termo).getByRole("region", {
+      name: "Identificação e concordância do responsável legal",
+    });
+    expect(
+      within(identificacao).getByText("Responsável Fictício"),
+    ).toBeInTheDocument();
+    expect(within(identificacao).getByText("52998224725")).toBeInTheDocument();
+    expect(
+      within(identificacao).queryByRole("textbox"),
+    ).not.toBeInTheDocument();
+    expect(
+      within(termo).getByText("Inscrição de menor de idade"),
+    ).toBeInTheDocument();
+    expect(
+      within(termo).getByText(/O aceite on-line não substitui/),
+    ).toBeInTheDocument();
+    expect(
+      within(termo).getByRole("checkbox", { name: /Sou o responsável legal/ }),
+    ).not.toBeChecked();
+    await confirmar();
+    fireEvent.click(
+      screen.getByRole("button", {
+        name: "Voltar e corrigir dados",
+      }),
+    );
+    expect(document.getElementById("cpfResponsavel")).toHaveFocus();
+    preencher("cpfResponsavel", "11144477735");
+    continuar();
+    continuar();
+    expect(document.getElementById("aceiteTermo")).not.toBeChecked();
+  });
+  it("RF57 liga erro do CPF do responsável à correção na etapa 1 (RNF56)", async () => {
+    vi.stubGlobal(
+      "fetch",
+      vi
+        .fn()
+        .mockResolvedValue(
+          response({ message: [{ path: ["cpfResponsavel"] }] }, 400),
+        ),
+    );
+    render(<FormularioInscricao />);
+    dados(true);
+    preencher("responsavelLegal", "Responsável Fictício");
+    preencher("cpfResponsavel", "52998224725");
+    continuar();
+    triagem();
+    continuar();
+    await confirmar();
+    enviar();
+    const link = await screen.findByRole("link", {
+      name: /CPF do responsável: Informe o CPF do responsável legal na etapa 1/,
+    });
+    expect(link).toHaveAttribute("href", "#cpfResponsavel");
+    fireEvent.click(link);
+    expect(document.getElementById("cpfResponsavel")).toHaveFocus();
+    expect(document.getElementById("nomeCompleto")).toHaveValue(
+      "Pessoa Fictícia",
+    );
+  });
   it("recarrega termo atualizado, desmarca aceite, mantém dados e permite nova tentativa", async () => {
     const fetch = vi
       .fn()
@@ -397,9 +468,9 @@ describe("Formulário RF1/RF2", () => {
     await waitFor(() =>
       expect(document.getElementById("aceiteTermo")).not.toBeDisabled(),
     );
-    fireEvent.click(screen.getByRole("button", { name: "Seus direitos" }));
+    fireEvent.click(screen.getByRole("button", { name: /Seus direitos/ }));
     expect(
-      screen.getByRole("button", { name: "Seus direitos" }),
+      screen.getByRole("button", { name: /Seus direitos/ }),
     ).toHaveAttribute("aria-expanded", "true");
     expect(
       screen.getByText("Procure a secretaria para revogar."),

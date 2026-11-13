@@ -290,7 +290,7 @@ describe('RF1/RF2: HTTP, transações e migrations oficiais', () => {
       cpfResponsavel: '52998224725',
     }).expect(201);
   });
-  it('cifra os três campos com a rotina oficial e audita sem conteúdo pessoal (RF1, RNF51)', async () => {
+  it('cifra os três campos da inscrição com aceite e audita sem conteúdo pessoal (RF1, RF57, RNF51)', async () => {
     const dados = valido();
     const res = await enviar(dados).expect(201);
     const [registro] = await db.select().from(inscricoes);
@@ -479,6 +479,24 @@ describe('RF1/RF2: HTTP, transações e migrations oficiais', () => {
       expect(await db.select().from(inscricoes)).toHaveLength(0);
     } finally {
       config.set('AMBIENTE_APLICACAO', 'desenvolvimento');
+    }
+  });
+  it('RF57 libera dados fictícios na validação explícita com NODE_ENV=production, como no contêiner', async () => {
+    const config = app.get(ConfigService);
+    const ambiente = config.get('AMBIENTE_APLICACAO');
+    const nodeEnv = config.get('NODE_ENV');
+    config.set('NODE_ENV', 'production');
+    config.set('AMBIENTE_APLICACAO', 'validacao');
+    try {
+      await enviar().expect(201);
+      expect((await db.select().from(inscricoes))[0].versaoTermoAceita).toBe(
+        '0.1',
+      );
+    } finally {
+      config.set('AMBIENTE_APLICACAO', ambiente);
+      if (ambiente === undefined) delete process.env.AMBIENTE_APLICACAO;
+      config.set('NODE_ENV', nodeEnv);
+      if (nodeEnv === undefined) delete process.env.NODE_ENV;
     }
   });
   it('RF57 bloqueia provisório pelo NODE_ENV quando não há ambiente explícito', async () => {

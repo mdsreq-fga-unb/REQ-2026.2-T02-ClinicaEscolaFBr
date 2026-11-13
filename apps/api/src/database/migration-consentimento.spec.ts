@@ -65,6 +65,12 @@ describe('RF57: migration depois das do RF7, do RF52, do RF25 e do RF27', () => 
       expect(termo.versao).toBe('0.1');
       expect(termo.provisoria).toBe(true);
       expect(termo.topicos).toHaveLength(5);
+      expect(termo.topicos[0].corpo).toContain(
+        'Contato de emergência obrigatório',
+      );
+      expect(termo.topicos[0].corpo).not.toContain(
+        'Contato de emergência, se você quiser informar',
+      );
       const documento = readFileSync(
         resolve(
           pasta,

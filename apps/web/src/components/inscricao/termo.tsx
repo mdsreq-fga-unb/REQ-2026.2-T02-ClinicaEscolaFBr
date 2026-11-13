@@ -1,5 +1,6 @@
 "use client";
-import { useId, useState } from "react";
+import { useId, useState, type ReactNode } from "react";
+import { ChevronDown, ChevronUp, FileText, Info } from "lucide-react";
 import { termoVigenteSchema, type TermoVigente } from "@clinica/shared";
 
 export async function buscarTermoVigente(): Promise<TermoVigente> {
@@ -41,52 +42,95 @@ function Texto({ corpo }: { corpo: string }) {
     ),
   );
 }
-export function Termo({ termo }: { termo: TermoVigente }) {
+export function Termo({
+  termo,
+  aviso,
+  estado,
+  children,
+}: {
+  termo: TermoVigente | null;
+  aviso?: ReactNode;
+  estado?: ReactNode;
+  children: ReactNode;
+}) {
   const id = useId();
   const [abertos, setAbertos] = useState<number[]>([]);
   return (
     <section
       aria-labelledby={`${id}-titulo`}
-      className="space-y-4 rounded-lg border p-4"
+      className="ui-painel border-primary"
     >
-      <h3 id={`${id}-titulo`} className="font-bold">
-        {termo.titulo}
-      </h3>
-      {termo.provisoria && (
-        <p className="font-semibold">
-          Versão provisória — aguardando aprovação da FBr. Ambiente de
-          validação.
-        </p>
-      )}
-      <p>{termo.introducao}</p>
-      {termo.topicos.map((topico, i) => (
-        <div key={i} className="border-t pt-3">
-          <h4>
-            <button
-              type="button"
-              className="w-full py-2 text-left font-semibold"
-              aria-expanded={abertos.includes(i)}
-              aria-controls={`${id}-${i}`}
-              onClick={() =>
-                setAbertos((antes) =>
-                  antes.includes(i)
-                    ? antes.filter((n) => n !== i)
-                    : [...antes, i],
-                )
-              }
-            >
-              {topico.titulo}
-            </button>
-          </h4>
-          <div
-            id={`${id}-${i}`}
-            hidden={!abertos.includes(i)}
-            className="space-y-3 py-3"
-          >
-            <Texto corpo={topico.corpo} />
-          </div>
-        </div>
-      ))}
+      <div className="flex flex-col items-start justify-between gap-3 border-b border-border bg-info-fundo p-4 sm:flex-row sm:px-5">
+        <h3
+          id={`${id}-titulo`}
+          className="flex w-full min-w-0 flex-1 gap-2 sm:w-auto"
+        >
+          <FileText aria-hidden className="mt-1 size-5 shrink-0 text-primary" />
+          Termo de consentimento para tratamento de dados
+        </h3>
+        {termo && (
+          <span className="ui-selo border border-border bg-background">
+            Versão {termo.versao}
+            {termo.provisoria ? " (provisória)" : ""}
+          </span>
+        )}
+      </div>
+      <div className="space-y-4 p-4 sm:p-5">
+        {aviso}
+        {termo ? (
+          <>
+            <p>{termo.introducao}</p>
+            <p className="ui-dica flex items-start gap-2">
+              <Info
+                aria-hidden
+                className="mt-0.5 size-4 shrink-0 text-primary"
+              />
+              Abra cada tópico para ler o termo completo antes de concordar.
+            </p>
+            <div>
+              {termo.topicos.map((topico, i) => (
+                <div key={i} className="border-t border-border">
+                  <h4>
+                    <button
+                      type="button"
+                      className="flex w-full items-center justify-between gap-3 py-3 text-left font-semibold text-primary"
+                      aria-expanded={abertos.includes(i)}
+                      aria-controls={`${id}-${i}`}
+                      onClick={() =>
+                        setAbertos((antes) =>
+                          antes.includes(i)
+                            ? antes.filter((n) => n !== i)
+                            : [...antes, i],
+                        )
+                      }
+                    >
+                      <span>{topico.titulo}</span>
+                      <span className="flex shrink-0 items-center gap-1 text-sm">
+                        {abertos.includes(i) ? "Recolher" : "Ler tópico"}
+                        {abertos.includes(i) ? (
+                          <ChevronUp aria-hidden className="size-4" />
+                        ) : (
+                          <ChevronDown aria-hidden className="size-4" />
+                        )}
+                      </span>
+                    </button>
+                  </h4>
+                  <div
+                    id={`${id}-${i}`}
+                    hidden={!abertos.includes(i)}
+                    className="space-y-3 pb-4"
+                  >
+                    <Texto corpo={topico.corpo} />
+                  </div>
+                </div>
+              ))}
+            </div>
+          </>
+        ) : (
+          estado
+        )}
+        <div className="space-y-3 border-t border-border pt-4">{children}</div>
+      </div>
     </section>
   );
 }
