@@ -265,7 +265,9 @@ classDiagram
     }
     class CancelamentoSessao {
       +AvisoPaciente avisoPaciente
-      +datetime whatsappEnviadoEm
+      +datetime avisoManualEm
+      +uuid avisoManualPor
+      +string avisoManualCanal
     }
     class Evolucao {
       +uuid id
@@ -280,7 +282,7 @@ classDiagram
 - **`AlteracaoParametro` (RF41, RF29 e RF48):** o histórico das mudanças da tabela `parametros`, só inserção. A tabela `parametros` continua com o valor vigente, e a mudança grava as duas na mesma transação. Serve para o "Última alteração: de R$ 30,00 para R$ 35,00…" da prancha 8-1.
 - **`ParametroSemestre` (RF48 e RF29):** os parâmetros que valem por semestre, com a chave primária `(semestre, chave)`: as vagas ofertadas (`vagas_ofertadas`, RF48) e a data-limite para corrigir evoluções (`data_limite_correcao`, RF29). A alteração grava uma `AlteracaoParametro` com a chave `vagas_ofertadas:2026/2`, por exemplo. O semestre de uma data é `AAAA/1` de janeiro a junho e `AAAA/2` de julho a dezembro, pelo horário de Brasília.
 - **`CorrecaoEvolucao` (RF29):** só inserção, como a `Evolucao`. Cada correção é a ficha inteira (os campos da DF38, cifrados, RNF51), com o motivo, quem corrigiu e quando, e `unique (evolucao_id, versao)`. A versão 1 é a própria `Evolucao`, que não muda; a vigente é a correção de maior versão.
-- **`avisoPaciente` e `whatsappEnviadoEm` em `CancelamentoSessao` (RF17):** o resultado do aviso do cancelamento por ausência do estagiário (`email_enviado`, `sem_email` ou `email_nao_enviado`) e quando a secretaria mandou a mensagem pelo WhatsApp. O trigger que impede alterar o cancelamento passa a aceitar só a mudança destas duas colunas.
+- **`avisoPaciente` e o aviso manual em `CancelamentoSessao` (RF17):** o aviso do cancelamento por ausência do estagiário (`envio_pendente`, `email_enviado`, `sem_email` ou `email_nao_enviado`), gravado na transação do RF16, e quando, por quem e por qual canal (`whatsapp` ou `outro`) a secretaria avisou o paciente. O trigger que impede alterar o cancelamento passa a aceitar só a mudança destas colunas.
 - **`encerradoEm` e `encerradaEm` (RF48):** hoje o vínculo e a atribuição só têm `vigente`, e os indicadores de posição precisam saber quem estava em atendimento numa data passada. A transferência (RF25) e o desligamento (RF37) passam a preencher a data junto com o `vigente = false`. A migration preenche os registros antigos com o `transferido_em` da transferência que os encerrou e com o `decidido_em` do desligamento. A reversão (RF38) já cria um vínculo novo, e por isso o histórico continua certo.
 
 ## Acesso e segurança (CP12)
@@ -537,8 +539,8 @@ _Ciclo 5._
 | Operação na tabela (`operacao`, `permitido`) | Mostrada como |
 | --- | --- |
 | `permitido = false`, qualquer operação | Acesso negado |
-| Leitura (`modo = 'leitura'`: consultar o prontuário, os dados iniciais, a evolução) | Visualização |
-| `registrar_anamnese_prontuario`, `registrar_contrato_prontuario`, `registrar_evolucao_sessao` | Criação |
+| `consultar_prontuario` | Visualização |
+| `registrar_anamnese`, `registrar_contrato`, `registrar_evolucao` e `registrar_dados_iniciais` (gravado antes do RF69 separar a anamnese e o contrato) | Criação |
 | `marcar_sessao_realizada`, `corrigir_evolucao` (RF29) e os complementos (RF30, Ciclo 6) | Alteração |
 
 ```mermaid
@@ -566,7 +568,7 @@ sequenceDiagram
 | `permitido = false` vira "Acesso negado" ([DF29](../requisitos/decisoes-fbr.md#df29)) | As tentativas negadas aparecem como "acesso negado" |
 | `@Perfis('coordenacao')` | Quem não é coordenação não consulta (403) |
 
-**Decisões de projeto:** a tipificação é feita na leitura, pela tabela acima, sem mudar a gravação, para valer também para os acessos já registrados. Uma operação nova do prontuário entra na tabela na mesma PR, e um teste falha se aparecer uma `operacao` sem tipo. A tentativa negada num prontuário que não existe fica sem paciente (`prontuario_id` nulo) e aparece com "—" na coluna do paciente. Consultar o registro também é registrado na auditoria geral (RNF10), e não no próprio registro de acessos.
+**Decisões de projeto:** a tipificação é feita na leitura, pela tabela acima, com os valores que o `PoliticaProntuario` grava em `acessos_prontuario` (e não os nomes da auditoria geral), para valer também para os acessos já registrados. A tabela de acessos não guarda o modo da política, por isso o tipo sai do nome da operação. Uma operação nova do prontuário entra na tabela na mesma PR, e um teste falha se aparecer uma `operacao` sem tipo. O acesso é gravado pela política **antes** da operação e fora da transação dela, como o RNF52 pede para todo acesso: uma criação ou alteração autorizada que falha depois (por exemplo, o `409` do segundo envio) continua no registro. Por isso, a tela diz "Operação" e o texto de ajuda explica que a linha registra a tentativa autorizada; o resultado da operação fica na auditoria geral (RNF10). A tentativa negada num prontuário que não existe fica sem paciente (`prontuario_id` nulo) e aparece com "—" na coluna do paciente. Consultar o registro também é registrado na auditoria geral (RNF10), e não no próprio registro de acessos.
 
 **Telas:** página "Registro de acessos" (`/acessos-prontuario`), no menu da coordenação, com os filtros paciente (busca pelo nome, como a lista de Pacientes do RF22), usuário, data inicial e final e "Filtrar"; a tabela com o selo de cada operação ("Acesso negado" em vermelho, com o ícone de X); "Nenhum acesso encontrado" quando não há resultado; os cartões no celular; e "Você não tem acesso ao registro de acessos" para os outros perfis. Abre com os últimos 30 dias. Protótipo: [prancha 6-2](prototipos.md#rf56).
 
@@ -1525,9 +1527,9 @@ _Ciclo 5._
 
 **Rotas** (módulo `agendamento`):
 
-- O `POST /sessoes/:id/ausencia-estagiario` (RF16) passa a gravar o resultado do aviso no cancelamento (`aviso_paciente`).
-- `GET /cancelamentos/avisos-pendentes` (secretaria): os cancelamentos por ausência do estagiário com `aviso_paciente` `sem_email` ou `email_nao_enviado` e sem `whatsapp_enviado_em`, de sessões ainda não passadas há mais de 7 dias. Cada um traz o nome do paciente, a data e o horário, o motivo da pendência, a mensagem pronta e o endereço `https://wa.me/55<celular>?text=<mensagem>`.
-- `POST /cancelamentos/:id/whatsapp` (secretaria): registra que a mensagem foi enviada (`whatsapp_enviado_em`), como o `POST /sessoes/:id/whatsapp` do agendamento.
+- O `POST /sessoes/:id/ausencia-estagiario` (RF16) passa a gravar o aviso no cancelamento (`aviso_paciente`), **dentro da transação do RF16**: `sem_email` quando o paciente não tem e-mail, ou `envio_pendente` antes de mandar o e-mail. Depois do commit, o envio muda o valor para `email_enviado` ou `email_nao_enviado`.
+- `GET /cancelamentos/avisos-pendentes` (secretaria): os cancelamentos por ausência do estagiário com `aviso_paciente` `sem_email`, `email_nao_enviado` ou `envio_pendente` há mais de 5 minutos (o processo caiu entre o commit e o envio), sem `aviso_manual_em`, de sessões ainda não passadas há mais de 7 dias. Cada um traz o nome do paciente, a data e o horário, o motivo da pendência e a mensagem pronta. Com celular, traz também o endereço `https://wa.me/55<celular>?text=<mensagem>`; sem celular (inscrição anterior à DF48 com só o e-mail, quando o e-mail falha), traz `celular: null`.
+- `POST /cancelamentos/:id/aviso` (secretaria): registra que o paciente foi avisado (`aviso_manual_em`, `aviso_manual_por` e `aviso_manual_canal`, `whatsapp` ou `outro`), como o `POST /sessoes/:id/whatsapp` do agendamento.
 
 ```mermaid
 sequenceDiagram
@@ -1537,37 +1539,35 @@ sequenceDiagram
     participant DB as Banco
     actor S as Secretaria
     E->>A: POST /sessoes/:id/ausencia-estagiario
-    A->>DB: transação do RF16 (sessão cancelada, cancelamento)
-    alt paciente com e-mail
+    A->>DB: transação do RF16 (sessão cancelada, cancelamento)<br/>e aviso_paciente = envio_pendente ou sem_email
+    opt paciente com e-mail, depois do commit
         A->>M: e-mail sem o motivo
         alt envio falhou
             A->>DB: aviso_paciente = email_nao_enviado
         else
             A->>DB: aviso_paciente = email_enviado
         end
-    else sem e-mail
-        A->>DB: aviso_paciente = sem_email
     end
     S->>A: GET /cancelamentos/avisos-pendentes (Agenda)
-    A-->>S: mensagem pronta e link do WhatsApp
-    S->>A: POST /cancelamentos/:id/whatsapp
-    A->>DB: whatsapp_enviado_em, auditoria
+    A-->>S: mensagem pronta, com o link do WhatsApp se houver celular
+    S->>A: POST /cancelamentos/:id/aviso (whatsapp ou outro)
+    A->>DB: aviso_manual_em, por e canal; auditoria
 ```
 
 | Regra | Critério de aceitação |
 | --- | --- |
 | O e-mail sai no mesmo pedido, depois do commit, com dia da semana, data e horário, e sem o motivo (CFP art. 9º) | O cancelamento por ausência envia o e-mail no mesmo momento, sem o motivo da ausência |
 | O texto diz "Este cancelamento não conta como falta" e "A secretaria vai entrar em contato para marcar outro horário" (prancha 5-1) | O e-mail informa que não conta como falta e que a secretaria vai entrar em contato |
-| `sem_email` entra na lista de avisos pendentes | Para paciente sem e-mail, a secretaria recebe o aviso com o botão e a mensagem pronta |
-| A falha do envio não desfaz a transação do RF16; `email_nao_enviado` entra na lista | Se o envio falhar, o cancelamento continua registrado e a secretaria recebe o aviso |
+| `sem_email` é gravado na transação do RF16 e entra na lista | Para paciente sem e-mail, a secretaria recebe o aviso com o botão e a mensagem pronta |
+| A falha do envio não desfaz a transação do RF16; `email_nao_enviado`, e o `envio_pendente` que ficou parado, entram na lista | Se o envio falhar, o cancelamento continua registrado e a secretaria recebe o aviso |
 
-**Decisões de projeto:** a mensagem do WhatsApp tem o mesmo texto do e-mail, montada por uma função só, usada pelos dois. O aviso pendente sai da lista quando a secretaria usa "Enviar pelo WhatsApp", como no agendamento (DF24). Não há reenvio automático do e-mail: a falha vai para a secretaria. O aviso do cancelamento para remarcar continua só por e-mail, como no RF16, porque a nova sessão já leva o aviso do agendamento (RF10). A coluna nova não muda as linhas antigas: os cancelamentos anteriores ficam com `aviso_paciente` nulo e fora da lista.
+**Decisões de projeto:** a mensagem do WhatsApp tem o mesmo texto do e-mail, montada por uma função só, usada pelos dois. O aviso pendente sai da lista quando a secretaria registra o aviso: pelo "Enviar pelo WhatsApp", como no agendamento (DF24), ou, sem celular, pelo "Registrar que o paciente foi avisado", depois de falar com ele por outro meio da ficha (ligação ou presencialmente). Não há reenvio automático do e-mail: a falha vai para a secretaria. O aviso do cancelamento para remarcar continua só por e-mail, como no RF16, porque a nova sessão já leva o aviso do agendamento (RF10). A coluna nova não muda as linhas antigas: os cancelamentos anteriores à migration ficam com `aviso_paciente` nulo e fora da lista. Como o valor do cancelamento novo é gravado na própria transação do RF16, o nulo nunca significa "perdeu o aviso"; a migration também põe um `check` que exige `aviso_paciente` nos cancelamentos por ausência criados depois dela.
 
-**Telas:** cartão "Avise o paciente sobre o cancelamento" na Agenda da secretaria, acima das sessões sem confirmação (RF14), com um item por aviso pendente: o aviso laranja "… não tem e-mail cadastrado e ainda não foi avisada" ou o vermelho "Não foi possível enviar o e-mail a …. A sessão de … continua cancelada.", a "Mensagem pronta" e "Enviar pelo WhatsApp", que abre o link numa aba nova e registra o envio. No celular, o botão ocupa a largura toda. Protótipo: [prancha 5-1](prototipos.md#rf17).
+**Telas:** cartão "Avise o paciente sobre o cancelamento" na Agenda da secretaria, acima das sessões sem confirmação (RF14), com um item por aviso pendente: o aviso laranja "… não tem e-mail cadastrado e ainda não foi avisada" ou o vermelho "Não foi possível enviar o e-mail a …. A sessão de … continua cancelada.", a "Mensagem pronta" e "Enviar pelo WhatsApp", que abre o link numa aba nova e registra o envio. Sem celular, no lugar do botão aparece "O paciente não tem celular cadastrado. Avise por outro contato da ficha.", com o link "Ver contatos" e o botão "Registrar que o paciente foi avisado". No celular, o botão ocupa a largura toda. Protótipo: [prancha 5-1](prototipos.md#rf17).
 
 **Acessibilidade (RNF56 a RNF58):** cada aviso tem ícone e texto; o botão diz para quem é a mensagem (`aria-label="Enviar pelo WhatsApp para …"`); depois do envio, o item sai com uma mensagem em `role="status"`.
 
-**Dados de teste:** um cancelamento por ausência com e-mail (enviado, fora da lista); um paciente sem e-mail (inscrição anterior à DF48); um envio que falha (servidor de e-mail de teste recusando); o "Enviar pelo WhatsApp" tirando o item da lista; o e-mail e a mensagem conferidos sem o motivo; o estagiário e a coordenação na rota dos avisos (403).
+**Dados de teste:** um cancelamento por ausência com e-mail (enviado, fora da lista); um paciente sem e-mail (inscrição anterior à DF48); um envio que falha (servidor de e-mail de teste recusando); um envio que falha para um paciente sem celular (aviso sem o botão do WhatsApp e com o registro manual); um cancelamento parado em `envio_pendente` há mais de 5 minutos (entra na lista); o "Enviar pelo WhatsApp" tirando o item da lista; o e-mail e a mensagem conferidos sem o motivo; o estagiário e a coordenação na rota dos avisos (403).
 
 **Dependências e riscos:** depende do RF16 (#144), já integrado. O reagendamento (RF12) é posterior ao MVP.
 
@@ -1756,7 +1756,7 @@ _Ciclo 5._
 
 **Rotas** (módulo `acompanhamento-clinico`):
 
-- `POST /prontuarios/:id/evolucoes/:evolucaoId/correcoes` (estagiário responsável ou supervisor do caso, pelo `PoliticaProntuario` com o modo `escrita`): recebe os campos da ficha de evolução (DF38) e o `motivo`, obrigatório. Grava uma `CorrecaoEvolucao`, a versão seguinte, e registra o acesso como `corrigir_evolucao` (RF56).
+- `POST /prontuarios/:id/evolucoes/:evolucaoId/correcoes` (o estagiário autor da evolução, com vínculo vigente, ou o supervisor do caso; pelo `PoliticaProntuario` com o modo `escrita` e a conferência do autor no serviço): recebe os campos da ficha de evolução (DF38) e o `motivo`, obrigatório. Grava uma `CorrecaoEvolucao`, a versão seguinte, e registra o acesso como `corrigir_evolucao` (RF56).
 - O `GET /prontuarios/:id` passa a trazer, em cada evolução, a versão vigente e as anteriores, cada uma com o autor, a data/hora e o motivo.
 - `GET /parametros/data-limite-correcao` e `PUT /parametros/data-limite-correcao` (coordenação): a data-limite do semestre vigente, com a última alteração, e a alteração.
 
@@ -1771,7 +1771,7 @@ sequenceDiagram
         A-->>U: 403, igual para prontuário inexistente (RNF25)
     else sem motivo ou campo acima do limite
         A-->>U: 400 com o campo indicado, nada gravado
-    else depois da data-limite do semestre vigente
+    else depois da data-limite do semestre da sessão
         A-->>U: 422 com a data-limite
     else
         A->>DB: transação: trava a evolução, versão = última + 1
@@ -1784,18 +1784,18 @@ sequenceDiagram
 | --- | --- |
 | A `Evolucao` original não muda (só inserção, trigger); a correção é uma linha nova, com `versao` | A correção do estagiário no prazo preserva a original e registra a nova com autor, data/hora e motivo |
 | `motivo` obrigatório no Zod e no banco (`not null`) | A correção sem motivo é recusada, e o registro continua como estava |
-| Compara o dia de hoje em Brasília com a `data_limite_correcao` do semestre vigente; vale para os dois perfis | Depois da data-limite, nem o estagiário nem o supervisor corrigem |
+| Compara o dia de hoje em Brasília com a `data_limite_correcao` do **semestre da sessão** da evolução; vale para os dois perfis | Depois da data-limite, nem o estagiário nem o supervisor corrigem |
 | O `PUT` grava o parâmetro do semestre e a `AlteracaoParametro` na mesma transação | A coordenação registra a data-limite, com o valor anterior, o novo, o autor e a data/hora |
 | Sem a data do semestre, a correção passa, e a resposta do `GET /parametros/data-limite-correcao` traz `pendente: true`, que vira o aviso da coordenação | Sem data-limite, a correção é permitida, e a coordenação é avisada |
-| Política do prontuário com o modo `escrita`: o estagiário com vínculo vigente e o supervisor com atribuição vigente; a coordenação só lê | Só o autor e o supervisor do caso corrigem; o supervisor pode corrigir o registro do estagiário |
+| Política do prontuário com o modo `escrita` (vínculo ou atribuição vigentes) e, para o estagiário, `evolucoes.registrada_por = usuário`; a coordenação só lê | Só o autor e o supervisor do caso corrigem; o supervisor pode corrigir o registro do estagiário |
 
-**Decisões de projeto:** a correção guarda a ficha inteira, e não só o campo mudado, para cada versão poder ser lida sozinha. A data-limite fica num parâmetro por semestre (`ParametroSemestre`, chave `data_limite_correcao`), a mesma tabela das vagas ofertadas do RF48. O semestre vigente é o da data de hoje. O "só o autor" do critério é lido como o estagiário responsável hoje: depois de uma transferência (RF25), quem corrige é o estagiário novo, e o antigo perde o acesso (RF55). Essa leitura vai para a inspeção. A evolução registrada antes da DF38, com a queixa e o planejamento, é corrigida com os mesmos campos dela.
+**Decisões de projeto:** a correção guarda a ficha inteira, e não só o campo mudado, para cada versão poder ser lida sozinha. A data-limite fica num parâmetro por semestre (`ParametroSemestre`, chave `data_limite_correcao`), a mesma tabela das vagas ofertadas do RF48. O prazo é o do **semestre da sessão**, e não o de hoje: assim, na virada do semestre, sem a data do semestre novo registrada, as evoluções do semestre anterior continuam fechadas. Sem a data registrada para o semestre da sessão, vale a regra do RF29 (a correção é permitida e a coordenação é avisada). O autor é o estagiário que registrou a evolução (`registrada_por`), como diz o critério do RF29. Depois de uma transferência (RF25), o estagiário anterior perde o acesso ao prontuário (RF55), e o novo não corrige as evoluções do anterior: só o supervisor do caso corrige as dele. A evolução registrada antes da DF38, com a queixa e o planejamento, é corrigida com os mesmos campos dela.
 
-**Telas:** "Corrigir evolução" em cada evolução do prontuário, dentro do prazo, abre a página "Corrigir evolução da sessão N" (como a "Registro de evolução" do RF28), com o aviso "A correção é permitida até …. A versão original continua guardada no histórico.", os campos já preenchidos e o "Motivo da correção". Sem motivo, aparece o aviso "A correção não foi salva." com o link para o campo. No prontuário, a evolução mostra "Versão N · atual" e as anteriores, com "Corrigida por … em …. Motivo: …". Depois do prazo, aparece "O prazo para corrigir evoluções deste semestre terminou em …", sem o botão. Para a coordenação, a página "Parâmetros" (a mesma do RF41) ganha o cartão "Data-limite para correção de evoluções", com o aviso de data pendente. Protótipo: [prancha 6-1](prototipos.md#rf29).
+**Telas:** "Corrigir evolução" em cada evolução do prontuário, dentro do prazo, abre a página "Corrigir evolução da sessão N" (como a "Registro de evolução" do RF28), com o aviso "A correção é permitida até …. A versão original continua guardada no histórico.", os campos já preenchidos e o "Motivo da correção". Sem motivo, aparece o aviso "A correção não foi salva." com o link para o campo. No prontuário, a evolução mostra "Versão N · atual" e as anteriores, com "Corrigida por … em …. Motivo: …". Depois do prazo, aparece "O prazo para corrigir evoluções deste semestre terminou em …", sem o botão. O botão também não aparece para o estagiário nas evoluções de outro autor. Para a coordenação, a página "Parâmetros" (a mesma do RF41) ganha o cartão "Data-limite para correção de evoluções", com o aviso de data pendente. Protótipo: [prancha 6-1](prototipos.md#rf29).
 
 **Acessibilidade (RNF56 a RNF58):** o aviso do topo recebe o foco e leva ao campo com erro; cada versão é uma seção com título; o contador de caracteres segue o do RF28.
 
-**Dados de teste:** a correção do estagiário no prazo (versão 2, a 1 legível); a do supervisor no registro do estagiário; sem motivo (400, nada gravado); um dia depois da data-limite (422 para os dois); sem data-limite (permitida, e a coordenação vê o aviso); a coordenação mudando a data, com o histórico; a coordenação, a secretaria e o estagiário de outro caso tentando corrigir (403); o acesso `corrigir_evolucao` aparecendo no registro do RF56; o `clinica_app` tentando alterar uma versão (recusado pelo banco).
+**Dados de teste:** a correção do estagiário no prazo (versão 2, a 1 legível); a do supervisor no registro do estagiário; sem motivo (400, nada gravado); um dia depois da data-limite (422 para os dois); sem data-limite (permitida, e a coordenação vê o aviso); a coordenação mudando a data, com o histórico; a coordenação, a secretaria e o estagiário de outro caso tentando corrigir (403); o acesso `corrigir_evolucao` aparecendo no registro do RF56; o `clinica_app` tentando alterar uma versão (recusado pelo banco); uma evolução de 2026/2 corrigida em janeiro de 2027, depois da data-limite de 2026/2 e sem a de 2027/1 registrada (recusada); depois de uma transferência, o estagiário novo tentando corrigir a evolução do anterior (403) e o supervisor corrigindo a mesma evolução (permitido).
 
 **Dependências e riscos:** depende do RF28 (#149), integrado no Ciclo 4. O complemento (RF30) e a validação pelo supervisor (RF31) são do Ciclo 6 e vão ler a versão vigente.
 
@@ -2265,7 +2265,7 @@ _Ciclo 5._
 | Indicador | Cálculo (SQL, numa transação só leitura `REPEATABLE READ`) |
 | --- | --- |
 | Data de referência | Fim do dia `fim` em Brasília; se `fim` é hoje, o momento da consulta |
-| Em atendimento ativo em D | Caso com um vínculo de estagiário em que `vinculado_em <= D` e (`encerrado_em` nulo ou `> D`). O desligamento encerra o vínculo, e a transferência troca por outro sem intervalo |
+| Em atendimento ativo em D | Caso com um vínculo de estagiário em que `vinculado_em <= D` e (`encerrado_em` nulo ou `> D`), **ou** cujo último vínculo antes de D foi encerrado por uma transferência (`transferencias_caso.vinculo_anterior_id`) e que não foi desligado nem encerrado até D. O desligamento encerra o vínculo e tira o caso do atendimento ativo. A transferência só de supervisor encerra o vínculo e deixa o caso aguardando o vínculo pelo novo supervisor (RF25); como o RF48 diz que a transferência mantém o paciente em atendimento ativo, esse intervalo conta como vaga ocupada |
 | 1. Vagas ocupadas | Casos ativos na data de referência, sobre as `vagas_ofertadas` do `ParametroSemestre` do semestre dela; sem registro, só a quantidade e `totalRegistrado: false` |
 | 2. Tempo médio de espera | Para cada caso cuja primeira sessão `realizada` está no intervalo: dias corridos entre a data da inscrição e a dessa sessão; média com uma casa |
 | 3. Taxa de evasão | Desligamentos por faltas com `decidido_em` no intervalo e `revertido_em` nulo, sobre os casos ativos em pelo menos um dia do intervalo (vínculo iniciado até o fim e não encerrado antes do início); denominador zero dá 0,0% |
@@ -2303,7 +2303,7 @@ sequenceDiagram
 
 **Acessibilidade (RNF56 a RNF58):** o resultado é anunciado com `role="status"` ao terminar; a barra das vagas tem o número em texto; a tabela tem `caption`; o diálogo prende o foco e o devolve ao link que o abriu; os cartões viram uma coluna no celular.
 
-**Dados de teste:** um mês com vínculos, uma transferência, dois desligamentos (um revertido) e primeiras sessões dentro e fora do intervalo, com os valores esperados de cada indicador calculados à mão; a mesma consulta feita "depois", com um vínculo encerrado após o fim do intervalo (continua contado); o fim igual a hoje; um período sem registros (todos 0); o semestre sem vagas registradas; o fim no futuro e o início depois do fim (400); um supervisor sem casos (aparece com 0); a secretaria, o supervisor e o estagiário (403).
+**Dados de teste:** um mês com vínculos, uma transferência, dois desligamentos (um revertido) e primeiras sessões dentro e fora do intervalo, com os valores esperados de cada indicador calculados à mão; a mesma consulta feita "depois", com um vínculo encerrado após o fim do intervalo (continua contado); o fim igual a hoje; um período sem registros (todos 0); o semestre sem vagas registradas; o fim no futuro e o início depois do fim (400); um supervisor sem casos (aparece com 0); uma transferência só de supervisor no meio do mês, com o novo vínculo 3 dias depois (o caso continua contado em "Vagas ocupadas" e no denominador da evasão nesses 3 dias); a secretaria, o supervisor e o estagiário (403).
 
 **Dependências e riscos:** depende do RF21, do RF25, do RF37 e do RF38, já integrados, e da migration do `encerradoEm`, que mexe em tabelas usadas pela transferência e pelo desligamento: as duas passam a gravar a data e ganham teste. O RF9, fora do MVP, vai divulgar as vagas registradas aqui.
 
