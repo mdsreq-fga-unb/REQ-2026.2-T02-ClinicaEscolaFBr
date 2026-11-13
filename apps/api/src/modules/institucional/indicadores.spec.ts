@@ -223,6 +223,34 @@ describe('Cálculo dos indicadores operacionais (RF48)', () => {
     expect(r.evasao.ativos).toBe(1);
   });
 
+  it('com o intervalo inteiro dentro da transição da transferência, o caso entra no denominador da evasão (RF48, RF25)', () => {
+    const r = calcularIndicadores(
+      {
+        ...vazio,
+        vinculos: [
+          // Transferência em 20/08 e novo vínculo em 03/09: de 25 a 31/08 não há
+          // vínculo vigente, mas o paciente continua em atendimento ativo.
+          {
+            casoId: 'a',
+            vinculadoEm: d('2026-07-01T09:00:00-03:00'),
+            encerradoEm: d('2026-08-20T09:00:00-03:00'),
+            encerradoPorTransferencia: true,
+          },
+          {
+            casoId: 'a',
+            vinculadoEm: d('2026-09-03T09:00:00-03:00'),
+            encerradoEm: null,
+            encerradoPorTransferencia: false,
+          },
+        ],
+      },
+      { inicio: '2026-08-25', fim: '2026-08-31' },
+      em15DeSetembro,
+    );
+    expect(r.evasao).toEqual({ percentual: 0, desligamentos: 0, ativos: 1 });
+    expect(r.vagas.ocupadas).toBe(1);
+  });
+
   it('período sem registros: todos os indicadores aparecem como zero, e não em branco (RF48)', () => {
     const r = calcularIndicadores(
       {
