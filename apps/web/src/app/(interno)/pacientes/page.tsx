@@ -15,6 +15,7 @@ import {
 } from "@/components/casos/responsaveis";
 import { Aviso } from "@/components/comum/aviso";
 import { Campo, classeEntrada } from "@/components/comum/campo";
+import { ConsultaSituacaoPelaSecretaria } from "@/components/fila/consulta-secretaria";
 import { buttonVariants } from "@/components/ui/button";
 import { api } from "@/lib/api";
 import { useValorAtrasado } from "@/lib/atraso";
@@ -32,7 +33,8 @@ function contagem(lista: ListaDePacientes, termo: string) {
 
 // Lista de Pacientes da secretaria e da coordenação (RF22, prancha 2-3): o nome, os
 // responsáveis e a situação de distribuição de cada caso, sem dado clínico
-// (RNF17). O número da inscrição aparece só para a coordenação.
+// (RNF17). O número da inscrição aparece só para a coordenação. A secretaria
+// também consulta aqui a situação de uma inscrição pelo número (RF8).
 export default function PacientesPage() {
   const { data: sessao } = useSessao();
   const permitido =
@@ -227,6 +229,8 @@ export default function PacientesPage() {
       >
         {texto}
       </p>
+
+      {sessao?.perfil === "secretaria" && <ConsultaSituacaoPelaSecretaria />}
     </div>
   );
 }

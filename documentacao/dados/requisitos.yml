@@ -168,7 +168,7 @@ rfs:
   lider: Jônatas
   depende: [RF52, RF7]
   issue: 155
-  estado: Design inspecionado
+  estado: Código concluído
   origem: [DF40, DF55]
 
 - id: RF9
@@ -1721,7 +1721,6 @@ decisoes:
   data: 12/11/2026
   fonte: respostas da FBr por WhatsApp
   decisao: Na reversão de um desligamento por faltas feito por engano (RF38), a coordenação escolhe quais faltas deixam de contar. Respondido por Robson Araújo.
-
 
 conjuntos:
 - area: Inscrição no atendimento
