@@ -459,8 +459,9 @@ def _paginas_github(caminho, token):
 
 
 def estado_da_issue(corpo):
-    """Valor da seção "Estado da feature (FDD)" do corpo da issue, se for um marco válido."""
-    m = re.search(r"^###\s*Estado da feature[^\n]*\n+\s*([^\n]+)", corpo or "", re.M)
+    """Valor da seção "Estado da feature (FDD)" do corpo da issue, se for um marco válido.
+    Aceita o título com ## ou ###, como o robô de acompanhamento (SECAO em logica.cjs)."""
+    m = re.search(r"^#{2,3} Estado da feature[^\n]*\n+\s*([^\n]+)", corpo or "", re.M)
     if not m:
         return None
     valor = m.group(1).strip()
@@ -495,8 +496,9 @@ def aplicar_github(dados, issues, milestones):
         if estado and ORDEM_ESTADOS.index(estado) > ORDEM_ESTADOS.index(atual):
             mudancas.append(f"{r['id']}: {atual} -> {estado}")
             r["estado"] = estado
+    situacoes = situacao_dos_ciclos(milestones)
     for c in dados["ciclos"]:
-        status = situacao_dos_ciclos(milestones).get(c["numero"])
+        status = situacoes.get(c["numero"])
         if status and status != c["status"]:
             mudancas.append(f"Ciclo {c['numero']}: {c['status']} -> {status}")
             c["status"] = status

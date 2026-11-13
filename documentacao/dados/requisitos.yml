@@ -11,8 +11,8 @@
 # O estado (estado da feature no FDD, igual ao da issue) é atualizado na PR que
 # muda o estado da feature. Na publicação do site, o estado de cada issue e a
 # situação do milestone de cada ciclo são lidos do GitHub (sincronizar_com_github,
-# em documentacao/macros/catalogo.py), e vale o marco mais adiantado. O docs-check confere o catálogo contra as páginas
-# (documentacao/scripts/verificar_catalogo.py).
+# em documentacao/macros/catalogo.py), e vale o marco mais adiantado. O docs-check
+# confere o catálogo contra as páginas (documentacao/scripts/verificar_catalogo.py).
 #
 # Campos dos RFs:
 #   esforco: [esforço, complexidade, lacuna de capacidade], escalas adotadas na Priorização e MVP
