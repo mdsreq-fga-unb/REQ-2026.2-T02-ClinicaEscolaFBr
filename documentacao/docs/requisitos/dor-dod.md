@@ -136,6 +136,7 @@ Feature: <nome> (CP<n>)
 RFs: <códigos>    RNFs: <códigos>
 Data: <dd/mm/aaaa>    Avaliador: <nome>    Revisor: <nome>
 Resultado: Pronta | Pronta com ressalvas | Não pronta
+Nível de V&V: Alto | Padrão (regra em Verificação e validação: CP6, CP7, CP12 ou RNF da lista do nível alto)
 Critérios [B] não atendidos: <códigos e motivo, ou "nenhum">
 Pendências [R] e/ou com a FBr: <descrição, responsável, prazo, ou "nenhuma">
 Justificativas: <por que cada critério pendente não impede ou impede a entrada>
