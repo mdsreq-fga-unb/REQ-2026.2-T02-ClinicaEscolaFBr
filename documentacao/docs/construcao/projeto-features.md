@@ -1068,7 +1068,7 @@ sequenceDiagram
 
 1. **"Estagiário do supervisor".** O modelo não liga o estagiário a um supervisor: o vínculo é por caso. Vale a definição única do início da CP4, a mesma do RF11 e do RF37.
 2. **Sessões futuras do estagiário anterior.** Ficam canceladas como `administrativo`, com a origem de quem transferiu (`supervisor` ou `coordenacao`), sem falta para ninguém, e a tela lista as sessões para reagendar com o novo estagiário.
-3. **Supervisor no limite de 50 casos:** até a resposta da FBr, vale o bloqueio da [DF17](../requisitos/decisoes-fbr.md#df17), como no RF20 (`casos.service.ts`): o supervisor no limite aparece desabilitado, com o motivo. Deixar a coordenação escolhê-lo com um aviso é uma proposta levada à FBr em 06/11 e registrada nas pendências de validação.
+3. **Supervisor no limite de 50 casos:** na transferência, a coordenação pode escolher o supervisor que já está no limite da [DF17](../requisitos/decisoes-fbr.md#df17), com um aviso ([DF50](../requisitos/decisoes-fbr.md#df50), de 11/11/2026). A distribuição de um caso novo (RF20) continua recusando esse supervisor.
 
 **Telas:** "Transferir caso" na ficha do caso, com os casos ativos de cada opção, o motivo e a confirmação. Protótipo: [prancha 4-3](prototipos.md#rf25).
 
@@ -1091,7 +1091,7 @@ sequenceDiagram
     - Não há a lista do histórico de transferências, que é do RF26.
     - A opção "Manter …" deixa a coordenação trocar só o estagiário, como o RF25 permite.
     - Para a coordenação, a lista mostra todos os estagiários ativos, e não só os do novo supervisor: pela definição de "estagiário do supervisor", quem ainda não tem caso não é de nenhum supervisor, e a transferência para ele é feita pela coordenação.
-    - O supervisor no limite de 50 casos aparece com o aviso da prancha, mas desabilitado, pela decisão 3 acima, até a FBr responder a proposta.
+    - O supervisor no limite de 50 casos aparece com o aviso da prancha e pode ser escolhido pela coordenação ([DF50](../requisitos/decisoes-fbr.md#df50)). A confirmação diz com quantos casos ele fica, a auditoria `transferir_caso` registra `acimaDoLimite`, e o aviso de sucesso diz que o limite foi ultrapassado.
 
 ---
 
@@ -1815,7 +1815,7 @@ sequenceDiagram
 
 **Telas:** botão "Desligar por faltas" só no paciente com alerta, com diálogo de confirmação que lista as sessões futuras que serão canceladas; cartão "Vaga liberada aguardando realocação" na distribuição (coordenação) e em "Meus casos" (supervisor), com o próximo inscrito elegível. Protótipo: [prancha 3-4](prototipos.md#rf37).
 
-**Aviso ao paciente:** o RF37 não pede aviso, e nenhuma mensagem é enviada quando as sessões futuras são canceladas pelo desligamento. Como o paciente pode ir à clínica para uma sessão que não existe mais, a pergunta foi levada à FBr em 06/11: a secretaria avisa por fora do sistema, ou o aviso vira requisito? Até a resposta, a tela de confirmação do desligamento lembra a secretaria de avisar o paciente.
+**Aviso ao paciente:** o RF37 não pede aviso, e nenhuma mensagem é enviada quando as sessões futuras são canceladas pelo desligamento. Como o paciente pode ir à clínica para uma sessão que não existe mais, a pergunta foi levada à FBr em 06/11. Em 11/11, a FBr respondeu que o estagiário responsável avisa o paciente, por fora do sistema ([DF53](../requisitos/decisoes-fbr.md#df53)), e a confirmação do desligamento lembra esse aviso, haja ou não sessões canceladas.
 
 **Dados de teste:** um paciente com 2 faltas e duas sessões futuras; um paciente com 1 falta (recusado); dois pedidos de desligamento simultâneos do mesmo caso (um aceito, o outro 422); uma fila com o próximo inscrito elegível do mesmo supervisor, uma com inscrito só de outro supervisor (vem vazio) e uma fila vazia; o desligamento pela secretaria e pela coordenação; a vaga vista pelo supervisor do estagiário e por outro supervisor (que não vê); o supervisor tentando vincular estagiário ao caso desligado (409); um supervisor com 50 casos, um deles desligado (pode receber um novo caso).
 
