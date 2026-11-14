@@ -230,7 +230,7 @@ describe('Restrição de acesso ao prontuário (RF55)', () => {
   it('a negação continua depois que o vínculo do estagiário deixa de ser vigente (RF27, RNF25, RNF51, RNF52)', async () => {
     await db
       .update(vinculosEstagiario)
-      .set({ vigente: false })
+      .set({ vigente: false, encerradoEm: new Date() })
       .where(eq(vinculosEstagiario.casoId, casoId));
     await expect(
       servico.consultar(prontuarioId, pessoas.estagiarioA),
@@ -607,7 +607,7 @@ describe('Restrição de acesso ao prontuário (RF55)', () => {
       const realizada = await sessao('realizada');
       await db
         .update(vinculosEstagiario)
-        .set({ vigente: false })
+        .set({ vigente: false, encerradoEm: new Date() })
         .where(eq(vinculosEstagiario.casoId, casoId));
       await expect(registrar(realizada)).rejects.toMatchObject({
         status: 403,

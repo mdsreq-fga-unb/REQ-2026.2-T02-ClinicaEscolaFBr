@@ -167,6 +167,7 @@ describe('Travas do banco no schema do Ciclo 3', () => {
         supervisorId: await criarUsuario('supervisor'),
         atribuidoPor: coordenacao,
         vigente: false,
+        encerradaEm: new Date(),
       });
     });
 
