@@ -25,7 +25,7 @@
 #   entrega: observação sobre a entrega (por exemplo, entrega parcial)
 #   origem: decisões com a FBr (DF) que fundamentam o requisito
 
-atualizado_em: 07/11/2026
+atualizado_em: 12/11/2026
 
 cps:
   CP1: Inscrição on-line
@@ -77,7 +77,7 @@ rfs:
   lider: Jônatas
   issue: 88
   estado: Código inspecionado
-  origem: [DF02, DF07, DF24, DF35, DF43, DF47, DF48, DF51]
+  origem: [DF02, DF07, DF24, DF35, DF43, DF47, DF48, DF51, DF56]
 
 - id: RF2
   nome: Emitir comprovante de inscrição
@@ -156,7 +156,7 @@ rfs:
   depende: [RF6]
   issue: 140
   estado: Design inspecionado
-  origem: [DF16, DF33]
+  origem: [DF16, DF33, DF57]
 
 - id: RF8
   nome: Consultar posição individual na fila
@@ -170,8 +170,8 @@ rfs:
   lider: Jônatas
   depende: [RF52, RF7]
   issue: 155
-  estado: Design inspecionado
-  origem: [DF40]
+  estado: Código concluído
+  origem: [DF40, DF55]
 
 - id: RF9
   nome: Manter e informar condições gerais da fila
@@ -196,7 +196,7 @@ rfs:
   depende: [RF21]
   issue: 96
   estado: Código inspecionado
-  origem: [DF01, DF18, DF24, DF49]
+  origem: [DF01, DF18, DF24, DF48, DF49]
   entrega: 'parcial no Ciclo 3: o link de confirmação de presença já é gerado e enviado no agendamento, mas a página que o recebe só chega com o RF14, no Ciclo 4'
 
 - id: RF11
@@ -212,6 +212,7 @@ rfs:
   depende: [RF10, RF21]
   issue: 141
   estado: Código inspecionado
+  origem: [DF57]
 
 - id: RF12
   nome: Reagendar sessão do paciente
@@ -230,7 +231,7 @@ rfs:
   esforco: [4, 4, 4]
   mvp: false
   lider: Nicolas
-  origem: [DF06, DF21, DF24, DF40]
+  origem: [DF06, DF21, DF24, DF40, DF48]
 
 - id: RF14
   nome: Confirmar presença em sessão agendada
@@ -245,7 +246,7 @@ rfs:
   depende: [RF10]
   issue: 142
   estado: Código inspecionado
-  origem: [DF24, DF45]
+  origem: [DF24, DF45, DF48]
 
 - id: RF15
   nome: Registrar cancelamento de sessão pelo paciente
@@ -595,7 +596,7 @@ rfs:
   depende: [RF15, RF34]
   issue: 151
   estado: Promovida para a versão integrada
-  origem: [DF20]
+  origem: [DF20, DF58]
 
 - id: RF36
   nome: Emitir alerta de limite de faltas atingido
@@ -639,6 +640,7 @@ rfs:
   depende: [RF37]
   issue: 154
   estado: Promovida para a versão integrada
+  origem: [DF58]
 
 - id: RF39
   nome: Consolidar faltas do estagiário para a supervisão
@@ -923,7 +925,7 @@ rfs:
   lider: Jônatas
   depende: [RF1]
   issue: 52
-  estado: Planejada
+  estado: Código concluído
   origem: [DF44, DF47]
 
 - id: RF65
@@ -1031,11 +1033,12 @@ rnfs:
   justificativa: A consulta individual envolve dado pessoal e exige verificação de identidade.
 
 - id: RNF7
-  nome: Compreensibilidade das informações sobre a posição na fila
+  nome: Compreensibilidade das informações sobre a situação na fila
   cp: CP3
   classificacao: Associado a RF do MVP
   relacionado: RF8
-  justificativa: Acompanha a consulta de posição e evita interpretação da posição como garantia de prazo.
+  justificativa: Acompanha a consulta da situação na fila e evita que a situação seja lida como garantia de prazo.
+  origem: [DF55]
 
 - id: RNF8
   nome: Confiabilidade das informações institucionais da fila
@@ -1064,7 +1067,7 @@ rnfs:
   classificacao: Não aplicável ao MVP
   relacionado: RF13
   justificativa: Depende do lembrete automático; RF13 fica fora do MVP (o link de confirmação do RF14 é enviado no próprio agendamento, RF10). Reavaliar se RF13 for incorporado.
-  origem: [DF24]
+  origem: [DF24, DF48]
 
 - id: RNF12
   nome: Tempo de resposta nas operações de agendamento
@@ -1701,6 +1704,25 @@ decisoes:
   fonte: respostas da FBr por WhatsApp
   decisao: O relatório final de evolução e a reprovação do estagiário ficam prontos até 05/12/2026, data final da evolução do estágio. Respondido por Robson Araújo.
 
+- id: DF55
+  data: 12/11/2026
+  fonte: respostas da FBr por WhatsApp
+  decisao: Na consulta da fila (RF8), o inscrito vê "Em triagem" enquanto não foi chamado para o atendimento e "Em atendimento" depois de chamado, inclusive enquanto aguarda o contato da clínica ou a resposta dele. A posição na fila não aparece para o inscrito, para não gerar expectativa, porque a captação de pacientes é semestral. Respondido por Robson Araújo.
+
+- id: DF56
+  data: 12/11/2026
+  fonte: respostas da FBr por WhatsApp
+  decisao: Os dados mínimos para o reconhecimento do paciente na inscrição incluem o endereço completo (rua, bairro, cidade e CEP), além do contato de emergência (DF51), para eventual fiscalização. Respondido por Robson Araújo.
+
+- id: DF57
+  data: 12/11/2026
+  fonte: respostas da FBr por WhatsApp
+  decisao: Os itens "Agenda", no menu do supervisor (RF11), e "Fila de espera", no menu da coordenação (RF7), propostos nos protótipos do Ciclo 4, ficam no sistema. Respondido por Robson Araújo.
+
+- id: DF58
+  data: 12/11/2026
+  fonte: respostas da FBr por WhatsApp
+  decisao: Na reversão de um desligamento por faltas feito por engano (RF38), a coordenação escolhe quais faltas deixam de contar. Respondido por Robson Araújo.
 
 conjuntos:
 - area: Inscrição no atendimento

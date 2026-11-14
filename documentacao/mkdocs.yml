@@ -171,6 +171,7 @@ nav:
   - Processo e equipe:
       - Estratégia de ESW: processo/estrategia-esw.md
       - Engenharia de requisitos: processo/engenharia-requisitos.md
+      - Verificação e validação: processo/verificacao-e-validacao.md
       - Equipe e cliente: processo/equipe-e-cliente.md
       - Boas práticas no GitHub: processo/boas-praticas-github.md
       - Estudo de FDD: processo/estudo-fdd.md

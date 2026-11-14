@@ -25,6 +25,13 @@ export default defineConfig({
   },
   webServer: [
     {
+      // Captura de e-mail só dos testes, no loopback: o e2e do RF8 lê o código
+      // de verificação que a API manda. Nunca encaminha e-mail.
+      command: "node e2e/smtp-local.mjs",
+      url: "http://127.0.0.1:8026",
+      reuseExistingServer: false,
+    },
+    {
       // Roda de apps/api, onde a API acha o .env da raiz (../../.env).
       command: "pnpm start:prod",
       cwd: "../api",
@@ -37,6 +44,8 @@ export default defineConfig({
         }),
         API_PORT: apiPort,
         WEB_URL: webURL,
+        SMTP_HOST: "127.0.0.1",
+        SMTP_PORT: "1026",
         LIMITE_INSCRICOES_POR_ORIGEM: "1000",
       },
       reuseExistingServer: false,

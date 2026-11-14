@@ -42,7 +42,7 @@ O GitHub será o repositório central do código-fonte, dos diagramas de domíni
 
 ## Processo de Validação { #73-processo-de-validacao }
 
-A validação ocorre de forma incremental, acompanhando os marcos do FDD e combinando inspeções internas, testes e demonstrações com o cliente. Uma feature só entra na construção depois de atender ao [Definition of Ready](../requisitos/dor-dod.md#91-definition-of-ready-dor) e só é considerada pronta quando atende ao [Definition of Done](../requisitos/dor-dod.md#92-definition-of-done-dod), que é a fonte única dos critérios e das evidências de cada marco. Esta seção mostra apenas onde cada marco acontece no processo:
+A validação ocorre de forma incremental, acompanhando os marcos do FDD e combinando inspeções internas, testes e demonstrações com o cliente. Uma feature só entra na construção depois de atender ao [Definition of Ready](../requisitos/dor-dod.md#91-definition-of-ready-dor) e só é considerada pronta quando atende ao [Definition of Done](../requisitos/dor-dod.md#92-definition-of-done-dod), que é a fonte única dos critérios e das evidências de cada marco. A [Estratégia de verificação e validação](verificacao-e-validacao.md) reúne todos os momentos de V&V, inclusive os de antes da construção, com o nível de rigor e as evidências. Esta seção mostra apenas onde cada marco acontece no processo:
 
 1. **Design inspecionado:** ao fim do Projetar por Feature, numa inspeção com o Líder de Feature e um revisor (DoD, etapa 1).
 2. **Código concluído:** durante o Construir por Feature (DoD, etapa 2).
