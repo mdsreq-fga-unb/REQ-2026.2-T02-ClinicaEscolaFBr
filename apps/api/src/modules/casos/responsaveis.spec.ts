@@ -228,8 +228,12 @@ describe('Consulta de responsáveis pelo caso (RF22)', () => {
         estagiario: 'ana',
         situacao: 'em_atendimento',
       });
-      await db.update(vinculosEstagiario).set({ vigente: false });
-      await db.update(atribuicoesSupervisor).set({ vigente: false });
+      await db
+        .update(vinculosEstagiario)
+        .set({ vigente: false, encerradoEm: new Date() });
+      await db
+        .update(atribuicoesSupervisor)
+        .set({ vigente: false, encerradaEm: new Date() });
       const r = await responsaveis(casoId, 'secretaria');
       expect(r.body).toMatchObject({ supervisor: null, estagiario: null });
       // Quem foi responsável no passado perde a consulta.

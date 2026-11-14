@@ -11,6 +11,7 @@ function simularApi(
   perfil: string,
   responsaveis: Resposta,
   dados: Resposta = [404, {}],
+  contribuicao: Resposta = [404, {}],
 ) {
   const chamadas: string[] = [];
   vi.stubGlobal(
@@ -23,7 +24,9 @@ function simularApi(
           ? responsaveis
           : url.endsWith("/dados-administrativos")
             ? dados
-            : [404, {}];
+            : url.endsWith("/casos/c1/contribuicao")
+              ? contribuicao
+              : [404, {}];
       return new Response(JSON.stringify(corpo), {
         status,
         headers: { "Content-Type": "application/json" },
@@ -228,4 +231,91 @@ describe("Ficha do paciente com os responsáveis (RF22)", () => {
     expect(antes(aviso, quadro)).toBe(true);
     expect(antes(quadro, cadastrais)).toBe(true);
   });
+
+  it("a secretaria vê o cartão da contribuição social do ciclo depois dos dados administrativos; a coordenação não o recebe (RF41)", async () => {
+    const chamadas = simularApi(
+      "secretaria",
+      [200, MARIANA_RESPONSAVEIS],
+      [200, MARIANA_ADMINISTRATIVOS],
+      [
+        200,
+        {
+          casoId: "c1",
+          cicloAtendimento: 1,
+          situacao: "pendente",
+          prazo: {
+            vinculadoEm: "2026-11-05T13:00:00.000Z",
+            ate: "2026-11-15",
+          },
+          valorAtualCentavos: 3500,
+          vigente: null,
+          anteriores: [],
+        },
+      ],
+    );
+    abrir();
+    const cartao = await screen.findByRole("region", {
+      name: "Contribuição social · Ciclo 1",
+    });
+    const administrativos = screen.getByRole("region", {
+      name: "Dados administrativos",
+    });
+    expect(
+      Boolean(
+        administrativos.compareDocumentPosition(cartao) &
+        Node.DOCUMENT_POSITION_FOLLOWING,
+      ),
+    ).toBe(true);
+    expect(within(cartao).getByText("Pendente")).toBeTruthy();
+    expect(chamadas.some((u) => u.endsWith("/casos/c1/contribuicao"))).toBe(
+      true,
+    );
+
+    cleanup();
+    const daCoordenacao = simularApi(
+      "coordenacao",
+      [200, MARIANA_RESPONSAVEIS],
+      [200, MARIANA_ADMINISTRATIVOS],
+    );
+    abrir();
+    await screen.findByRole("region", { name: "Dados administrativos" });
+    expect(
+      screen.queryByRole("region", { name: /Contribuição social/ }),
+    ).toBeNull();
+    expect(daCoordenacao.some((u) => u.endsWith("/contribuicao"))).toBe(false);
+  });
 });
+
+const MARIANA_RESPONSAVEIS = {
+  casoId: "c1",
+  nome: "Mariana Alves Toledo",
+  situacao: "em_atendimento",
+  supervisor: "Ricardo Menezes",
+  estagiario: "Ana Beatriz Costa",
+};
+
+const MARIANA_ADMINISTRATIVOS = {
+  casoId: "c1",
+  numeroInscricao: "2026-00398",
+  nome: "Mariana Alves Toledo",
+  dataNascimento: "1994-08-22",
+  celular: "61998765432",
+  email: null,
+  canalPreferencial: "whatsapp",
+  responsavelLegal: null,
+  situacao: "em_atendimento",
+  vinculadoEm: null,
+  cicloDesde: null,
+  proximaSessao: null,
+  estagiario: "Ana Beatriz Costa",
+  ultimoEstagiario: null,
+  supervisor: "Ricardo Menezes",
+  faltasNoCiclo: { faltas: 0, limite: 2, justificadas: 0 },
+  cicloAtendimento: 1,
+  sessoes: [],
+  acoesCancelamento: {},
+  podeDesligar: false,
+  desligamentos: [],
+  vagaDoDesligamento: null,
+  sessoesAReagendar: [],
+};

@@ -352,7 +352,7 @@ describe('Agenda de sessões do estagiário (RF11)', () => {
       const encerrarVinculo = (casoId: string) =>
         db
           .update(vinculosEstagiario)
-          .set({ vigente: false })
+          .set({ vigente: false, encerradoEm: new Date() })
           .where(eq(vinculosEstagiario.casoId, casoId));
 
       it('as sessões do caso deixam de vir, com o nome do paciente, e as dos outros casos continuam', async () => {

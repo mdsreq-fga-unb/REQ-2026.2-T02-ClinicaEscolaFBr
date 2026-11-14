@@ -7,3 +7,4 @@ export * from "./prontuario";
 export * from "./parametros";
 export * from "./assiduidade";
 export * from "./verificacao";
+export * from "./administrativo";

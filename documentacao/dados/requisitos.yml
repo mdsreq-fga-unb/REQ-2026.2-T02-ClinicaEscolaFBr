@@ -706,7 +706,7 @@ rfs:
   ordem: 37
   lider: Joaquim
   issue: 43
-  estado: Planejada
+  estado: Código concluído
   origem: [DF05, DF15]
 
 - id: RF42
