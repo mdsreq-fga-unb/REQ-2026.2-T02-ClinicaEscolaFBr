@@ -1,10 +1,16 @@
 import { Global, INestApplication, Module } from '@nestjs/common';
-import { ConfigModule } from '@nestjs/config';
+import { ConfigModule, ConfigService } from '@nestjs/config';
 import { Test } from '@nestjs/testing';
 import { randomBytes, randomUUID } from 'node:crypto';
 import { resolve } from 'node:path';
 import request from 'supertest';
-import { createDb, inscricoes, auditoria, type Db } from '@clinica/database';
+import {
+  createDb,
+  inscricoes,
+  auditoria,
+  versoesTermo,
+  type Db,
+} from '@clinica/database';
 import { inscricaoSchema, menorDeIdade } from '@clinica/shared';
 import { eq, sql } from 'drizzle-orm';
 import { migrate } from 'drizzle-orm/node-postgres/migrator';
@@ -33,6 +39,8 @@ const valido = () => ({
   percepcaoUrgencia: 'Urgência fictícia privada',
   historicoRelevante: 'Histórico fictício privado',
   confirmado: true,
+  aceiteTermo: true,
+  versaoTermo: '0.1',
   chaveEnvio: randomUUID(),
 });
 
@@ -282,7 +290,7 @@ describe('RF1/RF2: HTTP, transações e migrations oficiais', () => {
       cpfResponsavel: '52998224725',
     }).expect(201);
   });
-  it('cifra os três campos com a rotina oficial e audita sem conteúdo pessoal (RF1, RNF51)', async () => {
+  it('cifra os três campos da inscrição com aceite e audita sem conteúdo pessoal (RF1, RF57, RNF51)', async () => {
     const dados = valido();
     const res = await enviar(dados).expect(201);
     const [registro] = await db.select().from(inscricoes);
@@ -305,7 +313,11 @@ describe('RF1/RF2: HTTP, transações e migrations oficiais', () => {
       expect(decifrar(cifrado, chave)).toBe(dados[campo]);
     }
     const [evento] = await db.select().from(auditoria);
-    expect(evento.dadosNovos).toEqual({ numero: res.body.numero });
+    expect(evento.dadosNovos).toEqual({
+      numero: res.body.numero,
+      versaoTermoAceita: '0.1',
+      aceitePeloResponsavel: false,
+    });
     expect(evento.usuarioId).toBeNull();
     expect(evento.entidadeId).toBe(registro.id);
     for (const valor of [
@@ -414,5 +426,141 @@ describe('RF1/RF2: HTTP, transações e migrations oficiais', () => {
       `/pacientes/${randomUUID()}/dados-administrativos`,
     ])
       await request(app.getHttpServer()).get(caminho).expect(401);
+  });
+  it.each([
+    { aceiteTermo: false },
+    { aceiteTermo: undefined },
+    { versaoTermo: '' },
+    {
+      dataNascimento: '2020-01-01',
+      responsavelLegal: 'Responsável',
+      cpfResponsavel: '',
+    },
+  ])('RF57 recusa aceite incompleto %j sem gravar', async (alteracao) => {
+    await enviar({ ...valido(), ...alteracao }).expect(400);
+    expect(await db.select().from(inscricoes)).toHaveLength(0);
+  });
+  it('RF57 guarda versão, horário do servidor e responsável; ignora valores forjados pelo cliente', async () => {
+    await enviar({
+      ...valido(),
+      dataNascimento: '2020-01-01',
+      responsavelLegal: 'Responsável',
+      cpfResponsavel: '52998224725',
+      aceitePeloResponsavel: false,
+      termoAceitoEm: '1900-01-01',
+    }).expect(201);
+    const [registro] = await db.select().from(inscricoes);
+    expect(registro.versaoTermoAceita).toBe('0.1');
+    expect(registro.aceitePeloResponsavel).toBe(true);
+    expect(
+      Math.abs(Date.now() - registro.termoAceitoEm!.getTime()),
+    ).toBeLessThan(10000);
+  });
+  it('RF57 expõe cinco tópicos e bloqueia provisório em produção, mesmo com a inscrição aberta', async () => {
+    const termo = await request(app.getHttpServer())
+      .get('/termo/vigente')
+      .expect(200);
+    expect(termo.headers['cache-control']).toBe('no-store');
+    expect(termo.body).toMatchObject({ versao: '0.1', provisoria: true });
+    expect(termo.body.topicos).toHaveLength(5);
+    expect(termo.body.topicos[0].corpo).toContain(
+      'e-mail, celular e, se você quiser informar, WhatsApp',
+    );
+    expect(termo.body.topicos[1].corpo).toContain(
+      'Os avisos do sistema vão para o seu e-mail',
+    );
+    expect(JSON.stringify(termo.body.topicos)).not.toContain(
+      'canal que você escolheu',
+    );
+    const config = app.get(ConfigService);
+    config.set('AMBIENTE_APLICACAO', 'producao');
+    try {
+      await enviar().expect(403);
+      expect(await db.select().from(inscricoes)).toHaveLength(0);
+    } finally {
+      config.set('AMBIENTE_APLICACAO', 'desenvolvimento');
+    }
+  });
+  it('RF57 libera dados fictícios na validação explícita com NODE_ENV=production, como no contêiner', async () => {
+    const config = app.get(ConfigService);
+    const ambiente = config.get('AMBIENTE_APLICACAO');
+    const nodeEnv = config.get('NODE_ENV');
+    config.set('NODE_ENV', 'production');
+    config.set('AMBIENTE_APLICACAO', 'validacao');
+    try {
+      await enviar().expect(201);
+      expect((await db.select().from(inscricoes))[0].versaoTermoAceita).toBe(
+        '0.1',
+      );
+    } finally {
+      config.set('AMBIENTE_APLICACAO', ambiente);
+      if (ambiente === undefined) delete process.env.AMBIENTE_APLICACAO;
+      config.set('NODE_ENV', nodeEnv);
+      if (nodeEnv === undefined) delete process.env.NODE_ENV;
+    }
+  });
+  it('RF57 bloqueia provisório pelo NODE_ENV quando não há ambiente explícito', async () => {
+    const config = app.get(ConfigService);
+    const ambiente = config.get('AMBIENTE_APLICACAO');
+    const nodeEnv = config.get('NODE_ENV');
+    config.set('AMBIENTE_APLICACAO', undefined);
+    // ConfigService.set serializa undefined na variável de ambiente.
+    delete process.env.AMBIENTE_APLICACAO;
+    config.set('NODE_ENV', 'production');
+    try {
+      await enviar().expect(403);
+      expect(await db.select().from(inscricoes)).toHaveLength(0);
+    } finally {
+      config.set('AMBIENTE_APLICACAO', ambiente);
+      config.set('NODE_ENV', nodeEnv);
+    }
+  });
+  it('RF57 distingue troca de termo de conflito de chave e preserva reenvio após troca', async () => {
+    const dados = valido();
+    const primeiro = await enviar(dados).expect(201);
+    const [original] = await db.select().from(versoesTermo);
+    try {
+      await db.insert(versoesTermo).values({
+        ...original,
+        versao: '0.2',
+        provisoria: false,
+        vigenteDesde: new Date(Date.now() - 1000),
+      });
+      const antigo = await enviar().expect(409);
+      expect(antigo.body).toMatchObject({
+        codigo: 'termo_desatualizado',
+        versaoVigente: '0.2',
+      });
+      expect((await enviar(dados).expect(201)).body).toEqual(primeiro.body);
+      const conflito = await enviar({
+        ...dados,
+        nomeCompleto: 'Outra pessoa',
+      }).expect(409);
+      expect(conflito.body.codigo).not.toBe('termo_desatualizado');
+      const config = app.get(ConfigService);
+      const ambiente = config.get('AMBIENTE_APLICACAO');
+      config.set('AMBIENTE_APLICACAO', 'producao');
+      try {
+        // Só a versão aprovada fictícia libera uma inscrição nova em produção.
+        await enviar({ ...valido(), versaoTermo: '0.2' }).expect(201);
+      } finally {
+        config.set('AMBIENTE_APLICACAO', ambiente);
+      }
+      expect(
+        (await db.select().from(inscricoes))
+          .map((i) => i.versaoTermoAceita)
+          .sort((a, b) => a!.localeCompare(b!)),
+      ).toEqual(['0.1', '0.2']);
+      await expect(
+        db
+          .update(versoesTermo)
+          .set({ titulo: 'Modificado' })
+          .where(eq(versoesTermo.versao, '0.1')),
+      ).rejects.toThrow();
+    } finally {
+      await limpar();
+      await db.execute(sql`truncate versoes_termo cascade`);
+      await db.insert(versoesTermo).values(original);
+    }
   });
 });

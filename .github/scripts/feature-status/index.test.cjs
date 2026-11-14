@@ -519,6 +519,32 @@ test("/rnf completa as evidências, marca o D4.5 e edita a mesma tabela", async 
   assert.match(issue.body, /- \[x\] D4\.5/);
 });
 
+test("/rnf de membro com a participação privada (CONTRIBUTOR na listagem) conta pela permissão no repositório", async () => {
+  integrada();
+  comRelatorio([
+    testeRnf("inscrição (RF1) › recusa o envio sem contato (RNF1)"),
+    testeRnf("inscrição (RF1) › grava a queixa cifrada (RNF51)"),
+    testeRnf(
+      "inscrição (RF1) › sem violações WCAG (RNF56, RNF57, RNF58)",
+      "e2e",
+    ),
+    testeRnf("inscrição (RF1) › com o VoiceOver (RNF56)", "leitor-de-tela"),
+  ]);
+  permissoes = { gabriel: "write", visitante: "read" };
+  comentarios.push(
+    comentario("/rnf RNF51 https://x/troca", "gabriel", "CONTRIBUTOR"),
+    // Quem só tem leitura continua sem contar.
+    comentario("/rnf RNF53 https://x/copia", "visitante", "CONTRIBUTOR"),
+  );
+  await rodar("workflow_run", { workflow_run: { conclusion: "success" } });
+  assert.match(
+    tabela()[0].body,
+    /\| RNF51 \| ✅ verificado \|.*\[registro de @gabriel\]/,
+  );
+  assert.match(tabela()[0].body, /\| RNF53 \| ⏳ sem evidência/);
+  assert.doesNotMatch(issue.body, /- \[x\] D4\.5/);
+});
+
 test("/rnf antes da integração fica registrado para a avaliação depois do D4.3", async () => {
   comRelatorio([]);
   const pedido = comentario("/rnf RNF53 https://x/relatorio", "gabriel");

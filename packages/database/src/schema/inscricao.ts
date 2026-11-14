@@ -1,6 +1,8 @@
 import { sql } from "drizzle-orm";
 import {
   check,
+  boolean,
+  jsonb,
   date,
   pgEnum,
   pgSequence,
@@ -15,6 +17,18 @@ export const canalEnum = pgEnum("canal", CANAIS);
 
 // Gera a parte sequencial do número único da inscrição (RF1, RF2).
 export const inscricoesNumeroSeq = pgSequence("inscricoes_numero_seq");
+
+// Versões são acrescentadas por migration; nunca sobrescreva uma versão aceita.
+export const versoesTermo = pgTable("versoes_termo", {
+  versao: text("versao").primaryKey(),
+  titulo: text("titulo").notNull(),
+  introducao: text("introducao").notNull(),
+  topicos: jsonb("topicos")
+    .$type<{ titulo: string; corpo: string }[]>()
+    .notNull(),
+  vigenteDesde: timestamp("vigente_desde", { withTimezone: true }).notNull(),
+  provisoria: boolean("provisoria").notNull(),
+});
 
 // Inscrição on-line (RF1). Queixa, percepção de urgência e histórico são declarações
 // do interessado (RF4) e dados de saúde: ficam cifrados no banco (RNF51). Pelo menos um contato é obrigatório, e WhatsApp ou ligação
@@ -52,11 +66,24 @@ export const inscricoes = pgTable(
     queixaCifrada: text("queixa_cifrada"),
     percepcaoUrgenciaCifrada: text("percepcao_urgencia_cifrada"),
     historicoRelevanteCifrado: text("historico_relevante_cifrado"),
+    versaoTermoAceita: text("versao_termo_aceita").references(
+      () => versoesTermo.versao,
+    ),
+    termoAceitoEm: timestamp("termo_aceito_em", { withTimezone: true }),
+    aceitePeloResponsavel: boolean("aceite_pelo_responsavel"),
     criadaEm: timestamp("criada_em", { withTimezone: true })
       .notNull()
       .defaultNow(),
   },
   (t) => [
+    check(
+      "inscricoes_aceite_com_versao",
+      sql`(${t.versaoTermoAceita} is null) = (${t.termoAceitoEm} is null)`,
+    ),
+    check(
+      "inscricoes_aceite_com_responsavel",
+      sql`(${t.versaoTermoAceita} is null) = (${t.aceitePeloResponsavel} is null)`,
+    ),
     check(
       "inscricoes_algum_contato",
       sql`${t.celular} is not null or ${t.email} is not null`,

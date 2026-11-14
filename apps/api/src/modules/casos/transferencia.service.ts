@@ -316,13 +316,16 @@ export class TransferenciaService {
         }
 
         let novoSupervisor: { id: string; nome: string } | null = null;
+        let acimaDoLimite = false;
         if (trocaSupervisor) {
           novoSupervisor = await this.ativo(
             tx,
             dados.supervisorId!,
             'supervisor',
           );
-          // Supervisor no limite de casos não recebe o caso (DF17), como no RF20.
+          // Supervisor no limite de casos (DF17): na transferência, a coordenação pode
+          // passar do limite (DF50), e isso fica na auditoria. A distribuição de um
+          // caso novo (RF20) continua recusando esse supervisor.
           const [ativos] = await tx
             .select({ total: count() })
             .from(atribuicoesSupervisor)
@@ -337,11 +340,7 @@ export class TransferenciaService {
                 ]),
               ),
             );
-          if ((ativos?.total ?? 0) >= limite) {
-            throw new UnprocessableEntityException(
-              `${novoSupervisor.nome} já tem ${limite} casos ativos, o limite de casos por supervisor. Escolha outro supervisor.`,
-            );
-          }
+          acimaDoLimite = (ativos?.total ?? 0) >= limite;
         }
 
         let novoEstagiario: { id: string; nome: string } | null = null;
@@ -516,6 +515,7 @@ export class TransferenciaService {
               atribuicaoId: atribuicaoNova,
               vinculoId: vinculoNovo,
               sessoesCanceladas: canceladas,
+              acimaDoLimite,
             },
           },
           tx,
@@ -531,6 +531,7 @@ export class TransferenciaService {
             (encerraVinculo ? null : (caso.vinculo?.nome ?? null)),
           sessoesCanceladas: canceladas.length,
           sessoesAReagendar: reagendar,
+          acimaDoLimite,
         };
       });
     } catch (erro) {

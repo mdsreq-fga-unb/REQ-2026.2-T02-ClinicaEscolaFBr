@@ -521,7 +521,7 @@ describe('Transferir caso para outro estagiário ou supervisor (RF25)', () => {
       expect(vinculo.body.prontuarioId).toBe(prontuarioId);
     });
 
-    it('supervisor no limite de casos não recebe o caso, e as opções o mostram no limite (RF25, DF17)', async () => {
+    it('a coordenação transfere para um supervisor no limite de casos, e a auditoria registra que o limite foi ultrapassado (RF25, DF50, RNF18)', async () => {
       await db
         .insert(parametros)
         .values({ chave: 'limite_casos_supervisor', valor: '1' });
@@ -550,12 +550,17 @@ describe('Transferir caso para outro estagiário ou supervisor (RF25)', () => {
 
       const res = await transferir(caso, 'coordenacao', {
         supervisorId: pessoas.patricia.id,
-        motivo: 'Tentativa.',
-      }).expect(422);
-      expect(res.body.message).toContain('limite de casos por supervisor');
+        motivo: 'Reorganização acima do limite.',
+      }).expect(201);
+      expect(res.body.acimaDoLimite).toBe(true);
       expect((await atribuicaoVigente(caso)).supervisorId).toBe(
-        pessoas.ricardo.id,
+        pessoas.patricia.id,
       );
+      const [evento] = await db
+        .select()
+        .from(auditoria)
+        .where(eq(auditoria.operacao, 'transferir_caso'));
+      expect(evento.dadosNovos).toMatchObject({ acimaDoLimite: true });
     });
 
     it('as opções da coordenação trazem todos os estagiários ativos, sem o atual nem o desativado (RF25, RNF16)', async () => {
