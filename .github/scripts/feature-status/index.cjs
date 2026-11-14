@@ -47,20 +47,25 @@ module.exports = async ({ github, api = github, context, core }) => {
   // membro da organização com a participação privada como CONTRIBUTOR (foi o que
   // aconteceu na aprovação da #212, e o D3.1 não foi marcado). Nesse caso, vale a
   // permissão da pessoa no repositório.
+  // A permissão de cada login é consultada uma vez por execução: uma issue com
+  // vários /rnf da mesma pessoa não repete a chamada à API.
+  const permissaoDaEquipe = new Map();
   const daEquipe = async (associacao, login) => {
     if (MEMBROS.includes(associacao)) return true;
-    try {
-      const { data } = await github.rest.repos.getCollaboratorPermissionLevel({
-        owner,
-        repo,
-        username: login,
-      });
-      return [data.role_name, data.permission].some((p) =>
-        PERMISSOES_DA_EQUIPE.includes(p),
+    if (!permissaoDaEquipe.has(login)) {
+      permissaoDaEquipe.set(
+        login,
+        github.rest.repos
+          .getCollaboratorPermissionLevel({ owner, repo, username: login })
+          .then(({ data }) =>
+            [data.role_name, data.permission].some((p) =>
+              PERMISSOES_DA_EQUIPE.includes(p),
+            ),
+          )
+          .catch(() => false),
       );
-    } catch {
-      return false;
     }
+    return permissaoDaEquipe.get(login);
   };
   const ignorar = (login, associacao, motivo) =>
     core.info(
