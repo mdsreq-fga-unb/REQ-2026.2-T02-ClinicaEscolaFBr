@@ -39,6 +39,8 @@ services:
     pull_policy: always
     environment:
       NODE_ENV: production
+      # A validação deve definir validacao explicitamente; o padrão protege a produção.
+      AMBIENTE_APLICACAO: ${AMBIENTE_APLICACAO:-producao}
       DATABASE_URL: ${DATABASE_URL_API:?}
       WEB_URL: ${WEB_URL:?}
       CHAVE_DADOS: ${CHAVE_DADOS:?}

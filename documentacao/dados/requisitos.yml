@@ -923,7 +923,7 @@ rfs:
   lider: Jônatas
   depende: [RF1]
   issue: 52
-  estado: Planejada
+  estado: Código concluído
   origem: [DF44, DF47]
 
 - id: RF65
