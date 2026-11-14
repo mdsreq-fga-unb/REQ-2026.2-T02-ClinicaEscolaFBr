@@ -13,4 +13,5 @@ export * from "./verificacao";
 export * from "./fila";
 export * from "./casos";
 export * from "./indicadores";
+export * from "./contribuicao";
 export * from "./datas";

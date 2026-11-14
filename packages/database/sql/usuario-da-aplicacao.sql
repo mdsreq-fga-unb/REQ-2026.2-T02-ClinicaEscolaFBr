@@ -2,8 +2,9 @@
 -- As migrations continuam rodando com o dono do banco; a API usa este usuário,
 -- que pode ler e gravar os dados, mas só inserir e consultar os registros que
 -- não podem mudar: as tabelas com o gatilho impedir_alteracao_registro, como os
--- acessos ao prontuário (RNF52), a auditoria, as evoluções e as decisões de
--- prioridade. Uma tabela nova com esse gatilho entra sozinha.
+-- acessos ao prontuário (RNF52), a auditoria, as evoluções, as decisões de
+-- prioridade, o histórico dos parâmetros e os pagamentos da contribuição social
+-- (RNF36). Uma tabela nova com esse gatilho entra sozinha.
 --
 -- Na implantação, o serviço "migrador" roda este script depois das migrations, a
 -- cada deploy, e define a senha do clinica_app (CLINICA_APP_SENHA). No
