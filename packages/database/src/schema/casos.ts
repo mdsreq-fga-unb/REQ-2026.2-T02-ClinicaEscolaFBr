@@ -82,11 +82,18 @@ export const atribuicoesSupervisor = pgTable(
       .notNull()
       .defaultNow(),
     vigente: boolean("vigente").notNull().default(true),
+    // Quando a atribuição deixou de valer (RF25). Os indicadores (RF48) usam a
+    // data para saber quem era o supervisor num dia passado.
+    encerradaEm: timestamp("encerrada_em", { withTimezone: true }),
   },
   (t) => [
     uniqueIndex("atribuicoes_supervisor_vigente_unica")
       .on(t.casoId)
       .where(sql`${t.vigente}`),
+    check(
+      "atribuicoes_supervisor_encerrada_sem_vigencia",
+      sql`${t.vigente} = (${t.encerradaEm} is null)`,
+    ),
   ],
 );
 
@@ -108,11 +115,19 @@ export const vinculosEstagiario = pgTable(
       .notNull()
       .defaultNow(),
     vigente: boolean("vigente").notNull().default(true),
+    // Quando o vínculo terminou: pela transferência (RF25) ou pelo desligamento
+    // (RF37). Os indicadores (RF48) usam a data para saber quem estava em
+    // atendimento num dia passado.
+    encerradoEm: timestamp("encerrado_em", { withTimezone: true }),
   },
   (t) => [
     uniqueIndex("vinculos_estagiario_vigente_unico")
       .on(t.casoId)
       .where(sql`${t.vigente}`),
+    check(
+      "vinculos_estagiario_encerrado_sem_vigencia",
+      sql`${t.vigente} = (${t.encerradoEm} is null)`,
+    ),
   ],
 );
 

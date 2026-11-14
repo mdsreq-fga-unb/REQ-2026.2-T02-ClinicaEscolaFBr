@@ -16,6 +16,7 @@ import {
   gt,
   inArray,
   notInArray,
+  sql,
 } from 'drizzle-orm';
 import {
   atribuicoesSupervisor,
@@ -365,7 +366,8 @@ export class TransferenciaService {
           if (caso.atribuicao) {
             await tx
               .update(atribuicoesSupervisor)
-              .set({ vigente: false })
+              // now() é o mesmo instante da transação e do transferido_em (RF48).
+              .set({ vigente: false, encerradaEm: sql`now()` })
               .where(eq(atribuicoesSupervisor.id, caso.atribuicao.id));
           }
           [{ id: atribuicaoNova }] = await tx
@@ -386,7 +388,7 @@ export class TransferenciaService {
         if (encerraVinculo) {
           await tx
             .update(vinculosEstagiario)
-            .set({ vigente: false })
+            .set({ vigente: false, encerradoEm: sql`now()` })
             .where(eq(vinculosEstagiario.id, caso.vinculo!.id));
         }
         let vinculoNovo: string | null = null;

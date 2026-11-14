@@ -17,6 +17,7 @@ import {
   inArray,
   isNotNull,
   isNull,
+  sql,
 } from 'drizzle-orm';
 import {
   atribuicoesSupervisor,
@@ -160,7 +161,8 @@ export class DesligamentosService {
       );
       await tx
         .update(vinculosEstagiario)
-        .set({ vigente: false })
+        // now() é o mesmo instante da transação e do decidido_em (RF48).
+        .set({ vigente: false, encerradoEm: sql`now()` })
         .where(eq(vinculosEstagiario.id, vinculo.id));
 
       // Sessões futuras canceladas pelo desligamento: não geram falta nem contam
