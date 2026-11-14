@@ -170,6 +170,12 @@ export function DialogoTransferir({
             </div>
           ))}
         </dl>
+        {supervisorNovo?.noLimite && (
+          <Aviso
+            tipo="alerta"
+            titulo={`${supervisorNovo.nome} passa a ter ${casos(supervisorNovo.casosAtivos + 1)}, acima do limite de ${casos(supervisorNovo.limite)}.`}
+          />
+        )}
         <p className="ui-dica">
           Os responsáveis anteriores perdem o acesso assim que você confirmar.
           Os novos passam a ver todo o histórico do paciente.
@@ -283,7 +289,8 @@ export function DialogoTransferir({
               </legend>
               <p id={`${idSupervisor}-dica`} className="ui-dica -mt-1">
                 Casos ativos de cada supervisor. O limite é de{" "}
-                {casos(o.supervisores[0]?.limite ?? 50)}.
+                {casos(o.supervisores[0]?.limite ?? 50)}; na transferência, a
+                coordenação pode passar dele.
               </p>
               {erros.supervisor && (
                 <p
@@ -335,7 +342,6 @@ export function DialogoTransferir({
                     type="radio"
                     name={`${id}-supervisor`}
                     value={s.id}
-                    disabled={s.noLimite}
                     checked={supervisorId === s.id}
                     aria-describedby={
                       s.noLimite ? `${id}-limite-${s.id}` : undefined
@@ -359,7 +365,8 @@ export function DialogoTransferir({
                         className="mt-0.5 flex items-center gap-1.5 text-sm font-semibold text-[#a85400]"
                       >
                         <TriangleAlert aria-hidden className="size-4" />
-                        Já está no limite de {casos(s.limite)}
+                        Já está no limite de {casos(s.limite)}: a transferência
+                        passa do limite
                       </span>
                     )}
                   </span>
@@ -514,6 +521,8 @@ export function AvisoTransferencia({
       pelo caso de {resultado.paciente} ({resultado.numero}).
       {!resultado.estagiario &&
         " O caso aguarda o vínculo de um estagiário pelo supervisor."}
+      {resultado.acimaDoLimite &&
+        " O supervisor ficou acima do limite de casos, e isso ficou registrado."}
       {n > 0 && (
         <>
           {n === 1
