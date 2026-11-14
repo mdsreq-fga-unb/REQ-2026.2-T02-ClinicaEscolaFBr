@@ -4,14 +4,18 @@ O plugin mkdocs-macros chama define_env ao carregar o mkdocs.yml. As páginas qu
 usam as macros declaram "render_macros: true" no cabeçalho; as demais não passam
 pelo Jinja, para que exemplos com chaves duplas (como os do docker) fiquem intactos.
 
-Fonte dos dados: documentacao/dados/requisitos.yml.
+Fonte dos dados: documentacao/dados/requisitos.yml. Na publicação do site
+(SINCRONIZAR_GITHUB=1, no deploy-docs), o estado de cada feature e a situação de
+cada ciclo vêm do GitHub: ver sincronizar_com_github.
 """
 
 import datetime
+import json
 import os
 import posixpath
 import re
 import subprocess
+import urllib.request
 from pathlib import Path
 
 import yaml
@@ -422,6 +426,102 @@ class Catalogo:
         return "\n".join(linhas)
 
 
+# ---- Sincronização com o GitHub ------------------------------------------
+# O estado da feature é registrado na issue (seção "Estado da feature (FDD)", que o
+# robô de acompanhamento atualiza pelo DoR, pelo DoD e pelos comandos /demonstrada e
+# /aceite), e a situação do ciclo, no milestone. Na publicação, o site lê os dois do
+# GitHub, para não depender de uma PR a cada mudança. Sem token, ou se o GitHub não
+# responder, vale o que está no requisitos.yml.
+
+API_GITHUB = "https://api.github.com"
+REPO_API = REPO.replace("https://github.com/", "")
+BRASILIA = datetime.timezone(datetime.timedelta(hours=-3))
+
+
+def _get_github(caminho, token):
+    pedido = urllib.request.Request(
+        f"{API_GITHUB}/{caminho}",
+        headers={"Authorization": f"Bearer {token}", "Accept": "application/vnd.github+json",
+                 "User-Agent": "catalogo-docs"},
+    )
+    with urllib.request.urlopen(pedido, timeout=20) as resposta:
+        return json.load(resposta)
+
+
+def _paginas_github(caminho, token):
+    itens, pagina = [], 1
+    while True:
+        lote = _get_github(f"{caminho}&per_page=100&page={pagina}", token)
+        itens += lote
+        if len(lote) < 100:
+            return itens
+        pagina += 1
+
+
+def estado_da_issue(corpo):
+    """Valor da seção "Estado da feature (FDD)" do corpo da issue, se for um marco válido.
+    Aceita o título com ## ou ###, como o robô de acompanhamento (SECAO em logica.cjs)."""
+    m = re.search(r"^#{2,3} Estado da feature[^\n]*\n+\s*([^\n]+)", corpo or "", re.M)
+    if not m:
+        return None
+    valor = m.group(1).strip()
+    return valor if valor in ORDEM_ESTADOS else None
+
+
+def situacao_dos_ciclos(milestones):
+    """Situação de cada ciclo pelo milestone "Ciclo N — …": fechado é "Encerrado"; dos
+    abertos, o de menor número está "Em andamento", e os demais, "Aguardando"."""
+    ciclos = {}
+    for ms in milestones:
+        m = re.match(r"Ciclo (\d+)\b", ms.get("title", ""))
+        if m:
+            ciclos[int(m.group(1))] = ms["state"]
+    abertos = sorted(n for n, estado in ciclos.items() if estado == "open")
+    return {n: "Encerrado" if estado == "closed" else ("Em andamento" if n == abertos[0] else "Aguardando")
+            for n, estado in ciclos.items()}
+
+
+def aplicar_github(dados, issues, milestones):
+    """Aplica ao catálogo o estado das issues e a situação dos milestones. Devolve as
+    mudanças feitas, para o log da publicação."""
+    mudancas = []
+    corpos = {i["number"]: i.get("body") for i in issues if "pull_request" not in i}
+    for r in dados["rfs"]:
+        if not r.get("issue") or int(r["issue"]) not in corpos:
+            continue
+        estado = estado_da_issue(corpos[int(r["issue"])])
+        atual = r.get("estado", "Planejada")
+        # O yml é atualizado na PR que conclui o código, antes de o checklist da issue
+        # chegar lá; por isso vale o marco mais adiantado dos dois.
+        if estado and ORDEM_ESTADOS.index(estado) > ORDEM_ESTADOS.index(atual):
+            mudancas.append(f"{r['id']}: {atual} -> {estado}")
+            r["estado"] = estado
+    situacoes = situacao_dos_ciclos(milestones)
+    for c in dados["ciclos"]:
+        status = situacoes.get(c["numero"])
+        if status and status != c["status"]:
+            mudancas.append(f"Ciclo {c['numero']}: {c['status']} -> {status}")
+            c["status"] = status
+    return mudancas
+
+
+def sincronizar_com_github(dados):
+    """Só na publicação (SINCRONIZAR_GITHUB=1, com GITHUB_TOKEN). O docs-check das PRs e
+    o build local continuam usando só o requisitos.yml."""
+    token = os.environ.get("GITHUB_TOKEN")
+    if os.environ.get("SINCRONIZAR_GITHUB") != "1" or not token:
+        return False
+    try:
+        issues = _paginas_github(f"repos/{REPO_API}/issues?state=all", token)
+        milestones = _paginas_github(f"repos/{REPO_API}/milestones?state=all", token)
+    except (OSError, ValueError) as erro:
+        print(f"catalogo: GitHub indisponível ({erro}); o site usa o requisitos.yml.")
+        return False
+    for mudanca in aplicar_github(dados, issues, milestones):
+        print(f"catalogo: {mudanca}")
+    return True
+
+
 def data_publicacao():
     """Data do último commit publicado (ou DATA_PUBLICACAO, definida pelo workflow)."""
     data = os.environ.get("DATA_PUBLICACAO")
@@ -438,7 +538,9 @@ def data_publicacao():
 
 
 def define_env(env):
-    cat = Catalogo(carregar())
+    dados = carregar()
+    sincronizado = sincronizar_com_github(dados)
+    cat = Catalogo(dados)
 
     # Cada visão vira uma macro com o mesmo nome; os links saem relativos à página.
     def na_pagina(metodo):
@@ -455,7 +557,10 @@ def define_env(env):
 
     env.variables["n"] = cat.n
     env.variables["ciclos"] = cat.ciclos
-    env.variables["catalogo_atualizado_em"] = cat.dados["atualizado_em"]
+    # Sincronizado com o GitHub, o catálogo está atualizado no dia da publicação.
+    env.variables["catalogo_atualizado_em"] = (
+        datetime.datetime.now(BRASILIA).strftime("%d/%m/%Y") if sincronizado else cat.dados["atualizado_em"]
+    )
 
     # Números da página inicial (overrides/home.html), calculados do catálogo.
     for stat in env.conf["extra"].get("home", {}).get("stats", []):

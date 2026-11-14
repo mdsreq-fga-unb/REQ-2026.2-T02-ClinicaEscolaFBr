@@ -34,7 +34,7 @@ As mensagens devem identificar o campo que precisa ser corrigido e descrever a c
 
 Após a identificação de um erro de preenchimento, o sistema deve preservar os valores válidos informados nos demais campos do formulário, permitindo que o interessado conclua a inscrição sem precisar repetir todo o preenchimento.
 
-A conformidade deve ser verificada por meio de testes com campos obrigatórios vazios e entradas inválidas, incluindo telefone celular, e-mail e canal preferencial (RF1), confirmando a identificação textual dos erros e a preservação das informações válidas previamente inseridas.
+A conformidade deve ser verificada por meio de testes com campos obrigatórios vazios e entradas inválidas, incluindo telefone celular e e-mail (RF1), confirmando a identificação textual dos erros e a preservação das informações válidas previamente inseridas.
 
 Classificação: usabilidade e acessibilidade (URPS+).
 Rastreabilidade: Feature "Registrar solicitação de atendimento on-line" → CP1 — Inscrição on-line; complementa os requisitos transversais de acessibilidade da CP14.{{ origem("RNF1") }}
@@ -112,13 +112,13 @@ Classificação: segurança e privacidade (URPS+).
 Rastreabilidade: Feature "Consultar posição individual na fila" → CP3 — Fila de espera e consulta de posição; relacionada à CP12 — Segurança, sigilo e controle de acesso. Dependência: RF52 — Verificar identidade do paciente ou responsável (CP12).{{ origem("RNF6") }}
 {{ registro("RNF6") }}
 
-**RNF7 — Compreensibilidade das informações sobre a posição na fila**{ #rnf7 }
+**RNF7 — Compreensibilidade das informações sobre a situação na fila**{ #rnf7 }
 
-A interface de consulta da fila de espera (RF8) deve apresentar de forma clara e legível a posição e a situação atual do inscrito, acompanhadas de informação explícita de que a posição pode variar e não representa garantia de prazo ou data de atendimento.
+A interface de consulta da fila de espera (RF8) deve apresentar de forma clara e legível a situação atual do inscrito ("Em triagem" ou "Em atendimento"), acompanhada de informação explícita de que estar em triagem não representa garantia de prazo ou data de atendimento, porque a captação de pacientes é semestral. A posição na fila não é mostrada ao inscrito ([DF55](decisoes-fbr.md#df55)).
 
 O aviso deve ser exibido junto ao resultado da consulta, sem exigir que o interessado acesse outra página, abra um documento adicional ou realize uma operação específica para visualizar essa informação.
 
-A conformidade deve ser verificada por teste de compreensão com, no mínimo, 10 participantes representativos do público externo da Clínica Escola — interessados inscritos, pacientes ou responsáveis legais, incluindo participantes com baixa familiaridade digital. Após concluir a consulta sem explicação adicional do avaliador, cada participante deve responder, com suas próprias palavras, se a posição pode mudar e se ela garante uma data de atendimento. O requisito é atendido quando pelo menos 90% dos participantes responderem corretamente às duas questões e todas as consultas apresentarem o aviso junto ao resultado.
+A conformidade deve ser verificada por teste de compreensão com, no mínimo, 10 participantes representativos do público externo da Clínica Escola — interessados inscritos, pacientes ou responsáveis legais, incluindo participantes com baixa familiaridade digital. Após concluir a consulta sem explicação adicional do avaliador, cada participante deve responder, com suas próprias palavras, em que situação está a inscrição e se essa situação garante uma data de atendimento. O requisito é atendido quando pelo menos 90% dos participantes responderem corretamente às duas questões e todas as consultas apresentarem o aviso junto ao resultado.
 
 Classificação: usabilidade (URPS+).
 Rastreabilidade: Feature "Consultar posição individual na fila" → CP3 — Fila de espera e consulta de posição → IS03 — Expectativa sobre a fila.{{ origem("RNF7") }}
@@ -179,16 +179,16 @@ Rastreabilidade: CP4 — Agendamento, confirmação e remarcação (transversal 
 
 **RNF11 — Confiabilidade do envio de lembretes**{ #rnf11 }
 
-O sistema deve entregar ao provedor de e-mail pelo menos 98% dos lembretes de sessão (RF13) dos pacientes com e-mail como canal preferencial; o SMS foi descartado pela Clínica Escola em 23/10/2026 ([DF24](decisoes-fbr.md#df24)), e os lembretes por WhatsApp são enviados pela secretaria. Como o sistema não controla a chegada da mensagem ao aparelho do paciente, considera-se **entregue** o lembrete aceito pelo provedor de e-mail.
+O sistema deve entregar ao provedor de e-mail pelo menos 98% dos lembretes de sessão (RF13) **programados por e-mail**, isto é, dos pacientes com o e-mail como canal da inscrição, que é o caso de toda inscrição feita depois da [DF48](decisoes-fbr.md#df48). O SMS foi descartado pela Clínica Escola em 23/10/2026 ([DF24](decisoes-fbr.md#df24)). Os lembretes por WhatsApp, das inscrições anteriores à DF48 com WhatsApp ou ligação como canal, são enviados manualmente pela secretaria e ficam fora da meta: deles, só se registra o uso do botão (RF13). Como o sistema não controla a chegada da mensagem ao aparelho do paciente, considera-se **entregue** o lembrete aceito pelo provedor de e-mail.
 
 - **Fórmula e janela:** taxa = lembretes aceitos pelo provedor ÷ lembretes programados por e-mail × 100, apurada por mês civil, sobre todos os lembretes programados no mês.
 - **Nova tentativa:** um lembrete recusado ou sem resposta do provedor deve ser reenviado automaticamente até 3 vezes, dentro de 1 hora após a primeira tentativa.
 - **Falhas externas:** saem do denominador, mas continuam registradas, os lembretes que falharam por contato inválido informado na inscrição e os que falharam durante indisponibilidade do provedor registrada no seu painel de status. A qualidade do cadastro é responsabilidade da secretaria, e a indisponibilidade do provedor é acompanhada pela equipe técnica.
-- **Tratamento da falha:** quando as tentativas se esgotarem nos dois canais, a sessão deve ser sinalizada à secretaria para contato por telefone.
+- **Tratamento da falha:** quando as tentativas por e-mail se esgotarem, a sessão deve ser sinalizada à secretaria para contato por telefone.
 
 O envio e cada falha de cada lembrete devem ser registrados para consulta posterior.
 
-A conformidade deve ser verificada por teste com provedor simulado, sobre uma amostra de pelo menos 200 lembretes por canal, com falhas injetadas em 10% deles, conferindo as novas tentativas, a taxa de entrega calculada, a exclusão das falhas externas e a sinalização à secretaria; em produção, pelo relatório mensal da taxa de cada canal.
+A conformidade deve ser verificada por teste com provedor simulado, sobre uma amostra de pelo menos 200 lembretes programados por e-mail, com falhas injetadas em 10% deles, conferindo as novas tentativas, a taxa de entrega calculada, a exclusão das falhas externas e a sinalização à secretaria; em produção, pelo relatório mensal da taxa de entrega dos lembretes por e-mail.
 
 Classificação: confiabilidade (URPS+).
 Rastreabilidade: Feature "Enviar lembrete de sessão agendada" → CP4 — Agendamento, confirmação e remarcação.{{ origem("RNF11") }}
@@ -345,7 +345,12 @@ Rastreabilidade: CP5 — Distribuição de casos entre supervisores e estagiári
 
 A coordenação deve conseguir distribuir os casos (RF20) e o supervisor, vincular o estagiário ao caso (RF21), sem treinamento prévio e inclusive a partir do celular. A distribuição de um caso deve ser concluída em até 3 interações a partir da lista de pendentes.
 
-A conformidade deve ser verificada por teste de usabilidade com uma amostra mínima de 5 participantes representativos por perfil (supervisor e coordenação), em telas responsivas, com pelo menos 90% dos participantes concluindo a tarefa sem auxílio externo.
+A conformidade deve ser verificada de duas formas:
+
+- **Teste com usuários:** teste de usabilidade aplicado pela FBr no ambiente de validação, com usuários reais da clínica dos perfis que usam essas telas, sem treinamento prévio, no computador e no celular. O teste é aceito quando os participantes concluem as tarefas e a coordenação da FBr aprova o resultado. As dificuldades relatadas são registradas e tratadas como melhoria das telas.
+- **Teste automatizado:** o e2e confere, no celular, as 3 interações da distribuição a partir da lista de pendentes e as do vínculo a partir de Meus casos.
+
+Até 12/11/2026, a meta pedia uma amostra de 5 participantes por perfil e 90% de conclusão sem auxílio, valores definidos pela equipe na verificação cruzada. A FBr aplicou o teste com as pessoas da clínica disponíveis no semestre e aprovou o resultado, e a meta foi revista para a forma acima, que a clínica consegue aplicar ([registro do teste](../historico/unidade-3/reunioes.md#registro-do-teste-de-usabilidade-rnf22)).
 
 Classificação: usabilidade (URPS+).
 Rastreabilidade: CP5 — Distribuição de casos entre supervisores e estagiários (transversal às features "Listar casos aguardando distribuição", "Distribuir caso a supervisor" e "Vincular paciente a estagiário responsável").{{ origem("RNF22") }}

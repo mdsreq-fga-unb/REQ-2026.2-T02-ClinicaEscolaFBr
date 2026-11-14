@@ -195,4 +195,6 @@ export type ResultadoTransferencia = {
   sessoesCanceladas: number;
   // Início das sessões futuras canceladas, para reagendar com o novo estagiário.
   sessoesAReagendar: string[];
+  // O novo supervisor ficou acima do limite de casos (DF50).
+  acimaDoLimite: boolean;
 };

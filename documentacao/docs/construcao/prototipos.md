@@ -18,10 +18,10 @@ O Claude Design do Ciclo 3 e as imagens da inscrição (RF1) e do prontuário (R
 !!! info "Valores definidos pela FBr e valores provisórios"
     O prazo de confirmação de presença é de **24 horas antes da sessão**, como a FBr definiu em 31/10/2026. Continuam provisórios, e aparecem assim nas telas: o texto do termo de consentimento (RF57), que a equipe redigiu e a FBr ainda aprova; e os campos obrigatórios e o limite de 1.000 caracteres da anamnese (RF69) e da evolução (RF28).
 
-!!! question "Propostas para validar com a FBr"
-    - **Itens novos no menu:** "Agenda" para o supervisor (agenda dos seus estagiários, RF11) e "Fila de espera" para a coordenação (RF7). Os dois estão marcados como proposta nas telas.
-    - **Fila (RF8):** o inscrito vê uma de três situações, "Aguardando triagem", "Na fila de espera" (com a posição na fila inteira) e "Em atendimento". Em 11/11/2026, a FBr respondeu com "em triagem" e "em atendimento", e a equipe perguntou se "Na fila de espera" continua.
-    - **Reversão do desligamento (RF38):** a coordenação escolhe, no diálogo, quais faltas deixam de contar.
+!!! question "Propostas levadas à FBr e as respostas"
+    - **Itens novos no menu:** "Agenda" para o supervisor (agenda dos seus estagiários, RF11) e "Fila de espera" para a coordenação (RF7). Aprovados em 12/11/2026 ([DF57](../requisitos/decisoes-fbr.md#df57)).
+    - **Fila (RF8):** as pranchas mostram três situações, "Aguardando triagem", "Na fila de espera" (com a posição na fila inteira) e "Em atendimento". Em 12/11/2026, a FBr definiu só duas, "Em triagem" e "Em atendimento", **sem a posição**, para não gerar expectativa ([DF55](../requisitos/decisoes-fbr.md#df55)). As pranchas 1-3 e 1-4 ficam desatualizadas nesse ponto, e vale a DF55.
+    - **Reversão do desligamento (RF38):** a coordenação escolhe, no diálogo, quais faltas deixam de contar. Aprovada em 12/11/2026 ([DF58](../requisitos/decisoes-fbr.md#df58)).
     - **Transferência (RF25):** a coordenação pode escolher um supervisor que já está no limite de 50 casos, com aviso. Aprovada pela FBr em 11/11/2026 ([DF50](../requisitos/decisoes-fbr.md#df50)).
 
 ## 1. Público: inscrição, termo, verificação, fila e link da sessão
@@ -86,6 +86,9 @@ _Ciclo 4._ [RF8](../requisitos/funcionais.md#rf8) · issue [#155](https://github
 - **aguardando triagem:** sem posição, explicando o próximo passo;
 - **em atendimento:** sem posição, indicando a secretaria para dúvidas;
 - **acesso negado:** sem verificação válida ou depois de 15 minutos, sem nenhum dado da inscrição e com o botão para confirmar a identidade de novo.
+
+!!! warning "Mudança pedida pela FBr em 12/11/2026"
+    A posição na fila não aparece mais para o inscrito, e as situações passam a ser só "Em triagem" (antes de ser chamado para o atendimento) e "Em atendimento" (depois de chamado), pela [DF55](../requisitos/decisoes-fbr.md#df55). As pranchas abaixo ainda mostram a posição e as três situações: na construção, vale a DF55.
 
 **No computador**
 
@@ -209,7 +212,7 @@ _Ciclo 4._ [RF11](../requisitos/funcionais.md#rf11) · issue [#141](https://gith
 
 ### RF14 — Sessões sem confirmação na agenda { #rf14 }
 
-_Ciclo 4._ [RF14](../requisitos/funcionais.md#rf14) · issue [#142](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/issues/142). Na Agenda, a secretaria vê as sessões cujo prazo de confirmação acabou sem resposta do paciente, com o canal preferencial, o caminho para os contatos e a opção de registrar a confirmação feita por telefone. Também aparece o estado vazio.
+_Ciclo 4._ [RF14](../requisitos/funcionais.md#rf14) · issue [#142](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/issues/142). Na Agenda, a secretaria vê as sessões cujo prazo de confirmação acabou sem resposta do paciente, com o caminho para os contatos e a opção de registrar a confirmação feita por telefone. Também aparece o estado vazio. A imagem ainda mostra a coluna "Canal preferencial", que saiu com a [DF48](../requisitos/decisoes-fbr.md#df48).
 
 [![Agenda da secretaria: sessões sem confirmação e estado vazio](../assets/prototipos-ciclo-4/2-1-agenda-confirmacao.webp)](../assets/prototipos-ciclo-4/2-1-agenda-confirmacao.webp){ target="_blank" }
 

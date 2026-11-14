@@ -175,6 +175,10 @@ export const inscricaoSchema = dadosBase
     confirmado: z.literal(true, {
       error: "Revise os dados e confirme o envio.",
     }),
+    aceiteTermo: z.literal(true, {
+      error: "Leia o termo e marque sua concordância.",
+    }),
+    versaoTermo: obrigatorio(50),
     chaveEnvio: z.uuid(),
   })
   .superRefine(validarResponsavel)
@@ -185,3 +189,13 @@ export const comprovanteSchema = z.object({
   criadaEm: z.iso.datetime(),
 });
 export type ComprovanteInscricao = z.infer<typeof comprovanteSchema>;
+
+export const termoVigenteSchema = z.object({
+  versao: z.string().min(1),
+  titulo: z.string(),
+  introducao: z.string(),
+  topicos: z.array(z.object({ titulo: z.string(), corpo: z.string() })),
+  provisoria: z.boolean(),
+  vigenteDesde: z.iso.datetime(),
+});
+export type TermoVigente = z.infer<typeof termoVigenteSchema>;

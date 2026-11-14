@@ -10,7 +10,10 @@ import {
   menorDeIdade,
   triagemInscricaoSchema,
   type ComprovanteInscricao,
+  type TermoVigente,
 } from "@clinica/shared";
+import { buscarTermoVigente, Termo } from "./termo";
+import { Aviso } from "@/components/comum/aviso";
 import styles from "./inscricao.module.css";
 
 // A ordem dos rótulos é a ordem da revisão.
@@ -199,6 +202,36 @@ export function FormularioInscricao({ aberta = true }: { aberta?: boolean }) {
   const [valores, setValores] = useState<Valores>(vazio);
   const [erros, setErros] = useState<Record<string, string>>({});
   const [confirmado, setConfirmado] = useState(false);
+  const [aceiteTermo, setAceiteTermo] = useState(false);
+  const [termo, setTermo] = useState<TermoVigente | null>(null);
+  const [falhaTermo, setFalhaTermo] = useState(false);
+  const [tentativaTermo, setTentativaTermo] = useState(0);
+  const [termoAtualizado, setTermoAtualizado] = useState(false);
+  const avisoTermo = useRef<HTMLParagraphElement>(null);
+  useEffect(() => {
+    if (!aberta) return;
+    let ativo = true;
+    buscarTermoVigente()
+      .then((t) => {
+        if (ativo) setTermo(t);
+      })
+      .catch(() => {
+        if (ativo) setFalhaTermo(true);
+      });
+    return () => {
+      ativo = false;
+    };
+  }, [aberta, tentativaTermo]);
+  useEffect(() => {
+    if (termoAtualizado) avisoTermo.current?.focus();
+  }, [termoAtualizado, termo]);
+  function recarregarTermo() {
+    setAceiteTermo(false);
+    setTermo(null);
+    setFalhaTermo(false);
+    setTentativaTermo((n) => n + 1);
+  }
+
   const [enviando, setEnviando] = useState(false);
   const [falha, setFalha] = useState("");
   const [comprovante, setComprovante] = useState<ComprovanteInscricao | null>(
@@ -224,6 +257,7 @@ export function FormularioInscricao({ aberta = true }: { aberta?: boolean }) {
   function alterar(campo: Campo, valor: string) {
     setValores((antes) => ({ ...antes, [campo]: valor }));
     setConfirmado(false);
+    setAceiteTermo(false);
     setFalha("");
   }
   function mudarEtapa(proxima: number) {
@@ -249,7 +283,13 @@ export function FormularioInscricao({ aberta = true }: { aberta?: boolean }) {
     const conteudo = JSON.stringify(dados);
     if (!envio.current || envio.current.conteudo !== conteudo)
       envio.current = { chave: crypto.randomUUID(), conteudo };
-    const payload = { ...dados, confirmado, chaveEnvio: envio.current.chave };
+    const payload = {
+      ...dados,
+      confirmado,
+      aceiteTermo,
+      versaoTermo: termo?.versao ?? "",
+      chaveEnvio: envio.current.chave,
+    };
     const schema =
       etapa === 0
         ? dadosInscricaoSchema
@@ -260,7 +300,10 @@ export function FormularioInscricao({ aberta = true }: { aberta?: boolean }) {
     if (!validacao.success) {
       const mensagens: Record<string, string> = {};
       for (const erro of validacao.error.issues)
-        mensagens[String(erro.path[0])] ??= erro.message;
+        mensagens[String(erro.path[0])] ??=
+          etapa === 2 && erro.path[0] === "cpfResponsavel"
+            ? "Informe o CPF do responsável legal na etapa 1."
+            : erro.message;
       setErros(mensagens);
       return;
     }
@@ -282,6 +325,15 @@ export function FormularioInscricao({ aberta = true }: { aberta?: boolean }) {
         credentials: "omit",
         signal: AbortSignal.timeout(20000),
       });
+      if (resposta.status === 409) {
+        const erro = await resposta.json();
+        if (erro.codigo === "termo_desatualizado") {
+          recarregarTermo();
+          setTermoAtualizado(true);
+          setErros({});
+          return;
+        }
+      }
       if (resposta.status === 400) {
         // Aceitar somente caminhos conhecidos e mensagens do contrato local;
         // nunca mostrar o corpo arbitrário de erro retornado pelo servidor.
@@ -292,9 +344,13 @@ export function FormularioInscricao({ aberta = true }: { aberta?: boolean }) {
           const nome = erro?.path?.[0];
           if (
             typeof nome === "string" &&
-            (nome in rotulos || nome === "confirmado")
+            (nome in rotulos ||
+              ["confirmado", "aceiteTermo", "versaoTermo"].includes(nome))
           )
-            mensagens[nome] = "Confira este campo e tente novamente.";
+            mensagens[nome] =
+              nome === "cpfResponsavel"
+                ? "Informe o CPF do responsável legal na etapa 1."
+                : "Confira este campo e tente novamente.";
         }
         setErros(mensagens);
       }
@@ -471,7 +527,7 @@ export function FormularioInscricao({ aberta = true }: { aberta?: boolean }) {
                             href={`#${nome}`}
                             onClick={(event) => {
                               event.preventDefault();
-                              if (etapa === 2 && nome !== "confirmado") {
+                              if (etapa === 2 && nome in rotulos) {
                                 focoPendente.current = nome;
                                 setEtapa(
                                   nome in triagemInscricaoSchema.shape ? 1 : 0,
@@ -629,23 +685,6 @@ export function FormularioInscricao({ aberta = true }: { aberta?: boolean }) {
                         </dl>
                       </section>
                     ))}
-                    <div className={styles.aviso}>
-                      <strong>
-                        A inscrição não garante vaga nem agendamento.
-                      </strong>
-                      <p>
-                        O atendimento depende da triagem e da disponibilidade de
-                        vagas.
-                      </p>
-                    </div>
-                    <aside
-                      className={styles.reserva}
-                      aria-label="Consentimento futuro"
-                    >
-                      Espaço reservado para o termo e aceite de tratamento de
-                      dados, sujeito à aprovação da FBr em uma próxima etapa do
-                      projeto (RF57).
-                    </aside>
                     <label className={styles.confirmacao}>
                       <input
                         id="confirmado"
@@ -668,6 +707,157 @@ export function FormularioInscricao({ aberta = true }: { aberta?: boolean }) {
                         {erros.confirmado}
                       </p>
                     )}
+                    {termoAtualizado && (
+                      <p role="alert" ref={avisoTermo} tabIndex={-1}>
+                        O termo foi atualizado. Leia a nova versão e marque sua
+                        concordância novamente. Seus dados foram mantidos.
+                      </p>
+                    )}
+                    <Termo
+                      key={termo?.versao ?? "carregando"}
+                      termo={termo}
+                      aviso={
+                        menor && (
+                          <Aviso
+                            tipo="info"
+                            titulo="Inscrição de menor de idade"
+                          >
+                            Como o paciente é menor de idade, quem concorda com
+                            este termo é o responsável legal.
+                          </Aviso>
+                        )
+                      }
+                      estado={
+                        falhaTermo ? (
+                          <Aviso
+                            tipo="erro"
+                            titulo="Não foi possível carregar o termo."
+                          >
+                            <button type="button" onClick={recarregarTermo}>
+                              Tentar carregar novamente
+                            </button>
+                          </Aviso>
+                        ) : (
+                          <p role="status">Carregando termo…</p>
+                        )
+                      }
+                    >
+                      {menor ? (
+                        <section
+                          aria-labelledby="responsavel-consentimento-titulo"
+                          className="space-y-3"
+                        >
+                          <h4
+                            id="responsavel-consentimento-titulo"
+                            className="font-bold"
+                          >
+                            Identificação e concordância do responsável legal
+                          </h4>
+                          <dl className="grid gap-3 sm:grid-cols-2">
+                            <div>
+                              <dt className="ui-dica">
+                                Nome do responsável legal
+                              </dt>
+                              <dd>
+                                {valores.responsavelLegal ||
+                                  "Não informado na etapa 1"}
+                              </dd>
+                            </div>
+                            <div>
+                              <dt className="ui-dica">
+                                CPF do responsável legal
+                              </dt>
+                              <dd>
+                                {valores.cpfResponsavel ||
+                                  "Não informado na etapa 1"}
+                              </dd>
+                              {(!valores.cpfResponsavel ||
+                                erros.cpfResponsavel) && (
+                                <p
+                                  id="cpf-responsavel-termo-erro"
+                                  className={styles.erroCampo}
+                                >
+                                  Informe o CPF do responsável legal na etapa 1.
+                                  Use “Voltar e corrigir dados”.
+                                </p>
+                              )}
+                            </div>
+                          </dl>
+                          <p className="ui-dica">
+                            Dados da etapa 1. Para corrigir, use “Voltar e
+                            corrigir dados”.
+                          </p>
+                          <button
+                            type="button"
+                            disabled={enviando}
+                            className="text-primary underline"
+                            onClick={() => {
+                              focoPendente.current = "cpfResponsavel";
+                              mudarEtapa(0);
+                            }}
+                          >
+                            Voltar e corrigir dados
+                          </button>
+                        </section>
+                      ) : (
+                        <h4 className="font-bold">Sua concordância</h4>
+                      )}
+                      <label className={styles.confirmacao}>
+                        <input
+                          id="aceiteTermo"
+                          type="checkbox"
+                          checked={aceiteTermo}
+                          disabled={enviando || !termo}
+                          onChange={(e) => setAceiteTermo(e.target.checked)}
+                          aria-invalid={!!erros.aceiteTermo}
+                          aria-describedby={
+                            erros.aceiteTermo ? "aceiteTermo-erro" : undefined
+                          }
+                        />
+                        <span>
+                          {menor
+                            ? `Sou o responsável legal de ${valores.nomeCompleto}, li este termo e concordo com o tratamento dos dados pessoais e de saúde dele pela Clínica Escola da FBr, para as finalidades descritas.`
+                            : "Li este termo e concordo com o tratamento dos meus dados pessoais e de saúde pela Clínica Escola da FBr, para as finalidades descritas."}
+                        </span>
+                      </label>
+                      {erros.aceiteTermo && (
+                        <p id="aceiteTermo-erro" className={styles.erroCampo}>
+                          {erros.aceiteTermo}
+                        </p>
+                      )}
+                      <p className="ui-dica">
+                        Ao concluir, a inscrição guarda a versão do termo aceita
+                        e a data e a hora do aceite.
+                      </p>
+                      {menor && (
+                        <Aviso
+                          tipo="alerta"
+                          titulo="Autorização presencial do responsável legal"
+                        >
+                          O aceite on-line não substitui a autorização e o termo
+                          de responsabilidade assinados pessoalmente pelo
+                          responsável legal na Clínica Escola, exigidos para o
+                          atendimento de crianças e adolescentes.
+                        </Aviso>
+                      )}
+                      {erros.versaoTermo && (
+                        <p
+                          id="versaoTermo"
+                          tabIndex={-1}
+                          className={styles.erroCampo}
+                        >
+                          Aguarde o carregamento do termo antes de enviar.
+                        </p>
+                      )}
+                    </Termo>
+                    <Aviso
+                      tipo="info"
+                      titulo="A inscrição não garante vaga nem agendamento."
+                    >
+                      Ao concluir, você receberá o número da inscrição. O
+                      atendimento depende da triagem e da disponibilidade de
+                      vagas.
+                    </Aviso>
                   </>
                 )}
                 {falha && (

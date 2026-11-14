@@ -17,7 +17,7 @@ A Faculdade Brasília (FBr), [CNPJ], [ENDEREÇO], é a responsável pelos seus d
 
 - **Identificação:** nome, data de nascimento, CPF, RG, estado civil e, se você quiser informar, sexo, profissão e escolaridade.
 - **Endereço e contato:** endereço, bairro, cidade, CEP, e-mail, celular e, se você quiser informar, WhatsApp.
-- **Contato de emergência, se você quiser informar:** nome, grau de parentesco e telefone.
+- **Contato de emergência obrigatório:** nome, grau de parentesco e telefone.
 - **Responsável legal, para menores de 18 anos:** nome, CPF e o documento que comprova a responsabilidade.
 - **Sobre a sua saúde:** o motivo da busca pelo atendimento, como você percebe a urgência e o histórico que quiser contar.
 
