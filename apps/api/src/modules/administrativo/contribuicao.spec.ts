@@ -294,7 +294,9 @@ describe('Contribuição social do paciente (RF41, RNF36)', () => {
       registrar('secretaria', caso, { pagoEm: dia(0), forma: 'pix' }),
       registrar('secretaria', caso, { pagoEm: dia(0), forma: 'dinheiro' }),
     ]);
-    expect(respostas.map((r) => r.status).sort()).toEqual([201, 409]);
+    expect(respostas.map((r) => r.status).sort((a, b) => a - b)).toEqual([
+      201, 409,
+    ]);
     expect(respostas.find((r) => r.status === 409)!.body.pagoEm).toBe(dia(0));
     expect(await pagamentos(caso)).toHaveLength(1);
     expect(await eventos('registrar_contribuicao')).toHaveLength(1);
