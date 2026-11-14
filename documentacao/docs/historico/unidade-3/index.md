@@ -54,6 +54,7 @@ As evidências de cada marco ficam na issue da feature:
 - [:material-backup-restore: **Cópia de segurança e restauração** Procedimento do RNF53, com os scripts e o teste de restauração.](../../construcao/copia-de-seguranca.md)
 - [:material-speedometer: **Teste de carga** Cenário de referência do RNF12 e do RNF21, com a massa de dois semestres.](../../construcao/teste-de-carga.md)
 - [:material-check-decagram-outline: **9. DoR e DoD** Critérios de entrada na construção e de feature pronta.](../../requisitos/dor-dod.md)
+- [:material-shield-check-outline: **Verificação e validação** Quando aplicar, o que verificar e validar, nível de rigor e evidências.](../../processo/verificacao-e-validacao.md)
 - [:material-rocket-launch-outline: **Features e backlog** Itens do MVP por ciclo e Líder de Feature.](../../visao-geral/backlog.md)
 
 </div>

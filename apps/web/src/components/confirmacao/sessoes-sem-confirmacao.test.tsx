@@ -18,7 +18,6 @@ const pedro: SessaoSemConfirmacao = {
   estagiario: "Lucas Ferreira",
   inicio: "2026-11-04T19:00:00.000Z",
   termino: "2026-11-04T19:50:00.000Z",
-  canalPreferencial: "ligacao",
 };
 
 type Resposta = { status: number; corpo: unknown };
@@ -75,7 +74,7 @@ describe("Sessões sem confirmação (RF14)", () => {
     vi.unstubAllGlobals();
   });
 
-  it("mostra o paciente, a sessão, o canal e o caminho para os contatos, e explica que não é falta (RF14, RNF13)", async () => {
+  it("mostra o paciente, a sessão e o caminho para os contatos, sem o canal preferencial (DF48), e explica que não é falta (RF14, RNF13)", async () => {
     simularApi([lista([pedro])]);
     abrir();
 
@@ -86,7 +85,7 @@ describe("Sessões sem confirmação (RF14)", () => {
     ).toBeTruthy();
     expect(within(tabela).getByText("04/11/2026")).toBeTruthy();
     expect(within(tabela).getByText("16:00 às 16:50")).toBeTruthy();
-    expect(within(tabela).getByText("Ligação")).toBeTruthy();
+    expect(within(tabela).queryByText("Canal preferencial")).toBeNull();
     expect(within(tabela).getByText("Sem confirmação")).toBeTruthy();
     expect(
       within(tabela)
@@ -99,6 +98,9 @@ describe("Sessões sem confirmação (RF14)", () => {
     expect(screen.getByText("1 sessão")).toBeTruthy();
     expect(screen.getByText(/até 24 horas antes da sessão/)).toBeTruthy();
     expect(screen.getByText(/não é falta/)).toBeTruthy();
+    expect(
+      screen.getByText(/pelo e-mail ou pelo celular do paciente/),
+    ).toBeTruthy();
   });
 
   it("sem sessões: mostra o estado vazio", async () => {

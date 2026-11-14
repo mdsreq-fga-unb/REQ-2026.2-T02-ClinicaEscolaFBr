@@ -15,7 +15,7 @@ import { Campo, classeEntrada } from "@/components/comum/campo";
 import { Dados } from "@/components/comum/dados";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { api, ErroApi } from "@/lib/api";
-import { dataBr, dataHoraBr, horaBr } from "@/lib/formato";
+import { dataBr, dataHoraBr, hojeBr, horaBr } from "@/lib/formato";
 import { useSessao } from "@/lib/sessao";
 import { cn } from "@/lib/utils";
 
@@ -515,6 +515,8 @@ export default function AgendarSessaoPage() {
                 <input
                   {...props}
                   type="date"
+                  // O calendário não oferece dias que já passaram.
+                  min={hojeBr()}
                   className={classeEntrada}
                   value={data}
                   onChange={(e) => {

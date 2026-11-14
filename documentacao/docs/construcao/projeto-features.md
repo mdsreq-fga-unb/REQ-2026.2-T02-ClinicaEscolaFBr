@@ -571,7 +571,7 @@ sequenceDiagram
 | --- | --- |
 | O mesmo esquema Zod é usado na interface e na API | Envio com campo obrigatório vazio é bloqueado, e os dados são mantidos |
 | A idade é calculada a partir da data de nascimento, e o responsável legal é obrigatório para menores de 18 anos | Menor de idade sem responsável legal é bloqueado |
-| Pelo menos um contato (celular ou e-mail) e o canal preferencial (e-mail, WhatsApp ou ligação) são obrigatórios; WhatsApp e ligação exigem o celular | Formato validado, um contato exigido e o preferencial registrado |
+| E-mail e celular obrigatórios, sem a escolha do canal preferencial ([DF48](../requisitos/decisoes-fbr.md#df48)); a API grava `canal_preferencial = 'email'` nas inscrições novas, e as antigas mantêm o canal escolhido | Formato validado e os dois contatos exigidos |
 | CPF com 11 números; RG como texto livre, como está no documento, sem órgão emissor e sem upload | Nenhum envio de cópia do documento |
 | A API só grava com `confirmado: true` | Sem confirmação, a solicitação não é registrada |
 | Número no formato `AAAA-NNNNN`, com o ano do registro e a sequência `inscricoes_numero_seq`, que não reinicia a cada ano | Cada inscrição recebe um número único, como "2026-00487" |
@@ -579,7 +579,7 @@ sequenceDiagram
 | A interface só mostra a confirmação após a resposta 201 | Nenhuma confirmação sem registro efetivo |
 | Componente `AvisoEmergencia` fixo no layout do formulário | Aviso do CVV e do SAMU em todas as etapas |
 
-**Dados de teste:** um adulto com e-mail como canal preferencial; um menor com responsável legal, só celular e WhatsApp como canal; uma inscrição com ligação como canal e sem celular (recusada); uma inscrição com CPF em formato inválido; um RG com letra ("12.345.678-X").
+**Dados de teste:** um adulto com e-mail e celular; um menor com responsável legal; uma inscrição sem e-mail e outra sem celular (recusadas); uma inscrição com CPF em formato inválido; um RG com letra ("12.345.678-X").
 
 ### RF2 — Emitir comprovante de inscrição ([#89](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/issues/89))
 
@@ -741,15 +741,17 @@ sequenceDiagram
 
 _Construída no Ciclo 4._
 
+!!! warning "Mudança da DF55 (12/11/2026)"
+    A FBr decidiu que o inscrito vê só "Em triagem", antes de ser chamado para o atendimento, ou "Em atendimento", depois de chamado, **sem a posição na fila** ([DF55](../requisitos/decisoes-fbr.md#df55)). A tabela, o diagrama e as regras abaixo já seguem a DF55. A ordem da fila continua sendo calculada pelo RF7 e vista só pela equipe.
+
 **Rotas** (módulo `fila`, num controller próprio, separado do `GET /fila`, que tem os guards internos na classe):
 
-- `GET /fila/minha-situacao` (pública, com o `VerificacaoGuard` do RF52). Usa só a inscrição ligada à verificação, em `req.inscricaoVerificada`, e devolve uma de quatro situações, pela `casos.situacao`. Não devolve a prioridade nem nenhum dado clínico. Responde com `Cache-Control: no-store`, porque a consulta pode ser feita num computador compartilhado.
-- `GET /fila/situacao?numero=` (secretaria): a consulta presencial, para quem informou só o celular (RF52, [DF24](../requisitos/decisoes-fbr.md#df24)) e para quem recebeu "procure a secretaria". Devolve a mesma resposta da rota pública, com a situação e a posição, sem a cor (RNF17). A secretaria confere a identidade da pessoa no balcão, e a consulta fica na auditoria.
+- `GET /fila/minha-situacao` (pública, com o `VerificacaoGuard` do RF52). Usa só a inscrição ligada à verificação, em `req.inscricaoVerificada`, e devolve uma de três situações, pela `casos.situacao`. Não devolve a prioridade nem nenhum dado clínico. Responde com `Cache-Control: no-store`, porque a consulta pode ser feita num computador compartilhado.
+- `GET /fila/situacao?numero=` (secretaria): a consulta presencial, para inscrições legadas sem e-mail ou pessoas que precisam de apoio na verificação (novas inscrições seguem a DF48) e para quem recebeu "procure a secretaria". Devolve a mesma resposta da rota pública, com a situação, sem a posição (DF55) e sem a cor (RNF17). A secretaria confere a identidade da pessoa no balcão, e a consulta fica na auditoria.
 
 | Situação do caso | Resposta |
 | --- | --- |
-| Sem caso (inscrição sem prioridade) | Aguardando triagem |
-| `aguardando_distribuicao`, `aguardando_vinculo` ou `aguardando_vaga` | Na fila de espera, com a posição na fila inteira |
+| Sem caso (inscrição sem prioridade), `aguardando_distribuicao`, `aguardando_vinculo` ou `aguardando_vaga` | Em triagem, sem a posição |
 | `em_atendimento` | Em atendimento |
 | `encerrado` ou `desligado_por_faltas` | Procure a secretaria |
 
@@ -765,12 +767,9 @@ sequenceDiagram
         A-->>W: 401 sem nenhum dado
     else verificação válida
         A->>DB: caso da inscrição verificada e a situação dele
-        alt sem caso
-            A-->>W: aguardando triagem
-        else aguardando distribuição, vínculo ou vaga
-            A->>A: posição calculada pelo FilaService
-            A-->>W: na fila de espera, posição N
-        else em atendimento
+        alt sem caso, ou aguardando distribuição, vínculo ou vaga
+            A-->>W: em triagem, sem a posição
+        else em atendimento (caso vinculado a um estagiário)
             A-->>W: em atendimento
         else encerrado ou desligado por faltas
             A-->>W: procure a secretaria
@@ -780,19 +779,23 @@ sequenceDiagram
 
 | Regra | Critério de aceitação |
 | --- | --- |
-| A rota só lê `req.inscricaoVerificada` e nunca recebe um id de inscrição (RNF6) | Depois da verificação, o inscrito vê a própria posição e situação |
+| A rota só lê `req.inscricaoVerificada` e nunca recebe um id de inscrição (RNF6) | Depois da verificação, o inscrito vê a própria situação, sem a posição |
 | Sem verificação válida, `401` sem dado | Sem verificação, a consulta é negada |
-| A posição vem do mesmo `FilaService` do RF7, calculada na hora | Depois de mudanças na fila, uma nova consulta mostra a posição atualizada |
+| A situação vem de `casos.situacao`, lida na hora; a posição não é calculada nem devolvida (DF55) | Depois do vínculo com um estagiário, uma nova consulta mostra "Em atendimento" |
 
-**Decisões de projeto:** a posição é a da fila inteira, e não dentro da cor, porque informar a cor revelaria a prioridade clínica (proposta levada à FBr). A resposta vem com o aviso de que a posição pode mudar e não garante data (RNF7). O "procure a secretaria", para o caso encerrado ou desligado, é uma situação a mais que as três da prancha 1-3 e é uma proposta da equipe, registrada nas pendências de validação. O horário "Consulta feita em…" vem da API, junto com a resposta.
+**Decisões de projeto:** a resposta não traz a posição nem a cor (DF55 e RNF17). Ela vem com o aviso de que estar em triagem não garante data de atendimento, porque a captação é semestral (RNF7). O "procure a secretaria", para o caso encerrado ou desligado, continua como encaminhamento à secretaria e é uma proposta da equipe, registrada nas pendências de validação. O horário "Consulta feita em…" vem da API, junto com a resposta.
 
 **Acessibilidade (RNF56 a RNF58):** o resultado, que carrega depois da verificação, é anunciado com `role="status"`. O aviso do 401 usa `role="alert"`, recebe o foco e traz o botão "Confirmar identidade", que recarrega a página para recomeçar a verificação (se o componente da #202 ganhar uma função para recomeçar, ela substitui o recarregamento). A situação tem ícone e texto, e não só cor, e a página é conferida a 320 px sem rolagem lateral.
 
-**Telas:** página `/consultar`, depois dos dois passos do RF52. O componente da #202 já mostra o título, o aviso "Identidade confirmada" e o "Encerrar consulta"; o RF8 mostra só o cartão do resultado, nas três situações do protótipo, mais o "procure a secretaria" e o acesso negado. Para a secretaria, a consulta pelo número fica na lista de Pacientes. Protótipo: [pranchas 1-3 e 1-4](prototipos.md#rf8).
+**Telas:** página `/consultar`, depois dos dois passos do RF52. O componente da #202 já mostra o título, o aviso "Identidade confirmada" e o "Encerrar consulta"; o RF8 mostra só o cartão do resultado, com "Em triagem", "Em atendimento", o encaminhamento "Procure a secretaria" e o acesso negado. Para a secretaria, a consulta pelo número fica na lista de Pacientes. Protótipo: [pranchas 1-3 e 1-4](prototipos.md#rf8).
 
-**Dados de teste:** uma inscrição sem prioridade, uma na posição 3, uma `aguardando_vinculo` (continua na fila), uma em atendimento, uma encerrada e uma desligada (procure a secretaria), cada uma com e-mail para o código; uma verificação expirada (401); uma consulta antes e depois de outro caso passar à frente; a inscrição A verificada pedindo a rota com o número de B na query (a resposta continua sendo a de A); a secretaria consultando pelo número (sem a cor) e o estagiário tentando a mesma rota (403). O teste de compreensão do aviso (RNF7) entra no teste de usabilidade da área pública, com o RF52.
+**Dados de teste:** inscrição sem caso e casos aguardando distribuição, vínculo ou vaga retornam `em_triagem`; após a chamada/vínculo, o caso `em_atendimento` aparece como tal. Encerrados ou desligados retornam `procure_secretaria`. Em todos esses estados, a resposta contém somente `numero`, `situacao` e `consultadaEm`, sem posição, prioridade ou dados clínicos. Testes verificam código real RF52, consulta após mudança do caso, query com outra inscrição ignorada, secretaria autorizada, demais perfis negados, expiração e encerramento. O teste de compreensão do aviso RNF7 com usuários permanece uma atividade de validação; o e2e verifica sua apresentação, não substitui esse teste humano.
 
-**Dependências e riscos:** o RF8 usa o `FilaService` e a `entradaNaFilaEm` do RF7 (#140), as situações novas do RF37 e do RF38 e a verificação do RF52 (#202, ainda aberta). Se entrar antes do RF37 e do RF38, trata só o `encerrado` como "procure a secretaria". O RF7 entra no `depende` do RF8 no `requisitos.yml`, ao lado do RF52.
+**Dependências e riscos:** depende da verificação do RF52, das situações do caso mantidas pela distribuição/vínculo (RF20/RF21) e do encerramento/desligamento. A consulta presencial compõe a lista de Pacientes do RF22. A fila do RF7 continua interna à equipe; o RF8 não chama `FilaService`, não calcula posição e não altera a ordenação. A FBr confirmou os nomes "Em triagem" e "Em atendimento" na DF55. O encaminhamento "Procure a secretaria" para casos encerrados/desligados continua pendente de confirmação específica da FBr.
+
+**Na implementação:** a API e a interface seguem a [DF55](../requisitos/decisoes-fbr.md#df55), registrada na [PR #257](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/pull/257). O cartão mantém número da inscrição, selo com ícone/texto, aviso informativo da captação semestral em "Em triagem" e horário de Brasília com ícone de relógio. As imagens históricas das pranchas 1-3/1-4 ainda contêm a posição e os nomes anteriores: a DF55 substitui esses elementos, conforme o aviso na página dos protótipos. "Atualizar situação" permanece como ação adicional à prancha e busca uma resposta nova sem cache. Título, identidade confirmada e encerramento continuam no componente RF52. A consulta da secretaria permanece abaixo da lista RF22, sem substituí-la. Os testes de navegador cobrem 320, 360, 768, 1024, 1366 e 1920 px, axe e foco por teclado nas ações "Atualizar situação" e "Confirmar identidade" (RNF56–RNF58).
+
+**Execução local dos testes:** `pnpm --filter @clinica/web exec playwright test -c playwright.rf8.config.ts` seleciona RF8 e RF52; o CI usa `playwright.config.ts` e executa a suíte geral. Ambas usam o capturador `e2e/smtp-local.mjs` iniciado pela configuração geral em loopback (`1026`, consulta HTTP `8026`): todos os e-mails dos e2e ficam nesse capturador, sem envio externo. Os cenários RF8 usam destinatários próprios para não ler mensagens de outros testes. Banco e demais variáveis devem apontar para infraestrutura descartável local; não usar dados reais.
 
 ---
 
@@ -925,6 +928,32 @@ sequenceDiagram
 
 **Dados de teste:** um caso em atendimento, um aguardando vínculo (sem estagiário) e um aguardando distribuição (sem os dois); um estagiário de outro caso (403).
 
+**Na implementação (PR do RF22):**
+
+- **Rotas:**
+    - `GET /pacientes?busca` devolve `{ pacientes, cortada }`. A lista vem em ordem alfabética, com até 200 pacientes. Quando há mais, `cortada` é `true`, e a tela pede para buscar pelo nome. A busca usa `ILIKE` com `%` e `_` escapados.
+    - `GET /casos/:id/responsaveis` não tem `@Perfis`: o serviço libera a secretaria e a coordenação, e o estagiário e o supervisor só nos casos com vínculo ou atribuição vigente. Para eles, o caso inexistente responde como o negado (`403`), sem revelar o que existe.
+    - As duas rotas respondem com `Cache-Control: no-store`.
+- **Número da inscrição:** não vem para a secretaria (RNF17). Vem para a coordenação e para o estagiário e o supervisor responsáveis, que já o veem nas próprias telas.
+- **Situação de distribuição:** a prancha 2-3 tem três selos, calculados pelos responsáveis vigentes (`situacaoDistribuicao`, em `@clinica/shared`):
+    - "Distribuído", com os dois responsáveis;
+    - "Aguardando vínculo de estagiário", só com o supervisor;
+    - "Pendente de distribuição", sem supervisor.
+
+    O nome que falta aparece como "—".
+- **Lista de Pacientes:**
+    - a busca espera a pessoa parar de digitar (300 ms) antes de consultar a API;
+    - a contagem "Mostrando N pacientes." é anunciada ao leitor de tela;
+    - a tabela aparece a partir de 1024 px, e abaixo disso a lista vira cartões.
+- **Ficha do paciente:**
+    - o quadro "Responsáveis pelo caso" fica no topo, depois do aviso do conteúdo clínico;
+    - a secretaria e a coordenação veem a ficha completa (RF55) a partir da distribuição;
+    - antes da distribuição, e para o estagiário e o supervisor responsáveis, a ficha mostra só o quadro e a identificação, como na prancha;
+    - o supervisor chega pelo nome do paciente em "Meus casos";
+    - o quadro mostra a orientação de cada perfil: a coordenação vai à distribuição, e o supervisor vincula o estagiário pelo diálogo do RF21. O vínculo só é oferecido nas situações em que o RF21 o aceita (`aguardando_vinculo` e `aguardando_vaga`): o caso desligado por faltas volta pela reversão (RF38);
+    - o botão "Transferir caso" da coordenação (RF25) passa para dentro do quadro, como na prancha 4-3.
+- **Trilha do estagiário:** aponta para "Meus pacientes", que é do RF23 e já existe.
+
 ---
 
 ### RF23 — Consultar casos sob responsabilidade do estagiário ou supervisor ([#146](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/issues/146))
@@ -956,6 +985,19 @@ sequenceDiagram
 **Telas:** "Meus pacientes" do estagiário (a página que hoje dá 404 depois da entrada, #160) e "Meus casos" do supervisor, com o filtro por estagiário. Protótipo: [prancha 4-1](prototipos.md#rf23).
 
 **Dados de teste:** dois estagiários do mesmo supervisor, com dois casos cada; um caso aguardando vínculo; um estagiário sem casos (estado vazio); um estagiário abrindo o prontuário de um caso do outro (403).
+
+**Na implementação (PR do RF23):**
+
+- **Rota:** `GET /casos/meus` aceita o estagiário e o supervisor e responde com `Cache-Control: no-store`. O estagiário recebe só os casos com vínculo vigente dele; o supervisor, os casos com atribuição vigente dele, que já incluem os dos seus estagiários. O caso encerrado não entra. A resposta ganhou os campos:
+    - `estagiarioId`: o estagiário do vínculo vigente;
+    - `estagiarioAnterior` e `estagiarioAnteriorId`: o último estagiário do caso desligado por faltas (RF37), que a prancha mostra ao supervisor junto com a data;
+    - `supervisor`: o supervisor do caso, mostrado na lista do estagiário.
+- **Filtro por estagiário (diferença do projeto):** o projeto previa `GET /casos/meus?estagiarioId`. A lista do supervisor é pequena (o limite é de 50 casos ativos por supervisor, parâmetro do RF20), e as opções do filtro vêm dela, então o filtro é feito na tela e a rota não aceita o `estagiarioId`. A opção do filtro é o id do estagiário (`estagiarioId`, ou `estagiarioAnteriorId` no caso desligado), e o nome é só o rótulo: dois estagiários com o mesmo nome são duas opções. Se a opção escolhida sai da lista (o caso foi transferido, por exemplo), o filtro volta para "Todos".
+- **Caso desligado por faltas (diferença da prancha 4-1):** a prancha mostra o caso desligado ("Desligado por faltas · Em 28/10/2026") também ao estagiário, com "Ver ficha" e "Abrir prontuário". O desligamento (RF37) encerra o vínculo, e o RF55 não deixa o estagiário sem vínculo vigente abrir o prontuário. Por isso o caso desligado aparece só para o supervisor, com o último estagiário e a data, e sai de "Meus pacientes". Quando a reversão do desligamento (RF38) volta o caso ao atendimento, com um novo vínculo, ele volta à lista do estagiário.
+- **"Meus pacientes":** é a página inicial do estagiário (#160). Tem o resumo por situação, a tabela (a partir de 1024 px; abaixo disso, cartões), o supervisor de cada caso e o estado vazio. A prioridade clínica é a exceção do RNF17 para os próprios casos; a queixa e os dados de triagem não vêm na resposta.
+- **"Meus casos":** ganhou as colunas da prancha e perdeu o número da inscrição (RNF17). O filtro é um grupo de opções ("Todos", cada estagiário e "Sem estagiário"), que só aparece quando há mais de uma opção, e a quantidade de casos filtrados é anunciada ao leitor de tela.
+- **Acesso direto negado:** o prontuário de outro caso e a ficha de outro caso (`/pacientes/:casoId`, aberta por "Ver ficha") mostram a mesma tela da prancha 4-1: cadeado, orientação, "Voltar para meus pacientes" (ou "meus casos", ou "pacientes") e "Tentativa registrada em …", sem o nome do paciente. A tela é o componente `AcessoNegado`, que as duas páginas usam. Para a informação ser verdadeira, `GET /casos/:id/responsaveis` passou a registrar a tentativa negada na auditoria (`consultar_responsaveis_negada`, RNF52), como o prontuário já fazia. A ficha antes mostrava o aviso vermelho do RF22.
+- **Evidência dos RNFs:** os testes de leitor de tela do RNF24 (VoiceOver) cobrem "Meus pacientes" e o filtro de "Meus casos", e o teste de carga do RNF21 inclui o estagiário abrindo "Meus pacientes" e o RF23 na lista de RFs.
 
 ---
 
@@ -1001,7 +1043,7 @@ sequenceDiagram
         A->>DB: transação: encerra o vínculo e, se for o caso, a atribuição vigentes
         A->>DB: cria o novo vínculo e, se for o caso, a nova atribuição
         A->>DB: TransferenciaCaso com os anteriores, os novos, o motivo e o autor
-        A->>DB: auditoria (RNF16)
+        A->>DB: auditoria (RNF18)
         A-->>U: transferido, com o mesmo prontuário
     end
 ```
@@ -1023,6 +1065,25 @@ sequenceDiagram
 **Telas:** "Transferir caso" na ficha do caso, com os casos ativos de cada opção, o motivo e a confirmação. Protótipo: [prancha 4-3](prototipos.md#rf25).
 
 **Dados de teste:** um caso com sessões futuras transferido entre dois estagiários do mesmo supervisor; uma tentativa do supervisor A com estagiário do supervisor B e outra com um estagiário sem caso (403); um supervisor com 50 casos, desabilitado na escolha da coordenação; uma transferência pela coordenação para outro supervisor, com e sem novo estagiário; uma sem motivo; o estagiário anterior tentando abrir o prontuário depois (403).
+
+**Na implementação (PR do RF25):**
+
+- **Rotas:** `GET /casos/:id/transferencia` devolve o caso, os responsáveis atuais e as opções de quem pede: para o supervisor, os estagiários dele com conta ativa, sem o atual, com os pacientes em atendimento de cada um; para a coordenação, todos os estagiários ativos e os supervisores ativos, com os casos ativos e o limite. `POST /casos/:id/transferencia` faz a transferência. As duas rotas são do supervisor responsável e da coordenação; para a secretaria, o estagiário e outro supervisor, `403`.
+- **Situações:** a transferência vale para o caso `em_atendimento`, `aguardando_vinculo` e `aguardando_vaga`. O caso que aguarda distribuição vai pela distribuição (RF20), e o desligado por faltas, pela reversão (RF38): `422` com a orientação. O caso sem estagiário não é transferido pelo supervisor, que usa "Vincular estagiário" (RF21).
+- **Coordenação:** escolhe o novo supervisor e, se quiser, o novo estagiário, ou mantém o supervisor ("Manter …") e troca só o estagiário. Sem novo estagiário, o vínculo anterior é encerrado e o caso fica `aguardando_vinculo`, em "Meus casos" do novo supervisor, que vincula o estagiário pelo RF21 com o mesmo prontuário.
+- **Mesmo prontuário:** o vínculo novo aponta para o prontuário do ciclo, que não muda; o acesso segue o vínculo e a atribuição vigentes (RF55).
+- **Sessões futuras:** canceladas como `administrativo`, com a origem de quem transferiu e sem falta. A resposta traz o horário de cada uma, e o aviso de sucesso as lista para a secretaria reagendar em "Agendar sessão".
+- **Motivo:** obrigatório, até 1.000 caracteres, gravado cifrado em `transferencias_caso.motivo_cifrado` (RNF51) e fora da auditoria. A auditoria `transferir_caso` (RNF18) guarda os responsáveis anteriores e os novos.
+- **Histórico:** a migration `0013_transferencia_de_caso` cria a tabela `transferencias_caso` com a trava `impedir_alteracao_registro`, como as outras tabelas só de inserção. A consulta do histórico é do RF26, fora do MVP.
+- **Concorrência:** o caso, o estagiário e o supervisor escolhidos são travados (`FOR UPDATE`) na transação; duas transferências ao mesmo tempo resultam em uma só, e a outra recebe `409`.
+- **Telas:** o supervisor transfere em "Meus casos", no caso em atendimento com estagiário; a coordenação, pelo botão "Transferir caso" na ficha do paciente. O formulário segue a prancha 4-3: o resumo do caso, a escolha com os pacientes ou os casos de cada opção, o supervisor no limite desabilitado, o motivo, o aviso de quem perde e quem ganha o acesso, o resumo de erros com links para os campos e a confirmação com "De", "Para" e "Motivo".
+- **Diferenças da prancha 4-3:**
+    - O resumo mostra o número da inscrição, porque o prontuário não tem número próprio.
+    - O botão fica em "Meus casos" e na ficha do paciente, porque o painel "Responsáveis pelo caso" do RF22 ainda não existe.
+    - Não há a lista do histórico de transferências, que é do RF26.
+    - A opção "Manter …" deixa a coordenação trocar só o estagiário, como o RF25 permite.
+    - Para a coordenação, a lista mostra todos os estagiários ativos, e não só os do novo supervisor: pela definição de "estagiário do supervisor", quem ainda não tem caso não é de nenhum supervisor, e a transferência para ele é feita pela coordenação.
+    - O supervisor no limite de 50 casos aparece com o aviso da prancha, mas desabilitado, pela decisão 3 acima, até a FBr responder a proposta.
 
 ---
 
@@ -1073,7 +1134,7 @@ _Construída no Ciclo 3._
 
 **Rota:** `POST /sessoes` (secretaria, ou o estagiário responsável pelo caso). Recebe o caso, o início e, opcionalmente, o término. Sem término, ele é calculado com o parâmetro `duracao_sessao_minutos` (padrão de 50). O fim do intervalo para anotações é `termino + intervalo_anotacoes_minutos` (padrão de 10) ([DF18](../requisitos/decisoes-fbr.md#df18)).
 
-**Escopo no Ciclo 3:** o agendamento gera o link de confirmação. Com e-mail como canal preferencial, a API envia o link por e-mail; com WhatsApp ou ligação, a resposta traz a mensagem pronta e o endereço `https://wa.me/55<celular>?text=<mensagem>`, e a interface mostra o botão "Enviar pelo WhatsApp", que chama `POST /sessoes/:id/whatsapp` para registrar `mensagemWhatsappEm` ([DF24](../requisitos/decisoes-fbr.md#df24)). O SMS não é usado. A página que confirma a presença entra com o RF14, no Ciclo 4.
+**Escopo no Ciclo 3:** o agendamento gera o link de confirmação. Com e-mail como canal preferencial, a API envia o link por e-mail; com WhatsApp ou ligação, a resposta traz a mensagem pronta e o endereço `https://wa.me/55<celular>?text=<mensagem>`, e a interface mostra o botão "Enviar pelo WhatsApp", que chama `POST /sessoes/:id/whatsapp` para registrar `mensagemWhatsappEm` ([DF24](../requisitos/decisoes-fbr.md#df24)). O SMS não é usado. A página que confirma a presença entra com o RF14, no Ciclo 4. Com a [DF48](../requisitos/decisoes-fbr.md#df48), a inscrição não pede mais o canal, e o botão do WhatsApp só aparece nas inscrições anteriores a ela com WhatsApp ou ligação.
 
 ```mermaid
 sequenceDiagram
@@ -1141,7 +1202,7 @@ sequenceDiagram
 | `403` sem sessão para quem não supervisiona; o estagiário nunca vê a agenda de outro | Sem vínculo de supervisão, não acessa a agenda |
 | Para o estagiário, a consulta filtra as sessões pelos casos com vínculo vigente dele, inclusive as sessões passadas (RNF16, RF25) | Encerrado o vínculo, por transferência ou desligamento, as sessões do caso e o nome do paciente deixam de aparecer |
 
-**Telas:** item "Agenda" do estagiário e, para o supervisor, "Agenda" com a escolha do estagiário (proposta levada à FBr). A sessão realizada leva ao prontuário. Depois da entrada, o estagiário cai hoje na `/meus-pacientes`, que dá 404 e é construída pelo RF23 (#160). A "Agenda" da secretaria, que também dá 404 hoje, é construída pelo RF14, com a seção "Sem confirmação". Protótipo: [prancha 4-2](prototipos.md#rf11).
+**Telas:** item "Agenda" do estagiário e, para o supervisor, "Agenda" com a escolha do estagiário (proposta levada à FBr). A sessão realizada leva ao prontuário. Depois da entrada, o estagiário cai em `/meus-pacientes`, construída pelo RF23 (#160). A "Agenda" da secretaria, que também dá 404 hoje, é construída pelo RF14, com a seção "Sem confirmação". Protótipo: [prancha 4-2](prototipos.md#rf11).
 
 **Na implementação (PR do RF11):**
 
@@ -1165,7 +1226,7 @@ _Construída no Ciclo 4._
 
 - `GET /confirmacao/:token` (pública): devolve só a data e o horário da sessão, o primeiro nome do paciente (RNF59), a situação (`agendada` ou `confirmada`) e se ainda dá para confirmar.
 - `POST /confirmacao/:token/confirmar` (pública).
-- `GET /sessoes/sem-confirmacao` (secretaria): sessões futuras agendadas cujo prazo terminou sem confirmação, com o canal preferencial e o caminho para os contatos do paciente, que ficam na ficha, e não na linha (RNF13 e prancha 2-1).
+- `GET /sessoes/sem-confirmacao` (secretaria): sessões futuras agendadas cujo prazo terminou sem confirmação, com o caminho para os contatos do paciente, que ficam na ficha, e não na linha (RNF13 e prancha 2-1). A prancha 2-1 mostrava também o canal preferencial; com a [DF48](../requisitos/decisoes-fbr.md#df48), a inscrição não pede mais o canal, e a coluna saiu em 12/11/2026. A tela orienta o contato pelo e-mail ou pelo celular.
 - `POST /sessoes/:id/confirmacao` (secretaria): confirmação feita por telefone, como no protótipo.
 
 ```mermaid
@@ -1313,7 +1374,7 @@ sequenceDiagram
 
 | Regra | Critério de aceitação |
 | --- | --- |
-| O registro muda o status e avisa o paciente pelo canal preferencial | O registro com motivo atualiza a sessão e dispara a notificação ao paciente |
+| O registro muda o status e avisa o paciente por e-mail ([DF48](../requisitos/decisoes-fbr.md#df48)) | O registro com motivo atualiza a sessão e dispara a notificação ao paciente |
 | `403` para quem não é o estagiário, o supervisor do caso ou a secretaria | Quem não tem vínculo com a sessão não registra a ausência |
 | `ausencia_estagiario` fica guardado para o RF39 e o RF40, dos Ciclos 5 e 6 | A ausência real conta nas faltas do estagiário |
 | `administrativo` vem só da rota do RF15 e não entra na contagem do estagiário; o supervisor não registra esse tipo | O cancelamento para remarcar não conta |
@@ -1373,7 +1434,13 @@ sequenceDiagram
 
 **Telas:** o prontuário nas seções do modelo da clínica, com a barra "Ir para", as evoluções e o histórico de responsáveis fechados e "Marcar sessão como realizada" na sessão que já terminou, como hoje. Protótipo: [prancha 5-1](prototipos.md#rf27).
 
+**Verificável no Ciclo 4:** os critérios 2 (elemento sem registro aparece como ausente) e 4 (sem vínculo não acessa; a coordenação só lê) ficam completos. O critério 1 fica parcial: as evoluções aparecem sem correções, complementos e validação (RF29, RF30 e RF67, Ciclos 5 e 6), e a alta (RF68) e o relatório final (RF33) aparecem como "Sem registro neste ciclo". O critério 3 (o novo responsável vê os registros anteriores) só pode ser verificado depois do RF25 ([#147](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/issues/147)). O texto das partes dos ciclos seguintes está como ponto a confirmar na prancha 5-1.
+
+**RNFs:** RNF25 (inclui o antigo RNF26), RNF51 (o conteúdo clínico só é decifrado depois da política de acesso) e RNF52.
+
 **Dados de teste:** um prontuário completo (dados iniciais, sessões realizadas, uma falta e evoluções) e um recém-criado; um caso transferido (RF25); a coordenação lendo; um estagiário sem vínculo (403).
+
+**Na implementação (PR do RF27):** a página inclui a barra fixa "Ir para" com foco visível; a lista de sessões tem as colunas Sessão, Situação e Evolução e se adapta a cartões em telas estreitas; as evoluções ficam em seção própria, fechadas por padrão. Dados iniciais mostram queixa e total de seções preenchidas e abrem a leitura completa em página somente leitura. O histórico de responsáveis também começa fechado. Alta e relatório ausentes aparecem como "Sem registro neste ciclo"; correções, complementos, validação, alta e relatório continuam dependentes de RF29, RF30, RF67, RF68 e RF33. A página inclui testes web de prontuário completo e vazio e um fluxo e2e com verificação de acessibilidade e larguras entre 320 e 1920 px.
 
 ---
 
@@ -1444,6 +1511,8 @@ sequenceDiagram
 
 **Dados de teste:** um prontuário novo; uma anamnese só com a queixa principal e outra completa; uma seção com 1.001 caracteres; um contrato sem a via guardada; uma segunda anamnese no mesmo prontuário (409); o supervisor tentando registrar (403); um registro antigo, com o texto único.
 
+**Na implementação (PR do RF69):** cada seção numerada tem dica, contador de caracteres e erro associado; o primeiro campo inválido recebe foco e o formulário anuncia no topo que os dados digitados foram mantidos. O supervisor lê anamnese e contrato na página "Dados iniciais · paciente", com trilha de navegação e indicação "Só leitura". O formulário de registro continua no prontuário do estagiário responsável; após `409`, a consulta é invalidada para mostrar o registro existente. Testes web cobrem preenchimento inicial, campos vazios, limite, erros, foco, bloqueio durante envio e conflito.
+
 ---
 
 ## Registro de evolução (CP7)
@@ -1485,13 +1554,18 @@ sequenceDiagram
 | Só aceita sessão `realizada` | Sessão não realizada não aceita evolução |
 | O número da sessão no ciclo, a data, o horário e o comparecimento vêm da sessão, sem campo no formulário | O registro mostra os dados da sessão, sem digitação |
 | Quatro obrigatórios e `intervencoesEncaminhamentos` opcional, cada um com até 1.000 caracteres (proposta da equipe) | Sem um obrigatório, não salva; mais de 1.000 caracteres é recusado |
+| Uma evolução original por sessão: o segundo envio para a mesma sessão devolve `409` | A sessão com evolução não aceita outra; mudanças seguem a correção (RF29) e o complemento (RF30) |
 | O aviso é calculado pelo número da sessão da evolução no ciclo (a ordem dela entre as realizadas), e não pelo total no momento do registro: aparece só quando esse número é múltiplo de 10, e não se repete nas evoluções seguintes | Na 10ª sessão realizada do ciclo, os dois veem o aviso |
+
+**Fechamento avaliativo:** o RF28 só mostra o aviso. O registro do fechamento depende do relatório final (RF33, Ciclo 6). Por quanto tempo o aviso fica visível para o supervisor ainda está em aberto e entrou nas pendências de validação.
 
 **Decisão de projeto:** as evoluções já registradas com os campos antigos aparecem no prontuário com os rótulos "Evolução da queixa" e "Planejamento", sem migração do conteúdo, porque não dá para separar o texto nos campos novos sem mudar o que foi escrito.
 
 **Telas:** formulário de evolução aberto pela ação "Registrar evolução" do prontuário, com os dados da sessão só para leitura e os cinco campos; o aviso de fechamento avaliativo no topo do prontuário e em "Meus casos" do supervisor. Protótipo: [prancha 5-3](prototipos.md#rf28).
 
-**Dados de teste:** uma sessão realizada; sessões agendada, cancelada e com falta (422); um estagiário sem vínculo (403); uma evolução sem técnicas utilizadas; um campo com 1.001 caracteres; um paciente com 9 sessões realizadas que registra a 10ª; uma evolução antiga, com os dois campos.
+**Dados de teste:** uma sessão realizada; sessões agendada, confirmada, cancelada e com falta (422); uma sessão de outro paciente (403); um estagiário com o vínculo revogado (403); o supervisor e a coordenação tentando registrar (403); uma segunda evolução na mesma sessão (409); uma evolução sem técnicas utilizadas; um campo com 1.001 caracteres; um paciente com 9 sessões realizadas que registra a 10ª; uma evolução antiga, com os dois campos.
+
+**Na implementação (PR do RF28):** "Registrar evolução" abre uma página própria com trilha, botão "Cancelar" e os dados completos da sessão; o formulário usa duas colunas em telas largas. Após salvar, a página mostra a confirmação e abre a evolução no prontuário. Se outro envio já tiver gravado a evolução, o `409` invalida a consulta e carrega o registro existente. No prontuário, a tabela de sessões indica o registro, a ausência de aplicação ou a ação permitida; a seção separada de Evoluções mantém cada item recolhido, exceto o recém-salvo. O aviso de fechamento permanece conforme comportamento atual até a FBr definir sua duração. Testes web cobrem os estados do formulário, e o fluxo e2e mede axe e responsividade de 320 a 1920 px.
 
 ---
 

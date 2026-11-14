@@ -375,3 +375,129 @@ O Thiago elogiou o sistema e a equipe e disse que a FBr começa os testes o quan
 
 !!! note "Correção (07/11/2026)"
     Esta ata foi corrigida em 07/11/2026. A versão anterior registrava que não houve aceite por feature e que o RF51 não foi demonstrado. Na reunião, o RF51 foi demonstrado e aceito, e o Thiago aceitou as features que não tiveram ajustes; as que tiveram ajustes (RF1, RF10 e RF53) ficam sem aceite até as correções.
+
+## Respostas da FBr sobre a demonstração do Ciclo 4 { #respostas-da-fbr-sobre-a-demonstracao-do-ciclo-4 }
+
+**Data:** 11/11/2026
+**Local:** grupo "Sistema Clínica Escola FBr" no WhatsApp
+**Participantes:** pela FBr, Robson Araújo, que respondeu, e Thiago Viana, que recebeu a mensagem; pela equipe, Gabriel da Cunha Barbaceli e os demais integrantes do grupo.
+
+A demonstração do incremento do Ciclo 4 foi enviada à FBr por e-mail. Às 12h06, a equipe pediu no grupo o "de acordo" da demonstração e as respostas das pendências de validação. Às 16h01, Robson Araújo respondeu.
+
+![Mensagem da equipe e resposta de Robson Araújo no grupo da FBr, com o telefone e a foto de perfil cobertos](../../assets/fbr/whatsapp-2026-11-11.jpg){ width="360" }
+
+_Figura 20 — Pedido da equipe e resposta de Robson Araújo no grupo da FBr, em 11/11/2026. O telefone e a foto de perfil foram cobertos._
+
+### Pedido da equipe
+
+1. **Demonstração do Ciclo 4:** se a FBr viu a demonstração, e o "de acordo" ou o que mudar em cada tela.
+2. **Termo de consentimento (RF57):** a aprovação do texto provisório, a base legal para tratar os dados de saúde e o canal para o paciente exercer os demais direitos de titular.
+3. **Propostas dos protótipos de 06/11:**
+    - os itens "Agenda" no menu do supervisor e "Fila de espera" no da coordenação;
+    - as três situações na consulta da posição na fila (RF8);
+    - a escolha das faltas na reversão do desligamento (RF38);
+    - a transferência para um supervisor no limite de 50 casos (RF25).
+4. **Teste de usabilidade da distribuição de casos (RNF22):** se foi aplicado, e o resultado.
+5. **Outros pontos:**
+    - a obrigatoriedade do endereço e do contato de emergência na inscrição (RF1);
+    - a leitura do motivo da justificativa de falta pela secretaria (RF34);
+    - quem avisa o paciente desligado por faltas (RF37);
+    - a data de entrega do relatório final e da reprovação do estagiário (RF33, RF63 e RF64).
+
+### Resposta de Robson Araújo
+
+Transcrição da mensagem, com a numeração dele:
+
+> 1. Esta tudo certo, só to aguardando 3 pessoas poderem fazer o teste, que irá ocorrer amanhã, to cadastrando 1 supervisor e 2 estagiários para isso!
+> 2. Seria seria interessante o Jurídico ver esse termo para um boa elaboração;
+> 3. Em triagem se nao for selecionado; se for selecionado e estiver esperando contato ou resposta do mesmo em atendimento;
+> 4. No caso de transferência, pode extrapolar o limite;
+> 5. Os testes estava selecionando e explicando o que será realizado, ocorrerá amanha no período matutino ate as 13 hs;
+> 6. Contato de emergência são obrigatória!!! Dados mínimos para reconhecimento tbm; O motivo de falta tbm deve aparecer, e sim os órgãos fiscalizadores podem pedir p ver CRP, CFP, Secretaria de Saúde; Os estagiários avisam os pacientes desligados por falta; deixa ate o dia 05/122 data final de evolução do estágio!!
+
+### Resultado
+
+| Ponto | Resposta | Registro |
+| --- | --- | --- |
+| Demonstração do Ciclo 4 | "Esta tudo certo" | "De acordo" da demonstração: D5 e D6 das features do Ciclo 4 demonstradas |
+| Termo de consentimento (RF57) | O Jurídico da FBr deve revisar o termo | Continua provisório; a pendência de validação foi atualizada |
+| Situações na consulta da fila (RF8) | "Em triagem" enquanto não é selecionado; "em atendimento" quando é selecionado e aguarda contato ou resposta | Resposta parcial; a equipe perguntou se "Na fila de espera" continua |
+| Transferência acima do limite (RF25) | A coordenação pode extrapolar o limite | [DF50](../../requisitos/decisoes-fbr.md#df50) |
+| Teste de usabilidade (RNF22) | Aplicado em 12/11, de manhã, com 1 supervisor e 2 estagiários | O resultado vem depois do teste |
+| Contato de emergência (RF1) | Obrigatório, com os "dados mínimos para reconhecimento" | [DF51](../../requisitos/decisoes-fbr.md#df51); a equipe perguntou quais são os dados mínimos |
+| Motivo da justificativa de falta (RF34) | Deve aparecer, e os órgãos fiscalizadores (CRP, CFP e Secretaria de Saúde) podem pedir para ver | [DF52](../../requisitos/decisoes-fbr.md#df52) |
+| Aviso ao paciente desligado (RF37) | Os estagiários avisam | [DF53](../../requisitos/decisoes-fbr.md#df53) |
+| Relatório final e reprovação do estagiário (RF33, RF63 e RF64) | Até 05/12, data final da evolução do estágio (a mensagem diz "05/122") | [DF54](../../requisitos/decisoes-fbr.md#df54) |
+
+**Sem resposta:** os itens "Agenda" e "Fila de espera" no menu, a escolha das faltas na reversão do desligamento (RF38) e a base legal e o canal dos direitos do titular (RF57). A equipe voltou a perguntar no grupo, junto com a confirmação do RF8 e dos dados mínimos do RF1.
+
+## Respostas da FBr de 12/11 e teste de usabilidade { #respostas-da-fbr-de-12-11-e-teste-de-usabilidade }
+
+**Data:** 12/11/2026
+**Local:** grupo "Sistema Clínica Escola FBr" no WhatsApp
+**Participantes:** pela FBr, Robson Araújo; pela equipe, Gabriel da Cunha Barbaceli e os demais integrantes do grupo.
+
+Em 11/11, às 16h43, a equipe pediu a confirmação dos pontos que ficaram em aberto nas [respostas de 11/11](#respostas-da-fbr-sobre-a-demonstracao-do-ciclo-4), e Thiago Viana marcou Robson Araújo na mensagem. Em 12/11, às 13h43, a equipe pediu de novo, e Robson Araújo respondeu às 15h35. Às 15h37, ele contou como foi o teste de usabilidade aplicado de manhã.
+
+![Pedido da equipe e respostas de Robson Araújo no grupo da FBr, com os telefones e as fotos de perfil cobertos](../../assets/fbr/whatsapp-2026-11-12.jpg){ width="360" }
+
+_Figura 21 — Pedido da equipe e respostas de Robson Araújo no grupo da FBr, em 11 e 12/11/2026. Os telefones e as fotos de perfil foram cobertos._
+
+### Pedido da equipe
+
+- **A. Situação do inscrito na consulta da fila (RF8):** a equipe entendeu que o inscrito vê "Em triagem" antes de ser chamado para o atendimento e "Em atendimento" depois de chamado, enquanto aguarda o contato ou a resposta. Perguntou se a posição na fila continua aparecendo enquanto ele está "Em triagem".
+- **B. Dados mínimos para o reconhecimento na inscrição (RF1):** além de nome, data de nascimento, CPF, celular e e-mail, quais dados passam a ser obrigatórios (por exemplo, o endereço completo), e se, no contato de emergência, bastam o nome e o telefone.
+- **C. Itens sem resposta:**
+    - os itens "Agenda", no menu do supervisor, e "Fila de espera", no da coordenação;
+    - a escolha, pela coordenação, das faltas que deixam de contar na reversão de um desligamento feito por engano (RF38).
+
+### Resposta de Robson Araújo
+
+Transcrição da mensagem:
+
+> A. Correta a compreensão; a posição na fila não para nao gerar expectativas pois a captação é semestral;
+> B. Endereço completo tbm, para eventual fiscalização.
+> C. Podem manter.
+> Pode deixar p coordenação eliminar as faltas;
+
+Sobre o teste de usabilidade:
+
+> O sistema foi testado hoje por 3 pessoas, estagiários, supervisor e secretária. Estão de acordo com as funcionalidades o professor supervisor que apresentou maior dificuldade de navegação por conta de habilidades tecnológica
+
+### Resultado
+
+| Ponto | Resposta | Registro |
+| --- | --- | --- |
+| Situação na consulta da fila (RF8) | "Em triagem" antes de ser chamado e "Em atendimento" depois, **sem a posição**, porque a captação é semestral | [DF55](../../requisitos/decisoes-fbr.md#df55); o RF8 e o RNF7 foram atualizados |
+| Dados mínimos da inscrição (RF1) | Endereço completo, para eventual fiscalização | [DF56](../../requisitos/decisoes-fbr.md#df56); o RF1 foi atualizado, e a mudança do formulário está na issue [#252](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/issues/252) |
+| Itens "Agenda" e "Fila de espera" nos menus | Podem ficar | [DF57](../../requisitos/decisoes-fbr.md#df57) |
+| Faltas que deixam de contar na reversão (RF38) | A coordenação escolhe | [DF58](../../requisitos/decisoes-fbr.md#df58) |
+
+**Sem resposta:** se, no contato de emergência, bastam o nome e o telefone, e o que o inscrito vê na consulta da fila depois do encerramento ou do desligamento do caso. Os dois continuam nas [pendências de validação](../../requisitos/analise-feedback.md#pendencias-de-validacao-com-a-fbr), com o padrão adotado até a resposta.
+
+### Registro do teste de usabilidade (RNF22) { #registro-do-teste-de-usabilidade-rnf22 }
+
+O teste seguiu o kit enviado à FBr em 05/11/2026, que pedia pelo menos 5 pessoas da coordenação e 5 supervisores, sem treinamento, fazendo a distribuição (T1 e T2) e o vínculo (T3 e T4) no computador e no celular, com a planilha de anotação preenchida por quem aplicava. A FBr aplicou o teste com as pessoas da clínica disponíveis no semestre e respondeu com a avaliação geral (Figura 21). O registro abaixo traz só o que a FBr informou. Os campos que a FBr não mediu ficam como "não informado", e nenhum valor foi estimado pela equipe.
+
+| Item do kit | Previsto | Realizado (informado pela FBr) |
+| --- | --- | --- |
+| Data e ambiente | A partir de 06/11/2026, no ambiente de validação, com dados fictícios | 12/11/2026, de manhã, no ambiente de validação |
+| Quem aplicou | Robson Araújo e Thiago Viana | Robson Araújo, coordenador, que também aprovou o resultado |
+| Participantes | Pelo menos 5 da coordenação e 5 supervisores, sem ter visto a distribuição nem o vínculo | 3 pessoas: estagiários, supervisor e secretária, com contas criadas pela coordenação. Nenhuma da coordenação |
+| Tarefas | T1 e T2 (distribuição, coordenação) e T3 e T4 (vínculo, supervisor), no computador e no celular | Não informado tarefa a tarefa. A coordenação não participou, então a distribuição (T1 e T2) não foi feita por participantes |
+| Concluiu sem ajuda | Pelo menos 90% de cada perfil | Não informado |
+| Interações na distribuição | No máximo 3, a partir da lista de casos pendentes | Não medido |
+| Tempo de cada tarefa | Anotado na planilha | Não medido |
+| Dificuldades observadas | Anotadas por participante | O supervisor, professor, teve mais dificuldade de navegação, que a FBr atribuiu à familiaridade com tecnologia |
+| Avaliação geral | — | Os participantes ficaram de acordo com as funcionalidades |
+| Planilha do kit | Devolvida até 13/11/2026 | Não preenchida |
+
+**Conclusão.** Pela meta do kit, de 5 participantes por perfil e 90% sem ajuda, o teste não poderia ser contado. Essa amostra foi definida pela equipe na verificação cruzada, e não pela FBr, e a clínica aplicou o teste com as pessoas que tinha disponíveis no semestre. A equipe reviu então a forma de verificação do [RNF22](../../requisitos/nao-funcionais.md#rnf22): um teste com os usuários reais da clínica, sem treinamento, aprovado pela coordenação da FBr, mais o e2e das 3 interações da distribuição. Com essa forma, o RNF22 fica **verificado**:
+
+- **Teste com usuários:** estagiários, supervisor e secretária usaram o sistema sem treinamento, e o coordenador, que aplicou o teste, informou que eles "estão de acordo com as funcionalidades" (Figura 21).
+- **Teste automatizado:** o e2e `rnf22.spec.ts` confere, no celular, as 3 interações da distribuição e as do vínculo.
+- **Observação registrada:** o supervisor, professor, teve mais dificuldade de navegação, atribuída pela FBr à familiaridade com tecnologia. Ela está nas [pendências de validação](../../requisitos/analise-feedback.md#pendencias-de-validacao-com-a-fbr) como melhoria.
+
+O registro `/rnf RNF22` aponta para esta seção nas issues do RF18, do RF20 e do RF21.
+
+**O que a equipe faz com a dificuldade do supervisor.** Sem saber em qual tela ou passo a dificuldade apareceu, a equipe não tem como corrigir um ponto específico. Ela vai perguntar à FBr em que parte o supervisor travou, e, até a resposta, os fluxos do supervisor (Meus casos, vínculo e agenda) são revistos na inspeção das features do Ciclo 5 com atenção aos rótulos e aos caminhos.

@@ -62,8 +62,12 @@ test.describe
     await toque.tocar(
       page.getByRole("button", { name: `Vincular estagiário a ${paciente}` }),
     );
+    // Só o rádio do diálogo: atrás dele, o filtro de "Meus casos" (RF23) também
+    // tem o nome do estagiário.
     await toque.tocar(
-      page.getByRole("radio", { name: new RegExp(EQUIPE.estagiario.nome) }),
+      page
+        .getByRole("dialog", { name: "Vincular estagiário" })
+        .getByRole("radio", { name: new RegExp(EQUIPE.estagiario.nome) }),
     );
     await toque.tocar(page.getByRole("button", { name: "Confirmar vínculo" }));
     await expect(

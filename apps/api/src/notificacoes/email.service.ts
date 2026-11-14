@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, type OnModuleDestroy } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import nodemailer, { type Transporter } from 'nodemailer';
 
@@ -41,7 +41,7 @@ const somenteTexto = (html: string) =>
     .trim();
 
 @Injectable()
-export class EmailService {
+export class EmailService implements OnModuleDestroy {
   private readonly transporter: Transporter;
   private readonly remetente: string;
 
@@ -54,7 +54,12 @@ export class EmailService {
     // Google pede usuário e senha de app. TLS direto na 465 e STARTTLS
     // obrigatório na 587: sem ele, quem estiver no caminho poderia tirar o TLS e
     // ler os convites e os códigos. O Mailpit (1025) fica sem TLS.
+    // Conexões reaproveitadas (pool): sem isso, cada e-mail abre uma conexão TLS
+    // nova com o relay do Google, e o agendamento, que espera o envio para dizer
+    // na tela se o link saiu (RF10), passava de 2 segundos (RNF12).
     this.transporter = nodemailer.createTransport({
+      pool: true,
+      maxConnections: 10,
       host: config.getOrThrow<string>('SMTP_HOST'),
       port,
       secure: port === 465,
@@ -63,6 +68,10 @@ export class EmailService {
       auth: user ? { user, pass: config.get<string>('SMTP_PASS') } : undefined,
     });
     this.remetente = config.get<string>('SMTP_FROM') || REMETENTE_PADRAO;
+  }
+
+  onModuleDestroy() {
+    this.transporter.close?.();
   }
 
   enviar(para: string, assunto: string, html: string) {

@@ -1,8 +1,10 @@
 import {
   ConflictException,
+  ForbiddenException,
   Inject,
   Injectable,
   NotFoundException,
+  UnprocessableEntityException,
 } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import {
@@ -14,6 +16,7 @@ import {
   desc,
   inArray,
   isNull,
+  lte,
 } from 'drizzle-orm';
 import {
   atribuicoesSupervisor,
@@ -32,13 +35,16 @@ import { AuditoriaService } from '../../auditoria/auditoria.service';
 import type { UsuarioAutenticado } from '../../auth/usuario-autenticado';
 import {
   LIMITE_FALTAS_CICLO,
+  SECOES_ANAMNESE,
+  SESSOES_POR_FECHAMENTO_AVALIATIVO,
   STATUS_SESSAO_EM_ABERTO,
+  type Anamnese,
   type CancelamentoDaSessao,
   type ClassificacaoCancelamento,
-  type DadosIniciais,
+  type Contrato,
+  type Evolucao,
   type OrigemCancelamento,
 } from '@clinica/shared';
-import type { Evolucao } from '@clinica/shared';
 import { DB } from '../../database/database.module';
 import { acoesDeCancelamento } from '../agendamento/acoes-cancelamento';
 import { DesligamentosService } from '../assiduidade/desligamentos.service';
@@ -59,6 +65,30 @@ const cancelamentoDaSessao = (
 ): CancelamentoDaSessao | null =>
   classificacao && origem ? { classificacao, origem } : null;
 const supervisor = aliasedTable(usuarios, 'supervisor');
+
+// A anamnese fica num JSON cifrado com as seis seções (DF37). O registro antigo, de
+// texto único, aparece como a queixa principal, e as outras seções como não informadas.
+function anamneseDoTexto(texto: string): Anamnese {
+  const vazia = Object.fromEntries(
+    SECOES_ANAMNESE.map(([secao]) => [secao, null]),
+  ) as Record<keyof Anamnese, string | null>;
+  try {
+    const dados: unknown = JSON.parse(texto);
+    if (
+      dados &&
+      typeof dados === 'object' &&
+      typeof (dados as Anamnese).queixaPrincipal === 'string'
+    )
+      return { ...vazia, ...(dados as Anamnese) };
+  } catch {
+    // Texto livre do registro antigo.
+  }
+  return { ...vazia, queixaPrincipal: texto };
+}
+
+// O fechamento avaliativo vem a cada 10 sessões realizadas no ciclo (RF28, DF23).
+const fechamentoAvaliativo = (numeroNoCiclo: number) =>
+  numeroNoCiclo > 0 && numeroNoCiclo % SESSOES_POR_FECHAMENTO_AVALIATIVO === 0;
 
 @Injectable()
 export class ProntuariosService {
@@ -84,12 +114,31 @@ export class ProntuariosService {
     const chave = this.config.getOrThrow<string>('CHAVE_DADOS');
     const abrir = (valor: string | null) =>
       valor ? decifrar(valor, chave) : null;
-    const [autorDadosIniciais] = prontuario.dadosIniciaisPor
-      ? await this.db
-          .select({ nome: usuarios.nome })
+    // Registros antigos têm só o autor dos dados iniciais, que vale para as duas partes.
+    const anamnesePor = prontuario.anamnesePor ?? prontuario.dadosIniciaisPor;
+    const contratoPor = prontuario.contratoPor ?? prontuario.dadosIniciaisPor;
+    const autores = new Map(
+      (
+        await this.db
+          .select({ id: usuarios.id, nome: usuarios.nome })
           .from(usuarios)
-          .where(eq(usuarios.id, prontuario.dadosIniciaisPor))
-      : [];
+          .where(
+            inArray(
+              usuarios.id,
+              [anamnesePor, contratoPor].filter((id): id is string => !!id),
+            ),
+          )
+      ).map((autor) => [autor.id, autor.nome]),
+    );
+    const temContrato =
+      !!prontuario.dataAssinaturaContrato || !!prontuario.contratoCifrado;
+    // A queixa da inscrição preenche a anamnese (RF69, RF1). Vai só para o estagiário
+    // responsável, que passou pela política acima, e só enquanto a anamnese não existe:
+    // as outras respostas da triagem (RF4) não entram.
+    const queixaDaInscricao =
+      usuario.perfil === 'estagiario' && !prontuario.anamneseCifrada
+        ? await this.queixaDaInscricao(prontuario.casoId)
+        : null;
     const [historicoEstagiarios, historicoSupervisores] = await Promise.all([
       this.db
         .select({
@@ -147,6 +196,12 @@ export class ProntuariosService {
         sessaoId: evolucoes.sessaoId,
         queixa: evolucoes.queixaCifrada,
         planejamento: evolucoes.planejamentoCifrado,
+        humorAparencia: evolucoes.humorAparenciaCifrado,
+        conteudoTrabalhado: evolucoes.conteudoTrabalhadoCifrado,
+        tecnicasUtilizadas: evolucoes.tecnicasUtilizadasCifrado,
+        intervencoesEncaminhamentos:
+          evolucoes.intervencoesEncaminhamentosCifrado,
+        planoProximaSessao: evolucoes.planoProximaSessaoCifrado,
         registradaPor: evolucoes.registradaPor,
         registradaEm: evolucoes.registradaEm,
         autor: usuarios.nome,
@@ -161,9 +216,13 @@ export class ProntuariosService {
       prontuario.cicloAtendimento,
       true,
     );
-    const sessoesRealizadas = sessoes.filter(
-      (sessao) => sessao.status === 'realizada',
-    ).length;
+    // Número de cada sessão realizada no ciclo, na ordem em que aconteceram (RF28).
+    const numeroNoCiclo = new Map(
+      sessoes
+        .filter((sessao) => sessao.status === 'realizada')
+        .map((sessao, indice) => [sessao.id, indice + 1]),
+    );
+    const sessoesRealizadas = numeroNoCiclo.size;
     const [canceladas, sessoesAReagendar] = await Promise.all([
       this.desligamentos.canceladasPorDesligamento(prontuario.casoId),
       this.desligamentos.sessoesAReagendar(prontuario.casoId),
@@ -174,13 +233,29 @@ export class ProntuariosService {
       criadoEm: prontuario.criadoEm,
       ...caso,
       dadosIniciais: {
-        anamnese: abrir(prontuario.anamneseCifrada),
-        contrato: abrir(prontuario.contratoCifrado),
-        dataAssinaturaContrato: prontuario.dataAssinaturaContrato,
-        aceiteTclePesquisa: prontuario.aceiteTclePesquisa,
-        viaContratoGuardada: prontuario.viaContratoGuardada,
-        registradoEm: prontuario.dadosIniciaisEm,
-        registradoPor: autorDadosIniciais?.nome ?? null,
+        anamnese: prontuario.anamneseCifrada
+          ? {
+              ...anamneseDoTexto(decifrar(prontuario.anamneseCifrada, chave)),
+              registradaEm: prontuario.anamneseEm ?? prontuario.dadosIniciaisEm,
+              registradaPor: anamnesePor
+                ? (autores.get(anamnesePor) ?? null)
+                : null,
+            }
+          : null,
+        contrato: temContrato
+          ? {
+              // Texto livre só nos registros anteriores à DF41.
+              textoLivre: abrir(prontuario.contratoCifrado),
+              dataAssinatura: prontuario.dataAssinaturaContrato,
+              aceiteTclePesquisa: prontuario.aceiteTclePesquisa,
+              viaGuardada: prontuario.viaContratoGuardada,
+              registradoEm: prontuario.contratoEm ?? prontuario.dadosIniciaisEm,
+              registradoPor: contratoPor
+                ? (autores.get(contratoPor) ?? null)
+                : null,
+            }
+          : null,
+        queixaDaInscricao,
       },
       historicoResponsaveis: {
         estagiarios: historicoEstagiarios,
@@ -212,25 +287,32 @@ export class ProntuariosService {
           ),
           falta: faltasDoCiclo.get(sessao.id) ?? null,
           canceladaPorDesligamento: canceladas.has(sessao.id),
-          evolucao: evolucoesRows.find((e) => e.sessaoId === sessao.id)
-            ? (() => {
-                const evolucao = evolucoesRows.find(
-                  (e) => e.sessaoId === sessao.id,
-                )!;
-                return {
-                  id: evolucao.id,
-                  queixa: abrir(evolucao.queixa),
-                  planejamento: abrir(evolucao.planejamento),
-                  registradaPor: evolucao.autor,
-                  registradaEm: evolucao.registradaEm,
-                };
-              })()
-            : null,
+          numeroNoCiclo: numeroNoCiclo.get(sessao.id) ?? null,
+          evolucao: (() => {
+            const evolucao = evolucoesRows.find(
+              (e) => e.sessaoId === sessao.id,
+            );
+            if (!evolucao) return null;
+            return {
+              id: evolucao.id,
+              humorAparencia: abrir(evolucao.humorAparencia),
+              conteudoTrabalhado: abrir(evolucao.conteudoTrabalhado),
+              tecnicasUtilizadas: abrir(evolucao.tecnicasUtilizadas),
+              intervencoesEncaminhamentos: abrir(
+                evolucao.intervencoesEncaminhamentos,
+              ),
+              planoProximaSessao: abrir(evolucao.planoProximaSessao),
+              // Evoluções anteriores à DF38, com os rótulos antigos.
+              queixa: abrir(evolucao.queixa),
+              planejamento: abrir(evolucao.planejamento),
+              registradaPor: evolucao.autor,
+              registradaEm: evolucao.registradaEm,
+            };
+          })(),
         }),
       ),
       sessoesRealizadas,
-      fechamentoAvaliativoPendente:
-        sessoesRealizadas > 0 && sessoesRealizadas % 10 === 0,
+      fechamentoAvaliativoPendente: fechamentoAvaliativo(sessoesRealizadas),
       alta: null,
       relatorioFinal: null,
     };
@@ -297,6 +379,9 @@ export class ProntuariosService {
     });
   }
 
+  // Evolução da sessão realizada, na ficha da DF38 (RF28). Sessão de outro paciente ou
+  // de outro estagiário, ou estagiário sem vínculo vigente: 403; sessão ainda não
+  // realizada: 422; segunda evolução da mesma sessão: 409.
   async registrarEvolucao(
     id: string,
     sessaoId: string,
@@ -310,7 +395,22 @@ export class ProntuariosService {
       'registro_estagiario',
     );
     const chave = this.config.getOrThrow<string>('CHAVE_DADOS');
+    const cifrarOpcional = (texto: string | null) =>
+      texto ? cifrar(texto, chave) : null;
     return this.db.transaction(async (tx) => {
+      // O vínculo é conferido de novo dentro da transação, travado, para uma
+      // transferência no meio não deixar passar o registro.
+      const [vinculo] = await tx
+        .select({ id: vinculosEstagiario.id })
+        .from(vinculosEstagiario)
+        .where(
+          and(
+            eq(vinculosEstagiario.casoId, prontuario.casoId),
+            eq(vinculosEstagiario.estagiarioId, usuario.id),
+            eq(vinculosEstagiario.vigente, true),
+          ),
+        )
+        .for('update');
       const [sessao] = await tx
         .select()
         .from(sessoesAtendimento)
@@ -322,22 +422,29 @@ export class ProntuariosService {
               sessoesAtendimento.cicloAtendimento,
               prontuario.cicloAtendimento,
             ),
-            eq(sessoesAtendimento.estagiarioId, usuario.id),
-            eq(sessoesAtendimento.status, 'realizada'),
           ),
         )
         .for('update');
-      if (!sessao)
-        throw new NotFoundException(
-          'Sessão realizada não encontrada neste ciclo.',
+      if (!vinculo || !sessao || sessao.estagiarioId !== usuario.id)
+        throw new ForbiddenException(
+          'Você não pode registrar evolução nesta sessão.',
+        );
+      if (sessao.status !== 'realizada')
+        throw new UnprocessableEntityException(
+          'Só a sessão realizada aceita o registro de evolução.',
         );
       const [registro] = await tx
         .insert(evolucoes)
         .values({
           prontuarioId: id,
           sessaoId,
-          queixaCifrada: cifrar(dados.queixa, chave),
-          planejamentoCifrado: cifrar(dados.planejamento, chave),
+          humorAparenciaCifrado: cifrar(dados.humorAparencia, chave),
+          conteudoTrabalhadoCifrado: cifrar(dados.conteudoTrabalhado, chave),
+          tecnicasUtilizadasCifrado: cifrar(dados.tecnicasUtilizadas, chave),
+          intervencoesEncaminhamentosCifrado: cifrarOpcional(
+            dados.intervencoesEncaminhamentos,
+          ),
+          planoProximaSessaoCifrado: cifrar(dados.planoProximaSessao, chave),
           registradaPor: usuario.id,
         })
         .onConflictDoNothing()
@@ -353,19 +460,42 @@ export class ProntuariosService {
         },
         tx,
       );
-      return { id: registro.id, registrada: true };
+      // O aviso vem pelo número desta sessão entre as realizadas do ciclo, e não pelo
+      // total no momento do registro: não se repete nas evoluções seguintes.
+      const anteriores = await tx
+        .select({ id: sessoesAtendimento.id })
+        .from(sessoesAtendimento)
+        .where(
+          and(
+            eq(sessoesAtendimento.casoId, prontuario.casoId),
+            eq(
+              sessoesAtendimento.cicloAtendimento,
+              prontuario.cicloAtendimento,
+            ),
+            eq(sessoesAtendimento.status, 'realizada'),
+            lte(sessoesAtendimento.inicio, sessao.inicio),
+          ),
+        );
+      const numeroNoCiclo = anteriores.length;
+      return {
+        id: registro.id,
+        registrada: true,
+        numeroNoCiclo,
+        fechamentoAvaliativo: fechamentoAvaliativo(numeroNoCiclo),
+      };
     });
   }
 
-  async registrarDadosIniciais(
+  // Anamnese nas seis seções da ficha da clínica (RF69, DF37), registrada uma vez.
+  async registrarAnamnese(
     id: string,
-    dados: DadosIniciais,
+    dados: Anamnese,
     usuario: UsuarioAutenticado,
   ) {
     await this.politica.exigirAcesso(
       usuario,
       id,
-      'registrar_dados_iniciais',
+      'registrar_anamnese',
       'registro_estagiario',
     );
     const chave = this.config.getOrThrow<string>('CHAVE_DADOS');
@@ -373,28 +503,66 @@ export class ProntuariosService {
       const [atualizado] = await tx
         .update(prontuarios)
         .set({
-          anamneseCifrada: cifrar(dados.anamnese, chave),
+          anamneseCifrada: cifrar(JSON.stringify(dados), chave),
+          anamnesePor: usuario.id,
+          anamneseEm: new Date(),
+        })
+        .where(and(eq(prontuarios.id, id), isNull(prontuarios.anamneseCifrada)))
+        .returning({ id: prontuarios.id });
+      if (!atualizado)
+        throw new ConflictException('A anamnese já foi registrada.');
+      await this.auditoria.registrar(
+        {
+          usuarioId: usuario.id,
+          operacao: 'registrar_anamnese_prontuario',
+          entidade: 'prontuarios',
+          entidadeId: id,
+          dadosNovos: { autorId: usuario.id },
+        },
+        tx,
+      );
+      return { registrada: true };
+    });
+  }
+
+  // Contrato da Clínica Escola, assinado em papel (RF69, DF41), registrado uma vez.
+  async registrarContrato(
+    id: string,
+    dados: Contrato,
+    usuario: UsuarioAutenticado,
+  ) {
+    await this.politica.exigirAcesso(
+      usuario,
+      id,
+      'registrar_contrato',
+      'registro_estagiario',
+    );
+    return this.db.transaction(async (tx) => {
+      const [atualizado] = await tx
+        .update(prontuarios)
+        .set({
           dataAssinaturaContrato: dados.dataAssinaturaContrato,
           aceiteTclePesquisa: dados.aceiteTclePesquisa,
           viaContratoGuardada: dados.viaContratoGuardada,
-          dadosIniciaisPor: usuario.id,
-          dadosIniciaisEm: new Date(),
+          contratoPor: usuario.id,
+          contratoEm: new Date(),
         })
         .where(
           and(
             eq(prontuarios.id, id),
-            isNull(prontuarios.anamneseCifrada),
             isNull(prontuarios.dataAssinaturaContrato),
+            isNull(prontuarios.contratoCifrado),
           ),
         )
         .returning({ id: prontuarios.id });
-      if (!atualizado) {
-        throw new ConflictException('Os dados iniciais já foram registrados.');
-      }
+      if (!atualizado)
+        throw new ConflictException(
+          'O contrato terapêutico já foi registrado.',
+        );
       await this.auditoria.registrar(
         {
           usuarioId: usuario.id,
-          operacao: 'registrar_dados_iniciais_prontuario',
+          operacao: 'registrar_contrato_prontuario',
           entidade: 'prontuarios',
           entidadeId: id,
           dadosNovos: { autorId: usuario.id },
@@ -403,6 +571,17 @@ export class ProntuariosService {
       );
       return { registrado: true };
     });
+  }
+
+  private async queixaDaInscricao(casoId: string) {
+    const [linha] = await this.db
+      .select({ queixa: inscricoes.queixaCifrada })
+      .from(casos)
+      .innerJoin(inscricoes, eq(inscricoes.id, casos.inscricaoId))
+      .where(eq(casos.id, casoId));
+    return linha?.queixa
+      ? decifrar(linha.queixa, this.config.getOrThrow<string>('CHAVE_DADOS'))
+      : null;
   }
 
   // Dados cadastrais e administrativos, sem conteúdo clínico, para a secretaria e a

@@ -386,9 +386,10 @@ describe('Confirmação de presença (RF14)', () => {
         paciente: 'Mariana Alves Toledo',
         responsavelLegal: 'Cláudia Toledo',
         estagiario: 'Ana Beatriz Costa',
-        canalPreferencial: 'whatsapp',
         inicio: vencida.inicio.toISOString(),
       });
+      // Com a DF48, a inscrição não pede mais o canal, e a lista não o mostra.
+      expect(body.sessoes[0]).not.toHaveProperty('canalPreferencial');
       expect(JSON.stringify(body)).not.toMatch(
         /61998765432|mariana@exemplo|queixa|cpf/i,
       );

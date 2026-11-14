@@ -51,7 +51,7 @@ O sistema deve permitir que o interessado realize uma solicitação de atendimen
 - O formulário deve exigir, como campos obrigatórios — confirmados pela Clínica Escola na reunião de 26/08/2026 ([ata](../historico/unidade-1/reunioes.md)) —, os seguintes: nome completo, data de nascimento, CPF, RG, endereço, estado civil e a queixa (motivo da busca pelo atendimento); quando o interessado for menor de idade, o formulário deve exigir também o nome do responsável legal.
 - Para viabilizar os lembretes e a verificação de identidade previstos nos RF13 e RF52, o interessado deve informar o **e-mail** e o **telefone celular**, os dois obrigatórios, e a inscrição avisa que os contatos da clínica são feitos por e-mail ([DF48](decisoes-fbr.md#df48)). A inscrição não pede mais a escolha do canal preferencial. As mensagens automáticas do sistema vão por e-mail, e o celular fica para os contatos da secretaria por WhatsApp ou ligação. O SMS não é usado. As inscrições feitas antes da DF48, com o canal escolhido e às vezes só o celular, continuam seguindo a [DF24](decisoes-fbr.md#df24).
 - O formulário também deve coletar, para a triagem, a percepção de urgência e um campo de histórico relevante informado pelo interessado, ambos como declarações do próprio solicitante.
-- O formulário também deve coletar os dados da ficha de identificação da Clínica Escola que os campos acima não cobrem ([DF43](decisoes-fbr.md#df43)): sexo, profissão, escolaridade, bairro, cidade, CEP, WhatsApp, contato de emergência e, para menor de idade, o CPF e o documento que comprova a responsabilidade legal. Até a FBr definir a obrigatoriedade desses dados, eles são opcionais; essa regra é uma proposta da equipe. A exceção é o CPF do responsável legal, obrigatório na inscrição de menor de idade ([DF47](decisoes-fbr.md#df47)), porque o consentimento do RF57 é dado pelo responsável.
+- O formulário também deve coletar os dados da ficha de identificação da Clínica Escola que os campos acima não cobrem ([DF43](decisoes-fbr.md#df43)): sexo, profissão, escolaridade, bairro, cidade, CEP, WhatsApp, contato de emergência e, para menor de idade, o CPF e o documento que comprova a responsabilidade legal. O contato de emergência é obrigatório ([DF51](decisoes-fbr.md#df51)), assim como o endereço completo, com bairro, cidade e CEP, que a FBr incluiu nos dados mínimos para o reconhecimento do paciente, para eventual fiscalização ([DF56](decisoes-fbr.md#df56)). O CPF do responsável legal também é obrigatório na inscrição de menor de idade ([DF47](decisoes-fbr.md#df47)), porque o consentimento do RF57 é dado pelo responsável. Os demais (sexo, profissão, escolaridade, WhatsApp e o documento do responsável) continuam opcionais.
 - O CPF e o RG são coletados apenas como texto informado pelo próprio interessado — a Clínica Escola não exige, nem o sistema deve solicitar, o envio de cópia digitalizada desses documentos.
 - O sistema deve validar o formato dos dados de contato, verificar os campos obrigatórios e solicitar a confirmação do interessado antes de registrar a inscrição.
 - O formulário deve exibir, de forma fixa e sempre visível, um aviso textual com os contatos de emergência do CVV (188) e do SAMU (192), conforme solicitado pela Clínica Escola FBr na validação do MVP ([validação do MVP](priorizacao-e-mvp.md#1024-validacao-do-mvp-com-o-cliente)) — condição vinculada ao adiamento da sinalização automática de pontos de atenção (RF5) para uma entrega posterior.
@@ -81,6 +81,8 @@ _Critérios de aceitação:_
 - Antes do registro, o interessado revisa os dados informados e confirma o envio; sem essa confirmação, a solicitação não é registrada.
 
 - Para interessado menor de idade, calculado pela data de nascimento, o envio sem o nome ou sem o CPF do responsável legal é bloqueado e o campo é indicado.
+
+- O envio sem o contato de emergência ou sem o endereço completo (endereço, bairro, cidade e CEP) é bloqueado e o campo é indicado ([DF51](decisoes-fbr.md#df51) e [DF56](decisoes-fbr.md#df56)).
 
 _Rastreabilidade:_ Feature "Registrar solicitação de atendimento on-line" → CP1 — Inscrição on-line → OE1/OE4. Restrição transversal: CP12 — Segurança, sigilo e controle de acesso.{{ origem("RF1") }}
 
@@ -261,15 +263,15 @@ _Rastreabilidade:_ Feature "Ordenar inscritos na fila de espera" → CP3 — Fil
 
 **RF8 — Consultar posição individual na fila**{ #rf8 }
 
-O sistema deve permitir que o inscrito consulte sua posição e situação atual na fila de espera da Clínica Escola FBr, localizando a solicitação por CPF ou número de inscrição. Antes de apresentar o resultado, o fluxo deve executar a verificação de identidade definida no RF52. As condições de privacidade e de comunicação do resultado são estabelecidas, respectivamente, pelos RNF6 e RNF7.
+O sistema deve permitir que o inscrito consulte a situação atual da sua inscrição na fila de espera da Clínica Escola FBr, localizando a solicitação por CPF ou número de inscrição. Antes de apresentar o resultado, o fluxo deve executar a verificação de identidade definida no RF52. A consulta mostra **"Em triagem"** enquanto o inscrito ainda não foi chamado para o atendimento, e **"Em atendimento"** depois de chamado, inclusive enquanto ele aguarda o contato da clínica ou responde a ele ([DF55](decisoes-fbr.md#df55)). O inscrito é chamado quando o caso é vinculado a um estagiário (RF21). A posição na fila **não aparece** para o inscrito, para não gerar expectativa, porque a captação de pacientes é semestral; a ordem da fila (RF7) continua sendo vista só pela equipe. O nome da feature foi mantido para preservar a rastreabilidade. As condições de privacidade e de comunicação do resultado são estabelecidas, respectivamente, pelos RNF6 e RNF7.
 
 _Critérios de aceitação:_
 
-- Após localizar a solicitação e concluir a verificação de identidade (RF52), o inscrito vê sua posição e a situação atual da inscrição, conforme os RNF6 e RNF7.
+- Após localizar a solicitação e concluir a verificação de identidade (RF52), o inscrito vê a situação atual da inscrição ("Em triagem" ou "Em atendimento"), sem a posição na fila, conforme os RNF6 e RNF7.
 
-- Sem verificação de identidade concluída, a consulta de posição é negada, conforme o RNF6.
+- Sem verificação de identidade concluída, a consulta é negada, conforme o RNF6.
 
-- Após mudanças de prioridade ou de situação que alterem a fila, uma nova consulta autorizada mostra a posição atualizada.
+- Depois que o caso é vinculado a um estagiário (RF21), uma nova consulta autorizada mostra "Em atendimento".
 
 _Rastreabilidade:_ Feature "Consultar posição individual na fila" → CP3 — Fila de espera e consulta de posição → OE4/OE7 → IS03 — Expectativa sobre a fila. Dependência: RF52 — Verificar identidade do paciente ou responsável (CP12).{{ origem("RF8") }}
 
@@ -335,15 +337,15 @@ Os canais de contato com o paciente (e-mail, WhatsApp e ligação, sem SMS), a d
 - O sistema deve impedir o agendamento de sessões sobrepostas para o mesmo estagiário ou para o mesmo paciente, e deve registrar o status inicial da sessão como "agendada", com paciente, estagiário, data, horário de início e horário de término associados.
 - O agendamento não deve ocorrer para pacientes sem estagiário responsável vinculado.
 - O registro de auditoria do agendamento segue o RNF10.
-- Ao confirmar o agendamento, o link de confirmação de presença utilizado pelo RF14 deve chegar ao paciente pelo canal preferencial informado na inscrição (RF1): com **e-mail**, o sistema envia automaticamente; com **WhatsApp** ou **ligação**, o sistema mostra a quem agendou um botão "Enviar pelo WhatsApp", que abre o WhatsApp com a mensagem pronta para o celular do paciente (data, horário e link), e registra quando o botão foi usado. Para quem prefere ligação, a mensagem também serve de roteiro da ligação.
+- Ao confirmar o agendamento, o sistema envia automaticamente ao **e-mail** do paciente o link de confirmação de presença utilizado pelo RF14 quando o canal da inscrição é o e-mail: é o caso de toda inscrição feita depois da [DF48](decisoes-fbr.md#df48), que pede o e-mail e avisa que os contatos da clínica são feitos por ele, e das anteriores em que o paciente escolheu o e-mail. Nas inscrições anteriores à [DF48](decisoes-fbr.md#df48), em que o paciente escolheu **WhatsApp** ou **ligação** como canal preferencial, o sistema mostra a quem agendou um botão "Enviar pelo WhatsApp", que abre o WhatsApp com a mensagem pronta para o celular do paciente (data, horário e link), e registra quando o botão foi usado. Para quem preferiu ligação, a mensagem também serve de roteiro da ligação.
 
-**Entrega parcial no Ciclo 3.** O agendamento entregue no Ciclo 3 já gera o link de confirmação de presença e o envia ao paciente pelo canal preferencial, como descrito acima. A página que recebe o link e registra a confirmação é a do [RF14](#rf14), prevista para o Ciclo 4: até ela ser entregue, o paciente recebe o link, mas não consegue confirmar a presença por ele. O link passa a funcionar com a entrega do RF14. Os critérios de aceitação sobre o envio do link são verificados no Ciclo 3; a confirmação pela página do link é verificada nos critérios do RF14.
+**Entrega parcial no Ciclo 3.** O agendamento entregue no Ciclo 3 já gera o link de confirmação de presença e o envia ao paciente como descrito acima. A página que recebe o link e registra a confirmação é a do [RF14](#rf14), prevista para o Ciclo 4: até ela ser entregue, o paciente recebe o link, mas não consegue confirmar a presença por ele. O link passa a funcionar com a entrega do RF14. Os critérios de aceitação sobre o envio do link são verificados no Ciclo 3; a confirmação pela página do link é verificada nos critérios do RF14.
 
 _Critérios de aceitação:_
 
 - O agendamento, pela secretaria ou pelo estagiário, de paciente com estagiário vinculado, informando só o início, registra a sessão como "agendada" com paciente, estagiário, data, início e término calculado pela duração padrão.
-- Paciente com e-mail como canal preferencial recebe o link de confirmação de presença (RF14) automaticamente no agendamento.
-- Paciente com WhatsApp ou ligação como canal preferencial: o sistema mostra o botão "Enviar pelo WhatsApp" com a mensagem pronta (data, horário e link) e registra a data e a hora em que o botão foi usado.
+- Paciente com o e-mail como canal da inscrição (toda inscrição feita depois da DF48, e as anteriores que escolheram o e-mail) recebe o link de confirmação de presença (RF14) automaticamente no agendamento.
+- Paciente de inscrição anterior à DF48 com WhatsApp ou ligação como canal preferencial, mesmo que tenha e-mail cadastrado: o sistema mostra o botão "Enviar pelo WhatsApp" com a mensagem pronta (data, horário e link) e registra a data e a hora em que o botão foi usado.
 - Com uma sessão do estagiário das 14h00 às 14h50 e intervalo para anotações até as 15h00, uma nova sessão desse estagiário iniciando às 14h50 é bloqueada e o conflito é informado.
 - Na mesma situação, uma nova sessão desse estagiário iniciando às 15h00 é permitida.
 - Com uma sessão do paciente das 14h00 às 14h50, uma nova sessão do mesmo paciente iniciando às 14h30 é bloqueada.
@@ -353,7 +355,7 @@ _Critérios de aceitação:_
 - Os campos de início e de término só oferecem horários de 10 em 10 minutos (DF49).
 - Estagiário que não é o responsável pelo paciente, supervisor e coordenação não conseguem agendar sessão para o paciente.
 
-_Rastreabilidade:_ Feature "Agendar sessão do paciente" → CP4 — Agendamento, confirmação e remarcação → OE3/OE4. Dependência: RF21 (CP5 — vínculo do paciente ao estagiário responsável); integração: RF1 (canal de contato preferencial) e RF14 (link de confirmação de presença); restrição transversal: CP12 — Segurança, sigilo e controle de acesso.{{ origem("RF10") }}
+_Rastreabilidade:_ Feature "Agendar sessão do paciente" → CP4 — Agendamento, confirmação e remarcação → OE3/OE4. Dependência: RF21 (CP5 — vínculo do paciente ao estagiário responsável); integração: RF1 (e-mail e celular do paciente) e RF14 (link de confirmação de presença); restrição transversal: CP12 — Segurança, sigilo e controle de acesso.{{ origem("RF10") }}
 
 {{ registro("RF10") }}
 
@@ -399,12 +401,12 @@ _Rastreabilidade:_ Feature "Reagendar sessão do paciente" → CP4 — Agendamen
 
 **RF13 — Enviar lembrete de sessão agendada**{ #rf13 }
 
-O sistema deve enviar automaticamente um lembrete ao paciente antes de uma sessão agendada, registrando o envio ou a eventual falha de envio conforme o RNF11. O lembrete segue o canal preferencial do paciente (RF1): com e-mail, é enviado automaticamente; com WhatsApp ou ligação, entra na lista "lembretes a enviar" da secretaria, com o botão "Enviar pelo WhatsApp" e a mensagem pronta. O SMS não é usado. O lembrete e deve conter a data, o horário e o link de confirmação de presença (RF14) já enviado no agendamento (RF10) — reforçando-o, sem exigir novo envio para que o paciente confirme presença. O momento do envio é definido pelo parâmetro "antecedência do lembrete" (padrão de 24 horas antes do início da sessão), configurável pela coordenação. Sessões agendadas quando já falta menos do que essa antecedência para o início devem ter o lembrete enviado no momento do agendamento.
+O sistema deve enviar automaticamente um lembrete ao paciente antes de uma sessão agendada, registrando o envio ou a eventual falha de envio conforme o RNF11. O lembrete é enviado automaticamente ao e-mail do paciente quando o canal da inscrição é o e-mail, como em toda inscrição feita depois da [DF48](decisoes-fbr.md#df48). Nas inscrições anteriores à [DF48](decisoes-fbr.md#df48), em que o paciente escolheu WhatsApp ou ligação como canal preferencial, o lembrete entra na lista "lembretes a enviar" da secretaria, com o botão "Enviar pelo WhatsApp" e a mensagem pronta. O SMS não é usado. O lembrete e deve conter a data, o horário e o link de confirmação de presença (RF14) já enviado no agendamento (RF10) — reforçando-o, sem exigir novo envio para que o paciente confirme presença. O momento do envio é definido pelo parâmetro "antecedência do lembrete" (padrão de 24 horas antes do início da sessão), configurável pela coordenação. Sessões agendadas quando já falta menos do que essa antecedência para o início devem ter o lembrete enviado no momento do agendamento.
 
 _Critérios de aceitação:_
 
-- Com sessão às 14h00 de quinta-feira e antecedência de 24 horas, o lembrete do paciente com e-mail é enviado às 14h00 de quarta-feira, com o envio registrado com data e hora.
-- Na mesma situação, o lembrete do paciente com WhatsApp ou ligação aparece às 14h00 de quarta-feira na lista "lembretes a enviar" da secretaria, e o uso do botão fica registrado com data e hora.
+- Com sessão às 14h00 de quinta-feira e antecedência de 24 horas, o lembrete do paciente com o e-mail como canal da inscrição é enviado às 14h00 de quarta-feira, com o envio registrado com data e hora.
+- Na mesma situação, o lembrete do paciente de inscrição anterior à DF48 com WhatsApp ou ligação como canal, mesmo que tenha e-mail cadastrado, aparece às 14h00 de quarta-feira na lista "lembretes a enviar" da secretaria, e o uso do botão fica registrado com data e hora.
 - Sessão agendada com menos tempo até o início do que a antecedência configurada recebe o lembrete no momento do agendamento.
 - Nova antecedência definida pela coordenação vale para as sessões futuras cujo lembrete ainda não foi enviado.
 - Falha no envio do lembrete é registrada como falha, e não como envio concluído.
@@ -419,7 +421,7 @@ _Rastreabilidade:_ Feature "Enviar lembrete de sessão agendada" → CP4 — Age
 
 O sistema deve permitir que o paciente confirme presença em uma sessão agendada até o prazo de confirmação, definido pelo parâmetro "prazo de confirmação de presença" (padrão: até 24 horas antes do início da sessão, confirmado pela Clínica Escola em 31/10/2026), configurável pela coordenação. Ao confirmar, o sistema deve atualizar o status da sessão para "confirmada" e gerar o registro de auditoria do RNF10. Sessões não confirmadas até o fim do prazo devem ser sinalizadas para a secretaria, para contato ativo com o paciente. A ausência de confirmação não é, por si só, uma falta: a falta só é registrada quando o paciente não comparece à sessão (RF34).
 
-O link de confirmação de presença chega ao paciente no momento em que a sessão é agendada (RF10), pelo canal de contato preferencial informado na inscrição (RF1) — por e-mail automático ou pela mensagem de WhatsApp enviada por quem agendou —, e segue as condições de usabilidade do RNF15 e as proteções de segurança do RNF59. O envio **automático e antecipado** de um lembrete adicional antes da sessão — com antecedência configurável — é tratado pelo RF13, que fica para uma entrega posterior; enquanto RF13 não estiver disponível, o link enviado no momento do agendamento é o único canal de confirmação, e o RF14 não depende do RF13 para funcionar.
+O link de confirmação de presença chega ao paciente no momento em que a sessão é agendada (RF10), por e-mail automático ([DF48](decisoes-fbr.md#df48)) ou, nas inscrições anteriores à DF48 com WhatsApp ou ligação como canal, pela mensagem de WhatsApp enviada por quem agendou, e segue as condições de usabilidade do RNF15 e as proteções de segurança do RNF59. O envio **automático e antecipado** de um lembrete adicional antes da sessão — com antecedência configurável — é tratado pelo RF13, que fica para uma entrega posterior; enquanto RF13 não estiver disponível, o link enviado no momento do agendamento é o único canal de confirmação, e o RF14 não depende do RF13 para funcionar.
 
 _Critérios de aceitação:_
 
@@ -478,7 +480,7 @@ _Rastreabilidade:_ Feature "Registrar cancelamento de sessão pelo estagiário" 
 
 {{ registro("RF16") }}
 
-#### Feature — Notificar paciente sobre ausência do estagiário
+#### Feature — Notificar paciente sobre ausência do estagiário [#223](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/issues/223)
 
 **RF17 — Notificar paciente sobre ausência do estagiário**{ #rf17 }
 
@@ -623,11 +625,14 @@ _Rastreabilidade:_ Feature "Visualizar distribuição de casos por supervisor" �
 
 O sistema deve permitir a transferência de um caso ativo, preservando o histórico do paciente (sessões, evolução e vínculos anteriores), com os seguintes limites por perfil, coerentes com o RNF16: o **supervisor responsável pelo caso** pode transferi-lo apenas para outro estagiário sob a sua própria supervisão; transferir o caso para outro supervisor — por exemplo, ao término do estágio, na saída do estagiário ou por reorganização da carga — é ação exclusiva da **coordenação**, que pode transferir qualquer caso, para qualquer supervisor ou estagiário. A transferência deve exigir a indicação do novo responsável e do motivo, e deve ficar registrada com responsável anterior, novo responsável, data/hora e motivo, vinculada à atribuição anterior. A partir da transferência, o responsável anterior perde o acesso ao caso, e o novo responsável passa a ter acesso a todo o histórico. Esse registro deve ser mantido no sistema mesmo enquanto a tela dedicada à sua consulta (RF26) ficar para uma entrega posterior, de modo que o histórico de transferências exista integralmente no banco desde já.
 
+Na transferência, a coordenação pode escolher um supervisor que já acompanha o limite de casos do RF20, com um aviso ([DF50](decisoes-fbr.md#df50)); a distribuição de um caso novo (RF20) continua recusando esse supervisor.
+
 _Critérios de aceitação:_
 
 - A transferência, pelo supervisor responsável, de caso para outro estagiário sob sua supervisão registra o novo responsável, mantém o histórico do paciente disponível a ele e revoga o acesso do estagiário anterior.
 - O supervisor A não consegue transferir seu caso para estagiário do supervisor B; o sistema orienta a transferência pela coordenação.
 - A transferência de caso ativo pela coordenação para outro supervisor registra o novo supervisor e, quando indicado, o novo estagiário, preserva o histórico e revoga o acesso dos responsáveis anteriores.
+- A transferência pela coordenação para um supervisor que já acompanha o limite de casos é registrada, com o aviso de que o limite foi ultrapassado.
 
 _Rastreabilidade:_ Feature "Transferir caso para outro estagiário ou supervisor" → CP5 — Distribuição de casos entre supervisores e estagiários → OE5. Dependência: RF21; restrição transversal: RNF16.{{ origem("RF25") }}
 
@@ -742,7 +747,7 @@ _Rastreabilidade:_ Feature "Registrar evolução da sessão realizada" → CP7 �
 
 {{ registro("RF28") }}
 
-#### Feature — Corrigir evolução registrada
+#### Feature — Corrigir evolução registrada [#224](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/issues/224)
 
 **RF29 — Corrigir evolução registrada**{ #rf29 }
 
@@ -942,7 +947,7 @@ _Critérios de aceitação:_
 - Paciente que não confirmou a sessão no prazo (RF14), mas compareceu, não tem a contagem de faltas incrementada.
 - Falta marcada como justificada (RF34) continua contando para o limite de 2 faltas.
 - Em um novo ciclo de atendimento do mesmo paciente, a contagem começa em zero.
-- Na reversão de desligamento feito por engano (RF38), as faltas que a coordenação indicar deixam de contar, e a contagem passa a ser a das faltas mantidas (por exemplo, de duas faltas com uma retirada, a contagem volta a uma); todas as faltas continuam no histórico, com autor e data/hora da retirada.
+- Na reversão de desligamento feito por engano (RF38), as faltas que a coordenação indicar deixam de contar ([DF58](decisoes-fbr.md#df58)), e a contagem passa a ser a das faltas mantidas (por exemplo, de duas faltas com uma retirada, a contagem volta a uma); todas as faltas continuam no histórico, com autor e data/hora da retirada.
 
 _Rastreabilidade:_ Feature "Contabilizar faltas do paciente no ciclo" → CP9 — Controle de assiduidade e alertas → OE4/OE3. Dependência: RF15 (CP4), RF34.{{ origem("RF35") }}
 
@@ -974,6 +979,8 @@ O sistema deve permitir que a secretaria ou a coordenação registre o desligame
 
 A **realocação** da vaga a outro inscrito não é automática nem faz parte deste requisito: ela é confirmada pelo supervisor do estagiário ao vincular o novo paciente (RF21), depois de a coordenação distribuir o caso a esse supervisor, quando ainda não estiver distribuído (RF20). Conforme confirmado pela Clínica Escola, a vaga deve ser liberada em até uma semana após o desligamento; a liberação em até 5 segundos definida no RNF34 já atende a essa exigência com folga.
 
+O estagiário responsável avisa o paciente do desligamento, por fora do sistema ([DF53](decisoes-fbr.md#df53)), e a confirmação do desligamento lembra esse aviso.
+
 _Critérios de aceitação:_
 
 - A confirmação do desligamento pela secretaria ou pela coordenação, para paciente com alerta de limite pendente (RF36), registra a decisão com data e responsável e muda o status para "desligado por faltas".
@@ -989,7 +996,7 @@ _Rastreabilidade:_ Feature "Desligar paciente por faltas e liberar vaga" → CP9
 
 **RF38 — Reverter desligamento de paciente por faltas**{ #rf38 }
 
-O sistema deve permitir que um usuário com perfil de coordenação reverta um desligamento por faltas (RF37) registrado por engano, restaurando o status ativo do paciente e preservando o histórico de faltas e da decisão original de desligamento, agora marcada como revertida, com autor, data/hora e motivo da reversão. Conforme confirmado pela Clínica Escola, somente a coordenação analisa e decide cada caso de reversão — não é uma ação disponível à secretaria, ao estagiário ou ao supervisor. Caso a vaga do paciente já tenha sido realocada a outro inscrito da fila de espera (CP3) no momento da reversão, o sistema não deve remover a sessão ou o vínculo já criado para esse outro paciente; a reversão do desligamento original deve ser sinalizada à coordenação como pendente de tratamento manual da vaga (por exemplo, aguardar a próxima vaga disponível).
+O sistema deve permitir que um usuário com perfil de coordenação reverta um desligamento por faltas (RF37) registrado por engano, restaurando o status ativo do paciente e preservando o histórico de faltas e da decisão original de desligamento, agora marcada como revertida, com autor, data/hora e motivo da reversão. Na reversão, a coordenação escolhe quais faltas do desligamento deixam de contar ([DF58](decisoes-fbr.md#df58)). Conforme confirmado pela Clínica Escola, somente a coordenação analisa e decide cada caso de reversão — não é uma ação disponível à secretaria, ao estagiário ou ao supervisor. Caso a vaga do paciente já tenha sido realocada a outro inscrito da fila de espera (CP3) no momento da reversão, o sistema não deve remover a sessão ou o vínculo já criado para esse outro paciente; a reversão do desligamento original deve ser sinalizada à coordenação como pendente de tratamento manual da vaga (por exemplo, aguardar a próxima vaga disponível).
 
 _Critérios de aceitação:_
 
@@ -1006,7 +1013,7 @@ _Rastreabilidade:_ Feature "Reverter desligamento de paciente por faltas" → CP
 
 O escopo da CP9 também prevê o controle das faltas do estagiário, mencionado na Solução Proposta. Em resposta posterior à reunião de 26/08/2026, a Clínica Escola confirmou a regra de consequência: 3 faltas do estagiário reprovam o campo de estágio (RF40). As features abaixo separam quatro ações com regras distintas: a consulta das ausências do estagiário já registradas pela CP4 (RF16) pela supervisão (RF39), a contagem das faltas no semestre (RF40), a sinalização da reprovação ao atingir o limite (RF63) e o registro da decisão institucional da coordenação, que encerra a sinalização (RF64).
 
-#### Feature — Consolidar faltas do estagiário para a supervisão
+#### Feature — Consolidar faltas do estagiário para a supervisão [#225](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/issues/225)
 
 **RF39 — Consolidar faltas do estagiário para a supervisão**{ #rf39 }
 
@@ -1155,7 +1162,7 @@ _Rastreabilidade:_ Feature "Bloquear agendamento por contribuição social pende
 
 Este conjunto reúne quatro features que permitem que a secretaria ou o próprio paciente/responsável obtenham a declaração de comparecimento às sessões, contendo data, horário e nome do estagiário que realizou o atendimento, e validem sua autenticidade. O objetivo é atender de imediato uma demanda recorrente dos pacientes, sem trabalho manual da secretaria. A feature de emissão consolidada por período, antes cogitada como quinta feature, foi retirada da lista: a Clínica Escola confirmou que essa necessidade já é atendida pelo relatório final de atendimento (CP8).
 
-#### Feature — Listar sessões com comparecimento registrado do paciente
+#### Feature — Listar sessões com comparecimento registrado do paciente [#226](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/issues/226)
 
 **RF44 — Listar sessões com comparecimento registrado do paciente**{ #rf44 }
 
