@@ -2318,6 +2318,16 @@ sequenceDiagram
 
 **Dependências e riscos:** depende do RF21, do RF25, do RF37 e do RF38, já integrados, e da migration do `encerradoEm`, que mexe em tabelas usadas pela transferência e pelo desligamento: as duas passam a gravar a data e ganham teste. O RF9, fora do MVP, vai divulgar as vagas registradas aqui.
 
+**Na implementação ([PR #259](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/pull/259)):**
+
+- **Migration:** a `0016_indicadores_operacionais`, depois do consentimento do RF57 (`0015`), cria o `parametros_semestre` e o `alteracoes_parametro` e acrescenta o `encerrado_em` do vínculo e o `encerrada_em` da atribuição. Os registros antigos recebem a data pela transferência ou pelo desligamento. O histórico das alterações é só de inserção, com o gatilho `alteracoes_parametro_somente_insercao`, que usa o `impedir_alteracao_registro`.
+- **Semestre na rota:** o semestre é guardado como `2026/2`, mas vai na URL com hífen (`/vagas-ofertadas/2026-2`), porque a barra separa o caminho.
+- **Gravação das vagas:** a transação trava o semestre (`pg_advisory_xact_lock`) antes de ler o valor anterior. Assim, duas gravações ao mesmo tempo, mesmo na primeira vez do semestre, não registram o mesmo valor anterior no histórico.
+- **Leitura:** o banco devolve só os vínculos, as atribuições, os desligamentos e as sessões que podem cruzar o intervalo consultado; o cálculo dos quatro indicadores fica em `calculo-indicadores.ts`, separado do banco e testado sem ele.
+- **Distribuição por supervisor:** a tabela vem ordenada pelo número de casos e, no empate, pelo nome.
+- **Acesso negado:** a tela mostra "Você não tem acesso aos indicadores operacionais", com a volta para a página inicial, mas sem o "Tentativa registrada" da prancha 9-1, porque a recusa da rota (403) não é registrada na auditoria. A alteração das vagas, sim, vai para a auditoria, junto com o histórico.
+- **RNF46 e RNF47:** o teste do desligamento refletido na taxa de evasão está em `indicadores.spec.ts`. O teste de carga do RNF47, com a massa de 12 meses, entra numa PR seguinte.
+
 ## Roteiro da inspeção de design
 
 A inspeção é feita pelo Líder de Feature com o revisor da issue, que nunca pode ser o autor do design. Para cada feature, o resultado é registrado num comentário da issue, usando os itens abaixo:

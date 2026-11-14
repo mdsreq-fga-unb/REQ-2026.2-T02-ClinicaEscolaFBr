@@ -362,7 +362,7 @@ describe('Falta do paciente e contagem no ciclo (RF34, RF35)', () => {
     // Transferência: a Ana, estagiária da sessão, sai, e o Pedro assume o caso.
     await db
       .update(vinculosEstagiario)
-      .set({ vigente: false })
+      .set({ vigente: false, encerradoEm: new Date() })
       .where(eq(vinculosEstagiario.casoId, caso));
     await db.insert(vinculosEstagiario).values({
       casoId: caso,

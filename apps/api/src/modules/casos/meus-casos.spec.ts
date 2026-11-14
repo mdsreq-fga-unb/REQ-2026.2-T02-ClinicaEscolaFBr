@@ -287,7 +287,9 @@ describe('Casos sob responsabilidade do estagiário ou supervisor (RF23)', () =>
     const r = await meus('joao');
     expect(nomes(r.body)).toEqual(['Paulo Nunes']);
     // O caso do João passa a outro estagiário: ele fica sem casos.
-    await db.update(vinculosEstagiario).set({ vigente: false });
+    await db
+      .update(vinculosEstagiario)
+      .set({ vigente: false, encerradoEm: new Date() });
     expect((await meus('joao')).body).toEqual([]);
   });
 
@@ -295,7 +297,7 @@ describe('Casos sob responsabilidade do estagiário ou supervisor (RF23)', () =>
     const { mariana } = await cenario();
     await db
       .update(vinculosEstagiario)
-      .set({ vigente: false })
+      .set({ vigente: false, encerradoEm: new Date() })
       .where(eq(vinculosEstagiario.casoId, mariana.casoId));
     expect(nomes((await meus('ana')).body)).toEqual(['Tatiane Moreira Lopes']);
     expect(
@@ -308,7 +310,7 @@ describe('Casos sob responsabilidade do estagiário ou supervisor (RF23)', () =>
 
     await db
       .update(atribuicoesSupervisor)
-      .set({ vigente: false })
+      .set({ vigente: false, encerradaEm: new Date() })
       .where(eq(atribuicoesSupervisor.casoId, mariana.casoId));
     expect(nomes((await meus('ricardo')).body)).not.toContain(
       'Mariana Alves Toledo',
@@ -330,7 +332,7 @@ describe('Casos sob responsabilidade do estagiário ou supervisor (RF23)', () =>
     const { mariana } = await cenario();
     await db
       .update(vinculosEstagiario)
-      .set({ vigente: false })
+      .set({ vigente: false, encerradoEm: new Date() })
       .where(eq(vinculosEstagiario.casoId, mariana.casoId));
     await db
       .update(casos)

@@ -397,7 +397,7 @@ describe('Alerta, desligamento por faltas e reversão (RF36, RF37, RF38)', () =>
       });
       await db
         .update(vinculosEstagiario)
-        .set({ vigente: false })
+        .set({ vigente: false, encerradoEm: new Date() })
         .where(eq(vinculosEstagiario.casoId, proximo));
       await db
         .update(casos)
@@ -452,7 +452,7 @@ describe('Alerta, desligamento por faltas e reversão (RF36, RF37, RF38)', () =>
       const novo = await criarCaso('Vitória Campos Neves');
       await db
         .update(vinculosEstagiario)
-        .set({ vigente: false })
+        .set({ vigente: false, encerradoEm: new Date() })
         .where(eq(vinculosEstagiario.casoId, novo));
       await db
         .update(casos)

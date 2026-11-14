@@ -796,7 +796,7 @@ rfs:
   lider: Gabriel
   depende: [RF37, RF38, RF21]
   issue: 22
-  estado: Planejada
+  estado: Código concluído
   entrega: 'parcial no Ciclo 5: até o encerramento por alta (RF68), do Ciclo 6, o atendimento ativo considera só o desligamento por faltas e o fim do vínculo sem um novo vínculo'
 
 - id: RF49
