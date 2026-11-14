@@ -1,18 +1,20 @@
 name: Deploy MkDocs Documentation
 
-# O site é publicado a partir da development, a versão integrada: cada merge que
-# muda a documentação aparece no GitHub Pages, sem esperar a PR main <- development.
+# O site é publicado a partir da development, a versão integrada: cada merge
+# aparece no GitHub Pages, sem esperar a PR main <- development. Na publicação, o
+# estado das features e a situação dos ciclos vêm das issues e dos milestones
+# (SINCRONIZAR_GITHUB); por isso todo merge publica de novo, e não só os que mexem
+# na documentação.
 on:
   push:
     branches:
       - development
-    paths:
-      - "documentacao/**"
-      - ".github/workflows/deploy-docs.yaml"
   workflow_dispatch:
 
 permissions:
   contents: write
+  # Para ler o "Estado da feature" das issues e os milestones dos ciclos.
+  issues: read
 
 # Dois merges seguidos não publicam ao mesmo tempo na gh-pages; vale o mais recente.
 concurrency:
@@ -42,4 +44,7 @@ jobs:
 
       # A data do commit publicado aparece no rodapé do site ("Última publicação").
       - name: Build and deploy site to gh-pages branch
+        env:
+          SINCRONIZAR_GITHUB: "1"
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: mkdocs gh-deploy --force --strict --config-file documentacao/mkdocs.yml
