@@ -5,6 +5,7 @@ import {
   casos,
   decisoesPrioridade,
   inscricoes,
+  pagamentosContribuicao,
   prontuarios,
   sessoesAtendimento,
   usuarios,
@@ -297,6 +298,75 @@ describe('Travas do banco no schema do Ciclo 3', () => {
       await db
         .insert(sessoesAtendimento)
         .values(sessao(casoA, estagiarioB, 50));
+    });
+  });
+
+  describe('pagamento da contribuição social (RF41, RNF36)', () => {
+    const pagamento = (
+      casoId: string,
+      registradoPor: string,
+      versao: number,
+      motivoCorrecao: string | null,
+    ) => ({
+      casoId,
+      cicloAtendimento: 1,
+      versao,
+      valorCentavos: 3500,
+      pagoEm: '2026-11-09',
+      forma: 'pix' as const,
+      motivoCorrecao,
+      registradoPor,
+    });
+
+    it('a versão 1 não tem motivo, e toda correção tem; a mesma versão não entra duas vezes no ciclo (RF41, RNF36)', async () => {
+      const { casoId } = await criarCaso();
+      const secretaria = await criarUsuario('secretaria');
+      await recusada(
+        db
+          .insert(pagamentosContribuicao)
+          .values(pagamento(casoId, secretaria, 1, 'Motivo')),
+        'pagamentos_contribuicao_motivo_da_correcao',
+      );
+      await db
+        .insert(pagamentosContribuicao)
+        .values(pagamento(casoId, secretaria, 1, null));
+      await recusada(
+        db
+          .insert(pagamentosContribuicao)
+          .values(pagamento(casoId, secretaria, 2, null)),
+        'pagamentos_contribuicao_motivo_da_correcao',
+      );
+      await recusada(
+        db
+          .insert(pagamentosContribuicao)
+          .values(pagamento(casoId, secretaria, 1, null)),
+        'pagamentos_contribuicao_versao_unica',
+      );
+      await recusada(
+        db.insert(pagamentosContribuicao).values({
+          ...pagamento(casoId, secretaria, 2, 'x'),
+          valorCentavos: 0,
+        }),
+        'pagamentos_contribuicao_valor_positivo',
+      );
+      await db
+        .insert(pagamentosContribuicao)
+        .values(pagamento(casoId, secretaria, 2, 'Forma errada'));
+    });
+
+    it('nenhuma versão do pagamento pode ser alterada nem apagada (RF41, RNF36)', async () => {
+      const { casoId } = await criarCaso();
+      await db
+        .insert(pagamentosContribuicao)
+        .values(pagamento(casoId, await criarUsuario('secretaria'), 1, null));
+      await recusada(
+        db.update(pagamentosContribuicao).set({ valorCentavos: 4000 }),
+        'não pode ser alterado nem apagado',
+      );
+      await recusada(
+        db.delete(pagamentosContribuicao),
+        'não pode ser alterado nem apagado',
+      );
     });
   });
 
