@@ -579,6 +579,57 @@ describe('Rotas dos indicadores operacionais (RF48)', () => {
     );
   });
 
+  it('o vínculo encerrado por transferência para no vínculo seguinte, mesmo que o seguinte tenha terminado antes da janela (RF48, RF25)', async () => {
+    const dia = (n: number) => new Date(Date.now() - n * 86_400_000);
+    const { caso, atribuicao, vinculo } = await casoEmAtendimento(dia(100));
+    // Transferência há 90 dias, com um vínculo novo que terminou há 60 dias.
+    await db
+      .update(vinculosEstagiario)
+      .set({ vigente: false, encerradoEm: dia(90) })
+      .where(eq(vinculosEstagiario.id, vinculo.id));
+    await db.insert(transferenciasCaso).values({
+      casoId: caso.id,
+      tipo: 'estagiario',
+      supervisorAnteriorId: pessoas.ricardo.id,
+      estagiarioAnteriorId: pessoas.ana.id,
+      estagiarioNovoId: pessoas.ana.id,
+      atribuicaoAnteriorId: atribuicao.id,
+      vinculoAnteriorId: vinculo.id,
+      motivoCifrado: cifrar('motivo', CHAVE_TESTE),
+      transferidoPor: pessoas.ricardo.id,
+    });
+    await db.insert(vinculosEstagiario).values({
+      casoId: caso.id,
+      estagiarioId: pessoas.ana.id,
+      vinculadoPor: pessoas.ricardo.id,
+      vinculadoEm: dia(90),
+      vigente: false,
+      encerradoEm: dia(60),
+    });
+    const r = (
+      await consultar('coordenacao', hojeEmBrasilia(dia(5)), hoje).expect(200)
+    ).body as Indicadores;
+    expect(r.vagas.ocupadas).toBe(0);
+    expect(r.evasao.ativos).toBe(0);
+  });
+
+  it('duas gravações das vagas ao mesmo tempo guardam o valor anterior certo no histórico (RF48)', async () => {
+    await Promise.all(
+      [80, 90].map((total) =>
+        http()
+          .put('/vagas-ofertadas/2026-2')
+          .send({ total })
+          .set(como('coordenacao'))
+          .expect(200),
+      ),
+    );
+    const historico = await db.select().from(alteracoesParametro);
+    expect(historico).toHaveLength(2);
+    const primeira = historico.find((h) => h.valorAnterior === null)!;
+    const segunda = historico.find((h) => h.valorAnterior !== null)!;
+    expect(segunda.valorAnterior).toBe(primeira.valorNovo);
+  });
+
   it('o tempo de espera usa a primeira sessão realizada de cada paciente (RF48)', async () => {
     const antes = new Date(Date.now() - 20 * 86_400_000);
     const { caso } = await casoEmAtendimento(antes);
