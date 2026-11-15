@@ -52,10 +52,10 @@ ciclos:
   status: Encerrado
 - numero: 4
   periodo: 28/10 a 10/11/2026
-  status: Em andamento
+  status: Encerrado
 - numero: 5
   periodo: 11/11 a 17/11/2026
-  status: Aguardando
+  status: Em andamento
 - numero: 6
   periodo: 18/11 a 01/12/2026
   status: Aguardando
