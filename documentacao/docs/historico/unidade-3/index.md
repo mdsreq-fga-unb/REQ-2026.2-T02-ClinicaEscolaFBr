@@ -21,15 +21,15 @@ Os itens de cada ciclo, com o Líder de Feature e as dependências, estão em [F
 
 ## O que foi realizado
 
-Estado de cada feature dos Ciclos 3 e 4 no marco do FDD que ela alcançou, copiado das issues para o [catálogo de requisitos](../../requisitos/priorizacao-e-mvp.md#catalogo-de-requisitos) (atualizado em {{ catalogo_atualizado_em }}). A partir de "Promovida para a versão integrada", a feature está na `development`, publicada no ambiente de validação da FBr.
+Estado de cada feature dos Ciclos 3, 4 e 5 no marco do FDD que ela alcançou, copiado das issues para o [catálogo de requisitos](../../requisitos/priorizacao-e-mvp.md#catalogo-de-requisitos) (atualizado em {{ catalogo_atualizado_em }}). A partir de "Promovida para a versão integrada", a feature está na `development`, publicada no ambiente de validação da FBr.
 
-{{ tabela_andamento(3, 4) }}
+{{ tabela_andamento(3, 4, 5) }}
 
 As evidências de cada marco ficam na issue da feature:
 
 - **Inspeção de design e de código:** comentários "Inspeção de design (DoD 1)" e a aprovação da pull request; o resumo está em [Execução do processo](../../visao-geral/execucao-do-processo.md#revisoes-do-modelo).
 - **Testes:** cada pull request roda os testes unitários, de integração e ponta a ponta no CI, e o merge roda de novo na `development`. Os testes citam o RF e o RNF no nome, e o robô de acompanhamento usa os relatórios para marcar a verificação dos RNFs de cada feature (D4.5), como explicado em [Boas práticas no GitHub](../../processo/boas-praticas-github.md#verificacao-dos-rnfs-d45).
-- **Demonstração e aceite:** a demonstração do Ciclo 3 à FBr está na [ata de 06/11/2026](reunioes.md#reuniao-de-validacao-do-ciclo-3-com-a-fbr). A do Ciclo 4 foi enviada à FBr por e-mail em 10/11, e as respostas da FBr de 11/11 estão em [Reuniões](reunioes.md#respostas-da-fbr-sobre-a-demonstracao-do-ciclo-4). O aceite formal é pedido por escrito e registrado com o comando `/aceite` na issue.
+- **Demonstração e aceite:** a demonstração do Ciclo 3 à FBr está na [ata de 06/11/2026](reunioes.md#reuniao-de-validacao-do-ciclo-3-com-a-fbr). A do Ciclo 4 foi enviada à FBr por e-mail em 10/11. A FBr respondeu em [11/11](reunioes.md#respostas-da-fbr-sobre-a-demonstracao-do-ciclo-4) e em [12/11](reunioes.md#respostas-da-fbr-de-12-11-e-teste-de-usabilidade), depois de um teste de usabilidade com estagiários, supervisor e secretária, e o aceite foi registrado nas issues com os comandos `/demonstrada` e `/aceite`. Os protótipos do Ciclo 5 foram enviados à FBr por e-mail em 14/11.
 - **Fechamento de cada ciclo:** o resultado de cada feature, o motivo do que ficou pendente e a lição do ciclo estão em [Fechamento dos ciclos](../../visao-geral/cronograma.md#fechamento-dos-ciclos).
 
 ## Conteúdo da unidade
@@ -48,8 +48,8 @@ As evidências de cada marco ficam na issue da feature:
 <div class="unit-cards" markdown>
 
 - [:material-layers-outline: **Arquitetura técnica** Partes do sistema, módulos por CP, caminho de uma requisição e decisões técnicas.](../../construcao/arquitetura.md)
-- [:material-sitemap-outline: **Projeto das features** Modelo detalhado, diagramas de cada feature dos Ciclos 3 e 4, por característica de produto, e roteiro da inspeção de design.](../../construcao/projeto-features.md)
-- [:material-cellphone-link: **Protótipos** Telas das features dos Ciclos 3 e 4, organizadas pelo fluxo do sistema.](../../construcao/prototipos.md)
+- [:material-sitemap-outline: **Projeto das features** Modelo detalhado, diagramas de cada feature dos Ciclos 3, 4 e 5, por característica de produto, e roteiro da inspeção de design.](../../construcao/projeto-features.md)
+- [:material-cellphone-link: **Protótipos** Telas das features dos Ciclos 3, 4 e 5, organizadas pelo fluxo do sistema.](../../construcao/prototipos.md)
 - [:material-file-sign: **Termo de consentimento (versão 0.1)** Texto do termo aceito na inscrição, em revisão pela FBr.](../../construcao/termo-consentimento.md)
 - [:material-server-network: **Implantação e segurança** Ambientes no Coolify da FBr, como o deploy acontece, HTTPS, usuário da aplicação no banco e troca da chave dos dados (RNF51 e RNF52).](../../construcao/implantacao.md)
 - [:material-backup-restore: **Cópia de segurança e restauração** Procedimento do RNF53, com os scripts e o teste de restauração.](../../construcao/copia-de-seguranca.md)
@@ -69,6 +69,8 @@ As evidências de cada marco ficam na issue da feature:
 </div>
 
 ## Vídeo de Apresentação da Unidade 3
+
+Os slides da apresentação estão em [PDF](../../assets/unidade-3/apresentacao-unidade-3.pdf){ target="_blank" rel="noopener" }.
 
 !!! info "Vídeo em produção"
     O vídeo de apresentação da Unidade 3 será publicado aqui junto com a entrega da unidade, prevista para 17/11/2026.
