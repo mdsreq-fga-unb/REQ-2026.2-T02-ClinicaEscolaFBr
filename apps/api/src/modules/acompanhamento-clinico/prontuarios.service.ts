@@ -34,7 +34,9 @@ import { cifrar, decifrar } from '../../common/criptografia';
 import { AuditoriaService } from '../../auditoria/auditoria.service';
 import type { UsuarioAutenticado } from '../../auth/usuario-autenticado';
 import {
+  correcaoNoPrazo,
   LIMITE_FALTAS_CICLO,
+  semestreDaSessao,
   SECOES_ANAMNESE,
   SESSOES_POR_FECHAMENTO_AVALIATIVO,
   STATUS_SESSAO_EM_ABERTO,
@@ -49,6 +51,10 @@ import { DB } from '../../database/database.module';
 import { acoesDeCancelamento } from '../agendamento/acoes-cancelamento';
 import { DesligamentosService } from '../assiduidade/desligamentos.service';
 import { FaltasService } from '../assiduidade/faltas.service';
+import {
+  correcoesDasEvolucoes,
+  dataLimiteDoSemestre,
+} from './correcoes-evolucao.service';
 import { PoliticaProntuario } from './politica-prontuario';
 
 const estagiario = aliasedTable(usuarios, 'estagiario');
@@ -210,6 +216,33 @@ export class ProntuariosService {
       .innerJoin(usuarios, eq(usuarios.id, evolucoes.registradaPor))
       .where(eq(evolucoes.prontuarioId, id))
       .orderBy(asc(evolucoes.registradaEm));
+    // Correções das evoluções (RF29) e a data-limite do semestre de cada sessão.
+    const correcoes = await correcoesDasEvolucoes(
+      this.db,
+      evolucoesRows.map((e) => e.id),
+      chave,
+    );
+    const inicioDaSessao = new Map(sessoes.map((s) => [s.id, s.inicio]));
+    const semestres = [
+      ...new Set(
+        evolucoesRows.map((e) =>
+          semestreDaSessao(inicioDaSessao.get(e.sessaoId)!),
+        ),
+      ),
+    ];
+    const prazos = new Map(
+      await Promise.all(
+        semestres.map(
+          async (semestre) =>
+            [semestre, await dataLimiteDoSemestre(this.db, semestre)] as const,
+        ),
+      ),
+    );
+    // Quem passou pela política com o supervisor ou o estagiário corrige; a
+    // coordenação só lê. O estagiário corrige só o que ele registrou.
+    const podeCorrigirPorPerfil = (registradaPor: string) =>
+      usuario.perfil === 'supervisor' ||
+      (usuario.perfil === 'estagiario' && registradaPor === usuario.id);
     // Quem abre o prontuário pode justificar a falta ou é a coordenação: vê o motivo.
     const faltasDoCiclo = await this.faltas.doCiclo(
       prontuario.casoId,
@@ -293,8 +326,8 @@ export class ProntuariosService {
               (e) => e.sessaoId === sessao.id,
             );
             if (!evolucao) return null;
-            return {
-              id: evolucao.id,
+            const original = {
+              versao: 1,
               humorAparencia: abrir(evolucao.humorAparencia),
               conteudoTrabalhado: abrir(evolucao.conteudoTrabalhado),
               tecnicasUtilizadas: abrir(evolucao.tecnicasUtilizadas),
@@ -305,8 +338,36 @@ export class ProntuariosService {
               // Evoluções anteriores à DF38, com os rótulos antigos.
               queixa: abrir(evolucao.queixa),
               planejamento: abrir(evolucao.planejamento),
+              motivo: null,
+              autor: evolucao.autor,
+              em: evolucao.registradaEm,
+            };
+            // Da versão vigente para a original (RF29).
+            const versoes = [...(correcoes.get(evolucao.id) ?? []), original];
+            const atual = versoes[0];
+            const dataLimite =
+              prazos.get(semestreDaSessao(sessao.inicio)) ?? null;
+            const noPrazo = correcaoNoPrazo(dataLimite);
+            return {
+              id: evolucao.id,
+              // Os campos são os da versão vigente.
+              humorAparencia: atual.humorAparencia,
+              conteudoTrabalhado: atual.conteudoTrabalhado,
+              tecnicasUtilizadas: atual.tecnicasUtilizadas,
+              intervencoesEncaminhamentos: atual.intervencoesEncaminhamentos,
+              planoProximaSessao: atual.planoProximaSessao,
+              queixa: atual.queixa,
+              planejamento: atual.planejamento,
               registradaPor: evolucao.autor,
               registradaEm: evolucao.registradaEm,
+              versaoAtual: atual.versao,
+              versoes,
+              correcao: {
+                dataLimite,
+                prazoEncerrado: !noPrazo,
+                permitida:
+                  noPrazo && podeCorrigirPorPerfil(evolucao.registradaPor),
+              },
             };
           })(),
         }),

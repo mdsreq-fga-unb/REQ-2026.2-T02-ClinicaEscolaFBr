@@ -6,14 +6,17 @@ import {
   Param,
   ParseUUIDPipe,
   Post,
+  Put,
   UseGuards,
 } from '@nestjs/common';
 import {
   anamneseSchema,
   contratoSchema,
+  dataLimiteCorrecaoSchema,
   evolucaoSchema,
   type Anamnese,
   type Contrato,
+  type DataLimiteCorrecaoEntrada,
   type Evolucao,
 } from '@clinica/shared';
 import { Perfis } from '../../auth/perfis.decorator';
@@ -24,13 +27,17 @@ import {
   type UsuarioAutenticado,
 } from '../../auth/usuario-autenticado';
 import { ZodValidationPipe } from '../../common/zod-validation.pipe';
+import { CorrecoesEvolucaoService } from './correcoes-evolucao.service';
 import { ProntuariosService } from './prontuarios.service';
 
 // Restrição de acesso ao prontuário (RF55).
 @Controller()
 @UseGuards(AutenticadoGuard)
 export class ProntuariosController {
-  constructor(private readonly prontuarios: ProntuariosService) {}
+  constructor(
+    private readonly prontuarios: ProntuariosService,
+    private readonly correcoes: CorrecoesEvolucaoService,
+  ) {}
 
   // Qualquer perfil pode tentar: a política decide e registra a tentativa.
   @Get('prontuarios/:id')
@@ -82,6 +89,40 @@ export class ProntuariosController {
     @UsuarioAtual() usuario: UsuarioAutenticado,
   ) {
     return this.prontuarios.registrarEvolucao(id, sessaoId, dados, usuario);
+  }
+
+  // Correção da evolução (RF29). O corpo é validado no serviço, pelo formato da
+  // evolução original (a ficha da DF38 ou a antiga), depois da política de acesso.
+  @Post('prontuarios/:id/evolucoes/:evolucaoId/correcoes')
+  @Header('Cache-Control', 'no-store')
+  corrigirEvolucao(
+    @Param('id', ParseUUIDPipe) id: string,
+    @Param('evolucaoId', ParseUUIDPipe) evolucaoId: string,
+    @Body() corpo: unknown,
+    @UsuarioAtual() usuario: UsuarioAutenticado,
+  ) {
+    return this.correcoes.corrigir(id, evolucaoId, corpo, usuario);
+  }
+
+  // Data-limite para corrigir evoluções no semestre vigente (RF29): só a coordenação.
+  @Get('parametros/data-limite-correcao')
+  @Header('Cache-Control', 'no-store')
+  @UseGuards(PerfisGuard)
+  @Perfis('coordenacao')
+  dataLimiteCorrecao() {
+    return this.correcoes.consultarDataLimite();
+  }
+
+  @Put('parametros/data-limite-correcao')
+  @Header('Cache-Control', 'no-store')
+  @UseGuards(PerfisGuard)
+  @Perfis('coordenacao')
+  registrarDataLimiteCorrecao(
+    @Body(new ZodValidationPipe(dataLimiteCorrecaoSchema))
+    corpo: DataLimiteCorrecaoEntrada,
+    @UsuarioAtual() usuario: UsuarioAutenticado,
+  ) {
+    return this.correcoes.registrarDataLimite(corpo.dataLimite, usuario.id);
   }
 
   @Get('pacientes/:casoId/dados-administrativos')

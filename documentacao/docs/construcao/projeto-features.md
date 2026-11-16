@@ -1783,7 +1783,7 @@ sequenceDiagram
     else sem motivo ou campo acima do limite
         A-->>U: 400 com o campo indicado, nada gravado
     else depois da data-limite do semestre da sessão
-        A-->>U: 422 com a data-limite
+        A-->>U: 422 com a data-limite (dd/mm/aaaa)
     else
         A->>DB: transação: trava a evolução, versão = última + 1
         A->>DB: insere CorrecaoEvolucao cifrada (RNF51) e auditoria (RNF10)
@@ -1795,12 +1795,12 @@ sequenceDiagram
 | --- | --- |
 | A `Evolucao` original não muda (só inserção, trigger); a correção é uma linha nova, com `versao` | A correção do estagiário no prazo preserva a original e registra a nova com autor, data/hora e motivo |
 | `motivo` obrigatório no Zod e no banco (`not null`) | A correção sem motivo é recusada, e o registro continua como estava |
-| Compara o dia de hoje em Brasília com a `data_limite_correcao` do **semestre da sessão** da evolução; vale para os dois perfis | Depois da data-limite, nem o estagiário nem o supervisor corrigem |
+| Compara o dia de hoje em Brasília com a `data_limite_correcao` do **semestre da sessão** da evolução; vale para os dois perfis; o `422` traz a data-limite em dd/mm/aaaa, como na tela | Depois da data-limite, nem o estagiário nem o supervisor corrigem |
 | O `PUT` grava o parâmetro do semestre e a `AlteracaoParametro` na mesma transação | A coordenação registra a data-limite, com o valor anterior, o novo, o autor e a data/hora |
 | Sem a data do semestre, a correção passa, e a resposta do `GET /parametros/data-limite-correcao` traz `pendente: true`, que vira o aviso da coordenação | Sem data-limite, a correção é permitida, e a coordenação é avisada |
 | Política do prontuário com o modo `escrita` (vínculo ou atribuição vigentes) e, para o estagiário, `evolucoes.registrada_por = usuário`; a coordenação só lê | Só o autor e o supervisor do caso corrigem; o supervisor pode corrigir o registro do estagiário |
 
-**Decisões de projeto:** a correção guarda a ficha inteira, e não só o campo mudado, para cada versão poder ser lida sozinha. A data-limite fica num parâmetro por semestre (`ParametroSemestre`, chave `data_limite_correcao`), a mesma tabela das vagas ofertadas do RF48. O prazo é o do **semestre da sessão**, e não o de hoje: assim, na virada do semestre, sem a data do semestre novo registrada, as evoluções do semestre anterior continuam fechadas. Sem a data registrada para o semestre da sessão, vale a regra do RF29 (a correção é permitida e a coordenação é avisada). O autor é o estagiário que registrou a evolução (`registrada_por`), como diz o critério do RF29. Depois de uma transferência (RF25), o estagiário anterior perde o acesso ao prontuário (RF55), e o novo não corrige as evoluções do anterior: só o supervisor do caso corrige as dele. A evolução registrada antes da DF38, com a queixa e o planejamento, é corrigida com os mesmos campos dela.
+**Decisões de projeto:** a correção guarda a ficha inteira, e não só o campo mudado, para cada versão poder ser lida sozinha. Duas correções da mesma evolução ao mesmo tempo não geram a mesma versão: a transação trava a evolução antes de calcular a versão seguinte, e o `unique (evolucao_id, versao)` do banco, no [modelo do Ciclo 5](#modelo-detalhado-do-ciclo-5), recusa a repetição se a trava falhar. A data-limite fica num parâmetro por semestre (`ParametroSemestre`, chave `data_limite_correcao`), a mesma tabela das vagas ofertadas do RF48. O prazo é o do **semestre da sessão**, e não o de hoje: assim, na virada do semestre, sem a data do semestre novo registrada, as evoluções do semestre anterior continuam fechadas. Sem a data registrada para o semestre da sessão, vale a regra do RF29 (a correção é permitida e a coordenação é avisada). O autor é o estagiário que registrou a evolução (`registrada_por`), como diz o critério do RF29. Depois de uma transferência (RF25), o estagiário anterior perde o acesso ao prontuário (RF55), e o novo não corrige as evoluções do anterior: só o supervisor do caso corrige as dele. A evolução registrada antes da DF38, com a queixa e o planejamento, é corrigida com os mesmos campos dela.
 
 **Telas:** "Corrigir evolução" em cada evolução do prontuário, dentro do prazo, abre a página "Corrigir evolução da sessão N" (como a "Registro de evolução" do RF28), com o aviso "A correção é permitida até …. A versão original continua guardada no histórico.", os campos já preenchidos e o "Motivo da correção". Sem motivo, aparece o aviso "A correção não foi salva." com o link para o campo. No prontuário, a evolução mostra "Versão N · atual" e as anteriores, com "Corrigida por … em …. Motivo: …". Depois do prazo, aparece "O prazo para corrigir evoluções deste semestre terminou em …", sem o botão. O botão também não aparece para o estagiário nas evoluções de outro autor. Para a coordenação, a página "Parâmetros" (a mesma do RF41) ganha o cartão "Data-limite para correção de evoluções", com o aviso de data pendente. Protótipo: [prancha 6-1](prototipos.md#rf29).
 
@@ -1809,6 +1809,8 @@ sequenceDiagram
 **Dados de teste:** a correção do estagiário no prazo (versão 2, a 1 legível); a do supervisor no registro do estagiário; sem motivo (400, nada gravado); um dia depois da data-limite (422 para os dois); sem data-limite (permitida, e a coordenação vê o aviso); a coordenação mudando a data, com o histórico; a coordenação, a secretaria e o estagiário de outro caso tentando corrigir (403); o acesso `corrigir_evolucao` aparecendo no registro do RF56; o `clinica_app` tentando alterar uma versão (recusado pelo banco); uma evolução de 2026/2 corrigida em janeiro de 2027, depois da data-limite de 2026/2 e sem a de 2027/1 registrada (recusada); depois de uma transferência, o estagiário novo tentando corrigir a evolução do anterior (403) e o supervisor corrigindo a mesma evolução (permitido).
 
 **Dependências e riscos:** depende do RF28 (#149), integrado no Ciclo 4. O complemento (RF30) e a validação pelo supervisor (RF31) são do Ciclo 6 e vão ler a versão vigente.
+
+**Na implementação ([PR #267](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/pull/267)):** a tabela `correcoes_evolucao` é somente inserção, com a restrição única `(evolucao_id, versao)` pedida na inspeção de design; a versão seguinte é calculada sob uma trava consultiva da evolução, e não com `FOR UPDATE`, que exigiria do `clinica_app` a permissão de alterar as evoluções. O motivo também é cifrado (RNF51). O corpo da correção é validado no serviço, depois da política de acesso, com o esquema do formato da evolução original (a ficha da DF38 ou a antiga), para o 400 indicar o campo. O `GET /prontuarios/:id` traz, em cada evolução, os campos da versão vigente, `versaoAtual`, `versoes` (da vigente para a original) e `correcao` (`dataLimite`, `prazoEncerrado` e `permitida`, calculada para quem consulta). O 422 traz a data-limite e a mensagem com a data em dd/mm/aaaa. Uma correção com os mesmos campos da versão vigente ainda cria uma nova versão com o motivo, para registrar a justificativa sem alterar o conteúdo clínico. A página `/parametros` reutiliza a tela do RF41 e inclui o cartão da data-limite, com um único item "Parâmetros" no menu. A migration `0018_correcao_de_evolucao` segue a `0017_contribuicao_social` do RF41; se a #269 (RF56) entrar primeiro, regenere esta migration como `0019` e atualize o journal e o snapshot do Drizzle. Testes: `correcao-evolucao.spec.ts` cobre os dados de teste acima, as rotas com os perfis e a correção feita como `clinica_app`; os testes web cobrem a página de correção, as versões no prontuário e o cartão; o fluxo e2e `ciclo-3.spec.ts` corrige a evolução registrada pelo RF28, com o axe e as larguras de 320 a 1920 px.
 
 ---
 
@@ -2126,7 +2128,7 @@ sequenceDiagram
 
 _Ciclo 5._
 
-**Rota** (módulo `assiduidade`): `GET /faltas-estagiarios?estagiarioId&inicio&fim` (supervisor e coordenação). Lê os `cancelamentos_sessao` com a classificação `ausencia_estagiario` (RF16) e a sessão no período, e devolve, por linha, só o nome do estagiário, a data e o horário da sessão e a data/hora do registro. Os cancelamentos `administrativo` (para remarcar) ficam de fora.
+**Rota** (módulo `assiduidade`): `GET /faltas-estagiarios?estagiarioId&inicio&fim` (supervisor e coordenação). Lê os `cancelamentos_sessao` com a classificação `ausencia_estagiario` (RF16) e a sessão no período, e devolve, por linha, só o nome do estagiário, a data e o horário da sessão e a data/hora do registro. Os cancelamentos `administrativo` (para remarcar) ficam de fora. O campo "Estagiário" da tela vem de `GET /faltas-estagiarios/estagiarios`, pela mesma regra da autorização.
 
 ```mermaid
 sequenceDiagram
@@ -2148,9 +2150,9 @@ sequenceDiagram
 | --- | --- |
 | Filtro `classificacao = 'ausencia_estagiario'` e `sessoes.inicio` no período (dias inteiros em Brasília) | Lista as sessões canceladas por ausência real no período, sem os cancelamentos para remarcar |
 | A consulta não faz join com a inscrição, e a resposta não tem o motivo (cifrado, nem decifrado) | Cada linha mostra o estagiário, a data, o horário e o registro, sem o paciente nem o motivo |
-| Para o supervisor, só as sessões de casos com a atribuição dele vigente na data da sessão; `estagiarioId` de fora dá 403. A coordenação vê todos (RNF35) | Quem não é a coordenação nem o supervisor do estagiário não acessa |
+| Para o supervisor, só as sessões de casos com a atribuição dele vigente no momento do registro da ausência; `estagiarioId` fora da lista do filtro dá 403, registrado na auditoria. A coordenação vê todos (RNF35) | Quem não é a coordenação nem o supervisor do estagiário não acessa |
 
-**Decisões de projeto:** "estagiário do supervisor" segue a definição única da CP4 (vínculo vigente num caso com a atribuição vigente do supervisor), usada no filtro da tela. A linha conta para o supervisor pela atribuição vigente na data da sessão, com a `encerradaEm` do [modelo do Ciclo 5](#modelo-detalhado-do-ciclo-5), para a falta antiga não sumir depois de uma transferência. A consulta só lista: a contagem do semestre é do RF40, e a reprovação, do RF63, os dois no Ciclo 6.
+**Decisões de projeto:** a linha conta para o supervisor pela atribuição vigente **no momento do registro da ausência**, com a `encerradaEm` do [modelo do Ciclo 5](#modelo-detalhado-do-ciclo-5), para a falta antiga não sumir depois de uma transferência. A data do registro, e não a da sessão, resolve o apontamento 2 da inspeção de design: a transferência (RF25) que troca o supervisor também encerra o vínculo do estagiário e cancela as sessões futuras dele, e assim uma ausência registrada antes da transferência para uma sessão posterior a ela iria, pela data da sessão, para o novo supervisor, que nunca supervisionou aquele estagiário (RNF35). No momento do registro, o estagiário da sessão tinha o vínculo com o caso e era supervisionado pelo supervisor da atribuição vigente. O filtro "Estagiário" e a autorização usam a mesma lista (apontamento 1): para o supervisor, os estagiários dele hoje (definição única da CP4: vínculo vigente num caso com a atribuição vigente dele) e os que têm falta registrada enquanto o caso era dele; para a coordenação, todos. A consulta só lista: a contagem do semestre é do RF40, e a reprovação, do RF63, os dois no Ciclo 6.
 
 **Telas:** página "Faltas dos estagiários" (`/faltas-estagiarios`), no menu do supervisor e da coordenação, com o filtro "Estagiário" ("Todos os meus estagiários" para o supervisor e "Todos os estagiários" para a coordenação), as datas e "Consultar"; "N faltas no período" e a tabela, ou "Nenhuma falta no período" com as datas; os cartões no celular; e "Você não tem acesso à relação de faltas" para os outros perfis. Abre com o semestre vigente até hoje. Protótipo: [prancha 7-1](prototipos.md#rf39).
 
@@ -2159,6 +2161,14 @@ sequenceDiagram
 **Dados de teste:** duas ausências de um estagiário e uma de outro, do mesmo supervisor, mais um cancelamento para remarcar e um pedido do paciente (só as três ausências aparecem); uma ausência fora do período; o supervisor pedindo um estagiário de outro supervisor (403); a coordenação vendo todos; um período sem faltas; a resposta conferida sem o nome do paciente e sem o motivo; o estagiário e a secretaria (403).
 
 **Dependências e riscos:** depende do RF16 (#144), integrado no Ciclo 4, e da `encerradaEm` da atribuição, criada para o RF48 no mesmo ciclo. Se o RF48 atrasar, o RF39 usa a atribuição vigente hoje e registra a diferença.
+
+**Na implementação (PR do RF39):**
+
+- **Sem migration:** a consulta usa a `encerradaEm` da atribuição, que veio com o RF48 (`0016`).
+- **Supervisor do momento do registro:** a condição fica num `exists` sobre `atribuicoes_supervisor` (`atribuido_em <= registrado_em < encerrada_em`), usado na consulta e na lista do filtro. Os testes cobrem a ausência registrada em 01/10 para a sessão de 20/10, com a transferência em 10/10: a falta fica com a supervisora anterior, que continua a escolher a estagiária no filtro, e o novo supervisor recebe a lista vazia e `403` ao pedir essa estagiária. A ausência registrada depois da transferência, com o novo estagiário, é do novo supervisor.
+- **Período:** dias inteiros de Brasília pelo início da sessão, com a data inicial não posterior à final. A data final pode passar de hoje, porque a ausência é registrada antes da sessão. A tela abre com o semestre vigente até hoje (`inicioDoSemestre`). A validação de data do calendário passou para `datas.ts` e é usada também pelo RF41 e pelo RF48.
+- **Acesso negado:** o supervisor que pede um estagiário fora da lista recebe `403`, e a tentativa vai para a auditoria (`consultar_faltas_estagiario_negada`), como na agenda do estagiário (RF11). O estagiário e a secretaria recebem `403` nas duas rotas, e a tela mostra "Você não tem acesso à relação de faltas".
+- **Tela:** página "Faltas dos estagiários" no menu do supervisor e da coordenação, montada em `components/assiduidade/faltas-dos-estagiarios.tsx`. A contagem fica dentro de `role="status"`, a tabela tem `caption`, e abaixo de 768 px a tabela dá lugar à lista de cartões, com "Consultar" na largura toda.
 
 ---
 
@@ -2215,6 +2225,17 @@ sequenceDiagram
 
 **Dependências e riscos:** usa o vínculo do RF21 e a entrada na fila do RF7 para o prazo, e a tabela `alteracoes_parametro`, criada com o RF48. A situação para a secretaria, a coordenação e o estagiário (lista com filtro e indicação na agenda) é do RF42, e o bloqueio, do RF43, os dois no Ciclo 6.
 
+**Na implementação ([PR #263](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/pull/263)):**
+
+- **Migration:** a `0017_contribuicao_social`, depois da dos indicadores do RF48 (`0016`), cria o `pagamentos_contribuicao`, só de inserção (gatilho `pagamentos_contribuicao_somente_insercao`), e o parâmetro `valor_contribuicao_centavos` com 3500.
+- **Consulta pela coordenação (RNF36):** o `GET /casos/:id/contribuicao` aceita também a coordenação, só para leitura, porque o RNF36 deixa o histórico disponível a ela. Na ficha do paciente, ela vê o cartão sem "Registrar pagamento" nem "Corrigir pagamento". Registrar e corrigir continuam só com a secretaria.
+- **Ciclos anteriores (RNF36):** o `GET /casos/:id/contribuicao` traz também os `ciclosAnteriores`, os pagamentos dos ciclos anteriores do caso, do mais recente para o mais antigo, cada um com a versão vigente e as anteriores. No cartão, a seção "Ciclos anteriores" mostra a versão vigente de cada ciclo e, em "Ver versões anteriores", as outras, só para consulta, para a secretaria e a coordenação. Registrar e corrigir continuam valendo só para o ciclo atual.
+- **Histórico do valor (RNF36):** o `GET /parametros/valor-contribuicao` (e a resposta do `PUT`) traz as `alteracoes`, todas as linhas de `alteracoes_parametro` do `valor_contribuicao_centavos`, da mais recente para a mais antiga, com o valor anterior, o novo, quem alterou e quando; a `ultimaAlteracao` continua sendo a primeira delas. Na página "Parâmetros", a tabela "Histórico de alterações" mostra a data e hora, quem alterou e os dois valores em reais, só para consulta.
+- **Sem corte por data:** as duas consultas devolvem todo o histórico, sem filtro de tempo, e as tabelas são só de inserção; assim, nada com menos de 24 meses some da consulta, como pede o RNF36. Não houve migration nova.
+- **Valor mudado com o formulário aberto:** o registro leva o `valorEsperadoCentavos`, o valor que a tela mostrou. Se a coordenação mudou o parâmetro nesse meio-tempo, a API responde `409` com o código `valor_alterado` e o valor atual, sem gravar nada; a tela mostra o valor novo e pede para confirmar de novo.
+- **Correções ao mesmo tempo:** a correção leva a `versaoEsperada`, a versão que a secretaria abriu. Se outra pessoa corrigiu antes, a API responde `409` com o código `versao_desatualizada` e a versão atual, sem gravar nada, para a segunda correção não desfazer a primeira; a tela pede para abrir a correção de novo. O segundo pagamento no ciclo continua com o `409` de código `ja_pago`.
+- **Outras decisões:** a correção precisa mudar o valor, a data ou a forma (senão, `422`); o valor fica entre R$ 0,01 e R$ 1.000,00, e o motivo, com até 500 caracteres; salvar o mesmo valor do parâmetro não grava alteração; o caso sem vínculo aparece como pendente, sem prazo; e o prazo vencido aparece no cartão, mas não bloqueia o registro, porque o bloqueio é do RF43.
+
 ---
 
 ### RF44 — Listar sessões com comparecimento registrado do paciente ([#226](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/issues/226))
@@ -2224,7 +2245,7 @@ _Ciclo 5._
 **Rotas** (módulo `administrativo`):
 
 - `GET /declaracoes/minhas-sessoes` (pública, com o `VerificacaoGuard` do RF52): as sessões `realizada` da inscrição em `req.inscricaoVerificada`, de todos os ciclos, da mais recente para a mais antiga. Cada uma traz só a data, o horário e o nome do estagiário. Responde com `Cache-Control: no-store`.
-- `GET /pacientes/:casoId/sessoes-realizadas` (secretaria): a mesma lista, para a ficha do paciente.
+- `GET /pacientes/:casoId/sessoes-realizadas` (secretaria): a mesma lista, para a ficha do paciente, com as sessões de todos os ciclos de atendimento desse caso. Cada inscrição tem no máximo um caso; se a mesma pessoa se inscrever de novo, a nova inscrição tem outro caso, e as sessões dele aparecem na ficha desse caso.
 
 ```mermaid
 sequenceDiagram
@@ -2254,9 +2275,9 @@ sequenceDiagram
 
 **Telas:** página `/declaracoes`, depois dos dois passos do RF52 (o mesmo componente do RF8), com "Inscrição AAAA-NNNNN", o aviso, a tabela (cartões no celular) e "Encerrar consulta". Na ficha da secretaria, a seção "Sessões com presença registrada". O estagiário, o supervisor e a coordenação que abrem a rota interna veem a tela "Você não tem acesso a esta lista". Protótipo: [prancha 8-2](prototipos.md#rf44).
 
-**Acessibilidade (RNF56 a RNF58):** tabela com `caption` e cabeçalhos; o estado vazio é um título com o texto; a página é conferida a 320 px.
+**Acessibilidade (RNF56 a RNF58):** tabela com `caption` e cabeçalhos; o estado vazio é um título com o texto. Como `/declaracoes` é pública, o e2e roda o axe e confere a falta de rolagem lateral em 320, 360, 768, 1024, 1366 e 1920 px (RNF58), e o foco reforçado dos controles com o `focoVisivel` (RNF57). O RNF56 também é verificado com o leitor de tela, num teste em `e2e/leitor-de-tela/`, como o da verificação do RF52, conforme o nível de rigor da [estratégia de V&V](../processo/verificacao-e-validacao.md).
 
-**Dados de teste:** uma inscrição com três sessões realizadas, uma cancelada, uma com falta e uma agendada (só as três aparecem); uma inscrição sem sessão realizada (estado vazio); a inscrição A verificada pedindo a rota (só as de A); a rota sem verificação (401); o estagiário, o supervisor e a coordenação na rota interna (403).
+**Dados de teste:** uma inscrição com três sessões realizadas, uma cancelada, uma com falta e uma agendada (só as três aparecem); um caso com sessões realizadas em dois ciclos de atendimento (as dos dois aparecem); uma inscrição sem sessão realizada (estado vazio); a inscrição A verificada pedindo a rota (só as de A); a rota sem verificação (401); o estagiário, o supervisor e a coordenação na rota interna (403).
 
 **Dependências e riscos:** depende do RF52 (#47), já integrado, e da sessão `realizada`, marcada no prontuário (RF28). A emissão é do RF45.
 

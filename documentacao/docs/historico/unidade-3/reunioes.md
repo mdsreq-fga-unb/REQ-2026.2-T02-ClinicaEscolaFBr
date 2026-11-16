@@ -339,7 +339,7 @@ O Gabriel demonstrou as features do Ciclo 3 no ambiente de validação, do ponto
 
 | # | Ajuste | Afeta | Situação |
 | --- | --- | --- | --- |
-| 1 | Avaliar se o RG continua obrigatório, com a nova Carteira de Identidade Nacional (CIN); o CPF continua obrigatório | RF1 | A confirmar com o Robson, nas [pendências de validação](../../requisitos/analise-feedback.md#pendencias-de-validacao-com-a-fbr) |
+| 1 | Avaliar se o RG continua obrigatório, com a nova Carteira de Identidade Nacional (CIN); o CPF continua obrigatório | RF1 | Decidido: o RG deixa de ser obrigatório, sem o órgão emissor e o estado ([DF60](../../requisitos/decisoes-fbr.md#df60)), registrado em 16/11/2026 |
 | 2 | O CPF do responsável legal é obrigatório na inscrição de menor de idade | RF1, RF57 | Decidido ([DF47](../../requisitos/decisoes-fbr.md#df47)) |
 | 3 | Os dados de endereço e contato devem ser completos e obrigatórios | RF1 | A confirmar com o Robson, nas pendências de validação |
 | 4 | Sai a escolha do canal preferencial: o e-mail e o telefone passam a ser obrigatórios, com um aviso de que os contatos da clínica são feitos por e-mail | RF1, RF8, RF52 | Decidido ([DF48](../../requisitos/decisoes-fbr.md#df48)) |
@@ -501,3 +501,42 @@ O teste seguiu o kit enviado à FBr em 05/11/2026, que pedia pelo menos 5 pessoa
 O registro `/rnf RNF22` aponta para esta seção nas issues do RF18, do RF20 e do RF21.
 
 **O que a equipe faz com a dificuldade do supervisor.** Sem saber em qual tela ou passo a dificuldade apareceu, a equipe não tem como corrigir um ponto específico. Ela vai perguntar à FBr em que parte o supervisor travou, e, até a resposta, os fluxos do supervisor (Meus casos, vínculo e agenda) são revistos na inspeção das features do Ciclo 5 com atenção aos rótulos e aos caminhos.
+
+## Validação do Ciclo 5 pela FBr (16/11) { #validacao-do-ciclo-5-pela-fbr }
+
+**Data:** 16/11/2026
+**Local:** grupo "Sistema Clínica Escola FBr" no WhatsApp, depois do e-mail de 14/11
+**Participantes:** pela FBr, Robson Araújo, que analisou o material com os supervisores Alexandre e Ana; pela equipe, Gabriel da Cunha Barbaceli e os demais integrantes do grupo.
+
+Em 14/11, a equipe enviou à FBr, por e-mail, o protótipo de alta fidelidade do Ciclo 5, com as sete features do ciclo (RF17, RF29, RF39, RF41, RF44, RF48 e RF56), e os onze pontos em aberto das [pendências de validação](../../requisitos/analise-feedback.md#pendencias-de-validacao-com-a-fbr). Avisou no grupo e pediu que a FBr analisasse o material do mesmo jeito que fez com o do Ciclo 4, porque 20/11 é feriado.
+
+Em 16/11, às 09h50, Robson Araújo mandou no grupo:
+
+- uma foto da prancha 5-1, com o aviso à secretaria quando o paciente não tem e-mail no cancelamento por ausência do estagiário (RF17);
+- um áudio curto, com a validação e o pedido sobre o cancelamento.
+
+Às 09h52 e 09h53, ele respondeu por escrito à mensagem da equipe sobre o e-mail. A validação vale para o protótipo do Ciclo 5 e para o que já está implementado no ambiente de validação, analisados por ele com os supervisores. Às 09h57, a equipe pediu um detalhe sobre o pedido do cancelamento, que ainda não foi respondido.
+
+![Mensagens de Robson Araújo e da equipe no grupo da FBr, com os telefones e as fotos de perfil cobertos](../../assets/fbr/whatsapp-2026-11-16.jpg){ width="360" }
+
+_Figura 22 — Validação do Ciclo 5 por Robson Araújo no grupo da FBr, em 16/11/2026. Os telefones e as fotos de perfil foram cobertos, e o áudio não foi publicado._
+
+### Resposta de Robson Araújo
+
+Transcrição das mensagens escritas:
+
+> Validado, para mim apenas no cancelamento de sessão corrente que há a necessidade de ja apontar próxima data para atendimento
+>
+> No mais esta ótimo, analisei juntamente com os Supervisores Alexandre e Ana
+
+### Pergunta da equipe
+
+A equipe perguntou se a próxima data seria uma sugestão, baseada nos horários disponíveis do estagiário, que o paciente pode aceitar ou não, e se a secretaria poderia mudar o dia e o horário sugeridos.
+
+### Resultado
+
+| Ponto | Resposta | Registro |
+| --- | --- | --- |
+| Protótipo do Ciclo 5 e o que já está no ambiente de validação | Validados, com a análise dos supervisores Alexandre e Ana | [DF59](../../requisitos/decisoes-fbr.md#df59); R7.3 das sete features do Ciclo 5 |
+| Cancelamento por ausência do estagiário (RF17) | No cancelamento da sessão, já apontar a próxima data de atendimento | Pendente do detalhe pedido em 16/11. A equipe propõe tratar isso depois do MVP, junto com o reagendamento (RF12, fora do MVP), para não atrasar a construção. Até lá, o RF17 segue o protótipo: o aviso diz que a secretaria entra em contato para marcar outro horário. Ver as [pendências de validação](../../requisitos/analise-feedback.md#pendencias-de-validacao-com-a-fbr) |
+| Onze pontos em aberto do e-mail de 14/11 | Sem resposta ponto a ponto ("No mais está ótimo") | Continuam nas [pendências de validação](../../requisitos/analise-feedback.md#pendencias-de-validacao-com-a-fbr), com os valores padrão adotados |

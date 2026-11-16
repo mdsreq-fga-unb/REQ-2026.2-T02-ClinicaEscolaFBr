@@ -21,10 +21,10 @@ export const prioridadeSchema = z.object({ cor: corSchema });
 export const LIMITE_CAMPO_CLINICO = 1000;
 const MENSAGEM_LIMITE = "Use no máximo 1.000 caracteres.";
 
-const textoObrigatorio = (mensagem: string) =>
+export const textoObrigatorio = (mensagem: string) =>
   z.string().trim().min(1, mensagem).max(LIMITE_CAMPO_CLINICO, MENSAGEM_LIMITE);
 // Campo opcional: em branco vira null, para aparecer como "não informado".
-const textoOpcional = z
+export const textoOpcional = z
   .string()
   .trim()
   .max(LIMITE_CAMPO_CLINICO, MENSAGEM_LIMITE)
@@ -148,5 +148,6 @@ export const PARAMETROS_PADRAO = {
   validade_convite_horas: 72, // RF53, DF30
   prazo_confirmacao_horas: 24, // RF14, DF45
   antecedencia_minima_cancelamento_minutos: 60, // RF15, DF20
+  valor_contribuicao_centavos: 3500, // RF41: R$ 35,00, em centavos
 } as const;
 export type ChaveParametro = keyof typeof PARAMETROS_PADRAO;
