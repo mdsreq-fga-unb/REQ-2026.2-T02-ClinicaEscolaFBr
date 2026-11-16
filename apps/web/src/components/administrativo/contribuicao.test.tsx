@@ -53,8 +53,17 @@ const CORRIGIDA: SituacaoContribuicao = {
 
 type Resposta = [number, unknown];
 
-// A consulta devolve `situacao`; o envio devolve `envio`.
-function simularApi(situacao: SituacaoContribuicao, envio?: Resposta) {
+// A consulta devolve `situacao`; cada envio devolve a resposta seguinte de `envio`
+// (a última se repete).
+function simularApi(
+  situacao: SituacaoContribuicao,
+  envio?: Resposta | Resposta[],
+) {
+  const fila: Resposta[] = Array.isArray(envio?.[0])
+    ? [...(envio as Resposta[])]
+    : envio
+      ? [envio as Resposta]
+      : [];
   const chamadas: { url: string; metodo: string; corpo: unknown }[] = [];
   vi.stubGlobal(
     "fetch",
@@ -66,7 +75,9 @@ function simularApi(situacao: SituacaoContribuicao, envio?: Resposta) {
         corpo: init?.body ? JSON.parse(init.body as string) : null,
       });
       const [status, corpo]: Resposta =
-        metodo === "GET" ? [200, situacao] : (envio ?? [500, {}]);
+        metodo === "GET"
+          ? [200, situacao]
+          : ((fila.length > 1 ? fila.shift() : fila[0]) ?? [500, {}]);
       return new Response(JSON.stringify(corpo), {
         status,
         headers: { "Content-Type": "application/json" },
@@ -76,14 +87,18 @@ function simularApi(situacao: SituacaoContribuicao, envio?: Resposta) {
   return chamadas;
 }
 
-const montar = () =>
+const montar = (somenteLeitura = false) =>
   render(
     <QueryClientProvider
       client={
         new QueryClient({ defaultOptions: { queries: { retry: false } } })
       }
     >
-      <CartaoContribuicao casoId="c1" nome="Mariana Alves Toledo" />
+      <CartaoContribuicao
+        casoId="c1"
+        nome="Mariana Alves Toledo"
+        somenteLeitura={somenteLeitura}
+      />
     </QueryClientProvider>,
   );
 
@@ -182,7 +197,12 @@ describe("Contribuição social na ficha do paciente (RF41)", () => {
     await waitFor(() => expect(sucesso.closest("[tabindex]")).toHaveFocus());
     const post = chamadas.find((c) => c.metodo === "POST")!;
     expect(post.url).toContain("/casos/c1/contribuicao");
-    expect(post.corpo).toEqual({ pagoEm: hojeBr(), forma: "pix" });
+    // O pedido leva o valor que a tela mostrou, para a API conferir.
+    expect(post.corpo).toEqual({
+      pagoEm: hojeBr(),
+      forma: "pix",
+      valorEsperadoCentavos: 3500,
+    });
     const cartao = screen.getByRole("region", {
       name: "Contribuição social · Ciclo 1",
     });
@@ -315,7 +335,9 @@ describe("Contribuição social na ficha do paciente (RF41)", () => {
     expect(await screen.findByText("Correção registrada.")).toBeInTheDocument();
     const post = chamadas.find((c) => c.metodo === "POST")!;
     expect(post.url).toContain("/casos/c1/contribuicao/correcao");
+    // O pedido leva a versão aberta, para a API recusar se outra pessoa corrigiu.
     expect(post.corpo).toEqual({
+      versaoEsperada: 1,
       valorCentavos: 3500,
       pagoEm: "2026-11-09",
       forma: "cartao",
@@ -324,6 +346,107 @@ describe("Contribuição social na ficha do paciente (RF41)", () => {
     expect(
       screen.getByRole("list", { name: "Versões anteriores do pagamento" }),
     ).toBeInTheDocument();
+  });
+
+  it("a coordenação vê o pagamento e as versões só para leitura, sem registrar nem corrigir (RF41, RNF36)", async () => {
+    simularApi(CORRIGIDA);
+    montar(true);
+    const cartao = await screen.findByRole("region", {
+      name: "Contribuição social · Ciclo 1",
+    });
+    expect(within(cartao).getByText("Efetivada")).toBeInTheDocument();
+    expect(
+      within(cartao).getByRole("list", {
+        name: "Versões anteriores do pagamento",
+      }),
+    ).toBeInTheDocument();
+    expect(within(cartao).queryByRole("button")).toBeNull();
+  });
+
+  it("a coordenação não vê o botão de registrar no caso pendente (RF41)", async () => {
+    simularApi(PENDENTE);
+    montar(true);
+    const cartao = await screen.findByRole("region", {
+      name: "Contribuição social · Ciclo 1",
+    });
+    expect(within(cartao).getByText("Pendente")).toBeInTheDocument();
+    expect(within(cartao).queryByRole("button")).toBeNull();
+  });
+
+  it("o valor mudou com o formulário aberto: o aviso mostra o valor novo, e a secretaria confirma de novo com ele (RF41)", async () => {
+    const chamadas = simularApi(PENDENTE, [
+      [
+        409,
+        {
+          codigo: "valor_alterado",
+          message:
+            "O valor da contribuição mudou para R$ 40,00. Confira e confirme o pagamento de novo.",
+          valorAtualCentavos: 4000,
+        },
+      ],
+      [201, EFETIVADA],
+    ]);
+    montar();
+    fireEvent.click(
+      await screen.findByRole("button", { name: "Registrar pagamento" }),
+    );
+    const form = screen.getByRole("region", {
+      name: "Registrar pagamento de Mariana Alves Toledo",
+    });
+    fireEvent.click(within(form).getByRole("radio", { name: "Pix" }));
+    fireEvent.click(
+      within(form).getByRole("button", { name: "Confirmar pagamento" }),
+    );
+    const aviso = await within(form).findByRole("alert");
+    expect(aviso).toHaveTextContent("Não foi possível registrar o pagamento.");
+    expect(aviso).toHaveTextContent(
+      "O valor da contribuição mudou para R$ 40,00. Confira e confirme o pagamento de novo.",
+    );
+    await waitFor(() => expect(aviso).toHaveFocus());
+    expect(form.textContent?.replace(/\s/g, " ")).toContain("R$ 40,00");
+
+    fireEvent.click(
+      within(form).getByRole("button", { name: "Confirmar pagamento" }),
+    );
+    expect(
+      await screen.findByText("Pagamento registrado."),
+    ).toBeInTheDocument();
+    const posts = chamadas.filter((c) => c.metodo === "POST");
+    expect(
+      posts.map(
+        (c) =>
+          (c.corpo as { valorEsperadoCentavos: number }).valorEsperadoCentavos,
+      ),
+    ).toEqual([3500, 4000]);
+  });
+
+  it("a correção de uma versão que outra pessoa já corrigiu mostra o aviso para conferir a versão atual (RF41, RNF36)", async () => {
+    simularApi(EFETIVADA, [
+      409,
+      {
+        codigo: "versao_desatualizada",
+        message:
+          "O pagamento foi corrigido por outra pessoa agora e está na versão 2. Confira a versão atual antes de corrigir de novo.",
+        versaoAtual: 2,
+      },
+    ]);
+    montar();
+    fireEvent.click(
+      await screen.findByRole("button", { name: "Corrigir pagamento" }),
+    );
+    const form = screen.getByRole("region", { name: "Corrigir pagamento" });
+    fireEvent.click(within(form).getByRole("radio", { name: "Cartão" }));
+    fireEvent.change(within(form).getByLabelText("Motivo da correção"), {
+      target: { value: "Forma registrada errada." },
+    });
+    fireEvent.click(
+      within(form).getByRole("button", { name: "Salvar correção" }),
+    );
+    const aviso = await within(form).findByRole("alert");
+    expect(aviso).toHaveTextContent("Não foi possível salvar a correção.");
+    expect(aviso).toHaveTextContent(
+      "O pagamento foi corrigido por outra pessoa agora e está na versão 2. Confira a versão atual antes de corrigir de novo. Cancele e abra a correção de novo para ver a versão atual.",
+    );
   });
 
   it("na correção, o valor em formato errado é recusado no campo (RF41)", async () => {

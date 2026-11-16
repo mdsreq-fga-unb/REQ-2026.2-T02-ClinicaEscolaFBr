@@ -46,13 +46,22 @@ const valorCentavos = z
   .min(1, "Informe um valor maior que zero.")
   .max(VALOR_CONTRIBUICAO_MAXIMO_CENTAVOS, "Informe no máximo R$ 1.000,00.");
 
-// Registro (RF41): o valor não vem do pedido, vem do parâmetro.
-export const registroContribuicaoSchema = z.object({ pagoEm, forma });
+// Registro (RF41): o valor gravado vem do parâmetro, e não do pedido. O pedido
+// leva o valor que a secretaria viu na tela: se a coordenação mudou o valor com o
+// formulário aberto, o registro é recusado (409) e a tela pede nova confirmação.
+export const registroContribuicaoSchema = z.object({
+  pagoEm,
+  forma,
+  valorEsperadoCentavos: valorCentavos,
+});
 export type RegistroContribuicao = z.infer<typeof registroContribuicaoSchema>;
 
 // Correção (RF41, RNF36): a ficha inteira de novo, com o motivo obrigatório. O
 // valor pode mudar, porque o erro pode estar nele.
+// A versão esperada é a que a secretaria abriu para corrigir: se outra pessoa
+// corrigiu antes, a correção é recusada (409), para não desfazer a outra.
 export const correcaoContribuicaoSchema = z.object({
+  versaoEsperada: z.number().int().min(1),
   valorCentavos,
   pagoEm,
   forma,
@@ -63,6 +72,12 @@ export const correcaoContribuicaoSchema = z.object({
     .max(500, "Use até 500 caracteres."),
 });
 export type CorrecaoContribuicao = z.infer<typeof correcaoContribuicaoSchema>;
+
+// Códigos do 409 do registro e da correção, para a tela saber o que mostrar.
+export type ConflitoContribuicao =
+  | { codigo: "ja_pago"; pagoEm: string | null }
+  | { codigo: "valor_alterado"; valorAtualCentavos: number }
+  | { codigo: "versao_desatualizada"; versaoAtual: number };
 
 // Alteração do valor pela coordenação (RF41).
 export const valorContribuicaoSchema = z.object({ valorCentavos });

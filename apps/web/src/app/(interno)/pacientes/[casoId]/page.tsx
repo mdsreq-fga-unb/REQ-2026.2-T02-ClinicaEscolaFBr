@@ -107,7 +107,7 @@ const VOLTAR = {
 // a coordenação e o estagiário e o supervisor responsáveis. Para a secretaria e a
 // coordenação, seguem os dados cadastrais e administrativos (RF55), com as faltas
 // do ciclo (RF34, RF35), o desligamento por faltas (RF37) e a reversão (RF38), e,
-// para a secretaria, a contribuição social do ciclo (RF41). O
+// a contribuição social do ciclo (RF41), que a coordenação só consulta. O
 // estagiário e o supervisor, e o caso que ainda aguarda distribuição, veem só a
 // identificação (prancha 2-3). O conteúdo clínico fica no prontuário.
 export default function PacientePage() {
@@ -458,8 +458,15 @@ export default function PacientePage() {
           />
         </section>
       </div>
-      {/* Contribuição social do ciclo (RF41), só para a secretaria. */}
-      {secretaria && <CartaoContribuicao casoId={d.casoId} nome={d.nome} />}
+      {/* Contribuição social do ciclo (RF41): a secretaria registra e corrige, e a
+          coordenação só consulta (RNF36). */}
+      {(secretaria || coordenacao) && (
+        <CartaoContribuicao
+          casoId={d.casoId}
+          nome={d.nome}
+          somenteLeitura={coordenacao}
+        />
+      )}
       <HistoricoFaltas
         id="historico-faltas"
         contagem={d.faltasNoCiclo}

@@ -168,13 +168,18 @@ describe('Contribuição social do paciente (RF41, RNF36)', () => {
   const http = () => request(app.getHttpServer());
   const consultar = (quem: string, casoId: string) =>
     http().get(`/casos/${casoId}/contribuicao`).set(como(quem));
+  // O registro leva o valor que a tela mostrou (R$ 35,00, salvo quando o teste
+  // muda), e a correção, a versão aberta (a 1, salvo quando o teste muda).
   const registrar = (quem: string, casoId: string, corpo: object) =>
-    http().post(`/casos/${casoId}/contribuicao`).set(como(quem)).send(corpo);
+    http()
+      .post(`/casos/${casoId}/contribuicao`)
+      .set(como(quem))
+      .send({ valorEsperadoCentavos: 3500, ...corpo });
   const corrigir = (quem: string, casoId: string, corpo: object) =>
     http()
       .post(`/casos/${casoId}/contribuicao/correcao`)
       .set(como(quem))
-      .send(corpo);
+      .send({ versaoEsperada: 1, ...corpo });
   const alterarValor = (quem: string, valorCentavos: unknown) =>
     http()
       .put('/parametros/valor-contribuicao')
@@ -282,6 +287,7 @@ describe('Contribuição social do paciente (RF41, RNF36)', () => {
       forma: 'cartao',
     }).expect(409);
     expect(body).toMatchObject({
+      codigo: 'ja_pago',
       message: 'Este ciclo já tem pagamento registrado.',
       pagoEm: dia(-2),
     });
@@ -403,6 +409,7 @@ describe('Contribuição social do paciente (RF41, RNF36)', () => {
 
     // A correção pode mudar o valor, porque o erro pode estar nele.
     const terceira = await corrigir('secretaria', caso, {
+      versaoEsperada: 2,
       valorCentavos: 3000,
       pagoEm: dia(-1),
       forma: 'cartao',
@@ -438,7 +445,136 @@ describe('Contribuição social do paciente (RF41, RNF36)', () => {
     expect(await pagamentos(caso)).toHaveLength(1);
   });
 
-  it.each(['ana', 'carla', 'coordenacao'])(
+  it('a coordenação consulta o pagamento e as versões, só para leitura: não registra nem corrige (403) (RF41, RNF36)', async () => {
+    const caso = await criarCaso();
+    await registrar('secretaria', caso, {
+      pagoEm: dia(-1),
+      forma: 'pix',
+    }).expect(201);
+    await corrigir('secretaria', caso, {
+      valorCentavos: 3500,
+      pagoEm: dia(-1),
+      forma: 'dinheiro',
+      motivo: 'Forma registrada errada.',
+    }).expect(201);
+
+    const { body } = await consultar('coordenacao', caso).expect(200);
+    expect(body).toMatchObject({
+      situacao: 'efetivada',
+      vigente: { versao: 2, forma: 'dinheiro' },
+      anteriores: [{ versao: 1, forma: 'pix' }],
+    });
+
+    await registrar('coordenacao', caso, {
+      pagoEm: dia(0),
+      forma: 'pix',
+    }).expect(403);
+    await corrigir('coordenacao', caso, {
+      versaoEsperada: 2,
+      valorCentavos: 3500,
+      pagoEm: dia(0),
+      forma: 'pix',
+      motivo: 'Teste',
+    }).expect(403);
+    expect(await pagamentos(caso)).toHaveLength(2);
+  });
+
+  it('a correção de uma versão que outra pessoa já corrigiu é recusada com 409 e a versão atual, sem gravar nada (RF41, RNF36)', async () => {
+    const caso = await criarCaso();
+    await registrar('secretaria', caso, {
+      pagoEm: dia(-1),
+      forma: 'pix',
+    }).expect(201);
+    await corrigir('secretaria', caso, {
+      valorCentavos: 3500,
+      pagoEm: dia(-1),
+      forma: 'dinheiro',
+      motivo: 'Primeira correção.',
+    }).expect(201);
+
+    // A segunda pessoa abriu a versão 1 antes da primeira correção.
+    const { body } = await corrigir('secretaria', caso, {
+      versaoEsperada: 1,
+      valorCentavos: 3000,
+      pagoEm: dia(-1),
+      forma: 'pix',
+      motivo: 'Segunda correção, sobre a versão 1.',
+    }).expect(409);
+    expect(body).toMatchObject({
+      codigo: 'versao_desatualizada',
+      versaoAtual: 2,
+    });
+    expect(await pagamentos(caso)).toHaveLength(2);
+    expect(await eventos('corrigir_contribuicao')).toHaveLength(1);
+  });
+
+  it('duas correções da mesma versão ao mesmo tempo: uma passa e a outra recebe 409 (RF41, RNF36)', async () => {
+    const caso = await criarCaso();
+    await registrar('secretaria', caso, {
+      pagoEm: dia(-1),
+      forma: 'pix',
+    }).expect(201);
+    const respostas = await Promise.all([
+      corrigir('secretaria', caso, {
+        valorCentavos: 3500,
+        pagoEm: dia(-1),
+        forma: 'dinheiro',
+        motivo: 'Correção A.',
+      }),
+      corrigir('secretaria', caso, {
+        valorCentavos: 3500,
+        pagoEm: dia(-1),
+        forma: 'cartao',
+        motivo: 'Correção B.',
+      }),
+    ]);
+    expect(respostas.map((r) => r.status).sort((a, b) => a - b)).toEqual([
+      201, 409,
+    ]);
+    expect(respostas.find((r) => r.status === 409)!.body.codigo).toBe(
+      'versao_desatualizada',
+    );
+    expect(await pagamentos(caso)).toHaveLength(2);
+  });
+
+  it('o valor mudou com o formulário aberto: o registro é recusado com 409 e o valor atual, sem gravar; confirmado o valor novo, passa (RF41)', async () => {
+    const caso = await criarCaso();
+    await alterarValor('coordenacao', 4000).expect(200);
+
+    // A tela ainda mostrava R$ 35,00.
+    const { body } = await registrar('secretaria', caso, {
+      valorEsperadoCentavos: 3500,
+      pagoEm: dia(0),
+      forma: 'pix',
+    }).expect(409);
+    expect(body).toMatchObject({
+      codigo: 'valor_alterado',
+      valorAtualCentavos: 4000,
+      message:
+        'O valor da contribuição mudou para R$\u00a040,00. Confira e confirme o pagamento de novo.',
+    });
+    expect(await pagamentos(caso)).toHaveLength(0);
+    expect(await eventos('registrar_contribuicao')).toHaveLength(0);
+
+    const confirmado = await registrar('secretaria', caso, {
+      valorEsperadoCentavos: 4000,
+      pagoEm: dia(0),
+      forma: 'pix',
+    }).expect(201);
+    expect(confirmado.body.vigente.valorCentavos).toBe(4000);
+  });
+
+  it('o registro sem o valor que a tela mostrou é recusado com 400 (RF41)', async () => {
+    const caso = await criarCaso();
+    await http()
+      .post(`/casos/${caso}/contribuicao`)
+      .set(como('secretaria'))
+      .send({ pagoEm: dia(0), forma: 'pix' })
+      .expect(400);
+    expect(await pagamentos(caso)).toHaveLength(0);
+  });
+
+  it.each(['ana', 'carla'])(
     '%s não consulta, não registra e não corrige o pagamento (403) (RF41)',
     async (quem) => {
       const caso = await criarCaso();
@@ -523,6 +659,7 @@ describe('Contribuição social do paciente (RF41, RNF36)', () => {
     // O registro seguinte usa o valor novo; o anterior continua com R$ 35,00.
     const novo = await criarCaso();
     const registro = await registrar('secretaria', novo, {
+      valorEsperadoCentavos: 4000,
       pagoEm: dia(0),
       forma: 'dinheiro',
     }).expect(201);

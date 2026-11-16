@@ -16,6 +16,7 @@ import {
   type Db,
 } from '@clinica/database';
 import {
+  formatarCentavos,
   PARAMETROS_PADRAO,
   prazoDaContribuicao,
   type CorrecaoContribuicao,
@@ -86,7 +87,18 @@ export class ContribuicaoService {
         if (vigente) this.jaPago(vigente.pagoEm);
 
         // O valor vem do parâmetro, lido nesta transação, e fica copiado na linha.
+        // Se não é o valor que a secretaria viu na tela, a coordenação mudou o
+        // parâmetro com o formulário aberto: nada é gravado, e a tela pede nova
+        // confirmação com o valor atual.
         const valorCentavos = await numeroDoParametro(tx, VALOR);
+        if (valorCentavos !== dados.valorEsperadoCentavos) {
+          throw new ConflictException({
+            statusCode: 409,
+            codigo: 'valor_alterado',
+            message: `O valor da contribuição mudou para ${formatarCentavos(valorCentavos)}. Confira e confirme o pagamento de novo.`,
+            valorAtualCentavos: valorCentavos,
+          });
+        }
         const [pagamento] = await tx
           .insert(pagamentosContribuicao)
           .values({
@@ -143,6 +155,10 @@ export class ContribuicaoService {
             'Este ciclo ainda não tem pagamento registrado para corrigir.',
           );
         }
+        // A secretaria corrige a versão que abriu. Se outra pessoa corrigiu antes,
+        // a correção é recusada, para não desfazer a outra sem perceber.
+        if (vigente.versao !== dados.versaoEsperada)
+          this.desatualizada(vigente.versao);
         if (
           vigente.valorCentavos === dados.valorCentavos &&
           vigente.pagoEm === dados.pagoEm &&
@@ -189,9 +205,9 @@ export class ContribuicaoService {
       });
     } catch (erro) {
       if (!violaUnico(erro)) throw erro;
-      throw new ConflictException(
-        'O pagamento foi corrigido por outra pessoa agora. Confira a versão atual antes de corrigir de novo.',
-      );
+      const caso = await this.caso(this.db, casoId);
+      const [vigente] = await this.versoes(this.db, caso);
+      return this.desatualizada(vigente?.versao ?? dados.versaoEsperada);
     }
   }
 
@@ -365,8 +381,19 @@ export class ContribuicaoService {
   private jaPago(pagoEm: string | undefined): never {
     throw new ConflictException({
       statusCode: 409,
+      codigo: 'ja_pago',
       message: JA_PAGO,
       pagoEm: pagoEm ?? null,
+    });
+  }
+
+  // 409 com a versão atual, quando outra pessoa corrigiu antes.
+  private desatualizada(versaoAtual: number): never {
+    throw new ConflictException({
+      statusCode: 409,
+      codigo: 'versao_desatualizada',
+      message: `O pagamento foi corrigido por outra pessoa agora e está na versão ${versaoAtual}. Confira a versão atual antes de corrigir de novo.`,
+      versaoAtual,
     });
   }
 }

@@ -232,7 +232,7 @@ describe("Ficha do paciente com os responsáveis (RF22)", () => {
     expect(antes(quadro, cadastrais)).toBe(true);
   });
 
-  it("a secretaria vê o cartão da contribuição social do ciclo depois dos dados administrativos; a coordenação não o recebe (RF41)", async () => {
+  it("a secretaria vê o cartão da contribuição social do ciclo depois dos dados administrativos; a coordenação o vê só para leitura (RF41, RNF36)", async () => {
     const chamadas = simularApi(
       "secretaria",
       [200, MARIANA_RESPONSAVEIS],
@@ -276,13 +276,31 @@ describe("Ficha do paciente com os responsáveis (RF22)", () => {
       "coordenacao",
       [200, MARIANA_RESPONSAVEIS],
       [200, MARIANA_ADMINISTRATIVOS],
+      [
+        200,
+        {
+          casoId: "c1",
+          cicloAtendimento: 1,
+          situacao: "pendente",
+          prazo: {
+            vinculadoEm: "2026-11-05T13:00:00.000Z",
+            ate: "2026-11-15",
+          },
+          valorAtualCentavos: 3500,
+          vigente: null,
+          anteriores: [],
+        },
+      ],
     );
     abrir();
-    await screen.findByRole("region", { name: "Dados administrativos" });
+    const daCoordenacaoCartao = await screen.findByRole("region", {
+      name: "Contribuição social · Ciclo 1",
+    });
+    // Só leitura: a coordenação não registra nem corrige o pagamento.
+    expect(within(daCoordenacaoCartao).queryByRole("button")).toBeNull();
     expect(
-      screen.queryByRole("region", { name: /Contribuição social/ }),
-    ).toBeNull();
-    expect(daCoordenacao.some((u) => u.endsWith("/contribuicao"))).toBe(false);
+      daCoordenacao.some((u) => u.endsWith("/casos/c1/contribuicao")),
+    ).toBe(true);
   });
 });
 

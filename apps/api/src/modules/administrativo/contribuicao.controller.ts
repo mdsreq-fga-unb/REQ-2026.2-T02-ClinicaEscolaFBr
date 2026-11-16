@@ -27,15 +27,16 @@ import {
 import { ZodValidationPipe } from '../../common/zod-validation.pipe';
 import { ContribuicaoService } from './contribuicao.service';
 
-// Contribuição social (RF41): só a secretaria consulta, registra e corrige o
-// pagamento, e só a coordenação altera o valor.
+// Contribuição social (RF41): só a secretaria registra e corrige o pagamento, e
+// só a coordenação altera o valor. A coordenação também consulta o pagamento e as
+// versões, só para leitura, porque o RNF36 deixa o histórico disponível a ela.
 @Controller()
 @UseGuards(AutenticadoGuard, PerfisGuard)
 export class ContribuicaoController {
   constructor(private readonly contribuicao: ContribuicaoService) {}
 
   @Get('casos/:id/contribuicao')
-  @Perfis('secretaria')
+  @Perfis('secretaria', 'coordenacao')
   @Header('Cache-Control', 'no-store')
   situacao(@Param('id', ParseUUIDPipe) id: string) {
     return this.contribuicao.situacao(id);

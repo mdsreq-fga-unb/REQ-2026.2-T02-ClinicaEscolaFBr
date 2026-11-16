@@ -98,13 +98,16 @@ function errosDaApi(erro: ErroApi): Erros {
 // (RF41, prancha 8-1): a situação no ciclo atual, com o prazo quando pendente, e o
 // registro e a correção do pagamento, que abrem no lugar do cartão. A versão
 // anterior fica abaixo da vigente. O sistema só registra o pagamento já recebido
-// pela secretaria; ele não cobra nem transita valores.
+// pela secretaria; ele não cobra nem transita valores. A coordenação vê o mesmo
+// cartão só para leitura (RNF36), sem registrar nem corrigir.
 export function CartaoContribuicao({
   casoId,
   nome,
+  somenteLeitura = false,
 }: {
   casoId: string;
   nome: string;
+  somenteLeitura?: boolean;
 }) {
   const chave = ["casos", casoId, "contribuicao"];
   const cliente = useQueryClient();
@@ -169,7 +172,9 @@ export function CartaoContribuicao({
     </h2>
   );
 
-  if (modo === "registrar")
+  const atualizar = () => void cliente.invalidateQueries({ queryKey: chave });
+
+  if (modo === "registrar" && !somenteLeitura)
     return (
       <section aria-labelledby={titulo} className="ui-cartao">
         {cabecalho(`Registrar pagamento de ${nome}`)}
@@ -181,13 +186,14 @@ export function CartaoContribuicao({
           aoJaPago={(pagoEm) => {
             setRetorno({ tipo: "ja_pago", pagoEm });
             setModo("ver");
-            void cliente.invalidateQueries({ queryKey: chave });
+            atualizar();
           }}
+          aoMudar={atualizar}
         />
       </section>
     );
 
-  if (modo === "corrigir" && s.vigente)
+  if (modo === "corrigir" && s.vigente && !somenteLeitura)
     return (
       <section aria-labelledby={titulo} className="ui-cartao">
         {cabecalho("Corrigir pagamento")}
@@ -198,6 +204,7 @@ export function CartaoContribuicao({
           aoCancelar={() => setModo("ver")}
           aoConcluir={(dados) => concluir(dados, { tipo: "corrigido" })}
           aoJaPago={() => undefined}
+          aoMudar={atualizar}
         />
       </section>
     );
@@ -243,7 +250,7 @@ export function CartaoContribuicao({
               estagiário.
             </p>
           )}
-          {s.prazo && (
+          {s.prazo && !somenteLeitura && (
             <Button
               className="w-fit max-sm:w-full"
               onClick={() => abrir("registrar")}
@@ -296,13 +303,15 @@ export function CartaoContribuicao({
               ))}
             </ul>
           )}
-          <Button
-            variant="outline"
-            className="w-fit max-sm:w-full"
-            onClick={() => abrir("corrigir")}
-          >
-            Corrigir pagamento
-          </Button>
+          {!somenteLeitura && (
+            <Button
+              variant="outline"
+              className="w-fit max-sm:w-full"
+              onClick={() => abrir("corrigir")}
+            >
+              Corrigir pagamento
+            </Button>
+          )}
         </>
       )}
     </section>
@@ -319,6 +328,7 @@ function FormularioPagamento({
   aoCancelar,
   aoConcluir,
   aoJaPago,
+  aoMudar,
 }: {
   casoId: string;
   situacao: SituacaoContribuicao;
@@ -326,6 +336,8 @@ function FormularioPagamento({
   aoCancelar: () => void;
   aoConcluir: (dados: SituacaoContribuicao) => void;
   aoJaPago: (pagoEm: string | null) => void;
+  // O pagamento ou o valor mudou no servidor: o cartão busca a situação de novo.
+  aoMudar: () => void;
 }) {
   const correcao = Boolean(vigente);
   const id = useId();
@@ -337,6 +349,13 @@ function FormularioPagamento({
     vigente?.forma ?? null,
   );
   const [motivo, setMotivo] = useState("");
+  // O valor mostrado no registro e a versão aberta na correção vão no pedido. Se
+  // mudaram no servidor, a API recusa (409): o valor novo aparece na tela para a
+  // secretaria confirmar de novo, e a correção pede para conferir a versão atual.
+  const [valorEsperado, setValorEsperado] = useState(
+    situacao.valorAtualCentavos,
+  );
+  const [versaoEsperada] = useState(vigente?.versao ?? 1);
   const [erros, setErros] = useState<Erros>({});
   const [erroGeral, setErroGeral] = useState<string | null>(null);
 
@@ -348,11 +367,30 @@ function FormularioPagamento({
       ),
     onSuccess: aoConcluir,
     onError: (erro) => {
-      if (erro instanceof ErroApi && erro.status === 409 && !correcao) {
-        aoJaPago(
-          typeof erro.corpo?.pagoEm === "string" ? erro.corpo.pagoEm : null,
-        );
-        return;
+      if (erro instanceof ErroApi && erro.status === 409) {
+        const conflito = erro.corpo as {
+          codigo?: string;
+          valorAtualCentavos?: number;
+        } | null;
+        if (conflito?.codigo === "valor_alterado") {
+          setValorEsperado(conflito.valorAtualCentavos ?? valorEsperado);
+          setErroGeral(erro.message);
+          aoMudar();
+          return;
+        }
+        if (conflito?.codigo === "versao_desatualizada") {
+          setErroGeral(
+            `${erro.message} Cancele e abra a correção de novo para ver a versão atual.`,
+          );
+          aoMudar();
+          return;
+        }
+        if (!correcao) {
+          aoJaPago(
+            typeof erro.corpo?.pagoEm === "string" ? erro.corpo.pagoEm : null,
+          );
+          return;
+        }
       }
       if (erro instanceof ErroApi && erro.status === 400) {
         const porCampo = errosDaApi(erro);
@@ -388,6 +426,7 @@ function FormularioPagamento({
     const centavos = correcao ? centavosDoCampo(valor) : undefined;
     const r = correcao
       ? correcaoContribuicaoSchema.safeParse({
+          versaoEsperada,
           valorCentavos: centavos ?? undefined,
           pagoEm,
           forma: forma ?? undefined,
@@ -396,6 +435,7 @@ function FormularioPagamento({
       : registroContribuicaoSchema.safeParse({
           pagoEm,
           forma: forma ?? undefined,
+          valorEsperadoCentavos: valorEsperado,
         });
     const novos: Erros = {};
     if (correcao && centavos === null && valor.trim() !== "")
@@ -458,7 +498,7 @@ function FormularioPagamento({
             Valor da contribuição
           </p>
           <p className="m-0 text-[22px] font-bold">
-            {formatarCentavos(situacao.valorAtualCentavos)}
+            {formatarCentavos(valorEsperado)}
           </p>
         </div>
       )}
