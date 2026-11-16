@@ -17,7 +17,7 @@ import {
   vinculosEstagiario,
   type Db,
 } from '@clinica/database';
-import type { StatusSessao } from '@clinica/shared';
+import type { AvisoPaciente, StatusSessao } from '@clinica/shared';
 import { AuditoriaModule } from '../../auditoria/auditoria.module';
 import type { UsuarioAutenticado } from '../../auth/usuario-autenticado';
 import { decifrar } from '../../common/criptografia';
@@ -32,13 +32,14 @@ import { gerarToken } from '../acesso/credenciais';
 import { acoesDeCancelamento } from './acoes-cancelamento';
 import { AgendamentoModule } from './agendamento.module';
 
-// RF15, RF16, RNF10 e RNF59: cancelamento pelo link, pela equipe e ausência do
-// estagiário. O usuário da sessão é simulado pelo cabeçalho x-usuario-teste.
+// RF15, RF16, RF17, RNF10 e RNF59: cancelamento pelo link, pela equipe e ausência
+// do estagiário, com o aviso ao paciente. O usuário da sessão é simulado pelo
+// cabeçalho x-usuario-teste.
 const MINUTO = 60_000;
 const LINK_INVALIDO = /não é mais válido/;
 const JUSTIFICATIVA = 'Consulta médica marcada no mesmo horário.';
 
-describe('Cancelamento de sessão (RF15 e RF16)', () => {
+describe('Cancelamento de sessão (RF15, RF16 e RF17)', () => {
   let app: INestApplication;
   let db: Db;
   let limpar: () => Promise<unknown>;
@@ -142,6 +143,7 @@ describe('Cancelamento de sessão (RF15 e RF16)', () => {
     estagiario: UsuarioAutenticado,
     supervisor: UsuarioAutenticado,
     email: string | null = 'mariana@exemplo.com',
+    celular: string | null = '61998765432',
   ) {
     numero += 1;
     const [inscricao] = await db
@@ -155,7 +157,7 @@ describe('Cancelamento de sessão (RF15 e RF16)', () => {
         endereco: 'Rua Fictícia, 1',
         estadoCivil: 'solteiro',
         canalPreferencial: email ? 'email' : 'whatsapp',
-        celular: '61998765432',
+        celular,
         email,
         queixaCifrada: 'x',
         percepcaoUrgenciaCifrada: 'x',
@@ -592,13 +594,17 @@ describe('Cancelamento de sessão (RF15 e RF16)', () => {
       expect(await cancelamentoNoBanco(id)).toMatchObject({
         origem: 'estagiario',
         classificacao: 'ausencia_estagiario',
+        avisoPaciente: 'email_enviado',
       });
       expect(await faltasDa(id)).toHaveLength(0);
       const [evento] = await eventos(id);
       expect(evento).toMatchObject({
         usuarioId: pessoas.ana.id,
         operacao: 'cancelar_sessao',
-        dadosNovos: { classificacao: 'ausencia_estagiario' },
+        dadosNovos: {
+          classificacao: 'ausencia_estagiario',
+          avisoPaciente: 'envio_pendente',
+        },
       });
       expect(enviar.mock.calls[0][2]).not.toContain('Prova');
     });
@@ -650,6 +656,7 @@ describe('Cancelamento de sessão (RF15 e RF16)', () => {
 
       expect(body.avisoAoPaciente).toBe('sem_email');
       expect(enviar).not.toHaveBeenCalled();
+      expect((await cancelamentoNoBanco(id)).avisoPaciente).toBe('sem_email');
     });
 
     it('falha no e-mail: a ausência continua registrada, e a resposta avisa', async () => {
@@ -660,6 +667,294 @@ describe('Cancelamento de sessão (RF15 e RF16)', () => {
 
       expect(body.avisoAoPaciente).toBe('email_nao_enviado');
       expect((await sessaoNoBanco(id)).status).toBe('cancelada');
+      expect((await cancelamentoNoBanco(id)).avisoPaciente).toBe(
+        'email_nao_enviado',
+      );
+    });
+  });
+
+  describe('aviso ao paciente da ausência do estagiário (RF17)', () => {
+    const avisosPendentes = (quem = 'secretaria') =>
+      servidor()
+        .get('/cancelamentos/avisos-pendentes')
+        .set('x-usuario-teste', JSON.stringify(pessoas[quem]));
+    const registrarAviso = (
+      id: string,
+      canal: string = 'whatsapp',
+      quem = 'secretaria',
+    ) =>
+      servidor()
+        .post(`/cancelamentos/${id}/aviso`)
+        .set('x-usuario-teste', JSON.stringify(pessoas[quem]))
+        .send({ canal });
+
+    // Cancelamento por ausência gravado direto no banco, para o que a rota não
+    // produz sozinha: o envio parado no meio e a sessão de dias atrás.
+    async function ausenciaGravada(
+      aviso: AvisoPaciente,
+      {
+        registradoHaMinutos = 0,
+        sessaoEmMinutos = 3 * 60,
+      }: { registradoHaMinutos?: number; sessaoEmMinutos?: number } = {},
+    ) {
+      const { id } = await criarSessao(sessaoEmMinutos, 'cancelada');
+      const [cancelamento] = await db
+        .insert(cancelamentosSessao)
+        .values({
+          sessaoId: id,
+          origem: 'estagiario',
+          classificacao: 'ausencia_estagiario',
+          justificativaCifrada: 'x',
+          registradoPor: pessoas.ana.id,
+          registradoEm: new Date(Date.now() - registradoHaMinutos * MINUTO),
+          antecedenciaMinutos: 60,
+          avisoPaciente: aviso,
+        })
+        .returning();
+      return cancelamento.id;
+    }
+
+    const MENSAGEM =
+      'Olá, Mariana. A sua sessão na Clínica Escola de Psicologia da FBr de quinta-feira, 05/12/2030, às 14:00, foi cancelada pela clínica. Este cancelamento não conta como falta. A secretaria vai entrar em contato para marcar outro horário.';
+    const sessaoAs14 = new Date('2030-12-05T14:00:00-03:00');
+
+    it('com e-mail: envia no mesmo momento, com o dia, a data e o horário, sem o motivo, e não gera aviso à secretaria', async () => {
+      const { id } = await criarSessao(sessaoAs14);
+
+      await ausencia('ana', id).expect(200);
+
+      expect(enviar).toHaveBeenCalledTimes(1);
+      const [para, assunto, html] = enviar.mock.calls[0];
+      expect(para).toBe('mariana@exemplo.com');
+      expect(assunto).toBe('Sessão cancelada na Clínica Escola FBr');
+      expect(html).toBe(
+        [
+          '<p>Olá, Mariana.</p>',
+          '<p>A sua sessão na Clínica Escola de Psicologia da FBr de quinta-feira, 05/12/2030, às 14:00, foi cancelada pela clínica. Este cancelamento não conta como falta.</p>',
+          '<p>A secretaria vai entrar em contato para marcar outro horário.</p>',
+        ].join('\n'),
+      );
+      expect(html).not.toContain('Prova');
+      const { body } = await avisosPendentes().expect(200);
+      expect(body).toEqual([]);
+    });
+
+    it('sem e-mail: a secretaria recebe o aviso com a mensagem pronta, o mesmo texto do e-mail, e o link do WhatsApp', async () => {
+      const semEmail = await criarCaso(pessoas.ana, pessoas.carla, null);
+      const { id } = await criarSessao(sessaoAs14, 'agendada', {
+        casoId: semEmail,
+      });
+      await ausencia('ana', id).expect(200);
+      const cancelamento = await cancelamentoNoBanco(id);
+
+      const { body } = await avisosPendentes().expect(200);
+
+      expect(body).toEqual([
+        {
+          id: cancelamento.id,
+          casoId: semEmail,
+          paciente: 'Mariana Alves Toledo',
+          inicio: sessaoAs14.toISOString(),
+          motivo: 'sem_email',
+          mensagem: MENSAGEM,
+          celular: '(61) 99876-5432',
+          url: `https://wa.me/5561998765432?text=${encodeURIComponent(MENSAGEM)}`,
+        },
+      ]);
+      expect(JSON.stringify(body)).not.toContain('Prova');
+    });
+
+    it('falha no envio: o cancelamento continua registrado e a secretaria recebe o mesmo aviso', async () => {
+      enviar.mockRejectedValueOnce(new Error('SMTP fora do ar'));
+      const { id } = await criarSessao(sessaoAs14);
+      await ausencia('ana', id).expect(200);
+
+      const { body } = await avisosPendentes().expect(200);
+
+      expect((await sessaoNoBanco(id)).status).toBe('cancelada');
+      expect(body).toHaveLength(1);
+      expect(body[0]).toMatchObject({
+        motivo: 'email_nao_enviado',
+        mensagem: MENSAGEM,
+      });
+    });
+
+    it('falha no envio para paciente sem celular: o aviso vem sem o WhatsApp, e a secretaria registra o aviso por outro contato', async () => {
+      enviar.mockRejectedValueOnce(new Error('SMTP fora do ar'));
+      const semCelular = await criarCaso(
+        pessoas.ana,
+        pessoas.carla,
+        'mariana@exemplo.com',
+        null,
+      );
+      const { id } = await criarSessao(3 * 60, 'agendada', {
+        casoId: semCelular,
+      });
+      await ausencia('ana', id).expect(200);
+
+      const { body } = await avisosPendentes().expect(200);
+
+      expect(body[0]).toMatchObject({ celular: null, url: null });
+      const { body: recusa } = await registrarAviso(body[0].id).expect(422);
+      expect(recusa.message).toMatch(/não tem celular/);
+      await registrarAviso(body[0].id, 'outro').expect(200);
+      expect((await cancelamentoNoBanco(id)).avisoManualCanal).toBe('outro');
+    });
+
+    it('o envio parado há mais de 5 minutos entra na lista; o que acabou de começar, não', async () => {
+      const parado = await ausenciaGravada('envio_pendente', {
+        registradoHaMinutos: 6,
+      });
+      await ausenciaGravada('envio_pendente', { registradoHaMinutos: 3 });
+
+      const { body } = await avisosPendentes().expect(200);
+
+      expect(body).toHaveLength(1);
+      expect(body[0]).toMatchObject({ id: parado, motivo: 'envio_pendente' });
+    });
+
+    it('a sessão de mais de 7 dias atrás sai da lista', async () => {
+      await ausenciaGravada('sem_email', { sessaoEmMinutos: -8 * 24 * 60 });
+      const recente = await ausenciaGravada('sem_email', {
+        sessaoEmMinutos: -6 * 24 * 60,
+      });
+
+      const { body } = await avisosPendentes().expect(200);
+
+      expect(body.map((a: { id: string }) => a.id)).toEqual([recente]);
+    });
+
+    it('o cancelamento para remarcar continua só por e-mail e não entra na lista', async () => {
+      const semEmail = await criarCaso(pessoas.ana, pessoas.carla, null);
+      const { id } = await criarSessao(3 * 60, 'agendada', {
+        casoId: semEmail,
+      });
+
+      await cancelar('secretaria', id, 'administrativo').expect(200);
+
+      expect((await cancelamentoNoBanco(id)).avisoPaciente).toBeNull();
+      const { body } = await avisosPendentes().expect(200);
+      expect(body).toEqual([]);
+    });
+
+    it('"Enviar pelo WhatsApp" registra o aviso, audita e tira o item da lista (RNF10)', async () => {
+      const aviso = await ausenciaGravada('sem_email');
+
+      const { body } = await registrarAviso(aviso).expect(200);
+
+      expect(body).toEqual({
+        avisoManualEm: expect.any(String),
+        canal: 'whatsapp',
+      });
+      const [cancelamento] = await db
+        .select()
+        .from(cancelamentosSessao)
+        .where(eq(cancelamentosSessao.id, aviso));
+      expect(cancelamento).toMatchObject({
+        avisoPaciente: 'sem_email',
+        avisoManualPor: pessoas.secretaria.id,
+        avisoManualCanal: 'whatsapp',
+      });
+      expect(cancelamento.avisoManualEm?.toISOString()).toBe(
+        body.avisoManualEm,
+      );
+      const [evento] = await eventos(aviso);
+      expect(evento).toMatchObject({
+        usuarioId: pessoas.secretaria.id,
+        operacao: 'registrar_aviso_paciente',
+        entidade: 'cancelamentos_sessao',
+        dadosAnteriores: { avisoPaciente: 'sem_email', avisoManualEm: null },
+        dadosNovos: { avisoManualCanal: 'whatsapp' },
+      });
+      expect((await avisosPendentes().expect(200)).body).toEqual([]);
+    });
+
+    it('o aviso registrado duas vezes: a segunda recebe 409, sem mudar o primeiro registro', async () => {
+      const aviso = await ausenciaGravada('email_nao_enviado');
+      await registrarAviso(aviso, 'whatsapp').expect(200);
+
+      const { body } = await registrarAviso(aviso, 'outro').expect(409);
+
+      expect(body.message).toMatch(/já foi registrado/);
+      const [cancelamento] = await db
+        .select()
+        .from(cancelamentosSessao)
+        .where(eq(cancelamentosSessao.id, aviso));
+      expect(cancelamento.avisoManualCanal).toBe('whatsapp');
+      expect(await eventos(aviso)).toHaveLength(1);
+    });
+
+    it('duas pessoas da secretaria ao mesmo tempo: só um registro vale', async () => {
+      const aviso = await ausenciaGravada('sem_email');
+
+      const respostas = await Promise.all([
+        registrarAviso(aviso),
+        registrarAviso(aviso),
+      ]);
+
+      expect(respostas.map((r) => r.status).sort((a, b) => a - b)).toEqual([
+        200, 409,
+      ]);
+      expect(await eventos(aviso)).toHaveLength(1);
+    });
+
+    it('o paciente já avisado por e-mail não tem aviso a registrar (422)', async () => {
+      const { id } = await criarSessao(3 * 60);
+      await ausencia('ana', id).expect(200);
+
+      const { body } = await registrarAviso(
+        (await cancelamentoNoBanco(id)).id,
+      ).expect(422);
+
+      expect(body.message).toMatch(/não tem aviso pendente/);
+    });
+
+    it('cancelamento inexistente (404) e canal inválido (400)', async () => {
+      await registrarAviso('00000000-0000-4000-8000-000000000000').expect(404);
+      await registrarAviso(await ausenciaGravada('sem_email'), 'email').expect(
+        400,
+      );
+    });
+
+    it.each([
+      ['o estagiário', 'ana'],
+      ['o supervisor', 'carla'],
+      ['a coordenação', 'coordenacao'],
+    ])('%s não vê nem registra os avisos (403)', async (_quem, chave) => {
+      const aviso = await ausenciaGravada('sem_email');
+
+      await avisosPendentes(chave).expect(403);
+      await registrarAviso(aviso, 'whatsapp', chave).expect(403);
+
+      expect(await eventos(aviso)).toHaveLength(0);
+    });
+
+    it('o banco exige o aviso na ausência nova e só deixa mudar as colunas do aviso', async () => {
+      const { id } = await criarSessao(3 * 60, 'cancelada');
+      await expect(
+        db.insert(cancelamentosSessao).values({
+          sessaoId: id,
+          origem: 'estagiario',
+          classificacao: 'ausencia_estagiario',
+          justificativaCifrada: 'x',
+          registradoPor: pessoas.ana.id,
+          antecedenciaMinutos: 60,
+        }),
+      ).rejects.toThrow();
+      const aviso = await ausenciaGravada('sem_email');
+      await expect(
+        db
+          .update(cancelamentosSessao)
+          .set({ justificativaCifrada: 'y' })
+          .where(eq(cancelamentosSessao.id, aviso)),
+      ).rejects.toThrow();
+      await registrarAviso(aviso).expect(200);
+      await expect(
+        db
+          .update(cancelamentosSessao)
+          .set({ avisoManualCanal: 'outro' })
+          .where(eq(cancelamentosSessao.id, aviso)),
+      ).rejects.toThrow();
     });
   });
 
