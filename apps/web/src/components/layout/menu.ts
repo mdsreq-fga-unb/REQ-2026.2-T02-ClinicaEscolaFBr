@@ -4,6 +4,7 @@ import {
   CalendarPlus,
   FileText,
   Folder,
+  History,
   Inbox,
   Shuffle,
   User,
@@ -51,6 +52,11 @@ export const MENU_POR_PERFIL: Record<Perfil, ItemMenu[]> = {
     { rotulo: "Usuários", href: "/usuarios", Icone: Users },
     // Indicadores operacionais (RF48), na prancha 9-1.
     { rotulo: "Indicadores", href: "/indicadores", Icone: BarChart3 },
+    {
+      rotulo: "Registro de acessos",
+      href: "/acessos-prontuario",
+      Icone: History,
+    },
   ],
 };
 

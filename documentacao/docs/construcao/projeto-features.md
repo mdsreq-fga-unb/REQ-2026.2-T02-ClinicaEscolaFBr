@@ -578,6 +578,14 @@ sequenceDiagram
 
 **Dependências e riscos:** usa a gravação do RF55 (#50) e os nomes de operação do RF27, do RF28 e do RF69. O RF29, construído no mesmo ciclo, grava `corrigir_evolucao`.
 
+**Na implementação (RF56, ajustes da inspeção de 16/11):** a API mantém os filtros por `pacienteId` (id da inscrição) e `usuarioId` e aceita também `paciente` e `usuario`, buscas literais por parte do nome. Os filtros se combinam; nomes têm até 150 caracteres, datas inexistentes ou período invertido retornam 400. A resposta contém `acessos`, `total`, `pagina` e `tamanhoPagina` (50), com contagem e página na mesma transação de leitura consistente; o id desempata acessos com a mesma data. O perfil é o gravado no momento do acesso, inclusive para usuários desativados. Nenhum conteúdo clínico é selecionado ou decifrado.
+
+A tentativa negada sem prontuário identificado permanece com paciente “—” e **só aparece quando não há filtro de paciente**, tanto por nome quanto por id. Essa regra está no texto de ajuda e no teste da API; filtros de usuário e período continuam aplicáveis. A tela anuncia o total e a página em `role="status"`, preserva os filtros em caso de falha e retorna à primeira página ao pesquisar novamente. Os demais perfis recebem 403 e não veem o item no menu.
+
+**Banco:** a migration `0017_rf56_indices_acessos` adiciona índices em `criado_em`, `(prontuario_id, criado_em)` e `(usuario_id, criado_em)`. Foi gerada depois da `0016` da development; não altera registros, gatilhos de imutabilidade ou permissões. As PRs #263 e #267 também propõem a numeração 0017: se outra migration entrar primeiro, regenerar a migration RF56, seu snapshot e o journal sobre a nova development antes do merge, sem renomear apenas o SQL nem alterar migrations já integradas.
+
+**Verificação:** testes de API cobrem registros permitidos e negados, operações atuais e legadas, filtros e ausência de paciente, contagem/paginação, limites do dia em Brasília, sigilo, permissões e imutabilidade. Testes web cobrem estados, foco, contagem e paginação; E2E usa dados fictícios e cobre seis larguras, teclado, axe e recusa aos demais perfis. O cenário de leitor de tela requer o workflow macOS. A inspeção de design da #51 foi aprovada com ajustes; **R7.3 continua pendente**, aguardando a FBr (Thiago e Robson) sobre a prancha 6-2 até 19/11. Os testes não substituem esse aceite nem a inspeção de código independente.
+
 ---
 
 ### RF57 — Registrar consentimento para tratamento de dados ([#52](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/issues/52))
