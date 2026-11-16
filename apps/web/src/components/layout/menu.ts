@@ -52,8 +52,7 @@ export const MENU_POR_PERFIL: Record<Perfil, ItemMenu[]> = {
     { rotulo: "Usuários", href: "/usuarios", Icone: Users },
     // Indicadores operacionais (RF48), na prancha 9-1.
     { rotulo: "Indicadores", href: "/indicadores", Icone: BarChart3 },
-    // Data-limite para corrigir evoluções (RF29), na prancha 6-1; o RF41 usa a
-    // mesma página.
+    // Data-limite para corrigir evoluções (RF29), na prancha 6-1; e valor da contribuição social (RF41), na prancha 8-1.
     { rotulo: "Parâmetros", href: "/parametros", Icone: SlidersHorizontal },
   ],
 };

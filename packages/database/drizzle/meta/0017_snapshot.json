@@ -1,5 +1,5 @@
 {
-  "id": "223a83e3-c3d8-4514-9d82-96780ca7e19a",
+  "id": "e524e5df-a9db-4120-bc32-c35c2a98ed79",
   "prevId": "f39c00cc-14df-42c7-9519-0110a0680a11",
   "version": "7",
   "dialect": "postgresql",
@@ -65,12 +65,8 @@
           "name": "auditoria_usuario_id_usuarios_id_fk",
           "tableFrom": "auditoria",
           "tableTo": "usuarios",
-          "columnsFrom": [
-            "usuario_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["usuario_id"],
+          "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         }
@@ -166,9 +162,7 @@
         "usuarios_email_unique": {
           "name": "usuarios_email_unique",
           "nullsNotDistinct": false,
-          "columns": [
-            "email"
-          ]
+          "columns": ["email"]
         }
       },
       "policies": {},
@@ -230,12 +224,8 @@
           "name": "convites_ativacao_usuario_id_usuarios_id_fk",
           "tableFrom": "convites_ativacao",
           "tableTo": "usuarios",
-          "columnsFrom": [
-            "usuario_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["usuario_id"],
+          "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         }
@@ -245,9 +235,7 @@
         "convites_ativacao_token_hash_unique": {
           "name": "convites_ativacao_token_hash_unique",
           "nullsNotDistinct": false,
-          "columns": [
-            "token_hash"
-          ]
+          "columns": ["token_hash"]
         }
       },
       "policies": {},
@@ -303,12 +291,8 @@
           "name": "sessoes_login_usuario_id_usuarios_id_fk",
           "tableFrom": "sessoes_login",
           "tableTo": "usuarios",
-          "columnsFrom": [
-            "usuario_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["usuario_id"],
+          "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         }
@@ -318,9 +302,7 @@
         "sessoes_login_token_hash_unique": {
           "name": "sessoes_login_token_hash_unique",
           "nullsNotDistinct": false,
-          "columns": [
-            "token_hash"
-          ]
+          "columns": ["token_hash"]
         }
       },
       "policies": {},
@@ -527,12 +509,8 @@
           "name": "inscricoes_versao_termo_aceita_versoes_termo_versao_fk",
           "tableFrom": "inscricoes",
           "tableTo": "versoes_termo",
-          "columnsFrom": [
-            "versao_termo_aceita"
-          ],
-          "columnsTo": [
-            "versao"
-          ],
+          "columnsFrom": ["versao_termo_aceita"],
+          "columnsTo": ["versao"],
           "onDelete": "no action",
           "onUpdate": "no action"
         }
@@ -542,9 +520,7 @@
         "inscricoes_numero_unique": {
           "name": "inscricoes_numero_unique",
           "nullsNotDistinct": false,
-          "columns": [
-            "numero"
-          ]
+          "columns": ["numero"]
         }
       },
       "policies": {},
@@ -702,12 +678,8 @@
           "name": "atribuicoes_supervisor_caso_id_casos_id_fk",
           "tableFrom": "atribuicoes_supervisor",
           "tableTo": "casos",
-          "columnsFrom": [
-            "caso_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["caso_id"],
+          "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         },
@@ -715,12 +687,8 @@
           "name": "atribuicoes_supervisor_supervisor_id_usuarios_id_fk",
           "tableFrom": "atribuicoes_supervisor",
           "tableTo": "usuarios",
-          "columnsFrom": [
-            "supervisor_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["supervisor_id"],
+          "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         },
@@ -728,12 +696,8 @@
           "name": "atribuicoes_supervisor_atribuido_por_usuarios_id_fk",
           "tableFrom": "atribuicoes_supervisor",
           "tableTo": "usuarios",
-          "columnsFrom": [
-            "atribuido_por"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["atribuido_por"],
+          "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         }
@@ -801,12 +765,8 @@
           "name": "casos_inscricao_id_inscricoes_id_fk",
           "tableFrom": "casos",
           "tableTo": "inscricoes",
-          "columnsFrom": [
-            "inscricao_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["inscricao_id"],
+          "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         }
@@ -816,9 +776,7 @@
         "casos_inscricao_id_unique": {
           "name": "casos_inscricao_id_unique",
           "nullsNotDistinct": false,
-          "columns": [
-            "inscricao_id"
-          ]
+          "columns": ["inscricao_id"]
         }
       },
       "policies": {},
@@ -896,12 +854,8 @@
           "name": "decisoes_prioridade_inscricao_id_inscricoes_id_fk",
           "tableFrom": "decisoes_prioridade",
           "tableTo": "inscricoes",
-          "columnsFrom": [
-            "inscricao_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["inscricao_id"],
+          "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         },
@@ -909,12 +863,8 @@
           "name": "decisoes_prioridade_decisao_anterior_id_decisoes_prioridade_id_fk",
           "tableFrom": "decisoes_prioridade",
           "tableTo": "decisoes_prioridade",
-          "columnsFrom": [
-            "decisao_anterior_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["decisao_anterior_id"],
+          "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         },
@@ -922,12 +872,8 @@
           "name": "decisoes_prioridade_decidida_por_usuarios_id_fk",
           "tableFrom": "decisoes_prioridade",
           "tableTo": "usuarios",
-          "columnsFrom": [
-            "decidida_por"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["decidida_por"],
+          "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         }
@@ -1046,12 +992,8 @@
           "name": "transferencias_caso_caso_id_casos_id_fk",
           "tableFrom": "transferencias_caso",
           "tableTo": "casos",
-          "columnsFrom": [
-            "caso_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["caso_id"],
+          "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         },
@@ -1059,12 +1001,8 @@
           "name": "transferencias_caso_supervisor_anterior_id_usuarios_id_fk",
           "tableFrom": "transferencias_caso",
           "tableTo": "usuarios",
-          "columnsFrom": [
-            "supervisor_anterior_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["supervisor_anterior_id"],
+          "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         },
@@ -1072,12 +1010,8 @@
           "name": "transferencias_caso_supervisor_novo_id_usuarios_id_fk",
           "tableFrom": "transferencias_caso",
           "tableTo": "usuarios",
-          "columnsFrom": [
-            "supervisor_novo_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["supervisor_novo_id"],
+          "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         },
@@ -1085,12 +1019,8 @@
           "name": "transferencias_caso_estagiario_anterior_id_usuarios_id_fk",
           "tableFrom": "transferencias_caso",
           "tableTo": "usuarios",
-          "columnsFrom": [
-            "estagiario_anterior_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["estagiario_anterior_id"],
+          "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         },
@@ -1098,12 +1028,8 @@
           "name": "transferencias_caso_estagiario_novo_id_usuarios_id_fk",
           "tableFrom": "transferencias_caso",
           "tableTo": "usuarios",
-          "columnsFrom": [
-            "estagiario_novo_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["estagiario_novo_id"],
+          "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         },
@@ -1111,12 +1037,8 @@
           "name": "transferencias_caso_atribuicao_anterior_id_atribuicoes_supervisor_id_fk",
           "tableFrom": "transferencias_caso",
           "tableTo": "atribuicoes_supervisor",
-          "columnsFrom": [
-            "atribuicao_anterior_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["atribuicao_anterior_id"],
+          "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         },
@@ -1124,12 +1046,8 @@
           "name": "transferencias_caso_vinculo_anterior_id_vinculos_estagiario_id_fk",
           "tableFrom": "transferencias_caso",
           "tableTo": "vinculos_estagiario",
-          "columnsFrom": [
-            "vinculo_anterior_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["vinculo_anterior_id"],
+          "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         },
@@ -1137,12 +1055,8 @@
           "name": "transferencias_caso_transferido_por_usuarios_id_fk",
           "tableFrom": "transferencias_caso",
           "tableTo": "usuarios",
-          "columnsFrom": [
-            "transferido_por"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["transferido_por"],
+          "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         }
@@ -1231,12 +1145,8 @@
           "name": "vinculos_estagiario_caso_id_casos_id_fk",
           "tableFrom": "vinculos_estagiario",
           "tableTo": "casos",
-          "columnsFrom": [
-            "caso_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["caso_id"],
+          "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         },
@@ -1244,12 +1154,8 @@
           "name": "vinculos_estagiario_estagiario_id_usuarios_id_fk",
           "tableFrom": "vinculos_estagiario",
           "tableTo": "usuarios",
-          "columnsFrom": [
-            "estagiario_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["estagiario_id"],
+          "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         },
@@ -1257,12 +1163,8 @@
           "name": "vinculos_estagiario_vinculado_por_usuarios_id_fk",
           "tableFrom": "vinculos_estagiario",
           "tableTo": "usuarios",
-          "columnsFrom": [
-            "vinculado_por"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["vinculado_por"],
+          "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         }
@@ -1327,12 +1229,8 @@
           "name": "links_confirmacao_sessao_id_sessoes_atendimento_id_fk",
           "tableFrom": "links_confirmacao",
           "tableTo": "sessoes_atendimento",
-          "columnsFrom": [
-            "sessao_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["sessao_id"],
+          "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         }
@@ -1342,16 +1240,12 @@
         "links_confirmacao_sessao_id_unique": {
           "name": "links_confirmacao_sessao_id_unique",
           "nullsNotDistinct": false,
-          "columns": [
-            "sessao_id"
-          ]
+          "columns": ["sessao_id"]
         },
         "links_confirmacao_token_hash_unique": {
           "name": "links_confirmacao_token_hash_unique",
           "nullsNotDistinct": false,
-          "columns": [
-            "token_hash"
-          ]
+          "columns": ["token_hash"]
         }
       },
       "policies": {},
@@ -1523,12 +1417,8 @@
           "name": "sessoes_atendimento_caso_id_casos_id_fk",
           "tableFrom": "sessoes_atendimento",
           "tableTo": "casos",
-          "columnsFrom": [
-            "caso_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["caso_id"],
+          "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         },
@@ -1536,12 +1426,8 @@
           "name": "sessoes_atendimento_estagiario_id_usuarios_id_fk",
           "tableFrom": "sessoes_atendimento",
           "tableTo": "usuarios",
-          "columnsFrom": [
-            "estagiario_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["estagiario_id"],
+          "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         },
@@ -1549,12 +1435,8 @@
           "name": "sessoes_atendimento_agendada_por_usuarios_id_fk",
           "tableFrom": "sessoes_atendimento",
           "tableTo": "usuarios",
-          "columnsFrom": [
-            "agendada_por"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["agendada_por"],
+          "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         }
@@ -1634,12 +1516,8 @@
           "name": "acessos_prontuario_prontuario_id_prontuarios_id_fk",
           "tableFrom": "acessos_prontuario",
           "tableTo": "prontuarios",
-          "columnsFrom": [
-            "prontuario_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["prontuario_id"],
+          "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         },
@@ -1647,12 +1525,8 @@
           "name": "acessos_prontuario_usuario_id_usuarios_id_fk",
           "tableFrom": "acessos_prontuario",
           "tableTo": "usuarios",
-          "columnsFrom": [
-            "usuario_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["usuario_id"],
+          "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         }
@@ -1661,144 +1535,6 @@
       "uniqueConstraints": {},
       "policies": {},
       "checkConstraints": {},
-      "isRLSEnabled": false
-    },
-    "public.correcoes_evolucao": {
-      "name": "correcoes_evolucao",
-      "schema": "",
-      "columns": {
-        "id": {
-          "name": "id",
-          "type": "uuid",
-          "primaryKey": true,
-          "notNull": true,
-          "default": "gen_random_uuid()"
-        },
-        "evolucao_id": {
-          "name": "evolucao_id",
-          "type": "uuid",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "versao": {
-          "name": "versao",
-          "type": "integer",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "queixa_cifrada": {
-          "name": "queixa_cifrada",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "planejamento_cifrado": {
-          "name": "planejamento_cifrado",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "humor_aparencia_cifrado": {
-          "name": "humor_aparencia_cifrado",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "conteudo_trabalhado_cifrado": {
-          "name": "conteudo_trabalhado_cifrado",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "tecnicas_utilizadas_cifrado": {
-          "name": "tecnicas_utilizadas_cifrado",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "intervencoes_encaminhamentos_cifrado": {
-          "name": "intervencoes_encaminhamentos_cifrado",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "plano_proxima_sessao_cifrado": {
-          "name": "plano_proxima_sessao_cifrado",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "motivo_cifrado": {
-          "name": "motivo_cifrado",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "corrigida_por": {
-          "name": "corrigida_por",
-          "type": "uuid",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "corrigida_em": {
-          "name": "corrigida_em",
-          "type": "timestamp with time zone",
-          "primaryKey": false,
-          "notNull": true,
-          "default": "now()"
-        }
-      },
-      "indexes": {},
-      "foreignKeys": {
-        "correcoes_evolucao_evolucao_id_evolucoes_id_fk": {
-          "name": "correcoes_evolucao_evolucao_id_evolucoes_id_fk",
-          "tableFrom": "correcoes_evolucao",
-          "tableTo": "evolucoes",
-          "columnsFrom": [
-            "evolucao_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "no action",
-          "onUpdate": "no action"
-        },
-        "correcoes_evolucao_corrigida_por_usuarios_id_fk": {
-          "name": "correcoes_evolucao_corrigida_por_usuarios_id_fk",
-          "tableFrom": "correcoes_evolucao",
-          "tableTo": "usuarios",
-          "columnsFrom": [
-            "corrigida_por"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "no action",
-          "onUpdate": "no action"
-        }
-      },
-      "compositePrimaryKeys": {},
-      "uniqueConstraints": {
-        "correcoes_evolucao_versao": {
-          "name": "correcoes_evolucao_versao",
-          "nullsNotDistinct": false,
-          "columns": [
-            "evolucao_id",
-            "versao"
-          ]
-        }
-      },
-      "policies": {},
-      "checkConstraints": {
-        "correcoes_evolucao_versao_seguinte": {
-          "name": "correcoes_evolucao_versao_seguinte",
-          "value": "\"correcoes_evolucao\".\"versao\" >= 2"
-        },
-        "correcoes_evolucao_ficha_completa": {
-          "name": "correcoes_evolucao_ficha_completa",
-          "value": "(\"correcoes_evolucao\".\"queixa_cifrada\" IS NOT NULL AND \"correcoes_evolucao\".\"planejamento_cifrado\" IS NOT NULL) OR (\"correcoes_evolucao\".\"humor_aparencia_cifrado\" IS NOT NULL AND \"correcoes_evolucao\".\"conteudo_trabalhado_cifrado\" IS NOT NULL AND \"correcoes_evolucao\".\"tecnicas_utilizadas_cifrado\" IS NOT NULL AND \"correcoes_evolucao\".\"plano_proxima_sessao_cifrado\" IS NOT NULL)"
-        }
-      },
       "isRLSEnabled": false
     },
     "public.evolucoes": {
@@ -1886,12 +1622,8 @@
           "name": "evolucoes_prontuario_id_prontuarios_id_fk",
           "tableFrom": "evolucoes",
           "tableTo": "prontuarios",
-          "columnsFrom": [
-            "prontuario_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["prontuario_id"],
+          "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         },
@@ -1899,12 +1631,8 @@
           "name": "evolucoes_sessao_id_sessoes_atendimento_id_fk",
           "tableFrom": "evolucoes",
           "tableTo": "sessoes_atendimento",
-          "columnsFrom": [
-            "sessao_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["sessao_id"],
+          "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         },
@@ -1912,12 +1640,8 @@
           "name": "evolucoes_registrada_por_usuarios_id_fk",
           "tableFrom": "evolucoes",
           "tableTo": "usuarios",
-          "columnsFrom": [
-            "registrada_por"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["registrada_por"],
+          "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         }
@@ -1927,9 +1651,7 @@
         "evolucoes_sessao_id_unique": {
           "name": "evolucoes_sessao_id_unique",
           "nullsNotDistinct": false,
-          "columns": [
-            "sessao_id"
-          ]
+          "columns": ["sessao_id"]
         }
       },
       "policies": {},
@@ -2050,12 +1772,8 @@
           "name": "prontuarios_caso_id_casos_id_fk",
           "tableFrom": "prontuarios",
           "tableTo": "casos",
-          "columnsFrom": [
-            "caso_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["caso_id"],
+          "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         },
@@ -2063,12 +1781,8 @@
           "name": "prontuarios_vinculo_origem_id_vinculos_estagiario_id_fk",
           "tableFrom": "prontuarios",
           "tableTo": "vinculos_estagiario",
-          "columnsFrom": [
-            "vinculo_origem_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["vinculo_origem_id"],
+          "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         },
@@ -2076,12 +1790,8 @@
           "name": "prontuarios_dados_iniciais_por_usuarios_id_fk",
           "tableFrom": "prontuarios",
           "tableTo": "usuarios",
-          "columnsFrom": [
-            "dados_iniciais_por"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["dados_iniciais_por"],
+          "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         },
@@ -2089,12 +1799,8 @@
           "name": "prontuarios_anamnese_por_usuarios_id_fk",
           "tableFrom": "prontuarios",
           "tableTo": "usuarios",
-          "columnsFrom": [
-            "anamnese_por"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["anamnese_por"],
+          "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         },
@@ -2102,12 +1808,8 @@
           "name": "prontuarios_contrato_por_usuarios_id_fk",
           "tableFrom": "prontuarios",
           "tableTo": "usuarios",
-          "columnsFrom": [
-            "contrato_por"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["contrato_por"],
+          "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         }
@@ -2117,10 +1819,7 @@
         "prontuarios_caso_ciclo": {
           "name": "prontuarios_caso_ciclo",
           "nullsNotDistinct": false,
-          "columns": [
-            "caso_id",
-            "ciclo_atendimento"
-          ]
+          "columns": ["caso_id", "ciclo_atendimento"]
         }
       },
       "policies": {},
@@ -2176,12 +1875,8 @@
           "name": "alteracoes_parametro_alterado_por_usuarios_id_fk",
           "tableFrom": "alteracoes_parametro",
           "tableTo": "usuarios",
-          "columnsFrom": [
-            "alterado_por"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["alterado_por"],
+          "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         }
@@ -2228,12 +1923,8 @@
           "name": "parametros_alterado_por_usuarios_id_fk",
           "tableFrom": "parametros",
           "tableTo": "usuarios",
-          "columnsFrom": [
-            "alterado_por"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["alterado_por"],
+          "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         }
@@ -2286,12 +1977,8 @@
           "name": "parametros_semestre_alterado_por_usuarios_id_fk",
           "tableFrom": "parametros_semestre",
           "tableTo": "usuarios",
-          "columnsFrom": [
-            "alterado_por"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["alterado_por"],
+          "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         }
@@ -2299,10 +1986,7 @@
       "compositePrimaryKeys": {
         "parametros_semestre_semestre_chave_pk": {
           "name": "parametros_semestre_semestre_chave_pk",
-          "columns": [
-            "semestre",
-            "chave"
-          ]
+          "columns": ["semestre", "chave"]
         }
       },
       "uniqueConstraints": {},
@@ -2395,12 +2079,8 @@
           "name": "cancelamentos_sessao_sessao_id_sessoes_atendimento_id_fk",
           "tableFrom": "cancelamentos_sessao",
           "tableTo": "sessoes_atendimento",
-          "columnsFrom": [
-            "sessao_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["sessao_id"],
+          "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         },
@@ -2408,12 +2088,8 @@
           "name": "cancelamentos_sessao_registrado_por_usuarios_id_fk",
           "tableFrom": "cancelamentos_sessao",
           "tableTo": "usuarios",
-          "columnsFrom": [
-            "registrado_por"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["registrado_por"],
+          "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         },
@@ -2421,12 +2097,8 @@
           "name": "cancelamentos_sessao_desligamento_id_desligamentos_por_faltas_id_fk",
           "tableFrom": "cancelamentos_sessao",
           "tableTo": "desligamentos_por_faltas",
-          "columnsFrom": [
-            "desligamento_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["desligamento_id"],
+          "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         }
@@ -2436,9 +2108,7 @@
         "cancelamentos_sessao_sessao_id_unique": {
           "name": "cancelamentos_sessao_sessao_id_unique",
           "nullsNotDistinct": false,
-          "columns": [
-            "sessao_id"
-          ]
+          "columns": ["sessao_id"]
         }
       },
       "policies": {},
@@ -2481,12 +2151,8 @@
           "name": "desligamento_faltas_desligamento_id_desligamentos_por_faltas_id_fk",
           "tableFrom": "desligamento_faltas",
           "tableTo": "desligamentos_por_faltas",
-          "columnsFrom": [
-            "desligamento_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["desligamento_id"],
+          "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         },
@@ -2494,12 +2160,8 @@
           "name": "desligamento_faltas_falta_id_faltas_paciente_id_fk",
           "tableFrom": "desligamento_faltas",
           "tableTo": "faltas_paciente",
-          "columnsFrom": [
-            "falta_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["falta_id"],
+          "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         }
@@ -2507,10 +2169,7 @@
       "compositePrimaryKeys": {
         "desligamento_faltas_desligamento_id_falta_id_pk": {
           "name": "desligamento_faltas_desligamento_id_falta_id_pk",
-          "columns": [
-            "desligamento_id",
-            "falta_id"
-          ]
+          "columns": ["desligamento_id", "falta_id"]
         }
       },
       "uniqueConstraints": {},
@@ -2608,12 +2267,8 @@
           "name": "desligamentos_por_faltas_caso_id_casos_id_fk",
           "tableFrom": "desligamentos_por_faltas",
           "tableTo": "casos",
-          "columnsFrom": [
-            "caso_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["caso_id"],
+          "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         },
@@ -2621,12 +2276,8 @@
           "name": "desligamentos_por_faltas_decidido_por_usuarios_id_fk",
           "tableFrom": "desligamentos_por_faltas",
           "tableTo": "usuarios",
-          "columnsFrom": [
-            "decidido_por"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["decidido_por"],
+          "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         },
@@ -2634,12 +2285,8 @@
           "name": "desligamentos_por_faltas_revertido_por_usuarios_id_fk",
           "tableFrom": "desligamentos_por_faltas",
           "tableTo": "usuarios",
-          "columnsFrom": [
-            "revertido_por"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["revertido_por"],
+          "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         }
@@ -2777,12 +2424,8 @@
           "name": "faltas_paciente_sessao_id_sessoes_atendimento_id_fk",
           "tableFrom": "faltas_paciente",
           "tableTo": "sessoes_atendimento",
-          "columnsFrom": [
-            "sessao_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["sessao_id"],
+          "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         },
@@ -2790,12 +2433,8 @@
           "name": "faltas_paciente_caso_id_casos_id_fk",
           "tableFrom": "faltas_paciente",
           "tableTo": "casos",
-          "columnsFrom": [
-            "caso_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["caso_id"],
+          "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         },
@@ -2803,12 +2442,8 @@
           "name": "faltas_paciente_registrada_por_usuarios_id_fk",
           "tableFrom": "faltas_paciente",
           "tableTo": "usuarios",
-          "columnsFrom": [
-            "registrada_por"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["registrada_por"],
+          "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         },
@@ -2816,12 +2451,8 @@
           "name": "faltas_paciente_justificada_por_usuarios_id_fk",
           "tableFrom": "faltas_paciente",
           "tableTo": "usuarios",
-          "columnsFrom": [
-            "justificada_por"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["justificada_por"],
+          "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         },
@@ -2829,12 +2460,8 @@
           "name": "faltas_paciente_retirada_por_usuarios_id_fk",
           "tableFrom": "faltas_paciente",
           "tableTo": "usuarios",
-          "columnsFrom": [
-            "retirada_por"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["retirada_por"],
+          "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         }
@@ -2844,9 +2471,7 @@
         "faltas_paciente_sessao_id_unique": {
           "name": "faltas_paciente_sessao_id_unique",
           "nullsNotDistinct": false,
-          "columns": [
-            "sessao_id"
-          ]
+          "columns": ["sessao_id"]
         }
       },
       "policies": {},
@@ -2943,12 +2568,8 @@
           "name": "vagas_liberadas_desligamento_id_desligamentos_por_faltas_id_fk",
           "tableFrom": "vagas_liberadas",
           "tableTo": "desligamentos_por_faltas",
-          "columnsFrom": [
-            "desligamento_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["desligamento_id"],
+          "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         },
@@ -2956,12 +2577,8 @@
           "name": "vagas_liberadas_estagiario_id_usuarios_id_fk",
           "tableFrom": "vagas_liberadas",
           "tableTo": "usuarios",
-          "columnsFrom": [
-            "estagiario_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["estagiario_id"],
+          "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         },
@@ -2969,12 +2586,8 @@
           "name": "vagas_liberadas_supervisor_id_usuarios_id_fk",
           "tableFrom": "vagas_liberadas",
           "tableTo": "usuarios",
-          "columnsFrom": [
-            "supervisor_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["supervisor_id"],
+          "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         },
@@ -2982,12 +2595,8 @@
           "name": "vagas_liberadas_ocupada_por_vinculo_id_vinculos_estagiario_id_fk",
           "tableFrom": "vagas_liberadas",
           "tableTo": "vinculos_estagiario",
-          "columnsFrom": [
-            "ocupada_por_vinculo_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["ocupada_por_vinculo_id"],
+          "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         }
@@ -2997,9 +2606,7 @@
         "vagas_liberadas_desligamento_id_unique": {
           "name": "vagas_liberadas_desligamento_id_unique",
           "nullsNotDistinct": false,
-          "columns": [
-            "desligamento_id"
-          ]
+          "columns": ["desligamento_id"]
         }
       },
       "policies": {},
@@ -3095,12 +2702,8 @@
           "name": "codigos_verificacao_inscricao_id_inscricoes_id_fk",
           "tableFrom": "codigos_verificacao",
           "tableTo": "inscricoes",
-          "columnsFrom": [
-            "inscricao_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["inscricao_id"],
+          "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         }
@@ -3208,12 +2811,8 @@
           "name": "verificacoes_identidade_inscricao_id_inscricoes_id_fk",
           "tableFrom": "verificacoes_identidade",
           "tableTo": "inscricoes",
-          "columnsFrom": [
-            "inscricao_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["inscricao_id"],
+          "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         }
@@ -3223,13 +2822,125 @@
         "verificacoes_identidade_token_hash_unique": {
           "name": "verificacoes_identidade_token_hash_unique",
           "nullsNotDistinct": false,
-          "columns": [
-            "token_hash"
-          ]
+          "columns": ["token_hash"]
         }
       },
       "policies": {},
       "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.pagamentos_contribuicao": {
+      "name": "pagamentos_contribuicao",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "caso_id": {
+          "name": "caso_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "ciclo_atendimento": {
+          "name": "ciclo_atendimento",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "versao": {
+          "name": "versao",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "valor_centavos": {
+          "name": "valor_centavos",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "pago_em": {
+          "name": "pago_em",
+          "type": "date",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "forma": {
+          "name": "forma",
+          "type": "forma_pagamento",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "motivo_correcao": {
+          "name": "motivo_correcao",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "registrado_por": {
+          "name": "registrado_por",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "registrado_em": {
+          "name": "registrado_em",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "pagamentos_contribuicao_caso_id_casos_id_fk": {
+          "name": "pagamentos_contribuicao_caso_id_casos_id_fk",
+          "tableFrom": "pagamentos_contribuicao",
+          "tableTo": "casos",
+          "columnsFrom": ["caso_id"],
+          "columnsTo": ["id"],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "pagamentos_contribuicao_registrado_por_usuarios_id_fk": {
+          "name": "pagamentos_contribuicao_registrado_por_usuarios_id_fk",
+          "tableFrom": "pagamentos_contribuicao",
+          "tableTo": "usuarios",
+          "columnsFrom": ["registrado_por"],
+          "columnsTo": ["id"],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {
+        "pagamentos_contribuicao_versao_unica": {
+          "name": "pagamentos_contribuicao_versao_unica",
+          "nullsNotDistinct": false,
+          "columns": ["caso_id", "ciclo_atendimento", "versao"]
+        }
+      },
+      "policies": {},
+      "checkConstraints": {
+        "pagamentos_contribuicao_versao_positiva": {
+          "name": "pagamentos_contribuicao_versao_positiva",
+          "value": "\"pagamentos_contribuicao\".\"versao\" >= 1"
+        },
+        "pagamentos_contribuicao_valor_positivo": {
+          "name": "pagamentos_contribuicao_valor_positivo",
+          "value": "\"pagamentos_contribuicao\".\"valor_centavos\" > 0"
+        },
+        "pagamentos_contribuicao_motivo_da_correcao": {
+          "name": "pagamentos_contribuicao_motivo_da_correcao",
+          "value": "(\"pagamentos_contribuicao\".\"versao\" = 1) = (\"pagamentos_contribuicao\".\"motivo_correcao\" is null)"
+        }
+      },
       "isRLSEnabled": false
     }
   },
@@ -3237,30 +2948,17 @@
     "public.perfil": {
       "name": "perfil",
       "schema": "public",
-      "values": [
-        "secretaria",
-        "estagiario",
-        "supervisor",
-        "coordenacao"
-      ]
+      "values": ["secretaria", "estagiario", "supervisor", "coordenacao"]
     },
     "public.situacao_usuario": {
       "name": "situacao_usuario",
       "schema": "public",
-      "values": [
-        "pendente_ativacao",
-        "ativo",
-        "desativado"
-      ]
+      "values": ["pendente_ativacao", "ativo", "desativado"]
     },
     "public.canal": {
       "name": "canal",
       "schema": "public",
-      "values": [
-        "email",
-        "whatsapp",
-        "ligacao"
-      ]
+      "values": ["email", "whatsapp", "ligacao"]
     },
     "public.situacao_caso": {
       "name": "situacao_caso",
@@ -3277,18 +2975,12 @@
     "public.tipo_transferencia_caso": {
       "name": "tipo_transferencia_caso",
       "schema": "public",
-      "values": [
-        "estagiario",
-        "supervisor"
-      ]
+      "values": ["estagiario", "supervisor"]
     },
     "public.meio_confirmacao": {
       "name": "meio_confirmacao",
       "schema": "public",
-      "values": [
-        "link",
-        "secretaria"
-      ]
+      "values": ["link", "secretaria"]
     },
     "public.status_sessao": {
       "name": "status_sessao",
@@ -3326,10 +3018,12 @@
     "public.origem_falta": {
       "name": "origem_falta",
       "schema": "public",
-      "values": [
-        "falta",
-        "cancelamento_fora_do_prazo"
-      ]
+      "values": ["falta", "cancelamento_fora_do_prazo"]
+    },
+    "public.forma_pagamento": {
+      "name": "forma_pagamento",
+      "schema": "public",
+      "values": ["dinheiro", "pix", "cartao"]
     }
   },
   "schemas": {},

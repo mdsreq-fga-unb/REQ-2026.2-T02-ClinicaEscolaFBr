@@ -495,6 +495,7 @@ rfs:
   ordem: 41
   lider: Luís Henrique
   depende: [RF28]
+  issue: 271
   estado: Planejada
 
 - id: RF67
@@ -508,6 +509,7 @@ rfs:
   ordem: 45
   lider: Luís Henrique
   depende: [RF28]
+  issue: 272
   estado: Planejada
 
 - id: RF68
@@ -521,6 +523,7 @@ rfs:
   ordem: 46
   lider: Luís Henrique
   depende: [RF28]
+  issue: 273
   estado: Planejada
   origem: [DF34, DF35]
 
@@ -533,8 +536,9 @@ rfs:
   mvp: true
   ciclo: 6
   ordem: 42
-  lider: Luís Henrique
+  lider: Maria Clara
   depende: [RF28, RF29, RF30]
+  issue: 274
   estado: Planejada
   origem: [DF32]
 
@@ -547,8 +551,9 @@ rfs:
   mvp: true
   ciclo: 6
   ordem: 43
-  lider: Luís Henrique
+  lider: Jônatas
   depende: [RF27, RF28, RF29, RF30]
+  issue: 275
   estado: Planejada
   origem: [DF32]
 
@@ -562,7 +567,7 @@ rfs:
   motivo_mvp: Should have com esforço alto, incluído no MVP em 24/10/2026 porque a FBr pediu o relatório final pronto antes do fim do semestre ([validação do MVP](#1024-validacao-do-mvp-com-o-cliente)); construção no Ciclo 6, até 01/12/2026.
   ciclo: 6
   ordem: 44
-  lider: Gabriel
+  lider: Luís Henrique
   depende: [RF28, RF32]
   issue: 131
   estado: Planejada
@@ -667,6 +672,7 @@ rfs:
   ordem: 47
   lider: Nicolas
   depende: [RF16, RF39]
+  issue: 276
   estado: Planejada
 
 - id: RF63
@@ -680,6 +686,7 @@ rfs:
   ordem: 48
   lider: Nicolas
   depende: [RF40]
+  issue: 277
   estado: Planejada
   origem: [DF12, DF54]
 
@@ -694,6 +701,7 @@ rfs:
   ordem: 49
   lider: Nicolas
   depende: [RF63]
+  issue: 278
   estado: Planejada
   origem: [DF12, DF54]
 
@@ -708,7 +716,7 @@ rfs:
   ordem: 37
   lider: Joaquim
   issue: 43
-  estado: Planejada
+  estado: Código concluído
   origem: [DF05, DF15]
 
 - id: RF42
@@ -735,6 +743,7 @@ rfs:
   ordem: 51
   lider: Joaquim
   depende: [RF41, RF42]
+  issue: 279
   estado: Planejada
   origem: [DF15, DF33]
 
@@ -764,6 +773,7 @@ rfs:
   ordem: 52
   lider: Maria Clara
   depende: [RF52]
+  issue: 280
   estado: Planejada
 
 - id: RF46
@@ -939,6 +949,7 @@ rfs:
   ordem: 54
   lider: Jônatas
   depende: [RF57, RF52]
+  issue: 281
   estado: Planejada
 
 - id: RF58
@@ -1724,6 +1735,11 @@ decisoes:
   fonte: respostas da FBr por WhatsApp
   decisao: Na reversão de um desligamento por faltas feito por engano (RF38), a coordenação escolhe quais faltas deixam de contar. Respondido por Robson Araújo.
 
+- id: DF59
+  data: 16/11/2026
+  fonte: validação da FBr por WhatsApp
+  decisao: O protótipo do Ciclo 5 (RF17, RF29, RF39, RF41, RF44, RF48 e RF56) e o que já está no ambiente de validação foram validados por Robson Araújo, que os analisou com os supervisores Alexandre e Ana. Ele pediu que, no cancelamento da sessão pelo estagiário, a próxima data de atendimento já seja apontada; o detalhe desse pedido está nas pendências de validação.
+
 conjuntos:
 - area: Inscrição no atendimento
   conjunto: Inscrição on-line
@@ -1783,7 +1799,7 @@ conjuntos:
 - area: Acompanhamento clínico
   conjunto: Encerramento do ciclo
   rfs: [RF68, RF33]
-  lider: Luís Henrique e Gabriel
+  lider: Luís Henrique
   conclusao: Ciclo 6
 - area: Assiduidade e alertas
   conjunto: Controle de faltas do paciente
