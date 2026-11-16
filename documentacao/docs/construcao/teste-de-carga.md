@@ -1,6 +1,6 @@
 # Teste de carga
 
-Procedimento do teste de desempenho do [RNF12](../requisitos/nao-funcionais.md#rnf12) (agendamento em até 2 segundos) e do [RNF21](../requisitos/nao-funcionais.md#rnf21) (listagens, distribuição e vínculo em até 3 segundos), no percentil 95. Os dois são evolutivos: o patamar mínimo do lançamento é a meta verificada uma vez no cenário de referência, **no ambiente de homologação** (ver o [backlog](../requisitos/priorizacao-e-mvp.md#patamar-minimo-de-lancamento-dos-rnfs-evolutivos)).
+Procedimento do teste de desempenho do [RNF12](../requisitos/nao-funcionais.md#rnf12) (agendamento em até 2 segundos) e do [RNF21](../requisitos/nao-funcionais.md#rnf21) (listagens, distribuição e vínculo em até 3 segundos), no percentil 95, e do [RNF47](../requisitos/nao-funcionais.md#rnf47) (indicadores operacionais em até 5 segundos). Os dois são evolutivos: o patamar mínimo do lançamento é a meta verificada uma vez no cenário de referência, **no ambiente de homologação** (ver o [backlog](../requisitos/priorizacao-e-mvp.md#patamar-minimo-de-lancamento-dos-rnfs-evolutivos)).
 
 ## Cenário de referência
 
@@ -15,12 +15,21 @@ As operações medidas são as que existem hoje:
 - **RNF12:** buscar paciente e agendar sessão (RF10). Remarcar, confirmar presença e cancelar entram quando forem construídos (Ciclo 4).
 - **RNF21:** listar casos pendentes, ver a disponibilidade dos supervisores, distribuir (RF18, RF20), ver os próprios casos e vincular estagiário (RF21), a lista de Pacientes e os responsáveis pelo caso (RF22), consultados pela secretaria, e os casos sob a responsabilidade do estagiário ("Meus pacientes") e do supervisor ("Meus casos") (RF23).
 
+### Indicadores operacionais (RNF47)
+
+Depois do cenário de referência, o mesmo workflow roda o RNF47 sobre a mesma massa de dados:
+
+- **Carga:** 10 pessoas da coordenação ao mesmo tempo, por 5 minutos, cada uma com a sua conta, consultando os indicadores do RF48 de um período de 12 meses que termina no dia da consulta, o maior que o RNF47 cobre.
+- **Limite:** o RNF47 diz "em até 5 segundos", sem falar em percentil. Por isso, o limite vale para a consulta mais lenta, e não para o percentil 95, e pelo menos 99% das respostas precisam estar certas.
+- **Exportação em PDF:** o RNF47 também cobre a exportação do relatório institucional (RF49), que entra no teste quando for construída, no Ciclo 6.
+
 ## Arquivos
 
 | Arquivo | O que faz |
 | --- | --- |
 | `apps/api/src/scripts/semear-carga.ts` | Cria a massa de dados fictícia e as 30 contas da carga, com a senha de `SENHA_CARGA`. Recusa `NODE_ENV=production` e exige `AMBIENTE_DE_TESTE=sim`. Não repete a massa se ela já existir. |
 | `scripts/carga/rnf12-rnf21.js` | O teste no k6: as 30 pessoas, as operações de cada papel e os limites. Grava o resultado no formato dos relatórios de teste, para o D4.5. |
+| `scripts/carga/rnf47.js` | O teste no k6 do RNF47: as 10 pessoas da coordenação consultando os indicadores de 12 meses, com o limite de 5 segundos. Grava o resultado do mesmo jeito, citando o RF48 e o RNF47. |
 | Workflow "Carga" | Roda o teste. Sem endereço, sobe a API e o banco no próprio runner, como alerta antecipado (todo dia 1º). Com o endereço da homologação, roda contra ela. |
 
 ## Rodar na homologação
