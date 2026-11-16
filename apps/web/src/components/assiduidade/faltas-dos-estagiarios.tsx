@@ -1,5 +1,5 @@
 "use client";
-import { useQuery } from "@tanstack/react-query";
+import { hashKey, useQuery } from "@tanstack/react-query";
 import { Lock } from "lucide-react";
 import Link from "next/link";
 import { useState, type FormEvent } from "react";
@@ -187,6 +187,12 @@ export function FaltasDosEstagiarios() {
       return;
     }
     setErros({});
+    // Com os mesmos filtros, a chave da consulta não muda e o React Query não
+    // busca de novo: o refetch traz as faltas registradas desde a última consulta.
+    if (consulta && hashKey([consulta]) === hashKey([r.data])) {
+      void faltas.refetch();
+      return;
+    }
     setConsulta(r.data);
   }
 
