@@ -6,6 +6,7 @@ import { notFound, useRouter, useSearchParams } from "next/navigation";
 import { Suspense, type ReactNode } from "react";
 import type { EstagiarioDoSupervisor } from "@clinica/shared";
 import { AgendaDeSessoes } from "@/components/agenda/agenda-de-sessoes";
+import { AvisosDeCancelamento } from "@/components/cancelamento/avisos-de-cancelamento";
 import { Aviso } from "@/components/comum/aviso";
 import { Campo, classeEntrada } from "@/components/comum/campo";
 import { SessoesSemConfirmacao } from "@/components/confirmacao/sessoes-sem-confirmacao";
@@ -40,7 +41,8 @@ function Cabecalho({
   );
 }
 
-// Agenda da secretaria, com as sessões sem confirmação (RF14).
+// Agenda da secretaria, com os avisos de cancelamento por ausência do estagiário
+// (RF17) acima das sessões sem confirmação (RF14).
 function AgendaDaSecretaria() {
   return (
     <>
@@ -50,6 +52,7 @@ function AgendaDaSecretaria() {
       >
         {botaoAgendar}
       </Cabecalho>
+      <AvisosDeCancelamento />
       <SessoesSemConfirmacao />
     </>
   );

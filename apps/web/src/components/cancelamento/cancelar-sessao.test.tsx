@@ -305,7 +305,9 @@ describe("Cancelar sessão (RF15 e RF16)", () => {
       ),
     ).toBeTruthy();
     expect(
-      screen.getByText("Peça à secretaria para entrar em contato com ele."),
+      screen.getByText(
+        "A secretaria recebeu o aviso para entrar em contato com ele.",
+      ),
     ).toBeTruthy();
     expect(posts).toEqual([
       {
