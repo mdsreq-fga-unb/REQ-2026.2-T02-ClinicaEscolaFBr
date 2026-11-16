@@ -1059,13 +1059,15 @@ _Rastreabilidade:_ Feature "Contabilizar faltas do estagiário no semestre" → 
 
 **RF63 — Sinalizar reprovação do estagiário por faltas**{ #rf63 }
 
-Quando a contagem de faltas do estagiário no semestre (RF40) atingir 3 faltas, o sistema deve sinalizar ao supervisor responsável e à coordenação que o estagiário atingiu o limite que reprova o campo de estágio, conforme confirmado pela Clínica Escola. A sinalização é gerada uma única vez por estagiário e semestre, e permanece visível a esses dois perfis até que a coordenação registre a decisão institucional sobre o caso (RF64); faltas adicionais no mesmo semestre não geram nova sinalização, apenas atualizam a contagem exibida. A sinalização mostra o nome do estagiário, a contagem de faltas do semestre e a data e o horário das sessões, sem o nome do paciente nem o motivo da ausência (RNF35).
+Quando a contagem de faltas do estagiário no semestre (RF40) atingir 3 faltas, o sistema deve sinalizar ao supervisor responsável e à coordenação que o estagiário atingiu o limite que reprova o campo de estágio, conforme confirmado pela Clínica Escola. A sinalização é gerada uma única vez por estagiário e semestre, e permanece visível a esses dois perfis até que a coordenação registre a decisão institucional sobre o caso (RF64); faltas adicionais no mesmo semestre não geram nova sinalização, apenas atualizam a contagem exibida. A sinalização mostra o nome do estagiário, a contagem de faltas do semestre e a data e o horário das sessões, sem o nome do paciente nem o motivo da ausência (RNF35). Se uma falta for reclassificada como cancelamento administrativo (RF40) e a contagem cair abaixo de 3 antes da decisão institucional, a sinalização é encerrada sem decisão, com o motivo "contagem abaixo do limite", e volta a ser gerada se a contagem atingir 3 de novo no mesmo semestre. Se a decisão institucional (RF64) já estiver registrada, a reclassificação não a altera: a decisão continua no histórico, com a contagem atualizada ao lado, e cabe à coordenação registrar uma nova decisão se for o caso.
 
 _Critérios de aceitação:_
 
 - Quando a terceira falta do semestre é contabilizada (RF40), a sinalização de reprovação aparece para o supervisor responsável e para a coordenação.
 - A sinalização de reprovação continua visível ao supervisor e à coordenação enquanto não houver decisão registrada.
 - Faltas além da terceira no mesmo semestre não criam nova sinalização.
+- Reclassificação de falta que reduz a contagem abaixo de 3 antes da decisão encerra a sinalização sem decisão; se a contagem voltar a 3 no semestre, a sinalização é gerada de novo.
+- Reclassificação de falta depois da decisão institucional mantém a decisão registrada e mostra a contagem atualizada.
 - Somente o supervisor do estagiário e a coordenação visualizam a sinalização de reprovação.
 
 _Rastreabilidade:_ Feature "Sinalizar reprovação do estagiário por faltas" → CP9 — Controle de assiduidade e alertas → OE4/OE3. Dependência: RF40.{{ origem("RF63") }}
@@ -1084,6 +1086,7 @@ _Critérios de aceitação:_
 - A decisão não pode ser registrada sem justificativa.
 - Usuário sem perfil de coordenação não consegue registrar a decisão.
 - A sinalização encerrada e a decisão continuam disponíveis no histórico do estagiário para o supervisor e a coordenação.
+- Se a contagem mudar depois da decisão (RF40), a coordenação pode registrar uma nova decisão, com justificativa, que fica no histórico junto da anterior, sem apagá-la.
 
 _Rastreabilidade:_ Feature "Registrar decisão institucional sobre a reprovação do estagiário" → CP9 — Controle de assiduidade e alertas → OE4/OE3. Dependência: RF63.{{ origem("RF64") }}
 
@@ -1375,7 +1378,7 @@ O sistema deve permitir que um usuário com perfil de coordenação cadastre usu
 2. **Ativação e senha inicial:** ao abrir o link, o próprio usuário define sua senha, que deve atender às regras do RNF49; a conta passa a "ativa" e o link deixa de valer.
 3. **Reenvio:** enquanto o usuário estiver pendente, a coordenação pode reenviar o convite, o que gera um novo link e invalida o anterior.
 
-Um usuário pendente de ativação não consegue se autenticar (RF50). O cadastro, o reenvio do convite e a ativação ficam registrados na trilha de auditoria, com o autor, o usuário afetado e a data/hora.
+Para o perfil de supervisor, o cadastro pede também o número de inscrição no CRP, obrigatório, que a coordenação pode corrigir depois; ele aparece no relatório final (RF33) e na declaração de comparecimento (RF45). Um usuário pendente de ativação não consegue se autenticar (RF50). O cadastro, o reenvio do convite e a ativação ficam registrados na trilha de auditoria, com o autor, o usuário afetado e a data/hora.
 
 _Critérios de aceitação:_
 
@@ -1384,10 +1387,11 @@ _Critérios de aceitação:_
 - Link de ativação já usado ou com mais de 72 horas é recusado, com orientação para pedir novo convite à coordenação.
 - O reenvio do convite a usuário pendente invalida o link anterior.
 - E-mail já cadastrado não pode ser cadastrado de novo.
+- O cadastro de supervisor sem o número do CRP é recusado, com o campo indicado; a correção do número pela coordenação fica na auditoria.
 - Usuário sem perfil de coordenação não consegue cadastrar usuários.
 - O cadastro, o reenvio do convite e a ativação ficam registrados na auditoria, com o autor, o usuário afetado e a data/hora.
 
-_Rastreabilidade:_ Feature "Cadastrar usuário institucional com perfil de acesso" → CP12 — Segurança, sigilo e controle de acesso → OE7/OE5.{{ origem("RF53") }}
+_Rastreabilidade:_ Feature "Cadastrar usuário institucional com perfil de acesso" → CP12 — Segurança, sigilo e controle de acesso → OE7/OE5. Integração: RF33 (CP8) e RF45 (CP10), que mostram o CRP do supervisor.{{ origem("RF53") }}
 
 {{ registro("RF53") }}
 
@@ -1412,14 +1416,15 @@ _Rastreabilidade:_ Feature "Desativar usuário institucional" → CP12 — Segur
 
 **RF55 — Restringir acesso ao prontuário do paciente**{ #rf55 }
 
-O sistema deve permitir o acesso ao prontuário de um paciente (CP6), que reúne os registros de evolução (CP7) e o relatório final (CP8), somente ao estagiário responsável pelo paciente, ao supervisor desse estagiário, conforme o vínculo definido na CP5, e à coordenação, que consulta o conteúdo clínico de todos os prontuários, sem registrar nem alterar nada nele ([DF32](decisoes-fbr.md#df32)). O perfil de secretaria não deve ter acesso ao conteúdo clínico do prontuário, apenas aos dados cadastrais (nome, data de nascimento, contatos e responsável legal) e administrativos (situação do caso, sessões agendadas e realizadas, faltas e situação da contribuição social) do paciente. A regra não prevê outras exceções por perfil, conforme a definição da CP12 na [características de produto](../produto/solucao-proposta.md#23-caracteristicas-de-produto-mapeadas-com-os-objetivos-especificos), atualizada com a decisão da FBr de 23/10/2026. Todo acesso, inclusive o da coordenação, fica no registro de acessos (RNF52).
+O sistema deve permitir o acesso ao prontuário de um paciente (CP6), que reúne os registros de evolução (CP7) e o relatório final (CP8), somente ao estagiário responsável pelo paciente, ao supervisor desse estagiário, conforme o vínculo definido na CP5, e à coordenação, que consulta o conteúdo clínico de todos os prontuários, sem registrar nem alterar nada nele ([DF32](decisoes-fbr.md#df32)). O perfil de secretaria não deve ter acesso ao conteúdo clínico do prontuário, apenas aos dados cadastrais (nome, data de nascimento, contatos e responsável legal) e administrativos (situação do caso, sessões agendadas e realizadas, faltas e situação da contribuição social) do paciente. A única exceção é a versão **aprovada** do relatório final (RF33): como a entrega ao paciente é impressa pela secretaria, ela acessa essa versão exclusivamente para imprimir e registrar a entrega, sem ver as versões em elaboração, as devolvidas nem os registros de evolução. O acesso fica no registro de acessos, como os demais. A regra não prevê outras exceções por perfil, conforme a definição da CP12 na [características de produto](../produto/solucao-proposta.md#23-caracteristicas-de-produto-mapeadas-com-os-objetivos-especificos), atualizada com a decisão da FBr de 23/10/2026. Todo acesso, inclusive o da coordenação, fica no registro de acessos (RNF52).
 
 _Critérios de aceitação:_
 
 - O estagiário responsável pelo paciente e seu supervisor veem o conteúdo clínico do prontuário.
 - Estagiário que não é responsável pelo paciente tem o acesso ao prontuário negado, inclusive em requisição feita direto ao servidor, sem passar pela interface.
 - A coordenação vê o conteúdo clínico de qualquer prontuário, sem vínculo com o caso, e não consegue registrar nem alterar nada nele; cada consulta fica no registro de acessos.
-- Secretaria e coordenação veem os dados cadastrais e administrativos do paciente; a secretaria não vê os registros de evolução nem o relatório final.
+- Secretaria e coordenação veem os dados cadastrais e administrativos do paciente; a secretaria não vê os registros de evolução nem as versões do relatório final em elaboração ou devolvidas.
+- Da versão aprovada do relatório final, a secretaria só abre o documento para imprimir e registrar a entrega (RF33), e o acesso fica no registro de acessos.
 - Concluída a transferência do estagiário A para o estagiário C, C passa a acessar o prontuário e A perde o acesso.
 
 _Rastreabilidade:_ Feature "Restringir acesso ao prontuário do paciente" → CP12 — Segurança, sigilo e controle de acesso → OE7/OE5. Dependência: RF21 (CP5, vínculo entre paciente, estagiário e supervisor) e RF66 (CP6, prontuário). Integração: RF28 a RF32 (CP7, evolução), protegidos pela mesma regra quando forem construídos, e RF33 (CP8, relatório final).{{ origem("RF55") }}
