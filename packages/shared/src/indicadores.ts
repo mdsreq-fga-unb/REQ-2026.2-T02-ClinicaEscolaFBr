@@ -1,14 +1,8 @@
 import { z } from "zod";
-import { hojeEmBrasilia } from "./datas";
+import { dataValida, hojeEmBrasilia } from "./datas";
 
 // Indicadores operacionais (RF48), consultados pela coordenação para um
 // intervalo de datas. As datas são dias do calendário de Brasília (AAAA-MM-DD).
-
-const DATA = /^\d{4}-\d{2}-\d{2}$/;
-const dataValida = (valor: string) =>
-  DATA.test(valor) &&
-  !Number.isNaN(Date.parse(`${valor}T12:00:00Z`)) &&
-  new Date(`${valor}T12:00:00Z`).toISOString().slice(0, 10) === valor;
 
 // A data final não pode passar do dia da consulta, e a inicial não pode passar
 // da final. O motivo fica no campo, para a tela marcar o campo certo.

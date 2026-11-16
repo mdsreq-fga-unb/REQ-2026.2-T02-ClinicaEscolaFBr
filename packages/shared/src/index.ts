@@ -15,4 +15,5 @@ export * from "./casos";
 export * from "./indicadores";
 export * from "./acessos-prontuario";
 export * from "./correcao-evolucao";
+export * from "./faltas-estagiario";
 export * from "./contribuicao";

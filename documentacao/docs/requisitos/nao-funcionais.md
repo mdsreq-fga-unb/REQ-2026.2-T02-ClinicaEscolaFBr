@@ -384,7 +384,7 @@ Quando o acesso for negado pelo RF55 (a secretaria, o estagiário e o supervisor
 | --- | --- |
 | Prontuário (CP6): identificação registrada na criação (RF66) e dados iniciais, isto é, anamnese e contrato terapêutico (RF69) | O conteúdo e quais seções clínicas possuem ou não registros. |
 | Evolução (CP7): registro original, correções e complementos | O conteúdo e a existência ou a quantidade de evoluções, correções e complementos. |
-| Relatório final (CP8) | O conteúdo, as versões e a existência do relatório. |
+| Relatório final (CP8) | O conteúdo, as versões e a existência do relatório. A exceção é a versão aprovada, que a secretaria acessa só para imprimir e registrar a entrega (RF55 e RF33); as versões em elaboração e as devolvidas continuam sem conteúdo nem indicação de existência para ela. |
 
 A conformidade deve ser verificada com registros fictícios completos e incompletos de cada tipo (prontuário com e sem seções preenchidas, evoluções com correções e complementos), inspecionando a interface e as respostas do servidor em tentativas negadas antes e depois de uma transferência de responsável e confirmando que nenhum conteúdo ou indicador de existência é exposto.
 
