@@ -1724,6 +1724,11 @@ decisoes:
   fonte: respostas da FBr por WhatsApp
   decisao: Na reversão de um desligamento por faltas feito por engano (RF38), a coordenação escolhe quais faltas deixam de contar. Respondido por Robson Araújo.
 
+- id: DF59
+  data: 16/11/2026
+  fonte: validação da FBr por WhatsApp
+  decisao: O protótipo do Ciclo 5 (RF17, RF29, RF39, RF41, RF44, RF48 e RF56) e o que já está no ambiente de validação foram validados por Robson Araújo, que os analisou com os supervisores Alexandre e Ana. Ele pediu que, no cancelamento da sessão pelo estagiário, a próxima data de atendimento já seja apontada; o detalhe desse pedido está nas pendências de validação.
+
 conjuntos:
 - area: Inscrição no atendimento
   conjunto: Inscrição on-line
