@@ -89,16 +89,18 @@ A carga vem da [escala de esforço](../requisitos/priorizacao-e-mvp.md#10212-esc
 
 | Líder de Feature | Ciclo 3 (2 semanas) | Ciclo 4 (2 semanas) | Ciclo 5 (1 semana) | Ciclo 6 (2 semanas) |
 | --- | --- | --- | --- | --- |
-| Gabriel | 3 · 26 a 42 h | 5 · 30 a 54 h | 1 · 12 a 18 h | 2 · 18 a 30 h |
-| Jônatas | 2 · 14 a 24 h | 3 · 14 a 30 h | 1 · 6 a 12 h | 1 · 12 a 18 h |
-| Joaquim | 1 · 6 a 12 h | 2 · 12 a 20 h | 1 · 6 a 12 h | 2 · 12 a 24 h |
-| Luís Henrique | 3 · 10 a 24 h | 3 · 20 a 36 h | 1 · 2 a 6 h | 5 · 16 a 38 h |
-| Maria Clara | 3 · 14 a 30 h | 3 · 14 a 26 h | 1 · 2 a 6 h | 1 · 12 a 18 h |
+| Gabriel | 3 · 26 a 42 h | 5 · 30 a 54 h | 1 · 12 a 18 h | 0 · projeto e protótipo das 14 features |
+| Jônatas | 2 · 14 a 24 h | 3 · 14 a 30 h | 1 · 6 a 12 h | 2 · 18 a 30 h |
+| Joaquim | 1 · 6 a 12 h | 2 · 12 a 20 h | 1 · 6 a 12 h | 3 · 18 a 36 h |
+| Luís Henrique | 3 · 10 a 24 h | 3 · 20 a 36 h | 1 · 2 a 6 h | 4 · 16 a 32 h |
+| Maria Clara | 3 · 14 a 30 h | 3 · 14 a 26 h | 1 · 2 a 6 h | 2 · 18 a 30 h |
 | Nicolas | 1 · 12 a 18 h | 4 · 16 a 36 h | 2 · 4 a 12 h | 3 · 14 a 30 h |
 
 **Ciclo 5.** O ciclo tem só uma semana, mas as {{ ciclos[5].features }} features ficam divididas entre os seis integrantes: cada um tem uma ou duas, e a maior carga é a do RF48 (Gabriel), de 12 a 18 horas.
 
-**Maiores cargas.** As maiores cargas são as do Gabriel no Ciclo 4 (5 features, de 30 a 54 horas) e a do Luís Henrique no Ciclo 6 (5 features, de 16 a 38 horas). No fechamento de cada ciclo, a equipe confere essas cargas com o que foi realizado e, se um Líder ficar acima do que consegue fazer, passa uma feature para outro integrante do mesmo ciclo em vez de adiá-la.
+**Ciclo 6.** Para ganhar tempo, o Gabriel faz o projeto e o protótipo das 14 features do ciclo, e por isso não lidera nenhuma delas: o RF33 passou para o Luís Henrique, o RF49 para o Joaquim, o RF31 para a Maria Clara e o RF32 para o Jônatas. Como o Gabriel é o autor do design, a inspeção de design de cada feature é feita pelo Líder com o revisor da issue, nunca com ele. Os revisores são: a Maria Clara nas features do Luís Henrique; o Luís Henrique nas da Maria Clara; o Nicolas nas do Jônatas e no RF49; e o Jônatas nas do Nicolas e no RF42 e no RF43.
+
+**Maiores cargas.** As maiores cargas são as do Gabriel no Ciclo 4 (5 features, de 30 a 54 horas) e a do Joaquim no Ciclo 6 (3 features, de 18 a 36 horas). No fechamento de cada ciclo, a equipe confere essas cargas com o que foi realizado e, se um Líder ficar acima do que consegue fazer, passa uma feature para outro integrante do mesmo ciclo em vez de adiá-la.
 
 ## Fechamento dos ciclos
 
