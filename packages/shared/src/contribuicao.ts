@@ -107,11 +107,25 @@ export type SituacaoContribuicao = {
   vigente: VersaoContribuicao | null;
   // Da mais recente para a mais antiga.
   anteriores: VersaoContribuicao[];
+  // Pagamentos dos ciclos anteriores do caso, só para consulta (RNF36), do ciclo
+  // mais recente para o mais antigo. Só aparecem os ciclos com pagamento
+  // registrado, e nenhum é cortado por data.
+  ciclosAnteriores: CicloAnteriorContribuicao[];
+};
+
+export type CicloAnteriorContribuicao = {
+  cicloAtendimento: number;
+  vigente: VersaoContribuicao;
+  // Da mais recente para a mais antiga.
+  anteriores: VersaoContribuicao[];
 };
 
 export type ValorContribuicao = {
   valorCentavos: number;
   ultimaAlteracao: UltimaAlteracao | null;
+  // Todas as alterações do valor, da mais recente para a mais antiga, sem corte
+  // por data (RNF36). A primeira é a `ultimaAlteracao`.
+  alteracoes: UltimaAlteracao[];
 };
 
 // Último dia do prazo (AAAA-MM-DD): o dia do vínculo em Brasília mais 10 dias

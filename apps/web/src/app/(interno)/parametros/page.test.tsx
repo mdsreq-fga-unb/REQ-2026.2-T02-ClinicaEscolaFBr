@@ -6,6 +6,7 @@ import {
   render,
   screen,
   waitFor,
+  within,
 } from "@testing-library/react";
 import type { ValorContribuicao } from "@clinica/shared";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
@@ -42,14 +43,23 @@ const montar = () =>
     </QueryClientProvider>,
   );
 
+const ULTIMA = {
+  valorAnterior: "3000",
+  valorNovo: "3500",
+  por: "Helena Duarte",
+  em: "2026-08-03T13:12:00.000Z",
+};
+// Alteração de mais de 24 meses antes, que continua no histórico (RNF36).
+const ANTIGA = {
+  valorAnterior: "2500",
+  valorNovo: "3000",
+  por: "Marta Siqueira",
+  em: "2023-02-10T12:05:00.000Z",
+};
 const ATUAL: ValorContribuicao = {
   valorCentavos: 3500,
-  ultimaAlteracao: {
-    valorAnterior: "3000",
-    valorNovo: "3500",
-    por: "Helena Duarte",
-    em: "2026-08-03T13:12:00.000Z",
-  },
+  ultimaAlteracao: ULTIMA,
+  alteracoes: [ULTIMA, ANTIGA],
 };
 
 function simularApi(atual: ValorContribuicao, depois?: ValorContribuicao) {
@@ -107,22 +117,61 @@ describe("Parâmetros da coordenação: valor da contribuição social (RF41)", 
   });
 
   it("sem alterações, diz que o valor é o padrão (RF41)", async () => {
-    simularApi({ valorCentavos: 3500, ultimaAlteracao: null });
+    simularApi({ valorCentavos: 3500, ultimaAlteracao: null, alteracoes: [] });
     montar();
     expect(
       await screen.findByText("Valor padrão, ainda sem alterações."),
     ).toBeInTheDocument();
+    const historico = screen.getByRole("region", {
+      name: "Histórico de alterações",
+    });
+    expect(historico).toHaveTextContent(
+      "Nenhuma alteração registrada. O valor é o padrão, definido na implantação.",
+    );
+    expect(within(historico).queryByRole("table")).toBeNull();
+  });
+
+  it("mostra o histórico de todas as alterações, da mais recente para a mais antiga, com a data/hora, quem alterou e os valores em reais, sem cortar as antigas (RF41, RNF36, RNF56)", async () => {
+    simularApi(ATUAL);
+    montar();
+    const historico = await screen.findByRole("region", {
+      name: "Histórico de alterações",
+    });
+    const tabela = within(historico).getByRole("table", {
+      name: "Alterações do valor da contribuição social, da mais recente para a mais antiga",
+    });
+    expect(
+      within(tabela)
+        .getAllByRole("columnheader")
+        .map((c) => c.textContent),
+    ).toEqual(["Data e hora", "Alterado por", "Valor anterior", "Valor novo"]);
+    const linhas = within(tabela)
+      .getAllByRole("row")
+      .slice(1)
+      .map((l) =>
+        within(l)
+          .getAllByRole("cell")
+          .map((c) => c.textContent?.replace(/\s/g, " ")),
+      );
+    expect(linhas).toEqual([
+      ["03/08/2026 10:12", "Helena Duarte", "R$ 30,00", "R$ 35,00"],
+      ["10/02/2023 09:05", "Marta Siqueira", "R$ 25,00", "R$ 30,00"],
+    ]);
+    // Só consulta: a tabela não tem ações.
+    expect(within(historico).queryByRole("button")).toBeNull();
   });
 
   it("muda o valor de R$ 35,00 para R$ 40,00, enviando em centavos, e o aviso de sucesso recebe o foco (RF41, RNF58)", async () => {
+    const nova = {
+      valorAnterior: "3500",
+      valorNovo: "4000",
+      por: "Helena Duarte",
+      em: "2026-11-14T13:00:00.000Z",
+    };
     const chamadas = simularApi(ATUAL, {
       valorCentavos: 4000,
-      ultimaAlteracao: {
-        valorAnterior: "3500",
-        valorNovo: "4000",
-        por: "Helena Duarte",
-        em: "2026-11-14T13:00:00.000Z",
-      },
+      ultimaAlteracao: nova,
+      alteracoes: [nova, ULTIMA, ANTIGA],
     });
     montar();
     fireEvent.change(await screen.findByLabelText("Valor (R$)"), {
@@ -144,6 +193,12 @@ describe("Parâmetros da coordenação: valor da contribuição social (RF41)", 
     expect(
       screen.getByText(/de R\$\s35,00 para R\$\s40,00/),
     ).toBeInTheDocument();
+    // A alteração nova entra no topo do histórico, sem recarregar a página.
+    const [, primeira] = within(
+      screen.getByRole("table", { name: /Alterações do valor/ }),
+    ).getAllByRole("row");
+    expect(primeira).toHaveTextContent(/14\/11\/2026 10:00/);
+    expect(primeira).toHaveTextContent(/R\$\s40,00/);
   });
 
   it("recusa o valor vazio, zero ou em formato errado no próprio campo, sem enviar (RF41, RNF57)", async () => {

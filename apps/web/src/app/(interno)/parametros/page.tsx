@@ -27,12 +27,14 @@ const reais = (texto: string | null) =>
 // Parâmetros institucionais da coordenação. Por enquanto, o valor da
 // contribuição social (RF41, prancha 8-1); a prancha não diz onde fica o cartão,
 // e a página é uma proposta da equipe. A alteração vale só para os pagamentos
-// registrados depois dela.
+// registrados depois dela. Abaixo, o histórico de todas as alterações, só para
+// consulta e sem corte por data (RNF36).
 export default function ParametrosPage() {
   const { data: sessao } = useSessao();
   const permitido = sessao?.perfil === "coordenacao";
   const cliente = useQueryClient();
   const titulo = useId();
+  const tituloHistorico = useId();
   const campo = useId();
   const entrada = useRef<HTMLInputElement>(null);
   const [editado, setEditado] = useState<string | null>(null);
@@ -202,6 +204,71 @@ export default function ParametrosPage() {
           </form>
         )}
       </section>
+
+      {dados && (
+        <section
+          aria-labelledby={tituloHistorico}
+          className="ui-painel max-w-[720px]"
+        >
+          <div className="border-b border-border p-4 sm:px-5">
+            <h2 id={tituloHistorico} className="ui-h2">
+              Histórico de alterações
+            </h2>
+            <p className="ui-dica m-0">
+              Todas as alterações do valor da contribuição social, da mais
+              recente para a mais antiga. Nenhuma é apagada.
+            </p>
+          </div>
+          {dados.alteracoes.length === 0 ? (
+            <p className="p-4 sm:px-5">
+              Nenhuma alteração registrada. O valor é o padrão, definido na
+              implantação.
+            </p>
+          ) : (
+            <div
+              className="overflow-x-auto focus-visible:outline-2 focus-visible:outline-primary"
+              tabIndex={0}
+              role="region"
+              aria-label="Tabela do histórico de alterações"
+            >
+              <table className="ui-tabela">
+                <caption className="sr-only">
+                  Alterações do valor da contribuição social, da mais recente
+                  para a mais antiga
+                </caption>
+                <thead>
+                  <tr>
+                    <th scope="col">Data e hora</th>
+                    <th scope="col">Alterado por</th>
+                    <th scope="col" className="text-right">
+                      Valor anterior
+                    </th>
+                    <th scope="col" className="text-right">
+                      Valor novo
+                    </th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {dados.alteracoes.map((a, indice) => (
+                    <tr key={`${a.em}-${indice}`}>
+                      <td className="whitespace-nowrap">
+                        {dataHoraBr(a.em).replace(", ", " ")}
+                      </td>
+                      <td>{a.por}</td>
+                      <td className="text-right whitespace-nowrap tabular-nums">
+                        {reais(a.valorAnterior)}
+                      </td>
+                      <td className="text-right whitespace-nowrap tabular-nums">
+                        {reais(a.valorNovo)}
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          )}
+        </section>
+      )}
     </div>
   );
 }

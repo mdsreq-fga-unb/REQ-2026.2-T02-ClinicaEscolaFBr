@@ -250,6 +250,7 @@ describe("Ficha do paciente com os responsáveis (RF22)", () => {
           valorAtualCentavos: 3500,
           vigente: null,
           anteriores: [],
+          ciclosAnteriores: [],
         },
       ],
     );
@@ -289,6 +290,7 @@ describe("Ficha do paciente com os responsáveis (RF22)", () => {
           valorAtualCentavos: 3500,
           vigente: null,
           anteriores: [],
+          ciclosAnteriores: [],
         },
       ],
     );

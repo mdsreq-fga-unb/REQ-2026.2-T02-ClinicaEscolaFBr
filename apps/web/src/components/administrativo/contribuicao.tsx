@@ -18,6 +18,7 @@ import {
   NOMES_FORMA_PAGAMENTO,
   PRAZO_CONTRIBUICAO_DIAS,
   registroContribuicaoSchema,
+  type CicloAnteriorContribuicao,
   type FormaPagamento,
   type SituacaoContribuicao,
   type VersaoContribuicao,
@@ -99,7 +100,8 @@ function errosDaApi(erro: ErroApi): Erros {
 // registro e a correção do pagamento, que abrem no lugar do cartão. A versão
 // anterior fica abaixo da vigente. O sistema só registra o pagamento já recebido
 // pela secretaria; ele não cobra nem transita valores. A coordenação vê o mesmo
-// cartão só para leitura (RNF36), sem registrar nem corrigir.
+// cartão só para leitura (RNF36), sem registrar nem corrigir. Abaixo, os
+// pagamentos dos ciclos anteriores do caso, só para consulta.
 export function CartaoContribuicao({
   casoId,
   nome,
@@ -280,28 +282,11 @@ export function CartaoContribuicao({
           </dl>
           <Autoria versao={v} />
           {s.anteriores.length > 0 && (
-            <ul
-              aria-label="Versões anteriores do pagamento"
-              className="m-0 flex list-none flex-col gap-4 border-t border-border p-0 pt-4"
-            >
-              {s.anteriores.map((a) => (
-                <li key={a.versao} className="flex flex-col gap-1.5">
-                  <Selo
-                    tipo="anterior"
-                    texto={
-                      s.anteriores.length === 1
-                        ? undefined
-                        : `Versão ${a.versao}`
-                    }
-                  />
-                  <p className="m-0 text-[15px]">
-                    {formatarCentavos(a.valorCentavos)} · {dataBr(a.pagoEm)} ·{" "}
-                    {NOMES_FORMA_PAGAMENTO[a.forma]}
-                  </p>
-                  <Autoria versao={a} />
-                </li>
-              ))}
-            </ul>
+            <VersoesAnteriores
+              versoes={s.anteriores}
+              rotulo="Versões anteriores do pagamento"
+              className="border-t border-border pt-4"
+            />
           )}
           {!somenteLeitura && (
             <Button
@@ -313,6 +298,93 @@ export function CartaoContribuicao({
             </Button>
           )}
         </>
+      )}
+      {s.cicloAtendimento > 1 && (
+        <CiclosAnteriores ciclos={s.ciclosAnteriores} />
+      )}
+    </section>
+  );
+}
+
+// "R$ 35,00 · 09/11/2026 · Pix".
+const resumo = (v: VersaoContribuicao) =>
+  `${formatarCentavos(v.valorCentavos)} · ${dataBr(v.pagoEm)} · ${NOMES_FORMA_PAGAMENTO[v.forma]}`;
+
+// Versões anteriores de um pagamento, da mais recente para a mais antiga, cada
+// uma com quem registrou ou corrigiu e quando.
+function VersoesAnteriores({
+  versoes,
+  rotulo,
+  className,
+}: {
+  versoes: VersaoContribuicao[];
+  rotulo: string;
+  className?: string;
+}) {
+  return (
+    <ul
+      aria-label={rotulo}
+      className={cn("m-0 flex list-none flex-col gap-4 p-0", className)}
+    >
+      {versoes.map((a) => (
+        <li key={a.versao} className="flex flex-col gap-1.5">
+          <Selo
+            tipo="anterior"
+            texto={versoes.length === 1 ? undefined : `Versão ${a.versao}`}
+          />
+          <p className="m-0 text-[15px]">{resumo(a)}</p>
+          <Autoria versao={a} />
+        </li>
+      ))}
+    </ul>
+  );
+}
+
+// Pagamentos dos ciclos anteriores do caso, só para consulta, para a secretaria e
+// a coordenação (RNF36): a versão vigente de cada ciclo e, ao abrir, as
+// anteriores. Nenhum registro é apagado nem escondido por data.
+function CiclosAnteriores({ ciclos }: { ciclos: CicloAnteriorContribuicao[] }) {
+  const titulo = useId();
+  return (
+    <section
+      aria-labelledby={titulo}
+      className="flex flex-col gap-3 border-t border-border pt-4"
+    >
+      <h3 id={titulo} className="text-[15px] font-bold">
+        Ciclos anteriores
+      </h3>
+      {ciclos.length === 0 ? (
+        <p className="ui-dica m-0">
+          Nenhum pagamento registrado nos ciclos anteriores.
+        </p>
+      ) : (
+        <ul className="m-0 flex list-none flex-col gap-4 p-0">
+          {ciclos.map((c) => (
+            <li
+              key={c.cicloAtendimento}
+              className="flex flex-col gap-1.5 rounded-lg border border-border p-4"
+            >
+              <h4 className="m-0 text-[15px] font-semibold">
+                Ciclo {c.cicloAtendimento}
+              </h4>
+              <Selo tipo="efetivada" />
+              <p className="m-0 text-[15px]">{resumo(c.vigente)}</p>
+              <Autoria versao={c.vigente} />
+              {c.anteriores.length > 0 && (
+                <details className="mt-1">
+                  <summary className="cursor-pointer font-semibold text-marca underline-offset-4 hover:underline focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary">
+                    Ver versões anteriores ({c.anteriores.length})
+                  </summary>
+                  <VersoesAnteriores
+                    versoes={c.anteriores}
+                    rotulo={`Versões anteriores do pagamento do ciclo ${c.cicloAtendimento}`}
+                    className="mt-3"
+                  />
+                </details>
+              )}
+            </li>
+          ))}
+        </ul>
       )}
     </section>
   );

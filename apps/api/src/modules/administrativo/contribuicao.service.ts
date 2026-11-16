@@ -5,7 +5,7 @@ import {
   NotFoundException,
   UnprocessableEntityException,
 } from '@nestjs/common';
-import { and, asc, desc, eq, gte, sql } from 'drizzle-orm';
+import { and, asc, desc, eq, gte, lt, sql, type SQL } from 'drizzle-orm';
 import {
   alteracoesParametro,
   casos,
@@ -19,6 +19,7 @@ import {
   formatarCentavos,
   PARAMETROS_PADRAO,
   prazoDaContribuicao,
+  type CicloAnteriorContribuicao,
   type CorrecaoContribuicao,
   type RegistroContribuicao,
   type SituacaoContribuicao,
@@ -211,8 +212,11 @@ export class ContribuicaoService {
     }
   }
 
+  // O valor vigente e todas as alterações dele, da mais recente para a mais
+  // antiga. Nada é cortado por data: o RNF36 pede o histórico disponível à
+  // coordenação por pelo menos 24 meses, e a tabela só recebe inserções.
   async valor(banco: Leitor = this.db): Promise<ValorContribuicao> {
-    const [ultima] = await banco
+    const alteracoes = await banco
       .select({
         valorAnterior: alteracoesParametro.valorAnterior,
         valorNovo: alteracoesParametro.valorNovo,
@@ -225,13 +229,15 @@ export class ContribuicaoService {
       .orderBy(
         desc(alteracoesParametro.alteradoEm),
         desc(alteracoesParametro.id),
-      )
-      .limit(1);
+      );
+    const historico = alteracoes.map((a) => ({
+      ...a,
+      em: a.em.toISOString(),
+    }));
     return {
       valorCentavos: await numeroDoParametro(banco, VALOR),
-      ultimaAlteracao: ultima
-        ? { ...ultima, em: ultima.em.toISOString() }
-        : null,
+      ultimaAlteracao: historico[0] ?? null,
+      alteracoes: historico,
     };
   }
 
@@ -323,8 +329,53 @@ export class ContribuicaoService {
     banco: Leitor,
     caso: CasoDoPagamento,
   ): Promise<VersaoContribuicao[]> {
+    const linhas = await this.linhasDoPagamento(
+      banco,
+      and(
+        eq(pagamentosContribuicao.casoId, caso.id),
+        eq(pagamentosContribuicao.cicloAtendimento, caso.ciclo),
+      ),
+    );
+    return linhas.map((l) => l.versao);
+  }
+
+  // Pagamentos dos ciclos anteriores do caso, só para consulta (RNF36), do ciclo
+  // mais recente para o mais antigo, cada um com a versão vigente e as
+  // anteriores. Sem corte por data: tudo o que foi registrado continua aqui.
+  private async ciclosAnteriores(
+    banco: Leitor,
+    caso: CasoDoPagamento,
+  ): Promise<CicloAnteriorContribuicao[]> {
+    const linhas = await this.linhasDoPagamento(
+      banco,
+      and(
+        eq(pagamentosContribuicao.casoId, caso.id),
+        lt(pagamentosContribuicao.cicloAtendimento, caso.ciclo),
+      ),
+    );
+    const ciclos: CicloAnteriorContribuicao[] = [];
+    for (const { ciclo, versao } of linhas) {
+      const atual = ciclos.at(-1);
+      if (atual?.cicloAtendimento === ciclo) atual.anteriores.push(versao);
+      else
+        ciclos.push({
+          cicloAtendimento: ciclo,
+          vigente: versao,
+          anteriores: [],
+        });
+    }
+    return ciclos;
+  }
+
+  // Versões do pagamento com o ciclo, do ciclo mais recente para o mais antigo e,
+  // em cada ciclo, da vigente (maior número) para a mais antiga.
+  private async linhasDoPagamento(
+    banco: Leitor,
+    filtro: SQL | undefined,
+  ): Promise<{ ciclo: number; versao: VersaoContribuicao }[]> {
     const linhas = await banco
       .select({
+        ciclo: pagamentosContribuicao.cicloAtendimento,
         versao: pagamentosContribuicao.versao,
         valorCentavos: pagamentosContribuicao.valorCentavos,
         pagoEm: pagamentosContribuicao.pagoEm,
@@ -338,16 +389,14 @@ export class ContribuicaoService {
         usuarios,
         eq(usuarios.id, pagamentosContribuicao.registradoPor),
       )
-      .where(
-        and(
-          eq(pagamentosContribuicao.casoId, caso.id),
-          eq(pagamentosContribuicao.cicloAtendimento, caso.ciclo),
-        ),
-      )
-      .orderBy(desc(pagamentosContribuicao.versao));
-    return linhas.map((l) => ({
-      ...l,
-      registradoEm: l.registradoEm.toISOString(),
+      .where(filtro)
+      .orderBy(
+        desc(pagamentosContribuicao.cicloAtendimento),
+        desc(pagamentosContribuicao.versao),
+      );
+    return linhas.map(({ ciclo, ...l }) => ({
+      ciclo,
+      versao: { ...l, registradoEm: l.registradoEm.toISOString() },
     }));
   }
 
@@ -355,11 +404,13 @@ export class ContribuicaoService {
     banco: Leitor,
     caso: CasoDoPagamento,
   ): Promise<SituacaoContribuicao> {
-    const [vinculadoEm, versoes, valorAtualCentavos] = await Promise.all([
-      this.primeiroVinculo(banco, caso),
-      this.versoes(banco, caso),
-      numeroDoParametro(banco, VALOR),
-    ]);
+    const [vinculadoEm, versoes, ciclosAnteriores, valorAtualCentavos] =
+      await Promise.all([
+        this.primeiroVinculo(banco, caso),
+        this.versoes(banco, caso),
+        this.ciclosAnteriores(banco, caso),
+        numeroDoParametro(banco, VALOR),
+      ]);
     const [vigente = null, ...anteriores] = versoes;
     return {
       casoId: caso.id,
@@ -374,6 +425,7 @@ export class ContribuicaoService {
       valorAtualCentavos,
       vigente,
       anteriores,
+      ciclosAnteriores,
     };
   }
 

@@ -21,6 +21,7 @@ const PENDENTE: SituacaoContribuicao = {
   valorAtualCentavos: 3500,
   vigente: null,
   anteriores: [],
+  ciclosAnteriores: [],
 };
 const REGISTRO: VersaoContribuicao = {
   versao: 1,
@@ -49,6 +50,40 @@ const CORRIGIDA: SituacaoContribuicao = {
   ...EFETIVADA,
   vigente: CORRECAO,
   anteriores: [REGISTRO],
+};
+// Caso no ciclo 3, ainda sem pagamento, com os ciclos 2 e 1 pagos; o ciclo 1 foi
+// registrado há mais de 24 meses e corrigido (RNF36).
+const COM_CICLOS_ANTERIORES: SituacaoContribuicao = {
+  ...PENDENTE,
+  cicloAtendimento: 3,
+  ciclosAnteriores: [
+    {
+      cicloAtendimento: 2,
+      vigente: {
+        ...REGISTRO,
+        pagoEm: "2026-03-10",
+        registradoEm: "2026-03-10T14:00:00.000Z",
+      },
+      anteriores: [],
+    },
+    {
+      cicloAtendimento: 1,
+      vigente: {
+        ...CORRECAO,
+        valorCentavos: 3000,
+        pagoEm: "2024-02-05",
+        registradoEm: "2024-02-06T12:30:00.000Z",
+      },
+      anteriores: [
+        {
+          ...REGISTRO,
+          valorCentavos: 3000,
+          pagoEm: "2024-02-05",
+          registradoEm: "2024-02-05T12:00:00.000Z",
+        },
+      ],
+    },
+  ],
 };
 
 type Resposta = [number, unknown];
@@ -371,6 +406,84 @@ describe("Contribuição social na ficha do paciente (RF41)", () => {
     });
     expect(within(cartao).getByText("Pendente")).toBeInTheDocument();
     expect(within(cartao).queryByRole("button")).toBeNull();
+  });
+
+  it.each([
+    ["a secretaria", false],
+    ["a coordenação", true],
+  ])(
+    "%s vê os pagamentos dos ciclos anteriores, do mais recente para o mais antigo, com as versões anteriores ao abrir (RF41, RNF36)",
+    async (_quem, somenteLeitura) => {
+      simularApi(COM_CICLOS_ANTERIORES);
+      montar(somenteLeitura);
+      const cartao = await screen.findByRole("region", {
+        name: "Contribuição social · Ciclo 3",
+      });
+      const secao = within(cartao).getByRole("region", {
+        name: "Ciclos anteriores",
+      });
+      expect(
+        within(secao)
+          .getAllByRole("heading", { level: 4 })
+          .map((h) => h.textContent),
+      ).toEqual(["Ciclo 2", "Ciclo 1"]);
+      const [ciclo2, ciclo1] = within(secao)
+        .getAllByRole("listitem")
+        .filter((item) => item.querySelector("h4"));
+      expect(ciclo2).toHaveTextContent("R$ 35,00 · 10/03/2026 · Pix");
+      expect(ciclo2).toHaveTextContent(
+        "Registrado por Juliana Rocha em 10/03/2026, às 11:00.",
+      );
+      expect(ciclo2.querySelector("details")).toBeNull();
+
+      // O ciclo 1 mostra a versão vigente (a correção) e, ao abrir, a anterior.
+      expect(ciclo1).toHaveTextContent("R$ 30,00 · 05/02/2024 · Cartão");
+      expect(ciclo1).toHaveTextContent(
+        "Corrigido por Juliana Rocha em 06/02/2024, às 09:30. Motivo: forma de pagamento registrada errada.",
+      );
+      const detalhes = ciclo1.querySelector("details")!;
+      expect(detalhes).not.toHaveAttribute("open");
+      fireEvent.click(within(ciclo1).getByText("Ver versões anteriores (1)"));
+      const versoes = within(ciclo1).getByRole("list", {
+        name: "Versões anteriores do pagamento do ciclo 1",
+      });
+      expect(versoes).toHaveTextContent("R$ 30,00 · 05/02/2024 · Pix");
+      expect(versoes).toHaveTextContent(
+        "Registrado por Juliana Rocha em 05/02/2024, às 09:00.",
+      );
+
+      // Os ciclos anteriores são só para consulta, para os dois perfis.
+      expect(
+        within(secao).queryByRole("button", { name: /pagamento/ }),
+      ).toBeNull();
+      expect(
+        within(cartao).queryAllByRole("button", {
+          name: "Registrar pagamento",
+        }),
+      ).toHaveLength(somenteLeitura ? 0 : 1);
+    },
+  );
+
+  it("caso a partir do ciclo 2 sem pagamento nos ciclos anteriores: a seção diz que não há registro (RF41, RNF36)", async () => {
+    simularApi({ ...PENDENTE, cicloAtendimento: 2 });
+    montar(true);
+    const cartao = await screen.findByRole("region", {
+      name: "Contribuição social · Ciclo 2",
+    });
+    expect(
+      within(cartao).getByRole("region", { name: "Ciclos anteriores" }),
+    ).toHaveTextContent("Nenhum pagamento registrado nos ciclos anteriores.");
+  });
+
+  it("no primeiro ciclo do caso, não há seção de ciclos anteriores (RF41)", async () => {
+    simularApi(CORRIGIDA);
+    montar();
+    const cartao = await screen.findByRole("region", {
+      name: "Contribuição social · Ciclo 1",
+    });
+    expect(
+      within(cartao).queryByRole("region", { name: "Ciclos anteriores" }),
+    ).toBeNull();
   });
 
   it("o valor mudou com o formulário aberto: o aviso mostra o valor novo, e a secretaria confirma de novo com ele (RF41)", async () => {

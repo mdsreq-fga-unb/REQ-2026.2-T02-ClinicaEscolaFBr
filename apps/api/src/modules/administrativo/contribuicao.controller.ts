@@ -29,7 +29,9 @@ import { ContribuicaoService } from './contribuicao.service';
 
 // Contribuição social (RF41): só a secretaria registra e corrige o pagamento, e
 // só a coordenação altera o valor. A coordenação também consulta o pagamento e as
-// versões, só para leitura, porque o RNF36 deixa o histórico disponível a ela.
+// versões, inclusive as dos ciclos anteriores do caso, e o histórico das
+// alterações do valor, só para leitura, porque o RNF36 deixa o histórico
+// disponível a ela.
 @Controller()
 @UseGuards(AutenticadoGuard, PerfisGuard)
 export class ContribuicaoController {

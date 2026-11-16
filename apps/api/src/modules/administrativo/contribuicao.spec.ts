@@ -616,6 +616,7 @@ describe('Contribuição social do paciente (RF41, RNF36)', () => {
     expect(inicial.body).toEqual({
       valorCentavos: 3500,
       ultimaAlteracao: null,
+      alteracoes: [],
     });
 
     const { body } = await alterarValor('coordenacao', 4000).expect(200);
@@ -726,7 +727,7 @@ describe('Contribuição social do paciente (RF41, RNF36)', () => {
     expect(body.prazo.ate).toBe(dia(9));
   });
 
-  it('um ciclo de atendimento novo pede uma contribuição nova, sem mostrar a do ciclo anterior (RF41)', async () => {
+  it('um ciclo de atendimento novo pede uma contribuição nova, e a do ciclo anterior passa para os ciclos anteriores (RF41, RNF36)', async () => {
     const caso = await criarCaso();
     await registrar('secretaria', caso, {
       pagoEm: dia(-1),
@@ -741,6 +742,10 @@ describe('Contribuição social do paciente (RF41, RNF36)', () => {
       cicloAtendimento: 2,
       situacao: 'pendente',
       vigente: null,
+      anteriores: [],
+      ciclosAnteriores: [
+        { cicloAtendimento: 1, vigente: { versao: 1, forma: 'pix' } },
+      ],
     });
     await registrar('secretaria', caso, {
       pagoEm: dia(0),
@@ -751,6 +756,165 @@ describe('Contribuição social do paciente (RF41, RNF36)', () => {
       [1, 1],
       [2, 1],
     ]);
+  });
+
+  it.each(['secretaria', 'coordenacao'])(
+    '%s consulta os pagamentos dos ciclos anteriores, com as versões, do ciclo mais recente para o mais antigo e sem corte por data (RF41, RNF36)',
+    async (quem) => {
+      const caso = await criarCaso();
+      // Ciclo 1, registrado há mais de 24 meses e corrigido depois.
+      await db.insert(pagamentosContribuicao).values([
+        {
+          casoId: caso,
+          cicloAtendimento: 1,
+          versao: 1,
+          valorCentavos: 3000,
+          pagoEm: dia(-1100),
+          forma: 'dinheiro',
+          registradoPor: pessoas.secretaria.id,
+          registradoEm: diasAtras(1100),
+        },
+        {
+          casoId: caso,
+          cicloAtendimento: 1,
+          versao: 2,
+          valorCentavos: 3000,
+          pagoEm: dia(-1100),
+          forma: 'pix',
+          motivoCorrecao: 'Forma registrada errada.',
+          registradoPor: pessoas.secretaria.id,
+          registradoEm: diasAtras(1099),
+        },
+      ]);
+      // Ciclo 2, pelo registro de hoje.
+      await db
+        .update(casos)
+        .set({ cicloAtendimento: 2 })
+        .where(eq(casos.id, caso));
+      await registrar('secretaria', caso, {
+        pagoEm: dia(-1),
+        forma: 'cartao',
+      }).expect(201);
+      // O caso está no ciclo 3, ainda sem pagamento.
+      await db
+        .update(casos)
+        .set({ cicloAtendimento: 3 })
+        .where(eq(casos.id, caso));
+
+      const { body } = await consultar(quem, caso).expect(200);
+      const situacao = body as SituacaoContribuicao;
+      expect(situacao).toMatchObject({
+        cicloAtendimento: 3,
+        situacao: 'pendente',
+        vigente: null,
+        anteriores: [],
+      });
+      expect(situacao.ciclosAnteriores).toMatchObject([
+        {
+          cicloAtendimento: 2,
+          vigente: {
+            versao: 1,
+            valorCentavos: 3500,
+            pagoEm: dia(-1),
+            forma: 'cartao',
+            motivoCorrecao: null,
+            registradoPor: 'Juliana Rocha',
+          },
+          anteriores: [],
+        },
+        {
+          cicloAtendimento: 1,
+          vigente: {
+            versao: 2,
+            valorCentavos: 3000,
+            forma: 'pix',
+            motivoCorrecao: 'Forma registrada errada.',
+          },
+          anteriores: [{ versao: 1, forma: 'dinheiro', motivoCorrecao: null }],
+        },
+      ]);
+      expect(
+        Date.now() -
+          Date.parse(situacao.ciclosAnteriores[1].anteriores[0].registradoEm),
+      ).toBeGreaterThan(730 * DIA);
+    },
+  );
+
+  it('a coordenação só consulta os ciclos anteriores: o registro e a correção continuam valendo só para o ciclo atual e só para a secretaria (RF41, RNF36)', async () => {
+    const caso = await criarCaso();
+    await registrar('secretaria', caso, {
+      pagoEm: dia(-1),
+      forma: 'pix',
+    }).expect(201);
+    await db
+      .update(casos)
+      .set({ cicloAtendimento: 2 })
+      .where(eq(casos.id, caso));
+
+    await registrar('coordenacao', caso, {
+      pagoEm: dia(0),
+      forma: 'pix',
+    }).expect(403);
+    await corrigir('coordenacao', caso, {
+      valorCentavos: 3000,
+      pagoEm: dia(-1),
+      forma: 'dinheiro',
+      motivo: 'Teste',
+    }).expect(403);
+    // A correção da secretaria vale para o ciclo atual, que ainda não tem
+    // pagamento; o do ciclo 1 não muda.
+    await corrigir('secretaria', caso, {
+      valorCentavos: 3000,
+      pagoEm: dia(-1),
+      forma: 'dinheiro',
+      motivo: 'Teste',
+    }).expect(422);
+    const linhas = await pagamentos(caso);
+    expect(linhas.map((l) => [l.cicloAtendimento, l.versao, l.forma])).toEqual([
+      [1, 1, 'pix'],
+    ]);
+  });
+
+  it('a coordenação consulta todas as alterações do valor, da mais recente para a mais antiga, com quem alterou, quando, o valor anterior e o novo, sem corte por data (RF41, RNF36)', async () => {
+    // Uma alteração de mais de 24 meses atrás continua no histórico.
+    await db.insert(alteracoesParametro).values({
+      chave: 'valor_contribuicao_centavos',
+      valorAnterior: '2500',
+      valorNovo: '3500',
+      alteradoPor: pessoas.coordenacao.id,
+      alteradoEm: diasAtras(1100),
+    });
+    // Alteração de outro parâmetro não entra no histórico do valor.
+    await db.insert(alteracoesParametro).values({
+      chave: 'outro_parametro',
+      valorAnterior: '1',
+      valorNovo: '2',
+      alteradoPor: pessoas.coordenacao.id,
+    });
+    await alterarValor('coordenacao', 4000).expect(200);
+    await alterarValor('coordenacao', 4500).expect(200);
+    const { body } = await alterarValor('coordenacao', 3800).expect(200);
+    // O PUT devolve o histórico atualizado, para a tela mostrar sem nova consulta.
+    expect((body as ValorContribuicao).alteracoes).toHaveLength(4);
+
+    const consulta = await http()
+      .get('/parametros/valor-contribuicao')
+      .set(como('coordenacao'))
+      .expect(200);
+    const valor = consulta.body as ValorContribuicao;
+    expect(valor.valorCentavos).toBe(3800);
+    expect(
+      valor.alteracoes.map((a) => [a.valorAnterior, a.valorNovo, a.por]),
+    ).toEqual([
+      ['4500', '3800', 'Helena Duarte'],
+      ['4000', '4500', 'Helena Duarte'],
+      ['3500', '4000', 'Helena Duarte'],
+      ['2500', '3500', 'Helena Duarte'],
+    ]);
+    const datas = valor.alteracoes.map((a) => Date.parse(a.em));
+    expect([...datas].sort((a, b) => b - a)).toEqual(datas);
+    expect(Date.now() - datas[3]).toBeGreaterThan(730 * DIA);
+    expect(valor.ultimaAlteracao).toEqual(valor.alteracoes[0]);
   });
 
   it('o clinica_app não consegue apagar nem alterar uma versão do pagamento: o banco recusa (RF41, RNF36)', async () => {
