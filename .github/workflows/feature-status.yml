@@ -69,9 +69,15 @@ jobs:
           # acabou de concluir, o daquela execução; dos outros, o mais recente da development.
           # Sem nenhum relatório (PR só de documentação), segue sem ele. Só valem
           # execuções da development deste repositório, nunca a de um fork.
+          # Os artefatos vêm do mais novo para o mais antigo, misturando os das PRs. Num dia
+          # com muitas PRs, os 30 primeiros podem ser todos de outras branches; por isso a
+          # busca passa por todas as páginas e fica com o primeiro da development.
           ultimo() {
-            gh api "repos/$GITHUB_REPOSITORY/actions/artifacts?name=$1&per_page=30" \
-              --jq '[.artifacts[] | select(.workflow_run.head_branch == "development" and .workflow_run.head_repository_id == .workflow_run.repository_id and (.expired | not))][0].workflow_run.id // empty'
+            local id
+            id=$(gh api --paginate "repos/$GITHUB_REPOSITORY/actions/artifacts?name=$1&per_page=100" \
+              --jq '.artifacts[] | select(.workflow_run.head_branch == "development" and .workflow_run.head_repository_id == .workflow_run.repository_id and (.expired | not)) | .workflow_run.id' \
+              | head -n 1) || true
+            echo "$id"
           }
           CI=""; LEITOR=""; CARGA=""
           if [ "$WORKFLOW" = "CI" ]; then CI="$EXECUCAO"; fi
@@ -92,11 +98,14 @@ jobs:
           if [ -n "$CARGA" ] && gh run download "$CARGA" -R "$GITHUB_REPOSITORY" -n rnfs-carga -D "$RUNNER_TEMP/carga"; then
             FONTES+=("$RUNNER_TEMP/carga/rnfs-verificados.json" "$RUNS/$CARGA")
           fi
-          if [ ${#FONTES[@]} -gt 0 ]; then
+          # Sem o relatório do CI, a avaliação ficaria só com os testes de leitor de tela e
+          # de carga e reescreveria como "sem evidência" o que o CI já tinha verificado.
+          # Nesse caso, o D4.5 não é avaliado nesta execução.
+          if [ -f "$RUNNER_TEMP/ci/rnfs-verificados.json" ]; then
             node .github/scripts/feature-status/juntar-rnfs.cjs "$RUNNER_TEMP/rnfs-verificados.json" "${FONTES[@]}"
             echo "RELATORIO_RNFS=$RUNNER_TEMP/rnfs-verificados.json" >> "$GITHUB_ENV"
           else
-            echo "::notice::Sem relatório de RNFs da development: o D4.5 não foi avaliado nesta execução."
+            echo "::notice::Sem relatório do CI da development: o D4.5 não foi avaliado nesta execução."
           fi
       - uses: actions/github-script@v9
         env:
