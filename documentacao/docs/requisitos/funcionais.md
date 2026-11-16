@@ -770,13 +770,15 @@ _Rastreabilidade:_ Feature "Corrigir evolução registrada" → CP7 — Registro
 
 **RF30 — Registrar complemento de evolução da sessão**{ #rf30 }
 
-O sistema deve permitir que o estagiário responsável adicione um complemento a um registro de evolução já salvo de uma sessão, sem alterar ou substituir o conteúdo já registrado. Diferente da correção (RF29), que revisa um conteúdo considerado incorreto, o complemento é uma informação adicional (por exemplo, uma observação posterior do estagiário ou uma orientação do supervisor) que se soma ao registro original, preservando a ordem cronológica dos complementos. Cada complemento deve identificar o autor e o momento do registro, de forma equivalente ao registro original.
+O sistema deve permitir que o estagiário responsável adicione um complemento a um registro de evolução já salvo de uma sessão, sem alterar ou substituir o conteúdo já registrado. Diferente da correção (RF29), que revisa um conteúdo considerado incorreto, o complemento é uma informação adicional (por exemplo, uma observação posterior do estagiário ou uma orientação do supervisor) que se soma ao registro original, preservando a ordem cronológica dos complementos. Cada complemento deve identificar o autor e o momento do registro, de forma equivalente ao registro original. O complemento é um texto livre, com o mesmo limite de caracteres dos campos da evolução (RF28), e é registrado pelo estagiário responsável; a orientação do supervisor entra como complemento registrado pelo estagiário. O complemento é aceito enquanto o caso estiver em atendimento: depois do encerramento por alta (RF68) ou do desligamento (RF37), não há novo complemento. Quem pode registrar o complemento e se há prazo são pendências de validação com a FBr; até a resposta, valem essas regras.
 
 _Critérios de aceitação:_
 
 - O complemento adicionado pelo estagiário responsável fica associado à evolução original, sem alterar o conteúdo já salvo, com autor e data/hora próprios.
 - A consulta da evolução (RF31/RF32) mostra o registro original e todos os complementos em ordem cronológica, distinguindo-os das correções (RF29).
 - Usuário sem vínculo clínico vigente com o caso não consegue adicionar complemento.
+- Complemento vazio ou acima do limite de caracteres é recusado, com o campo indicado.
+- Caso encerrado por alta (RF68) ou desligado (RF37) não aceita novo complemento.
 
 _Rastreabilidade:_ Feature "Registrar complemento de evolução da sessão" → CP7 — Registro de evolução por sessão → OE5. Dependência: RF28.{{ origem("RF30") }}
 
@@ -818,8 +820,10 @@ _Critérios de aceitação:_
 - Caso encerrado em semestre anterior não pode ser reaberto; o retorno do paciente exige nova inscrição.
 - O histórico do caso identifica o encerramento como alta, distinto do desligamento por faltas (RF37).
 - O encerramento por alta só é concluído após a confirmação do supervisor.
+- Só o estagiário responsável registra a alta, só o supervisor do caso a confirma e só a coordenação reabre o caso; os demais perfis recebem a negação de acesso.
+- O caso encerrado por alta deixa de contar como atendimento ativo nos indicadores (RF48) a partir da data do encerramento.
 
-_Rastreabilidade:_ Feature "Encerrar caso por alta" → CP7 — Registro de evolução por sessão → OE5/OE2. Dependência: RF28; integração: RF21 (CP5), RF37 (CP9).{{ origem("RF68") }}
+_Rastreabilidade:_ Feature "Encerrar caso por alta" → CP7 — Registro de evolução por sessão → OE5/OE2. Dependência: RF28; integração: RF21 (CP5), RF37 (CP9), RF48 (CP11).{{ origem("RF68") }}
 
 {{ registro("RF68") }}
 
@@ -831,10 +835,12 @@ O sistema deve permitir que o estagiário responsável, o seu supervisor e a coo
 
 _Critérios de aceitação:_
 
-- A consulta da evolução de uma sessão pelo estagiário responsável ou pelo supervisor mostra o original, as correções e os complementos, com autor e data/hora de cada item, distinguindo revisão de conteúdo de informação adicional.
-- Usuário sem vínculo clínico vigente com o caso não acessa a evolução da sessão.
+- A consulta da evolução de uma sessão pelo estagiário responsável, pelo supervisor ou pela coordenação mostra o original, as correções e os complementos, com autor e data/hora de cada item, distinguindo revisão de conteúdo de informação adicional.
+- A consulta mostra se a evolução está validada pelo supervisor ou pendente de validação (RF67).
+- Sessão sem evolução registrada mostra o aviso de que ainda não há registro.
+- A coordenação consulta, mas não altera nem complementa a evolução; usuário sem vínculo clínico vigente com o caso e que não seja da coordenação não acessa a evolução da sessão.
 
-_Rastreabilidade:_ Feature "Consultar evolução de uma sessão específica" → CP7 — Registro de evolução por sessão → OE5. Dependência: RF28, RF29 e RF30; restrição transversal: CP12.{{ origem("RF31") }}
+_Rastreabilidade:_ Feature "Consultar evolução de uma sessão específica" → CP7 — Registro de evolução por sessão → OE5. Dependência: RF28, RF29 e RF30; integração: RF67; restrição transversal: CP12.{{ origem("RF31") }}
 
 {{ registro("RF31") }}
 
@@ -848,9 +854,11 @@ _Critérios de aceitação:_
 
 - O histórico do ciclo mostra, por sessão e em ordem cronológica, os registros originais, as correções e os complementos, identificando o tipo, o autor e a data/hora de cada um.
 - Ciclo sem evoluções exibe o aviso de que não há registros, sem mostrar dados de outro ciclo.
+- Depois de uma transferência de responsável (RF25), o histórico continua mostrando os registros feitos pelos responsáveis anteriores.
+- O histórico indica, em cada evolução, se ela está validada pelo supervisor ou pendente de validação (RF67).
 - Usuário sem acesso ao prontuário não consulta o histórico de evolução.
 
-_Rastreabilidade:_ Feature "Consultar histórico de evolução do paciente" → CP7 — Registro de evolução por sessão → OE5/OE2. Dependência: RF27 (CP6), RF28, RF29 e RF30; restrição transversal: RF55 (CP12).{{ origem("RF32") }}
+_Rastreabilidade:_ Feature "Consultar histórico de evolução do paciente" → CP7 — Registro de evolução por sessão → OE5/OE2. Dependência: RF27 (CP6), RF28, RF29 e RF30; integração: RF25, RF67; restrição transversal: RF55 (CP12).{{ origem("RF32") }}
 
 {{ registro("RF32") }}
 
@@ -883,7 +891,7 @@ _Critérios de aceitação:_
 
 - A submissão do relatório pelo estagiário, com todos os campos obrigatórios, gera uma versão vinculada ao ciclo e aos registros de origem, com estado `em revisão`, disponível ao supervisor do caso.
 - Ciclo sem evoluções não gera relatório; o sistema informa a ausência de registros de origem, sem conteúdo clínico presumido.
-- Usuário sem vínculo clínico vigente com o caso não gera nem consulta o relatório.
+- Usuário sem vínculo clínico vigente com o caso não gera nem consulta o relatório; a coordenação consulta as versões, sem alterá-las, e a secretaria acessa somente a versão aprovada, para imprimir e registrar a entrega.
 - Evolução ausente ou incompleta no período fica identificável no relatório para revisão humana, sem texto clínico criado pelo sistema.
 - A devolução do relatório pelo supervisor exige observações, registra a decisão e permite ao estagiário produzir nova versão sem apagar as anteriores.
 - A aprovação do relatório registra o supervisor e a data/hora, bloqueia alterações na versão aprovada e permite finalizá-la em PDF com campo para assinatura manuscrita.
@@ -891,7 +899,7 @@ _Critérios de aceitação:_
 - A secretaria imprime apenas a versão aprovada e, antes de registrar quem entregou e quando, confirma que a via foi assinada; não há download nem envio por e-mail ao destinatário.
 - Ciclo encerrado com menos de 8 ou mais de 10 sessões exige justificativa da exceção na submissão do relatório.
 
-_Rastreabilidade:_ Feature "Gerar relatório final de evolução" → CP8 — Geração do relatório final de evolução → OE5/OE6. Dependência: RF28, RF32 (CP7); restrição transversal: RF55 (CP12).{{ origem("RF33") }}
+_Rastreabilidade:_ Feature "Gerar relatório final de evolução" → CP8 — Geração do relatório final de evolução → OE5/OE6. Dependência: RF28, RF32 (CP7); integração: RF53 (CP12), que passa a guardar o número do CRP do supervisor, usado na identificação do relatório; restrição transversal: RF55 (CP12).{{ origem("RF33") }}
 
 {{ registro("RF33") }}
 
@@ -1033,13 +1041,14 @@ _Rastreabilidade:_ Feature "Consolidar faltas do estagiário para a supervisão"
 
 **RF40 — Contabilizar faltas do estagiário no semestre**{ #rf40 }
 
-O sistema deve manter, por estagiário e por semestre letivo, a contagem cumulativa de faltas do estagiário a sessões, incrementada a cada sessão cancelada por ausência real do estagiário (RF16) e exibida na relação consultada pela supervisão (RF39). Cancelamentos registrados como administrativos para remarcação (RF16), usados enquanto o RF12 ficar para uma entrega posterior, não incrementam essa contagem. A contagem recomeça do zero a cada semestre letivo e não é alterada pela sinalização de reprovação (RF63) nem pela decisão institucional (RF64); a correção de uma falta registrada por engano é feita no próprio registro de ausência da CP4, com autor, data/hora e motivo preservados.
+O sistema deve manter, por estagiário e por semestre letivo, a contagem cumulativa de faltas do estagiário a sessões, incrementada a cada sessão cancelada por ausência real do estagiário (RF16) e exibida na relação consultada pela supervisão (RF39). Cancelamentos registrados como administrativos para remarcação (RF16), usados enquanto o RF12 ficar para uma entrega posterior, não incrementam essa contagem. O semestre de cada falta é o da data da sessão (1º semestre de janeiro a junho, 2º de julho a dezembro), como na data-limite do RF29, porque a gestão do calendário acadêmico está fora do escopo. A contagem recomeça do zero a cada semestre e não é alterada pela sinalização de reprovação (RF63) nem pela decisão institucional (RF64); a ausência registrada por engano é reclassificada pela coordenação como cancelamento administrativo para remarcação, com motivo, autor e data/hora, e a contagem é recalculada. Essa reclassificação é uma proposta da equipe, pendente de validação com a FBr, como a escolha das faltas na reversão do desligamento do paciente (RF38).
 
 _Critérios de aceitação:_
 
 - Cada sessão cancelada por ausência real do estagiário (RF16) aumenta em uma unidade a contagem de faltas dele no semestre.
 - Sessão cancelada como administrativa para remarcação (RF16) não altera a contagem de faltas do estagiário.
-- No início de cada semestre letivo, a contagem do estagiário volta a zero, e a do semestre anterior fica preservada no histórico.
+- No início de cada semestre (pela data da sessão), a contagem do estagiário volta a zero, e a do semestre anterior fica preservada no histórico.
+- A reclassificação, pela coordenação, de uma ausência registrada por engano como cancelamento administrativo exige motivo, fica registrada com autor e data/hora e diminui a contagem.
 - Somente o supervisor do estagiário e a coordenação consultam a contagem de faltas dele.
 
 _Rastreabilidade:_ Feature "Contabilizar faltas do estagiário no semestre" → CP9 — Controle de assiduidade e alertas → OE4/OE3. Dependência: RF16 (CP4), RF39.{{ origem("RF40") }}
@@ -1050,7 +1059,7 @@ _Rastreabilidade:_ Feature "Contabilizar faltas do estagiário no semestre" → 
 
 **RF63 — Sinalizar reprovação do estagiário por faltas**{ #rf63 }
 
-Quando a contagem de faltas do estagiário no semestre (RF40) atingir 3 faltas, o sistema deve sinalizar ao supervisor responsável e à coordenação que o estagiário atingiu o limite que reprova o campo de estágio, conforme confirmado pela Clínica Escola. A sinalização é gerada uma única vez por estagiário e semestre, e permanece visível a esses dois perfis até que a coordenação registre a decisão institucional sobre o caso (RF64); faltas adicionais no mesmo semestre não geram nova sinalização, apenas atualizam a contagem exibida.
+Quando a contagem de faltas do estagiário no semestre (RF40) atingir 3 faltas, o sistema deve sinalizar ao supervisor responsável e à coordenação que o estagiário atingiu o limite que reprova o campo de estágio, conforme confirmado pela Clínica Escola. A sinalização é gerada uma única vez por estagiário e semestre, e permanece visível a esses dois perfis até que a coordenação registre a decisão institucional sobre o caso (RF64); faltas adicionais no mesmo semestre não geram nova sinalização, apenas atualizam a contagem exibida. A sinalização mostra o nome do estagiário, a contagem de faltas do semestre e a data e o horário das sessões, sem o nome do paciente nem o motivo da ausência (RNF35).
 
 _Critérios de aceitação:_
 
@@ -1105,7 +1114,7 @@ O controle da taxa é feito hoje à mão ([ata de 26/08/2026](../historico/unida
 - Toda alteração do parâmetro pela coordenação deve ser registrada com o valor anterior, o novo valor, o autor e a data/hora, e passa a valer somente para pagamentos registrados a partir dela, sem alterar pagamentos já efetivados.
 - Cada paciente pode ter apenas um pagamento de contribuição social registrado por ciclo de atendimento, já que a taxa é semestral: conforme confirmado pela Clínica Escola, ela é cobrada uma vez por semestre e volta a ser devida caso o paciente se inscreva novamente em outro semestre.
 - Não há isenção da taxa para pacientes sem condição de pagar.
-- O paciente tem 10 dias corridos, contados do vínculo com o estagiário (RF21), para pagar a contribuição e efetivar a vaga. O bloqueio pela falta de pagamento depois desse prazo está no RF43.
+- O paciente tem 10 dias corridos, contados do primeiro vínculo com o estagiário (RF21) depois da última entrada do caso na fila (a transferência para outro estagiário não reinicia o prazo, e a volta à fila reinicia), para pagar a contribuição e efetivar a vaga. O bloqueio pela falta de pagamento depois desse prazo está no RF43.
 - Um pagamento registrado com valor, data ou forma incorretos não pode ser apagado nem sobrescrito: a secretaria registra uma correção, informando o motivo, que gera uma nova versão do registro com autor e data/hora e preserva a versão anterior (auditoria no RNF36).
 - Para este requisito, **ciclo de atendimento** é o período de acompanhamento de um paciente que vai da primeira sessão até o encerramento do atendimento (conclusão das sessões com o relatório final, desligamento por faltas ou desistência) dentro do mesmo semestre.
 
@@ -1126,7 +1135,7 @@ _Rastreabilidade:_ Feature "Registrar pagamento da contribuição social do paci
 
 **RF42 — Consultar situação da contribuição social dos pacientes**{ #rf42 }
 
-O sistema deve permitir que usuários com perfil de secretaria ou de coordenação consultem a situação da contribuição social dos pacientes em atendimento, com filtro por situação (**efetivada** ou **pendente**). Para cada paciente, a consulta deve mostrar o nome, a situação, a data da primeira sessão e, quando efetivada, a data do pagamento. O estagiário também pode consultar a contribuição social, mas apenas dos pacientes vinculados a ele (RF21) e apenas a situação (efetivada ou pendente), sem a forma de pagamento nem os dados de outros pacientes. A situação também deve ser indicada na agenda do dia, junto à primeira sessão do paciente, para que a pendência seja percebida no momento em que a taxa é exigida. A partir da 2ª sessão do paciente, a pendência deixa de ser apenas informativa e passa a bloquear o agendamento, conforme o RF43.
+O sistema deve permitir que usuários com perfil de secretaria ou de coordenação consultem a situação da contribuição social dos pacientes em atendimento, com filtro por situação (**efetivada** ou **pendente**). Para cada paciente, a consulta deve mostrar o nome, a situação, a data da primeira sessão e, quando efetivada, a data do pagamento. O supervisor não consulta a contribuição social, que é um controle administrativo. O estagiário também pode consultar a contribuição social, mas apenas dos pacientes vinculados a ele (RF21) e apenas a situação (efetivada ou pendente), sem a forma de pagamento nem os dados de outros pacientes. A situação também deve ser indicada na agenda do dia, junto à primeira sessão do paciente, para que a pendência seja percebida no momento em que a taxa é exigida. A partir da 2ª sessão do paciente, a pendência deixa de ser apenas informativa e passa a bloquear o agendamento, conforme o RF43.
 
 _Critérios de aceitação:_
 
@@ -1134,6 +1143,7 @@ _Critérios de aceitação:_
 - Após o registro do pagamento (RF41), o paciente aparece como "efetivada", com a data do pagamento.
 - Na agenda do dia, a 1ª sessão de paciente com contribuição pendente exibe a indicação "contribuição pendente", que some assim que o pagamento é registrado. Como confirmado pela Clínica Escola, na 1ª sessão a indicação é apenas informativa; a partir da 2ª, a pendência bloqueia o agendamento (RF43).
 - O estagiário vê, para seus pacientes, apenas a situação da contribuição (efetivada ou pendente), sem a forma de pagamento e sem dados de outros pacientes.
+- O supervisor não acessa a consulta da contribuição social.
 
 _Rastreabilidade:_ Feature "Consultar situação da contribuição social dos pacientes" → CP10 — Registros administrativos do atendimento → OE6/OE4. A indicação na agenda depende do agendamento da CP4.{{ origem("RF42") }}
 
@@ -1143,7 +1153,7 @@ _Rastreabilidade:_ Feature "Consultar situação da contribuição social dos pa
 
 **RF43 — Bloquear agendamento por contribuição social pendente**{ #rf43 }
 
-O paciente tem 10 dias corridos, contados do vínculo com o estagiário (RF21), para pagar a contribuição social e efetivar a vaga, como decidido com a Clínica Escola. Se o pagamento não for registrado (RF41) nesse prazo, o sistema avisa a secretaria, e a secretaria ou a coordenação confirma a perda da vaga: o vínculo é encerrado, a vaga é liberada, as sessões futuras são canceladas e o paciente volta à fila de espera (CP3), com a mesma prioridade clínica e, para o desempate, a data em que voltou para a fila, e não a da inscrição original ([DF33](decisoes-fbr.md#df33)). Enquanto o prazo corre, o sistema também deve impedir o agendamento (RF10) da 2ª sessão em diante de um paciente cuja contribuição social do ciclo de atendimento atual (RF41) ainda esteja pendente. A 1ª sessão do paciente não deve ser bloqueada por essa razão — a taxa é exigida a partir dela, mas o bloqueio só passa a valer da 2ª sessão em diante, conforme confirmado pela Clínica Escola. Como não existe isenção da taxa, o bloqueio se aplica a todos os pacientes sem exceção.
+O paciente tem 10 dias corridos, contados do primeiro vínculo com o estagiário (RF21) depois da última entrada do caso na fila (a transferência para outro estagiário não reinicia o prazo, e a volta à fila reinicia), para pagar a contribuição social e efetivar a vaga, como decidido com a Clínica Escola. Se o pagamento não for registrado (RF41) nesse prazo, o sistema avisa a secretaria, e a secretaria ou a coordenação confirma a perda da vaga: o vínculo é encerrado, a vaga é liberada, as sessões futuras são canceladas e o paciente volta à fila de espera (CP3), com a mesma prioridade clínica e, para o desempate, a data em que voltou para a fila, e não a da inscrição original ([DF33](decisoes-fbr.md#df33)). Enquanto o prazo corre, o sistema também deve impedir o agendamento (RF10) da 2ª sessão em diante de um paciente cuja contribuição social do ciclo de atendimento atual (RF41) ainda esteja pendente. A 1ª sessão do paciente não deve ser bloqueada por essa razão — a taxa é exigida a partir dela, mas o bloqueio só passa a valer da 2ª sessão em diante, conforme confirmado pela Clínica Escola. Como não existe isenção da taxa, o bloqueio se aplica a todos os pacientes sem exceção.
 
 _Critérios de aceitação:_
 
@@ -1153,6 +1163,7 @@ _Critérios de aceitação:_
 - Paciente vinculado há 10 dias corridos sem pagamento registrado gera aviso à secretaria; a confirmação da perda da vaga encerra o vínculo, libera a vaga, cancela as sessões futuras e devolve o paciente à fila de espera.
 - Paciente que paga dentro dos 10 dias não gera aviso nem perde a vaga.
 - Paciente que perdeu a vaga volta à fila com a mesma prioridade clínica, atrás dos inscritos da mesma prioridade que entraram na fila antes da data da perda da vaga.
+- Só a secretaria e a coordenação confirmam a perda da vaga; o estagiário e o supervisor não a confirmam.
 
 _Rastreabilidade:_ Feature "Bloquear agendamento por contribuição social pendente" → CP10 — Registros administrativos do atendimento → OE6/OE4; restrição sobre a feature "Agendar sessão do paciente" (RF10, CP4). Dependência: RF41, RF42.{{ origem("RF43") }}
 
@@ -1188,7 +1199,8 @@ _Rastreabilidade:_ Feature "Listar sessões com comparecimento registrado do pac
 - A declaração não deve conter informação clínica (queixa, prioridade, diagnóstico, evolução), preservando o sigilo do atendimento, e pode indicar que o atendimento é de natureza psicológica, sem necessidade de texto neutro.
 - Para paciente menor de idade, a retirada da declaração pelo responsável legal exige que a Autorização para Acompanhamento Psicoterapêutico de Crianças e Adolescentes, assinada presencialmente, já esteja preenchida; sem essa autorização, a declaração não deve ser emitida para o responsável.
 - Toda emissão é auditada conforme o RNF39.
-- Além de data, horário e nome do estagiário, o documento deve conter a assinatura e o carimbo do psicólogo responsável e o número de CRP, conforme o modelo fornecido pela Clínica Escola.
+- Além de data, horário e nome do estagiário, o documento deve conter a assinatura e o carimbo do psicólogo responsável e o número de CRP, conforme o modelo fornecido pela Clínica Escola. Até a FBr confirmar o modelo e quem assina, o psicólogo responsável é o supervisor do caso, com o número do CRP guardado no cadastro do supervisor (RF53).
+- A entrega da Autorização para Acompanhamento Psicoterapêutico de Crianças e Adolescentes, assinada presencialmente, é registrada pela secretaria na ficha do paciente, com a data e quem registrou; é esse registro que libera a emissão para o responsável legal. O registro é uma proposta da equipe, pendente de validação com a FBr.
 
 _Critérios de aceitação:_
 
@@ -1201,7 +1213,7 @@ _Critérios de aceitação:_
 - Para paciente menor de idade com a autorização preenchida, o responsável legal emite a declaração normalmente.
 - O documento só pode ser visualizado em tela e impresso, sem download nem envio por e-mail.
 
-_Rastreabilidade:_ Feature "Emitir declaração de comparecimento do paciente" → CP10 — Registros administrativos do atendimento → OE6/OE4. Dependência: RF52 (CP12).{{ origem("RF45") }}
+_Rastreabilidade:_ Feature "Emitir declaração de comparecimento do paciente" → CP10 — Registros administrativos do atendimento → OE6/OE4. Dependência: RF52 (CP12), RF44; integração: RF53 (CP12), que passa a guardar o número do CRP do supervisor.{{ origem("RF45") }}
 
 {{ registro("RF45") }}
 
