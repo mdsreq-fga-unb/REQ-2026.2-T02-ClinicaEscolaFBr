@@ -1439,6 +1439,7 @@ decisoes:
   data: 26/08/2026
   fonte: reunião de levantamento
   decisao: 'Campos obrigatórios da inscrição: nome completo, data de nascimento, CPF, RG, endereço, estado civil e queixa; para menor de idade, também o responsável legal.'
+  substituida_em_parte_por: DF60
 
 - id: DF03
   data: 26/08/2026
@@ -1738,7 +1739,7 @@ decisoes:
 - id: DF60
   data: 06/11/2026
   fonte: reunião de validação do Ciclo 3 com a FBr
-  decisao: O RG deixa de ser obrigatório na inscrição (RF1), porque a nova Carteira de Identidade Nacional usa o CPF como número único; o órgão emissor e o estado do RG não são pedidos. Decidido por Thiago Viana, e registrado em 16/11/2026, a partir do relato da equipe.
+  decisao: O RG deixa de ser obrigatório na inscrição (RF1), porque a nova Carteira de Identidade Nacional usa o CPF como número único; o órgão emissor e o estado do RG não são pedidos. Substitui em parte a DF02, só quanto ao RG; os demais campos obrigatórios da DF02 continuam valendo. Decidido por Thiago Viana, e registrado em 16/11/2026, a partir do relato da equipe.
 
 - id: DF61
   data: 06/11/2026
