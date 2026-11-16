@@ -26,6 +26,37 @@ beforeEach(() => {
   sessao.atual = { id: "u1", perfil: "coordenacao" };
 });
 
+// A página de Parâmetros também tem o cartão do valor da contribuição (RF41), que
+// consulta a própria rota. Ela responde com o valor sem alterações, e as demais
+// chamadas vão para a data-limite do teste.
+const VALOR_CONTRIBUICAO = {
+  valorCentavos: 3500,
+  ultimaAlteracao: null,
+  alteracoes: [],
+};
+const DATA_PENDENTE = {
+  semestre: "2026/2",
+  dataLimite: null,
+  pendente: true,
+  ultimaAlteracao: null,
+};
+function simularApi(
+  dataLimite: (caminho: string, init?: RequestInit) => unknown,
+) {
+  vi.mocked(api).mockImplementation(
+    async (caminho: string, init) =>
+      (caminho === "/parametros/valor-contribuicao"
+        ? VALOR_CONTRIBUICAO
+        : await dataLimite(caminho, init)) as never,
+  );
+}
+const chamadasDaDataLimite = () =>
+  vi
+    .mocked(api)
+    .mock.calls.filter(
+      ([caminho]) => caminho === "/parametros/data-limite-correcao",
+    );
+
 function renderizar() {
   const client = new QueryClient({
     defaultOptions: { queries: { retry: false } },
@@ -39,12 +70,7 @@ function renderizar() {
 
 describe("data-limite para correção de evoluções (RF29)", () => {
   it("sem a data do semestre, avisa que as correções continuam permitidas (RF29)", async () => {
-    vi.mocked(api).mockResolvedValue({
-      semestre: "2026/2",
-      dataLimite: null,
-      pendente: true,
-      ultimaAlteracao: null,
-    } as never);
+    simularApi(() => DATA_PENDENTE);
     renderizar();
     expect(
       await screen.findByText(
@@ -57,7 +83,7 @@ describe("data-limite para correção de evoluções (RF29)", () => {
   });
 
   it("a coordenação salva a data, e a tela mostra a última alteração com o valor anterior, o novo e o autor (RF29)", async () => {
-    vi.mocked(api).mockImplementation(async (caminho: string, init) => {
+    simularApi((caminho, init) => {
       if (init?.method === "PUT") {
         expect(JSON.parse(init.body as string)).toEqual({
           dataLimite: "2026-12-14",
@@ -72,7 +98,7 @@ describe("data-limite para correção de evoluções (RF29)", () => {
             por: "Helena Duarte",
             em: "2026-08-03T13:12:00Z",
           },
-        } as never;
+        };
       }
       expect(caminho).toBe("/parametros/data-limite-correcao");
       return {
@@ -80,7 +106,7 @@ describe("data-limite para correção de evoluções (RF29)", () => {
         dataLimite: "2026-07-13",
         pendente: false,
         ultimaAlteracao: null,
-      } as never;
+      };
     });
     renderizar();
     const campo = await screen.findByLabelText(
@@ -98,12 +124,7 @@ describe("data-limite para correção de evoluções (RF29)", () => {
   });
 
   it("sem data, não envia e indica o campo (RF29)", async () => {
-    vi.mocked(api).mockResolvedValue({
-      semestre: "2026/2",
-      dataLimite: null,
-      pendente: true,
-      ultimaAlteracao: null,
-    } as never);
+    simularApi(() => DATA_PENDENTE);
     renderizar();
     fireEvent.click(
       await screen.findByRole("button", { name: "Salvar data-limite" }),
@@ -116,7 +137,9 @@ describe("data-limite para correção de evoluções (RF29)", () => {
           .getAttribute("aria-invalid"),
       ).toBe("true"),
     );
-    expect(vi.mocked(api)).toHaveBeenCalledTimes(1);
+    // Só a consulta da data-limite: nenhuma gravação foi enviada.
+    expect(chamadasDaDataLimite()).toHaveLength(1);
+    expect(chamadasDaDataLimite()[0][1]?.method).toBeUndefined();
   });
 
   it("outros perfis veem o acesso negado, sem consultar a API (RF29)", async () => {
