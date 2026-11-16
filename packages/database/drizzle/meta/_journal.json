@@ -134,6 +134,13 @@
       "when": 1794853680993,
       "tag": "0018_correcao_de_evolucao",
       "breakpoints": true
+    },
+    {
+      "idx": 19,
+      "version": "7",
+      "when": 1794856749571,
+      "tag": "0019_aviso_ausencia_estagiario",
+      "breakpoints": true
     }
   ]
 }
