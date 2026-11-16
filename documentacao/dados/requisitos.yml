@@ -818,7 +818,7 @@ rfs:
   mvp: true
   ciclo: 6
   ordem: 53
-  lider: Joaquim
+  lider: Gabriel
   depende: [RF48]
   issue: 23
   estado: Planejada
@@ -1819,7 +1819,7 @@ conjuntos:
 - area: Gestão institucional
   conjunto: Indicadores e relatórios institucionais
   rfs: [RF48, RF49]
-  lider: Gabriel e Joaquim
+  lider: Gabriel
   conclusao: Ciclo 6
 - area: Acesso e segurança
   conjunto: Autenticação
