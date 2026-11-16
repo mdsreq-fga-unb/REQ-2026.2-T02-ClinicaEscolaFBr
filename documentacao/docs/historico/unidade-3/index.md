@@ -29,7 +29,8 @@ As evidências de cada marco ficam na issue da feature:
 
 - **Inspeção de design e de código:** comentários "Inspeção de design (DoD 1)" e a aprovação da pull request; o resumo está em [Execução do processo](../../visao-geral/execucao-do-processo.md#revisoes-do-modelo).
 - **Testes:** cada pull request roda os testes unitários, de integração e ponta a ponta no CI, e o merge roda de novo na `development`. Os testes citam o RF e o RNF no nome, e o robô de acompanhamento usa os relatórios para marcar a verificação dos RNFs de cada feature (D4.5), como explicado em [Boas práticas no GitHub](../../processo/boas-praticas-github.md#verificacao-dos-rnfs-d45).
-- **Demonstração e aceite:** a demonstração do Ciclo 3 à FBr está na [ata de 06/11/2026](reunioes.md#reuniao-de-validacao-do-ciclo-3-com-a-fbr); o aceite formal é pedido por escrito e registrado com o comando `/aceite` na issue.
+- **Demonstração e aceite:** a demonstração do Ciclo 3 à FBr está na [ata de 06/11/2026](reunioes.md#reuniao-de-validacao-do-ciclo-3-com-a-fbr). A do Ciclo 4 foi enviada à FBr por e-mail em 10/11, e as respostas da FBr de 11/11 estão em [Reuniões](reunioes.md#respostas-da-fbr-sobre-a-demonstracao-do-ciclo-4). O aceite formal é pedido por escrito e registrado com o comando `/aceite` na issue.
+- **Fechamento de cada ciclo:** o resultado de cada feature, o motivo do que ficou pendente e a lição do ciclo estão em [Fechamento dos ciclos](../../visao-geral/cronograma.md#fechamento-dos-ciclos).
 
 ## Conteúdo da unidade
 
@@ -54,6 +55,7 @@ As evidências de cada marco ficam na issue da feature:
 - [:material-backup-restore: **Cópia de segurança e restauração** Procedimento do RNF53, com os scripts e o teste de restauração.](../../construcao/copia-de-seguranca.md)
 - [:material-speedometer: **Teste de carga** Cenário de referência do RNF12 e do RNF21, com a massa de dois semestres.](../../construcao/teste-de-carga.md)
 - [:material-check-decagram-outline: **9. DoR e DoD** Critérios de entrada na construção e de feature pronta.](../../requisitos/dor-dod.md)
+- [:material-shield-check-outline: **Verificação e validação** Quando aplicar, o que verificar e validar, nível de rigor e evidências.](../../processo/verificacao-e-validacao.md)
 - [:material-rocket-launch-outline: **Features e backlog** Itens do MVP por ciclo e Líder de Feature.](../../visao-geral/backlog.md)
 
 </div>

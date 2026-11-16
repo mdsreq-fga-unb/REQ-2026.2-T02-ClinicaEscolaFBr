@@ -1,6 +1,9 @@
 import { z } from 'zod';
 
 const envSchema = z.object({
+  AMBIENTE_APLICACAO: z
+    .enum(['desenvolvimento', 'validacao', 'producao'])
+    .optional(),
   DATABASE_URL: z.url(),
   API_PORT: z.coerce.number().default(3333),
   WEB_URL: z.url(),

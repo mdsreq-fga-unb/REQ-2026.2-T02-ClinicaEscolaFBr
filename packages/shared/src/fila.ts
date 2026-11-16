@@ -14,3 +14,10 @@ export type FilaEspera = {
   inscritos: InscritoNaFila[];
   pendentes: { numero: string; nome: string; criadaEm: string }[];
 };
+
+// Consulta individual (DF55): a posição pertence somente à fila interna da equipe.
+export type SituacaoInscricao = {
+  numero: string;
+  situacao: "em_triagem" | "em_atendimento" | "procure_secretaria";
+  consultadaEm: string;
+};

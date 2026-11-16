@@ -67,6 +67,7 @@ export async function focoVisivel(alvo: Locator) {
 export async function criarCasoTriado(
   playwright: PlaywrightWorkerArgs["playwright"],
   paciente: string,
+  email = "paciente.e2e@example.com",
 ) {
   const api = await playwright.request.newContext({ baseURL: API });
   const inscricao = await api.post("/inscricoes", {
@@ -81,11 +82,13 @@ export async function criarCasoTriado(
       estadoCivil: "Solteiro(a)",
       responsavelLegal: "",
       celular: "61999999999",
-      email: "paciente.e2e@example.com",
+      email,
       queixa: "Queixa fictícia de teste",
       percepcaoUrgencia: "Urgência fictícia",
       historicoRelevante: "Histórico fictício",
       confirmado: true,
+      aceiteTermo: true,
+      versaoTermo: "0.1",
       chaveEnvio: randomUUID(),
     },
   });

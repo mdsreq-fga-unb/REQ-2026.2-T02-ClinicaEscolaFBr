@@ -10,9 +10,12 @@ As seções seguem as características de produto (CP), na ordem do fluxo do sis
 !!! info "Quem escreveu o projeto do Ciclo 4"
     Por causa do prazo do ciclo, o projeto das features do Ciclo 4 foi escrito pelo Gabriel em 05/11/2026, menos o do RF52, escrito pelo Joaquim. Para que nenhum projeto seja inspecionado por quem o escreveu, a inspeção de cada feature é feita pelo Líder de Feature com o revisor da issue, e o código continua com cada Líder.
 
+!!! info "Projeto do Ciclo 5"
+    O projeto das sete features do Ciclo 5 (RF17, RF29, RF39, RF41, RF44, RF48 e RF56) foi escrito pelo Gabriel em 12/11/2026, a partir das pranchas do Ciclo 5. A inspeção de cada um é feita pelo Líder de Feature com o revisor da issue, como no Ciclo 4.
+
 ## Convenções
 
-- **API:** NestJS, um módulo por área do FDD (`acesso`, `inscricao`, `triagem`, `casos`, `agendamento`, `acompanhamento-clinico`). As rotas internas exigem sessão e usam o `PerfisGuard` com o decorator `@Perfis(...)`. As rotas públicas (inscrição e ativação de conta) não exigem sessão.
+- **API:** NestJS, um módulo por área do FDD (`acesso`, `inscricao`, `triagem`, `casos`, `agendamento`, `acompanhamento-clinico`, `assiduidade`, `fila`, `administrativo` e `institucional`). As rotas internas exigem sessão e usam o `PerfisGuard` com o decorator `@Perfis(...)`. As rotas públicas (inscrição e ativação de conta) não exigem sessão.
 - **Banco:** PostgreSQL com Drizzle, em `packages/database`. Os nomes de tabela e coluna seguem o português sem acento, como as tabelas `usuarios` e `auditoria` da base técnica.
 - **Validação:** esquemas Zod em `packages/shared`, usados tanto pela API quanto pela interface.
 - **Auditoria:** toda operação que altera dados relevantes chama o `AuditoriaService`, que grava na tabela `auditoria` (somente inserção) o autor, a operação, a entidade, o estado anterior e o novo.
@@ -204,6 +207,83 @@ classDiagram
 ```
 
 `LimiteCodigoVerificacao` não tem chave estrangeira: ele é guardado pelo identificador informado, exista ou não uma inscrição com ele.
+
+### Classes do Ciclo 5 { #modelo-detalhado-do-ciclo-5 }
+
+Classes novas do Ciclo 5 e as colunas novas de classes que já existem. O `Caso`, o `VinculoEstagiario`, a `AtribuicaoSupervisor`, a `Evolucao` e o `CancelamentoSessao` aparecem só com os atributos usados aqui.
+
+```mermaid
+classDiagram
+    direction LR
+    class Caso {
+      +uuid id
+      +int cicloAtendimento
+    }
+    class VinculoEstagiario {
+      +datetime vinculadoEm
+      +bool vigente
+      +datetime encerradoEm
+    }
+    class AtribuicaoSupervisor {
+      +datetime atribuidoEm
+      +bool vigente
+      +datetime encerradaEm
+    }
+    class PagamentoContribuicao {
+      +uuid id
+      +int cicloAtendimento
+      +int versao
+      +int valorCentavos
+      +date pagoEm
+      +FormaPagamento forma
+      +string motivoCorrecao
+      +uuid registradoPor
+      +datetime registradoEm
+    }
+    class AlteracaoParametro {
+      +uuid id
+      +string chave
+      +string valorAnterior
+      +string valorNovo
+      +uuid alteradoPor
+      +datetime alteradoEm
+    }
+    class ParametroSemestre {
+      +string semestre
+      +string chave
+      +string valor
+      +uuid alteradoPor
+      +datetime alteradoEm
+    }
+    class CorrecaoEvolucao {
+      +uuid id
+      +int versao
+      +string camposCifrados
+      +string motivo
+      +uuid corrigidaPor
+      +datetime corrigidaEm
+    }
+    class CancelamentoSessao {
+      +AvisoPaciente avisoPaciente
+      +datetime avisoManualEm
+      +uuid avisoManualPor
+      +string avisoManualCanal
+    }
+    class Evolucao {
+      +uuid id
+    }
+    Caso "1" -- "0..*" PagamentoContribuicao : versões por ciclo
+    Caso "1" -- "0..*" VinculoEstagiario
+    Caso "1" -- "0..*" AtribuicaoSupervisor
+    Evolucao "1" -- "0..*" CorrecaoEvolucao : versões
+```
+
+- **`PagamentoContribuicao` (RF41):** só inserção, como a `Evolucao`. A versão 1 é o registro, e cada correção é uma versão nova, com o motivo obrigatório. Vale a versão de maior número do caso no ciclo. O banco garante `unique (caso_id, ciclo_atendimento, versao)`, `motivo_correcao` nulo só na versão 1 (`check`) e o trigger `impedir_alteracao_registro` contra `update` e `delete`. O valor é guardado em centavos, copiado do parâmetro no momento do registro, para a mudança do parâmetro não alterar o que já foi pago. A forma é o enum `forma_pagamento` (`dinheiro`, `pix`, `cartao`).
+- **`AlteracaoParametro` (RF41, RF29 e RF48):** o histórico das mudanças da tabela `parametros`, só inserção. A tabela `parametros` continua com o valor vigente, e a mudança grava as duas na mesma transação. Serve para o "Última alteração: de R$ 30,00 para R$ 35,00…" da prancha 8-1.
+- **`ParametroSemestre` (RF48 e RF29):** os parâmetros que valem por semestre, com a chave primária `(semestre, chave)`: as vagas ofertadas (`vagas_ofertadas`, RF48) e a data-limite para corrigir evoluções (`data_limite_correcao`, RF29). A alteração grava uma `AlteracaoParametro` com a chave `vagas_ofertadas:2026/2`, por exemplo. O semestre de uma data é `AAAA/1` de janeiro a junho e `AAAA/2` de julho a dezembro, pelo horário de Brasília.
+- **`CorrecaoEvolucao` (RF29):** só inserção, como a `Evolucao`. Cada correção é a ficha inteira (os campos da DF38, cifrados, RNF51), com o motivo, quem corrigiu e quando, e `unique (evolucao_id, versao)`. A versão 1 é a própria `Evolucao`, que não muda; a vigente é a correção de maior versão.
+- **`avisoPaciente` e o aviso manual em `CancelamentoSessao` (RF17):** o aviso do cancelamento por ausência do estagiário (`envio_pendente`, `email_enviado`, `sem_email` ou `email_nao_enviado`), gravado na transação do RF16, e quando, por quem e por qual canal (`whatsapp` ou `outro`) a secretaria avisou o paciente. O trigger que impede alterar o cancelamento passa a aceitar só a mudança destas colunas.
+- **`encerradoEm` e `encerradaEm` (RF48):** hoje o vínculo e a atribuição só têm `vigente`, e os indicadores de posição precisam saber quem estava em atendimento numa data passada. A transferência (RF25) e o desligamento (RF37) passam a preencher a data junto com o `vigente = false`. A migration preenche os registros antigos com o `transferido_em` da transferência que os encerrou e com o `decidido_em` do desligamento. A reversão (RF38) já cria um vínculo novo, e por isso o histórico continua certo.
 
 ## Acesso e segurança (CP12)
 
@@ -450,6 +530,56 @@ sequenceDiagram
 
 ---
 
+### RF56 — Consultar registro de acessos ao prontuário ([#51](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/issues/51))
+
+_Ciclo 5._
+
+**Rota** (módulo `acompanhamento-clinico`): `GET /acessos-prontuario?pacienteId&usuarioId&inicio&fim&pagina` (`@Perfis('coordenacao')`). Lê a tabela `acessos_prontuario`, que o `PoliticaProntuario` já grava em todo acesso, permitido ou negado, desde o Ciclo 3 (RNF52). Cada linha traz a data e a hora, o nome e o perfil do usuário, o nome do paciente e a operação. Não traz nenhum dado do prontuário (RNF17). Ordem: do acesso mais recente para o mais antigo, 50 por página.
+
+| Operação na tabela (`operacao`, `permitido`) | Mostrada como |
+| --- | --- |
+| `permitido = false`, qualquer operação | Acesso negado |
+| `consultar_prontuario` | Visualização |
+| `registrar_anamnese`, `registrar_contrato`, `registrar_evolucao` e `registrar_dados_iniciais` (gravado antes do RF69 separar a anamnese e o contrato) | Criação |
+| `marcar_sessao_realizada`, `corrigir_evolucao` (RF29) e os complementos (RF30, Ciclo 6) | Alteração |
+
+```mermaid
+sequenceDiagram
+    actor C as Coordenação
+    participant A as API (acompanhamento-clínico)
+    participant DB as Banco
+    C->>A: GET /acessos-prontuario?pacienteId&usuarioId&inicio&fim
+    alt outro perfil
+        A-->>C: 403
+    else período inválido
+        A-->>C: 400 com o campo
+    else
+        A->>DB: acessos_prontuario + usuarios + prontuarios + casos + inscricoes (só o nome)
+        A-->>C: página de acessos, com o tipo de operação
+    end
+```
+
+| Regra | Critério de aceitação |
+| --- | --- |
+| A política já grava a leitura com o usuário, o perfil e a data/hora | Cada visualização gera uma entrada com nome, perfil, data/hora e "visualização" |
+| A operação vira "Criação" ou "Alteração" pela tabela acima | Cada criação ou alteração gera a entrada com a operação correspondente |
+| Os filtros entram no `where`; o período usa o dia inteiro em Brasília | Os filtros mostram só as entradas que os atendem |
+| A resposta não tem nenhuma coluna do prontuário | A consulta não mostra o conteúdo clínico |
+| `permitido = false` vira "Acesso negado" ([DF29](../requisitos/decisoes-fbr.md#df29)) | As tentativas negadas aparecem como "acesso negado" |
+| `@Perfis('coordenacao')` | Quem não é coordenação não consulta (403) |
+
+**Decisões de projeto:** a tipificação é feita na leitura, pela tabela acima, com os valores que o `PoliticaProntuario` grava em `acessos_prontuario` (e não os nomes da auditoria geral), para valer também para os acessos já registrados. A tabela de acessos não guarda o modo da política, por isso o tipo sai do nome da operação. Uma operação nova do prontuário entra na tabela na mesma PR, e um teste falha se aparecer uma `operacao` sem tipo. O acesso é gravado pela política **antes** da operação e fora da transação dela, como o RNF52 pede para todo acesso: uma criação ou alteração autorizada que falha depois (por exemplo, o `409` do segundo envio) continua no registro. Por isso, a tela diz "Operação" e o texto de ajuda explica que a linha registra a tentativa autorizada; o resultado da operação fica na auditoria geral (RNF10). A tentativa negada num prontuário que não existe fica sem paciente (`prontuario_id` nulo) e aparece com "—" na coluna do paciente. Consultar o registro também é registrado na auditoria geral (RNF10), e não no próprio registro de acessos.
+
+**Telas:** página "Registro de acessos" (`/acessos-prontuario`), no menu da coordenação, com os filtros paciente (busca pelo nome, como a lista de Pacientes do RF22), usuário, data inicial e final e "Filtrar"; a tabela com o selo de cada operação ("Acesso negado" em vermelho, com o ícone de X); "Nenhum acesso encontrado" quando não há resultado; os cartões no celular; e "Você não tem acesso ao registro de acessos" para os outros perfis. Abre com os últimos 30 dias. Protótipo: [prancha 6-2](prototipos.md#rf56).
+
+**Acessibilidade (RNF56 a RNF58):** a tabela tem `caption`; o selo tem o texto da operação, e não só a cor; a contagem do resultado é anunciada com `role="status"`.
+
+**Dados de teste:** uma visualização do estagiário, uma da coordenação, uma evolução registrada, uma sessão marcada como realizada, uma tentativa negada da secretaria e uma num prontuário inexistente; cada filtro sozinho e combinados; um período sem acessos; a resposta conferida sem texto clínico; a secretaria, o supervisor e o estagiário (403).
+
+**Dependências e riscos:** usa a gravação do RF55 (#50) e os nomes de operação do RF27, do RF28 e do RF69. O RF29, construído no mesmo ciclo, grava `corrigir_evolucao`.
+
+---
+
 ### RF57 — Registrar consentimento para tratamento de dados ([#52](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/issues/52))
 
 _Construída no Ciclo 4._
@@ -525,9 +655,17 @@ sequenceDiagram
 1. **Versão provisória.** Até a FBr aprovar o texto (DF44), a versão vigente é a `0.1`, marcada `provisoria`, e aparece assim na tela. A produção fica com `INSCRICAO_ABERTA=false` até haver uma versão aprovada (sem a variável, a inscrição fica aberta: `?? true` no `inscricao-aberta.guard.ts`). Além disso, em produção, a API recusa a inscrição enquanto a versão vigente for `provisoria`.
 2. **Inscrições antigas.** As inscrições feitas antes do termo ficam com a versão vazia. Elas não são apagadas nem recebem um aceite presumido.
 3. **Texto no banco, e não no código:** uma versão nova entra por migration, sem mudar o código da tela.
-4. **CPF do responsável passa a ser obrigatório para menor de idade.** O aceite do termo pelo responsável exige o nome e o CPF dele, como no protótipo 1-1. A DF43 traz o CPF do responsável como dado da ficha, opcional, e o RF1 e a #191 o tratam assim. Com o RF57, ele passa a ser exigido na inscrição de menor. É uma proposta da equipe, citada no RF1 e registrada nas [pendências de validação com a FBr](../requisitos/analise-feedback.md#pendencias-de-validacao-com-a-fbr). Se a FBr recusar, o CPF volta a ser opcional, e o aceite do menor registra só o nome do responsável.
+4. **CPF do responsável obrigatório para menor de idade.** A implementação preserva a exigência já integrada à inscrição, conforme a [DF47](../requisitos/decisoes-fbr.md#df47), registrada na validação de 06/11. Nome e CPF identificam quem aceita pelo menor. A decisão e sua confirmação institucional são acompanhadas no catálogo; não se presume aprovação do texto do termo.
 5. **Duas caixas: a confirmação do RF1 e o aceite do termo.** O critério do RF1 pede que a pessoa revise os dados e confirme o envio, e a LGPD pede que o consentimento seja específico e destacado (art. 11, I). Por isso, as duas caixas ficam separadas: "Confirmo que revisei os meus dados" (o `confirmado` que já existe) e a do termo. As pranchas 1-1 e 1-2 mostram só a do termo e são ajustadas. O aviso provisório que a etapa 3 mostra hoje no lugar do termo sai.
 6. **Inscrição feita na recepção.** Enquanto o RF3 não entra, a recepção preenche o formulário on-line pelo interessado. Quem lê o termo e marca a caixa é o próprio interessado ou o responsável, na tela ou numa cópia impressa da mesma versão; a recepção não marca por ele. Fica registrado como limitação que, até o RF3, o aceite dado na recepção não se distingue do aceite on-line.
+
+**Na implementação:** a migration `0015_consentimento_versionado`, depois da fila, da transferência de casos e das fichas (0012 a 0014), cria as versões e os campos de aceite. Antes da publicação, seu texto 0.1 foi alinhado à DF51: o contato de emergência é obrigatório. A obrigatoriedade dos campos do formulário RF1 é acompanhada separadamente na issue #252. A versão continua provisória; inscrições legadas não recebem aceite presumido, e versões publicadas não podem ser atualizadas ou apagadas. Um texto aprovado futuro entra por nova migration. O serviço usa a data do banco e calcula o responsável pela data de nascimento; a chave de envio é consultada antes da versão vigente para preservar reenvios.
+
+O bloco do termo segue as pranchas 1-1 e 1-2: selo de versão, tópicos com “Ler tópico”, concordância dentro do quadro e aviso de disponibilidade depois dele. Para menor, exibe aviso informativo, nome e CPF do responsável só para leitura, retorno à etapa 1 para correção e alerta sobre assinatura presencial. Os textos dos cinco tópicos vêm do documento versionado, preservando seu conteúdo completo. Como diferenças da prancha, permanecem os dois blocos de revisão do RF1 já implementado (dados e triagem), os botões “Editar dados” e “Editar triagem” e o envio “Confirmar e enviar inscrição”; o termo não altera esse fluxo. O erro de CPF remete à etapa 1, além da validação que já impede avançar sem ele.
+
+`AMBIENTE_APLICACAO=producao` bloqueia inscrição com termo provisório; sem a variável, `NODE_ENV=production` também bloqueia. O compose repassa a variável com padrão `producao`. **Antes do merge, a implantação deve confirmar `AMBIENTE_APLICACAO=validacao` no Coolify da validação**, como descrito em [Implantação](implantacao.md#configuracao). A implementação é destinada a dados fictícios enquanto o termo for provisório. **R4.4 permanece como ressalva do DoR: falta aprovação formal da FBr, o que impede produção e inscrições reais, mas não a integração técnica em development.** R7.2: estados de carregamento, indisponibilidade, ausência de aceite, identificação do responsável e versão alterada estão descritos e testados. R7.3: as referências são as pranchas 1-1 e 1-2, com as diferenças acima registradas para inspeção. R8.3: não há integração externa própria; o fluxo usa a API de inscrição e o PostgreSQL existentes, e a massa fictícia cobre adulto, menor, falta de aceite, troca de versão, reenvio e registros legados. Os itens da issue permanecem sujeitos à conferência do líder, sem marcação automática.
+
+A evidência automatizada inclui RF57/RNF51 no teste de criptografia da inscrição, RNF56 com axe, RNF57 com `focoVisivel` nos tópicos e no aceite e RNF58 em 320, 360, 768, 1024, 1366 e 1920 px. O caminho do responsável é testado no computador e no celular.
 
 **Telas:** etapa 3 da inscrição, com o termo depois do resumo, os cinco tópicos que abrem e fecham (botões com `aria-expanded` e `aria-controls`), a caixa de confirmação dos dados e a caixa de concordância, as duas desmarcadas, e, para menor, o nome e o CPF do responsável só para leitura e o aviso de que o aceite on-line não substitui o termo assinado na clínica. O `aceiteTermo` entra nos dois lugares que hoje só tratam o `confirmado`: o link do resumo de erros, que leva à caixa do termo, e o mapeamento do 400 do servidor. **Termo desatualizado (409):** a tela recarrega o termo, desmarca a caixa e mostra "O termo foi atualizado. Leia a nova versão e marque a concordância de novo", com o foco na mensagem; esse estado entra na prancha. Conferida também a 320 px (RNF58). Protótipo: [pranchas 1-1 e 1-2](prototipos.md#rf57).
 
@@ -571,7 +709,7 @@ sequenceDiagram
 | --- | --- |
 | O mesmo esquema Zod é usado na interface e na API | Envio com campo obrigatório vazio é bloqueado, e os dados são mantidos |
 | A idade é calculada a partir da data de nascimento, e o responsável legal é obrigatório para menores de 18 anos | Menor de idade sem responsável legal é bloqueado |
-| Pelo menos um contato (celular ou e-mail) e o canal preferencial (e-mail, WhatsApp ou ligação) são obrigatórios; WhatsApp e ligação exigem o celular | Formato validado, um contato exigido e o preferencial registrado |
+| E-mail e celular obrigatórios, sem a escolha do canal preferencial ([DF48](../requisitos/decisoes-fbr.md#df48)); a API grava `canal_preferencial = 'email'` nas inscrições novas, e as antigas mantêm o canal escolhido | Formato validado e os dois contatos exigidos |
 | CPF com 11 números; RG como texto livre, como está no documento, sem órgão emissor e sem upload | Nenhum envio de cópia do documento |
 | A API só grava com `confirmado: true` | Sem confirmação, a solicitação não é registrada |
 | Número no formato `AAAA-NNNNN`, com o ano do registro e a sequência `inscricoes_numero_seq`, que não reinicia a cada ano | Cada inscrição recebe um número único, como "2026-00487" |
@@ -579,7 +717,7 @@ sequenceDiagram
 | A interface só mostra a confirmação após a resposta 201 | Nenhuma confirmação sem registro efetivo |
 | Componente `AvisoEmergencia` fixo no layout do formulário | Aviso do CVV e do SAMU em todas as etapas |
 
-**Dados de teste:** um adulto com e-mail como canal preferencial; um menor com responsável legal, só celular e WhatsApp como canal; uma inscrição com ligação como canal e sem celular (recusada); uma inscrição com CPF em formato inválido; um RG com letra ("12.345.678-X").
+**Dados de teste:** um adulto com e-mail e celular; um menor com responsável legal; uma inscrição sem e-mail e outra sem celular (recusadas); uma inscrição com CPF em formato inválido; um RG com letra ("12.345.678-X").
 
 ### RF2 — Emitir comprovante de inscrição ([#89](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/issues/89))
 
@@ -741,15 +879,17 @@ sequenceDiagram
 
 _Construída no Ciclo 4._
 
+!!! warning "Mudança da DF55 (12/11/2026)"
+    A FBr decidiu que o inscrito vê só "Em triagem", antes de ser chamado para o atendimento, ou "Em atendimento", depois de chamado, **sem a posição na fila** ([DF55](../requisitos/decisoes-fbr.md#df55)). A tabela, o diagrama e as regras abaixo já seguem a DF55. A ordem da fila continua sendo calculada pelo RF7 e vista só pela equipe.
+
 **Rotas** (módulo `fila`, num controller próprio, separado do `GET /fila`, que tem os guards internos na classe):
 
-- `GET /fila/minha-situacao` (pública, com o `VerificacaoGuard` do RF52). Usa só a inscrição ligada à verificação, em `req.inscricaoVerificada`, e devolve uma de quatro situações, pela `casos.situacao`. Não devolve a prioridade nem nenhum dado clínico. Responde com `Cache-Control: no-store`, porque a consulta pode ser feita num computador compartilhado.
-- `GET /fila/situacao?numero=` (secretaria): a consulta presencial, para quem informou só o celular (RF52, [DF24](../requisitos/decisoes-fbr.md#df24)) e para quem recebeu "procure a secretaria". Devolve a mesma resposta da rota pública, com a situação e a posição, sem a cor (RNF17). A secretaria confere a identidade da pessoa no balcão, e a consulta fica na auditoria.
+- `GET /fila/minha-situacao` (pública, com o `VerificacaoGuard` do RF52). Usa só a inscrição ligada à verificação, em `req.inscricaoVerificada`, e devolve uma de três situações, pela `casos.situacao`. Não devolve a prioridade nem nenhum dado clínico. Responde com `Cache-Control: no-store`, porque a consulta pode ser feita num computador compartilhado.
+- `GET /fila/situacao?numero=` (secretaria): a consulta presencial, para inscrições legadas sem e-mail ou pessoas que precisam de apoio na verificação (novas inscrições seguem a DF48) e para quem recebeu "procure a secretaria". Devolve a mesma resposta da rota pública, com a situação, sem a posição (DF55) e sem a cor (RNF17). A secretaria confere a identidade da pessoa no balcão, e a consulta fica na auditoria.
 
 | Situação do caso | Resposta |
 | --- | --- |
-| Sem caso (inscrição sem prioridade) | Aguardando triagem |
-| `aguardando_distribuicao`, `aguardando_vinculo` ou `aguardando_vaga` | Na fila de espera, com a posição na fila inteira |
+| Sem caso (inscrição sem prioridade), `aguardando_distribuicao`, `aguardando_vinculo` ou `aguardando_vaga` | Em triagem, sem a posição |
 | `em_atendimento` | Em atendimento |
 | `encerrado` ou `desligado_por_faltas` | Procure a secretaria |
 
@@ -765,12 +905,9 @@ sequenceDiagram
         A-->>W: 401 sem nenhum dado
     else verificação válida
         A->>DB: caso da inscrição verificada e a situação dele
-        alt sem caso
-            A-->>W: aguardando triagem
-        else aguardando distribuição, vínculo ou vaga
-            A->>A: posição calculada pelo FilaService
-            A-->>W: na fila de espera, posição N
-        else em atendimento
+        alt sem caso, ou aguardando distribuição, vínculo ou vaga
+            A-->>W: em triagem, sem a posição
+        else em atendimento (caso vinculado a um estagiário)
             A-->>W: em atendimento
         else encerrado ou desligado por faltas
             A-->>W: procure a secretaria
@@ -780,19 +917,23 @@ sequenceDiagram
 
 | Regra | Critério de aceitação |
 | --- | --- |
-| A rota só lê `req.inscricaoVerificada` e nunca recebe um id de inscrição (RNF6) | Depois da verificação, o inscrito vê a própria posição e situação |
+| A rota só lê `req.inscricaoVerificada` e nunca recebe um id de inscrição (RNF6) | Depois da verificação, o inscrito vê a própria situação, sem a posição |
 | Sem verificação válida, `401` sem dado | Sem verificação, a consulta é negada |
-| A posição vem do mesmo `FilaService` do RF7, calculada na hora | Depois de mudanças na fila, uma nova consulta mostra a posição atualizada |
+| A situação vem de `casos.situacao`, lida na hora; a posição não é calculada nem devolvida (DF55) | Depois do vínculo com um estagiário, uma nova consulta mostra "Em atendimento" |
 
-**Decisões de projeto:** a posição é a da fila inteira, e não dentro da cor, porque informar a cor revelaria a prioridade clínica (proposta levada à FBr). A resposta vem com o aviso de que a posição pode mudar e não garante data (RNF7). O "procure a secretaria", para o caso encerrado ou desligado, é uma situação a mais que as três da prancha 1-3 e é uma proposta da equipe, registrada nas pendências de validação. O horário "Consulta feita em…" vem da API, junto com a resposta.
+**Decisões de projeto:** a resposta não traz a posição nem a cor (DF55 e RNF17). Ela vem com o aviso de que estar em triagem não garante data de atendimento, porque a captação é semestral (RNF7). O "procure a secretaria", para o caso encerrado ou desligado, continua como encaminhamento à secretaria e é uma proposta da equipe, registrada nas pendências de validação. O horário "Consulta feita em…" vem da API, junto com a resposta.
 
 **Acessibilidade (RNF56 a RNF58):** o resultado, que carrega depois da verificação, é anunciado com `role="status"`. O aviso do 401 usa `role="alert"`, recebe o foco e traz o botão "Confirmar identidade", que recarrega a página para recomeçar a verificação (se o componente da #202 ganhar uma função para recomeçar, ela substitui o recarregamento). A situação tem ícone e texto, e não só cor, e a página é conferida a 320 px sem rolagem lateral.
 
-**Telas:** página `/consultar`, depois dos dois passos do RF52. O componente da #202 já mostra o título, o aviso "Identidade confirmada" e o "Encerrar consulta"; o RF8 mostra só o cartão do resultado, nas três situações do protótipo, mais o "procure a secretaria" e o acesso negado. Para a secretaria, a consulta pelo número fica na lista de Pacientes. Protótipo: [pranchas 1-3 e 1-4](prototipos.md#rf8).
+**Telas:** página `/consultar`, depois dos dois passos do RF52. O componente da #202 já mostra o título, o aviso "Identidade confirmada" e o "Encerrar consulta"; o RF8 mostra só o cartão do resultado, com "Em triagem", "Em atendimento", o encaminhamento "Procure a secretaria" e o acesso negado. Para a secretaria, a consulta pelo número fica na lista de Pacientes. Protótipo: [pranchas 1-3 e 1-4](prototipos.md#rf8).
 
-**Dados de teste:** uma inscrição sem prioridade, uma na posição 3, uma `aguardando_vinculo` (continua na fila), uma em atendimento, uma encerrada e uma desligada (procure a secretaria), cada uma com e-mail para o código; uma verificação expirada (401); uma consulta antes e depois de outro caso passar à frente; a inscrição A verificada pedindo a rota com o número de B na query (a resposta continua sendo a de A); a secretaria consultando pelo número (sem a cor) e o estagiário tentando a mesma rota (403). O teste de compreensão do aviso (RNF7) entra no teste de usabilidade da área pública, com o RF52.
+**Dados de teste:** inscrição sem caso e casos aguardando distribuição, vínculo ou vaga retornam `em_triagem`; após a chamada/vínculo, o caso `em_atendimento` aparece como tal. Encerrados ou desligados retornam `procure_secretaria`. Em todos esses estados, a resposta contém somente `numero`, `situacao` e `consultadaEm`, sem posição, prioridade ou dados clínicos. Testes verificam código real RF52, consulta após mudança do caso, query com outra inscrição ignorada, secretaria autorizada, demais perfis negados, expiração e encerramento. O teste de compreensão do aviso RNF7 com usuários permanece uma atividade de validação; o e2e verifica sua apresentação, não substitui esse teste humano.
 
-**Dependências e riscos:** o RF8 usa o `FilaService` e a `entradaNaFilaEm` do RF7 (#140), as situações novas do RF37 e do RF38 e a verificação do RF52 (#202, ainda aberta). Se entrar antes do RF37 e do RF38, trata só o `encerrado` como "procure a secretaria". O RF7 entra no `depende` do RF8 no `requisitos.yml`, ao lado do RF52.
+**Dependências e riscos:** depende da verificação do RF52, das situações do caso mantidas pela distribuição/vínculo (RF20/RF21) e do encerramento/desligamento. A consulta presencial compõe a lista de Pacientes do RF22. A fila do RF7 continua interna à equipe; o RF8 não chama `FilaService`, não calcula posição e não altera a ordenação. A FBr confirmou os nomes "Em triagem" e "Em atendimento" na DF55. O encaminhamento "Procure a secretaria" para casos encerrados/desligados continua pendente de confirmação específica da FBr.
+
+**Na implementação:** a API e a interface seguem a [DF55](../requisitos/decisoes-fbr.md#df55), registrada na [PR #257](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/pull/257). O cartão mantém número da inscrição, selo com ícone/texto, aviso informativo da captação semestral em "Em triagem" e horário de Brasília com ícone de relógio. As imagens históricas das pranchas 1-3/1-4 ainda contêm a posição e os nomes anteriores: a DF55 substitui esses elementos, conforme o aviso na página dos protótipos. "Atualizar situação" permanece como ação adicional à prancha e busca uma resposta nova sem cache. Título, identidade confirmada e encerramento continuam no componente RF52. A consulta da secretaria permanece abaixo da lista RF22, sem substituí-la. Os testes de navegador cobrem 320, 360, 768, 1024, 1366 e 1920 px, axe e foco por teclado nas ações "Atualizar situação" e "Confirmar identidade" (RNF56–RNF58).
+
+**Execução local dos testes:** `pnpm --filter @clinica/web exec playwright test -c playwright.rf8.config.ts` seleciona RF8 e RF52; o CI usa `playwright.config.ts` e executa a suíte geral. Ambas usam o capturador `e2e/smtp-local.mjs` iniciado pela configuração geral em loopback (`1026`, consulta HTTP `8026`): todos os e-mails dos e2e ficam nesse capturador, sem envio externo. Os cenários RF8 usam destinatários próprios para não ler mensagens de outros testes. Banco e demais variáveis devem apontar para infraestrutura descartável local; não usar dados reais.
 
 ---
 
@@ -1057,7 +1198,7 @@ sequenceDiagram
 
 1. **"Estagiário do supervisor".** O modelo não liga o estagiário a um supervisor: o vínculo é por caso. Vale a definição única do início da CP4, a mesma do RF11 e do RF37.
 2. **Sessões futuras do estagiário anterior.** Ficam canceladas como `administrativo`, com a origem de quem transferiu (`supervisor` ou `coordenacao`), sem falta para ninguém, e a tela lista as sessões para reagendar com o novo estagiário.
-3. **Supervisor no limite de 50 casos:** até a resposta da FBr, vale o bloqueio da [DF17](../requisitos/decisoes-fbr.md#df17), como no RF20 (`casos.service.ts`): o supervisor no limite aparece desabilitado, com o motivo. Deixar a coordenação escolhê-lo com um aviso é uma proposta levada à FBr em 06/11 e registrada nas pendências de validação.
+3. **Supervisor no limite de 50 casos:** na transferência, a coordenação pode escolher o supervisor que já está no limite da [DF17](../requisitos/decisoes-fbr.md#df17), com um aviso ([DF50](../requisitos/decisoes-fbr.md#df50), de 11/11/2026). A distribuição de um caso novo (RF20) continua recusando esse supervisor.
 
 **Telas:** "Transferir caso" na ficha do caso, com os casos ativos de cada opção, o motivo e a confirmação. Protótipo: [prancha 4-3](prototipos.md#rf25).
 
@@ -1080,7 +1221,7 @@ sequenceDiagram
     - Não há a lista do histórico de transferências, que é do RF26.
     - A opção "Manter …" deixa a coordenação trocar só o estagiário, como o RF25 permite.
     - Para a coordenação, a lista mostra todos os estagiários ativos, e não só os do novo supervisor: pela definição de "estagiário do supervisor", quem ainda não tem caso não é de nenhum supervisor, e a transferência para ele é feita pela coordenação.
-    - O supervisor no limite de 50 casos aparece com o aviso da prancha, mas desabilitado, pela decisão 3 acima, até a FBr responder a proposta.
+    - O supervisor no limite de 50 casos aparece com o aviso da prancha e pode ser escolhido pela coordenação ([DF50](../requisitos/decisoes-fbr.md#df50)). A confirmação diz com quantos casos ele fica, a auditoria `transferir_caso` registra `acimaDoLimite`, e o aviso de sucesso diz que o limite foi ultrapassado.
 
 ---
 
@@ -1131,7 +1272,7 @@ _Construída no Ciclo 3._
 
 **Rota:** `POST /sessoes` (secretaria, ou o estagiário responsável pelo caso). Recebe o caso, o início e, opcionalmente, o término. Sem término, ele é calculado com o parâmetro `duracao_sessao_minutos` (padrão de 50). O fim do intervalo para anotações é `termino + intervalo_anotacoes_minutos` (padrão de 10) ([DF18](../requisitos/decisoes-fbr.md#df18)).
 
-**Escopo no Ciclo 3:** o agendamento gera o link de confirmação. Com e-mail como canal preferencial, a API envia o link por e-mail; com WhatsApp ou ligação, a resposta traz a mensagem pronta e o endereço `https://wa.me/55<celular>?text=<mensagem>`, e a interface mostra o botão "Enviar pelo WhatsApp", que chama `POST /sessoes/:id/whatsapp` para registrar `mensagemWhatsappEm` ([DF24](../requisitos/decisoes-fbr.md#df24)). O SMS não é usado. A página que confirma a presença entra com o RF14, no Ciclo 4.
+**Escopo no Ciclo 3:** o agendamento gera o link de confirmação. Com e-mail como canal preferencial, a API envia o link por e-mail; com WhatsApp ou ligação, a resposta traz a mensagem pronta e o endereço `https://wa.me/55<celular>?text=<mensagem>`, e a interface mostra o botão "Enviar pelo WhatsApp", que chama `POST /sessoes/:id/whatsapp` para registrar `mensagemWhatsappEm` ([DF24](../requisitos/decisoes-fbr.md#df24)). O SMS não é usado. A página que confirma a presença entra com o RF14, no Ciclo 4. Com a [DF48](../requisitos/decisoes-fbr.md#df48), a inscrição não pede mais o canal, e o botão do WhatsApp só aparece nas inscrições anteriores a ela com WhatsApp ou ligação.
 
 ```mermaid
 sequenceDiagram
@@ -1371,7 +1512,7 @@ sequenceDiagram
 
 | Regra | Critério de aceitação |
 | --- | --- |
-| O registro muda o status e avisa o paciente pelo canal preferencial | O registro com motivo atualiza a sessão e dispara a notificação ao paciente |
+| O registro muda o status e avisa o paciente por e-mail ([DF48](../requisitos/decisoes-fbr.md#df48)) | O registro com motivo atualiza a sessão e dispara a notificação ao paciente |
 | `403` para quem não é o estagiário, o supervisor do caso ou a secretaria | Quem não tem vínculo com a sessão não registra a ausência |
 | `ausencia_estagiario` fica guardado para o RF39 e o RF40, dos Ciclos 5 e 6 | A ausência real conta nas faltas do estagiário |
 | `administrativo` vem só da rota do RF15 e não entra na contagem do estagiário; o supervisor não registra esse tipo | O cancelamento para remarcar não conta |
@@ -1386,6 +1527,60 @@ sequenceDiagram
 - **Quem vê o quê no diálogo:** a secretaria vê as três opções; o estagiário responsável, a ausência e o cancelamento para remarcar; o supervisor do caso, só a ausência. O vínculo e a atribuição vigentes valem, e não o estagiário de cada sessão.
 
 **Dados de teste:** uma ausência real registrada pelo estagiário e outra pelo supervisor; um cancelamento administrativo pela secretaria, pela rota do RF15; um paciente com e-mail e outro sem; uma falha no envio do e-mail; um estagiário e um supervisor de outro caso (403); uma sessão já iniciada.
+
+---
+
+### RF17 — Notificar paciente sobre ausência do estagiário ([#223](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/issues/223))
+
+_Ciclo 5._
+
+**O que já existe:** o cancelamento por ausência do estagiário (RF16, #144) já manda o e-mail ao paciente depois do commit, sem o motivo, e devolve `avisoAoPaciente` (`email_enviado`, `sem_email` ou `email_nao_enviado`). Hoje esse resultado só aparece na tela de quem cancelou e não fica gravado.
+
+**Rotas** (módulo `agendamento`):
+
+- O `POST /sessoes/:id/ausencia-estagiario` (RF16) passa a gravar o aviso no cancelamento (`aviso_paciente`), **dentro da transação do RF16**: `sem_email` quando o paciente não tem e-mail, ou `envio_pendente` antes de mandar o e-mail. Depois do commit, o envio muda o valor para `email_enviado` ou `email_nao_enviado`.
+- `GET /cancelamentos/avisos-pendentes` (secretaria): os cancelamentos por ausência do estagiário com `aviso_paciente` `sem_email`, `email_nao_enviado` ou `envio_pendente` há mais de 5 minutos (o processo caiu entre o commit e o envio), sem `aviso_manual_em`, de sessões ainda não passadas há mais de 7 dias. Cada um traz o nome do paciente, a data e o horário, o motivo da pendência e a mensagem pronta. Com celular, traz também o endereço `https://wa.me/55<celular>?text=<mensagem>`; sem celular (inscrição anterior à DF48 com só o e-mail, quando o e-mail falha), traz `celular: null`.
+- `POST /cancelamentos/:id/aviso` (secretaria): registra que o paciente foi avisado (`aviso_manual_em`, `aviso_manual_por` e `aviso_manual_canal`, `whatsapp` ou `outro`), como o `POST /sessoes/:id/whatsapp` do agendamento.
+
+```mermaid
+sequenceDiagram
+    actor E as Estagiário
+    participant A as API (agendamento)
+    participant M as E-mail
+    participant DB as Banco
+    actor S as Secretaria
+    E->>A: POST /sessoes/:id/ausencia-estagiario
+    A->>DB: transação do RF16 (sessão cancelada, cancelamento)<br/>e aviso_paciente = envio_pendente ou sem_email
+    opt paciente com e-mail, depois do commit
+        A->>M: e-mail sem o motivo
+        alt envio falhou
+            A->>DB: aviso_paciente = email_nao_enviado
+        else
+            A->>DB: aviso_paciente = email_enviado
+        end
+    end
+    S->>A: GET /cancelamentos/avisos-pendentes (Agenda)
+    A-->>S: mensagem pronta, com o link do WhatsApp se houver celular
+    S->>A: POST /cancelamentos/:id/aviso (whatsapp ou outro)
+    A->>DB: aviso_manual_em, por e canal; auditoria
+```
+
+| Regra | Critério de aceitação |
+| --- | --- |
+| O e-mail sai no mesmo pedido, depois do commit, com dia da semana, data e horário, e sem o motivo (CFP art. 9º) | O cancelamento por ausência envia o e-mail no mesmo momento, sem o motivo da ausência |
+| O texto diz "Este cancelamento não conta como falta" e "A secretaria vai entrar em contato para marcar outro horário" (prancha 5-1) | O e-mail informa que não conta como falta e que a secretaria vai entrar em contato |
+| `sem_email` é gravado na transação do RF16 e entra na lista | Para paciente sem e-mail, a secretaria recebe o aviso com o botão e a mensagem pronta |
+| A falha do envio não desfaz a transação do RF16; `email_nao_enviado`, e o `envio_pendente` que ficou parado, entram na lista | Se o envio falhar, o cancelamento continua registrado e a secretaria recebe o aviso |
+
+**Decisões de projeto:** a mensagem do WhatsApp tem o mesmo texto do e-mail, montada por uma função só, usada pelos dois. O aviso pendente sai da lista quando a secretaria registra o aviso: pelo "Enviar pelo WhatsApp", como no agendamento (DF24), ou, sem celular, pelo "Registrar que o paciente foi avisado", depois de falar com ele por outro meio da ficha (ligação ou presencialmente). Não há reenvio automático do e-mail: a falha vai para a secretaria. O aviso do cancelamento para remarcar continua só por e-mail, como no RF16, porque a nova sessão já leva o aviso do agendamento (RF10). A coluna nova não muda as linhas antigas: os cancelamentos anteriores à migration ficam com `aviso_paciente` nulo e fora da lista. Como o valor do cancelamento novo é gravado na própria transação do RF16, o nulo nunca significa "perdeu o aviso"; a migration também põe um `check` que exige `aviso_paciente` nos cancelamentos por ausência criados depois dela.
+
+**Telas:** cartão "Avise o paciente sobre o cancelamento" na Agenda da secretaria, acima das sessões sem confirmação (RF14), com um item por aviso pendente: o aviso laranja "… não tem e-mail cadastrado e ainda não foi avisada" ou o vermelho "Não foi possível enviar o e-mail a …. A sessão de … continua cancelada.", a "Mensagem pronta" e "Enviar pelo WhatsApp", que abre o link numa aba nova e registra o envio. Sem celular, no lugar do botão aparece "O paciente não tem celular cadastrado. Avise por outro contato da ficha.", com o link "Ver contatos" e o botão "Registrar que o paciente foi avisado". No celular, o botão ocupa a largura toda. Protótipo: [prancha 5-1](prototipos.md#rf17).
+
+**Acessibilidade (RNF56 a RNF58):** cada aviso tem ícone e texto; o botão diz para quem é a mensagem (`aria-label="Enviar pelo WhatsApp para …"`); depois do envio, o item sai com uma mensagem em `role="status"`.
+
+**Dados de teste:** um cancelamento por ausência com e-mail (enviado, fora da lista); um paciente sem e-mail (inscrição anterior à DF48); um envio que falha (servidor de e-mail de teste recusando); um envio que falha para um paciente sem celular (aviso sem o botão do WhatsApp e com o registro manual); um cancelamento parado em `envio_pendente` há mais de 5 minutos (entra na lista); o "Enviar pelo WhatsApp" tirando o item da lista; o e-mail e a mensagem conferidos sem o motivo; o estagiário e a coordenação na rota dos avisos (403).
+
+**Dependências e riscos:** depende do RF16 (#144), já integrado. O reagendamento (RF12) é posterior ao MVP.
 
 ---
 
@@ -1563,6 +1758,57 @@ sequenceDiagram
 **Dados de teste:** uma sessão realizada; sessões agendada, confirmada, cancelada e com falta (422); uma sessão de outro paciente (403); um estagiário com o vínculo revogado (403); o supervisor e a coordenação tentando registrar (403); uma segunda evolução na mesma sessão (409); uma evolução sem técnicas utilizadas; um campo com 1.001 caracteres; um paciente com 9 sessões realizadas que registra a 10ª; uma evolução antiga, com os dois campos.
 
 **Na implementação (PR do RF28):** "Registrar evolução" abre uma página própria com trilha, botão "Cancelar" e os dados completos da sessão; o formulário usa duas colunas em telas largas. Após salvar, a página mostra a confirmação e abre a evolução no prontuário. Se outro envio já tiver gravado a evolução, o `409` invalida a consulta e carrega o registro existente. No prontuário, a tabela de sessões indica o registro, a ausência de aplicação ou a ação permitida; a seção separada de Evoluções mantém cada item recolhido, exceto o recém-salvo. O aviso de fechamento permanece conforme comportamento atual até a FBr definir sua duração. Testes web cobrem os estados do formulário, e o fluxo e2e mede axe e responsividade de 320 a 1920 px.
+
+---
+
+### RF29 — Corrigir evolução registrada ([#224](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/issues/224))
+
+_Ciclo 5._
+
+**Rotas** (módulo `acompanhamento-clinico`):
+
+- `POST /prontuarios/:id/evolucoes/:evolucaoId/correcoes` (o estagiário autor da evolução, com vínculo vigente, ou o supervisor do caso; pelo `PoliticaProntuario` com o modo `escrita` e a conferência do autor no serviço): recebe os campos da ficha de evolução (DF38) e o `motivo`, obrigatório. Grava uma `CorrecaoEvolucao`, a versão seguinte, e registra o acesso como `corrigir_evolucao` (RF56).
+- O `GET /prontuarios/:id` passa a trazer, em cada evolução, a versão vigente e as anteriores, cada uma com o autor, a data/hora e o motivo.
+- `GET /parametros/data-limite-correcao` e `PUT /parametros/data-limite-correcao` (coordenação): a data-limite do semestre vigente, com a última alteração, e a alteração.
+
+```mermaid
+sequenceDiagram
+    actor U as Estagiário ou supervisor do caso
+    participant A as API (acompanhamento-clínico)
+    participant DB as Banco
+    U->>A: POST .../evolucoes/:evolucaoId/correcoes (campos, motivo)
+    A->>DB: política do prontuário (vínculo e atribuição vigentes), registra o acesso
+    alt sem permissão
+        A-->>U: 403, igual para prontuário inexistente (RNF25)
+    else sem motivo ou campo acima do limite
+        A-->>U: 400 com o campo indicado, nada gravado
+    else depois da data-limite do semestre da sessão
+        A-->>U: 422 com a data-limite
+    else
+        A->>DB: transação: trava a evolução, versão = última + 1
+        A->>DB: insere CorrecaoEvolucao cifrada (RNF51) e auditoria (RNF10)
+        A-->>U: versão nova, com autor, data/hora e motivo
+    end
+```
+
+| Regra | Critério de aceitação |
+| --- | --- |
+| A `Evolucao` original não muda (só inserção, trigger); a correção é uma linha nova, com `versao` | A correção do estagiário no prazo preserva a original e registra a nova com autor, data/hora e motivo |
+| `motivo` obrigatório no Zod e no banco (`not null`) | A correção sem motivo é recusada, e o registro continua como estava |
+| Compara o dia de hoje em Brasília com a `data_limite_correcao` do **semestre da sessão** da evolução; vale para os dois perfis | Depois da data-limite, nem o estagiário nem o supervisor corrigem |
+| O `PUT` grava o parâmetro do semestre e a `AlteracaoParametro` na mesma transação | A coordenação registra a data-limite, com o valor anterior, o novo, o autor e a data/hora |
+| Sem a data do semestre, a correção passa, e a resposta do `GET /parametros/data-limite-correcao` traz `pendente: true`, que vira o aviso da coordenação | Sem data-limite, a correção é permitida, e a coordenação é avisada |
+| Política do prontuário com o modo `escrita` (vínculo ou atribuição vigentes) e, para o estagiário, `evolucoes.registrada_por = usuário`; a coordenação só lê | Só o autor e o supervisor do caso corrigem; o supervisor pode corrigir o registro do estagiário |
+
+**Decisões de projeto:** a correção guarda a ficha inteira, e não só o campo mudado, para cada versão poder ser lida sozinha. A data-limite fica num parâmetro por semestre (`ParametroSemestre`, chave `data_limite_correcao`), a mesma tabela das vagas ofertadas do RF48. O prazo é o do **semestre da sessão**, e não o de hoje: assim, na virada do semestre, sem a data do semestre novo registrada, as evoluções do semestre anterior continuam fechadas. Sem a data registrada para o semestre da sessão, vale a regra do RF29 (a correção é permitida e a coordenação é avisada). O autor é o estagiário que registrou a evolução (`registrada_por`), como diz o critério do RF29. Depois de uma transferência (RF25), o estagiário anterior perde o acesso ao prontuário (RF55), e o novo não corrige as evoluções do anterior: só o supervisor do caso corrige as dele. A evolução registrada antes da DF38, com a queixa e o planejamento, é corrigida com os mesmos campos dela.
+
+**Telas:** "Corrigir evolução" em cada evolução do prontuário, dentro do prazo, abre a página "Corrigir evolução da sessão N" (como a "Registro de evolução" do RF28), com o aviso "A correção é permitida até …. A versão original continua guardada no histórico.", os campos já preenchidos e o "Motivo da correção". Sem motivo, aparece o aviso "A correção não foi salva." com o link para o campo. No prontuário, a evolução mostra "Versão N · atual" e as anteriores, com "Corrigida por … em …. Motivo: …". Depois do prazo, aparece "O prazo para corrigir evoluções deste semestre terminou em …", sem o botão. O botão também não aparece para o estagiário nas evoluções de outro autor. Para a coordenação, a página "Parâmetros" (a mesma do RF41) ganha o cartão "Data-limite para correção de evoluções", com o aviso de data pendente. Protótipo: [prancha 6-1](prototipos.md#rf29).
+
+**Acessibilidade (RNF56 a RNF58):** o aviso do topo recebe o foco e leva ao campo com erro; cada versão é uma seção com título; o contador de caracteres segue o do RF28.
+
+**Dados de teste:** a correção do estagiário no prazo (versão 2, a 1 legível); a do supervisor no registro do estagiário; sem motivo (400, nada gravado); um dia depois da data-limite (422 para os dois); sem data-limite (permitida, e a coordenação vê o aviso); a coordenação mudando a data, com o histórico; a coordenação, a secretaria e o estagiário de outro caso tentando corrigir (403); o acesso `corrigir_evolucao` aparecendo no registro do RF56; o `clinica_app` tentando alterar uma versão (recusado pelo banco); uma evolução de 2026/2 corrigida em janeiro de 2027, depois da data-limite de 2026/2 e sem a de 2027/1 registrada (recusada); depois de uma transferência, o estagiário novo tentando corrigir a evolução do anterior (403) e o supervisor corrigindo a mesma evolução (permitido).
+
+**Dependências e riscos:** depende do RF28 (#149), integrado no Ciclo 4. O complemento (RF30) e a validação pelo supervisor (RF31) são do Ciclo 6 e vão ler a versão vigente.
 
 ---
 
@@ -1804,7 +2050,7 @@ sequenceDiagram
 
 **Telas:** botão "Desligar por faltas" só no paciente com alerta, com diálogo de confirmação que lista as sessões futuras que serão canceladas; cartão "Vaga liberada aguardando realocação" na distribuição (coordenação) e em "Meus casos" (supervisor), com o próximo inscrito elegível. Protótipo: [prancha 3-4](prototipos.md#rf37).
 
-**Aviso ao paciente:** o RF37 não pede aviso, e nenhuma mensagem é enviada quando as sessões futuras são canceladas pelo desligamento. Como o paciente pode ir à clínica para uma sessão que não existe mais, a pergunta foi levada à FBr em 06/11: a secretaria avisa por fora do sistema, ou o aviso vira requisito? Até a resposta, a tela de confirmação do desligamento lembra a secretaria de avisar o paciente.
+**Aviso ao paciente:** o RF37 não pede aviso, e nenhuma mensagem é enviada quando as sessões futuras são canceladas pelo desligamento. Como o paciente pode ir à clínica para uma sessão que não existe mais, a pergunta foi levada à FBr em 06/11. Em 11/11, a FBr respondeu que o estagiário responsável avisa o paciente, por fora do sistema ([DF53](../requisitos/decisoes-fbr.md#df53)), e a confirmação do desligamento lembra esse aviso, haja ou não sessões canceladas.
 
 **Dados de teste:** um paciente com 2 faltas e duas sessões futuras; um paciente com 1 falta (recusado); dois pedidos de desligamento simultâneos do mesmo caso (um aceito, o outro 422); uma fila com o próximo inscrito elegível do mesmo supervisor, uma com inscrito só de outro supervisor (vem vazio) e uma fila vazia; o desligamento pela secretaria e pela coordenação; a vaga vista pelo supervisor do estagiário e por outro supervisor (que não vê); o supervisor tentando vincular estagiário ao caso desligado (409); um supervisor com 50 casos, um deles desligado (pode receber um novo caso).
 
@@ -1875,6 +2121,212 @@ sequenceDiagram
 **Dependências e riscos:** a migration dos status sai na primeira PR que entrar entre o RF14, o RF15 (Nicolas) e o RF34, pela regra única da CP4. Se o RF34 entrar antes, ele leva a migration e os ajustes; até o RF14 e o RF15 entrarem, os testes do RF34 criam as sessões confirmadas e canceladas direto no banco, como no Ciclo 3. O RF7 (Jônatas) traz a fila. Nenhuma integração externa: não há e-mail, SMS nem PDF na CP9.
 
 ---
+
+### RF39 — Consolidar faltas do estagiário para a supervisão ([#225](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/issues/225))
+
+_Ciclo 5._
+
+**Rota** (módulo `assiduidade`): `GET /faltas-estagiarios?estagiarioId&inicio&fim` (supervisor e coordenação). Lê os `cancelamentos_sessao` com a classificação `ausencia_estagiario` (RF16) e a sessão no período, e devolve, por linha, só o nome do estagiário, a data e o horário da sessão e a data/hora do registro. Os cancelamentos `administrativo` (para remarcar) ficam de fora.
+
+```mermaid
+sequenceDiagram
+    actor U as Supervisor ou coordenação
+    participant A as API (assiduidade)
+    participant DB as Banco
+    U->>A: GET /faltas-estagiarios?estagiarioId&inicio&fim
+    alt outro perfil, ou estagiário que não é do supervisor
+        A-->>U: 403
+    else período inválido
+        A-->>U: 400 com o campo
+    else
+        A->>DB: cancelamentos ausencia_estagiario + sessões + usuários
+        A-->>U: linhas sem paciente nem motivo, e a contagem
+    end
+```
+
+| Regra | Critério de aceitação |
+| --- | --- |
+| Filtro `classificacao = 'ausencia_estagiario'` e `sessoes.inicio` no período (dias inteiros em Brasília) | Lista as sessões canceladas por ausência real no período, sem os cancelamentos para remarcar |
+| A consulta não faz join com a inscrição, e a resposta não tem o motivo (cifrado, nem decifrado) | Cada linha mostra o estagiário, a data, o horário e o registro, sem o paciente nem o motivo |
+| Para o supervisor, só as sessões de casos com a atribuição dele vigente na data da sessão; `estagiarioId` de fora dá 403. A coordenação vê todos (RNF35) | Quem não é a coordenação nem o supervisor do estagiário não acessa |
+
+**Decisões de projeto:** "estagiário do supervisor" segue a definição única da CP4 (vínculo vigente num caso com a atribuição vigente do supervisor), usada no filtro da tela. A linha conta para o supervisor pela atribuição vigente na data da sessão, com a `encerradaEm` do [modelo do Ciclo 5](#modelo-detalhado-do-ciclo-5), para a falta antiga não sumir depois de uma transferência. A consulta só lista: a contagem do semestre é do RF40, e a reprovação, do RF63, os dois no Ciclo 6.
+
+**Telas:** página "Faltas dos estagiários" (`/faltas-estagiarios`), no menu do supervisor e da coordenação, com o filtro "Estagiário" ("Todos os meus estagiários" para o supervisor e "Todos os estagiários" para a coordenação), as datas e "Consultar"; "N faltas no período" e a tabela, ou "Nenhuma falta no período" com as datas; os cartões no celular; e "Você não tem acesso à relação de faltas" para os outros perfis. Abre com o semestre vigente até hoje. Protótipo: [prancha 7-1](prototipos.md#rf39).
+
+**Acessibilidade (RNF56 a RNF58):** a tabela tem `caption`; a contagem é anunciada com `role="status"`; o filtro é um `select` com rótulo.
+
+**Dados de teste:** duas ausências de um estagiário e uma de outro, do mesmo supervisor, mais um cancelamento para remarcar e um pedido do paciente (só as três ausências aparecem); uma ausência fora do período; o supervisor pedindo um estagiário de outro supervisor (403); a coordenação vendo todos; um período sem faltas; a resposta conferida sem o nome do paciente e sem o motivo; o estagiário e a secretaria (403).
+
+**Dependências e riscos:** depende do RF16 (#144), integrado no Ciclo 4, e da `encerradaEm` da atribuição, criada para o RF48 no mesmo ciclo. Se o RF48 atrasar, o RF39 usa a atribuição vigente hoje e registra a diferença.
+
+---
+
+## Registros administrativos (CP10)
+
+### RF41 — Registrar pagamento da contribuição social do paciente ([#43](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/issues/43))
+
+_Ciclo 5._
+
+**Rotas** (módulo `administrativo`):
+
+- `GET /casos/:id/contribuicao` (secretaria): a situação no ciclo atual do caso. Traz `pendente` ou `efetivada`, o prazo (10 dias corridos a partir do primeiro vínculo depois da última entrada do caso na fila, RF21), a versão vigente e as anteriores, cada uma com o autor e a data/hora.
+- `POST /casos/:id/contribuicao` (secretaria): recebe `pagoEm` e `forma`. O valor não vem do pedido: a API lê o parâmetro `valor_contribuicao_centavos` na mesma transação.
+- `POST /casos/:id/contribuicao/correcao` (secretaria): recebe `valorCentavos`, `pagoEm`, `forma` e `motivo` (obrigatório) e grava a versão seguinte.
+- `GET /parametros/valor-contribuicao` e `PUT /parametros/valor-contribuicao` (coordenação): o valor vigente com a última alteração, e a alteração, que recebe só o `valorCentavos`.
+
+```mermaid
+sequenceDiagram
+    actor S as Secretaria
+    participant A as API (administrativo)
+    participant DB as Banco
+    S->>A: POST /casos/:id/contribuicao (pagoEm, forma)
+    A->>DB: transação: trava o caso (FOR UPDATE) e lê o ciclo atual
+    alt caso sem vínculo no ciclo
+        A-->>S: 422, a contribuição só é devida depois do vínculo
+    else já existe pagamento no ciclo
+        A-->>S: 409 com a data do pagamento registrado
+    else data no futuro ou forma inválida
+        A-->>S: 400 com o campo indicado
+    else
+        A->>DB: lê valor_contribuicao_centavos (parametros)
+        A->>DB: insere PagamentoContribuicao versão 1 com o valor lido
+        A->>DB: auditoria (RNF10, RNF36)
+        A-->>S: efetivada, com valor, data, forma, autor e data/hora
+    end
+```
+
+| Regra | Critério de aceitação |
+| --- | --- |
+| O valor é lido do parâmetro na transação e copiado para o registro | O registro marca a contribuição como efetivada e guarda o valor vigente, a data, a forma, quem registrou e quando |
+| O caso é travado com `FOR UPDATE`, e o `unique (caso_id, ciclo_atendimento, versao)` segura dois envios ao mesmo tempo; o segundo recebe `409` com o `pagoEm` da versão vigente | O segundo pagamento no mesmo ciclo é bloqueado, informando a data do já registrado |
+| `@Perfis('secretaria')` nas rotas do pagamento | Quem não é secretaria não registra pagamento (403) |
+| `PUT /parametros/valor-contribuicao` grava `parametros` e `AlteracaoParametro` na mesma transação; o registro já feito guarda o próprio valor | A alteração pela coordenação registra o valor anterior, o novo, o autor e a data/hora e vale só para os pagamentos seguintes |
+| `@Perfis('coordenacao')` nas rotas do parâmetro | Quem não é coordenação não altera o valor (403) |
+| A correção insere a versão seguinte, com o motivo; o trigger recusa `update` e `delete` | A correção exige o motivo, gera nova versão com autor e data/hora e mantém a anterior consultável |
+
+**Decisões de projeto:** a chave do parâmetro é `valor_contribuicao_centavos`, um inteiro em centavos, e "valor da contribuição social" é o nome dele na tela e no requisito; não há outra chave. Ele começa em 3500 centavos (R$ 35,00), pela migration, como os outros de `PARAMETROS_PADRAO`. **Prazo de 10 dias:** conta do primeiro vínculo criado depois da última entrada do caso na fila (`casos.entrada_na_fila_em`, RF7). A transferência para outro estagiário (RF25) cria outro vínculo, mas não muda a entrada na fila, e por isso não reinicia o prazo. A volta à fila pela perda da vaga (RF43, [DF33](../requisitos/decisoes-fbr.md#df33)) muda a entrada na fila, e o prazo recomeça no vínculo seguinte, como diz o RF41. O "ciclo de atendimento" é o `casos.ciclo_atendimento`, que já separa as faltas e o prontuário; a inscrição num semestre novo abre um ciclo novo e uma contribuição nova. A correção pode mudar o valor, porque o erro pode estar nele (prancha 8-1). Nenhum dado de pagamento passa pela API como cobrança: o sistema só registra o que a secretaria recebeu por fora (RF41). O bloqueio da 2ª sessão sem pagamento é do RF43, no Ciclo 6; aqui o prazo só aparece no cartão.
+
+**Telas:** cartão "Contribuição social · Ciclo N" na ficha do paciente (`/pacientes/[casoId]`), visto pela secretaria, com o selo "Pendente" e o prazo, ou "Efetivada" com valor, data e forma; "Registrar pagamento" e "Corrigir pagamento" abrem o formulário no lugar do cartão, e, no celular, os botões ficam em largura total. A versão anterior aparece abaixo da vigente, com "Registrado por… em…". O `409` mostra o aviso "Este ciclo já tem pagamento registrado." com a data. O valor da coordenação fica numa página nova, "Parâmetros" (`/parametros`), no menu da coordenação: a prancha não diz onde fica o cartão, e a página é uma proposta da equipe. Protótipo: [prancha 8-1](prototipos.md#rf41).
+
+**Acessibilidade (RNF56 a RNF58):** as formas de pagamento são um grupo de rádio com legenda; o erro de cada campo fica ligado por `aria-describedby`, e o aviso do topo recebe o foco; o selo tem texto, e não só cor; a data usa o mesmo campo do agendamento (RF10).
+
+**Dados de teste:** um caso vinculado há 3 dias (pendente, prazo em 7 dias); o registro em Pix; o segundo registro (409 com a data); dois registros ao mesmo tempo (um passa, o outro recebe 409); a correção sem motivo (400) e com motivo (versão 2, a 1 consultável); o estagiário e a coordenação tentando registrar (403); a coordenação mudando de R$ 35,00 para R$ 40,00 e o registro seguinte com R$ 40,00, sem mudar o anterior; um caso transferido para outro estagiário (o prazo continua contando do primeiro vínculo); um caso que voltou à fila e foi vinculado de novo (o prazo recomeça no vínculo novo); a secretaria tentando mudar o valor (403); o `clinica_app` tentando apagar uma versão (recusado pelo banco).
+
+**Dependências e riscos:** usa o vínculo do RF21 e a entrada na fila do RF7 para o prazo, e a tabela `alteracoes_parametro`, criada com o RF48. A situação para a secretaria, a coordenação e o estagiário (lista com filtro e indicação na agenda) é do RF42, e o bloqueio, do RF43, os dois no Ciclo 6.
+
+---
+
+### RF44 — Listar sessões com comparecimento registrado do paciente ([#226](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/issues/226))
+
+_Ciclo 5._
+
+**Rotas** (módulo `administrativo`):
+
+- `GET /declaracoes/minhas-sessoes` (pública, com o `VerificacaoGuard` do RF52): as sessões `realizada` da inscrição em `req.inscricaoVerificada`, de todos os ciclos, da mais recente para a mais antiga. Cada uma traz só a data, o horário e o nome do estagiário. Responde com `Cache-Control: no-store`.
+- `GET /pacientes/:casoId/sessoes-realizadas` (secretaria): a mesma lista, para a ficha do paciente.
+
+```mermaid
+sequenceDiagram
+    actor P as Paciente ou responsável
+    participant W as Web (/declaracoes)
+    participant A as API (administrativo)
+    participant DB as Banco
+    P->>W: confirma a identidade (RF52)
+    W->>A: GET /declaracoes/minhas-sessoes
+    alt verificação ausente ou expirada
+        A-->>W: 401, e a tela pede a verificação de novo
+    else
+        A->>DB: sessões realizada da inscrição verificada
+        A-->>W: lista (ou vazia), sem dado clínico
+        W-->>P: tabela, ou "Não há sessões disponíveis para declaração"
+    end
+```
+
+| Regra | Critério de aceitação |
+| --- | --- |
+| Filtra `status = 'realizada'`; a resposta só tem data, horário e nome do estagiário | A lista mostra só as sessões com presença registrada, com data, horário e estagiário |
+| A rota pública só usa a inscrição da verificação e não recebe id (RNF6) | O paciente ou responsável verificado vê só as próprias sessões |
+| Lista vazia volta `200` com `[]`, e a tela mostra o estado vazio | Sem sessão com presença, aparece o aviso de que não há sessões para declaração |
+| `@Perfis('secretaria')` na rota interna; `401` sem verificação na pública | Usuário interno sem perfil de secretaria não acessa; sem verificação, nenhuma sessão aparece (RNF38) |
+
+**Decisões de projeto:** a lista não tem ação até o RF45 (Ciclo 6). O aviso "A emissão da declaração pelo sistema ainda não está disponível. Para pedir a sua, procure a secretaria da clínica." é uma proposta da equipe, como diz a prancha. As sessões de ciclos anteriores entram, porque a declaração pode ser pedida depois do fim do atendimento.
+
+**Telas:** página `/declaracoes`, depois dos dois passos do RF52 (o mesmo componente do RF8), com "Inscrição AAAA-NNNNN", o aviso, a tabela (cartões no celular) e "Encerrar consulta". Na ficha da secretaria, a seção "Sessões com presença registrada". O estagiário, o supervisor e a coordenação que abrem a rota interna veem a tela "Você não tem acesso a esta lista". Protótipo: [prancha 8-2](prototipos.md#rf44).
+
+**Acessibilidade (RNF56 a RNF58):** tabela com `caption` e cabeçalhos; o estado vazio é um título com o texto; a página é conferida a 320 px.
+
+**Dados de teste:** uma inscrição com três sessões realizadas, uma cancelada, uma com falta e uma agendada (só as três aparecem); uma inscrição sem sessão realizada (estado vazio); a inscrição A verificada pedindo a rota (só as de A); a rota sem verificação (401); o estagiário, o supervisor e a coordenação na rota interna (403).
+
+**Dependências e riscos:** depende do RF52 (#47), já integrado, e da sessão `realizada`, marcada no prontuário (RF28). A emissão é do RF45.
+
+---
+
+## Indicadores e relatórios institucionais (CP11)
+
+### RF48 — Consultar indicadores operacionais ([#22](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/issues/22))
+
+_Ciclo 5._
+
+**Rotas** (módulo `institucional`, todas `@Perfis('coordenacao')`):
+
+- `GET /indicadores?inicio=AAAA-MM-DD&fim=AAAA-MM-DD`: os quatro indicadores. Recusa com `400` o fim depois do dia da consulta ou o início depois do fim, com o campo e o motivo.
+- `GET /vagas-ofertadas/:semestre` e `PUT /vagas-ofertadas/:semestre`: o total do semestre, com a última alteração, e a alteração, que recebe o `total` (inteiro maior que zero).
+
+| Indicador | Cálculo (SQL, numa transação só leitura `REPEATABLE READ`) |
+| --- | --- |
+| Data de referência | Fim do dia `fim` em Brasília; se `fim` é hoje, o momento da consulta |
+| Em atendimento ativo em D | Caso com um vínculo de estagiário em que `vinculado_em <= D` e (`encerrado_em` nulo ou `> D`), **ou** cujo último vínculo antes de D foi encerrado por uma transferência (`transferencias_caso.vinculo_anterior_id`) e que não foi desligado nem encerrado até D. O desligamento encerra o vínculo e tira o caso do atendimento ativo. A transferência só de supervisor encerra o vínculo e deixa o caso aguardando o vínculo pelo novo supervisor (RF25); como o RF48 diz que a transferência mantém o paciente em atendimento ativo, esse intervalo conta como vaga ocupada |
+| 1. Vagas ocupadas | Casos ativos na data de referência, sobre as `vagas_ofertadas` do `ParametroSemestre` do semestre dela; sem registro, só a quantidade e `totalRegistrado: false` |
+| 2. Tempo médio de espera | Para cada caso cuja primeira sessão `realizada` está no intervalo: dias corridos entre a data da inscrição e a dessa sessão; média com uma casa |
+| 3. Taxa de evasão | Desligamentos por faltas com `decidido_em` no intervalo e `revertido_em` nulo, sobre os casos em atendimento ativo (pela definição acima) em pelo menos um dia do intervalo: o período de atendimento começa antes do fim do intervalo e não termina antes do início. O período de um vínculo encerrado por transferência vai até o vínculo seguinte, então o caso conta mesmo com o intervalo inteiro dentro da transição; denominador zero dá 0,0% |
+| 4. Distribuição por supervisor | Todos os supervisores ativos, com a contagem dos casos ativos na data de referência cuja atribuição de supervisor também estava vigente nela (`atribuido_em <= D` e `encerrada_em` nula ou `> D`); quem tem zero aparece |
+
+```mermaid
+sequenceDiagram
+    actor C as Coordenação
+    participant A as API (institucional)
+    participant DB as Banco
+    C->>A: GET /indicadores?inicio&fim
+    alt intervalo inválido
+        A-->>C: 400 com o campo e o motivo, sem indicador
+    else
+        A->>DB: transação só leitura: as quatro consultas na mesma foto
+        A->>DB: vagas ofertadas do semestre da data de referência
+        A-->>C: indicadores, data de referência e textos do período
+    end
+```
+
+| Regra | Critério de aceitação |
+| --- | --- |
+| A data de referência é o fim de `fim`; os de fluxo usam `inicio` a `fim`, inclusive | Na consulta de 01/08 a 31/08 feita em 15/09, os de posição refletem o fim de 31/08, e os de fluxo, de 01/08 a 31/08 |
+| `fim` igual a hoje usa `now()` | Com fim no dia da consulta, os de posição refletem o momento da consulta |
+| `revertido_em is null` no numerador | O desligamento revertido não entra na evasão |
+| Cada indicador sempre volta um número; divisão por zero dá 0 | Indicador sem registros aparece como zero, nunca em branco |
+| Validação do intervalo com Zod no `@clinica/shared` | O intervalo inválido é recusado com o motivo |
+| `PUT /vagas-ofertadas/:semestre` grava o `ParametroSemestre` e a `AlteracaoParametro` na mesma transação | A coordenação registra as vagas do semestre, com o valor anterior, o novo, o autor e a data/hora |
+| `totalRegistrado: false` sem linha do semestre | Sem vagas registradas, aparece só a quantidade ocupada e o aviso |
+| `@Perfis('coordenacao')` em todas as rotas | Quem não é coordenação não consulta nem registra (403) |
+
+**Decisões de projeto:** os indicadores são calculados na hora, sem tabela de resumo, porque o volume da clínica é pequeno. Assim, todo registro incluído ou alterado entra na próxima consulta, o que atende ao [RNF46](../requisitos/nao-funcionais.md#rnf46) (até 15 minutos); o teste registra um desligamento e confere que a consulta seguinte já o conta na taxa de evasão. O tempo de até 5 segundos do [RNF47](../requisitos/nao-funcionais.md#rnf47), com um período de 12 meses e 10 usuários ao mesmo tempo, é medido no teste de carga. A posição numa data passada depende do `encerradoEm`, criado neste ciclo (ver o [modelo do Ciclo 5](#modelo-detalhado-do-ciclo-5)); os vínculos encerrados antes da migration recebem a data pela transferência ou pelo desligamento. A data de inscrição é a `inscricoes.criada_em`, e não a `entrada_na_fila_em`, porque o RF48 fala da inscrição. Nenhum nome de paciente sai na resposta.
+
+**Telas:** página "Indicadores" (`/indicadores`), no menu da coordenação, com as datas e "Consultar"; a frase do período ("Vagas ocupadas e distribuição mostram a situação ao fim de…"); os três cartões e a tabela por supervisor; "Alterar vagas ofertadas" (ou "Registrar vagas ofertadas", no aviso) abre o diálogo com a última alteração; o intervalo recusado marca o campo e mostra o aviso "Não foi possível consultar este período."; "Calculando os indicadores…" com o esqueleto dos cartões. O supervisor e os outros perfis veem "Você não tem acesso aos indicadores operacionais", com a volta para a página inicial do perfil. Abre com o mês corrente até hoje. Protótipo: [pranchas 9-1 e 9-2](prototipos.md#rf48).
+
+**Acessibilidade (RNF56 a RNF58):** o resultado é anunciado com `role="status"` ao terminar; a barra das vagas tem o número em texto; a tabela tem `caption`; o diálogo prende o foco e o devolve ao link que o abriu; os cartões viram uma coluna no celular.
+
+**Dados de teste:** para o teste de carga do RNF47, uma massa de 12 meses (inscrições, vínculos, transferências, desligamentos e sessões realizadas, na escala do cenário de referência do RNF12); para os critérios, um mês com vínculos, uma transferência, dois desligamentos (um revertido) e primeiras sessões dentro e fora do intervalo, com os valores esperados de cada indicador calculados à mão; a mesma consulta feita "depois", com um vínculo encerrado após o fim do intervalo (continua contado); o fim igual a hoje; um período sem registros (todos 0); o semestre sem vagas registradas; o fim no futuro e o início depois do fim (400); um supervisor sem casos (aparece com 0); uma transferência só de supervisor no meio do mês, com o novo vínculo 3 dias depois (o caso continua contado em "Vagas ocupadas" e no denominador da evasão nesses 3 dias); uma consulta com o intervalo inteiro dentro desses 3 dias (o caso entra no denominador da evasão); a secretaria, o supervisor e o estagiário (403).
+
+**Dependências e riscos:** depende do RF21, do RF25, do RF37 e do RF38, já integrados, e da migration do `encerradoEm`, que mexe em tabelas usadas pela transferência e pelo desligamento: as duas passam a gravar a data e ganham teste. O RF9, fora do MVP, vai divulgar as vagas registradas aqui.
+
+**Na implementação ([PR #259](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/pull/259)):**
+
+- **Migration:** a `0016_indicadores_operacionais`, depois do consentimento do RF57 (`0015`), cria o `parametros_semestre` e o `alteracoes_parametro` e acrescenta o `encerrado_em` do vínculo e o `encerrada_em` da atribuição. Os registros antigos recebem a data pela transferência ou pelo desligamento. O histórico das alterações é só de inserção, com o gatilho `alteracoes_parametro_somente_insercao`, que usa o `impedir_alteracao_registro`.
+- **Semestre na rota:** o semestre é guardado como `2026/2`, mas vai na URL com hífen (`/vagas-ofertadas/2026-2`), porque a barra separa o caminho.
+- **Gravação das vagas:** a transação trava o semestre (`pg_advisory_xact_lock`) antes de ler o valor anterior. Assim, duas gravações ao mesmo tempo, mesmo na primeira vez do semestre, não registram o mesmo valor anterior no histórico.
+- **Leitura:** o banco devolve só os vínculos, as atribuições, os desligamentos e as sessões que podem cruzar o intervalo consultado; o cálculo dos quatro indicadores fica em `calculo-indicadores.ts`, separado do banco e testado sem ele.
+- **Distribuição por supervisor:** a tabela vem ordenada pelo número de casos e, no empate, pelo nome.
+- **Acesso negado:** a tela mostra "Você não tem acesso aos indicadores operacionais", com a volta para a página inicial, mas sem o "Tentativa registrada" da prancha 9-1, porque a recusa da rota (403) não é registrada na auditoria. A alteração das vagas, sim, vai para a auditoria, junto com o histórico.
+- **RNF46 e RNF47:** o teste do desligamento refletido na taxa de evasão está em `indicadores.spec.ts`. O teste de carga do RNF47, com a massa de 12 meses, entra numa PR seguinte.
 
 ## Roteiro da inspeção de design
 

@@ -360,12 +360,11 @@ export function DialogoDesligar({
           tipo="info"
           titulo="Nenhum inscrito da fila é vinculado automaticamente. A coordenação distribui o caso e o supervisor registra o novo vínculo."
         />
-        {futuras.length > 0 && (
-          <Aviso
-            tipo="alerta"
-            titulo="Avise o paciente sobre o desligamento e as sessões canceladas: o sistema não envia mensagem."
-          />
-        )}
+        {/* Quem avisa o paciente é o estagiário responsável (DF53). */}
+        <Aviso
+          tipo="alerta"
+          titulo={`O estagiário responsável avisa o paciente sobre o desligamento${futuras.length > 0 ? " e as sessões canceladas" : ""}: o sistema não envia mensagem.`}
+        />
       </div>
     </Dialogo>
   );

@@ -16,6 +16,9 @@ export type VinculoLido = {
   // Encerrado por uma transferência (RF25): o caso continua em atendimento ativo
   // até o vínculo seguinte, como diz o RF48.
   encerradoPorTransferencia: boolean;
+  // Início do vínculo seguinte do caso, lido no banco. Quando não vem, vale o
+  // vínculo seguinte da lista.
+  proximoVinculoEm?: Date | null;
 };
 export type AtribuicaoLida = {
   casoId: string;
@@ -80,7 +83,9 @@ export function periodosAtivos(vinculos: VinculoLido[]) {
       ordenados.map((v, i) => ({
         inicio: v.vinculadoEm,
         fim: v.encerradoPorTransferencia
-          ? (ordenados[i + 1]?.vinculadoEm ?? null)
+          ? v.proximoVinculoEm !== undefined
+            ? v.proximoVinculoEm
+            : (ordenados[i + 1]?.vinculadoEm ?? null)
           : v.encerradoEm,
       })),
     );

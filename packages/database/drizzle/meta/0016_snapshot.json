@@ -1,6 +1,6 @@
 {
-  "id": "43296029-d805-4446-833d-451ad767e5c9",
-  "prevId": "9632bd7f-cae8-49f8-8d6c-55e7d8c5569f",
+  "id": "f39c00cc-14df-42c7-9519-0110a0680a11",
+  "prevId": "94014db4-ca0b-4307-9b2e-caf888ef4a78",
   "version": "7",
   "dialect": "postgresql",
   "tables": {
@@ -477,6 +477,24 @@
           "primaryKey": false,
           "notNull": false
         },
+        "versao_termo_aceita": {
+          "name": "versao_termo_aceita",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "termo_aceito_em": {
+          "name": "termo_aceito_em",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "aceite_pelo_responsavel": {
+          "name": "aceite_pelo_responsavel",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": false
+        },
         "criada_em": {
           "name": "criada_em",
           "type": "timestamp with time zone",
@@ -486,7 +504,17 @@
         }
       },
       "indexes": {},
-      "foreignKeys": {},
+      "foreignKeys": {
+        "inscricoes_versao_termo_aceita_versoes_termo_versao_fk": {
+          "name": "inscricoes_versao_termo_aceita_versoes_termo_versao_fk",
+          "tableFrom": "inscricoes",
+          "tableTo": "versoes_termo",
+          "columnsFrom": ["versao_termo_aceita"],
+          "columnsTo": ["versao"],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
       "compositePrimaryKeys": {},
       "uniqueConstraints": {
         "inscricoes_numero_unique": {
@@ -497,6 +525,14 @@
       },
       "policies": {},
       "checkConstraints": {
+        "inscricoes_aceite_com_versao": {
+          "name": "inscricoes_aceite_com_versao",
+          "value": "(\"inscricoes\".\"versao_termo_aceita\" is null) = (\"inscricoes\".\"termo_aceito_em\" is null)"
+        },
+        "inscricoes_aceite_com_responsavel": {
+          "name": "inscricoes_aceite_com_responsavel",
+          "value": "(\"inscricoes\".\"versao_termo_aceita\" is null) = (\"inscricoes\".\"aceite_pelo_responsavel\" is null)"
+        },
         "inscricoes_algum_contato": {
           "name": "inscricoes_algum_contato",
           "value": "\"inscricoes\".\"celular\" is not null or \"inscricoes\".\"email\" is not null"
@@ -518,6 +554,55 @@
           "value": "\"inscricoes\".\"cep\" is null or \"inscricoes\".\"cep\" ~ '^[0-9]{8}$'"
         }
       },
+      "isRLSEnabled": false
+    },
+    "public.versoes_termo": {
+      "name": "versoes_termo",
+      "schema": "",
+      "columns": {
+        "versao": {
+          "name": "versao",
+          "type": "text",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "titulo": {
+          "name": "titulo",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "introducao": {
+          "name": "introducao",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "topicos": {
+          "name": "topicos",
+          "type": "jsonb",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "vigente_desde": {
+          "name": "vigente_desde",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "provisoria": {
+          "name": "provisoria",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
       "isRLSEnabled": false
     },
     "public.atribuicoes_supervisor": {
@@ -2743,120 +2828,6 @@
       "policies": {},
       "checkConstraints": {},
       "isRLSEnabled": false
-    },
-    "public.pagamentos_contribuicao": {
-      "name": "pagamentos_contribuicao",
-      "schema": "",
-      "columns": {
-        "id": {
-          "name": "id",
-          "type": "uuid",
-          "primaryKey": true,
-          "notNull": true,
-          "default": "gen_random_uuid()"
-        },
-        "caso_id": {
-          "name": "caso_id",
-          "type": "uuid",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "ciclo_atendimento": {
-          "name": "ciclo_atendimento",
-          "type": "integer",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "versao": {
-          "name": "versao",
-          "type": "integer",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "valor_centavos": {
-          "name": "valor_centavos",
-          "type": "integer",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "pago_em": {
-          "name": "pago_em",
-          "type": "date",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "forma": {
-          "name": "forma",
-          "type": "forma_pagamento",
-          "typeSchema": "public",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "motivo_correcao": {
-          "name": "motivo_correcao",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "registrado_por": {
-          "name": "registrado_por",
-          "type": "uuid",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "registrado_em": {
-          "name": "registrado_em",
-          "type": "timestamp with time zone",
-          "primaryKey": false,
-          "notNull": true,
-          "default": "now()"
-        }
-      },
-      "indexes": {},
-      "foreignKeys": {
-        "pagamentos_contribuicao_caso_id_casos_id_fk": {
-          "name": "pagamentos_contribuicao_caso_id_casos_id_fk",
-          "tableFrom": "pagamentos_contribuicao",
-          "tableTo": "casos",
-          "columnsFrom": ["caso_id"],
-          "columnsTo": ["id"],
-          "onDelete": "no action",
-          "onUpdate": "no action"
-        },
-        "pagamentos_contribuicao_registrado_por_usuarios_id_fk": {
-          "name": "pagamentos_contribuicao_registrado_por_usuarios_id_fk",
-          "tableFrom": "pagamentos_contribuicao",
-          "tableTo": "usuarios",
-          "columnsFrom": ["registrado_por"],
-          "columnsTo": ["id"],
-          "onDelete": "no action",
-          "onUpdate": "no action"
-        }
-      },
-      "compositePrimaryKeys": {},
-      "uniqueConstraints": {
-        "pagamentos_contribuicao_versao_unica": {
-          "name": "pagamentos_contribuicao_versao_unica",
-          "nullsNotDistinct": false,
-          "columns": ["caso_id", "ciclo_atendimento", "versao"]
-        }
-      },
-      "policies": {},
-      "checkConstraints": {
-        "pagamentos_contribuicao_versao_positiva": {
-          "name": "pagamentos_contribuicao_versao_positiva",
-          "value": "\"pagamentos_contribuicao\".\"versao\" >= 1"
-        },
-        "pagamentos_contribuicao_valor_positivo": {
-          "name": "pagamentos_contribuicao_valor_positivo",
-          "value": "\"pagamentos_contribuicao\".\"valor_centavos\" > 0"
-        },
-        "pagamentos_contribuicao_motivo_da_correcao": {
-          "name": "pagamentos_contribuicao_motivo_da_correcao",
-          "value": "(\"pagamentos_contribuicao\".\"versao\" = 1) = (\"pagamentos_contribuicao\".\"motivo_correcao\" is null)"
-        }
-      },
-      "isRLSEnabled": false
     }
   },
   "enums": {
@@ -2934,11 +2905,6 @@
       "name": "origem_falta",
       "schema": "public",
       "values": ["falta", "cancelamento_fora_do_prazo"]
-    },
-    "public.forma_pagamento": {
-      "name": "forma_pagamento",
-      "schema": "public",
-      "values": ["dinheiro", "pix", "cartao"]
     }
   },
   "schemas": {},

@@ -19,13 +19,30 @@ import {
   type Indicadores,
   type VagasOfertadas,
 } from '@clinica/shared';
-import { and, desc, eq, exists, min, sql } from 'drizzle-orm';
+import {
+  and,
+  between,
+  desc,
+  eq,
+  exists,
+  gt,
+  gte,
+  isNull,
+  lte,
+  min,
+  or,
+  sql,
+} from 'drizzle-orm';
 import {
   AuditoriaService,
   type Transacao,
 } from '../../auditoria/auditoria.service';
 import { DB } from '../../database/database.module';
-import { calcularIndicadores, fimDoDia } from './calculo-indicadores';
+import {
+  calcularIndicadores,
+  fimDoDia,
+  inicioDoDia,
+} from './calculo-indicadores';
 
 const VAGAS = 'vagas_ofertadas';
 type Leitor = Db | Transacao;
@@ -49,6 +66,27 @@ export class IndicadoresService {
             ? agora
             : fimDoDia(consulta.fim);
         const semestre = semestreDaData(hojeEmBrasilia(referencia));
+        const de = inicioDoDia(consulta.inicio);
+        const ate = fimDoDia(consulta.fim);
+        // Início do vínculo seguinte do mesmo caso: é até onde vai o período de um
+        // vínculo encerrado por transferência, mesmo que o seguinte esteja fora
+        // da janela.
+        const proximo = sql<Date | null>`(select min(v2.vinculado_em) from ${vinculosEstagiario} v2 where v2.caso_id = ${vinculosEstagiario.casoId} and v2.vinculado_em > ${vinculosEstagiario.vinculadoEm})`;
+        const encerradoPorTransferencia = exists(
+          tx
+            .select({ um: sql`1` })
+            .from(transferenciasCaso)
+            .where(
+              eq(transferenciasCaso.vinculoAnteriorId, vinculosEstagiario.id),
+            ),
+        );
+        // O banco devolve só o que pode cruzar a janela da consulta, para o custo
+        // não crescer com o histórico inteiro (RNF47):
+        // - vínculos iniciados até o fim e ainda vigentes no início, ou encerrados
+        //   por transferência (o período deles vai até o vínculo seguinte);
+        // - atribuições vigentes na data de referência;
+        // - desligamentos do intervalo;
+        // - casos cuja primeira sessão realizada caiu no intervalo.
         const [
           vinculos,
           atribuicoes,
@@ -62,19 +100,26 @@ export class IndicadoresService {
               casoId: vinculosEstagiario.casoId,
               vinculadoEm: vinculosEstagiario.vinculadoEm,
               encerradoEm: vinculosEstagiario.encerradoEm,
-              encerradoPorTransferencia: exists(
-                tx
-                  .select({ um: sql`1` })
-                  .from(transferenciasCaso)
-                  .where(
-                    eq(
-                      transferenciasCaso.vinculoAnteriorId,
-                      vinculosEstagiario.id,
-                    ),
-                  ),
-              ).mapWith(Boolean),
+              encerradoPorTransferencia:
+                encerradoPorTransferencia.mapWith(Boolean),
+              proximoVinculoEm: proximo.mapWith((v: string | Date | null) =>
+                v === null ? null : new Date(v),
+              ),
             })
-            .from(vinculosEstagiario),
+            .from(vinculosEstagiario)
+            .where(
+              and(
+                lte(vinculosEstagiario.vinculadoEm, ate),
+                or(
+                  isNull(vinculosEstagiario.encerradoEm),
+                  gte(vinculosEstagiario.encerradoEm, de),
+                  and(
+                    encerradoPorTransferencia,
+                    or(sql`${proximo} is null`, sql`${proximo} >= ${de}`),
+                  ),
+                ),
+              ),
+            ),
           tx
             .select({
               casoId: atribuicoesSupervisor.casoId,
@@ -82,14 +127,24 @@ export class IndicadoresService {
               atribuidoEm: atribuicoesSupervisor.atribuidoEm,
               encerradaEm: atribuicoesSupervisor.encerradaEm,
             })
-            .from(atribuicoesSupervisor),
+            .from(atribuicoesSupervisor)
+            .where(
+              and(
+                lte(atribuicoesSupervisor.atribuidoEm, referencia),
+                or(
+                  isNull(atribuicoesSupervisor.encerradaEm),
+                  gt(atribuicoesSupervisor.encerradaEm, referencia),
+                ),
+              ),
+            ),
           tx
             .select({
               casoId: desligamentosPorFaltas.casoId,
               decididoEm: desligamentosPorFaltas.decididoEm,
               revertidoEm: desligamentosPorFaltas.revertidoEm,
             })
-            .from(desligamentosPorFaltas),
+            .from(desligamentosPorFaltas)
+            .where(between(desligamentosPorFaltas.decididoEm, de, ate)),
           tx
             .select({
               casoId: sessoesAtendimento.casoId,
@@ -102,7 +157,8 @@ export class IndicadoresService {
             .innerJoin(casos, eq(casos.id, sessoesAtendimento.casoId))
             .innerJoin(inscricoes, eq(inscricoes.id, casos.inscricaoId))
             .where(eq(sessoesAtendimento.status, 'realizada'))
-            .groupBy(sessoesAtendimento.casoId, inscricoes.criadaEm),
+            .groupBy(sessoesAtendimento.casoId, inscricoes.criadaEm)
+            .having(between(min(sessoesAtendimento.inicio), de, ate)),
           tx
             .select({ id: usuarios.id, nome: usuarios.nome })
             .from(usuarios)
@@ -176,6 +232,12 @@ export class IndicadoresService {
   // valor anterior, o novo, o autor e a data/hora.
   registrarVagas(semestre: string, total: number, autorId: string) {
     return this.db.transaction(async (tx) => {
+      // Trava a chave do semestre antes de ler o valor anterior: na primeira
+      // gravação ainda não há linha para o FOR UPDATE bloquear, e duas gravações
+      // ao mesmo tempo leriam o mesmo "sem valor anterior".
+      await tx.execute(
+        sql`select pg_advisory_xact_lock(hashtextextended(${`${VAGAS}:${semestre}`}, 0))`,
+      );
       const [atual] = await tx
         .select({ valor: parametrosSemestre.valor })
         .from(parametrosSemestre)

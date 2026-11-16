@@ -8,7 +8,7 @@ As telas estão organizadas pelo fluxo do sistema, uma seção por feature, e ca
 | --- | --- | --- | --- |
 | Ciclo 3 | [Abrir no Claude Design](https://claude.ai/artifact/Ad1CLwRmS2AFtZHDj8vtwo#page-dcb81aee8d83){ target="_blank" rel="noopener" } | [PDF de 24/10/2026 (24 MB)](../assets/prototipos-ciclo-3/prototipos-ciclo-3.pdf){ target="_blank" rel="noopener" } | Aprovados com ajustes na [reunião de 23/10/2026](../historico/unidade-3/reunioes.md#reuniao-de-validacao-do-prototipo-do-ciclo-3-com-a-fbr) |
 | Ciclo 4 | [Abrir o projeto de design](https://claude.ai/artifact/46j4XDcdd3JK7Dev5ixcDW){ target="_blank" rel="noopener" } | [PDF (13 MB)](../assets/prototipos-ciclo-4/prototipos-ciclo-4.pdf){ target="_blank" rel="noopener" } | Enviados à FBr em 06/11/2026, com as propostas abaixo ([ata](../historico/unidade-3/reunioes.md#reuniao-de-validacao-do-ciclo-3-com-a-fbr)) |
-| Ciclo 5 | [Abrir o projeto de design](https://claude.ai/artifact/JNqq7TRz9RTdhKT7pMey2J#page-dcb81aee8d83){ target="_blank" rel="noopener" } | [PDF (11 MB)](../assets/prototipos-ciclo-5/prototipos-ciclo-5.pdf){ target="_blank" rel="noopener" } | Ainda não enviados à FBr |
+| Ciclo 5 | [Abrir o projeto de design](https://claude.ai/artifact/JNqq7TRz9RTdhKT7pMey2J#page-dcb81aee8d83){ target="_blank" rel="noopener" } | [PDF (11 MB)](../assets/prototipos-ciclo-5/prototipos-ciclo-5.pdf){ target="_blank" rel="noopener" } | Enviados à FBr por e-mail em 14/11/2026, com o pedido de resposta até 19/11, porque 20/11 é feriado; o e-mail também levou os pontos em aberto das [pendências de validação](../requisitos/analise-feedback.md#pendencias-de-validacao-com-a-fbr) |
 
 O Claude Design do Ciclo 3 e as imagens da inscrição (RF1) e do prontuário (RF66) já têm as decisões de 31/10/2026: os dados da ficha de identificação e o contrato da Clínica Escola. Os protótipos do Ciclo 4 seguem as cores, a tipografia e os componentes aprovados no Ciclo 3 e, para reduzir a rolagem, mostram aberto só o que é usado na hora: o conteúdo de consulta começa fechado e abre com um botão, as seções sem registro ocupam uma linha só e os campos com erro ficam sempre à vista.
 
@@ -18,10 +18,10 @@ O Claude Design do Ciclo 3 e as imagens da inscrição (RF1) e do prontuário (R
 !!! info "Valores definidos pela FBr e valores provisórios"
     O prazo de confirmação de presença é de **24 horas antes da sessão**, como a FBr definiu em 31/10/2026. Continuam provisórios, e aparecem assim nas telas: o texto do termo de consentimento (RF57), que a equipe redigiu e a FBr ainda aprova; e os campos obrigatórios e o limite de 1.000 caracteres da anamnese (RF69) e da evolução (RF28).
 
-!!! question "Propostas para validar com a FBr"
-    - **Itens novos no menu:** "Agenda" para o supervisor (agenda dos seus estagiários, RF11) e "Fila de espera" para a coordenação (RF7). Os dois estão marcados como proposta nas telas.
-    - **Fila (RF8):** o inscrito vê uma de três situações, "Aguardando triagem", "Na fila de espera" (com a posição na fila inteira) e "Em atendimento". Em 11/11/2026, a FBr respondeu com "em triagem" e "em atendimento", e a equipe perguntou se "Na fila de espera" continua.
-    - **Reversão do desligamento (RF38):** a coordenação escolhe, no diálogo, quais faltas deixam de contar.
+!!! question "Propostas levadas à FBr e as respostas"
+    - **Itens novos no menu:** "Agenda" para o supervisor (agenda dos seus estagiários, RF11) e "Fila de espera" para a coordenação (RF7). Aprovados em 12/11/2026 ([DF57](../requisitos/decisoes-fbr.md#df57)).
+    - **Fila (RF8):** as pranchas mostram três situações, "Aguardando triagem", "Na fila de espera" (com a posição na fila inteira) e "Em atendimento". Em 12/11/2026, a FBr definiu só duas, "Em triagem" e "Em atendimento", **sem a posição**, para não gerar expectativa ([DF55](../requisitos/decisoes-fbr.md#df55)). As pranchas 1-3 e 1-4 ficam desatualizadas nesse ponto, e vale a DF55.
+    - **Reversão do desligamento (RF38):** a coordenação escolhe, no diálogo, quais faltas deixam de contar. Aprovada em 12/11/2026 ([DF58](../requisitos/decisoes-fbr.md#df58)).
     - **Transferência (RF25):** a coordenação pode escolher um supervisor que já está no limite de 50 casos, com aviso. Aprovada pela FBr em 11/11/2026 ([DF50](../requisitos/decisoes-fbr.md#df50)).
 
 ## 1. Público: inscrição, termo, verificação, fila e link da sessão
@@ -86,6 +86,9 @@ _Ciclo 4._ [RF8](../requisitos/funcionais.md#rf8) · issue [#155](https://github
 - **aguardando triagem:** sem posição, explicando o próximo passo;
 - **em atendimento:** sem posição, indicando a secretaria para dúvidas;
 - **acesso negado:** sem verificação válida ou depois de 15 minutos, sem nenhum dado da inscrição e com o botão para confirmar a identidade de novo.
+
+!!! warning "Mudança pedida pela FBr em 12/11/2026"
+    A posição na fila não aparece mais para o inscrito, e as situações passam a ser só "Em triagem" (antes de ser chamado para o atendimento) e "Em atendimento" (depois de chamado), pela [DF55](../requisitos/decisoes-fbr.md#df55). As pranchas abaixo ainda mostram a posição e as três situações: na construção, vale a DF55.
 
 **No computador**
 

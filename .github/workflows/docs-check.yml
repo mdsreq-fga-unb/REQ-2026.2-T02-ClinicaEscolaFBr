@@ -32,5 +32,7 @@ jobs:
       - run: pip install -r documentacao/requirements.txt
       - name: Conferir o catálogo de requisitos
         run: python documentacao/scripts/verificar_catalogo.py
+      - name: Testar a sincronização do catálogo com o GitHub
+        run: python documentacao/scripts/testar_sincronizacao.py
       - name: Compilar o site no modo estrito
         run: mkdocs build --strict --config-file documentacao/mkdocs.yml

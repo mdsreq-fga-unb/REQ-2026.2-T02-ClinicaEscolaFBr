@@ -1,5 +1,5 @@
 {
-  "id": "9632bd7f-cae8-49f8-8d6c-55e7d8c5569f",
+  "id": "94014db4-ca0b-4307-9b2e-caf888ef4a78",
   "prevId": "77bdfadc-1bae-46be-9006-293791a16c78",
   "version": "7",
   "dialect": "postgresql",
@@ -477,6 +477,24 @@
           "primaryKey": false,
           "notNull": false
         },
+        "versao_termo_aceita": {
+          "name": "versao_termo_aceita",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "termo_aceito_em": {
+          "name": "termo_aceito_em",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "aceite_pelo_responsavel": {
+          "name": "aceite_pelo_responsavel",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": false
+        },
         "criada_em": {
           "name": "criada_em",
           "type": "timestamp with time zone",
@@ -486,7 +504,17 @@
         }
       },
       "indexes": {},
-      "foreignKeys": {},
+      "foreignKeys": {
+        "inscricoes_versao_termo_aceita_versoes_termo_versao_fk": {
+          "name": "inscricoes_versao_termo_aceita_versoes_termo_versao_fk",
+          "tableFrom": "inscricoes",
+          "tableTo": "versoes_termo",
+          "columnsFrom": ["versao_termo_aceita"],
+          "columnsTo": ["versao"],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
       "compositePrimaryKeys": {},
       "uniqueConstraints": {
         "inscricoes_numero_unique": {
@@ -497,6 +525,14 @@
       },
       "policies": {},
       "checkConstraints": {
+        "inscricoes_aceite_com_versao": {
+          "name": "inscricoes_aceite_com_versao",
+          "value": "(\"inscricoes\".\"versao_termo_aceita\" is null) = (\"inscricoes\".\"termo_aceito_em\" is null)"
+        },
+        "inscricoes_aceite_com_responsavel": {
+          "name": "inscricoes_aceite_com_responsavel",
+          "value": "(\"inscricoes\".\"versao_termo_aceita\" is null) = (\"inscricoes\".\"aceite_pelo_responsavel\" is null)"
+        },
         "inscricoes_algum_contato": {
           "name": "inscricoes_algum_contato",
           "value": "\"inscricoes\".\"celular\" is not null or \"inscricoes\".\"email\" is not null"
@@ -518,6 +554,55 @@
           "value": "\"inscricoes\".\"cep\" is null or \"inscricoes\".\"cep\" ~ '^[0-9]{8}$'"
         }
       },
+      "isRLSEnabled": false
+    },
+    "public.versoes_termo": {
+      "name": "versoes_termo",
+      "schema": "",
+      "columns": {
+        "versao": {
+          "name": "versao",
+          "type": "text",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "titulo": {
+          "name": "titulo",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "introducao": {
+          "name": "introducao",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "topicos": {
+          "name": "topicos",
+          "type": "jsonb",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "vigente_desde": {
+          "name": "vigente_desde",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "provisoria": {
+          "name": "provisoria",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
       "isRLSEnabled": false
     },
     "public.atribuicoes_supervisor": {
@@ -562,12 +647,6 @@
           "primaryKey": false,
           "notNull": true,
           "default": true
-        },
-        "encerrada_em": {
-          "name": "encerrada_em",
-          "type": "timestamp with time zone",
-          "primaryKey": false,
-          "notNull": false
         }
       },
       "indexes": {
@@ -620,12 +699,7 @@
       "compositePrimaryKeys": {},
       "uniqueConstraints": {},
       "policies": {},
-      "checkConstraints": {
-        "atribuicoes_supervisor_encerrada_sem_vigencia": {
-          "name": "atribuicoes_supervisor_encerrada_sem_vigencia",
-          "value": "\"atribuicoes_supervisor\".\"vigente\" = (\"atribuicoes_supervisor\".\"encerrada_em\" is null)"
-        }
-      },
+      "checkConstraints": {},
       "isRLSEnabled": false
     },
     "public.casos": {
@@ -1029,12 +1103,6 @@
           "primaryKey": false,
           "notNull": true,
           "default": true
-        },
-        "encerrado_em": {
-          "name": "encerrado_em",
-          "type": "timestamp with time zone",
-          "primaryKey": false,
-          "notNull": false
         }
       },
       "indexes": {
@@ -1087,12 +1155,7 @@
       "compositePrimaryKeys": {},
       "uniqueConstraints": {},
       "policies": {},
-      "checkConstraints": {
-        "vinculos_estagiario_encerrado_sem_vigencia": {
-          "name": "vinculos_estagiario_encerrado_sem_vigencia",
-          "value": "\"vinculos_estagiario\".\"vigente\" = (\"vinculos_estagiario\".\"encerrado_em\" is null)"
-        }
-      },
+      "checkConstraints": {},
       "isRLSEnabled": false
     },
     "public.links_confirmacao": {
@@ -1741,67 +1804,6 @@
       "checkConstraints": {},
       "isRLSEnabled": false
     },
-    "public.alteracoes_parametro": {
-      "name": "alteracoes_parametro",
-      "schema": "",
-      "columns": {
-        "id": {
-          "name": "id",
-          "type": "uuid",
-          "primaryKey": true,
-          "notNull": true,
-          "default": "gen_random_uuid()"
-        },
-        "chave": {
-          "name": "chave",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "valor_anterior": {
-          "name": "valor_anterior",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "valor_novo": {
-          "name": "valor_novo",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "alterado_por": {
-          "name": "alterado_por",
-          "type": "uuid",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "alterado_em": {
-          "name": "alterado_em",
-          "type": "timestamp with time zone",
-          "primaryKey": false,
-          "notNull": true,
-          "default": "now()"
-        }
-      },
-      "indexes": {},
-      "foreignKeys": {
-        "alteracoes_parametro_alterado_por_usuarios_id_fk": {
-          "name": "alteracoes_parametro_alterado_por_usuarios_id_fk",
-          "tableFrom": "alteracoes_parametro",
-          "tableTo": "usuarios",
-          "columnsFrom": ["alterado_por"],
-          "columnsTo": ["id"],
-          "onDelete": "no action",
-          "onUpdate": "no action"
-        }
-      },
-      "compositePrimaryKeys": {},
-      "uniqueConstraints": {},
-      "policies": {},
-      "checkConstraints": {},
-      "isRLSEnabled": false
-    },
     "public.parametros": {
       "name": "parametros",
       "schema": "",
@@ -1845,65 +1847,6 @@
         }
       },
       "compositePrimaryKeys": {},
-      "uniqueConstraints": {},
-      "policies": {},
-      "checkConstraints": {},
-      "isRLSEnabled": false
-    },
-    "public.parametros_semestre": {
-      "name": "parametros_semestre",
-      "schema": "",
-      "columns": {
-        "semestre": {
-          "name": "semestre",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "chave": {
-          "name": "chave",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "valor": {
-          "name": "valor",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "alterado_por": {
-          "name": "alterado_por",
-          "type": "uuid",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "alterado_em": {
-          "name": "alterado_em",
-          "type": "timestamp with time zone",
-          "primaryKey": false,
-          "notNull": true,
-          "default": "now()"
-        }
-      },
-      "indexes": {},
-      "foreignKeys": {
-        "parametros_semestre_alterado_por_usuarios_id_fk": {
-          "name": "parametros_semestre_alterado_por_usuarios_id_fk",
-          "tableFrom": "parametros_semestre",
-          "tableTo": "usuarios",
-          "columnsFrom": ["alterado_por"],
-          "columnsTo": ["id"],
-          "onDelete": "no action",
-          "onUpdate": "no action"
-        }
-      },
-      "compositePrimaryKeys": {
-        "parametros_semestre_semestre_chave_pk": {
-          "name": "parametros_semestre_semestre_chave_pk",
-          "columns": ["semestre", "chave"]
-        }
-      },
       "uniqueConstraints": {},
       "policies": {},
       "checkConstraints": {},

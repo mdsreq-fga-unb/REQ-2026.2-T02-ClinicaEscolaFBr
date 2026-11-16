@@ -281,7 +281,7 @@ describe("Transferir caso para outro estagiário ou supervisor (RF25)", () => {
     ).toBeNull();
   });
 
-  it("a coordenação escolhe o supervisor, com a contagem de casos e o que está no limite bloqueado, e o estagiário é opcional (RF25, RNF16, RNF20)", async () => {
+  it("a coordenação escolhe o supervisor, com a contagem de casos e o aviso no que está no limite, e o estagiário é opcional (RF25, RNF16, RNF20)", async () => {
     const chamadas = simularApi({ opcoes: OPCOES_COORDENACAO });
     const { aoConcluir } = abrir(true);
     await screen.findByText("Mariana Alves Toledo");
@@ -292,9 +292,11 @@ describe("Transferir caso para outro estagiário ou supervisor (RF25)", () => {
     expect(
       (within(grupo).getByLabelText(/Otávio Mendes/) as HTMLInputElement)
         .disabled,
-    ).toBe(true);
+    ).toBe(false);
     expect(
-      within(grupo).getByText("Já está no limite de 50 casos"),
+      within(grupo).getByText(
+        "Já está no limite de 50 casos: a transferência passa do limite",
+      ),
     ).toBeTruthy();
     expect(
       screen.getByRole("group", { name: /Novo estagiário responsável/ })
@@ -320,6 +322,31 @@ describe("Transferir caso para outro estagiário ou supervisor (RF25)", () => {
     await vi.waitFor(() => expect(aoConcluir).toHaveBeenCalled());
     expect(chamadas.find((c) => c.metodo === "POST")?.corpo).toEqual({
       supervisorId: "s2",
+      motivo: "Reorganização.",
+    });
+  });
+
+  it("a coordenação transfere para um supervisor no limite, com o aviso na confirmação (RF25, DF50, RNF16)", async () => {
+    const chamadas = simularApi({ opcoes: OPCOES_COORDENACAO });
+    const { aoConcluir } = abrir(true);
+    await screen.findByText("Mariana Alves Toledo");
+    const grupo = screen.getByRole("group", {
+      name: "Novo supervisor responsável",
+    });
+    fireEvent.click(within(grupo).getByLabelText(/Otávio Mendes/));
+    fireEvent.change(motivo(), { target: { value: "Reorganização." } });
+    transferir();
+    expect(
+      await screen.findByText(
+        "Otávio Mendes passa a ter 51 casos, acima do limite de 50 casos.",
+      ),
+    ).toBeTruthy();
+    fireEvent.click(
+      screen.getByRole("button", { name: "Confirmar transferência" }),
+    );
+    await vi.waitFor(() => expect(aoConcluir).toHaveBeenCalled());
+    expect(chamadas.find((c) => c.metodo === "POST")?.corpo).toEqual({
+      supervisorId: "s3",
       motivo: "Reorganização.",
     });
   });
@@ -359,7 +386,7 @@ describe("Transferir caso para outro estagiário ou supervisor (RF25)", () => {
     ).toBeTruthy();
   });
 
-  it("o aviso de sucesso traz os novos responsáveis e as sessões a remarcar (RF25, RNF20)", () => {
+  it("o aviso de sucesso traz os novos responsáveis, as sessões a remarcar e o limite ultrapassado (RF25, DF50, RNF20)", () => {
     render(
       <AvisoTransferencia
         resultado={{
@@ -373,6 +400,7 @@ describe("Transferir caso para outro estagiário ou supervisor (RF25)", () => {
             "2026-11-12T13:00:00.000Z",
             "2026-11-19T13:00:00.000Z",
           ],
+          acimaDoLimite: true,
         }}
       />,
     );
@@ -382,6 +410,7 @@ describe("Transferir caso para outro estagiário ou supervisor (RF25)", () => {
       "Patrícia Nogueira agora é o responsável pelo caso de Mariana Alves Toledo (2026-00398).",
     );
     expect(texto).toContain("aguarda o vínculo de um estagiário");
+    expect(texto).toContain("O supervisor ficou acima do limite de casos");
     expect(texto).toContain(
       "As 2 sessões futuras do estagiário anterior foram canceladas",
     );

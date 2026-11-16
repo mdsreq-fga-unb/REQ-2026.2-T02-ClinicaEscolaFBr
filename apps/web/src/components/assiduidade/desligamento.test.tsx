@@ -132,7 +132,7 @@ describe("Alerta, desligamento e reversão (RF36, RF37, RF38)", () => {
     expect(chamadas).toHaveLength(0);
   });
 
-  it("o desligamento lista as faltas e confirma pela rota do caso (RF37)", async () => {
+  it("o desligamento lista as faltas, lembra que o estagiário avisa o paciente e confirma pela rota do caso (RF37, DF53)", async () => {
     const chamadas = simularApi({
       desligamentoId: "d1",
       estagiario: "Ana Beatriz Costa",
@@ -156,6 +156,12 @@ describe("Alerta, desligamento e reversão (RF36, RF37, RF38)", () => {
     );
     expect(screen.getByText("Faltas no ciclo (2 de 2)")).toBeTruthy();
     expect(screen.getByText("Juliana Rocha (Secretaria)")).toBeTruthy();
+    // Quem avisa o paciente é o estagiário responsável (DF53).
+    expect(
+      screen.getByText(
+        /^O estagiário responsável avisa o paciente sobre o desligamento/,
+      ),
+    ).toBeTruthy();
     fireEvent.click(
       screen.getByRole("button", { name: "Confirmar desligamento" }),
     );

@@ -40,6 +40,9 @@ O processo de ER separa técnicas, práticas, ferramentas e resultados. Entrevis
 
 ### Verificação e Validação de Requisitos
 
+!!! info "Estratégia"
+    Quando cada técnica é aplicada, o que se verifica e o que se valida em cada momento, o nível de rigor e as evidências estão em [Estratégia de verificação e validação](verificacao-e-validacao.md).
+
 - **Revisão Técnica:** os requisitos, features, critérios de aceitação e representações elaboradas serão revisados pela equipe buscando identificar ambiguidades, inconsistências, incompletudes e dificuldades de verificação.
 
 - **Checklist Estruturado:** será utilizado como apoio às revisões, permitindo verificar sistematicamente aspectos relevantes da qualidade dos requisitos.
