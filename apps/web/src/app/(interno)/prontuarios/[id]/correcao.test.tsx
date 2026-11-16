@@ -133,7 +133,7 @@ describe("correção de evolução no prontuário (RF29)", () => {
     );
   });
 
-  it("depois da correção, mostra a versão atual e a original, com autor, data e motivo (RF29)", async () => {
+  it("depois da correção, mostra a versão atual e a original, com autor, data e motivo (RF29, RNF28)", async () => {
     prontuarioCom([corrigida, original], {
       dataLimite: null,
       prazoEncerrado: false,

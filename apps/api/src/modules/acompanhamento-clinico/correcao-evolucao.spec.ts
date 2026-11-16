@@ -300,7 +300,7 @@ describe('Corrigir evolução registrada (RF29)', () => {
     return p.sessoes.find((s) => s.id === sessaoId)!.evolucao!;
   };
 
-  it('a correção do estagiário no prazo preserva a original e registra a nova com autor, data/hora e motivo (RF29, RNF51)', async () => {
+  it('a correção do estagiário no prazo preserva a original e registra a nova com autor, data/hora e motivo (RF29, RNF28, RNF51)', async () => {
     await definirDataLimite('2026/2', '2026-12-15');
     const resposta = await correcoes.corrigir(
       prontuarioId,
@@ -616,7 +616,7 @@ describe('Corrigir evolução registrada (RF29)', () => {
     });
   });
 
-  it('o estagiário só corrige o que ele registrou; depois da transferência, o novo não corrige a do anterior, e o supervisor corrige (RF29, RF25, RF55)', async () => {
+  it('o estagiário só corrige o que ele registrou; depois da transferência, o novo não corrige a do anterior, e o supervisor corrige (RF29, RF25, RF55, RF56)', async () => {
     // Transferência: o vínculo de A termina e B passa a ser o responsável.
     await db
       .update(vinculosEstagiario)
@@ -632,6 +632,16 @@ describe('Corrigir evolução registrada (RF29)', () => {
         correcoes.corrigir(prontuarioId, evolucaoId, ficha(), quem),
       ).rejects.toBeInstanceOf(ForbiddenException);
     }
+    const [acessoDoNovoEstagiario] = await db
+      .select()
+      .from(acessosProntuario)
+      .where(
+        and(
+          eq(acessosProntuario.usuarioId, pessoas.estagiarioB.id),
+          eq(acessosProntuario.operacao, 'corrigir_evolucao'),
+        ),
+      );
+    expect(acessoDoNovoEstagiario).toMatchObject({ permitido: false });
     expect(
       (await evolucaoNoProntuario(pessoas.estagiarioB)).correcao.permitida,
     ).toBe(false);

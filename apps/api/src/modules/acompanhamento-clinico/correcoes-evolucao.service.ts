@@ -1,6 +1,5 @@
 import {
   BadRequestException,
-  ForbiddenException,
   Inject,
   Injectable,
   NotFoundException,
@@ -141,12 +140,6 @@ export class CorrecoesEvolucaoService {
     corpo: unknown,
     usuario: UsuarioAutenticado,
   ) {
-    await this.politica.exigirAcesso(
-      usuario,
-      prontuarioId,
-      'corrigir_evolucao',
-      'escrita',
-    );
     const [evolucao] = await this.db
       .select({
         id: evolucoes.id,
@@ -165,16 +158,18 @@ export class CorrecoesEvolucaoService {
           eq(evolucoes.prontuarioId, prontuarioId),
         ),
       );
+    // A política registra a tentativa já com a autorização específica da evolução:
+    // o estagiário atual do caso não pode corrigir uma evolução registrada pelo anterior.
+    await this.politica.exigirAcesso(
+      usuario,
+      prontuarioId,
+      'corrigir_evolucao',
+      'escrita',
+      !evolucao ||
+        usuario.perfil !== 'estagiario' ||
+        evolucao.registradaPor === usuario.id,
+    );
     if (!evolucao) throw new NotFoundException('Evolução não encontrada.');
-    // O estagiário só corrige o que ele mesmo registrou; depois de uma
-    // transferência, o novo estagiário não corrige as evoluções do anterior.
-    if (
-      usuario.perfil === 'estagiario' &&
-      evolucao.registradaPor !== usuario.id
-    )
-      throw new ForbiddenException(
-        'Você só pode corrigir as evoluções que registrou.',
-      );
     const resultado = esquemaDaCorrecao(evolucao.fichaAntiga).safeParse(corpo);
     if (!resultado.success)
       throw new BadRequestException(resultado.error.issues);
