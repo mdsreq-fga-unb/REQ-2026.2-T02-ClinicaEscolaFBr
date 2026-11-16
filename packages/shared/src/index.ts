@@ -14,3 +14,4 @@ export * from "./fila";
 export * from "./casos";
 export * from "./indicadores";
 export * from "./acessos-prontuario";
+export * from "./contribuicao";

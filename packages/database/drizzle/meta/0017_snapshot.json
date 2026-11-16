@@ -1,5 +1,5 @@
 {
-  "id": "6ca7b5d6-733f-42d0-849e-6d7d7c0d2980",
+  "id": "e524e5df-a9db-4120-bc32-c35c2a98ed79",
   "prevId": "f39c00cc-14df-42c7-9519-0110a0680a11",
   "version": "7",
   "dialect": "postgresql",
@@ -1510,65 +1510,7 @@
           "default": "now()"
         }
       },
-      "indexes": {
-        "acessos_prontuario_criado_em_idx": {
-          "name": "acessos_prontuario_criado_em_idx",
-          "columns": [
-            {
-              "expression": "criado_em",
-              "isExpression": false,
-              "asc": true,
-              "nulls": "last"
-            }
-          ],
-          "isUnique": false,
-          "concurrently": false,
-          "method": "btree",
-          "with": {}
-        },
-        "acessos_prontuario_prontuario_criado_em_idx": {
-          "name": "acessos_prontuario_prontuario_criado_em_idx",
-          "columns": [
-            {
-              "expression": "prontuario_id",
-              "isExpression": false,
-              "asc": true,
-              "nulls": "last"
-            },
-            {
-              "expression": "criado_em",
-              "isExpression": false,
-              "asc": true,
-              "nulls": "last"
-            }
-          ],
-          "isUnique": false,
-          "concurrently": false,
-          "method": "btree",
-          "with": {}
-        },
-        "acessos_prontuario_usuario_criado_em_idx": {
-          "name": "acessos_prontuario_usuario_criado_em_idx",
-          "columns": [
-            {
-              "expression": "usuario_id",
-              "isExpression": false,
-              "asc": true,
-              "nulls": "last"
-            },
-            {
-              "expression": "criado_em",
-              "isExpression": false,
-              "asc": true,
-              "nulls": "last"
-            }
-          ],
-          "isUnique": false,
-          "concurrently": false,
-          "method": "btree",
-          "with": {}
-        }
-      },
+      "indexes": {},
       "foreignKeys": {
         "acessos_prontuario_prontuario_id_prontuarios_id_fk": {
           "name": "acessos_prontuario_prontuario_id_prontuarios_id_fk",
@@ -2886,6 +2828,120 @@
       "policies": {},
       "checkConstraints": {},
       "isRLSEnabled": false
+    },
+    "public.pagamentos_contribuicao": {
+      "name": "pagamentos_contribuicao",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "caso_id": {
+          "name": "caso_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "ciclo_atendimento": {
+          "name": "ciclo_atendimento",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "versao": {
+          "name": "versao",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "valor_centavos": {
+          "name": "valor_centavos",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "pago_em": {
+          "name": "pago_em",
+          "type": "date",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "forma": {
+          "name": "forma",
+          "type": "forma_pagamento",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "motivo_correcao": {
+          "name": "motivo_correcao",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "registrado_por": {
+          "name": "registrado_por",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "registrado_em": {
+          "name": "registrado_em",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "pagamentos_contribuicao_caso_id_casos_id_fk": {
+          "name": "pagamentos_contribuicao_caso_id_casos_id_fk",
+          "tableFrom": "pagamentos_contribuicao",
+          "tableTo": "casos",
+          "columnsFrom": ["caso_id"],
+          "columnsTo": ["id"],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "pagamentos_contribuicao_registrado_por_usuarios_id_fk": {
+          "name": "pagamentos_contribuicao_registrado_por_usuarios_id_fk",
+          "tableFrom": "pagamentos_contribuicao",
+          "tableTo": "usuarios",
+          "columnsFrom": ["registrado_por"],
+          "columnsTo": ["id"],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {
+        "pagamentos_contribuicao_versao_unica": {
+          "name": "pagamentos_contribuicao_versao_unica",
+          "nullsNotDistinct": false,
+          "columns": ["caso_id", "ciclo_atendimento", "versao"]
+        }
+      },
+      "policies": {},
+      "checkConstraints": {
+        "pagamentos_contribuicao_versao_positiva": {
+          "name": "pagamentos_contribuicao_versao_positiva",
+          "value": "\"pagamentos_contribuicao\".\"versao\" >= 1"
+        },
+        "pagamentos_contribuicao_valor_positivo": {
+          "name": "pagamentos_contribuicao_valor_positivo",
+          "value": "\"pagamentos_contribuicao\".\"valor_centavos\" > 0"
+        },
+        "pagamentos_contribuicao_motivo_da_correcao": {
+          "name": "pagamentos_contribuicao_motivo_da_correcao",
+          "value": "(\"pagamentos_contribuicao\".\"versao\" = 1) = (\"pagamentos_contribuicao\".\"motivo_correcao\" is null)"
+        }
+      },
+      "isRLSEnabled": false
     }
   },
   "enums": {
@@ -2963,6 +3019,11 @@
       "name": "origem_falta",
       "schema": "public",
       "values": ["falta", "cancelamento_fora_do_prazo"]
+    },
+    "public.forma_pagamento": {
+      "name": "forma_pagamento",
+      "schema": "public",
+      "values": ["dinheiro", "pix", "cartao"]
     }
   },
   "schemas": {},

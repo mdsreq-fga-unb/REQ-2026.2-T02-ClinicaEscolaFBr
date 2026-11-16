@@ -124,8 +124,15 @@
     {
       "idx": 17,
       "version": "7",
-      "when": 1794834807182,
-      "tag": "0017_rf56_indices_acessos",
+      "when": 1794796105720,
+      "tag": "0017_contribuicao_social",
+      "breakpoints": true
+    },
+    {
+      "idx": 18,
+      "version": "7",
+      "when": 1794852347069,
+      "tag": "0018_rf56_indices_acessos",
       "breakpoints": true
     }
   ]

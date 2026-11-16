@@ -203,10 +203,11 @@ body:
     id: dor-registro
     attributes:
       label: "Registro da avaliação do DoR"
-      description: "Preencha quando a avaliação for feita ("Resultado da avaliação", no DoR)."
+      description: 'Preencha quando a avaliação for feita ("Resultado da avaliação", no DoR).'
       value: |
         Data: <dd/mm/aaaa>    Avaliador: <nome>    Revisor: <nome>
         Resultado: Pronta | Pronta com ressalvas | Não pronta
+        Nível de V&V: Alto | Padrão (regra em Verificação e validação: CP6, CP7, CP12 ou RNF da lista do nível alto)
         Critérios [B] não atendidos: <códigos e motivo, ou "nenhum">
         Pendências [R] e/ou com a FBr: <descrição, responsável, prazo, ou "nenhuma">
         Justificativas: <por que cada critério pendente não impede ou impede a entrada>
@@ -287,7 +288,7 @@ body:
     id: dod-registro
     attributes:
       label: "Registro do DoD"
-      description: "Atualize a cada marco ("Registro", no DoD). Se a FBr não aceitar, registre o motivo e devolva a feature ao backlog (D6.3)."
+      description: 'Atualize a cada marco ("Registro", no DoD). Se a FBr não aceitar, registre o motivo e devolva a feature ao backlog (D6.3).'
       value: |
         Inspeção de design: <data> | <participantes> | <resultado>
         Inspeção de código: <link do PR> | <revisor> | <resultado>

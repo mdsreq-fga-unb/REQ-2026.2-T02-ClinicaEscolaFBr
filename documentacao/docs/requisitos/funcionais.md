@@ -766,7 +766,7 @@ _Rastreabilidade:_ Feature "Corrigir evolução registrada" → CP7 — Registro
 
 {{ registro("RF29") }}
 
-#### Feature — Registrar complemento de evolução da sessão
+#### Feature — Registrar complemento de evolução da sessão [#271](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/issues/271)
 
 **RF30 — Registrar complemento de evolução da sessão**{ #rf30 }
 
@@ -782,7 +782,7 @@ _Rastreabilidade:_ Feature "Registrar complemento de evolução da sessão" → 
 
 {{ registro("RF30") }}
 
-#### Feature — Validar evolução pelo supervisor
+#### Feature — Validar evolução pelo supervisor [#272](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/issues/272)
 
 **RF67 — Validar evolução pelo supervisor**{ #rf67 }
 
@@ -799,7 +799,7 @@ _Rastreabilidade:_ Feature "Validar evolução pelo supervisor" → CP7 — Regi
 
 {{ registro("RF67") }}
 
-#### Feature — Encerrar caso por alta
+#### Feature — Encerrar caso por alta [#273](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/issues/273)
 
 **RF68 — Encerrar caso por alta**{ #rf68 }
 
@@ -823,7 +823,7 @@ _Rastreabilidade:_ Feature "Encerrar caso por alta" → CP7 — Registro de evol
 
 {{ registro("RF68") }}
 
-#### Feature — Consultar evolução de uma sessão específica
+#### Feature — Consultar evolução de uma sessão específica [#274](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/issues/274)
 
 **RF31 — Consultar evolução de uma sessão específica**{ #rf31 }
 
@@ -838,7 +838,7 @@ _Rastreabilidade:_ Feature "Consultar evolução de uma sessão específica" →
 
 {{ registro("RF31") }}
 
-#### Feature — Consultar histórico de evolução do paciente
+#### Feature — Consultar histórico de evolução do paciente [#275](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/issues/275)
 
 **RF32 — Consultar histórico de evolução do paciente**{ #rf32 }
 
@@ -1029,7 +1029,7 @@ _Rastreabilidade:_ Feature "Consolidar faltas do estagiário para a supervisão"
 
 {{ registro("RF39") }}
 
-#### Feature — Contabilizar faltas do estagiário no semestre
+#### Feature — Contabilizar faltas do estagiário no semestre [#276](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/issues/276)
 
 **RF40 — Contabilizar faltas do estagiário no semestre**{ #rf40 }
 
@@ -1046,7 +1046,7 @@ _Rastreabilidade:_ Feature "Contabilizar faltas do estagiário no semestre" → 
 
 {{ registro("RF40") }}
 
-#### Feature — Sinalizar reprovação do estagiário por faltas
+#### Feature — Sinalizar reprovação do estagiário por faltas [#277](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/issues/277)
 
 **RF63 — Sinalizar reprovação do estagiário por faltas**{ #rf63 }
 
@@ -1063,7 +1063,7 @@ _Rastreabilidade:_ Feature "Sinalizar reprovação do estagiário por faltas" �
 
 {{ registro("RF63") }}
 
-#### Feature — Registrar decisão institucional sobre a reprovação do estagiário
+#### Feature — Registrar decisão institucional sobre a reprovação do estagiário [#278](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/issues/278)
 
 **RF64 — Registrar decisão institucional sobre a reprovação do estagiário**{ #rf64 }
 
@@ -1139,7 +1139,7 @@ _Rastreabilidade:_ Feature "Consultar situação da contribuição social dos pa
 
 {{ registro("RF42") }}
 
-#### Feature — Bloquear agendamento por contribuição social pendente
+#### Feature — Bloquear agendamento por contribuição social pendente [#279](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/issues/279)
 
 **RF43 — Bloquear agendamento por contribuição social pendente**{ #rf43 }
 
@@ -1179,7 +1179,7 @@ _Rastreabilidade:_ Feature "Listar sessões com comparecimento registrado do pac
 
 {{ registro("RF44") }}
 
-#### Feature — Emitir declaração de comparecimento do paciente
+#### Feature — Emitir declaração de comparecimento do paciente [#280](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/issues/280)
 
 **RF45 — Emitir declaração de comparecimento do paciente**{ #rf45 }
 
@@ -1454,7 +1454,7 @@ _Rastreabilidade:_ Feature "Registrar consentimento para tratamento de dados" �
 
 {{ registro("RF57") }}
 
-#### Feature — Registrar revogação do consentimento
+#### Feature — Registrar revogação do consentimento [#281](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/issues/281)
 
 **RF65 — Registrar revogação do consentimento**{ #rf65 }
 
