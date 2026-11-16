@@ -2215,6 +2215,14 @@ sequenceDiagram
 
 **Dependências e riscos:** usa o vínculo do RF21 e a entrada na fila do RF7 para o prazo, e a tabela `alteracoes_parametro`, criada com o RF48. A situação para a secretaria, a coordenação e o estagiário (lista com filtro e indicação na agenda) é do RF42, e o bloqueio, do RF43, os dois no Ciclo 6.
 
+**Na implementação ([PR #263](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/pull/263)):**
+
+- **Migration:** a `0017_contribuicao_social`, depois da dos indicadores do RF48 (`0016`), cria o `pagamentos_contribuicao`, só de inserção (gatilho `pagamentos_contribuicao_somente_insercao`), e o parâmetro `valor_contribuicao_centavos` com 3500.
+- **Consulta pela coordenação (RNF36):** o `GET /casos/:id/contribuicao` aceita também a coordenação, só para leitura, porque o RNF36 deixa o histórico disponível a ela. Na ficha do paciente, ela vê o cartão sem "Registrar pagamento" nem "Corrigir pagamento". Registrar e corrigir continuam só com a secretaria.
+- **Valor mudado com o formulário aberto:** o registro leva o `valorEsperadoCentavos`, o valor que a tela mostrou. Se a coordenação mudou o parâmetro nesse meio-tempo, a API responde `409` com o código `valor_alterado` e o valor atual, sem gravar nada; a tela mostra o valor novo e pede para confirmar de novo.
+- **Correções ao mesmo tempo:** a correção leva a `versaoEsperada`, a versão que a secretaria abriu. Se outra pessoa corrigiu antes, a API responde `409` com o código `versao_desatualizada` e a versão atual, sem gravar nada, para a segunda correção não desfazer a primeira; a tela pede para abrir a correção de novo. O segundo pagamento no ciclo continua com o `409` de código `ja_pago`.
+- **Outras decisões:** a correção precisa mudar o valor, a data ou a forma (senão, `422`); o valor fica entre R$ 0,01 e R$ 1.000,00, e o motivo, com até 500 caracteres; salvar o mesmo valor do parâmetro não grava alteração; o caso sem vínculo aparece como pendente, sem prazo; e o prazo vencido aparece no cartão, mas não bloqueia o registro, porque o bloqueio é do RF43.
+
 ---
 
 ### RF44 — Listar sessões com comparecimento registrado do paciente ([#226](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/issues/226))
