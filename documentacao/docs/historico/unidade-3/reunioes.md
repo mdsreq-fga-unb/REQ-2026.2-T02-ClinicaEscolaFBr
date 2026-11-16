@@ -339,7 +339,7 @@ O Gabriel demonstrou as features do Ciclo 3 no ambiente de validação, do ponto
 
 | # | Ajuste | Afeta | Situação |
 | --- | --- | --- | --- |
-| 1 | Avaliar se o RG continua obrigatório, com a nova Carteira de Identidade Nacional (CIN); o CPF continua obrigatório | RF1 | A confirmar com o Robson, nas [pendências de validação](../../requisitos/analise-feedback.md#pendencias-de-validacao-com-a-fbr) |
+| 1 | Avaliar se o RG continua obrigatório, com a nova Carteira de Identidade Nacional (CIN); o CPF continua obrigatório | RF1 | Decidido: o RG deixa de ser obrigatório, sem o órgão emissor e o estado ([DF60](../../requisitos/decisoes-fbr.md#df60)), registrado em 16/11/2026 |
 | 2 | O CPF do responsável legal é obrigatório na inscrição de menor de idade | RF1, RF57 | Decidido ([DF47](../../requisitos/decisoes-fbr.md#df47)) |
 | 3 | Os dados de endereço e contato devem ser completos e obrigatórios | RF1 | A confirmar com o Robson, nas pendências de validação |
 | 4 | Sai a escolha do canal preferencial: o e-mail e o telefone passam a ser obrigatórios, com um aviso de que os contatos da clínica são feitos por e-mail | RF1, RF8, RF52 | Decidido ([DF48](../../requisitos/decisoes-fbr.md#df48)) |
