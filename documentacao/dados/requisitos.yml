@@ -481,7 +481,7 @@ rfs:
   lider: Luís Henrique
   depende: [RF28]
   issue: 224
-  estado: Planejada
+  estado: Código concluído
   origem: [DF11]
 
 - id: RF30

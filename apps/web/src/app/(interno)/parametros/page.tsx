@@ -13,6 +13,7 @@ import {
 import { Aviso } from "@/components/comum/aviso";
 import { Campo, classeEntrada } from "@/components/comum/campo";
 import { inicioDoPerfil } from "@/components/layout/menu";
+import { CartaoDataLimiteCorrecao } from "@/components/prontuario/correcao-evolucao";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { api } from "@/lib/api";
 import { dataHoraBr } from "@/lib/formato";
@@ -70,8 +71,7 @@ export default function ParametrosPage() {
         </span>
         <h1 className="ui-h2">Você não tem acesso aos parâmetros</h1>
         <p className="ui-subtitulo m-0">
-          Os parâmetros institucionais, como o valor da contribuição social, são
-          alterados só pela coordenação.
+          Os parâmetros institucionais são alterados só pela coordenação.
         </p>
         <Link
           href={inicioDoPerfil(sessao.perfil)}
@@ -124,6 +124,8 @@ export default function ParametrosPage() {
           registrada com o valor anterior, o novo, quem alterou e quando.
         </p>
       </div>
+
+      <CartaoDataLimiteCorrecao />
 
       <section
         aria-labelledby={titulo}

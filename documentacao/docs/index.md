@@ -1,12 +1,13 @@
 ---
 template: home.html
+render_macros: true
 hide:
   - navigation
 ---
 
 # Clínica Escola FBr — Documentação do projeto
 
-Documentação do projeto · versão 3.51
+Documentação do projeto · versão {{ versao_atual }}
 
 <details class="revision-history" id="historico-de-revisao" markdown>
 <summary>Histórico de revisão</summary>
@@ -149,11 +150,14 @@ Registro cronológico das versões e alterações do documento de visão e dos a
 | 12/11/2026 | 3.71 | RF57: termo provisório alinhado à DF51 na migration 0015, identificação e concordância do responsável conforme as pranchas, evidências RNF51/RNF56–58 e configuração explícita da validação; ressalva R4.4 preservada | Jônatas Davi Oliveira Farias |
 | 12/11/2026 | 3.72 | Respostas da FBr de 12/11: registro em Reuniões, com o print da conversa e o teste de usabilidade do RNF22 (só o que a FBr informou), e a forma de verificação do RNF22 revista para o teste com os usuários reais disponíveis, aprovado pela coordenação, mais o e2e; decisões DF55 a DF58 (consulta da fila sem a posição, endereço completo obrigatório, itens de menu e faltas na reversão); RF8, RNF7, RF1, RF35 e RF38 atualizados, e o projeto, os protótipos e as pendências de validação acompanham | Gabriel da Cunha Barbaceli |
 | 14/11/2026 | 3.73 | RF48 com o código concluído: página "Indicadores" da coordenação, com vagas ocupadas, tempo médio de espera, taxa de evasão e distribuição por supervisor numa data de referência, e o registro das vagas ofertadas por semestre com o histórico das alterações (migration 0016); "Na implementação" do RF48 no projeto das features | Gabriel da Cunha Barbaceli |
+| 16/11/2026 | 3.75 | Projeto das features ajustado pelas inspeções de design do Ciclo 5: no RF29, o `422` com a data-limite em dd/mm/aaaa e a garantia de versão única nas correções simultâneas; no RF44, a lista da secretaria com os ciclos de atendimento do caso, a verificação da página pública em todas as larguras, com o foco reforçado e o leitor de tela (RNF56 a RNF58), e os dados de teste com dois ciclos; o cabeçalho da página inicial passa a mostrar a última versão do histórico, calculada na publicação, em vez de um número escrito à mão, que estava na 3.51 | Gabriel da Cunha Barbaceli |
 | 16/11/2026 | 3.76 | RF41 com o código concluído: registro e correção versionada do pagamento da contribuição social pela secretaria, consulta só de leitura pela coordenação (RNF36), valor da contribuição como parâmetro da coordenação (migration 0017) e "Na implementação" do RF41 no projeto das features, com a conferência do valor exibido e da versão corrigida | Joaquim José da Fonseca Viana e Gabriel da Cunha Barbaceli |
+| 16/11/2026 | 3.80 | RF29 com o código concluído: versões imutáveis e cifradas das correções de evolução, prazo por semestre e auditoria dos acessos negados do estagiário que não registrou a evolução; testes com evidência do RNF28; integração do cartão de data-limite à página Parâmetros do RF41; migration 0018 após a 0017 do RF41 | Luís Henrique |
 | 16/11/2026 | 3.77 | RF41 com a consulta do histórico pela coordenação (RNF36): os pagamentos dos ciclos anteriores do caso, com as versões, no cartão da ficha do paciente, e o histórico de todas as alterações do valor da contribuição na página "Parâmetros", sem corte por data; "Na implementação" do RF41 no projeto das features | Joaquim José da Fonseca Viana |
 | 16/11/2026 | 3.78 | Validação do Ciclo 5 pela FBr em 16/11: registro em Reuniões, com o print da conversa (telefones e fotos cobertos), decisão DF59 (protótipo do Ciclo 5 e implementação validados com os supervisores), página de Protótipos atualizada e o pedido da próxima data de atendimento no cancelamento por ausência do estagiário (RF17) nas pendências de validação | Gabriel da Cunha Barbaceli |
 | 16/11/2026 | 3.79 | Features do Ciclo 6: as issues do RF30 (#271), do RF67 (#272), do RF68 (#273), do RF31 (#274), do RF32 (#275), do RF40 (#276), do RF63 (#277), do RF64 (#278), do RF43 (#279), do RF45 (#280) e do RF65 (#281) vinculadas ao catálogo e aos títulos das features; Líderes redistribuídos porque o Gabriel faz o projeto e o protótipo do ciclo e fica só com o RF49 (RF33 para o Luís Henrique, RF31 para a Maria Clara e RF32 para o Jônatas), com a carga do Ciclo 6 atualizada; o modelo da issue de feature ganha o nível de V&V no registro do DoR e volta a ser um YAML válido (aspas duplas dentro de aspas duplas em duas descrições) | Gabriel da Cunha Barbaceli |
 | 16/11/2026 | 3.81 | Teste de carga do RNF47 nos indicadores operacionais (RF48): 10 pessoas da coordenação consultando 12 meses ao mesmo tempo, cada consulta em até 5 segundos, no mesmo workflow do RNF12 e do RNF21 | Gabriel da Cunha Barbaceli |
+| 16/11/2026 | 3.83 | Pré-avaliação do DoR das features do Ciclo 6: critérios de acesso por perfil, de estado vazio e de validação nas consultas da evolução (RF31 e RF32), regras do complemento (RF30), negação de acesso e efeito nos indicadores na alta (RF68), acesso da coordenação e da secretaria ao relatório final (RF33), semestre pela data da sessão e reclassificação da falta do estagiário (RF40), conteúdo da sinalização de reprovação (RF63), supervisor fora da consulta da contribuição (RF42), prazo da contribuição alinhado ao RF41 (RF41 e RF43), CRP e autorização dos menores na declaração (RF45); cinco novas pendências de validação com a FBr; pela revisão, a exceção da secretaria à versão aprovada do relatório final no RF55 e no RNF25, a sinalização de reprovação quando a reclassificação reduz a contagem (RF63 e RF64) e o CRP do supervisor no cadastro (RF53) | Gabriel da Cunha Barbaceli |
 
 
 A versão 1.6 está registrada com a data do commit (04/09/2026), posterior à da versão 1.7; a numeração foi mantida para preservar as referências já feitas a essas versões.

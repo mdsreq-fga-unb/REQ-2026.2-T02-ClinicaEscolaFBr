@@ -537,6 +537,14 @@ def data_publicacao():
         return datetime.date.today().strftime("%d/%m/%Y")
 
 
+def versao_atual(caminho=RAIZ / "docs" / "index.md"):
+    """Maior versão do histórico de revisão da página inicial ("| dd/mm/aaaa | 3.75 | ..."),
+    para o cabeçalho não ficar para trás quando uma PR acrescenta uma versão."""
+    versoes = re.findall(r"^\| \d{2}/\d{2}/\d{4} \| (\d+)\.(\d+) \|", caminho.read_text(encoding="utf-8"), re.M)
+    maior = max((int(a), int(b)) for a, b in versoes)
+    return f"{maior[0]}.{maior[1]:02d}" if maior[1] >= 10 else f"{maior[0]}.{maior[1]}"
+
+
 def define_env(env):
     dados = carregar()
     sincronizado = sincronizar_com_github(dados)
@@ -556,6 +564,7 @@ def define_env(env):
     env.variables["composicao_mvp"] = cat.composicao_mvp()
 
     env.variables["n"] = cat.n
+    env.variables["versao_atual"] = versao_atual()
     env.variables["ciclos"] = cat.ciclos
     # Sincronizado com o GitHub, o catálogo está atualizado no dia da publicação.
     env.variables["catalogo_atualizado_em"] = (
