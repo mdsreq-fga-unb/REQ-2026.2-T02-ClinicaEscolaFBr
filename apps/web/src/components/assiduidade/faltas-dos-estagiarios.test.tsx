@@ -210,6 +210,32 @@ describe("Faltas dos estagiários (RF39, prancha 7-1)", () => {
     );
   });
 
+  it("consultar de novo com os mesmos filtros busca as faltas outra vez", async () => {
+    const quatro: FaltasDoEstagiario = {
+      ...TRES,
+      faltas: [
+        {
+          id: "f4",
+          estagiario: ESTAGIARIOS[1],
+          inicio: "2026-11-13T17:00:00.000Z",
+          registradaEm: "2026-11-12T12:00:00.000Z",
+        },
+        ...TRES.faltas,
+      ],
+    };
+    const consultas = simularApi([ok(TRES), ok(quatro)]);
+    abrir();
+    await screen.findByRole("region", { name: "3 faltas no período" });
+
+    fireEvent.click(screen.getByRole("button", { name: "Consultar" }));
+
+    expect(
+      await screen.findByRole("region", { name: "4 faltas no período" }),
+    ).toBeTruthy();
+    expect(consultas).toHaveLength(2);
+    expect(consultas[1]).toBe(consultas[0]);
+  });
+
   it("período inválido: indica o campo e não consulta", async () => {
     const consultas = simularApi([ok(TRES)]);
     abrir();
