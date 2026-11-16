@@ -13,6 +13,7 @@ import {
   type Contrato,
   type Evolucao,
   type SecaoAnamnese,
+  type VersaoEvolucao,
 } from "@clinica/shared";
 import { Aviso } from "@/components/comum/aviso";
 import {
@@ -25,10 +26,12 @@ import { Button } from "@/components/ui/button";
 import { api, ErroApi } from "@/lib/api";
 import { dataBr, dataHoraBr } from "@/lib/formato";
 
-type ErrosDe<T> = Partial<Record<keyof T, string>>;
+export type ErrosDe<T> = Partial<Record<keyof T, string>>;
 
 // Erros do esquema compartilhado, um por campo (RNF1).
-function errosPorCampo<T>(issues: { path: PropertyKey[]; message: string }[]) {
+export function errosPorCampo<T>(
+  issues: { path: PropertyKey[]; message: string }[],
+) {
   const erros: ErrosDe<T> = {};
   for (const problema of issues) {
     const campo = problema.path[0] as keyof T;
@@ -37,7 +40,7 @@ function errosPorCampo<T>(issues: { path: PropertyKey[]; message: string }[]) {
   return erros;
 }
 
-const NAO_INFORMADO = "Não informado";
+export const NAO_INFORMADO = "Não informado";
 const milhar = (n: number) => n.toLocaleString("pt-BR");
 const DICAS_SECAO: Record<SecaoAnamnese, string> = {
   queixaPrincipal: "Trazido da inscrição. Você pode completar.",
@@ -50,7 +53,7 @@ const DICAS_SECAO: Record<SecaoAnamnese, string> = {
     "Registre contexto social, familiar, escolar e de trabalho.",
 };
 
-function focarPrimeiroErro() {
+export function focarPrimeiroErro() {
   requestAnimationFrame(() => {
     document.querySelector<HTMLElement>("[aria-invalid='true']")?.focus();
   });
@@ -97,14 +100,16 @@ function useEnvio(prontuarioId: string) {
   return { erro, salvando, enviar };
 }
 
-// Texto longo com o contador de caracteres na dica (RF28, RF69).
-function CampoTexto({
+// Texto longo com o contador de caracteres na dica (RF28, RF69, RF29).
+export function CampoTexto({
+  id,
   rotulo,
   opcional = false,
   valor,
   erro,
   aoMudar,
 }: {
+  id?: string;
   rotulo: string;
   opcional?: boolean;
   valor: string;
@@ -113,6 +118,7 @@ function CampoTexto({
 }) {
   return (
     <Campo
+      id={id}
       rotulo={opcional ? `${rotulo} (opcional)` : rotulo}
       dica={`${milhar(valor.length)} de ${milhar(LIMITE_CAMPO_CLINICO)} caracteres`}
       dicaClassName={
@@ -554,12 +560,20 @@ export function FormularioEvolucao({
   );
 }
 
+// Os campos são os da versão vigente; as versões e a correção vêm do RF29.
 export type EvolucaoRegistrada = Record<CampoEvolucao, string | null> & {
   id: string;
   queixa: string | null;
   planejamento: string | null;
   registradaPor: string;
   registradaEm: string;
+  versaoAtual?: number;
+  versoes?: VersaoEvolucao[];
+  correcao?: {
+    dataLimite: string | null;
+    prazoEncerrado: boolean;
+    permitida: boolean;
+  };
 };
 
 export function LeituraEvolucao({

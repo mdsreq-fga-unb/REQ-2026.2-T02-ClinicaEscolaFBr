@@ -268,6 +268,66 @@ test.describe.serial("Integração do Ciclo 3", () => {
     await semViolacoes(page);
   });
 
+  test("a coordenação registra a data-limite e o estagiário corrige a evolução com motivo, em larguras de 320 a 1920 px (RF29, RNF56, RNF58)", async ({
+    browser,
+  }) => {
+    // Último dia do semestre vigente: a correção continua no prazo.
+    const hoje = hojeEmCuiaba();
+    const fimDoSemestre = `${hoje.slice(0, 4)}-${Number(hoje.slice(5, 7)) <= 6 ? "06-30" : "12-31"}`;
+    const coordenacao = await entrar(browser, "coordenacao");
+    await coordenacao.goto("/parametros");
+    await expect(
+      coordenacao.getByRole("heading", { level: 1, name: "Parâmetros" }),
+    ).toBeVisible();
+    await coordenacao.getByLabel(/Data-limite do semestre/).fill(fimDoSemestre);
+    await coordenacao
+      .getByRole("button", { name: "Salvar data-limite" })
+      .click();
+    await expect(coordenacao.getByText("Data-limite salva.")).toBeVisible();
+    await semViolacoes(coordenacao);
+
+    const page = await entrar(browser, "estagiario");
+    await page.goto(`/prontuarios/${prontuarioId}`);
+    await page
+      .getByRole("link", { name: /^Corrigir evolução da sessão/ })
+      .click();
+    await expect(
+      page.getByRole("heading", {
+        level: 1,
+        name: /^Corrigir evolução da sessão/,
+      }),
+    ).toBeVisible();
+    await semViolacoes(page);
+
+    // Sem motivo: nada é salvo, e o aviso do topo leva ao campo.
+    await page.getByRole("button", { name: "Salvar correção" }).click();
+    await expect(
+      page.getByRole("alert", { name: /A correção não foi salva/ }),
+    ).toBeVisible();
+    await semViolacoes(page);
+
+    await page
+      .getByLabel("Motivo da correção", { exact: true })
+      .fill("Complemento do plano.");
+    await page
+      .getByLabel(/Plano para a próxima sessão/)
+      .fill("Retomar o tema e revisar o registro da semana.");
+    for (const largura of [320, 360, 375, 768, 1024, 1366, 1920]) {
+      await page.setViewportSize({ width: largura, height: 1000 });
+      expect(
+        await page.evaluate(() => document.documentElement.scrollWidth),
+        `rolagem horizontal em ${largura}px`,
+      ).toBeLessThanOrEqual(largura);
+      await semViolacoes(page);
+    }
+    await page.getByRole("button", { name: "Salvar correção" }).click();
+    await expect(page.getByText(/^Correção salva\. A versão 2/)).toBeVisible();
+    await expect(
+      page.getByRole("heading", { name: "Versão 1 · original" }),
+    ).toBeVisible();
+    await semViolacoes(page);
+  });
+
   test("a coordenação consulta o prontuário só para leitura, e a secretaria tem o acesso negado sem o nome do paciente (RF55, RNF25, RNF56)", async ({
     browser,
   }) => {

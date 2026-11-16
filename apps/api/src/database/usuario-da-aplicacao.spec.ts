@@ -17,6 +17,7 @@ const SO_INSERCAO_CONHECIDAS = [
   'evolucoes',
   'decisoes_prioridade',
   'transferencias_caso',
+  'correcoes_evolucao',
   'alteracoes_parametro',
   'pagamentos_contribuicao',
 ];
