@@ -1440,6 +1440,7 @@ decisoes:
   fonte: reunião de levantamento
   decisao: 'Campos obrigatórios da inscrição: nome completo, data de nascimento, CPF, RG, endereço, estado civil e queixa; para menor de idade, também o responsável legal.'
   substituida_em_parte_por: DF60
+  parte_substituida: no RG, que com a DF60 deixa de ser obrigatório, sem o órgão emissor e o estado; os demais campos obrigatórios continuam valendo
 
 - id: DF03
   data: 26/08/2026

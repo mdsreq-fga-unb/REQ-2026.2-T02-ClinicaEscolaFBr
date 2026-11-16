@@ -144,6 +144,8 @@ def main():
         for campo in ("substituida_por", "substituida_em_parte_por"):
             if d.get(campo) and d[campo] not in dfs:
                 erro(f"{d['id']}: {campo} cita {d[campo]}, que não existe")
+        if d.get("substituida_em_parte_por") and not d.get("parte_substituida"):
+            erro(f"{d['id']}: substituida_em_parte_por sem parte_substituida")
 
     # ---- Conjuntos de features --------------------------------------------
     nos_conjuntos = [x for c in dados["conjuntos"] for x in c["rfs"]]
