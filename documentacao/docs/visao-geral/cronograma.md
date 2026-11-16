@@ -36,7 +36,7 @@ _Catálogo atualizado em {{ catalogo_atualizado_em }}._
 
 ## Previsto e realizado
 
-Compara o que cada etapa previa com o que foi entregue, a situação e o que ficou pendente. Os Ciclos 3 e 4 aparecem marco a marco nas tabelas seguintes, e o resultado de cada feature está em [Fechamento dos ciclos](#fechamento-dos-ciclos).
+Compara o que cada etapa previa com o que foi entregue, a situação e o que ficou pendente. Os Ciclos 3 a 6 aparecem marco a marco nas tabelas seguintes (o 6 ainda como previsto), e o resultado de cada feature está em [Fechamento dos ciclos](#fechamento-dos-ciclos).
 
 | Etapa | Previsto | Realizado | Situação | Pendências |
 | --- | --- | --- | --- | --- |
@@ -70,6 +70,34 @@ _Situação em 11/11/2026, no fechamento do ciclo, atualizada em 14/11/2026 com 
 | Promovido para a versão integrada (DoD 4) | 09/11 | 17 features integradas à `development` entre 07 e 11/11: RF34 e RF35 ([#212](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/pull/212)), RF36 a RF38 ([#216](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/pull/216)), RF14 ([#217](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/pull/217)), RF15 e RF16 ([#220](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/pull/220)), RF11 ([#222](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/pull/222)), RF52 ([#202](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/pull/202)), RF7 ([#233](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/pull/233)), RF25 ([#239](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/pull/239)), RF22 ([#240](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/pull/240)), RF23 ([#242](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/pull/242)) e RF27, RF28 e RF69 ([#241](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/pull/241)); depois do fim do ciclo, RF8 ([#237](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/pull/237), 13/11) e RF57 ([#238](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/pull/238), 14/11) | Concluído em 14/11, com 5 dias de atraso em relação ao marco (09/11), ou 4 dias depois do fim do ciclo (10/11) | — |
 | Demonstrada (DoD 5) | 10/11 | Demonstração do incremento enviada à FBr por e-mail em 10/11; a FBr respondeu em 11/11 ([respostas da FBr](../historico/unidade-3/reunioes.md#respostas-da-fbr-sobre-a-demonstracao-do-ciclo-4)), com as decisões DF50 a DF54, e marcou o teste com um supervisor e dois estagiários para 12/11. Em 12/11, a FBr contou o resultado do teste ([respostas de 12/11](../historico/unidade-3/reunioes.md#respostas-da-fbr-de-12-11-e-teste-de-usabilidade)), e o aceite (D5 e D6) foi registrado nas issues das 18 features integradas até 11/11, contando o RF51 | Concluído em 12/11, com 2 dias de atraso, para as features integradas até 11/11 | Demonstração do RF8 (com a DF55) e do RF57 (depois da revisão do termo pela FBr) |
 | Fechamento | 10/11 | Fechamento registrado feature a feature em 11/11, com duas features ainda em revisão (RF8 e RF57), e atualizado em 14/11 | Concluído com 1 dia de atraso | — |
+
+### Ciclo 5, marco a marco
+
+_Situação em 16/11/2026, com o ciclo em andamento; o fechamento entra com a entrega da Unidade 3, em 17/11._
+
+| Marco | Previsto | Realizado | Situação | Pendências |
+| --- | --- | --- | --- | --- |
+| Planejamento e issues | 10/11 | Issues do RF17, do RF29, do RF39 e do RF44 criadas em 08/11; as do RF41, do RF48 e do RF56 já existiam e entraram no ciclo | Concluído no prazo | — |
+| DoR | 10/11 | Pré-avaliação em 09/11; DoR registrado no RF41 em 09/11, no RF48 em 14/11, no RF56 em 15/11 e no RF17, no RF29, no RF39 e no RF44 em 16/11, todos como "Pronta com ressalvas" | Atrasado | Validação dos protótipos do Ciclo 5 (R7.3), feita pela FBr em 16/11 |
+| Design inspecionado (DoD 1) | 12/11 | Projeto e protótipos do ciclo em [#251](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/pull/251); inspeções registradas entre 14 e 16/11 | Atrasado | — |
+| Código concluído e inspecionado (DoD 2 e 3) | 15/11 | PRs abertas entre 13 e 16/11: RF48 ([#259](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/pull/259)), RF41 ([#263](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/pull/263)), RF29 ([#267](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/pull/267)), RF39 ([#288](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/pull/288)), RF56 ([#269](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/pull/269)) e RF17 ([#286](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/pull/286)) | Atrasado | Revisão do RF56 e do RF17; construção do RF44 |
+| Promovido para a versão integrada (DoD 4) | 16/11 | RF48 integrado em 14/11; RF41, RF29 e RF39 em 16/11 | Em andamento: 4 de 7 features | RF56, RF17 e RF44 |
+| Demonstrada (DoD 5) | 17/11 | Protótipo e incremento enviados à FBr por e-mail em 14/11 e validados por Robson Araújo, com os supervisores, em 16/11 ([validação de 16/11](../historico/unidade-3/reunioes.md#validacao-do-ciclo-5-pela-fbr), [DF59](../requisitos/decisoes-fbr.md#df59)) | Validado antes do marco | Registro da demonstração (D5) e do aceite (D6) nas issues; detalhe do pedido sobre o cancelamento (RF17) |
+| Fechamento | 17/11 | — | Previsto | — |
+
+### Ciclo 6, marco a marco
+
+_Situação em 16/11/2026, antes do início do ciclo (18/11 a 01/12)._
+
+| Marco | Previsto | Realizado | Situação | Pendências |
+| --- | --- | --- | --- | --- |
+| Planejamento e issues | 17/11 | Issues das {{ ciclos[6].features }} features criadas em 16/11 ([#282](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/pull/282)) | Concluído antes do prazo | — |
+| DoR | 17/11 | Pré-avaliação em 16/11 ([#287](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/pull/287)), com os critérios que faltavam nos requisitos e cinco novas pendências com a FBr | Em andamento | Projeto e protótipos (R7.2 e R7.3), confirmação dos Líderes (R8.1 e R8.3), features de que dependem (R1.3) e respostas da FBr (R4.2 a R4.4) |
+| Design inspecionado (DoD 1) | 21/11 | — | Previsto | — |
+| Código concluído e inspecionado (DoD 2 e 3) | 28/11 | — | Previsto | — |
+| Promovido para a versão integrada (DoD 4) | 30/11 | — | Previsto | — |
+| Demonstrada (DoD 5) | 01/12 | — | Previsto | — |
+| Fechamento | 01/12 | — | Previsto | — |
 
 ## Pontos de controle por feature
 

@@ -4,7 +4,7 @@ Esta página mostra como o processo definido na [Estratégia de Engenharia de So
 
 ## Modelo abrangente do domínio { #1-modelo-abrangente-do-dominio }
 
-O FDD começa pelo modelo abrangente do domínio. Os projetos das features ([Ciclo 3](../construcao/projeto-features.md) e [Ciclo 4](../construcao/projeto-features.md)) detalham as classes de cada característica de produto; o diagrama abaixo integra essas partes num modelo só, com as relações entre inscrição, caso, ciclo de atendimento, sessão, prontuário e responsáveis.
+O FDD começa pelo modelo abrangente do domínio. O [projeto das features](../construcao/projeto-features.md), com as dos Ciclos 3, 4 e 5, detalha as classes de cada característica de produto; o diagrama abaixo integra essas partes num modelo só, com as relações entre inscrição, caso, ciclo de atendimento, sessão, prontuário e responsáveis.
 
 ```mermaid
 classDiagram
