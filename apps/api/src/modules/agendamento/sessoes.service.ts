@@ -48,12 +48,12 @@ import { ParametrosService } from '../../parametros/parametros.service';
 import { gerarToken } from '../acesso/credenciais';
 import { prazoDeConfirmacao } from './confirmacao.service';
 import {
-  celularParaWhatsapp,
   dataBrasilia,
   diaDaSemana,
   formatarCelular,
   horaBrasilia,
   inicioDoDia,
+  linkDoWhatsapp,
   MINUTO,
 } from './horario';
 
@@ -321,7 +321,7 @@ export class SessoesService {
       resultado.whatsapp = {
         celular: formatarCelular(paciente.celular),
         mensagem,
-        url: `https://wa.me/${celularParaWhatsapp(paciente.celular)}?text=${encodeURIComponent(mensagem)}`,
+        url: linkDoWhatsapp(paciente.celular, mensagem),
       };
     }
     return resultado;
