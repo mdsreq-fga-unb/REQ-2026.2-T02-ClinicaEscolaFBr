@@ -2128,7 +2128,7 @@ sequenceDiagram
 
 _Ciclo 5._
 
-**Rota** (módulo `assiduidade`): `GET /faltas-estagiarios?estagiarioId&inicio&fim` (supervisor e coordenação). Lê os `cancelamentos_sessao` com a classificação `ausencia_estagiario` (RF16) e a sessão no período, e devolve, por linha, só o nome do estagiário, a data e o horário da sessão e a data/hora do registro. Os cancelamentos `administrativo` (para remarcar) ficam de fora.
+**Rota** (módulo `assiduidade`): `GET /faltas-estagiarios?estagiarioId&inicio&fim` (supervisor e coordenação). Lê os `cancelamentos_sessao` com a classificação `ausencia_estagiario` (RF16) e a sessão no período, e devolve, por linha, só o nome do estagiário, a data e o horário da sessão e a data/hora do registro. Os cancelamentos `administrativo` (para remarcar) ficam de fora. O campo "Estagiário" da tela vem de `GET /faltas-estagiarios/estagiarios`, pela mesma regra da autorização.
 
 ```mermaid
 sequenceDiagram
@@ -2150,9 +2150,9 @@ sequenceDiagram
 | --- | --- |
 | Filtro `classificacao = 'ausencia_estagiario'` e `sessoes.inicio` no período (dias inteiros em Brasília) | Lista as sessões canceladas por ausência real no período, sem os cancelamentos para remarcar |
 | A consulta não faz join com a inscrição, e a resposta não tem o motivo (cifrado, nem decifrado) | Cada linha mostra o estagiário, a data, o horário e o registro, sem o paciente nem o motivo |
-| Para o supervisor, só as sessões de casos com a atribuição dele vigente na data da sessão; `estagiarioId` de fora dá 403. A coordenação vê todos (RNF35) | Quem não é a coordenação nem o supervisor do estagiário não acessa |
+| Para o supervisor, só as sessões de casos com a atribuição dele vigente no momento do registro da ausência; `estagiarioId` fora da lista do filtro dá 403, registrado na auditoria. A coordenação vê todos (RNF35) | Quem não é a coordenação nem o supervisor do estagiário não acessa |
 
-**Decisões de projeto:** "estagiário do supervisor" segue a definição única da CP4 (vínculo vigente num caso com a atribuição vigente do supervisor), usada no filtro da tela. A linha conta para o supervisor pela atribuição vigente na data da sessão, com a `encerradaEm` do [modelo do Ciclo 5](#modelo-detalhado-do-ciclo-5), para a falta antiga não sumir depois de uma transferência. A consulta só lista: a contagem do semestre é do RF40, e a reprovação, do RF63, os dois no Ciclo 6.
+**Decisões de projeto:** a linha conta para o supervisor pela atribuição vigente **no momento do registro da ausência**, com a `encerradaEm` do [modelo do Ciclo 5](#modelo-detalhado-do-ciclo-5), para a falta antiga não sumir depois de uma transferência. A data do registro, e não a da sessão, resolve o apontamento 2 da inspeção de design: a transferência (RF25) que troca o supervisor também encerra o vínculo do estagiário e cancela as sessões futuras dele, e assim uma ausência registrada antes da transferência para uma sessão posterior a ela iria, pela data da sessão, para o novo supervisor, que nunca supervisionou aquele estagiário (RNF35). No momento do registro, o estagiário da sessão tinha o vínculo com o caso e era supervisionado pelo supervisor da atribuição vigente. O filtro "Estagiário" e a autorização usam a mesma lista (apontamento 1): para o supervisor, os estagiários dele hoje (definição única da CP4: vínculo vigente num caso com a atribuição vigente dele) e os que têm falta registrada enquanto o caso era dele; para a coordenação, todos. A consulta só lista: a contagem do semestre é do RF40, e a reprovação, do RF63, os dois no Ciclo 6.
 
 **Telas:** página "Faltas dos estagiários" (`/faltas-estagiarios`), no menu do supervisor e da coordenação, com o filtro "Estagiário" ("Todos os meus estagiários" para o supervisor e "Todos os estagiários" para a coordenação), as datas e "Consultar"; "N faltas no período" e a tabela, ou "Nenhuma falta no período" com as datas; os cartões no celular; e "Você não tem acesso à relação de faltas" para os outros perfis. Abre com o semestre vigente até hoje. Protótipo: [prancha 7-1](prototipos.md#rf39).
 
@@ -2161,6 +2161,14 @@ sequenceDiagram
 **Dados de teste:** duas ausências de um estagiário e uma de outro, do mesmo supervisor, mais um cancelamento para remarcar e um pedido do paciente (só as três ausências aparecem); uma ausência fora do período; o supervisor pedindo um estagiário de outro supervisor (403); a coordenação vendo todos; um período sem faltas; a resposta conferida sem o nome do paciente e sem o motivo; o estagiário e a secretaria (403).
 
 **Dependências e riscos:** depende do RF16 (#144), integrado no Ciclo 4, e da `encerradaEm` da atribuição, criada para o RF48 no mesmo ciclo. Se o RF48 atrasar, o RF39 usa a atribuição vigente hoje e registra a diferença.
+
+**Na implementação (PR do RF39):**
+
+- **Sem migration:** a consulta usa a `encerradaEm` da atribuição, que veio com o RF48 (`0016`).
+- **Supervisor do momento do registro:** a condição fica num `exists` sobre `atribuicoes_supervisor` (`atribuido_em <= registrado_em < encerrada_em`), usado na consulta e na lista do filtro. Os testes cobrem a ausência registrada em 01/10 para a sessão de 20/10, com a transferência em 10/10: a falta fica com a supervisora anterior, que continua a escolher a estagiária no filtro, e o novo supervisor recebe a lista vazia e `403` ao pedir essa estagiária. A ausência registrada depois da transferência, com o novo estagiário, é do novo supervisor.
+- **Período:** dias inteiros de Brasília pelo início da sessão, com a data inicial não posterior à final. A data final pode passar de hoje, porque a ausência é registrada antes da sessão. A tela abre com o semestre vigente até hoje (`inicioDoSemestre`). A validação de data do calendário passou para `datas.ts` e é usada também pelo RF41 e pelo RF48.
+- **Acesso negado:** o supervisor que pede um estagiário fora da lista recebe `403`, e a tentativa vai para a auditoria (`consultar_faltas_estagiario_negada`), como na agenda do estagiário (RF11). O estagiário e a secretaria recebem `403` nas duas rotas, e a tela mostra "Você não tem acesso à relação de faltas".
+- **Tela:** página "Faltas dos estagiários" no menu do supervisor e da coordenação, montada em `components/assiduidade/faltas-dos-estagiarios.tsx`. A contagem fica dentro de `role="status"`, a tabela tem `caption`, e abaixo de 768 px a tabela dá lugar à lista de cartões, com "Consultar" na largura toda.
 
 ---
 
