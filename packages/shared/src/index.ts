@@ -14,4 +14,5 @@ export * from "./fila";
 export * from "./casos";
 export * from "./indicadores";
 export * from "./correcao-evolucao";
+export * from "./faltas-estagiario";
 export * from "./contribuicao";

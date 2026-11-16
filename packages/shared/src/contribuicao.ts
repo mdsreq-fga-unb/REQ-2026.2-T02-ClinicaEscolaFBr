@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { hojeEmBrasilia } from "./datas";
+import { dataValida, hojeEmBrasilia } from "./datas";
 import type { UltimaAlteracao } from "./indicadores";
 
 // Contribuição social do paciente (RF41): o registro do pagamento recebido pela
@@ -20,12 +20,6 @@ export const PRAZO_CONTRIBUICAO_DIAS = 10;
 
 // Maior valor aceito para a contribuição: R$ 1.000,00.
 export const VALOR_CONTRIBUICAO_MAXIMO_CENTAVOS = 100_000;
-
-const DATA = /^\d{4}-\d{2}-\d{2}$/;
-const dataValida = (valor: string) =>
-  DATA.test(valor) &&
-  !Number.isNaN(Date.parse(`${valor}T12:00:00Z`)) &&
-  new Date(`${valor}T12:00:00Z`).toISOString().slice(0, 10) === valor;
 
 // O pagamento já foi recebido: a data não pode passar de hoje, em Brasília.
 const pagoEm = z

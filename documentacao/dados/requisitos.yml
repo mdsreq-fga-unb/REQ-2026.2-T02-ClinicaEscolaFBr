@@ -659,7 +659,7 @@ rfs:
   lider: Nicolas
   depende: [RF16]
   issue: 225
-  estado: Planejada
+  estado: Código concluído
 
 - id: RF40
   nome: Contabilizar faltas do estagiário no semestre
