@@ -6,8 +6,8 @@ import {
   Folder,
   History,
   Inbox,
-  Shuffle,
   SlidersHorizontal,
+  Shuffle,
   User,
   Users,
   type LucideIcon,
@@ -58,8 +58,7 @@ export const MENU_POR_PERFIL: Record<Perfil, ItemMenu[]> = {
       href: "/acessos-prontuario",
       Icone: History,
     },
-    // Valor da contribuição social (RF41), na prancha 8-1. A prancha não diz onde
-    // fica o cartão; a página "Parâmetros" é uma proposta da equipe.
+    // Data-limite para corrigir evoluções (RF29), na prancha 6-1; e valor da contribuição social (RF41), na prancha 8-1.
     { rotulo: "Parâmetros", href: "/parametros", Icone: SlidersHorizontal },
   ],
 };

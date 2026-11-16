@@ -1,5 +1,5 @@
 {
-  "id": "a9a8f65d-76ce-479d-b8f9-83145d105a95",
+  "id": "91e5d36d-a496-4817-a435-18a6af1a5972",
   "prevId": "e524e5df-a9db-4120-bc32-c35c2a98ed79",
   "version": "7",
   "dialect": "postgresql",
@@ -1510,65 +1510,7 @@
           "default": "now()"
         }
       },
-      "indexes": {
-        "acessos_prontuario_criado_em_idx": {
-          "name": "acessos_prontuario_criado_em_idx",
-          "columns": [
-            {
-              "expression": "criado_em",
-              "isExpression": false,
-              "asc": true,
-              "nulls": "last"
-            }
-          ],
-          "isUnique": false,
-          "concurrently": false,
-          "method": "btree",
-          "with": {}
-        },
-        "acessos_prontuario_prontuario_criado_em_idx": {
-          "name": "acessos_prontuario_prontuario_criado_em_idx",
-          "columns": [
-            {
-              "expression": "prontuario_id",
-              "isExpression": false,
-              "asc": true,
-              "nulls": "last"
-            },
-            {
-              "expression": "criado_em",
-              "isExpression": false,
-              "asc": true,
-              "nulls": "last"
-            }
-          ],
-          "isUnique": false,
-          "concurrently": false,
-          "method": "btree",
-          "with": {}
-        },
-        "acessos_prontuario_usuario_criado_em_idx": {
-          "name": "acessos_prontuario_usuario_criado_em_idx",
-          "columns": [
-            {
-              "expression": "usuario_id",
-              "isExpression": false,
-              "asc": true,
-              "nulls": "last"
-            },
-            {
-              "expression": "criado_em",
-              "isExpression": false,
-              "asc": true,
-              "nulls": "last"
-            }
-          ],
-          "isUnique": false,
-          "concurrently": false,
-          "method": "btree",
-          "with": {}
-        }
-      },
+      "indexes": {},
       "foreignKeys": {
         "acessos_prontuario_prontuario_id_prontuarios_id_fk": {
           "name": "acessos_prontuario_prontuario_id_prontuarios_id_fk",
@@ -1593,6 +1535,133 @@
       "uniqueConstraints": {},
       "policies": {},
       "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.correcoes_evolucao": {
+      "name": "correcoes_evolucao",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "evolucao_id": {
+          "name": "evolucao_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "versao": {
+          "name": "versao",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "queixa_cifrada": {
+          "name": "queixa_cifrada",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "planejamento_cifrado": {
+          "name": "planejamento_cifrado",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "humor_aparencia_cifrado": {
+          "name": "humor_aparencia_cifrado",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "conteudo_trabalhado_cifrado": {
+          "name": "conteudo_trabalhado_cifrado",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "tecnicas_utilizadas_cifrado": {
+          "name": "tecnicas_utilizadas_cifrado",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "intervencoes_encaminhamentos_cifrado": {
+          "name": "intervencoes_encaminhamentos_cifrado",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "plano_proxima_sessao_cifrado": {
+          "name": "plano_proxima_sessao_cifrado",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "motivo_cifrado": {
+          "name": "motivo_cifrado",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "corrigida_por": {
+          "name": "corrigida_por",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "corrigida_em": {
+          "name": "corrigida_em",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "correcoes_evolucao_evolucao_id_evolucoes_id_fk": {
+          "name": "correcoes_evolucao_evolucao_id_evolucoes_id_fk",
+          "tableFrom": "correcoes_evolucao",
+          "tableTo": "evolucoes",
+          "columnsFrom": ["evolucao_id"],
+          "columnsTo": ["id"],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "correcoes_evolucao_corrigida_por_usuarios_id_fk": {
+          "name": "correcoes_evolucao_corrigida_por_usuarios_id_fk",
+          "tableFrom": "correcoes_evolucao",
+          "tableTo": "usuarios",
+          "columnsFrom": ["corrigida_por"],
+          "columnsTo": ["id"],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {
+        "correcoes_evolucao_versao": {
+          "name": "correcoes_evolucao_versao",
+          "nullsNotDistinct": false,
+          "columns": ["evolucao_id", "versao"]
+        }
+      },
+      "policies": {},
+      "checkConstraints": {
+        "correcoes_evolucao_versao_seguinte": {
+          "name": "correcoes_evolucao_versao_seguinte",
+          "value": "\"correcoes_evolucao\".\"versao\" >= 2"
+        },
+        "correcoes_evolucao_ficha_completa": {
+          "name": "correcoes_evolucao_ficha_completa",
+          "value": "(\"correcoes_evolucao\".\"queixa_cifrada\" IS NOT NULL AND \"correcoes_evolucao\".\"planejamento_cifrado\" IS NOT NULL) OR (\"correcoes_evolucao\".\"humor_aparencia_cifrado\" IS NOT NULL AND \"correcoes_evolucao\".\"conteudo_trabalhado_cifrado\" IS NOT NULL AND \"correcoes_evolucao\".\"tecnicas_utilizadas_cifrado\" IS NOT NULL AND \"correcoes_evolucao\".\"plano_proxima_sessao_cifrado\" IS NOT NULL)"
+        }
+      },
       "isRLSEnabled": false
     },
     "public.evolucoes": {
