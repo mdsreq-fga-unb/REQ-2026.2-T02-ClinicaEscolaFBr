@@ -39,6 +39,7 @@ import {
   DialogoTransferir,
 } from "@/components/casos/transferir";
 import { DialogoVincular } from "@/components/casos/vincular";
+import { CartaoContribuicao } from "@/components/administrativo/contribuicao";
 import { AcessoNegado } from "@/components/comum/acesso-negado";
 import { Aviso } from "@/components/comum/aviso";
 import { Dados } from "@/components/comum/dados";
@@ -105,7 +106,8 @@ const VOLTAR = {
 // Ficha do paciente. No topo, os responsáveis pelo caso (RF22), para a secretaria,
 // a coordenação e o estagiário e o supervisor responsáveis. Para a secretaria e a
 // coordenação, seguem os dados cadastrais e administrativos (RF55), com as faltas
-// do ciclo (RF34, RF35), o desligamento por faltas (RF37) e a reversão (RF38). O
+// do ciclo (RF34, RF35), o desligamento por faltas (RF37) e a reversão (RF38), e,
+// a contribuição social do ciclo (RF41), que a coordenação só consulta. O
 // estagiário e o supervisor, e o caso que ainda aguarda distribuição, veem só a
 // identificação (prancha 2-3). O conteúdo clínico fica no prontuário.
 export default function PacientePage() {
@@ -456,6 +458,15 @@ export default function PacientePage() {
           />
         </section>
       </div>
+      {/* Contribuição social do ciclo (RF41): a secretaria registra e corrige, e a
+          coordenação só consulta (RNF36). */}
+      {(secretaria || coordenacao) && (
+        <CartaoContribuicao
+          casoId={d.casoId}
+          nome={d.nome}
+          somenteLeitura={coordenacao}
+        />
+      )}
       <HistoricoFaltas
         id="historico-faltas"
         contagem={d.faltasNoCiclo}
