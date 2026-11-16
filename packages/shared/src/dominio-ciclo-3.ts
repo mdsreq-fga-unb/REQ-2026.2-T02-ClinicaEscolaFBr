@@ -21,10 +21,10 @@ export const prioridadeSchema = z.object({ cor: corSchema });
 export const LIMITE_CAMPO_CLINICO = 1000;
 const MENSAGEM_LIMITE = "Use no máximo 1.000 caracteres.";
 
-const textoObrigatorio = (mensagem: string) =>
+export const textoObrigatorio = (mensagem: string) =>
   z.string().trim().min(1, mensagem).max(LIMITE_CAMPO_CLINICO, MENSAGEM_LIMITE);
 // Campo opcional: em branco vira null, para aparecer como "não informado".
-const textoOpcional = z
+export const textoOpcional = z
   .string()
   .trim()
   .max(LIMITE_CAMPO_CLINICO, MENSAGEM_LIMITE)

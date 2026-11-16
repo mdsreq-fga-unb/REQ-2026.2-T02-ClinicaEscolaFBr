@@ -105,3 +105,42 @@ export const evolucoes = pgTable(
     ),
   ],
 );
+
+// RF29: a correção não altera a evolução original (versão 1). Cada correção é uma
+// linha nova, a versão seguinte, com a ficha inteira, cifrada (RNF51), o motivo, o
+// autor e a data/hora. Somente inserção (gatilho impedir_alteracao_registro), e a
+// restrição única impede duas correções simultâneas com a mesma versão.
+export const correcoesEvolucao = pgTable(
+  "correcoes_evolucao",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    evolucaoId: uuid("evolucao_id")
+      .notNull()
+      .references(() => evolucoes.id),
+    versao: integer("versao").notNull(),
+    queixaCifrada: text("queixa_cifrada"),
+    planejamentoCifrado: text("planejamento_cifrado"),
+    humorAparenciaCifrado: text("humor_aparencia_cifrado"),
+    conteudoTrabalhadoCifrado: text("conteudo_trabalhado_cifrado"),
+    tecnicasUtilizadasCifrado: text("tecnicas_utilizadas_cifrado"),
+    intervencoesEncaminhamentosCifrado: text(
+      "intervencoes_encaminhamentos_cifrado",
+    ),
+    planoProximaSessaoCifrado: text("plano_proxima_sessao_cifrado"),
+    motivoCifrado: text("motivo_cifrado").notNull(),
+    corrigidaPor: uuid("corrigida_por")
+      .notNull()
+      .references(() => usuarios.id),
+    corrigidaEm: timestamp("corrigida_em", { withTimezone: true })
+      .notNull()
+      .defaultNow(),
+  },
+  (t) => [
+    unique("correcoes_evolucao_versao").on(t.evolucaoId, t.versao),
+    check("correcoes_evolucao_versao_seguinte", sql`${t.versao} >= 2`),
+    check(
+      "correcoes_evolucao_ficha_completa",
+      sql`(${t.queixaCifrada} IS NOT NULL AND ${t.planejamentoCifrado} IS NOT NULL) OR (${t.humorAparenciaCifrado} IS NOT NULL AND ${t.conteudoTrabalhadoCifrado} IS NOT NULL AND ${t.tecnicasUtilizadasCifrado} IS NOT NULL AND ${t.planoProximaSessaoCifrado} IS NOT NULL)`,
+    ),
+  ],
+);

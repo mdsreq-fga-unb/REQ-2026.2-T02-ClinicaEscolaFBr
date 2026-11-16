@@ -1810,6 +1810,8 @@ sequenceDiagram
 
 **Dependências e riscos:** depende do RF28 (#149), integrado no Ciclo 4. O complemento (RF30) e a validação pelo supervisor (RF31) são do Ciclo 6 e vão ler a versão vigente.
 
+**Na implementação (PR do RF29):** a migration `0017_correcao_de_evolucao` cria `correcoes_evolucao`, somente inserção, com a restrição única `(evolucao_id, versao)` pedida na inspeção de design; a versão seguinte é calculada sob uma trava consultiva da evolução, e não com `FOR UPDATE`, que exigiria do `clinica_app` a permissão de alterar as evoluções. O motivo também é cifrado (RNF51). O corpo da correção é validado no serviço, depois da política de acesso, com o esquema do formato da evolução original (a ficha da DF38 ou a antiga), para o 400 indicar o campo. O `GET /prontuarios/:id` traz, em cada evolução, os campos da versão vigente, `versaoAtual`, `versoes` (da vigente para a original) e `correcao` (`dataLimite`, `prazoEncerrado` e `permitida`, calculada para quem consulta). O 422 traz a data-limite e a mensagem com a data em dd/mm/aaaa. Como o RF41 ainda não estava integrado, esta PR cria a página "Parâmetros" da coordenação só com o cartão da data-limite; o RF41 acrescenta o seu cartão na mesma página. Testes: `correcao-evolucao.spec.ts` cobre todos os dados de teste acima, as rotas com os perfis e a correção feita como `clinica_app`; os testes web cobrem a página de correção, as versões no prontuário e o cartão; o fluxo e2e `ciclo-3.spec.ts` corrige a evolução registrada pelo RF28, com o axe e as larguras de 320 a 1920 px.
+
 ---
 
 ## Controle de assiduidade e alertas (CP9)

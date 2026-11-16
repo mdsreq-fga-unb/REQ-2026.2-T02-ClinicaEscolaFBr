@@ -1,6 +1,6 @@
 "use client";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { Eye, Lock } from "lucide-react";
+import { Eye, Lock, PencilLine, TriangleAlert } from "lucide-react";
 import Link from "next/link";
 import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -27,6 +27,11 @@ import {
   AcessoNegadoAoProntuario,
   voltarDoPerfil,
 } from "@/components/prontuario/acesso-negado";
+import {
+  camposDaFicha,
+  diaBr,
+  VersoesEvolucao,
+} from "@/components/prontuario/correcao-evolucao";
 import {
   FormularioAnamnese,
   FormularioContrato,
@@ -453,18 +458,34 @@ export default function ProntuarioPage() {
                         <span className="ui-meta">
                           Registrada por {atendimento.evolucao!.registradaPor}{" "}
                           em {dataHoraBr(atendimento.evolucao!.registradaEm)}
+                          {(atendimento.evolucao!.versaoAtual ?? 1) > 1 &&
+                            ` · versão ${atendimento.evolucao!.versaoAtual} · atual`}
                         </span>
                         <span className="text-marca underline underline-offset-4">
                           Ver evolução
                         </span>
                       </span>
                     </summary>
-                    <LeituraEvolucao
-                      evolucao={atendimento.evolucao!}
-                      inicio={atendimento.inicio}
-                      numeroNoCiclo={atendimento.numeroNoCiclo}
-                    />
+                    {(atendimento.evolucao!.versoes?.length ?? 1) > 1 ? (
+                      <div className="mt-3">
+                        <VersoesEvolucao
+                          versoes={atendimento.evolucao!.versoes!}
+                          campos={camposDaFicha(atendimento.evolucao!)}
+                        />
+                      </div>
+                    ) : (
+                      <LeituraEvolucao
+                        evolucao={atendimento.evolucao!}
+                        inicio={atendimento.inicio}
+                        numeroNoCiclo={atendimento.numeroNoCiclo}
+                      />
+                    )}
                   </details>
+                  <AcaoCorrecao
+                    prontuarioId={p.id}
+                    evolucao={atendimento.evolucao!}
+                    numeroNoCiclo={atendimento.numeroNoCiclo}
+                  />
                 </li>
               ))}
           </ol>
@@ -552,5 +573,41 @@ export default function ProntuarioPage() {
         </section>
       </div>
     </div>
+  );
+}
+
+// Ação de corrigir a evolução (RF29): o link dentro do prazo, para o estagiário
+// autor e o supervisor do caso, ou o aviso do prazo encerrado, sem o link.
+function AcaoCorrecao({
+  prontuarioId,
+  evolucao,
+  numeroNoCiclo,
+}: {
+  prontuarioId: string;
+  evolucao: EvolucaoRegistrada;
+  numeroNoCiclo: number | null;
+}) {
+  const correcao = evolucao.correcao;
+  if (!correcao) return null;
+  if (correcao.prazoEncerrado && correcao.dataLimite)
+    return (
+      <p className="mt-2 flex items-start gap-2 rounded-lg bg-alerta-fundo px-3 py-2 text-sm">
+        <TriangleAlert
+          aria-hidden
+          className="mt-0.5 size-4 shrink-0 text-[#a85400]"
+        />
+        O prazo para corrigir evoluções deste semestre terminou em{" "}
+        {diaBr(correcao.dataLimite)}.
+      </p>
+    );
+  if (!correcao.permitida) return null;
+  return (
+    <Link
+      href={`/prontuarios/${prontuarioId}/evolucoes/${evolucao.id}/corrigir`}
+      className={`${buttonVariants({ variant: "outline" })} mt-2`}
+      aria-label={`Corrigir evolução da sessão ${numeroNoCiclo ?? ""}`.trim()}
+    >
+      <PencilLine aria-hidden className="size-4" /> Corrigir evolução
+    </Link>
   );
 }
