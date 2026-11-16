@@ -1,4 +1,5 @@
 import { voiceOverTest as test } from "@guidepup/playwright";
+import { expect } from "@playwright/test";
 import type { ListaAcessosProntuario } from "@clinica/shared";
 import { anexarFala, irAte, ouvirFoco, simularRotas } from "./apoio";
 
@@ -34,15 +35,22 @@ test("VoiceOver lê filtros, contagem e tentativa negada (RF56, RNF56)", async (
   await page.getByRole("table").waitFor();
   await voiceOver.navigateToWebContent();
   try {
-    for (const rotulo of [
-      "Paciente",
-      "Usuário",
-      "Data inicial",
-      "Data final",
-    ]) {
+    // Os campos de texto são lidos com o rótulo quando recebem o foco.
+    for (const rotulo of ["Paciente", "Usuário"]) {
       const campo = page.getByLabel(rotulo, { exact: true });
       await campo.focus();
       await ouvirFoco(voiceOver, campo, rotulo);
+    }
+    // No campo de data, o WebKit põe o foco do teclado direto no segmento do mês, e
+    // o VoiceOver descreve só o segmento ("10 month stepper"), sem o rótulo. Por
+    // isso, as datas são conferidas de outro jeito: o campo tem o rótulo como nome
+    // acessível, e o VoiceOver lê o rótulo ao percorrer o formulário a partir do
+    // campo do usuário.
+    for (const rotulo of ["Data inicial", "Data final"]) {
+      await expect(
+        page.getByLabel(rotulo, { exact: true }),
+      ).toHaveAccessibleName(rotulo);
+      await irAte(voiceOver, rotulo);
     }
     await page.getByRole("button", { name: "Filtrar" }).click();
     await ouvirFoco(
