@@ -1783,7 +1783,7 @@ sequenceDiagram
     else sem motivo ou campo acima do limite
         A-->>U: 400 com o campo indicado, nada gravado
     else depois da data-limite do semestre da sessão
-        A-->>U: 422 com a data-limite
+        A-->>U: 422 com a data-limite (dd/mm/aaaa)
     else
         A->>DB: transação: trava a evolução, versão = última + 1
         A->>DB: insere CorrecaoEvolucao cifrada (RNF51) e auditoria (RNF10)
@@ -1795,12 +1795,12 @@ sequenceDiagram
 | --- | --- |
 | A `Evolucao` original não muda (só inserção, trigger); a correção é uma linha nova, com `versao` | A correção do estagiário no prazo preserva a original e registra a nova com autor, data/hora e motivo |
 | `motivo` obrigatório no Zod e no banco (`not null`) | A correção sem motivo é recusada, e o registro continua como estava |
-| Compara o dia de hoje em Brasília com a `data_limite_correcao` do **semestre da sessão** da evolução; vale para os dois perfis | Depois da data-limite, nem o estagiário nem o supervisor corrigem |
+| Compara o dia de hoje em Brasília com a `data_limite_correcao` do **semestre da sessão** da evolução; vale para os dois perfis; o `422` traz a data-limite em dd/mm/aaaa, como na tela | Depois da data-limite, nem o estagiário nem o supervisor corrigem |
 | O `PUT` grava o parâmetro do semestre e a `AlteracaoParametro` na mesma transação | A coordenação registra a data-limite, com o valor anterior, o novo, o autor e a data/hora |
 | Sem a data do semestre, a correção passa, e a resposta do `GET /parametros/data-limite-correcao` traz `pendente: true`, que vira o aviso da coordenação | Sem data-limite, a correção é permitida, e a coordenação é avisada |
 | Política do prontuário com o modo `escrita` (vínculo ou atribuição vigentes) e, para o estagiário, `evolucoes.registrada_por = usuário`; a coordenação só lê | Só o autor e o supervisor do caso corrigem; o supervisor pode corrigir o registro do estagiário |
 
-**Decisões de projeto:** a correção guarda a ficha inteira, e não só o campo mudado, para cada versão poder ser lida sozinha. A data-limite fica num parâmetro por semestre (`ParametroSemestre`, chave `data_limite_correcao`), a mesma tabela das vagas ofertadas do RF48. O prazo é o do **semestre da sessão**, e não o de hoje: assim, na virada do semestre, sem a data do semestre novo registrada, as evoluções do semestre anterior continuam fechadas. Sem a data registrada para o semestre da sessão, vale a regra do RF29 (a correção é permitida e a coordenação é avisada). O autor é o estagiário que registrou a evolução (`registrada_por`), como diz o critério do RF29. Depois de uma transferência (RF25), o estagiário anterior perde o acesso ao prontuário (RF55), e o novo não corrige as evoluções do anterior: só o supervisor do caso corrige as dele. A evolução registrada antes da DF38, com a queixa e o planejamento, é corrigida com os mesmos campos dela.
+**Decisões de projeto:** a correção guarda a ficha inteira, e não só o campo mudado, para cada versão poder ser lida sozinha. Duas correções da mesma evolução ao mesmo tempo não geram a mesma versão: a transação trava a evolução antes de calcular a versão seguinte, e o `unique (evolucao_id, versao)` do banco, no [modelo do Ciclo 5](#modelo-detalhado-do-ciclo-5), recusa a repetição se a trava falhar. A data-limite fica num parâmetro por semestre (`ParametroSemestre`, chave `data_limite_correcao`), a mesma tabela das vagas ofertadas do RF48. O prazo é o do **semestre da sessão**, e não o de hoje: assim, na virada do semestre, sem a data do semestre novo registrada, as evoluções do semestre anterior continuam fechadas. Sem a data registrada para o semestre da sessão, vale a regra do RF29 (a correção é permitida e a coordenação é avisada). O autor é o estagiário que registrou a evolução (`registrada_por`), como diz o critério do RF29. Depois de uma transferência (RF25), o estagiário anterior perde o acesso ao prontuário (RF55), e o novo não corrige as evoluções do anterior: só o supervisor do caso corrige as dele. A evolução registrada antes da DF38, com a queixa e o planejamento, é corrigida com os mesmos campos dela.
 
 **Telas:** "Corrigir evolução" em cada evolução do prontuário, dentro do prazo, abre a página "Corrigir evolução da sessão N" (como a "Registro de evolução" do RF28), com o aviso "A correção é permitida até …. A versão original continua guardada no histórico.", os campos já preenchidos e o "Motivo da correção". Sem motivo, aparece o aviso "A correção não foi salva." com o link para o campo. No prontuário, a evolução mostra "Versão N · atual" e as anteriores, com "Corrigida por … em …. Motivo: …". Depois do prazo, aparece "O prazo para corrigir evoluções deste semestre terminou em …", sem o botão. O botão também não aparece para o estagiário nas evoluções de outro autor. Para a coordenação, a página "Parâmetros" (a mesma do RF41) ganha o cartão "Data-limite para correção de evoluções", com o aviso de data pendente. Protótipo: [prancha 6-1](prototipos.md#rf29).
 
@@ -2224,7 +2224,7 @@ _Ciclo 5._
 **Rotas** (módulo `administrativo`):
 
 - `GET /declaracoes/minhas-sessoes` (pública, com o `VerificacaoGuard` do RF52): as sessões `realizada` da inscrição em `req.inscricaoVerificada`, de todos os ciclos, da mais recente para a mais antiga. Cada uma traz só a data, o horário e o nome do estagiário. Responde com `Cache-Control: no-store`.
-- `GET /pacientes/:casoId/sessoes-realizadas` (secretaria): a mesma lista, para a ficha do paciente.
+- `GET /pacientes/:casoId/sessoes-realizadas` (secretaria): a mesma lista, para a ficha do paciente, com as sessões de todos os ciclos de atendimento desse caso. Cada inscrição tem no máximo um caso; se a mesma pessoa se inscrever de novo, a nova inscrição tem outro caso, e as sessões dele aparecem na ficha desse caso.
 
 ```mermaid
 sequenceDiagram
@@ -2254,9 +2254,9 @@ sequenceDiagram
 
 **Telas:** página `/declaracoes`, depois dos dois passos do RF52 (o mesmo componente do RF8), com "Inscrição AAAA-NNNNN", o aviso, a tabela (cartões no celular) e "Encerrar consulta". Na ficha da secretaria, a seção "Sessões com presença registrada". O estagiário, o supervisor e a coordenação que abrem a rota interna veem a tela "Você não tem acesso a esta lista". Protótipo: [prancha 8-2](prototipos.md#rf44).
 
-**Acessibilidade (RNF56 a RNF58):** tabela com `caption` e cabeçalhos; o estado vazio é um título com o texto; a página é conferida a 320 px.
+**Acessibilidade (RNF56 a RNF58):** tabela com `caption` e cabeçalhos; o estado vazio é um título com o texto. Como `/declaracoes` é pública, o e2e roda o axe e confere a falta de rolagem lateral em 320, 360, 768, 1024, 1366 e 1920 px (RNF58), e o foco reforçado dos controles com o `focoVisivel` (RNF57). O RNF56 também é verificado com o leitor de tela, num teste em `e2e/leitor-de-tela/`, como o da verificação do RF52, conforme o nível de rigor da [estratégia de V&V](../processo/verificacao-e-validacao.md).
 
-**Dados de teste:** uma inscrição com três sessões realizadas, uma cancelada, uma com falta e uma agendada (só as três aparecem); uma inscrição sem sessão realizada (estado vazio); a inscrição A verificada pedindo a rota (só as de A); a rota sem verificação (401); o estagiário, o supervisor e a coordenação na rota interna (403).
+**Dados de teste:** uma inscrição com três sessões realizadas, uma cancelada, uma com falta e uma agendada (só as três aparecem); um caso com sessões realizadas em dois ciclos de atendimento (as dos dois aparecem); uma inscrição sem sessão realizada (estado vazio); a inscrição A verificada pedindo a rota (só as de A); a rota sem verificação (401); o estagiário, o supervisor e a coordenação na rota interna (403).
 
 **Dependências e riscos:** depende do RF52 (#47), já integrado, e da sessão `realizada`, marcada no prontuário (RF28). A emissão é do RF45.
 
