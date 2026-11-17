@@ -49,7 +49,6 @@ describe('RF1/RF2: contrato compartilhado', () => {
     'nomeCompleto',
     'dataNascimento',
     'cpf',
-    'rg',
     'endereco',
     'estadoCivil',
     'queixa',
@@ -88,6 +87,19 @@ describe('RF1/RF2: contrato compartilhado', () => {
   ])('recusa contrato inválido %j', (alteracao) => {
     expect(
       inscricaoSchema.safeParse({ ...valido(), ...alteracao }).success,
+    ).toBe(false);
+  });
+  it('aceita a inscrição sem RG e recusa RG com caractere de anexo ou com mais de 30 caracteres (DF60)', () => {
+    expect(inscricaoSchema.safeParse({ ...valido(), rg: '' }).success).toBe(
+      true,
+    );
+    const { rg: _rg, ...semRg } = valido();
+    expect(inscricaoSchema.safeParse(semRg).success).toBe(true);
+    expect(
+      inscricaoSchema.safeParse({ ...valido(), rg: 'foto.jpg@anexo' }).success,
+    ).toBe(false);
+    expect(
+      inscricaoSchema.safeParse({ ...valido(), rg: '1'.repeat(31) }).success,
     ).toBe(false);
   });
   it('aceita a inscrição sem os dados opcionais da ficha de identificação (DF43)', () => {
@@ -201,6 +213,12 @@ describe('RF1/RF2: HTTP, transações e migrations oficiais', () => {
     expect(registro.celular).toBe('61999999999');
     expect(registro.email).toBe('teste@example.com');
     expect(registro.canalPreferencial).toBe('email');
+  });
+  it('registra a inscrição sem RG, com o RG nulo no banco (RF1, DF60)', async () => {
+    await enviar({ ...valido(), rg: '' }).expect(201);
+    const [registro] = await db.select().from(inscricoes);
+    expect(registro.rg).toBeNull();
+    expect(registro.cpf).toBe(valido().cpf);
   });
   it('guarda os dados da ficha de identificação e deixa nulos os que ficaram em branco (DF43)', async () => {
     await enviar({
