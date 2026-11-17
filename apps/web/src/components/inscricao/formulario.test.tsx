@@ -178,6 +178,16 @@ describe("Formulário RF1/RF2", () => {
       documentoResponsavel: "",
     });
   });
+  it("marca o RG como opcional e avança sem ele, sem pedir órgão emissor nem estado (RF1, DF60)", () => {
+    render(<FormularioInscricao />);
+    expect(screen.getByLabelText("RG (opcional)")).not.toBeRequired();
+    expect(screen.queryByLabelText(/órgão emissor/i)).toBeNull();
+    dados();
+    preencher("rg", "");
+    continuar();
+    expect(screen.queryByRole("alert")).toBeNull();
+    expect(document.getElementById("queixa")).toBeInTheDocument();
+  });
   it("recusa CEP incompleto da ficha de identificação (DF43)", () => {
     render(<FormularioInscricao />);
     dados();

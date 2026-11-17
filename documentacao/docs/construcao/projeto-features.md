@@ -718,14 +718,14 @@ sequenceDiagram
 | O mesmo esquema Zod é usado na interface e na API | Envio com campo obrigatório vazio é bloqueado, e os dados são mantidos |
 | A idade é calculada a partir da data de nascimento, e o responsável legal é obrigatório para menores de 18 anos | Menor de idade sem responsável legal é bloqueado |
 | E-mail e celular obrigatórios, sem a escolha do canal preferencial ([DF48](../requisitos/decisoes-fbr.md#df48)); a API grava `canal_preferencial = 'email'` nas inscrições novas, e as antigas mantêm o canal escolhido | Formato validado e os dois contatos exigidos |
-| CPF com 11 números; RG como texto livre, como está no documento, sem órgão emissor e sem upload | Nenhum envio de cópia do documento |
+| CPF com 11 números; RG **opcional** ([DF60](../requisitos/decisoes-fbr.md#df60)), como texto livre, como está no documento, sem órgão emissor, sem estado e sem upload | Nenhum envio de cópia do documento; a inscrição sem RG é aceita quando os demais campos obrigatórios estão preenchidos |
 | A API só grava com `confirmado: true` | Sem confirmação, a solicitação não é registrada |
 | Número no formato `AAAA-NNNNN`, com o ano do registro e a sequência `inscricoes_numero_seq`, que não reinicia a cada ano | Cada inscrição recebe um número único, como "2026-00487" |
 | Queixa, urgência e histórico são cifrados antes de gravar (RNF51) | Nenhum desses campos aparece legível no banco |
 | A interface só mostra a confirmação após a resposta 201 | Nenhuma confirmação sem registro efetivo |
 | Componente `AvisoEmergencia` fixo no layout do formulário | Aviso do CVV e do SAMU em todas as etapas |
 
-**Dados de teste:** um adulto com e-mail e celular; um menor com responsável legal; uma inscrição sem e-mail e outra sem celular (recusadas); uma inscrição com CPF em formato inválido; um RG com letra ("12.345.678-X").
+**Dados de teste:** um adulto com e-mail e celular; um menor com responsável legal; uma inscrição sem e-mail e outra sem celular (recusadas); uma inscrição com CPF em formato inválido; um RG com letra ("12.345.678-X"); uma inscrição sem RG (aceita, com o RG nulo no banco).
 
 ### RF2 — Emitir comprovante de inscrição ([#89](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/issues/89))
 

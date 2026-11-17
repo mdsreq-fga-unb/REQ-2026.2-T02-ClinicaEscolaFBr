@@ -1,0 +1,1 @@
+ALTER TABLE "inscricoes" ALTER COLUMN "rg" DROP NOT NULL;

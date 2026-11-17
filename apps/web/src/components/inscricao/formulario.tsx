@@ -49,7 +49,9 @@ const vazio = Object.fromEntries(
   Object.keys(rotulos).map((campo) => [campo, ""]),
 ) as Valores;
 // Contatos e dados da ficha de identificação da Clínica Escola (DF43).
+// O RG também é opcional (DF60).
 const opcionais: Campo[] = [
+  "rg",
   "sexo",
   "profissao",
   "escolaridade",
