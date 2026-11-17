@@ -9,6 +9,7 @@ As telas estão organizadas pelo fluxo do sistema, uma seção por feature, e ca
 | Ciclo 3 | [Abrir no Claude Design](https://claude.ai/artifact/Ad1CLwRmS2AFtZHDj8vtwo#page-dcb81aee8d83){ target="_blank" rel="noopener" } | [PDF de 24/10/2026 (24 MB)](../assets/prototipos-ciclo-3/prototipos-ciclo-3.pdf){ target="_blank" rel="noopener" } | Aprovados com ajustes na [reunião de 23/10/2026](../historico/unidade-3/reunioes.md#reuniao-de-validacao-do-prototipo-do-ciclo-3-com-a-fbr) |
 | Ciclo 4 | [Abrir o projeto de design](https://claude.ai/artifact/46j4XDcdd3JK7Dev5ixcDW){ target="_blank" rel="noopener" } | [PDF (13 MB)](../assets/prototipos-ciclo-4/prototipos-ciclo-4.pdf){ target="_blank" rel="noopener" } | Enviados à FBr em 06/11/2026, com as propostas abaixo ([ata](../historico/unidade-3/reunioes.md#reuniao-de-validacao-do-ciclo-3-com-a-fbr)) |
 | Ciclo 5 | [Abrir o projeto de design](https://claude.ai/artifact/JNqq7TRz9RTdhKT7pMey2J#page-dcb81aee8d83){ target="_blank" rel="noopener" } | [PDF (11 MB)](../assets/prototipos-ciclo-5/prototipos-ciclo-5.pdf){ target="_blank" rel="noopener" } | Enviados à FBr por e-mail em 14/11/2026 e validados por Robson Araújo, com os supervisores Alexandre e Ana, em 16/11/2026 ([validação](../historico/unidade-3/reunioes.md#validacao-do-ciclo-5-pela-fbr)), com um pedido no cancelamento por ausência do estagiário (RF17) |
+| Ciclo 6 | [Abrir o projeto de design](https://claude.ai/artifact/9qj5u3p4tCrxe3viWXzWU7){ target="_blank" rel="noopener" } | [PDF (2 MB)](../assets/prototipos-ciclo-6/prototipos-ciclo-6.pdf){ target="_blank" rel="noopener" } | A enviar à FBr, com os pontos a confirmar da capa do PDF: quem registra o complemento (RF30), a reclassificação da falta do estagiário (RF40 e RF63), o modelo da declaração (RF45) e a base legal da revogação (RF65) |
 
 O Claude Design do Ciclo 3 e as imagens da inscrição (RF1) e do prontuário (RF66) já têm as decisões de 31/10/2026: os dados da ficha de identificação e o contrato da Clínica Escola. Os protótipos do Ciclo 4 seguem as cores, a tipografia e os componentes aprovados no Ciclo 3 e, para reduzir a rolagem, mostram aberto só o que é usado na hora: o conteúdo de consulta começa fechado e abre com um botão, as seções sem registro ocupam uma linha só e os campos com erro ficam sempre à vista.
 
@@ -60,6 +61,12 @@ _Ciclo 4._ [RF57](../requisitos/funcionais.md#rf57) · issue [#52](https://githu
 **No celular**
 
 [![Termo de consentimento no celular: os mesmos quatro estados](../assets/prototipos-ciclo-4/1-2-termo-celular.webp)](../assets/prototipos-ciclo-4/1-2-termo-celular.webp){ target="_blank" }
+
+### RF65 — Registrar revogação do consentimento { #rf65 }
+
+_Ciclo 6._ [RF65](../requisitos/funcionais.md#rf65) · issue [#281](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/issues/281). A secretaria registra a revogação depois de confirmar a identidade de quem pede, com os efeitos para a inscrição na fila e para o paciente em atendimento. O aceite original e os registros clínicos continuam no histórico. A base legal, a indicar pelo Jurídico da FBr, e o texto final do termo ainda estão pendentes.
+
+[![Revogação do consentimento: ficha, registro, erro sem a verificação, inscrição cancelada na fila, aviso ao supervisor, histórico, acesso negado e celular](../assets/prototipos-ciclo-6/1-1-revogacao-consentimento.webp)](../assets/prototipos-ciclo-6/1-1-revogacao-consentimento.webp){ target="_blank" }
 
 ### RF52 — Verificar identidade do paciente ou responsável { #rf52 }
 
@@ -266,6 +273,42 @@ _Ciclo 5._ [RF56](../requisitos/funcionais.md#rf56) · issue [#51](https://githu
 
 [![Registro de acessos: lista com tentativa negada, sem resultados, acesso negado e celular](../assets/prototipos-ciclo-5/6-2-registro-acessos.webp)](../assets/prototipos-ciclo-5/6-2-registro-acessos.webp){ target="_blank" }
 
+### RF30 — Registrar complemento de evolução da sessão { #rf30 }
+
+_Ciclo 6._ [RF30](../requisitos/funcionais.md#rf30) · issue [#271](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/issues/271). O estagiário responsável soma um complemento à evolução, sem alterar o que já foi registrado. O complemento aparece na linha do tempo, separado das correções do RF29, e não é aceito depois da alta ou do desligamento. Quem registra e se há prazo estão nas pendências com a FBr.
+
+[![Complemento de evolução: formulário, erros, linha do tempo, caso encerrado, visão do supervisor e da coordenação e celular](../assets/prototipos-ciclo-6/6-1-complemento-evolucao.webp)](../assets/prototipos-ciclo-6/6-1-complemento-evolucao.webp){ target="_blank" }
+
+### RF67 — Validar evolução pelo supervisor { #rf67 }
+
+_Ciclo 6._ [RF67](../requisitos/funcionais.md#rf67) · issue [#272](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/issues/272). O supervisor do caso valida a evolução, que volta a ficar pendente quando recebe uma correção ou um complemento.
+
+[![Validar evolução: pendente, confirmação, validada, de volta a pendente, visão do estagiário, acesso negado e celular](../assets/prototipos-ciclo-6/6-2-validar-evolucao.webp)](../assets/prototipos-ciclo-6/6-2-validar-evolucao.webp){ target="_blank" }
+
+### RF31 — Consultar evolução de uma sessão específica { #rf31 }
+
+_Ciclo 6._ [RF31](../requisitos/funcionais.md#rf31) · issue [#274](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/issues/274). A evolução de uma sessão, com o conteúdo atual, a situação de validação e o histórico do original, das correções e dos complementos. A coordenação consulta só para leitura, com o acesso registrado.
+
+[![Evolução de uma sessão: estagiário e supervisor, coordenação, sessão sem evolução, acesso negado e celular](../assets/prototipos-ciclo-6/6-3-evolucao-sessao.webp)](../assets/prototipos-ciclo-6/6-3-evolucao-sessao.webp){ target="_blank" }
+
+### RF32 — Consultar histórico de evolução do paciente { #rf32 }
+
+_Ciclo 6._ [RF32](../requisitos/funcionais.md#rf32) · issue [#275](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/issues/275). As evoluções do ciclo de atendimento, por sessão, com o autor, os registros e a validação, mantendo os registros de antes da transferência.
+
+[![Histórico de evolução: ciclo com transferência, sessão aberta, ciclo sem evoluções, acesso negado e celular](../assets/prototipos-ciclo-6/6-4-historico-evolucao.webp)](../assets/prototipos-ciclo-6/6-4-historico-evolucao.webp){ target="_blank" }
+
+### RF68 — Encerrar caso por alta { #rf68 }
+
+_Ciclo 6._ [RF68](../requisitos/funcionais.md#rf68) · issue [#273](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/issues/273). O estagiário registra a alta, o supervisor a confirma e a coordenação pode reabrir o caso no mesmo semestre. A alta aparece no histórico separada do desligamento por faltas.
+
+[![Alta: registro, aguardando confirmação, confirmação do supervisor, caso encerrado, reabertura, estagiário inativo, semestre anterior, acesso negado e celular](../assets/prototipos-ciclo-6/6-5-alta.webp)](../assets/prototipos-ciclo-6/6-5-alta.webp){ target="_blank" }
+
+### RF33 — Gerar relatório final de evolução { #rf33 }
+
+_Ciclo 6._ [RF33](../requisitos/funcionais.md#rf33) · issue [#131](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/issues/131). O relatório no modelo da Clínica Escola, com as lacunas do prontuário apontadas, a revisão do supervisor, as versões, a versão para impressão com as assinaturas e a entrega pela secretaria, sem download nem e-mail.
+
+[![Relatório final: rascunho, justificativa, ciclo sem evoluções, revisão, versões, impressão, entrega pela secretaria e acesso negado](../assets/prototipos-ciclo-6/6-6-relatorio-final.webp)](../assets/prototipos-ciclo-6/6-6-relatorio-final.webp){ target="_blank" }
+
 ## 7. Faltas e desligamento
 
 ### RF34 — Registrar falta do paciente na sessão { #rf34 }
@@ -304,6 +347,24 @@ _Ciclo 5._ [RF39](../requisitos/funcionais.md#rf39) · issue [#225](https://gith
 
 [![Faltas do estagiário: relação do supervisor, coordenação sem faltas no período, acesso negado e celular](../assets/prototipos-ciclo-5/7-1-faltas-estagiario.webp)](../assets/prototipos-ciclo-5/7-1-faltas-estagiario.webp){ target="_blank" }
 
+### RF40 — Contabilizar faltas do estagiário no semestre { #rf40 }
+
+_Ciclo 6._ [RF40](../requisitos/funcionais.md#rf40) · issue [#276](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/issues/276). A contagem de faltas do estagiário por semestre, na página do RF39, com a reclassificação de uma ausência registrada por engano, que é uma proposta da equipe a validar com a FBr.
+
+[![Faltas no semestre: resumo, faltas de um estagiário, reclassificação, semestre anterior, acesso negado e celular](../assets/prototipos-ciclo-6/7-1-faltas-semestre.webp)](../assets/prototipos-ciclo-6/7-1-faltas-semestre.webp){ target="_blank" }
+
+### RF63 — Sinalizar reprovação do estagiário por faltas { #rf63 }
+
+_Ciclo 6._ [RF63](../requisitos/funcionais.md#rf63) · issue [#277](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/issues/277). Na terceira falta do semestre, o supervisor e a coordenação veem a sinalização, sem o nome do paciente nem o motivo.
+
+[![Sinalização de reprovação: supervisor, lista da coordenação, falta além da terceira, contagem abaixo do limite, reclassificação depois da decisão, acesso negado e celular](../assets/prototipos-ciclo-6/7-2-sinalizacao-reprovacao.webp)](../assets/prototipos-ciclo-6/7-2-sinalizacao-reprovacao.webp){ target="_blank" }
+
+### RF64 — Registrar decisão institucional sobre a reprovação do estagiário { #rf64 }
+
+_Ciclo 6._ [RF64](../requisitos/funcionais.md#rf64) · issue [#278](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/issues/278). A coordenação registra a decisão, com justificativa obrigatória, e as decisões anteriores ficam no histórico.
+
+[![Decisão sobre a reprovação: diálogo, erro sem justificativa, histórico, visão do supervisor, acesso negado e celular](../assets/prototipos-ciclo-6/7-3-decisao-reprovacao.webp)](../assets/prototipos-ciclo-6/7-3-decisao-reprovacao.webp){ target="_blank" }
+
 ## 8. Contribuição social e declarações
 
 ### RF41 — Registrar pagamento da contribuição social do paciente { #rf41 }
@@ -318,6 +379,24 @@ _Ciclo 5._ [RF44](../requisitos/funcionais.md#rf44) · issue [#226](https://gith
 
 [![Sessões com presença registrada: lista do paciente, ficha da secretaria, sem sessões, celular e acesso negado](../assets/prototipos-ciclo-5/8-2-sessoes-comparecimento.webp)](../assets/prototipos-ciclo-5/8-2-sessoes-comparecimento.webp){ target="_blank" }
 
+### RF42 — Consultar situação da contribuição social dos pacientes { #rf42 }
+
+_Ciclo 6._ [RF42](../requisitos/funcionais.md#rf42) · issue [#44](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/issues/44). A lista da secretaria e da coordenação, com o filtro por situação, a indicação na agenda da 1ª sessão e a situação para o estagiário. O supervisor não acessa.
+
+[![Situação da contribuição: lista, filtro pendente, nenhum pendente, agenda do dia, estagiário, acesso negado e celular](../assets/prototipos-ciclo-6/8-1-situacao-contribuicao.webp)](../assets/prototipos-ciclo-6/8-1-situacao-contribuicao.webp){ target="_blank" }
+
+### RF43 — Bloquear agendamento por contribuição social pendente { #rf43 }
+
+_Ciclo 6._ [RF43](../requisitos/funcionais.md#rf43) · issue [#279](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/issues/279). O agendamento da 2ª sessão em diante é bloqueado com a contribuição pendente, e a perda da vaga depois de 10 dias corridos é confirmada pela secretaria ou pela coordenação.
+
+[![Bloqueio do agendamento: 2ª sessão bloqueada, 1ª sessão, depois do pagamento, prazo vencido, confirmação da perda da vaga, vaga perdida, visão do estagiário e celular](../assets/prototipos-ciclo-6/8-2-bloqueio-agendamento.webp)](../assets/prototipos-ciclo-6/8-2-bloqueio-agendamento.webp){ target="_blank" }
+
+### RF45 — Emitir declaração de comparecimento do paciente { #rf45 }
+
+_Ciclo 6._ [RF45](../requisitos/funcionais.md#rf45) · issue [#280](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/issues/280). A emissão pela lista de sessões do RF44, com a pré-visualização para imprimir, o bloqueio do responsável sem a autorização de menor e o registro da autorização pela secretaria. O modelo, quem assina e o CRP aguardam a FBr.
+
+[![Declaração de comparecimento: lista de sessões, pré-visualização, menor sem autorização, registro da autorização, sessão sem presença, acesso negado e celular](../assets/prototipos-ciclo-6/8-3-declaracao-comparecimento.webp)](../assets/prototipos-ciclo-6/8-3-declaracao-comparecimento.webp){ target="_blank" }
+
 ## 9. Indicadores
 
 ### RF48 — Consultar indicadores operacionais { #rf48 }
@@ -331,6 +410,12 @@ _Ciclo 5._ [RF48](../requisitos/funcionais.md#rf48) · issue [#22](https://githu
 **No celular**
 
 [![Indicadores operacionais no celular: consulta, registrar vagas, intervalo recusado e acesso negado](../assets/prototipos-ciclo-5/9-2-indicadores-celular.webp)](../assets/prototipos-ciclo-5/9-2-indicadores-celular.webp){ target="_blank" }
+
+### RF49 — Exportar relatório institucional em PDF { #rf49 }
+
+_Ciclo 6._ [RF49](../requisitos/funcionais.md#rf49) · issue [#23](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/issues/23). A coordenação exporta a consulta exibida dos indicadores em PDF, com os mesmos valores da tela, o intervalo, a data/hora e quem exportou.
+
+[![Relatório institucional: exportar a consulta, antes de consultar, PDF, aviso sem vagas ofertadas, acesso negado e celular](../assets/prototipos-ciclo-6/9-1-relatorio-institucional.webp)](../assets/prototipos-ciclo-6/9-1-relatorio-institucional.webp){ target="_blank" }
 
 ## 10. Navegação interna por perfil { #navegacao }
 
