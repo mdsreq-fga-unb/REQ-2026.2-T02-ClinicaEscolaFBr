@@ -4,7 +4,7 @@ Esta página mostra como o processo definido na [Estratégia de Engenharia de So
 
 ## Modelo abrangente do domínio { #1-modelo-abrangente-do-dominio }
 
-O FDD começa pelo modelo abrangente do domínio. Os projetos das features ([Ciclo 3](../construcao/projeto-features.md) e [Ciclo 4](../construcao/projeto-features.md)) detalham as classes de cada característica de produto; o diagrama abaixo integra essas partes num modelo só, com as relações entre inscrição, caso, ciclo de atendimento, sessão, prontuário e responsáveis.
+O FDD começa pelo modelo abrangente do domínio. O [projeto das features](../construcao/projeto-features.md), com as dos Ciclos 3, 4 e 5, detalha as classes de cada característica de produto; o diagrama abaixo integra essas partes num modelo só, com as relações entre inscrição, caso, ciclo de atendimento, sessão, prontuário e responsáveis.
 
 ```mermaid
 classDiagram
@@ -119,7 +119,7 @@ O estado de cada feature segue os marcos do FDD e do [DoD](../requisitos/dor-dod
 
 ## Fechamento dos ciclos { #5-fechamento-dos-ciclos }
 
-No fim de cada ciclo, o [Cronograma geral](cronograma.md) compara o planejado com o realizado, feature a feature: o marco alcançado, o que passou para o ciclo seguinte e o motivo. O fechamento do Ciclo 3 está registrado lá; o do Ciclo 4 entra em 10/11/2026.
+No fim de cada ciclo, o [Cronograma geral](cronograma.md) compara o planejado com o realizado, feature a feature: o marco alcançado, o que passou para o ciclo seguinte e o motivo. Os fechamentos do Ciclo 3 e do Ciclo 4 estão registrados lá, e o do Ciclo 5 entra com a entrega da Unidade 3, em 17/11/2026.
 
 ## Engenharia de requisitos na prática { #6-engenharia-de-requisitos-na-pratica }
 
@@ -140,7 +140,7 @@ Os documentos não são publicados no site, porque são modelos internos da clí
 
 ### Representação
 
-O processo previa diagramas de atividades "quando necessário". Os fluxos com várias decisões, como a inscrição em três etapas, o desligamento e a reversão, e a confirmação e o cancelamento da sessão, foram representados por diagramas de sequência com os caminhos alternativos (blocos `alt`), nos projetos das features ([Ciclo 3](../construcao/projeto-features.md) e [Ciclo 4](../construcao/projeto-features.md)), porque eles mostram, no mesmo desenho, quem faz cada passo e o que o sistema grava. Por isso, nenhum diagrama de atividades foi necessário. As situações do caso e da sessão estão nas listas de situações do modelo, e a visão geral do processo da clínica está no Rich Picture do [Cenário Atual](../produto/cenario-atual.md).
+O processo previa diagramas de atividades "quando necessário". Os fluxos com várias decisões, como a inscrição em três etapas, o desligamento e a reversão, e a confirmação e o cancelamento da sessão, foram representados por diagramas de sequência com os caminhos alternativos (blocos `alt`), no [projeto das features](../construcao/projeto-features.md) dos Ciclos 3, 4 e 5, porque eles mostram, no mesmo desenho, quem faz cada passo e o que o sistema grava. Por isso, nenhum diagrama de atividades foi necessário. As situações do caso e da sessão estão nas listas de situações do modelo, e a visão geral do processo da clínica está no Rich Picture do [Cenário Atual](../produto/cenario-atual.md).
 
 ### Verificação
 
@@ -150,6 +150,6 @@ A verificação interna por checklist é a avaliação do [DoR](../requisitos/do
 
 | Público | Como validou | Registro |
 | --- | --- | --- |
-| Coordenação e equipe técnica da FBr | Validação do MVP (24/09 a 08/10/2026), do protótipo do Ciclo 3 (23/10/2026) e demonstração do Ciclo 3 no ambiente de validação (06/11/2026) | [Reuniões da Unidade 2](../historico/unidade-2/reunioes.md) e [da Unidade 3](../historico/unidade-3/reunioes.md) |
+| Coordenação e equipe técnica da FBr | Validação do MVP (24/09 a 08/10/2026), do protótipo do Ciclo 3 (23/10/2026), demonstração do Ciclo 3 no ambiente de validação (06/11/2026), demonstração do Ciclo 4 por e-mail (10/11/2026), com as respostas e o aceite de 11 e 12/11/2026, e envio dos protótipos do Ciclo 5 (14/11/2026) | [Reuniões da Unidade 2](../historico/unidade-2/reunioes.md) e [da Unidade 3](../historico/unidade-3/reunioes.md) |
 | Supervisores, estagiários e secretaria | Teste de usabilidade do [RNF22](../requisitos/nao-funcionais.md#rnf22), aplicado pela FBr em 12/11/2026 com 3 pessoas sem treinamento. A FBr devolveu a avaliação geral (de acordo com as funcionalidades, com mais dificuldade de navegação para o supervisor), sem a planilha. A forma de verificação do RNF22 foi revista para um teste com os usuários reais disponíveis, aprovado pela coordenação, mais o e2e | [Ata de 06/11/2026](../historico/unidade-3/reunioes.md#reuniao-de-validacao-do-ciclo-3-com-a-fbr) e [registro do teste](../historico/unidade-3/reunioes.md#registro-do-teste-de-usabilidade-rnf22) |
 | Pacientes e responsáveis por menores | Não houve sessão com esse público. O contato com os pacientes passa pela clínica, por causa do sigilo e da LGPD, e a equipe não tem acesso direto a eles | A pergunta foi levada às [pendências de validação com a FBr](../requisitos/analise-feedback.md#pendencias-de-validacao-com-a-fbr) |
