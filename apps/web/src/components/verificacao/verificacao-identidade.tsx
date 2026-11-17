@@ -51,11 +51,13 @@ function SoCelular() {
 // Verificação de identidade do paciente ou do responsável (RF52): CPF ou
 // número da inscrição e o código enviado ao e-mail cadastrado. Depois da
 // verificação, mostra o conteúdo da feature que a usa (posição na fila, RF8;
-// declarações, CP10), recebido em `children`.
+// declarações, CP10), recebido em `children`, com o título da página da feature.
 export function VerificacaoIdentidade({
   children,
+  titulo: tituloDaPagina = "Consultar minha inscrição",
 }: {
   children?: (verificacao: VerificacaoAtual) => ReactNode;
+  titulo?: string;
 }) {
   const [etapa, setEtapa] = useState<Etapa>("carregando");
   const [identificador, setIdentificador] = useState("");
@@ -345,7 +347,7 @@ export function VerificacaoIdentidade({
         ) : etapa === "confirmada" && verificacao ? (
           <>
             <h1 ref={titulo} tabIndex={-1}>
-              Consultar minha inscrição
+              {tituloDaPagina}
             </h1>
             <Aviso tipo="sucesso" titulo="Identidade confirmada.">
               Inscrição {verificacao.numero}. A consulta fica liberada até as{" "}
@@ -376,11 +378,7 @@ export function VerificacaoIdentidade({
                   2. Código
                 </li>
               </ol>
-              <h1>
-                {naEtapaCodigo
-                  ? "Informe o código"
-                  : "Consultar minha inscrição"}
-              </h1>
+              <h1>{naEtapaCodigo ? "Informe o código" : tituloDaPagina}</h1>
               {!naEtapaCodigo && (
                 <p className={base.lead}>
                   Para proteger seus dados, pedimos um código enviado ao e-mail

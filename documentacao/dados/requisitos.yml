@@ -759,7 +759,7 @@ rfs:
   lider: Maria Clara
   depende: [RF52]
   issue: 226
-  estado: Planejada
+  estado: Código concluído
   entrega: 'parcial no Ciclo 5: a lista é só de consulta; a escolha da sessão para a declaração chega com o RF45, no Ciclo 6'
 
 - id: RF45

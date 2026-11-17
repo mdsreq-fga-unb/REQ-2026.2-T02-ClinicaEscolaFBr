@@ -11,6 +11,7 @@ import { ParametrosModule } from './parametros/parametros.module';
 import { AcessoModule } from './modules/acesso/acesso.module';
 import { AcompanhamentoClinicoModule } from './modules/acompanhamento-clinico/acompanhamento-clinico.module';
 import { AdministrativoModule } from './modules/administrativo/administrativo.module';
+import { DeclaracoesModule } from './modules/administrativo/declaracoes.module';
 import { AgendamentoModule } from './modules/agendamento/agendamento.module';
 import { AssiduidadeModule } from './modules/assiduidade/assiduidade.module';
 import { CasosModule } from './modules/casos/casos.module';
@@ -40,6 +41,7 @@ import { TriagemModule } from './modules/triagem/triagem.module';
     AcompanhamentoClinicoModule,
     AssiduidadeModule,
     AdministrativoModule,
+    DeclaracoesModule,
     InstitucionalModule,
     AcessoModule,
   ],
