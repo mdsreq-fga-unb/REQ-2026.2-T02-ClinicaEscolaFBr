@@ -204,8 +204,8 @@ module.exports = async ({ github, api = github, context, core }) => {
     ).filter(ehFeature);
 
   // Issues de feature que uma PR declara implementar. Só PRs que mexem no código
-  // contam, e só features com o DoR aprovado: sem DoR, o DoD não é avaliado.
-  const featuresDaPr = async (pr) => {
+  // contam.
+  const featuresCitadas = async (pr) => {
     const arquivos = await github.paginate(github.rest.pulls.listFiles, {
       owner,
       repo,
@@ -217,17 +217,45 @@ module.exports = async ({ github, api = github, context, core }) => {
     for (const numero of L.issuesCitadas(pr.title, pr.body)) {
       try {
         const issue = await buscarIssue(numero);
-        if (!ehFeature(issue)) continue;
-        if (L.dorAprovado(issue.body)) issues.push(issue);
-        else
-          core.warning(
-            `#${issue.number} citada na PR #${pr.number}, mas sem o DoR aprovado: o DoD não foi atualizado.`,
-          );
+        if (ehFeature(issue)) issues.push(issue);
       } catch {
         // Número que não é issue deste repositório.
       }
     }
     return issues;
+  };
+
+  // Só as features com o DoR aprovado: sem DoR, o DoD não é avaliado.
+  const comDoRAprovado = (issues, pr) =>
+    issues.filter((issue) => {
+      if (L.dorAprovado(issue.body)) return true;
+      core.warning(
+        `#${issue.number} citada na PR #${pr.number}, mas sem o DoR aprovado: o DoD não foi atualizado.`,
+      );
+      return false;
+    });
+
+  const featuresDaPr = async (pr) =>
+    comDoRAprovado(await featuresCitadas(pr), pr);
+
+  // PR com o código da feature aberta pelo Líder: ele entendeu e estimou a feature
+  // (R8.1) e identificou as integrações e a massa de teste (R8.3). Sem isso, a
+  // issue de uma feature já construída ficava presa no DoR só por esses dois itens.
+  const marcarDoLider = async (issue, pr) => {
+    if (issue.state !== "open" || !L.ehLider(issue, pr.user?.login))
+      return issue;
+    const pendentes = L.lerChecklist(issue.body)
+      .filter((i) => L.ITENS_DO_LIDER.includes(i.codigo) && !i.marcado)
+      .map((i) => i.codigo);
+    if (pendentes.length === 0) return issue;
+    const atualizada = await marcar(issue, pendentes);
+    await comentar(
+      issue.number,
+      `${pendentes.join(" e ")} marcado${pendentes.length > 1 ? "s" : ""}: a PR #${pr.number}, com o código da feature, foi aberta pelo Líder (@${pr.user.login}). Evidência: ${pr.html_url}.`,
+    );
+    // Com o DoR aprovado, o estado é alinhado junto com o DoD, logo depois.
+    if (!L.dorAprovado(atualizada.body)) await sincronizar(atualizada);
+    return atualizada;
   };
 
   if (evento === "issues") {
@@ -320,7 +348,10 @@ module.exports = async ({ github, api = github, context, core }) => {
       pr.merged &&
       BRANCHES_DE_INTEGRACAO.includes(pr.base.ref);
     if (carga.action === "closed" && !integrada) return;
-    for (const issue of await featuresDaPr(pr)) {
+    const citadas = [];
+    for (const issue of await featuresCitadas(pr))
+      citadas.push(await marcarDoLider(issue, pr));
+    for (const issue of comDoRAprovado(citadas, pr)) {
       if (integrada) {
         const atualizada = await marcar(issue, ["D4.3"]);
         await comentar(

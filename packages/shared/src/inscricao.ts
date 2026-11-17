@@ -58,10 +58,14 @@ const dadosBase = z.object({
     /^\d{11}$/,
     "Digite os 11 números do CPF, sem pontuação.",
   ),
-  rg: obrigatorio(30).regex(
-    /^[0-9A-Za-z.\- /]+$/,
-    "Informe um RG válido, sem anexos.",
-  ),
+  // O RG é opcional, sem o órgão emissor e o estado: a nova Carteira de
+  // Identidade Nacional usa o CPF como número único (DF60).
+  rg: z
+    .string()
+    .trim()
+    .max(30, "Use no máximo 30 caracteres.")
+    .regex(/^[0-9A-Za-z.\- /]*$/, "Informe um RG válido, sem anexos.")
+    .default(""),
   endereco: obrigatorio(500),
   bairro: opcional(100),
   cidadeUf: opcional(100),

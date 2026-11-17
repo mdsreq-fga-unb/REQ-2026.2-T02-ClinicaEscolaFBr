@@ -42,7 +42,8 @@ export const inscricoes = pgTable(
     nomeCompleto: text("nome_completo").notNull(),
     dataNascimento: date("data_nascimento").notNull(),
     cpf: text("cpf").notNull(),
-    rg: text("rg").notNull(),
+    // Opcional desde a DF60 (16/11/2026).
+    rg: text("rg"),
     endereco: text("endereco").notNull(),
     bairro: text("bairro"),
     cidadeUf: text("cidade_uf"),

@@ -58,10 +58,54 @@ export const ausenciaEstagiarioSchema = z.object({ justificativa });
 export type AusenciaEstagiario = z.infer<typeof ausenciaEstagiarioSchema>;
 
 // Aviso ao paciente quando a sessão muda sem o pedido dele (administrativo e
-// ausência do estagiário). Sem e-mail, a equipe precisa avisar: o botão do WhatsApp
-// fica para o RF17, do Ciclo 5. O pedido do próprio paciente não gera aviso.
+// ausência do estagiário). Sem e-mail, ou com falha no envio, a secretaria avisa
+// pelo WhatsApp (RF17). O pedido do próprio paciente não gera aviso.
 export type AvisoAoPaciente =
   "email_enviado" | "email_nao_enviado" | "sem_email";
+
+// O aviso gravado no cancelamento por ausência do estagiário (RF17). O
+// `envio_pendente` entra na transação do RF16, antes do envio, e passa a
+// `email_enviado` ou `email_nao_enviado` depois do commit. Se o processo cair no
+// meio, ele fica parado e entra na lista da secretaria.
+export const AVISOS_PACIENTE = [
+  "envio_pendente",
+  "email_enviado",
+  "sem_email",
+  "email_nao_enviado",
+] as const;
+export type AvisoPaciente = (typeof AVISOS_PACIENTE)[number];
+
+// Por onde a secretaria avisou o paciente (RF17): pelo WhatsApp, com a mensagem
+// pronta, ou por outro contato da ficha (ligação ou presencialmente).
+export const CANAIS_AVISO_MANUAL = ["whatsapp", "outro"] as const;
+export type CanalAvisoManual = (typeof CANAIS_AVISO_MANUAL)[number];
+
+export const avisoManualSchema = z.object({
+  canal: z.enum(CANAIS_AVISO_MANUAL, { error: "Escolha o canal do aviso." }),
+});
+export type AvisoManual = z.infer<typeof avisoManualSchema>;
+
+// Por que o aviso está pendente: sem e-mail, falha no envio ou envio parado.
+export type MotivoAvisoPendente = Exclude<AvisoPaciente, "email_enviado">;
+
+// Um item do cartão "Avise o paciente sobre o cancelamento", na Agenda da
+// secretaria (RF17). Sem o motivo da ausência (CFP art. 9º). A `url` abre a
+// mensagem pronta no WhatsApp; sem celular, ela e o `celular` vêm nulos.
+export type AvisoPendente = {
+  id: string;
+  casoId: string;
+  paciente: string;
+  inicio: string;
+  motivo: MotivoAvisoPendente;
+  mensagem: string;
+  celular: string | null;
+  url: string | null;
+};
+
+export type AvisoRegistrado = {
+  avisoManualEm: string;
+  canal: CanalAvisoManual;
+};
 
 export type ResultadoCancelamento = {
   classificacao: ClassificacaoCancelamento;

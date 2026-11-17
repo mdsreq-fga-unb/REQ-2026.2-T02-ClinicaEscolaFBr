@@ -10,6 +10,7 @@ on:
   push:
     branches: [main, development]
     paths:
+      - "apps/web/src/app/(interno)/acessos-prontuario/**"
       - "apps/web/src/app/(interno)/distribuicao/**"
       - "apps/web/src/app/(interno)/meus-casos/**"
       - "apps/web/src/components/comum/**"
@@ -22,6 +23,7 @@ on:
   pull_request:
     branches: [main, development]
     paths:
+      - "apps/web/src/app/(interno)/acessos-prontuario/**"
       - "apps/web/src/app/(interno)/distribuicao/**"
       - "apps/web/src/app/(interno)/meus-casos/**"
       - "apps/web/src/components/comum/**"

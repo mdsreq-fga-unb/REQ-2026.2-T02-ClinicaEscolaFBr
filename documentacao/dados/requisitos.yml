@@ -55,7 +55,7 @@ ciclos:
   status: Encerrado
 - numero: 5
   periodo: 11/11 a 17/11/2026
-  status: Em andamento
+  status: Encerrado
 - numero: 6
   periodo: 18/11 a 01/12/2026
   status: Aguardando
@@ -291,7 +291,7 @@ rfs:
   lider: Nicolas
   depende: [RF16]
   issue: 223
-  estado: Planejada
+  estado: Código concluído
   origem: [DF24, DF48]
 
 - id: RF18
@@ -759,7 +759,7 @@ rfs:
   lider: Maria Clara
   depende: [RF52]
   issue: 226
-  estado: Planejada
+  estado: Código concluído
   entrega: 'parcial no Ciclo 5: a lista é só de consulta; a escolha da sessão para a declaração chega com o RF45, no Ciclo 6'
 
 - id: RF45
@@ -920,7 +920,7 @@ rfs:
   ordem: 40
   lider: Jônatas
   issue: 51
-  estado: Planejada
+  estado: Código concluído
   origem: [DF29]
 
 - id: RF57
