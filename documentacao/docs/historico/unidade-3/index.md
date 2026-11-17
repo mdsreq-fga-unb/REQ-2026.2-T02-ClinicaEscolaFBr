@@ -72,21 +72,13 @@ As evidências de cada marco ficam na issue da feature:
 
 Os slides da apresentação estão em [PDF](../../assets/unidade-3/apresentacao-unidade-3.pdf){ target="_blank" rel="noopener" }.
 
-!!! info "Vídeo em produção"
-    O vídeo de apresentação da Unidade 3 será publicado aqui junto com a entrega da unidade, prevista para 17/11/2026.
-
-<!--
-  Quando o vídeo estiver no YouTube, apague o aviso acima e descomente o bloco
-  abaixo, trocando ID_DO_VIDEO pelo código do link (youtu.be/ID_DO_VIDEO).
-
 <div class="video-container">
   <iframe
-    src="https://www.youtube.com/embed/ID_DO_VIDEO"
+    src="https://www.youtube.com/embed/Fl5qtrEf79g"
     title="Apresentação da Unidade 3 — Clínica Escola FBr"
     allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
     allowfullscreen>
   </iframe>
 </div>
 
-▶ **[Assistir no YouTube](https://youtu.be/ID_DO_VIDEO)**
--->
+▶ **[Assistir no YouTube](https://youtu.be/Fl5qtrEf79g)**

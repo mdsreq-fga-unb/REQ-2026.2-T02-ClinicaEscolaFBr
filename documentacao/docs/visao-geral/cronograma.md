@@ -18,7 +18,7 @@ _Catálogo atualizado em {{ catalogo_atualizado_em }}._
 | --- | --- | --- | --- | --- |
 | Unidade 1 — Visão e planejamento | 07/09/2026 (apresentação em 08/09) | Encerrado | Cenário, solução proposta, estratégia de ESW, Engenharia de Requisitos e gestão do projeto | [Vídeo de apresentação](https://youtu.be/ysMmYmttAH8) |
 | Unidade 2 — Requisitos e priorização | 13/10/2026 | Encerrado | Requisitos, priorização, MVP validado com a FBr, DoR, DoD e backlog | [Vídeo de apresentação](https://youtu.be/XUJEFZv7Pn8) e [release `unidade-2`](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/releases/tag/unidade-2) |
-| [Unidade 3 — Construção do MVP](../historico/unidade-3/index.md) | 17/11/2026 | Em andamento | Incrementos dos Ciclos 3 a 5, com todas as CPs do MVP com ao menos um incremento construído | — |
+| [Unidade 3 — Construção do MVP](../historico/unidade-3/index.md) | 17/11/2026 | Em andamento | Incrementos dos Ciclos 3 a 5, com todas as CPs do MVP com ao menos um incremento construído | [Vídeo de apresentação](https://youtu.be/Fl5qtrEf79g) |
 | Unidade 4 — Entrega final | 10/12/2026 | Aguardando | MVP integrado e aceito pela FBr | — |
 
 ## Etapas e ciclos
