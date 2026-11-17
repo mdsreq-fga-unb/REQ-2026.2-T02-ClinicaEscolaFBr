@@ -14,6 +14,8 @@ import {
   uuid,
 } from "drizzle-orm/pg-core";
 import {
+  AVISOS_PACIENTE,
+  CANAIS_AVISO_MANUAL,
   CLASSIFICACOES_CANCELAMENTO,
   ORIGENS_CANCELAMENTO,
   ORIGENS_FALTA,
@@ -168,13 +170,20 @@ export const classificacaoCancelamentoEnum = pgEnum(
   "classificacao_cancelamento",
   CLASSIFICACOES_CANCELAMENTO,
 );
+export const avisoPacienteEnum = pgEnum("aviso_paciente", AVISOS_PACIENTE);
+export const canalAvisoManualEnum = pgEnum(
+  "canal_aviso_manual",
+  CANAIS_AVISO_MANUAL,
+);
 
 // Cancelamento da sessão (RF15, RF16, RF25 e RF37): no máximo um por sessão, com
 // quem registrou e por quê. Entra com o desligamento (RF37), o primeiro a cancelar
 // sessões, já no formato que o RF15 usa. A antecedência fica guardada com a
 // classificação, para ela poder ser conferida mesmo que o parâmetro mude. O
 // cancelamento pelo desligamento guarda o desligamento, para o RF38 listar as
-// sessões a reagendar. Só inserção.
+// sessões a reagendar. Só inserção, menos o aviso ao paciente da ausência do
+// estagiário (RF17): o gatilho proteger_campos_preenchidos deixa mudar só o
+// `aviso_paciente`, depois do envio do e-mail, e preencher uma vez o aviso manual.
 export const cancelamentosSessao = pgTable(
   "cancelamentos_sessao",
   {
@@ -197,6 +206,13 @@ export const cancelamentosSessao = pgTable(
     desligamentoId: uuid("desligamento_id").references(
       () => desligamentosPorFaltas.id,
     ),
+    // Só na ausência do estagiário (RF17), gravado na transação do RF16. Nulo nos
+    // cancelamentos anteriores à migration, que ficam fora da lista de avisos.
+    avisoPaciente: avisoPacienteEnum("aviso_paciente"),
+    // Quando, por quem e por onde a secretaria avisou o paciente (RF17).
+    avisoManualEm: timestamp("aviso_manual_em", { withTimezone: true }),
+    avisoManualPor: uuid("aviso_manual_por").references(() => usuarios.id),
+    avisoManualCanal: canalAvisoManualEnum("aviso_manual_canal"),
   },
   (t) => [
     check(
@@ -210,6 +226,16 @@ export const cancelamentosSessao = pgTable(
     check(
       "cancelamentos_justificativa",
       sql`${t.justificativaCifrada} is not null or ${t.classificacao} in ('desligamento', 'administrativo')`,
+    ),
+    // Criada com NOT VALID na migration: vale para os cancelamentos novos, sem
+    // conferir os anteriores a ela, que não têm o aviso gravado.
+    check(
+      "cancelamentos_aviso_paciente",
+      sql`(${t.classificacao} = 'ausencia_estagiario') = (${t.avisoPaciente} is not null)`,
+    ),
+    check(
+      "cancelamentos_aviso_manual_completo",
+      sql`(${t.avisoManualEm} is null) = (${t.avisoManualPor} is null) and (${t.avisoManualEm} is null) = (${t.avisoManualCanal} is null) and (${t.avisoManualEm} is null or ${t.avisoPaciente} is not null)`,
     ),
     index("cancelamentos_desligamento").on(t.desligamentoId),
   ],

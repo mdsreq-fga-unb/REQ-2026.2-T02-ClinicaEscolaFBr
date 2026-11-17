@@ -30,6 +30,11 @@ const onzeDigitos = (celular: string) => celular.replace(/\D/g, '').slice(-11);
 export const celularParaWhatsapp = (celular: string) =>
   `55${onzeDigitos(celular)}`;
 
+// A mensagem pronta aberta no WhatsApp, no agendamento (DF24) e no aviso do
+// cancelamento por ausência do estagiário (RF17).
+export const linkDoWhatsapp = (celular: string, mensagem: string) =>
+  `https://wa.me/${celularParaWhatsapp(celular)}?text=${encodeURIComponent(mensagem)}`;
+
 export function formatarCelular(celular: string) {
   const d = onzeDigitos(celular);
   return d.length === 11

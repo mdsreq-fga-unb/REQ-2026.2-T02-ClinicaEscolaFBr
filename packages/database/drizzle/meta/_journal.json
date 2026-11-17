@@ -145,8 +145,15 @@
     {
       "idx": 20,
       "version": "7",
-      "when": 1794882796875,
-      "tag": "0020_rg_opcional",
+      "when": 1794882678471,
+      "tag": "0020_aviso_ausencia_estagiario",
+      "breakpoints": true
+    },
+    {
+      "idx": 21,
+      "version": "7",
+      "when": 1794883383302,
+      "tag": "0021_rg_opcional",
       "breakpoints": true
     }
   ]

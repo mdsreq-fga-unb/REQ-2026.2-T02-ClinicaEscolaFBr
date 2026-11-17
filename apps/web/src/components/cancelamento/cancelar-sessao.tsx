@@ -328,7 +328,7 @@ export function DialogoCancelarSessao({
 
 // O resultado, logo acima da lista: o que aconteceu com a sessão e se o paciente
 // foi avisado. "Avisado por e-mail" e "ainda não avisado" ficam separados, para a
-// equipe saber quem ainda precisa de contato (RF16; o RF17 completa no Ciclo 5).
+// equipe saber quem ainda precisa de contato (RF16, RF17).
 export function ResultadoDoCancelamento({
   nome,
   inicio,
@@ -364,10 +364,16 @@ export function ResultadoDoCancelamento({
       texto: `A sessão de ${nome} em ${quando}, foi cancelada.`,
     },
   }[resultado.classificacao];
+  // Na ausência do estagiário, o aviso vai para a Agenda da secretaria, com a
+  // mensagem pronta para o WhatsApp (RF17).
   const contato =
-    usuario?.perfil === "secretaria"
-      ? "Entre em contato com ele por telefone ou WhatsApp."
-      : "Peça à secretaria para entrar em contato com ele.";
+    resultado.classificacao === "ausencia_estagiario"
+      ? usuario?.perfil === "secretaria"
+        ? "Envie a mensagem pronta pelo aviso que está na Agenda."
+        : "A secretaria recebeu o aviso para entrar em contato com ele."
+      : usuario?.perfil === "secretaria"
+        ? "Entre em contato com ele por telefone ou WhatsApp."
+        : "Peça à secretaria para entrar em contato com ele.";
   const podeAgendar =
     resultado.classificacao === "administrativo" &&
     casoId &&

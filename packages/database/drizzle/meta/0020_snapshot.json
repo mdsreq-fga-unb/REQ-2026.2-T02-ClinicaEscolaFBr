@@ -1,5 +1,5 @@
 {
-  "id": "3240bf50-ba23-4ee0-863d-1b89f7d12197",
+  "id": "3d41de93-8072-4553-b7ec-250cca2e4de8",
   "prevId": "b772326b-34d3-4099-ae0b-4e71f83b8a22",
   "version": "7",
   "dialect": "postgresql",
@@ -348,7 +348,7 @@
           "name": "rg",
           "type": "text",
           "primaryKey": false,
-          "notNull": false
+          "notNull": true
         },
         "endereco": {
           "name": "endereco",
@@ -2240,6 +2240,32 @@
           "type": "uuid",
           "primaryKey": false,
           "notNull": false
+        },
+        "aviso_paciente": {
+          "name": "aviso_paciente",
+          "type": "aviso_paciente",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "aviso_manual_em": {
+          "name": "aviso_manual_em",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "aviso_manual_por": {
+          "name": "aviso_manual_por",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "aviso_manual_canal": {
+          "name": "aviso_manual_canal",
+          "type": "canal_aviso_manual",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": false
         }
       },
       "indexes": {
@@ -2286,6 +2312,15 @@
           "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
+        },
+        "cancelamentos_sessao_aviso_manual_por_usuarios_id_fk": {
+          "name": "cancelamentos_sessao_aviso_manual_por_usuarios_id_fk",
+          "tableFrom": "cancelamentos_sessao",
+          "tableTo": "usuarios",
+          "columnsFrom": ["aviso_manual_por"],
+          "columnsTo": ["id"],
+          "onDelete": "no action",
+          "onUpdate": "no action"
         }
       },
       "compositePrimaryKeys": {},
@@ -2309,6 +2344,14 @@
         "cancelamentos_justificativa": {
           "name": "cancelamentos_justificativa",
           "value": "\"cancelamentos_sessao\".\"justificativa_cifrada\" is not null or \"cancelamentos_sessao\".\"classificacao\" in ('desligamento', 'administrativo')"
+        },
+        "cancelamentos_aviso_paciente": {
+          "name": "cancelamentos_aviso_paciente",
+          "value": "(\"cancelamentos_sessao\".\"classificacao\" = 'ausencia_estagiario') = (\"cancelamentos_sessao\".\"aviso_paciente\" is not null)"
+        },
+        "cancelamentos_aviso_manual_completo": {
+          "name": "cancelamentos_aviso_manual_completo",
+          "value": "(\"cancelamentos_sessao\".\"aviso_manual_em\" is null) = (\"cancelamentos_sessao\".\"aviso_manual_por\" is null) and (\"cancelamentos_sessao\".\"aviso_manual_em\" is null) = (\"cancelamentos_sessao\".\"aviso_manual_canal\" is null) and (\"cancelamentos_sessao\".\"aviso_manual_em\" is null or \"cancelamentos_sessao\".\"aviso_paciente\" is not null)"
         }
       },
       "isRLSEnabled": false
@@ -3177,6 +3220,21 @@
         "realizada",
         "falta_paciente"
       ]
+    },
+    "public.aviso_paciente": {
+      "name": "aviso_paciente",
+      "schema": "public",
+      "values": [
+        "envio_pendente",
+        "email_enviado",
+        "sem_email",
+        "email_nao_enviado"
+      ]
+    },
+    "public.canal_aviso_manual": {
+      "name": "canal_aviso_manual",
+      "schema": "public",
+      "values": ["whatsapp", "outro"]
     },
     "public.classificacao_cancelamento": {
       "name": "classificacao_cancelamento",
