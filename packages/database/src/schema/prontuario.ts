@@ -3,6 +3,7 @@ import {
   boolean,
   check,
   date,
+  index,
   integer,
   pgTable,
   text,
@@ -53,19 +54,33 @@ export const prontuarios = pgTable(
 
 // Registro de acessos ao prontuário, permitidos e negados (RF55, RNF52), consultado
 // pela coordenação no RF56. Somente inserção.
-export const acessosProntuario = pgTable("acessos_prontuario", {
-  id: uuid("id").primaryKey().defaultRandom(),
-  prontuarioId: uuid("prontuario_id").references(() => prontuarios.id),
-  usuarioId: uuid("usuario_id")
-    .notNull()
-    .references(() => usuarios.id),
-  perfil: perfilEnum("perfil").notNull(),
-  operacao: text("operacao").notNull(),
-  permitido: boolean("permitido").notNull(),
-  criadoEm: timestamp("criado_em", { withTimezone: true })
-    .notNull()
-    .defaultNow(),
-});
+export const acessosProntuario = pgTable(
+  "acessos_prontuario",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    prontuarioId: uuid("prontuario_id").references(() => prontuarios.id),
+    usuarioId: uuid("usuario_id")
+      .notNull()
+      .references(() => usuarios.id),
+    perfil: perfilEnum("perfil").notNull(),
+    operacao: text("operacao").notNull(),
+    permitido: boolean("permitido").notNull(),
+    criadoEm: timestamp("criado_em", { withTimezone: true })
+      .notNull()
+      .defaultNow(),
+  },
+  (t) => [
+    index("acessos_prontuario_criado_em_idx").on(t.criadoEm),
+    index("acessos_prontuario_prontuario_criado_em_idx").on(
+      t.prontuarioId,
+      t.criadoEm,
+    ),
+    index("acessos_prontuario_usuario_criado_em_idx").on(
+      t.usuarioId,
+      t.criadoEm,
+    ),
+  ],
+);
 
 // RF28: o original é imutável e cada sessão possui no máximo uma evolução inicial.
 // Os campos seguem a ficha "Registro de evolução" da clínica (DF38); a queixa e o

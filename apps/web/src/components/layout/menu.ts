@@ -4,11 +4,13 @@ import {
   CalendarPlus,
   FileText,
   Folder,
+  History,
   Inbox,
   SlidersHorizontal,
   Shuffle,
   User,
   Users,
+  UserX,
   type LucideIcon,
 } from "lucide-react";
 import type { Perfil } from "@clinica/shared";
@@ -28,6 +30,12 @@ const distribuicao = {
   Icone: Shuffle,
 };
 const pacientes = { rotulo: "Pacientes", href: "/pacientes", Icone: FileText };
+// Faltas dos estagiários (RF39), na prancha 7-1: do supervisor e da coordenação.
+const faltasEstagiarios = {
+  rotulo: "Faltas dos estagiários",
+  href: "/faltas-estagiarios",
+  Icone: UserX,
+};
 
 // Navegação interna por perfil, como no protótipo aprovado pela FBr.
 export const MENU_POR_PERFIL: Record<Perfil, ItemMenu[]> = {
@@ -43,6 +51,7 @@ export const MENU_POR_PERFIL: Record<Perfil, ItemMenu[]> = {
     distribuicao,
     agenda,
     { rotulo: "Meus casos", href: "/meus-casos", Icone: Folder },
+    faltasEstagiarios,
   ],
   coordenacao: [
     triagem,
@@ -50,8 +59,14 @@ export const MENU_POR_PERFIL: Record<Perfil, ItemMenu[]> = {
     distribuicao,
     pacientes,
     { rotulo: "Usuários", href: "/usuarios", Icone: Users },
+    faltasEstagiarios,
     // Indicadores operacionais (RF48), na prancha 9-1.
     { rotulo: "Indicadores", href: "/indicadores", Icone: BarChart3 },
+    {
+      rotulo: "Registro de acessos",
+      href: "/acessos-prontuario",
+      Icone: History,
+    },
     // Data-limite para corrigir evoluções (RF29), na prancha 6-1; e valor da contribuição social (RF41), na prancha 8-1.
     { rotulo: "Parâmetros", href: "/parametros", Icone: SlidersHorizontal },
   ],

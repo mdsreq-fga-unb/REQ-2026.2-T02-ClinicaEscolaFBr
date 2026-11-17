@@ -320,6 +320,57 @@ test("feature sem o DoR aprovado não tem o DoD atualizado pela PR", async () =>
   assert.match(avisos[0], /sem o DoR aprovado/);
 });
 
+// Descrição da #88 com o DoR completo, menos os itens do Líder (R8.1 e R8.3).
+const semItensDoLider = (corpo) =>
+  corpo
+    .replace("- [x] R8.1 ", "- [ ] R8.1 ")
+    .replace("- [x] R8.3 ", "- [ ] R8.3 ");
+
+test("PR de código aberta pelo Líder marca o R8.1 e o R8.3, e a feature segue para a construção", async () => {
+  issue.body = semItensDoLider(issue.body);
+  issue.assignees = [{ login: "jonatas" }];
+  item = { Status: "Planejado" };
+  await rodar("pull_request", { action: "opened", pull_request: pr() });
+  assert.match(issue.body, /- \[x\] R8\.1 /);
+  assert.match(issue.body, /- \[x\] R8\.3 /);
+  assert.match(comentarios[0].body, /R8\.1 e R8\.3 marcados: a PR #140/);
+  assert.match(comentarios[0].body, /@jonatas/);
+  assert.equal(item.Status, "Em Construção");
+});
+
+test("só o item do Líder que falta é marcado", async () => {
+  issue.body = issue.body.replace("- [x] R8.3 ", "- [ ] R8.3 ");
+  issue.assignees = [{ login: "jonatas" }];
+  await rodar("pull_request", { action: "opened", pull_request: pr() });
+  assert.match(issue.body, /- \[x\] R8\.3 /);
+  assert.match(comentarios[0].body, /^.*\n\nR8\.3 marcado: a PR #140/);
+});
+
+test("PR de quem não é o Líder não marca os itens do Líder", async () => {
+  issue.body = semItensDoLider(issue.body);
+  issue.assignees = [{ login: "maria" }];
+  await rodar("pull_request", { action: "opened", pull_request: pr() });
+  assert.match(issue.body, /- \[ \] R8\.1 /);
+  assert.match(issue.body, /- \[ \] R8\.3 /);
+  assert.equal(comentarios.length, 0);
+  assert.match(avisos[0], /sem o DoR aprovado/);
+});
+
+test("PR só de documentação do Líder não marca os itens do Líder", async () => {
+  arquivos = ["documentacao/docs/construcao/projeto-features.md"];
+  issue.body = semItensDoLider(issue.body);
+  issue.assignees = [{ login: "jonatas" }];
+  await rodar("pull_request", { action: "opened", pull_request: pr() });
+  assert.match(issue.body, /- \[ \] R8\.1 /);
+  assert.equal(comentarios.length, 0);
+});
+
+test("com os itens do Líder já marcados, a PR não comenta de novo", async () => {
+  issue.assignees = [{ login: "jonatas" }];
+  await rodar("pull_request", { action: "opened", pull_request: pr() });
+  assert.equal(comentarios.length, 0);
+});
+
 test("aprovação de outro integrante marca o D3.1", async () => {
   item = { Status: "Em Construção" };
   await rodar("pull_request_review", {

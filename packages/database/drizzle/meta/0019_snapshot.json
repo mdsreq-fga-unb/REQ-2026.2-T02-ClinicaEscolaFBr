@@ -1,5 +1,5 @@
 {
-  "id": "948da356-a4e7-443e-8f0b-050c2c32bdf5",
+  "id": "b772326b-34d3-4099-ae0b-4e71f83b8a22",
   "prevId": "91e5d36d-a496-4817-a435-18a6af1a5972",
   "version": "7",
   "dialect": "postgresql",
@@ -1510,7 +1510,65 @@
           "default": "now()"
         }
       },
-      "indexes": {},
+      "indexes": {
+        "acessos_prontuario_criado_em_idx": {
+          "name": "acessos_prontuario_criado_em_idx",
+          "columns": [
+            {
+              "expression": "criado_em",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "acessos_prontuario_prontuario_criado_em_idx": {
+          "name": "acessos_prontuario_prontuario_criado_em_idx",
+          "columns": [
+            {
+              "expression": "prontuario_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "criado_em",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "acessos_prontuario_usuario_criado_em_idx": {
+          "name": "acessos_prontuario_usuario_criado_em_idx",
+          "columns": [
+            {
+              "expression": "usuario_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "criado_em",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
       "foreignKeys": {
         "acessos_prontuario_prontuario_id_prontuarios_id_fk": {
           "name": "acessos_prontuario_prontuario_id_prontuarios_id_fk",
@@ -2182,32 +2240,6 @@
           "type": "uuid",
           "primaryKey": false,
           "notNull": false
-        },
-        "aviso_paciente": {
-          "name": "aviso_paciente",
-          "type": "aviso_paciente",
-          "typeSchema": "public",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "aviso_manual_em": {
-          "name": "aviso_manual_em",
-          "type": "timestamp with time zone",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "aviso_manual_por": {
-          "name": "aviso_manual_por",
-          "type": "uuid",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "aviso_manual_canal": {
-          "name": "aviso_manual_canal",
-          "type": "canal_aviso_manual",
-          "typeSchema": "public",
-          "primaryKey": false,
-          "notNull": false
         }
       },
       "indexes": {
@@ -2254,15 +2286,6 @@
           "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
-        },
-        "cancelamentos_sessao_aviso_manual_por_usuarios_id_fk": {
-          "name": "cancelamentos_sessao_aviso_manual_por_usuarios_id_fk",
-          "tableFrom": "cancelamentos_sessao",
-          "tableTo": "usuarios",
-          "columnsFrom": ["aviso_manual_por"],
-          "columnsTo": ["id"],
-          "onDelete": "no action",
-          "onUpdate": "no action"
         }
       },
       "compositePrimaryKeys": {},
@@ -2286,14 +2309,6 @@
         "cancelamentos_justificativa": {
           "name": "cancelamentos_justificativa",
           "value": "\"cancelamentos_sessao\".\"justificativa_cifrada\" is not null or \"cancelamentos_sessao\".\"classificacao\" in ('desligamento', 'administrativo')"
-        },
-        "cancelamentos_aviso_paciente": {
-          "name": "cancelamentos_aviso_paciente",
-          "value": "(\"cancelamentos_sessao\".\"classificacao\" = 'ausencia_estagiario') = (\"cancelamentos_sessao\".\"aviso_paciente\" is not null)"
-        },
-        "cancelamentos_aviso_manual_completo": {
-          "name": "cancelamentos_aviso_manual_completo",
-          "value": "(\"cancelamentos_sessao\".\"aviso_manual_em\" is null) = (\"cancelamentos_sessao\".\"aviso_manual_por\" is null) and (\"cancelamentos_sessao\".\"aviso_manual_em\" is null) = (\"cancelamentos_sessao\".\"aviso_manual_canal\" is null) and (\"cancelamentos_sessao\".\"aviso_manual_em\" is null or \"cancelamentos_sessao\".\"aviso_paciente\" is not null)"
         }
       },
       "isRLSEnabled": false
@@ -3194,21 +3209,6 @@
       "name": "forma_pagamento",
       "schema": "public",
       "values": ["dinheiro", "pix", "cartao"]
-    },
-    "public.aviso_paciente": {
-      "name": "aviso_paciente",
-      "schema": "public",
-      "values": [
-        "envio_pendente",
-        "email_enviado",
-        "sem_email",
-        "email_nao_enviado"
-      ]
-    },
-    "public.canal_aviso_manual": {
-      "name": "canal_aviso_manual",
-      "schema": "public",
-      "values": ["whatsapp", "outro"]
     }
   },
   "schemas": {},
