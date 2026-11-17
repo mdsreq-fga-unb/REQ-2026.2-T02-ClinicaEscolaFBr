@@ -200,6 +200,7 @@ O workflow **Feature Status** mantém o campo "Estado da feature (FDD)" de cada 
 | O que acontece | Efeito na issue | Status no Project |
 | --- | --- | --- |
 | A issue ganha o milestone de um ciclo | Ciclo e CP preenchidos no Project | Planejado |
+| PR com o código da feature aberta pelo Líder (quem está atribuído à issue) | R8.1 e R8.3 do DoR marcados, com o link da PR | — |
 | Todos os critérios [B] do DoR marcados e o registro do DoR preenchido | Estado "Em design" | Em Design |
 | D1 completo (inspeção de design) | Estado "Design inspecionado" | Em Construção |
 | PR que declara a issue aberta | — | Em Construção |
@@ -207,11 +208,11 @@ O workflow **Feature Status** mantém o campo "Estado da feature (FDD)" de cada 
 | PR mesclada na `development` ou na `main` | D4.3 marcado, com o link da PR | Em Validação |
 | D6.1 marcado (aceite da FBr) | Estado "Aceita" | Concluído, e o Project fecha a issue |
 
-As três linhas de PR só valem quando:
+As linhas de PR só valem quando:
 
 - a PR **declara** a issue com "Refs", "Closes", "Fixes" ou "Resolves" (por exemplo, "Refs #48" ou "Closes #45, #46"). Um "#N" solto, como na lista de issues relacionadas de uma PR de documentação, não conta;
 - a PR mexe no código do produto (`apps/` ou `packages/`);
-- a feature já tem o DoR aprovado. Sem ele, o DoD não é avaliado, e o workflow só deixa um aviso no log.
+- a feature já tem o DoR aprovado. Sem ele, o DoD não é avaliado, e o workflow só deixa um aviso no log. A exceção são o R8.1 e o R8.3, que fazem parte do próprio DoR: a PR do Líder com o código mostra que ele entende e estimou a feature (R8.1) e que as integrações e a massa de teste estão identificadas (R8.3), e sem a marcação automática a issue de uma feature já construída ficava presa no DoR só por esses dois itens.
 
 Comandos em comentário, aceitos só de integrantes da equipe:
 
