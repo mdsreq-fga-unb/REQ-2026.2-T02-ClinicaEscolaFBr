@@ -164,6 +164,15 @@ function issuesCitadas(...textos) {
 const mexeNoCodigo = (arquivos) =>
   arquivos.some((a) => /^(apps|packages)\//.test(a));
 
+// Critérios do DoR que são do Líder de Feature: entender e estimar a feature
+// (R8.1) e identificar as integrações e a massa de teste (R8.3). Uma PR com o
+// código da feature, aberta pelo próprio Líder, mostra os dois.
+const ITENS_DO_LIDER = ["R8.1", "R8.3"];
+
+// O Líder da feature é quem está atribuído à issue.
+const ehLider = (issue, login) =>
+  Boolean(login) && (issue.assignees ?? []).some((a) => a.login === login);
+
 // Marca invisível nos comentários do robô, para que eles nunca contem como
 // registro de inspeção nem como evidência.
 const MARCA_ROBO = "<!-- feature-status -->";
@@ -211,6 +220,8 @@ module.exports = {
   MARCA_ROBO,
   PREFIXO_ROBO,
   ehFeature,
+  ehLider,
+  ITENS_DO_LIDER,
   dorAprovado,
   mexeNoCodigo,
   ehInspecao,
