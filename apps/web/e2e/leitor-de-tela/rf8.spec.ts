@@ -53,13 +53,29 @@ test.describe("Leitor de tela na consulta da situação da inscrição", () => {
       const log = (await voiceOver.spokenPhraseLog()).join(" | ");
       expect(log).not.toMatch(/posição/i);
 
-      // O botão é lido como botão, e a nova situação é anunciada ao atualizar.
+      // O botão é lido como botão. Ao atualizar, a nova situação entra na região
+      // ao vivo do cartão, e o VoiceOver a lê.
       await irAte(voiceOver, "Atualizar situação");
       expect(await voiceOver.lastSpokenPhrase()).toMatch(/button|botão/i);
       situacao = "em_atendimento";
       await voiceOver.act();
-      await expect(page.getByText("Em atendimento")).toBeVisible();
-      await falou(voiceOver, "Em atendimento");
+      const cartao = page.getByRole("status", {
+        name: "Situação da inscrição",
+      });
+      await expect(cartao).toHaveAttribute("aria-live", "polite");
+      await expect(cartao).toContainText("Em atendimento");
+      // No runner do macOS, o anúncio espontâneo da região ao vivo nem sempre é
+      // captado a tempo (falhou assim na development em 16/11). Por isso, se ele
+      // não vier, o cursor volta ao início e vai até a nova situação, que precisa
+      // ser lida.
+      const anunciado = await falou(voiceOver, "Em atendimento").then(
+        () => true,
+        () => false,
+      );
+      if (!anunciado) {
+        await voiceOver.navigateToWebContent();
+        await irAte(voiceOver, "Em atendimento");
+      }
     } finally {
       await anexarFala(test.info(), voiceOver, "fala-situacao-inscricao.json");
     }
