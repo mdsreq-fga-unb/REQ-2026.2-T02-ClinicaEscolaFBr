@@ -291,7 +291,7 @@ rfs:
   lider: Nicolas
   depende: [RF16]
   issue: 223
-  estado: Planejada
+  estado: Código concluído
   origem: [DF24, DF48]
 
 - id: RF18

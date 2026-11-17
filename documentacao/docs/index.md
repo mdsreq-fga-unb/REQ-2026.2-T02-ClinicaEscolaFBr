@@ -165,6 +165,7 @@ Registro cronológico das versões e alterações do documento de visão e dos a
 | 16/11/2026 | 3.86 | Acompanhamento automático das features: a PR com o código da feature aberta pelo Líder marca o R8.1 e o R8.3 do DoR | Gabriel da Cunha Barbaceli |
 | 16/11/2026 | 3.87 | Ciclo 6: protótipos de alta fidelidade das 14 features (pranchas 1-1, 6-1 a 6-6, 7-1 a 7-3, 8-1 a 8-3 e 9-1), com o projeto no Claude Design, as imagens e o PDF; projeto das features do Ciclo 6, com as classes, as rotas, os diagramas, as regras ligadas aos critérios de aceitação e os dados de teste | Gabriel da Cunha Barbaceli |
 | 16/11/2026 | 3.88 | Publicação do vídeo de apresentação da Unidade 3 ([YouTube](https://youtu.be/Fl5qtrEf79g)) na página da Unidade 3, no Cronograma geral e na página inicial | Joaquim José da Fonseca Viana |
+| 16/11/2026 | 3.89 | RF17 com o código concluído: aviso ao paciente gravado na transação do cancelamento por ausência do estagiário (migration 0020), cartão "Avise o paciente sobre o cancelamento" na Agenda da secretaria, com a mensagem pronta para o WhatsApp e o registro do aviso; decisões da inspeção de design (`409` no aviso repetido, link pelo `celularParaWhatsapp` e `check` com `NOT VALID`) e "Na implementação" do RF17 no projeto das features | Nicolas Lopes da Costa |
 
   A versão 1.6 está registrada com a data do commit (04/09/2026), posterior à da versão 1.7; a numeração foi mantida para preservar as referências já feitas a essas versões.
 
