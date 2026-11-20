@@ -1,9 +1,10 @@
 "use client";
 import { useQuery } from "@tanstack/react-query";
+import Link from "next/link";
 import type { FilaEspera } from "@clinica/shared";
 import { Prioridade } from "@/components/casos/prioridade";
 import { Aviso } from "@/components/comum/aviso";
-import { Button } from "@/components/ui/button";
+import { Button, buttonVariants } from "@/components/ui/button";
 import { api, ErroApi } from "@/lib/api";
 import { dataBr } from "@/lib/formato";
 import { useSessao } from "@/lib/sessao";
@@ -98,6 +99,9 @@ export default function FilaPage() {
                             {t}
                           </th>
                         ))}
+                        <th className="p-4" scope="col">
+                          <span className="sr-only">Ações</span>
+                        </th>
                       </tr>
                     </thead>
                     <tbody>
@@ -110,6 +114,15 @@ export default function FilaPage() {
                             <Prioridade cor={i.prioridade} />
                           </td>
                           <td className="p-4">{dataBr(i.entradaEm)}</td>
+                          <td className="p-4 text-right">
+                            <Link
+                              href={`/pacientes/${i.casoId}`}
+                              aria-label={`Ver ficha de ${i.nome}`}
+                              className={buttonVariants({ variant: "ghost" })}
+                            >
+                              Ver ficha
+                            </Link>
+                          </td>
                         </tr>
                       ))}
                     </tbody>
@@ -134,12 +147,23 @@ export default function FilaPage() {
                   {fila.data.pendentes.map((i) => (
                     <li
                       key={i.numero}
-                      className="flex flex-wrap justify-between gap-3 p-4 text-sm"
+                      className="flex flex-wrap items-center justify-between gap-3 p-4 text-sm"
                     >
                       <span>
                         {i.numero} · <strong>{i.nome}</strong>
                       </span>
-                      <span>{dataBr(i.criadaEm)} · Pendente de triagem</span>
+                      <span className="flex flex-wrap items-center gap-3">
+                        {dataBr(i.criadaEm)} · Pendente de triagem
+                        {/* A coordenação também tria (RF4 e RF6): a inscrição
+                            pendente abre direto na triagem. */}
+                        <Link
+                          href={`/triagem/${i.inscricaoId}`}
+                          aria-label={`Abrir triagem da inscrição ${i.numero}`}
+                          className={buttonVariants({ variant: "outline" })}
+                        >
+                          Abrir triagem
+                        </Link>
+                      </span>
                     </li>
                   ))}
                 </ul>

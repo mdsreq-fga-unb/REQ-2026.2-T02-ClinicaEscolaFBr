@@ -149,6 +149,37 @@ describe("Ficha do paciente com os responsáveis (RF22)", () => {
     ).toBe("/meus-pacientes");
   });
 
+  it.each(["coordenacao", "supervisor"])(
+    "para %s, a ficha não mostra a lista de sessões com presença nem um aviso sobre ela, e não a consulta (RF44, RNF38)",
+    async (perfil) => {
+      const chamadas = simularApi(perfil, [
+        200,
+        perfil === "coordenacao"
+          ? {
+              ...ROBERTO,
+              situacao: "aguardando_distribuicao",
+              supervisor: null,
+            }
+          : ROBERTO,
+      ]);
+      abrir();
+      await screen.findByRole("region", { name: "Identificação" });
+      expect(
+        screen.queryByRole("region", {
+          name: "Sessões com presença registrada",
+        }),
+      ).toBeNull();
+      expect(
+        screen.queryByRole("region", {
+          name: "Você não tem acesso a esta lista",
+        }),
+      ).toBeNull();
+      expect(chamadas.some((u) => u.includes("sessoes-realizadas"))).toBe(
+        false,
+      );
+    },
+  );
+
   it("caso sem supervisor abre para a coordenação, com o quadro e a identificação (RF22)", async () => {
     const chamadas = simularApi("coordenacao", [
       200,

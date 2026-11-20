@@ -41,6 +41,7 @@ describe("Fila de espera (RF7)", () => {
           inscritos: [],
           pendentes: [
             {
+              inscricaoId: "i-1",
               numero: "2026-00001",
               nome: "Pessoa Fictícia",
               criadaEm: "2026-01-01T12:00:00Z",
@@ -55,6 +56,40 @@ describe("Fila de espera (RF7)", () => {
     ).toBeInTheDocument();
     expect(screen.getByText("Pessoa Fictícia")).toBeInTheDocument();
     expect(screen.queryByRole("table")).not.toBeInTheDocument();
+    // A inscrição sem prioridade abre direto na triagem.
+    expect(
+      screen.getByRole("link", {
+        name: "Abrir triagem da inscrição 2026-00001",
+      }),
+    ).toHaveAttribute("href", "/triagem/i-1");
+  });
+
+  it("cada inscrito da fila abre a ficha do paciente", async () => {
+    vi.stubGlobal(
+      "fetch",
+      vi.fn().mockResolvedValue(
+        responder({
+          inscritos: [
+            {
+              inscricaoId: "i-2",
+              casoId: "c-2",
+              numero: "2026-00002",
+              nome: "Paciente Fictício",
+              prioridade: "vermelha",
+              entradaEm: "2026-01-02T12:00:00Z",
+              posicao: 1,
+            },
+          ],
+          pendentes: [],
+        }),
+      ),
+    );
+    montar();
+    expect(
+      await screen.findByRole("link", {
+        name: "Ver ficha de Paciente Fictício",
+      }),
+    ).toHaveAttribute("href", "/pacientes/c-2");
   });
 
   it.each(["secretaria", "supervisor", "estagiario"])(
