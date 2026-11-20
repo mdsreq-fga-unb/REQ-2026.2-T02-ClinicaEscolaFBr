@@ -126,8 +126,32 @@ describe('Rotas de acesso: perfis e sessão', () => {
         .post(`/usuarios/${pessoas.estagiario.id}/desativacao`)
         .set(como(quem))
         .expect(403);
+      await request(servidor)
+        .put(`/usuarios/${pessoas.supervisor.id}/crp`)
+        .set(como(quem))
+        .send({ crp: '01/12345' })
+        .expect(403);
     },
   );
+
+  it('o cadastro de supervisor sem o CRP é recusado com o campo indicado (RF53)', async () => {
+    const resposta = await request(app.getHttpServer())
+      .post('/usuarios')
+      .set(como('coordenacao'))
+      .send({ ...novoUsuario, perfil: 'supervisor' })
+      .expect(400);
+    expect(resposta.body.message).toEqual(
+      expect.arrayContaining([expect.objectContaining({ path: ['crp'] })]),
+    );
+  });
+
+  it('a correção do CRP recusa o número fora do formato (400)', async () => {
+    await request(app.getHttpServer())
+      .put(`/usuarios/${pessoas.supervisor.id}/crp`)
+      .set(como('coordenacao'))
+      .send({ crp: '12345' })
+      .expect(400);
+  });
 
   it('a coordenação cadastra, recebe 409 no e-mail repetido e 400 no e-mail inválido', async () => {
     const servidor = app.getHttpServer();

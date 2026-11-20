@@ -7,6 +7,7 @@ import {
   usuarios,
   type Db,
 } from '@clinica/database';
+import { cadastroUsuarioSchema } from '@clinica/shared';
 import { AuditoriaService } from '../../auditoria/auditoria.service';
 import type { EmailService } from '../../notificacoes/email.service';
 import { ParametrosService } from '../../parametros/parametros.service';
@@ -241,7 +242,12 @@ describe('UsuariosService (RF53 e RF54)', () => {
 
   it('o reenvio invalida o convite anterior', async () => {
     const { id } = await servico.cadastrar(
-      { nome: 'Carla Souza', email: 'carla@fbr.edu.br', perfil: 'supervisor' },
+      {
+        nome: 'Carla Souza',
+        email: 'carla@fbr.edu.br',
+        perfil: 'supervisor',
+        crp: '01/12345',
+      },
       coordenacao,
     );
     const antigo = tokenDoUltimoEmail();
@@ -412,5 +418,135 @@ describe('UsuariosService (RF53 e RF54)', () => {
     expect(resultado.conviteEnviado === false && resultado.link).toMatch(
       /^http:\/\/localhost:3000\/ativacao\/[\w-]+$/,
     );
+  });
+
+  describe('CRP do supervisor (RF53, usado no RF33 e no RF45)', () => {
+    it('o cadastro de supervisor exige o CRP e guarda só a região e o número', () => {
+      const base = { nome: 'Carla Souza', email: 'carla@fbr.edu.br' };
+      const semCrp = cadastroUsuarioSchema.safeParse({
+        ...base,
+        perfil: 'supervisor',
+        crp: '  ',
+      });
+      expect(semCrp.success).toBe(false);
+      expect(semCrp.error?.issues[0]).toMatchObject({
+        path: ['crp'],
+        message: 'Informe o número do CRP do supervisor.',
+      });
+      expect(
+        cadastroUsuarioSchema.safeParse({
+          ...base,
+          perfil: 'supervisor',
+          crp: '12345',
+        }).success,
+      ).toBe(false);
+      expect(
+        cadastroUsuarioSchema.parse({
+          ...base,
+          perfil: 'supervisor',
+          crp: 'CRP 01 / 12345',
+        }),
+      ).toMatchObject({ crp: '01/12345' });
+    });
+
+    it('nos outros perfis o CRP não é pedido e é descartado', () => {
+      const dados = cadastroUsuarioSchema.parse({
+        nome: 'Pedro Lima',
+        email: 'pedro@fbr.edu.br',
+        perfil: 'estagiario',
+        crp: '01/12345',
+      });
+      expect(dados).not.toHaveProperty('crp');
+    });
+
+    it('cadastra o supervisor com o CRP e o mostra na lista', async () => {
+      await servico.cadastrar(
+        {
+          nome: 'Carla Souza',
+          email: 'carla@fbr.edu.br',
+          perfil: 'supervisor',
+          crp: '01/12345',
+        },
+        coordenacao,
+      );
+      const [carla] = await servico.listar({ perfil: 'supervisor' });
+      expect(carla.crp).toBe('01/12345');
+      const [helena] = await servico.listar({ perfil: 'coordenacao' });
+      expect(helena.crp).toBeNull();
+    });
+
+    it('a coordenação corrige o CRP e a auditoria guarda o anterior e o novo', async () => {
+      const { id } = await servico.cadastrar(
+        {
+          nome: 'Carla Souza',
+          email: 'carla@fbr.edu.br',
+          perfil: 'supervisor',
+          crp: '01/12345',
+        },
+        coordenacao,
+      );
+      await servico.corrigirCrp(id, { crp: '01/54321' }, coordenacao);
+      const [carla] = await db
+        .select()
+        .from(usuarios)
+        .where(eq(usuarios.id, id));
+      expect(carla.crp).toBe('01/54321');
+      const registros = await db
+        .select()
+        .from(auditoria)
+        .where(eq(auditoria.operacao, 'corrigir_crp'));
+      expect(registros).toHaveLength(1);
+      expect(registros[0]).toMatchObject({
+        usuarioId: coordenacao.id,
+        entidadeId: id,
+        dadosAnteriores: { crp: '01/12345' },
+        dadosNovos: { crp: '01/54321' },
+      });
+    });
+
+    it('completa o CRP de supervisor cadastrado antes do campo existir', async () => {
+      const [antigo] = await db
+        .insert(usuarios)
+        .values({
+          nome: 'Rui Prado',
+          email: 'rui@fbr.edu.br',
+          perfil: 'supervisor',
+          situacao: 'ativo',
+        })
+        .returning();
+      expect(
+        (await servico.listar({ perfil: 'supervisor' }))[0].crp,
+      ).toBeNull();
+      await servico.corrigirCrp(antigo.id, { crp: '01/11111' }, coordenacao);
+      expect((await servico.listar({ perfil: 'supervisor' }))[0].crp).toBe(
+        '01/11111',
+      );
+    });
+
+    it('recusa o CRP para quem não é supervisor ou está desativado (409)', async () => {
+      const [pedro, rui] = await db
+        .insert(usuarios)
+        .values([
+          {
+            nome: 'Pedro Lima',
+            email: 'pedro@fbr.edu.br',
+            perfil: 'estagiario',
+            situacao: 'ativo',
+          },
+          {
+            nome: 'Rui Prado',
+            email: 'rui@fbr.edu.br',
+            perfil: 'supervisor',
+            situacao: 'desativado',
+          },
+        ])
+        .returning();
+      await expect(
+        servico.corrigirCrp(pedro.id, { crp: '01/12345' }, coordenacao),
+      ).rejects.toMatchObject({ status: 409 });
+      await expect(
+        servico.corrigirCrp(rui.id, { crp: '01/12345' }, coordenacao),
+      ).rejects.toMatchObject({ status: 409 });
+    });
   });
 });

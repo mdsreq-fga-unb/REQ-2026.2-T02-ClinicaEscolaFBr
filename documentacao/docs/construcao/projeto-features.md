@@ -556,11 +556,12 @@ sequenceDiagram
 
 ### RF53 — Cadastrar usuário institucional com perfil de acesso ([#48](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/issues/48))
 
-_Construída no Ciclo 3._
+_Construída no Ciclo 3. O CRP do supervisor entrou no Ciclo 6, para o RF33 e o RF45._
 
 **Rotas:**
-- `POST /usuarios` (coordenação);
+- `POST /usuarios` (coordenação): com o CRP quando o perfil é de supervisor;
 - `POST /usuarios/:id/convite` (coordenação, para reenviar o convite);
+- `PUT /usuarios/:id/crp` (coordenação): corrige ou completa o CRP de um supervisor;
 - `POST /ativacao` (pública): recebe o token e a nova senha.
 
 ```mermaid
@@ -596,6 +597,10 @@ sequenceDiagram
 | Índice único no e-mail | E-mail já cadastrado não pode ser cadastrado de novo |
 | Rota com `@Perfis('coordenacao')` | Usuário sem perfil de coordenação não cadastra |
 | O cadastro, o reenvio e a ativação chamam o `AuditoriaService` | Operações registradas com autor, usuário afetado e data/hora |
+| `Usuario.crp` obrigatório no cadastro de supervisor, no formato `01/12345` (região e número; o prefixo "CRP" e os espaços são aceitos e descartados). Nos outros perfis o campo é descartado | O cadastro de supervisor sem o número do CRP é recusado, com o campo indicado |
+| A correção grava `corrigir_crp` na auditoria, com o número anterior e o novo; supervisor desativado ou outro perfil recebe 409 | A correção do número pela coordenação fica na auditoria |
+
+**CRP dos supervisores já cadastrados:** a coluna é nula para quem foi cadastrado antes dela, sem `not null` no banco, para a migration não falhar na validação nem na produção. A lista de usuários mostra "CRP não informado" e a ação "Informar CRP" nesses casos, e o RF33 e o RF45 precisam tratar o CRP ausente.
 
 **Dados de teste:** um convite válido, um vencido (criado há 73 h) e um já usado. Em desenvolvimento, o e-mail chega ao Mailpit (`http://localhost:8025`).
 

@@ -20,6 +20,10 @@ export const usuarios = pgTable("usuarios", {
   nome: text("nome").notNull(),
   email: text("email").notNull().unique(),
   perfil: perfilEnum("perfil").notNull(),
+  // Número do CRP do supervisor (RF53), mostrado no relatório final (RF33) e na
+  // declaração (RF45). Nulo nos outros perfis e nos supervisores cadastrados
+  // antes do campo, que a coordenação completa pela lista de usuários.
+  crp: text("crp"),
   situacao: situacaoUsuarioEnum("situacao")
     .notNull()
     .default("pendente_ativacao"),
