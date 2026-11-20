@@ -30,7 +30,8 @@ import {
 } from '@clinica/database';
 import type {
   Ativacao,
-  CadastroUsuario,
+  CadastroUsuarioValidado,
+  CorrecaoCrp,
   FiltroUsuarios,
   ResultadoCadastroUsuario,
   UsuarioListado,
@@ -121,6 +122,7 @@ export class UsuariosService {
         nome: u.nome,
         email: u.email,
         perfil: u.perfil,
+        crp: u.perfil === 'supervisor' ? u.crp : null,
         situacao: u.situacao,
         conviteEnviadoEm:
           u.situacao === 'pendente_ativacao' && convite
@@ -144,7 +146,7 @@ export class UsuariosService {
 
   // Cadastro com perfil e envio do convite de ativação (RF53).
   async cadastrar(
-    dados: CadastroUsuario,
+    dados: CadastroUsuarioValidado,
     autor: UsuarioAutenticado,
   ): Promise<ResultadoCadastroUsuario> {
     const [existente] = await this.db
@@ -281,6 +283,40 @@ export class UsuariosService {
         'O e-mail do convite não pôde ser enviado agora. Tente reenviar em instantes.',
       );
     }
+  }
+
+  // Correção do CRP do supervisor pela coordenação (RF53), com o número anterior
+  // e o novo na auditoria. Também completa o CRP dos supervisores cadastrados
+  // antes de o campo existir.
+  async corrigirCrp(
+    id: string,
+    { crp }: CorrecaoCrp,
+    autor: UsuarioAutenticado,
+  ) {
+    const usuario = await this.buscar(id);
+    if (usuario.perfil !== 'supervisor') {
+      throw new ConflictException('Só o cadastro de supervisor tem CRP.');
+    }
+    if (usuario.situacao === 'desativado') {
+      throw new ConflictException(
+        'Este usuário está desativado e o cadastro não pode ser alterado.',
+      );
+    }
+    if (usuario.crp === crp) return;
+    await this.db.transaction(async (tx) => {
+      await tx.update(usuarios).set({ crp }).where(eq(usuarios.id, id));
+      await this.auditoria.registrar(
+        {
+          usuarioId: autor.id,
+          operacao: 'corrigir_crp',
+          entidade: 'usuarios',
+          entidadeId: id,
+          dadosAnteriores: { crp: usuario.crp },
+          dadosNovos: { crp },
+        },
+        tx,
+      );
+    });
   }
 
   // Desativação (RF54): nada é apagado; as sessões abertas são revogadas.
