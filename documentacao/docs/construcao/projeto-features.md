@@ -3003,6 +3003,22 @@ sequenceDiagram
 
 **Dependências e riscos:** depende do RF52 (#47), do RF44 (#226) e da mudança do RF53 (CRP). O modelo da FBr pode mudar o texto, sem mudar as regras.
 
+**Na implementação (API):** as rotas mudaram em relação ao projeto acima.
+
+- **Emissão por `POST`, não `GET`.** Cada emissão é um registro novo (RNF39), e um `GET` repetido pelo navegador criaria emissões que ninguém pediu. Ficaram duas rotas, uma por canal, como no RF44:
+    - `POST /declaracoes/minhas-sessoes/:sessaoId/emissao`, para o paciente ou o responsável, pelo `VerificacaoGuard`;
+    - `POST /declaracoes/sessoes/:sessaoId/emissao`, para a secretaria.
+  As duas respondem `201` com a `DeclaracaoComparecimento`, com o id da emissão, a data/hora, o paciente, a sessão, o estagiário e o psicólogo responsável com o CRP. A tela monta o texto da declaração a partir desses dados.
+- **Permissão conferida no serviço.** Na rota da equipe, o perfil é conferido no serviço, e não no `PerfisGuard`, para que a tentativa do estagiário, do supervisor ou da coordenação fique na auditoria como `emitir_declaracao_negada` (RNF39). Na rota do paciente, a sessão de outra inscrição e a sessão que não existe recebem o mesmo `403`, também registrado, para a resposta não revelar se a sessão existe.
+- **Recusas com motivo.** As recusas de regra respondem `422`, com o `motivo` (`sem_presenca` ou `autorizacao_pendente`) e a mensagem pronta. A mensagem diz se a sessão teve falta, foi cancelada ou ainda não tem presença registrada.
+- **Psicólogo responsável.** É o supervisor do caso **na data da sessão**, mesmo que o caso tenha sido transferido depois (RF25). O CRP vem nulo se o supervisor ainda não o tem no cadastro (RF53).
+- **Menor de idade.** A idade é calculada na data da emissão. Sem a autorização registrada, a emissão é bloqueada também quando é a secretaria que emite, porque é ela quem entrega a declaração ao responsável.
+- **Autorização na ficha do paciente.** A autorização usa o `casoId`, como a ficha da secretaria: `GET` e `PUT /pacientes/:casoId/autorizacao-menor`. O `PUT` recebe a data da entrega, que não pode ser futura. Para paciente adulto, a resposta é `409`. Um novo registro corrige a data, e a auditoria guarda a data anterior.
+- **Banco.** A migration `0023_declaracao_comparecimento` cria:
+    - `emissoes_declaracao`, só de inserção, com o canal, quem emitiu e o tipo (`emissao`, com `reemissao` reservado para o RF46);
+    - `autorizacoes_menor`, uma por inscrição.
+- **Id da sessão no RF44.** A lista do RF44 passou a trazer o `id` de cada sessão, que a tela usa para emitir a declaração.
+
 ---
 
 ## Indicadores e relatórios institucionais (CP11)
