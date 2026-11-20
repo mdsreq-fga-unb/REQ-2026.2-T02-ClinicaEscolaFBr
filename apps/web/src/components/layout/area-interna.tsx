@@ -5,7 +5,7 @@ import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useRef, useState, type ReactNode } from "react";
 import { FaixaAlertas } from "@/components/assiduidade/desligamento";
-import { api, ErroApi } from "@/lib/api";
+import { api } from "@/lib/api";
 import { NOMES_PERFIL, useSessao, type UsuarioDaSessao } from "@/lib/sessao";
 import { cn } from "@/lib/utils";
 import { MENU_POR_PERFIL, tituloDaPagina } from "./menu";
@@ -37,7 +37,7 @@ const iniciais = (nome: string) =>
 
 // Inscrições aguardando triagem, no item "Triagem" do menu, como no protótipo.
 // A rota devolve só o total, sem as respostas das inscrições.
-function useTriagemPendente(usuario: UsuarioDaSessao | undefined) {
+function useTriagemPendente(usuario: UsuarioDaSessao | null | undefined) {
   const clinico =
     usuario?.perfil === "supervisor" || usuario?.perfil === "coordenacao";
   const consulta = useQuery({
@@ -142,7 +142,7 @@ function Navegacao({
 // Área interna da equipe: menu lateral fixo por perfil no computador e menu em
 // gaveta no celular, como no protótipo aprovado.
 export function AreaInterna({ children }: { children: ReactNode }) {
-  const { data: usuario, error, isPending } = useSessao();
+  const { data: usuario, isPending } = useSessao();
   const caminho = usePathname();
   const router = useRouter();
   const queryClient = useQueryClient();
@@ -152,10 +152,15 @@ export function AreaInterna({ children }: { children: ReactNode }) {
   const [falhaNaSaida, setFalhaNaSaida] = useState(false);
   const pendentes = useTriagemPendente(usuario);
 
+  // Sem sessão, ou com a sessão expirada por inatividade (RNF50): os dados da
+  // pessoa em cache são apagados, e a entrada avisa que a sessão terminou.
   useEffect(() => {
-    if (error instanceof ErroApi && error.status === 401)
-      router.replace("/entrar");
-  }, [error, router]);
+    if (usuario !== null) return;
+    queryClient.removeQueries({
+      predicate: (consulta) => consulta.queryKey[0] !== "sessao",
+    });
+    router.replace("/entrar?sessao=encerrada");
+  }, [usuario, router, queryClient]);
 
   useEffect(() => {
     const dialogo = gaveta.current;

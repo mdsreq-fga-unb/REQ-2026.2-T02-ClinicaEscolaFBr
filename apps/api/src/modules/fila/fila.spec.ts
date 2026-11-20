@@ -157,6 +157,13 @@ describe('Fila de espera (RF7)', () => {
       resultado.inscritos.map((i: { posicao: number }) => i.posicao),
     ).toEqual([1, 2, 3, 4]);
     expect(resultado.pendentes).toHaveLength(1);
+    // O id abre a triagem da inscrição pendente pela tela da fila.
+    expect(resultado.pendentes[0]).toEqual({
+      inscricaoId: expect.any(String),
+      numero: expect.any(String),
+      nome: expect.any(String),
+      criadaEm: expect.any(String),
+    });
     expect(JSON.stringify(resultado)).not.toMatch(
       /queixa|cpf|email|corCifrada|Urgência fictícia/,
     );

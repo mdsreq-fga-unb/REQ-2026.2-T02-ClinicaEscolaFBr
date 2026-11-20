@@ -233,15 +233,16 @@ for (const largura of [320, 360, 768, 1024, 1366, 1920]) {
     expect(await semRolagemLateral(secretaria)).toBe(true);
     await semViolacoes(secretaria);
 
-    // Coordenação: a ficha mostra que a lista não é do perfil (RNF38).
+    // Coordenação: a ficha não mostra a lista nem um aviso sobre ela (RNF38).
     const coordenacao = await entrar(browser, "coordenacao");
     await coordenacao.setViewportSize({ width: largura, height: 900 });
     await coordenacao.goto(`/pacientes/${caso.casoId}`);
+    await expect(coordenacao.getByRole("heading", { level: 1 })).toBeVisible();
     await expect(
       coordenacao.getByRole("region", {
         name: "Você não tem acesso a esta lista",
       }),
-    ).toBeVisible();
+    ).toHaveCount(0);
     await expect(
       coordenacao.getByRole("region", {
         name: "Sessões com presença registrada",

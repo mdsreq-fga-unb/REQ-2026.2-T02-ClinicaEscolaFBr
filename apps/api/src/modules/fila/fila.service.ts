@@ -89,6 +89,7 @@ export class FilaService {
       this.ordenada(),
       this.db
         .select({
+          inscricaoId: inscricoes.id,
           numero: inscricoes.numero,
           nome: inscricoes.nomeCompleto,
           criadaEm: inscricoes.criadaEm,
