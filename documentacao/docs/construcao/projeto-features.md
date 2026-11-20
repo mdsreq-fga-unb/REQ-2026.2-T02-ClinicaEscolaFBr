@@ -3090,6 +3090,15 @@ _Ciclo 6._
 
 **Dependências e riscos:** depende do RF48 (#22), integrado no Ciclo 5. A biblioteca de PDF é uma dependência nova, que passa pela revisão de dependências do CI.
 
+**Na implementação:**
+
+- **Mesmos valores da tela, mesmo com a data final de hoje.** Quando a data final é hoje, as vagas ocupadas e a distribuição dependem do instante da consulta (RF48). Por isso, a tela manda junto o `referencia` que recebeu do `GET /indicadores`, e a API calcula o PDF naquele instante. A referência só vale se for do dia da data final e não estiver no futuro; senão, a resposta é 400, com o pedido para consultar de novo. Com a data final no passado, o cálculo usa o fim daquele dia, como no RF48, e a referência é ignorada.
+- **Texto separado do desenho.** O texto do PDF é montado por `montarRelatorio`, com as mesmas frases e o mesmo formato de número da tela, e `gerarPdf` só desenha, com o `pdfkit` 0.20. Os testes conferem o texto sem precisar ler o PDF.
+- **Página e paginação.** O PDF é A4 deitado e segue a prancha 9-1: cabeçalho da Clínica Escola, título, intervalo e referência, os quatro cartões, o aviso das vagas quando faltam e a tabela por supervisor. Quando a tabela passa de página, o cabeçalho se repete. O rodapé diz quem exportou e quando, no horário de Brasília. A paginação "Página N de M" fica no canto superior direito.
+- **Acessibilidade.** O PDF é marcado, com o idioma `pt-BR`, o título exibido na janela, os títulos e parágrafos na estrutura, e a tabela com `TH` e `TD`. Molduras, divisórias, paginação e o cabeçalho repetido são artefatos, para o leitor de tela não ler duas vezes. A fonte é a Helvetica padrão do PDF, que não fica embutida no arquivo.
+- **Botão na tela.** "Exportar PDF" usa `aria-disabled` em vez de `disabled`. Assim ele continua acessível pelo Tab e lê a explicação "Consulte um período para exportar o relatório." Ele fica indisponível sem uma consulta exibida, durante uma nova consulta e enquanto o PDF é gerado. A conclusão é anunciada em `role="status"`, e uma recusa mostra o motivo.
+- **Auditoria.** A operação é `exportar_relatorio_institucional`, com o intervalo e a referência usados, sem dado de paciente.
+
 ## Roteiro da inspeção de design
 
 A inspeção é feita pelo Líder de Feature com o revisor da issue, que nunca pode ser o autor do design. Para cada feature, o resultado é registrado num comentário da issue, usando os itens abaixo:

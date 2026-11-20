@@ -7,6 +7,7 @@ import {
   Param,
   Put,
   Query,
+  StreamableFile,
   UseGuards,
 } from '@nestjs/common';
 import {
@@ -48,6 +49,27 @@ export class IndicadoresController {
     consulta: ConsultaIndicadores,
   ) {
     return this.indicadores.consultar(consulta);
+  }
+
+  // Relatório institucional em PDF (RF49): a mesma consulta exibida na tela.
+  @Get('indicadores/relatorio.pdf')
+  @Header('Cache-Control', 'no-store')
+  async exportar(
+    @Query(new ZodValidationPipe(consultaIndicadoresSchema))
+    consulta: ConsultaIndicadores,
+    @Query('referencia') referencia: string | undefined,
+    @UsuarioAtual() usuario: UsuarioAutenticado,
+  ) {
+    const { pdf, nomeArquivo } = await this.indicadores.exportar(
+      consulta,
+      referencia,
+      usuario,
+    );
+    return new StreamableFile(pdf, {
+      type: 'application/pdf',
+      disposition: `attachment; filename="${nomeArquivo}"`,
+      length: pdf.length,
+    });
   }
 
   @Get('vagas-ofertadas/:semestre')
