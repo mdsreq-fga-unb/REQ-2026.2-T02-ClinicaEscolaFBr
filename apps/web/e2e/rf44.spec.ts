@@ -194,12 +194,16 @@ for (const largura of [320, 360, 768, 1024, 1366, 1920]) {
     for (const d of outras) expect(texto).not.toContain(d);
     expect(texto).toContain(caso.estagiario);
     await expect(page.locator("main")).not.toContainText(/queixa|amarela/i);
+    // A emissão chegou com o RF45: uma ação por sessão da lista.
     await expect(
       page.getByText(
-        "A emissão da declaração pelo sistema ainda não está disponível.",
+        "Escolha a sessão para emitir a declaração de comparecimento.",
         { exact: false },
       ),
     ).toBeVisible();
+    await expect(
+      page.getByRole("button", { name: /^Emitir declaração/ }),
+    ).toHaveCount(3);
     // Foco visível no controle da página pública, chegando por teclado (RNF57).
     const encerrar = page.getByRole("button", { name: "Encerrar consulta" });
     await tabAte(page, encerrar);
@@ -230,6 +234,9 @@ for (const largura of [320, 360, 768, 1024, 1366, 1920]) {
     await expect(secao.locator(largura < 640 ? "li" : "tbody tr")).toHaveCount(
       3,
     );
+    await expect(
+      secao.getByRole("button", { name: /^Emitir declaração/ }),
+    ).toHaveCount(3);
     expect(await semRolagemLateral(secretaria)).toBe(true);
     await semViolacoes(secretaria);
 

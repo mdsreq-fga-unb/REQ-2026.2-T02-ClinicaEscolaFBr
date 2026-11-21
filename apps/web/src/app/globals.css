@@ -360,3 +360,24 @@
   background: var(--accent);
   color: var(--primary);
 }
+
+/* Declaração de comparecimento (RF45): a "pré-visualização" é a própria página
+   com o estilo de impressão. Ao imprimir, só a folha fica: tudo o que não é a
+   folha, nem a envolve, nem está dentro dela, some. O seletor só vale em página
+   que tem a folha, para não mudar a impressão das outras telas. */
+@media print {
+  body:has(.folha-declaracao)
+    *:not(:has(.folha-declaracao)):not(.folha-declaracao):not(
+      .folha-declaracao *
+    ) {
+    display: none !important;
+  }
+  .folha-declaracao {
+    width: 100%;
+    max-width: none;
+    border: 0;
+    box-shadow: none;
+    padding: 0;
+    break-inside: avoid;
+  }
+}

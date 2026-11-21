@@ -41,6 +41,7 @@ import {
 import { DialogoVincular } from "@/components/casos/vincular";
 import { CartaoContribuicao } from "@/components/administrativo/contribuicao";
 import { AcessoNegado } from "@/components/comum/acesso-negado";
+import { AutorizacaoMenorDaFicha } from "@/components/declaracoes/autorizacao-menor";
 import { SessoesComPresencaDaFicha } from "@/components/declaracoes/sessoes-com-presenca";
 import { Aviso } from "@/components/comum/aviso";
 import { Dados } from "@/components/comum/dados";
@@ -111,8 +112,10 @@ const VOLTAR = {
 // a contribuição social do ciclo (RF41), que a coordenação só consulta. O
 // estagiário e o supervisor, e o caso que ainda aguarda distribuição, veem só a
 // identificação (prancha 2-3). O conteúdo clínico fica no prontuário. As sessões
-// com presença registrada (RF44) são só da secretaria; os outros perfis veem, no
-// lugar da lista, que ela não é do seu perfil (prancha 8-2, RNF38).
+// com presença registrada (RF44) são só da secretaria, que também emite a
+// declaração de comparecimento (RF45) e registra a autorização de menor; os
+// outros perfis veem, no lugar da lista, que ela não é do seu perfil (prancha 8-2,
+// RNF38).
 export default function PacientePage() {
   const { casoId } = useParams<{ casoId: string }>();
   const { data: sessao } = useSessao();
@@ -471,8 +474,17 @@ export default function PacientePage() {
           somenteLeitura={coordenacao}
         />
       )}
-      {/* Sessões com presença registrada (RF44): de todos os ciclos do caso,
-          só para consulta até a emissão da declaração (RF45). */}
+      {/* Autorização de menor (RF45): só a secretaria registra, e o bloco só
+          aparece para paciente menor de idade. */}
+      {secretaria && (
+        <AutorizacaoMenorDaFicha
+          casoId={d.casoId}
+          nome={d.nome}
+          dataNascimento={d.dataNascimento}
+        />
+      )}
+      {/* Sessões com presença registrada (RF44): de todos os ciclos do caso. A
+          secretaria emite a declaração de comparecimento por aqui (RF45). */}
       <SessoesComPresencaDaFicha casoId={d.casoId} />
       <HistoricoFaltas
         id="historico-faltas"
