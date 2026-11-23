@@ -44,8 +44,9 @@ const telefone = (mensagem: string) =>
     .default("");
 
 // Validação de formato, sem consulta de identidade ou upload de documentos.
-// Os dados da ficha de identificação da Clínica Escola são opcionais até a FBr
-// definir quais são obrigatórios (DF43).
+// Da ficha de identificação da Clínica Escola (DF43), o endereço completo
+// (DF56) e o contato de emergência (DF51) são obrigatórios; sexo, profissão,
+// escolaridade, WhatsApp e o documento do responsável continuam opcionais.
 const dadosBase = z.object({
   nomeCompleto: obrigatorio(200),
   dataNascimento: z.iso
@@ -67,14 +68,14 @@ const dadosBase = z.object({
     .regex(/^[0-9A-Za-z.\- /]*$/, "Informe um RG válido, sem anexos.")
     .default(""),
   endereco: obrigatorio(500),
-  bairro: opcional(100),
-  cidadeUf: opcional(100),
+  bairro: obrigatorio(100),
+  cidadeUf: obrigatorio(100),
   cep: z
     .string()
     .trim()
-    .regex(/^(?:\d{5}-?\d{3})?$/, "Digite os 8 números do CEP.")
-    .transform((valor) => valor.replace(/\D/g, ""))
-    .default(""),
+    .min(1, "Informe o CEP.")
+    .regex(/^\d{5}-?\d{3}$/, "Digite os 8 números do CEP.")
+    .transform((valor) => valor.replace(/\D/g, "")),
   estadoCivil: z.enum(ESTADOS_CIVIS, { error: "Selecione o estado civil." }),
   sexo: opcional(50),
   profissao: opcional(100),
@@ -97,9 +98,18 @@ const dadosBase = z.object({
   email: z
     .union([z.literal(""), z.email("Informe um e-mail válido.").max(254)])
     .default(""),
-  contatoEmergenciaNome: opcional(200),
-  contatoEmergenciaParentesco: opcional(50),
-  contatoEmergenciaTelefone: telefone("Informe um telefone com DDD."),
+  contatoEmergenciaNome: obrigatorio(200),
+  contatoEmergenciaParentesco: obrigatorio(50),
+  contatoEmergenciaTelefone: z
+    .string()
+    .trim()
+    .min(1, "Informe o telefone do contato de emergência.")
+    .max(22)
+    .regex(
+      /^(?:\+55\s?)?(?:\([1-9]\d\)|[1-9]\d)\s?9?\d{4}-?\d{4}$/,
+      "Informe um telefone com DDD.",
+    )
+    .transform(soDigitos),
 });
 const validarResponsavel = (
   dados: {

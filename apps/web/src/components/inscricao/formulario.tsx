@@ -48,21 +48,16 @@ type Valores = Record<Campo, string>;
 const vazio = Object.fromEntries(
   Object.keys(rotulos).map((campo) => [campo, ""]),
 ) as Valores;
-// Contatos e dados da ficha de identificação da Clínica Escola (DF43).
-// O RG também é opcional (DF60).
+// Dados da ficha de identificação da Clínica Escola que continuam opcionais
+// (DF43). O RG também é opcional (DF60). O endereço completo (DF56) e o contato
+// de emergência (DF51) são obrigatórios.
 const opcionais: Campo[] = [
   "rg",
   "sexo",
   "profissao",
   "escolaridade",
-  "bairro",
-  "cidadeUf",
-  "cep",
   "documentoResponsavel",
   "whatsapp",
-  "contatoEmergenciaNome",
-  "contatoEmergenciaParentesco",
-  "contatoEmergenciaTelefone",
 ];
 const responsavel: string[] = [
   "responsavelLegal",
