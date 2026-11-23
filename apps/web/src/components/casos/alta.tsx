@@ -1,6 +1,6 @@
 "use client";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { useId, useState, type FormEvent } from "react";
+import { useId, useState, type FormEvent, type ReactNode } from "react";
 import {
   LIMITE_MOTIVO_ALTA,
   pedidoAltaSchema,
@@ -18,12 +18,16 @@ import {
 import { Dados } from "@/components/comum/dados";
 import { Dialogo } from "@/components/comum/dialogo";
 import { Button } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
 import { api, ErroApi } from "@/lib/api";
 import { dataBr, dataHoraBr, hojeBr } from "@/lib/formato";
 
 // Encerramento do caso por alta (RF68, prancha 6-5), na ficha do paciente. A API
 // diz o que cada perfil pode fazer: o estagiário responsável pede, o supervisor
 // do caso confirma e a coordenação reabre. A secretaria vê a alta sem o motivo.
+
+// Tira o ponto final do texto digitado, que entra no meio de uma frase.
+const semPontoFinal = (texto: string) => texto.trim().replace(/[.!?]+$/, "");
 
 const emHora = (iso: string) => dataHoraBr(iso).replace(", ", ", às ");
 
@@ -84,27 +88,55 @@ export function AltaDoCaso({ casoId, nome }: { casoId: string; nome: string }) {
     !alta.acoes.pedir && !alta.pedidoAberto && !vigente && !reabertas.length;
   if (nada && !concluido) return null;
 
+  // O título segue a prancha 6-5 para cada situação: o pedido do estagiário, a
+  // alta aguardando o supervisor, a confirmação e o caso encerrado.
+  const plural = (n: number) =>
+    n === 1 ? "1 sessão realizada" : `${n} sessões realizadas`;
+  const cabecalho = alta.acoes.pedir ? (
+    <>
+      <h2 id="alta-do-caso" className="ui-h2">
+        Encerrar caso por alta
+      </h2>
+      <p className="ui-dica m-0">
+        {nome} · ciclo {alta.ciclo} · {plural(alta.sessoesRealizadas)}
+      </p>
+    </>
+  ) : alta.pedidoAberto && alta.acoes.confirmar ? (
+    <h2 id="alta-do-caso" className="ui-h2">
+      Alta de {nome}
+    </h2>
+  ) : (
+    <h2
+      id="alta-do-caso"
+      className="ui-h2 flex flex-wrap items-center gap-x-3 gap-y-1"
+    >
+      {nome}
+      {alta.pedidoAberto ? (
+        <Selo tom="alerta">Alta aguardando confirmação do supervisor</Selo>
+      ) : vigente ? (
+        <Selo tom="neutro">
+          Encerrado por alta em {dataBr(vigente.dataAlta)}
+        </Selo>
+      ) : null}
+    </h2>
+  );
+
   return (
     <section aria-labelledby="alta-do-caso" className="ui-cartao gap-4">
-      <h2 id="alta-do-caso" className="ui-h2">
-        Alta
-      </h2>
+      <div className="flex flex-col gap-1">{cabecalho}</div>
       {concluido && <Aviso tipo="sucesso" focar titulo={concluido} />}
       {alta.acoes.pedir && (
         <PedidoDeAlta
           casoId={casoId}
           alta={alta}
           aoPedir={() =>
-            atualizar(
-              "Alta enviada para a confirmação do supervisor. Enquanto isso, o caso continua em atendimento.",
-            )
+            atualizar("Alta enviada para a confirmação do supervisor.")
           }
         />
       )}
       {alta.pedidoAberto && (
         <PedidoAberto
           casoId={casoId}
-          nome={nome}
           pedido={alta.pedidoAberto}
           podeConfirmar={alta.acoes.confirmar}
           aoConfirmar={(canceladas) =>
@@ -141,13 +173,37 @@ export function AltaDoCaso({ casoId, nome }: { casoId: string; nome: string }) {
                 Reaberta por {r.reabertura!.reabertaPor} em{" "}
                 {emHora(r.reabertura!.reabertaEm)}, a pedido de{" "}
                 {r.reabertura!.pedidaPor}
-                {r.reabertura!.motivo ? `: ${r.reabertura!.motivo}` : ""}.
+                {r.reabertura!.motivo
+                  ? `: ${semPontoFinal(r.reabertura!.motivo)}`
+                  : ""}
+                .
               </li>
             ))}
           </ul>
         </div>
       )}
     </section>
+  );
+}
+
+function Selo({
+  tom,
+  children,
+}: {
+  tom: "alerta" | "neutro";
+  children: ReactNode;
+}) {
+  return (
+    <span
+      className={cn(
+        "ui-selo text-[13px] font-semibold",
+        tom === "alerta"
+          ? "border-[#f0cf9f] bg-alerta-fundo text-[#8a4600]"
+          : "border-[#c3cfd8] bg-[#eef1f4] text-[#4a5864]",
+      )}
+    >
+      {children}
+    </span>
   );
 }
 
@@ -187,7 +243,7 @@ function PedidoDeAlta({
           caso depois da confirmação do supervisor.
         </p>
         <Button variant="outline" onClick={() => setAberto(true)}>
-          Encerrar caso por alta
+          Registrar alta
         </Button>
       </div>
     );
@@ -252,11 +308,12 @@ function PedidoDeAlta({
           Registre antes de enviar.
         </Aviso>
       )}
-      <Aviso tipo="info" titulo="A alta só é concluída depois da confirmação.">
-        Quem confirma é o supervisor do caso
-        {alta.supervisor ? `, ${alta.supervisor}` : ""}. O histórico do caso, as
-        sessões e o prontuário ficam guardados.
-      </Aviso>
+      {/* Frase única, sem negrito, como na prancha 6-5. */}
+      <Aviso
+        tipo="info"
+        className="[&_p]:font-normal"
+        titulo={`A alta só é concluída depois da confirmação do supervisor do caso${alta.supervisor ? `, ${alta.supervisor}` : ""}. O histórico do caso, as sessões e o prontuário ficam guardados.`}
+      />
       {envio.isError && !errosDaApi(envio.error) && (
         <Aviso tipo="erro" titulo="Não foi possível enviar a alta.">
           {envio.error instanceof ErroApi && envio.error.status !== 500
@@ -283,13 +340,11 @@ function PedidoDeAlta({
 // Pedido aberto: o supervisor do caso confirma; os outros veem a etiqueta.
 function PedidoAberto({
   casoId,
-  nome,
   pedido,
   podeConfirmar,
   aoConfirmar,
 }: {
   casoId: string;
-  nome: string;
   pedido: RegistroAlta;
   podeConfirmar: boolean;
   aoConfirmar: (sessoesCanceladas: number) => void;
@@ -303,28 +358,27 @@ function PedidoAberto({
   });
   return (
     <div className="flex flex-col gap-3">
-      <p className="m-0 flex flex-wrap items-center gap-2">
-        <span className="ui-selo border-[#f0cf9f] bg-alerta-fundo text-[#8a4600]">
-          Alta aguardando confirmação do supervisor
-        </span>
-      </p>
-      <p className="ui-dica m-0">
-        Pedida por {pedido.pedidaPor} em {emHora(pedido.pedidaEm)}. Enquanto
-        isso, o caso continua em atendimento.
-      </p>
+      {!podeConfirmar && (
+        <p className="ui-dica m-0">
+          Pedida por {pedido.pedidaPor} em {emHora(pedido.pedidaEm)}. Enquanto
+          isso, o caso continua em atendimento.
+        </p>
+      )}
       {podeConfirmar && (
         <>
-          <h3 className="ui-h2 text-[17px]">Alta de {nome}</h3>
           <Dados
             colunas={2}
             itens={[
               ["Data da alta", dataBr(pedido.dataAlta)],
               ["Pedida por", pedido.pedidaPor],
-              ...(pedido.motivo
-                ? ([["Motivo", pedido.motivo]] as [string, string][])
-                : []),
             ]}
           />
+          {pedido.motivo && (
+            <div>
+              <p className="ui-meta m-0">Motivo</p>
+              <p className="m-0">{pedido.motivo}</p>
+            </div>
+          )}
           <p className="ui-dica m-0">
             Ao confirmar, o caso é encerrado, a vaga é liberada e não há novos
             agendamentos nem evoluções. As sessões futuras são canceladas, sem
@@ -369,32 +423,52 @@ function CasoEncerrado({
   const [reabrindo, setReabrindo] = useState(false);
   return (
     <div className="flex flex-col gap-3">
-      <p className="m-0">
-        <span className="ui-selo border-[#c3cfd8] bg-[#eef1f4] text-[#4a5864]">
-          Encerrado por alta em {dataBr(registro.dataAlta)}
-        </span>
-      </p>
-      <ol className="flex flex-col gap-3 border-l-2 border-border pl-4">
-        <li>
-          <p className="m-0 font-semibold">
-            Alta confirmada por {registro.confirmadaPor}
-          </p>
-          <p className="ui-meta m-0">
-            {emHora(registro.confirmadaEm!)} · pedida por {registro.pedidaPor}
-            {registro.motivo ? ` · motivo: ${registro.motivo}` : ""}
-          </p>
-        </li>
-        <li>
-          <p className="m-0 font-semibold">Vaga liberada</p>
-          <p className="ui-meta m-0">
-            O caso deixa de contar como atendimento ativo nos indicadores a
-            partir de {dataBr(registro.confirmadaEm!)}. Para um novo
-            agendamento, a coordenação precisa reabrir o caso.
-          </p>
-        </li>
+      {/* Linha do tempo da prancha 6-5: marcadores redondos ligados por uma
+          linha vertical. */}
+      <ol className="relative flex flex-col gap-3 before:absolute before:top-2 before:bottom-2 before:left-[7px] before:w-0.5 before:bg-border">
+        {[
+          {
+            titulo: `Alta confirmada por ${registro.confirmadaPor}`,
+            texto: `${emHora(registro.confirmadaEm!)} · pedida por ${registro.pedidaPor}${registro.motivo ? ` · motivo: ${semPontoFinal(registro.motivo)}` : ""}`,
+          },
+          {
+            titulo: "Vaga liberada",
+            texto: `O caso deixa de contar como atendimento ativo nos indicadores a partir de ${dataBr(registro.confirmadaEm!)}.`,
+          },
+        ].map((item) => (
+          <li key={item.titulo} className="relative pl-7">
+            <span
+              aria-hidden
+              className="absolute top-1 left-0 size-4 rounded-full border-2 border-primary bg-card"
+            />
+            <p className="m-0 font-semibold">{item.titulo}</p>
+            <p className="ui-meta m-0">{item.texto}</p>
+          </li>
+        ))}
       </ol>
+      {/* Como na prancha 6-5: o agendamento aparece indisponível, com o motivo
+          ligado ao botão (RNF56). */}
+      <div className="flex flex-wrap items-center gap-3">
+        <Button
+          type="button"
+          aria-disabled
+          aria-describedby="alta-sem-agendamento"
+          className="max-sm:w-full"
+          onClick={(e) => e.preventDefault()}
+        >
+          Agendar sessão
+        </Button>
+        <p id="alta-sem-agendamento" className="ui-dica m-0">
+          Caso encerrado por alta. Para um novo agendamento, a coordenação
+          precisa reabrir o caso.
+        </p>
+      </div>
       {alta.bloqueioReabertura && (
-        <Aviso tipo="alerta" titulo={alta.bloqueioReabertura} />
+        <Aviso
+          tipo="alerta"
+          className="[&_p]:font-normal"
+          titulo={alta.bloqueioReabertura}
+        />
       )}
       {alta.acoes.reabrir && (
         <Button
@@ -503,8 +577,8 @@ function DialogoReabertura({
                 <option key={o.id} value={o.id}>
                   {o.nome} (
                   {o.papel === "estagiario"
-                    ? "estagiário da alta"
-                    : "supervisor do caso"}
+                    ? "estagiário(a) responsável"
+                    : "supervisor(a) do caso"}
                   )
                 </option>
               ))}

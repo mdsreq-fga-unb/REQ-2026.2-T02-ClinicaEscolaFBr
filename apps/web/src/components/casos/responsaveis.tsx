@@ -16,10 +16,12 @@ export const NOMES_SITUACAO_DISTRIBUICAO: Record<SituacaoDistribuicao, string> =
     distribuido: "Distribuído",
     aguardando_estagiario: "Aguardando vínculo de estagiário",
     pendente: "Pendente de distribuição",
+    encerrado: "Atendimento encerrado",
   };
 
 const ESTILO_PENDENTE = "border-[#f0cf9f] bg-alerta-fundo text-[#8a4600]";
 const ESTILO_DISTRIBUIDO = "border-[#a3d4b3] bg-[#e5f4ea] text-[#1b5e33]";
+const ESTILO_ENCERRADO = "border-[#c3cfd8] bg-[#eef1f4] text-[#4a5864]";
 
 // Selo da situação de distribuição (prancha 2-3): verde com o visto quando o caso
 // tem os dois responsáveis; laranja com o relógio quando falta algum. O texto diz
@@ -29,12 +31,17 @@ export function SeloDistribuicao({
 }: {
   situacao: SituacaoDistribuicao;
 }) {
-  const Icone = situacao === "distribuido" ? Check : Clock;
+  const Icone =
+    situacao === "distribuido" || situacao === "encerrado" ? Check : Clock;
   return (
     <span
       className={cn(
         "ui-selo max-w-full whitespace-normal",
-        situacao === "distribuido" ? ESTILO_DISTRIBUIDO : ESTILO_PENDENTE,
+        situacao === "distribuido"
+          ? ESTILO_DISTRIBUIDO
+          : situacao === "encerrado"
+            ? ESTILO_ENCERRADO
+            : ESTILO_PENDENTE,
       )}
     >
       <Icone aria-hidden className="size-3.5 shrink-0" />
@@ -60,14 +67,16 @@ function CartaoResponsavel({
   nome: string | null;
   pendencia: SituacaoDistribuicao;
 }) {
-  const Icone = nome ? User : Clock;
+  const Icone = nome || pendencia === "encerrado" ? User : Clock;
   return (
     <div className="flex min-w-0 items-center gap-3.5 rounded-[12px] border border-border bg-muted px-4 py-3.5">
       <span
         aria-hidden
         className={cn(
           "flex size-10 shrink-0 items-center justify-center rounded-full",
-          nome ? "bg-accent text-marca" : "bg-alerta-fundo text-[#8a4600]",
+          nome || pendencia === "encerrado"
+            ? "bg-accent text-marca"
+            : "bg-alerta-fundo text-[#8a4600]",
         )}
       >
         <Icone className="size-5" />

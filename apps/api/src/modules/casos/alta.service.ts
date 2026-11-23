@@ -103,6 +103,16 @@ export class AltaService {
       ? this.bloqueioReabertura(vigente.dataAlta, caso.ciclo, vigente.ciclo)
       : null;
 
+    const [realizadas] = await this.db
+      .select({ total: sql<number>`count(*)::int` })
+      .from(sessoesAtendimento)
+      .where(
+        and(
+          eq(sessoesAtendimento.casoId, casoId),
+          eq(sessoesAtendimento.cicloAtendimento, caso.ciclo),
+          eq(sessoesAtendimento.status, 'realizada'),
+        ),
+      );
     let sessoesSemEvolucao = 0;
     if (papel === 'estagiario' || papel === 'supervisor') {
       const [linha] = await this.db
@@ -142,6 +152,8 @@ export class AltaService {
 
     return {
       situacao: caso.situacao,
+      ciclo: caso.ciclo,
+      sessoesRealizadas: realizadas?.total ?? 0,
       pedidoAberto: pedidoAberto && this.semIds(pedidoAberto),
       historico: historico.map((r) => this.semIds(r)),
       acoes: {

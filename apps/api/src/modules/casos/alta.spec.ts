@@ -360,6 +360,7 @@ describe('Encerrar caso por alta (RF68)', () => {
     const daAna = await situacao(caso, 'ana');
     expect(daAna.acoes.pedir).toBe(true);
     expect(daAna.sessoesSemEvolucao).toBe(1);
+    expect(daAna).toMatchObject({ ciclo: 1, sessoesRealizadas: 1 });
     await pedir(caso).expect(201);
     const daSecretaria = await situacao(caso, 'secretaria');
     expect(daSecretaria.pedidoAberto?.motivo).toBeNull();

@@ -25,6 +25,8 @@ const situacao = (dados: Partial<SituacaoAlta> = {}): SituacaoAlta => ({
   sessoesSemEvolucao: 0,
   bloqueioReabertura: null,
   pedidoPorOpcoes: [],
+  ciclo: 1,
+  sessoesRealizadas: 9,
   ...dados,
 });
 
@@ -93,13 +95,19 @@ describe("Encerrar caso por alta (RF68, prancha 6-5)", () => {
     );
     abrir();
     fireEvent.click(
-      await screen.findByRole("button", { name: "Encerrar caso por alta" }),
+      await screen.findByRole("button", { name: "Registrar alta" }),
     );
     expect(
       screen.getByText("Há 2 sessões realizadas sem evolução neste ciclo."),
     ).toBeInTheDocument();
     expect(
-      screen.getByText(/Quem confirma é o supervisor do caso, Ricardo Menezes/),
+      screen.getByRole("heading", { name: "Encerrar caso por alta" }),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByText("Mariana Alves Toledo · ciclo 1 · 9 sessões realizadas"),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByText(/confirmação do supervisor do caso, Ricardo Menezes/),
     ).toBeInTheDocument();
 
     fireEvent.click(
@@ -139,10 +147,9 @@ describe("Encerrar caso por alta (RF68, prancha 6-5)", () => {
     );
     abrir();
     expect(
-      await screen.findByText("Alta aguardando confirmação do supervisor"),
-    ).toBeInTheDocument();
-    expect(
-      screen.getByRole("heading", { name: "Alta de Mariana Alves Toledo" }),
+      await screen.findByRole("heading", {
+        name: "Alta de Mariana Alves Toledo",
+      }),
     ).toBeInTheDocument();
     expect(
       screen.getByText("Objetivos terapêuticos do ciclo alcançados."),
@@ -205,6 +212,15 @@ describe("Encerrar caso por alta (RF68, prancha 6-5)", () => {
       screen.getByText("Alta confirmada por Ricardo Menezes"),
     ).toBeInTheDocument();
     expect(screen.getByText("Vaga liberada")).toBeInTheDocument();
+    // O agendamento fica indisponível, com o motivo ligado ao botão.
+    expect(
+      screen.getByRole("button", { name: "Agendar sessão" }),
+    ).toHaveAttribute("aria-disabled", "true");
+    expect(
+      screen.getByRole("button", { name: "Agendar sessão" }),
+    ).toHaveAccessibleDescription(
+      "Caso encerrado por alta. Para um novo agendamento, a coordenação precisa reabrir o caso.",
+    );
     fireEvent.click(screen.getByRole("button", { name: "Reabrir caso" }));
     fireEvent.change(screen.getByLabelText("Pedido por"), {
       target: { value: "00000000-0000-4000-8000-00000000000b" },

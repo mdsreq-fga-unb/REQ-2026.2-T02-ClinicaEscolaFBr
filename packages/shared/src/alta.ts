@@ -54,6 +54,9 @@ export type RegistroAlta = {
 // Situação da alta na ficha do caso (RF68, prancha 6-5).
 export type SituacaoAlta = {
   situacao: SituacaoCaso;
+  // Ciclo de atendimento e sessões realizadas nele, para o subtítulo do pedido.
+  ciclo: number;
+  sessoesRealizadas: number;
   // O pedido aberto, aguardando a confirmação do supervisor.
   pedidoAberto: RegistroAlta | null;
   // Todas as altas confirmadas do caso, da mais recente para a mais antiga, com
