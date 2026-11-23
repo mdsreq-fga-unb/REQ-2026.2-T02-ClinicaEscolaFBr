@@ -139,7 +139,8 @@ for (const largura of [320, 360, 768, 1024, 1366, 1920]) {
     playwright,
   }, info) => {
     const marca = `${largura}.${Date.now()}`;
-    // E-mail curto: a ficha mostra o e-mail inteiro, sem quebra, em 320 px.
+    // E-mail com letras aleatórias: largo o bastante para não caber numa linha em
+    // 320 px; a ficha quebra o valor em vez de criar rolagem lateral (RNF56).
     const email = `rf44.${largura}.${Date.now().toString(36)}@example.com`;
     const caso = await criarCaso(
       playwright,
