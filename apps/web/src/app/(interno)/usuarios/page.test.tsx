@@ -155,6 +155,23 @@ describe("CRP do supervisor na gestão de usuários (RF53)", () => {
     );
   });
 
+  it("com o formulário vazio, mostra todos os erros em português de uma vez, inclusive o do CRP", async () => {
+    simular();
+    abrir();
+    await screen.findByRole("table");
+    fireEvent.click(screen.getByRole("button", { name: "Cadastrar usuário" }));
+    fireEvent.click(screen.getByLabelText("Supervisor"));
+    fireEvent.click(
+      screen.getByRole("button", { name: "Salvar e enviar convite" }),
+    );
+    expect(await screen.findByText("Informe o nome completo.")).toBeTruthy();
+    expect(screen.getByText("Informe um e-mail válido.")).toBeTruthy();
+    expect(
+      screen.getByText("Informe o número do CRP do supervisor."),
+    ).toBeTruthy();
+    expect(screen.queryByText(/Invalid input/)).toBeNull();
+  });
+
   it("a coordenação informa o CRP de um supervisor pela lista", async () => {
     const chamadas = simular();
     abrir();

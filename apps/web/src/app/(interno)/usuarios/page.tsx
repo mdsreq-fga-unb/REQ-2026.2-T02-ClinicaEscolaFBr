@@ -95,7 +95,13 @@ function FormularioCadastro({
   aoConcluir: (email: string, conviteEnviado: boolean) => void;
   aoEnviar: (enviando: boolean) => void;
 }) {
-  const [dados, setDados] = useState<DadosCadastro>({});
+  // Os campos de texto começam vazios, e não indefinidos: senão, o nome em branco
+  // recebe a mensagem padrão do Zod, em inglês, no lugar de "Informe o nome".
+  const [dados, setDados] = useState<DadosCadastro>({
+    nome: "",
+    email: "",
+    crp: "",
+  });
   const [erros, setErros] = useState<
     Partial<Record<keyof DadosCadastro, string>>
   >({});
@@ -131,6 +137,11 @@ function FormularioCadastro({
         const campo = problema.path[0] as keyof DadosCadastro;
         novos[campo] ??=
           campo === "perfil" ? "Escolha um perfil." : problema.message;
+      }
+      // A regra do CRP é do objeto, e o Zod só a confere quando os campos estão
+      // certos: sem isto, o CRP vazio só apareceria no segundo envio.
+      if (dados.perfil === "supervisor" && !dados.crp?.trim()) {
+        novos.crp ??= "Informe o número do CRP do supervisor.";
       }
       setErros(novos);
       return;
