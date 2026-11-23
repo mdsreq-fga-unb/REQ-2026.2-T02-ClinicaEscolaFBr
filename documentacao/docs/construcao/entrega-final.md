@@ -29,7 +29,7 @@ As PRs abertas em 23/11 entram nesta ordem. A ordem respeita as que estão empil
 | Ordem | PR | O que traz | Migration | Observação |
 | --- | --- | --- | --- | --- |
 | 1 | [#298](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/pull/298) | Dependências da documentação | — | — |
-| 2 | [#299](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/pull/299) | Dependências do código | — | Só com o e2e verde; se continuar falhando, fica para depois da produção |
+| 2 | [#299](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/pull/299) | Dependências do código | — | O e2e do RF44 em 320 px falhou uma vez e passou na nova execução; se voltar a falhar, a PR fica para depois da produção |
 | 3 | [#294](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/pull/294) | CRP do supervisor (RF53) | `0022` | — |
 | 4 | [#296](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/pull/296) | API da declaração de comparecimento (RF45) | `0023` | Empilhada sobre a #294 |
 | 5 | [#303](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/pull/303) | Relatório final: modelo, impressão e entrega (RF33) | `0024` | Empilhada sobre a #296 |
