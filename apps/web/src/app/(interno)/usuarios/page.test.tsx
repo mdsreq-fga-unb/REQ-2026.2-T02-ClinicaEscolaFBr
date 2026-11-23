@@ -155,6 +155,38 @@ describe("CRP do supervisor na gestão de usuários (RF53)", () => {
     );
   });
 
+  it("ao trocar Supervisor por outro perfil, descarta o CRP digitado e cadastra", async () => {
+    const chamadas = simular();
+    abrir();
+    await screen.findByRole("table");
+    fireEvent.click(screen.getByRole("button", { name: "Cadastrar usuário" }));
+    fireEvent.change(screen.getByLabelText("Nome completo"), {
+      target: { value: "Ana Clara Lopes" },
+    });
+    fireEvent.change(screen.getByLabelText("E-mail"), {
+      target: { value: "ana@fbr.edu.br" },
+    });
+    fireEvent.click(screen.getByLabelText("Supervisor"));
+    const crp = screen.getByLabelText(/Número do CRP/);
+    // Sem inputMode numérico: o teclado do celular precisa ter a barra.
+    expect(crp.getAttribute("inputmode")).toBeNull();
+    fireEvent.change(crp, { target: { value: "123" } });
+    fireEvent.click(screen.getByLabelText("Estagiário"));
+    fireEvent.click(screen.getByLabelText("Supervisor"));
+    expect(
+      (screen.getByLabelText(/Número do CRP/) as HTMLInputElement).value,
+    ).toBe("");
+    fireEvent.click(screen.getByLabelText("Estagiário"));
+    fireEvent.click(
+      screen.getByRole("button", { name: "Salvar e enviar convite" }),
+    );
+    await vi.waitFor(() => {
+      const corpo = chamadas.find((c) => c.metodo === "POST")?.corpo;
+      expect(corpo).toMatchObject({ perfil: "estagiario" });
+      expect(corpo).not.toHaveProperty("crp");
+    });
+  });
+
   it("com o formulário vazio, mostra todos os erros em português de uma vez, inclusive o do CRP", async () => {
     simular();
     abrir();

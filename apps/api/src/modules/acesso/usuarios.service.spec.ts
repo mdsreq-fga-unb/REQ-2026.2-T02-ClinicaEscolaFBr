@@ -440,6 +440,15 @@ describe('UsuariosService (RF53 e RF54)', () => {
           crp: '12345',
         }).success,
       ).toBe(false);
+      for (const crp of ['00/12345', '01/0', '01/000']) {
+        expect(
+          cadastroUsuarioSchema.safeParse({
+            ...base,
+            perfil: 'supervisor',
+            crp,
+          }).success,
+        ).toBe(false);
+      }
       expect(
         cadastroUsuarioSchema.parse({
           ...base,
@@ -457,6 +466,15 @@ describe('UsuariosService (RF53 e RF54)', () => {
         crp: '01/12345',
       });
       expect(dados).not.toHaveProperty('crp');
+      // Um CRP inválido esquecido ao trocar de perfil também é descartado.
+      const trocaDePerfil = cadastroUsuarioSchema.safeParse({
+        nome: 'Pedro Lima',
+        email: 'pedro@fbr.edu.br',
+        perfil: 'estagiario',
+        crp: 'lixo',
+      });
+      expect(trocaDePerfil.success).toBe(true);
+      expect(trocaDePerfil.data).not.toHaveProperty('crp');
     });
 
     it('cadastra o supervisor com o CRP e o mostra na lista', async () => {

@@ -30,8 +30,9 @@ export const senhaSchema = z
 
 // Número de inscrição no CRP do supervisor (RF53, usado no RF33 e no RF45): a
 // região com dois dígitos, a barra e o número, como em "01/12345". Aceita o
-// prefixo "CRP" e espaços, e guarda só "01/12345".
-const FORMATO_CRP = /^(?:CRP\s*-?\s*)?(\d{2})\s*\/\s*(\d{1,6})$/i;
+// prefixo "CRP" e espaços, e guarda só "01/12345". Região e número não podem
+// ser só zeros ("00/0").
+const FORMATO_CRP = /^(?:CRP\s*-?\s*)?(?!00)(\d{2})\s*\/\s*(?!0+$)(\d{1,6})$/i;
 export const crpSchema = z
   .string()
   .trim()
@@ -46,15 +47,25 @@ const crpOpcional = z.preprocess(
 );
 
 // Cadastro de usuário institucional pela coordenação (RF53). O CRP é
-// obrigatório só para o supervisor e descartado nos outros perfis.
-export const cadastroUsuarioSchema = z
-  .object({
-    nome: z.string().trim().min(3, "Informe o nome completo."),
-    email: z.email("Informe um e-mail válido.").trim().toLowerCase(),
-    perfil: perfilSchema,
-    crp: crpOpcional,
-  })
-  .superRefine((dados, ctx) => {
+// obrigatório só para o supervisor e descartado nos outros perfis, antes da
+// validação: um CRP digitado e esquecido ao trocar de perfil não trava o
+// cadastro.
+const camposCadastroUsuario = z.object({
+  nome: z.string().trim().min(3, "Informe o nome completo."),
+  email: z.email("Informe um e-mail válido.").trim().toLowerCase(),
+  perfil: perfilSchema,
+  crp: crpOpcional,
+});
+export const cadastroUsuarioSchema = z.preprocess(
+  (valor) => {
+    if (typeof valor !== "object" || valor === null) return valor;
+    const registro = valor as Record<string, unknown>;
+    if (registro.perfil === "supervisor") return registro;
+    const semCrp = { ...registro };
+    delete semCrp.crp;
+    return semCrp;
+  },
+  camposCadastroUsuario.superRefine((dados, ctx) => {
     if (dados.perfil === "supervisor" && !dados.crp) {
       ctx.addIssue({
         code: "custom",
@@ -62,11 +73,9 @@ export const cadastroUsuarioSchema = z
         message: "Informe o número do CRP do supervisor.",
       });
     }
-  })
-  .transform(({ crp, ...dados }) =>
-    dados.perfil === "supervisor" ? { ...dados, crp } : dados,
-  );
-export type CadastroUsuario = z.input<typeof cadastroUsuarioSchema>;
+  }),
+);
+export type CadastroUsuario = z.input<typeof camposCadastroUsuario>;
 export type CadastroUsuarioValidado = z.output<typeof cadastroUsuarioSchema>;
 
 // Correção do CRP de um supervisor pela coordenação (RF53).

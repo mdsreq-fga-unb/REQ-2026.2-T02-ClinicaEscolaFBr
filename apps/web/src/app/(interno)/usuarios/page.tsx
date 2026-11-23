@@ -201,9 +201,16 @@ function FormularioCadastro({
                 className="size-[18px] accent-primary"
                 value={perfil}
                 checked={dados.perfil === perfil}
-                onChange={() =>
-                  setDados({ ...dados, perfil: perfil as Perfil })
-                }
+                onChange={() => {
+                  // Ao sair de Supervisor, o CRP digitado some com o campo.
+                  setDados({
+                    ...dados,
+                    perfil: perfil as Perfil,
+                    crp: perfil === "supervisor" ? dados.crp : "",
+                  });
+                  if (perfil !== "supervisor")
+                    setErros((atuais) => ({ ...atuais, crp: undefined }));
+                }}
               />
               {NOMES_PERFIL[perfil]}
             </label>
@@ -222,7 +229,6 @@ function FormularioCadastro({
               {...props}
               className={classeEntrada}
               autoComplete="off"
-              inputMode="numeric"
               value={dados.crp ?? ""}
               onChange={(e) => setDados({ ...dados, crp: e.target.value })}
             />
@@ -299,7 +305,6 @@ function FormularioCrp({
             {...props}
             className={classeEntrada}
             autoComplete="off"
-            inputMode="numeric"
             value={crp}
             onChange={(e) => setCrp(e.target.value)}
           />
@@ -384,7 +389,7 @@ export default function UsuariosPage() {
   // Ações de cada linha, chamadas como função para não recriar um componente a cada render.
   const acoes = (u: UsuarioListado) => {
     return (
-      <div className="flex flex-wrap gap-1 md:justify-end">
+      <div className="flex flex-wrap gap-1 xl:justify-end">
         {u.situacao === "pendente_ativacao" && (
           <Button
             variant="ghost"
@@ -525,7 +530,11 @@ export default function UsuariosPage() {
         )}
         {lista.data && lista.data.length > 0 && (
           <>
-            <table className="ui-tabela max-md:hidden">
+            {/* Tabela só a partir de 1280 px: abaixo disso, com o menu lateral,
+                as cinco colunas não cabem, e o e-mail quebrava letra por letra
+                (RNF56). Até lá, a lista de cartões. A largura mínima do e-mail deixa um
+                endereço comum numa linha só. */}
+            <table className="ui-tabela max-xl:hidden">
               <caption className="sr-only">Usuários cadastrados</caption>
               <thead>
                 <tr>
@@ -550,7 +559,7 @@ export default function UsuariosPage() {
                         <span className="ui-meta font-normal"> (você)</span>
                       )}
                     </th>
-                    <td className="break-all">{u.email}</td>
+                    <td className="min-w-[16rem] break-all">{u.email}</td>
                     <td>
                       <PerfilUsuario usuario={u} />
                     </td>
@@ -562,7 +571,7 @@ export default function UsuariosPage() {
                 ))}
               </tbody>
             </table>
-            <ul className="divide-y divide-border md:hidden">
+            <ul className="divide-y divide-border xl:hidden">
               {lista.data.map((u) => (
                 <li key={u.id} className="flex flex-col gap-2 p-4">
                   <p className="font-semibold">
