@@ -97,7 +97,7 @@ export default function FilaPage() {
                 </div>
               ) : (
                 <div
-                  className="overflow-x-auto focus-visible:outline-2 focus-visible:outline-primary"
+                  className="relative overflow-x-auto focus-visible:outline-2 focus-visible:outline-primary"
                   tabIndex={0}
                   role="region"
                   aria-label="Tabela da fila de espera"
@@ -161,7 +161,7 @@ export default function FilaPage() {
                 </p>
               ) : (
                 <div
-                  className="overflow-x-auto focus-visible:outline-2 focus-visible:outline-primary"
+                  className="relative overflow-x-auto focus-visible:outline-2 focus-visible:outline-primary"
                   tabIndex={0}
                   role="region"
                   aria-label="Tabela das inscrições com prioridade pendente"
