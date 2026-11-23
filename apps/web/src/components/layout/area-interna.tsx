@@ -152,14 +152,23 @@ export function AreaInterna({ children }: { children: ReactNode }) {
   const [falhaNaSaida, setFalhaNaSaida] = useState(false);
   const pendentes = useTriagemPendente(usuario);
 
-  // Sem sessão, ou com a sessão expirada por inatividade (RNF50): os dados da
-  // pessoa em cache são apagados, e a entrada avisa que a sessão terminou.
+  // Sem sessão: os dados da pessoa em cache são apagados e a área interna leva à
+  // entrada. Só quando havia uma pessoa nesta aba e a sessão acabou (expirada
+  // por inatividade, RNF50) a entrada avisa que a sessão foi encerrada; quem
+  // abre uma página interna sem ter entrado, ou depois de sair, só vê a entrada.
+  const tinhaSessao = useRef(false);
   useEffect(() => {
+    if (usuario) {
+      tinhaSessao.current = true;
+      return;
+    }
     if (usuario !== null) return;
     queryClient.removeQueries({
       predicate: (consulta) => consulta.queryKey[0] !== "sessao",
     });
-    router.replace("/entrar?sessao=encerrada");
+    router.replace(
+      tinhaSessao.current ? "/entrar?sessao=encerrada" : "/entrar",
+    );
   }, [usuario, router, queryClient]);
 
   useEffect(() => {

@@ -113,4 +113,20 @@ describe("Sessão expirada por inatividade (RNF50)", () => {
     expect(client.getQueryData(["usuarios", ""])).toBeUndefined();
     expect(screen.queryByText("Conteúdo interno")).toBeNull();
   });
+
+  it("sem ter entrado nesta aba, leva à entrada sem o aviso de sessão encerrada", async () => {
+    vi.stubGlobal(
+      "fetch",
+      vi.fn(
+        async () =>
+          new Response(JSON.stringify({ message: "Sessão encerrada." }), {
+            status: 401,
+            headers: { "Content-Type": "application/json" },
+          }),
+      ),
+    );
+    abrirAreaInterna();
+    await vi.waitFor(() => expect(replace).toHaveBeenCalledWith("/entrar"));
+    expect(replace).not.toHaveBeenCalledWith("/entrar?sessao=encerrada");
+  });
 });
