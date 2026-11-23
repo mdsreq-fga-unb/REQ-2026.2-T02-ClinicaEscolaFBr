@@ -55,7 +55,17 @@ describe("Fila de espera (RF7)", () => {
       await screen.findByText("Não há inscritos na fila de espera."),
     ).toBeInTheDocument();
     expect(screen.getByText("Pessoa Fictícia")).toBeInTheDocument();
-    expect(screen.queryByRole("table")).not.toBeInTheDocument();
+    // Sem a tabela da fila ordenada; as pendentes ficam na tabela à parte, com
+    // o selo "Pendente de triagem" (prancha 6-1).
+    expect(
+      screen.queryByRole("region", { name: "Tabela da fila de espera" }),
+    ).not.toBeInTheDocument();
+    expect(
+      screen.getByRole("region", {
+        name: "Tabela das inscrições com prioridade pendente",
+      }),
+    ).toBeInTheDocument();
+    expect(screen.getByText("Pendente de triagem")).toBeInTheDocument();
     // A inscrição sem prioridade abre direto na triagem.
     expect(
       screen.getByRole("link", {
