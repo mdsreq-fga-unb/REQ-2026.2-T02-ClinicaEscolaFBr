@@ -41,6 +41,7 @@ import {
 import { Button, buttonVariants } from "@/components/ui/button";
 import { api, ErroApi } from "@/lib/api";
 import { dataBr, dataHoraBr, idade, NOMES_SITUACAO_CASO } from "@/lib/formato";
+import { VersoesDoRelatorio } from "@/components/relatorio-final/relatorio-final";
 import { useSessao } from "@/lib/sessao";
 
 function AcaoSessao({
@@ -567,9 +568,16 @@ export default function ProntuarioPage() {
           <h2 id="titulo-relatorio" className="ui-h2">
             Relatório final
           </h2>
-          <p className="ui-dica">
-            {p.relatorioFinal?.estado ?? "Sem registro neste ciclo."}
-          </p>
+          {/* Versões do relatório final (RF33); a elaboração e a revisão entram
+              acima delas. */}
+          <VersoesDoRelatorio
+            casoId={p.casoId}
+            ciclo={p.cicloAtendimento}
+            podeFinalizar={
+              sessao?.perfil === "estagiario" || sessao?.perfil === "supervisor"
+            }
+            coordenacao={sessao?.perfil === "coordenacao"}
+          />
         </section>
       </div>
     </div>

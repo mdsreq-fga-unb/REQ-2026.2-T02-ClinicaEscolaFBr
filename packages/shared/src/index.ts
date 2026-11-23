@@ -18,3 +18,4 @@ export * from "./correcao-evolucao";
 export * from "./faltas-estagiario";
 export * from "./contribuicao";
 export * from "./declaracoes";
+export * from "./relatorio-final";

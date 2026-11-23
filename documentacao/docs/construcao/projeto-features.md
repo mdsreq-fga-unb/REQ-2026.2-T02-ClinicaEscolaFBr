@@ -2279,6 +2279,14 @@ sequenceDiagram
 
 **Dependências e riscos:** depende do RF28 e do RF32 e da mudança do RF53 (CRP do supervisor). É a maior feature do ciclo; se apertar, a impressão e a entrega podem ser integradas numa segunda PR, depois do fluxo de revisão.
 
+**Na implementação (modelo, impressão e entrega):** a primeira PR do RF33 traz o modelo inteiro e a parte da secretaria; a elaboração do rascunho, o envio e a decisão do supervisor entram depois, sobre as mesmas tabelas.
+
+- **Banco (migration 0024):** `relatorios_finais` (um por prontuário), `versoes_relatorio`, `impressoes_relatorio` e `entregas_relatorio`. O gatilho `proteger_versao_relatorio` deixa o rascunho mudar e passar só para "em revisão"; a versão em revisão só recebe a decisão, sem mudar o texto nem a origem; a aprovada e a devolvida ficam fixas, e nenhuma versão é apagada. Índices únicos garantem uma versão aberta e uma aprovada por relatório. A impressão e a entrega só aceitam a versão aprovada (gatilho `exigir_versao_relatorio_aprovada`) e são só inserção; a entrega tem o `check` da via assinada.
+- **Rotas:** `GET /casos/:id/relatorio-final`, a lista de versões; a secretaria recebe só a aprovada, sem as observações. `GET .../versoes/:versao/impressao` devolve a versão aprovada para a página de impressão, e `POST .../versoes/:versao/impressoes` registra quem imprimiu e quando: a impressão foi separada da abertura da página, para o registro ser feito quando a pessoa manda imprimir, não quando só olha a página. `POST .../entrega` é só da secretaria, depois de imprimir, uma vez por versão, com a data entre a aprovação e hoje e o responsável legal só quando a inscrição tem um. A coordenação consulta as versões, mas não imprime. Toda consulta, permitida ou negada, entra no registro de acessos (RNF52), com a política do prontuário no modo `relatorio_final`, a única exceção da secretaria (RF55).
+- **Telas:** na ficha do paciente, o cartão "Relatório final de {nome}" da secretaria, com o selo "Aprovado em", "Imprimir", a última impressão e "Registrar a entrega" (a confirmação da via assinada com os nomes do estagiário e do supervisor, a quem foi entregue e a data), ou o aviso "Relatório ainda não aprovado". No prontuário, a seção "Relatório final" lista as versões com a situação e, na aprovada, "Finalizar em PDF" para o estagiário e o supervisor. A página de impressão segue a prancha 6-6 e esconde o menu e os botões na impressão (folha A4, uma página no exemplo da prancha).
+- **Testes:** 18 testes da API, com as negações por perfil e as regras do banco, e 9 da tela; a tela foi conferida no navegador contra a prancha 6-6, em 1366 e 390 px, e o PDF gerado pela impressão.
+
+
 ---
 
 ## Controle de assiduidade e alertas (CP9)

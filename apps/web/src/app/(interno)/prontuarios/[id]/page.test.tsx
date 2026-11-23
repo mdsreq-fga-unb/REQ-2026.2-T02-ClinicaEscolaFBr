@@ -60,6 +60,8 @@ describe("elementos mínimos do prontuário (RF27, RNF25, RNF51, RNF52)", () => 
           acoesFalta: { registrar: false, justificar: false },
           acoesCancelamento: { cancelar: false, reverter: false },
         } as never;
+      // Ciclo sem relatório final (RF33): a API responde sem corpo.
+      if (path === "/casos/c1/relatorio-final?ciclo=2") return "" as never;
       throw new Error(`Rota inesperada: ${path}`);
     });
     const client = new QueryClient({
@@ -92,7 +94,9 @@ describe("elementos mínimos do prontuário (RF27, RNF25, RNF51, RNF52)", () => 
     expect(
       screen.getByText("Não há sessões registradas neste ciclo."),
     ).toBeTruthy();
-    expect(screen.getAllByText("Sem registro neste ciclo.")).toHaveLength(3);
+    await waitFor(() =>
+      expect(screen.getAllByText("Sem registro neste ciclo.")).toHaveLength(3),
+    );
     expect(screen.getByText("Ver histórico de responsáveis (0)")).toBeTruthy();
     await waitFor(() => expect(api).toHaveBeenCalledWith("/prontuarios/p1"));
   });

@@ -126,7 +126,7 @@ export function FaixaAlertas({ perfil }: { perfil: Perfil }) {
     : "Avalie o desligamento.";
 
   return (
-    <div role="status" className="flex flex-col">
+    <div role="status" className="flex flex-col print:hidden">
       {limite.length === 1 && (
         <div className="flex flex-wrap items-center gap-x-5 gap-y-3 border-b-4 border-[#8f1a10] bg-destructive px-4 py-3 text-white md:px-10">
           <AlertTriangle aria-hidden className="size-5 shrink-0" />

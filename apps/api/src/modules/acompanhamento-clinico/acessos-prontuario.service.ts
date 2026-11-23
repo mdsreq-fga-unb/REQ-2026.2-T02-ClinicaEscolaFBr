@@ -34,6 +34,12 @@ export const OPERACOES_PRONTUARIO: Record<
   registrar_evolucao: 'criacao',
   marcar_sessao_realizada: 'alteracao',
   corrigir_evolucao: 'alteracao',
+  // Relatório final (RF33): a consulta e a página de impressão são leitura; a
+  // impressão e a entrega criam registros.
+  consultar_relatorio_final: 'visualizacao',
+  abrir_impressao_relatorio_final: 'visualizacao',
+  imprimir_relatorio_final: 'criacao',
+  registrar_entrega_relatorio_final: 'criacao',
 };
 
 export function tipoDeAcesso(
