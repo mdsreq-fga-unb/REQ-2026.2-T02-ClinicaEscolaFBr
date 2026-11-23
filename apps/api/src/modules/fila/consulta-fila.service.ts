@@ -38,7 +38,9 @@ export class ConsultaFilaService {
         const situacao: SituacaoInscricao['situacao'] =
           estado === 'em_atendimento'
             ? 'em_atendimento'
-            : estado === 'encerrado' || estado === 'desligado_por_faltas'
+            : estado === 'encerrado' ||
+                estado === 'desligado_por_faltas' ||
+                estado === 'encerrado_por_alta'
               ? 'procure_secretaria'
               : 'em_triagem';
         await this.auditoria.registrar(

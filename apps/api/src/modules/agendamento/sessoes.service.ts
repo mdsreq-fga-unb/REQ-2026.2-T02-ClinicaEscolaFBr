@@ -17,7 +17,7 @@ import {
   ilike,
   inArray,
   lt,
-  ne,
+  notInArray,
   or,
 } from 'drizzle-orm';
 import {
@@ -120,7 +120,7 @@ export class SessoesService {
       .leftJoin(estagiario, eq(estagiario.id, vinculosEstagiario.estagiarioId))
       .where(
         and(
-          ne(casos.situacao, 'encerrado'),
+          notInArray(casos.situacao, ['encerrado', 'encerrado_por_alta']),
           busca
             ? ilike(inscricoes.nomeCompleto, `%${escaparLike(busca)}%`)
             : undefined,
@@ -182,6 +182,12 @@ export class SessoesService {
     autor: UsuarioAutenticado,
   ): Promise<ResultadoAgendamento> {
     const paciente = await this.buscarPaciente(dados.casoId);
+    // A alta encerra o vínculo: o motivo certo vem antes do "sem estagiário" (RF68).
+    if (paciente.situacao === 'encerrado_por_alta') {
+      throw new UnprocessableEntityException(
+        'Caso encerrado por alta. Para um novo agendamento, a coordenação precisa reabrir o caso.',
+      );
+    }
     if (autor.perfil === 'estagiario' && paciente.estagiarioId !== autor.id) {
       throw new ForbiddenException(NAO_RESPONSAVEL);
     }

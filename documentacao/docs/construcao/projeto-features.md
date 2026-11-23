@@ -2212,6 +2212,25 @@ sequenceDiagram
 
 **Dependências e riscos:** depende do RF28 e integra o RF21, o RF37 e o RF48. A migration acrescenta o valor `encerrado_por_alta` ao enum `situacao_caso`, e as consultas que listam os casos ativos precisam tratá-lo como encerrado.
 
+**Na implementação:**
+
+- **Rotas.** As três rotas do projeto, mais `GET /casos/:id/alta`, com a situação da alta para a ficha: o pedido aberto, as altas confirmadas e as reabertas, o que o perfil pode fazer, o motivo de não poder reabrir e quem pode ter pedido a reabertura. As rotas não usam o `PerfisGuard`; o serviço confere o perfil e a responsabilidade pelo caso antes da transação, para a tentativa negada ficar na auditoria sem ser desfeita pelo rollback.
+- **Atribuição do supervisor mantida.** O projeto previa encerrar também a atribuição. Ela fica vigente, como no desligamento (RF37), para o supervisor continuar vendo o caso e o histórico e poder pedir a reabertura. O caso `encerrado_por_alta` não conta no limite de casos do supervisor (RF20 e RF25). A distribuição do RF48 não muda, porque ela já depende do vínculo vigente. Na reabertura, só o vínculo do estagiário é recriado.
+- **Vaga liberada.** A `vagas_liberadas` passa a aceitar a origem `alta_id`, além do `desligamento_id`, com um `check` de origem única. A vaga aparece em "Vagas liberadas", como a do desligamento. Na reabertura, a vaga que ninguém ocupou é encerrada.
+- **Sessões futuras.** São canceladas como `administrativo`, com origem `supervisor` e a justificativa "Caso encerrado por alta.", e por isso não contam como falta de ninguém.
+- **Data da alta e indicadores.** A data da alta não pode ser futura. O vínculo termina no instante da confirmação, que é quando o RF48 deixa de contar o caso.
+- **Sessões sem evolução.** Antes de enviar a alta, o estagiário vê quantas sessões realizadas do ciclo ainda estão sem evolução. Depois da alta, ele perde o vínculo e não registra mais evolução (RF28).
+- **Sigilo (RNF17 e RNF51).** O motivo da alta e o da reabertura são cifrados e ficam fora da auditoria. A secretaria vê a alta sem o motivo.
+- **Proteção no banco (RNF27).** Depois de confirmada, a alta não é alterada nem apagada (`proteger_campos_preenchidos`). A reabertura é só inserção, e a vaga mantém a origem fixa.
+- **Outras regras.** O vínculo de estagiário (RF21) recusa o caso encerrado por alta com 409. O agendamento (RF10) recusa com 422, com a mensagem própria. A triagem e a consulta da fila (RF8) tratam o caso como encerrado.
+- **Telas.** Seção "Alta" na ficha do paciente, para todos os perfis que veem o caso:
+    - o formulário do estagiário, com a data, o motivo, o aviso das sessões sem evolução e o nome do supervisor que confirma;
+    - a etiqueta "Alta aguardando confirmação do supervisor", e o pedido com "Confirmar alta" para o supervisor;
+    - o caso "Encerrado por alta em …", com a confirmação e a vaga liberada;
+    - o diálogo "Reabrir o caso de …?" da coordenação, com quem pediu e o motivo;
+    - o aviso do semestre anterior;
+    - a lista das altas reabertas.
+
 ---
 
 ## Relatório final de evolução (CP8)

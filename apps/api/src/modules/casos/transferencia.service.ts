@@ -337,6 +337,7 @@ export class TransferenciaService {
                 notInArray(casos.situacao, [
                   'encerrado',
                   'desligado_por_faltas',
+                  'encerrado_por_alta',
                 ]),
               ),
             );

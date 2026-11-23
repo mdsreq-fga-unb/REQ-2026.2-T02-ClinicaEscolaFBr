@@ -41,6 +41,7 @@ import {
 import { DialogoVincular } from "@/components/casos/vincular";
 import { CartaoContribuicao } from "@/components/administrativo/contribuicao";
 import { AcessoNegado } from "@/components/comum/acesso-negado";
+import { AltaDoCaso } from "@/components/casos/alta";
 import { SessoesComPresencaDaFicha } from "@/components/declaracoes/sessoes-com-presenca";
 import { Aviso } from "@/components/comum/aviso";
 import { Dados } from "@/components/comum/dados";
@@ -276,6 +277,9 @@ export default function PacientePage() {
             ]}
           />
         </section>
+        {/* Alta do caso (RF68): o estagiário e o supervisor do caso veem a ficha
+            por aqui. */}
+        <AltaDoCaso casoId={r.casoId} nome={r.nome} />
         <SessoesComPresencaDaFicha casoId={r.casoId} />
         {dialogoVincular}
       </div>
@@ -471,6 +475,8 @@ export default function PacientePage() {
           somenteLeitura={coordenacao}
         />
       )}
+      {/* Alta do caso (RF68): pedido, confirmação, encerramento e reabertura. */}
+      <AltaDoCaso casoId={d.casoId} nome={d.nome} />
       {/* Sessões com presença registrada (RF44): de todos os ciclos do caso,
           só para consulta até a emissão da declaração (RF45). */}
       <SessoesComPresencaDaFicha casoId={d.casoId} />

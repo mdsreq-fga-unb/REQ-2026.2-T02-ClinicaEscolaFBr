@@ -14,7 +14,7 @@ import {
   desc,
   eq,
   exists,
-  ne,
+  notInArray,
   notExists,
   or,
   sql,
@@ -118,7 +118,10 @@ export class TriagemService {
                 .where(
                   and(
                     eq(casos.inscricaoId, inscricoes.id),
-                    ne(casos.situacao, 'encerrado'),
+                    notInArray(casos.situacao, [
+                      'encerrado',
+                      'encerrado_por_alta',
+                    ]),
                   ),
                 ),
             ),
@@ -179,7 +182,7 @@ export class TriagemService {
       .innerJoin(usuarios, eq(usuarios.id, decisoesPrioridade.decididaPor))
       // Casos encerrados saem da lista, para ela não crescer sem limite (RNF21).
       .innerJoin(casos, eq(casos.inscricaoId, decisoesPrioridade.inscricaoId))
-      .where(ne(casos.situacao, 'encerrado'))
+      .where(notInArray(casos.situacao, ['encerrado', 'encerrado_por_alta']))
       .orderBy(
         asc(decisoesPrioridade.inscricaoId),
         desc(decisoesPrioridade.decididaEm),

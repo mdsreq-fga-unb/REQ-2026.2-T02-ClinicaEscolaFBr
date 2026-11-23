@@ -2,6 +2,7 @@ import { sql } from "drizzle-orm";
 import {
   boolean,
   check,
+  date,
   type AnyPgColumn,
   integer,
   pgEnum,
@@ -179,3 +180,60 @@ export const transferenciasCaso = pgTable(
     ),
   ],
 );
+
+// Encerramento por alta (RF68): o pedido do estagiário responsável e a
+// confirmação do supervisor do caso. Enquanto confirmada_em é nulo, o caso
+// continua em atendimento. Um único pedido aberto por caso. O motivo é cifrado
+// (RNF51), e o registro não é apagado nem alterado depois de confirmado (RNF27):
+// a reabertura é uma linha própria.
+export const encerramentosAlta = pgTable(
+  "encerramentos_alta",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    casoId: uuid("caso_id")
+      .notNull()
+      .references(() => casos.id),
+    cicloAtendimento: integer("ciclo_atendimento").notNull(),
+    dataAlta: date("data_alta").notNull(),
+    motivoCifrado: text("motivo_cifrado").notNull(),
+    pedidaPor: uuid("pedida_por")
+      .notNull()
+      .references(() => usuarios.id),
+    pedidaEm: timestamp("pedida_em", { withTimezone: true })
+      .notNull()
+      .defaultNow(),
+    confirmadaPor: uuid("confirmada_por").references(() => usuarios.id),
+    confirmadaEm: timestamp("confirmada_em", { withTimezone: true }),
+  },
+  (t) => [
+    index("encerramentos_alta_caso").on(t.casoId, t.pedidaEm),
+    uniqueIndex("encerramentos_alta_pedido_aberto")
+      .on(t.casoId)
+      .where(sql`${t.confirmadaEm} is null`),
+    check(
+      "encerramentos_alta_confirmacao_completa",
+      sql`(${t.confirmadaPor} is null) = (${t.confirmadaEm} is null)`,
+    ),
+  ],
+);
+
+// Reabertura de um caso encerrado por alta, só pela coordenação (RF68): quem
+// pediu (o estagiário da alta ou o supervisor do caso), quem reabriu, quando e o
+// motivo. Uma por alta; o encerramento continua no histórico.
+export const reaberturasCaso = pgTable("reaberturas_caso", {
+  id: uuid("id").primaryKey().defaultRandom(),
+  encerramentoId: uuid("encerramento_id")
+    .notNull()
+    .unique()
+    .references(() => encerramentosAlta.id),
+  pedidaPor: uuid("pedida_por")
+    .notNull()
+    .references(() => usuarios.id),
+  reabertaPor: uuid("reaberta_por")
+    .notNull()
+    .references(() => usuarios.id),
+  reabertaEm: timestamp("reaberta_em", { withTimezone: true })
+    .notNull()
+    .defaultNow(),
+  motivoCifrado: text("motivo_cifrado").notNull(),
+});
