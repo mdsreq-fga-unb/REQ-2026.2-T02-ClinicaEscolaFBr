@@ -409,7 +409,7 @@ Cada evolução persistida deve conservar sua associação à sessão, ao pacien
 A conformidade deve ser verificada por comparação entre sessão, evolução, correções, complementos, validações, encerramento e histórico antes e depois de uma transferência de caso.
 
 Classificação: confiabilidade e auditoria (URPS+).
-Rastreabilidade: Features "Registrar evolução da sessão realizada", "Validar evolução pelo supervisor" e "Encerrar caso por alta" → CP7 — Registro de evolução por sessão; relacionada a RF25 e RNF20.{{ origem("RNF27") }}
+Rastreabilidade: Features "Registrar evolução da sessão realizada", "Registrar complemento de evolução da sessão", "Validar evolução pelo supervisor" e "Encerrar caso por alta" → CP7 — Registro de evolução por sessão; relacionada a RF25 e RNF20.{{ origem("RNF27") }}
 {{ registro("RNF27") }}
 
 **RNF28 — Auditoria das correções de evolução**{ #rnf28 }
