@@ -36,10 +36,11 @@ As PRs abertas em 23/11 entram nesta ordem. A ordem respeita as que estão empil
 | 6 | [#300](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/pull/300) | Tela da declaração (RF45) | — | Usa a API da #296 |
 | 7 | [#295](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/pull/295) | Relatório institucional em PDF (RF49) | — | — |
 | 8 | [#297](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/pull/297) | Correções do Ciclo 6 (sessão expirada, fila, ficha) | — | — |
-| 9 | [#301](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/pull/301) | Encerramento por alta (RF68) | `0022` → `0025` | Renumerar antes do merge |
-| 10 | [#302](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/pull/302) | Estado das features no catálogo | — | — |
-| 11 | [#304](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/pull/304) | Entrega final e o fim do Ciclo 7 | — | — |
-| 12 em diante | As features dos demais Líderes | Na ordem em que forem aprovadas | Próximo número livre | Renumerar antes do merge |
+| 9 | [#305](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/pull/305) | Contato de emergência e endereço completo obrigatórios na inscrição (RF1) | — | — |
+| 10 | [#301](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/pull/301) | Encerramento por alta (RF68) | `0022` → `0025` | Renumerar antes do merge |
+| 11 | [#302](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/pull/302) | Estado das features no catálogo | — | — |
+| 12 | [#304](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/pull/304) | Entrega final e o fim do Ciclo 7 | — | — |
+| 13 em diante | As features dos demais Líderes | Na ordem em que forem aprovadas | Próximo número livre | Renumerar antes do merge |
 
 **Regras da integração:**
 
