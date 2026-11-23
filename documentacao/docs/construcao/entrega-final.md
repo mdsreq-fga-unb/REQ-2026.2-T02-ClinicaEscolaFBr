@@ -38,7 +38,7 @@ As PRs abertas em 23/11 entram nesta ordem. A ordem respeita as que estão empil
 | 8 | [#297](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/pull/297) | Correções do Ciclo 6 (sessão expirada, fila, ficha) | — | — |
 | 9 | [#301](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/pull/301) | Encerramento por alta (RF68) | `0022` → `0025` | Renumerar antes do merge |
 | 10 | [#302](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/pull/302) | Estado das features no catálogo | — | — |
-| 11 | Esta PR | Entrega final e o fim do Ciclo 7 | — | — |
+| 11 | [#304](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/pull/304) | Entrega final e o fim do Ciclo 7 | — | — |
 | 12 em diante | As features dos demais Líderes | Na ordem em que forem aprovadas | Próximo número livre | Renumerar antes do merge |
 
 **Regras da integração:**
