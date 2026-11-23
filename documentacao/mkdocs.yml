@@ -184,6 +184,7 @@ nav:
           - Implantação e segurança: construcao/implantacao.md
           - Cópia de segurança e restauração: construcao/copia-de-seguranca.md
           - Teste de carga: construcao/teste-de-carga.md
+          - "Entrega final: integração, homologação e produção": construcao/entrega-final.md
   - Histórico das unidades:
       - Unidade 3 (em andamento):
           - Início da unidade: historico/unidade-3/index.md
