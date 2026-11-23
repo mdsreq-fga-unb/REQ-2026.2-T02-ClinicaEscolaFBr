@@ -153,3 +153,70 @@ export function centavosDoCampo(texto: string): number | null {
   const [reais, centavos = ""] = limpo.replace(/\./g, "").split(",");
   return Number(reais) * 100 + Number(centavos.padEnd(2, "0"));
 }
+
+// Bloqueio do agendamento e perda da vaga (RF43).
+
+// O prazo terminou: o último dia para pagar já passou, em Brasília. Vinculado em
+// 17/11, paga até 27/11, e o aviso aparece a partir de 28/11.
+export const prazoVencido = (ate: string, agora = new Date()) =>
+  hojeEmBrasilia(agora) > ate;
+
+// Situação da contribuição mostrada no "Agendar sessão" (RF43). A 1ª sessão do
+// ciclo nunca é bloqueada; da 2ª em diante, o agendamento exige o pagamento.
+export type ContribuicaoNoAgendamento = {
+  situacao: "pendente" | "efetivada";
+  // Pendente com uma sessão já realizada no ciclo: o agendamento é recusado.
+  bloqueia: boolean;
+  // Data do pagamento vigente, só para a secretaria, que registra o pagamento.
+  pagoEm: string | null;
+};
+
+// Corpo do 422 do agendamento bloqueado (RF43).
+export type BloqueioContribuicao = {
+  codigo: "contribuicao_pendente";
+  message: string;
+};
+
+// Caso com o prazo vencido sem pagamento (RF43): o aviso à secretaria e à
+// coordenação, que confirmam a perda da vaga.
+export type PrazoContribuicaoVencido = {
+  casoId: string;
+  numero: string;
+  nome: string;
+  estagiario: string;
+  vinculadoEm: string;
+  // Último dia do prazo (AAAA-MM-DD).
+  ate: string;
+};
+
+// Prévia da perda da vaga, para o diálogo de confirmação (prancha 8-2).
+export type PreviaPerdaVaga = {
+  estagiario: string;
+  vinculadoEm: string;
+  ate: string;
+  // Início das sessões futuras que a confirmação cancela.
+  sessoesFuturas: string[];
+};
+
+// Perda da vaga já confirmada, para a ficha ("Na fila de espera desde …").
+export type PerdaVagaConfirmada = {
+  confirmadaPor: string;
+  confirmadaEm: string;
+  sessoesCanceladas: number;
+  estagiario: string;
+};
+
+export type PerdaVagaDoCaso = {
+  // O prazo venceu e a perda ainda não foi confirmada: a ficha mostra o aviso.
+  previa: PreviaPerdaVaga | null;
+  // A perda mais recente do caso, se ele está de volta à fila por ela.
+  confirmada: PerdaVagaConfirmada | null;
+  // Entrada do caso na fila, usada no desempate (RF7, DF33).
+  naFilaDesde: string;
+};
+
+export type ResultadoPerdaVaga = {
+  estagiario: string;
+  sessoesCanceladas: number;
+  naFilaDesde: string;
+};

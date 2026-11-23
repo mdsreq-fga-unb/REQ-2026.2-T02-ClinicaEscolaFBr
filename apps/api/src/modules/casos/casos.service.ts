@@ -52,6 +52,7 @@ import { decifrar } from '../../common/criptografia';
 import { DB } from '../../database/database.module';
 import { ParametrosService } from '../../parametros/parametros.service';
 import { FilaService } from '../fila/fila.service';
+import { ContribuicaoPendenteService } from '../administrativo/contribuicao-pendente.service';
 import { DesligamentosService } from '../assiduidade/desligamentos.service';
 
 const estagiario = aliasedTable(usuarios, 'estagiario');
@@ -75,6 +76,7 @@ export class CasosService {
     private readonly config: ConfigService,
     private readonly desligamentos: DesligamentosService,
     private readonly fila: FilaService,
+    private readonly contribuicaoPendente: ContribuicaoPendenteService,
   ) {}
 
   // Prioridade clínica vigente de cada inscrição: a decisão mais recente (RNF5).
@@ -718,6 +720,14 @@ export class CasosService {
       });
       throw new ForbiddenException('Você não tem acesso a este caso.');
     }
-    return this.paraResposta(linha, usuario);
+    // Prazo da contribuição vencido (RF43): o aviso aparece para todos os
+    // perfis com acesso ao caso; só a secretaria e a coordenação confirmam.
+    return {
+      ...this.paraResposta(linha, usuario),
+      prazoContribuicaoVencido:
+        linha.situacao === 'em_atendimento'
+          ? await this.contribuicaoPendente.vencimento(casoId)
+          : null,
+    };
   }
 }

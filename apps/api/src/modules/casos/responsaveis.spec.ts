@@ -179,6 +179,8 @@ describe('Consulta de responsáveis pelo caso (RF22)', () => {
           situacao: 'em_atendimento',
           supervisor: 'Carla Mendes Souza',
           estagiario: 'Ana Beatriz Costa',
+          // Vinculado agora: o prazo da contribuição não venceu (RF43).
+          prazoContribuicaoVencido: null,
         });
         expect(JSON.stringify(r.body)).not.toMatch(
           /sigilos|prontuario|prioridade/i,
@@ -211,6 +213,7 @@ describe('Consulta de responsáveis pelo caso (RF22)', () => {
         situacao: 'aguardando_vinculo',
         supervisor: 'Carla Mendes Souza',
         estagiario: null,
+        prazoContribuicaoVencido: null,
       });
       expect((await responsaveis(semNinguem, 'coordenacao')).body).toEqual({
         casoId: semNinguem,
@@ -219,6 +222,7 @@ describe('Consulta de responsáveis pelo caso (RF22)', () => {
         situacao: 'aguardando_distribuicao',
         supervisor: null,
         estagiario: null,
+        prazoContribuicaoVencido: null,
       });
     });
 

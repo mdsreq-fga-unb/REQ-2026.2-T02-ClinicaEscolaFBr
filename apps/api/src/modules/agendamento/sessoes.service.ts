@@ -45,6 +45,7 @@ import { escaparLike } from '../../common/busca';
 import { DB } from '../../database/database.module';
 import { EmailService } from '../../notificacoes/email.service';
 import { ParametrosService } from '../../parametros/parametros.service';
+import { ContribuicaoPendenteService } from '../administrativo/contribuicao-pendente.service';
 import { gerarToken } from '../acesso/credenciais';
 import { prazoDeConfirmacao } from './confirmacao.service';
 import {
@@ -94,6 +95,7 @@ export class SessoesService {
     private readonly email: EmailService,
     private readonly parametros: ParametrosService,
     private readonly config: ConfigService,
+    private readonly contribuicao: ContribuicaoPendenteService,
   ) {}
 
   // Pacientes para a busca da tela (RF10). O estagiário vê só os próprios pacientes.
@@ -105,6 +107,7 @@ export class SessoesService {
       .select({
         casoId: casos.id,
         nome: inscricoes.nomeCompleto,
+        ciclo: casos.cicloAtendimento,
         estagiarioId: estagiario.id,
         estagiarioNome: estagiario.nome,
       })
@@ -131,6 +134,15 @@ export class SessoesService {
       )
       .orderBy(asc(inscricoes.nomeCompleto))
       .limit(20);
+    // Contribuição do ciclo (RF43), para a tela avisar antes de agendar.
+    const contribuicao = new Map(
+      await this.contribuicao.noAgendamento(
+        linhas
+          .filter((l) => l.estagiarioId)
+          .map((l) => ({ id: l.casoId, ciclo: l.ciclo })),
+        usuario.perfil,
+      ),
+    );
     return linhas.map((l) => ({
       casoId: l.casoId,
       nome: l.nome,
@@ -138,6 +150,7 @@ export class SessoesService {
         l.estagiarioId && l.estagiarioNome
           ? { id: l.estagiarioId, nome: l.estagiarioNome }
           : null,
+      contribuicao: contribuicao.get(l.casoId) ?? null,
     }));
   }
 
@@ -193,6 +206,11 @@ export class SessoesService {
         'Só é possível agendar sessão para paciente em atendimento.',
       );
     }
+    // Da 2ª sessão do ciclo em diante, só com a contribuição paga (RF43).
+    await this.contribuicao.recusarAgendamento(
+      { id: dados.casoId, ciclo: paciente.cicloAtendimento },
+      paciente.nome,
+    );
     const estagiarioId = paciente.estagiarioId;
 
     const duracao = await this.parametros.numero('duracao_sessao_minutos');

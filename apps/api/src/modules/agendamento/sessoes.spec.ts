@@ -8,6 +8,7 @@ import {
   casos,
   inscricoes,
   linksConfirmacao,
+  pagamentosContribuicao,
   sessoesAtendimento,
   usuarios,
   vinculosEstagiario,
@@ -466,6 +467,7 @@ describe('Agendamento de sessão (RF10)', () => {
         casoId: pacientes.mariana,
         nome: 'Mariana Alves Toledo',
         estagiario: { id: pessoas.ana.id, nome: 'Ana Beatriz Costa' },
+        contribuicao: { situacao: 'pendente', bloqueia: false, pagoEm: null },
       },
     ]);
   });
@@ -520,5 +522,140 @@ describe('Agendamento de sessão (RF10)', () => {
     }).expect(422);
     expect(res.body.message).toContain('paciente em atendimento');
     expect(await db.select().from(sessoesAtendimento)).toEqual([]);
+  });
+
+  describe('contribuição social pendente (RF43)', () => {
+    // Sessão já realizada no ciclo 1 do caso, `horasAtras` horas atrás.
+    async function realizarSessao(casoId: string, horasAtras = 24) {
+      const inicio = new Date(Date.now() - horasAtras * 60 * 60_000);
+      inicio.setUTCMinutes(0, 0, 0);
+      await db.insert(sessoesAtendimento).values({
+        casoId,
+        cicloAtendimento: 1,
+        estagiarioId: pessoas.ana.id,
+        inicio,
+        termino: new Date(inicio.getTime() + 50 * 60_000),
+        fimIntervaloAnotacoes: new Date(inicio.getTime() + 60 * 60_000),
+        status: 'realizada',
+        agendadaPor: pessoas.secretaria.id,
+      });
+    }
+    const pagar = (casoId: string, cicloAtendimento = 1) =>
+      db.insert(pagamentosContribuicao).values({
+        casoId,
+        cicloAtendimento,
+        versao: 1,
+        valorCentavos: 3500,
+        pagoEm: '2026-11-19',
+        forma: 'pix',
+        registradoPor: pessoas.secretaria.id,
+      });
+
+    it('a 1ª sessão nunca é bloqueada pela contribuição pendente', async () => {
+      await agendar('secretaria', {
+        casoId: pacientes.sergio,
+        inicio: as('10:00'),
+      }).expect(201);
+      // Uma sessão agendada (ainda não realizada) também não bloqueia a próxima.
+      await agendar('secretaria', {
+        casoId: pacientes.sergio,
+        inicio: as('14:00'),
+      }).expect(201);
+    });
+
+    it('com uma sessão realizada e a contribuição pendente, recusa o agendamento com o motivo (422), sem gravar nada', async () => {
+      await realizarSessao(pacientes.sergio);
+      const antes = await db.select().from(sessoesAtendimento);
+      const res = await agendar('ana', {
+        casoId: pacientes.sergio,
+        inicio: as('10:00'),
+      }).expect(422);
+      expect(res.body).toMatchObject({
+        codigo: 'contribuicao_pendente',
+        message:
+          'A contribuição social de Sérgio Antunes Freitas está pendente. A partir da 2ª sessão, o agendamento exige o pagamento registrado.',
+      });
+      expect(await db.select().from(sessoesAtendimento)).toHaveLength(
+        antes.length,
+      );
+      expect(
+        (await db.select().from(auditoria)).filter(
+          (e) => e.operacao === 'agendar_sessao',
+        ),
+      ).toEqual([]);
+    });
+
+    it('o pagamento é lido a cada agendamento: registrado, a 2ª sessão é permitida', async () => {
+      await realizarSessao(pacientes.sergio);
+      await agendar('secretaria', {
+        casoId: pacientes.sergio,
+        inicio: as('10:00'),
+      }).expect(422);
+      await pagar(pacientes.sergio);
+      await agendar('secretaria', {
+        casoId: pacientes.sergio,
+        inicio: as('10:00'),
+      }).expect(201);
+    });
+
+    it('o pagamento de um ciclo anterior não libera o ciclo atual', async () => {
+      await pagar(pacientes.sergio, 1);
+      await db
+        .update(casos)
+        .set({ cicloAtendimento: 2 })
+        .where(eq(casos.id, pacientes.sergio));
+      const inicio = new Date(Date.now() - 24 * 60 * 60_000);
+      inicio.setUTCMinutes(0, 0, 0);
+      await db.insert(sessoesAtendimento).values({
+        casoId: pacientes.sergio,
+        cicloAtendimento: 2,
+        estagiarioId: pessoas.ana.id,
+        inicio,
+        termino: new Date(inicio.getTime() + 50 * 60_000),
+        fimIntervaloAnotacoes: new Date(inicio.getTime() + 60 * 60_000),
+        status: 'realizada',
+        agendadaPor: pessoas.secretaria.id,
+      });
+      await agendar('secretaria', {
+        casoId: pacientes.sergio,
+        inicio: as('10:00'),
+      }).expect(422);
+    });
+
+    it('a busca traz a situação de cada paciente; a data do pagamento só vai para a secretaria', async () => {
+      await realizarSessao(pacientes.sergio);
+      await realizarSessao(pacientes.mariana, 48);
+      await pagar(pacientes.mariana);
+      const { body } = await request(app.getHttpServer())
+        .get('/sessoes/pacientes')
+        .set(como('secretaria'))
+        .expect(200);
+      const de = (nome: string) =>
+        body.find((p: { nome: string }) => p.nome.startsWith(nome))
+          .contribuicao;
+      expect(de('Sérgio')).toEqual({
+        situacao: 'pendente',
+        bloqueia: true,
+        pagoEm: null,
+      });
+      expect(de('Mariana')).toEqual({
+        situacao: 'efetivada',
+        bloqueia: false,
+        pagoEm: '2026-11-19',
+      });
+      // Sem estagiário vinculado, não há contribuição devida.
+      expect(de('Rafael')).toBeNull();
+
+      const { body: daAna } = await request(app.getHttpServer())
+        .get('/sessoes/pacientes')
+        .query({ busca: 'mari' })
+        .set(como('ana'))
+        .expect(200);
+      expect(daAna[0].contribuicao).toEqual({
+        situacao: 'efetivada',
+        bloqueia: false,
+        pagoEm: null,
+      });
+    });
   });
 });

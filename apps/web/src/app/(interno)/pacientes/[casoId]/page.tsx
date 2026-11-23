@@ -13,6 +13,7 @@ import {
   type ResultadoVinculo,
   type ResponsaveisDoCaso,
   type ResultadoTransferencia,
+  type ResultadoPerdaVaga,
   type SessaoAReagendar,
   type SituacaoCaso,
   situacaoDistribuicao,
@@ -40,6 +41,11 @@ import {
 } from "@/components/casos/transferir";
 import { DialogoVincular } from "@/components/casos/vincular";
 import { CartaoContribuicao } from "@/components/administrativo/contribuicao";
+import {
+  AvisoPrazoVencidoSemAcao,
+  PerdaVaga,
+  VagaPerdida,
+} from "@/components/administrativo/perda-vaga";
 import { AcessoNegado } from "@/components/comum/acesso-negado";
 import { SessoesComPresencaDaFicha } from "@/components/declaracoes/sessoes-com-presenca";
 import { Aviso } from "@/components/comum/aviso";
@@ -81,7 +87,8 @@ type Resultado =
   | { tipo: "desligado"; dados: ResultadoDesligamento }
   | { tipo: "revertido"; dados: ResultadoReversao }
   | { tipo: "vinculado"; dados: ResultadoVinculo }
-  | { tipo: "transferido"; dados: ResultadoTransferencia };
+  | { tipo: "transferido"; dados: ResultadoTransferencia }
+  | { tipo: "vaga_perdida"; dados: ResultadoPerdaVaga };
 
 // Situações em que a coordenação transfere o caso a outro supervisor ou
 // estagiário (RF25). O caso que aguarda distribuição vai pela distribuição (RF20).
@@ -202,6 +209,26 @@ export default function PacientePage() {
       O prontuário do caso foi criado.
     </Aviso>
   );
+  // Perda da vaga pela contribuição pendente (RF43): o caso volta à fila e a
+  // ficha passa a mostrar só a identificação, com o resultado no topo.
+  const avisoVagaPerdida = resultado?.tipo === "vaga_perdida" && (
+    <Aviso
+      tipo="sucesso"
+      focar
+      titulo={`Perda da vaga confirmada: ${r.nome} voltou à fila de espera.`}
+    >
+      O vínculo com {resultado.dados.estagiario} foi encerrado e a vaga foi
+      liberada.{" "}
+      {resultado.dados.sessoesCanceladas === 0
+        ? "Não havia sessões futuras para cancelar."
+        : resultado.dados.sessoesCanceladas === 1
+          ? "A sessão futura foi cancelada."
+          : `As ${resultado.dados.sessoesCanceladas} sessões futuras foram canceladas.`}
+    </Aviso>
+  );
+  // O estagiário e o supervisor veem o prazo vencido, sem a confirmação.
+  const avisoPrazoSemAcao = !(secretaria || coordenacao) &&
+    r.prazoContribuicaoVencido && <AvisoPrazoVencidoSemAcao nome={r.nome} />;
   const avisoClinico = (
     <Aviso
       tipo="info"
@@ -252,7 +279,10 @@ export default function PacientePage() {
       <div className="flex flex-col gap-6">
         {trilha}
         {avisoVinculo}
+        {avisoVagaPerdida}
         <h1 className="ui-titulo">{r.nome}</h1>
+        {avisoPrazoSemAcao}
+        {(secretaria || coordenacao) && <VagaPerdida casoId={r.casoId} />}
         {secretaria && avisoClinico}
         {quadro()}
         <section aria-labelledby="identificacao" className="ui-cartao">
@@ -392,6 +422,16 @@ export default function PacientePage() {
         )}
       </div>
 
+      {/* Prazo da contribuição vencido (RF43): a secretaria e a coordenação
+          confirmam a perda da vaga. */}
+      {d.situacao === "em_atendimento" && (
+        <PerdaVaga
+          casoId={d.casoId}
+          nome={d.nome}
+          podeRegistrarPagamento={secretaria}
+          aoConfirmar={(dados) => setResultado({ tipo: "vaga_perdida", dados })}
+        />
+      )}
       {d.prontuarioId === undefined && avisoClinico}
       {quadro(
         coordenacao && d.supervisor && TRANSFERIVEIS.includes(d.situacao) ? (
@@ -465,11 +505,13 @@ export default function PacientePage() {
       {/* Contribuição social do ciclo (RF41): a secretaria registra e corrige, e a
           coordenação só consulta (RNF36). */}
       {(secretaria || coordenacao) && (
-        <CartaoContribuicao
-          casoId={d.casoId}
-          nome={d.nome}
-          somenteLeitura={coordenacao}
-        />
+        <div id="contribuicao" className="scroll-mt-6">
+          <CartaoContribuicao
+            casoId={d.casoId}
+            nome={d.nome}
+            somenteLeitura={coordenacao}
+          />
+        </div>
       )}
       {/* Sessões com presença registrada (RF44): de todos os ciclos do caso,
           só para consulta até a emissão da declaração (RF45). */}

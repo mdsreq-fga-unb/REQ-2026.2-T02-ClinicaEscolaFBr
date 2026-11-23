@@ -23,6 +23,7 @@ import {
 import { usuarios } from "./base";
 import { casos, vinculosEstagiario } from "./casos";
 import { sessoesAtendimento } from "./agendamento";
+import { perdasVaga } from "./administrativo";
 
 export const origemFaltaEnum = pgEnum("origem_falta", ORIGENS_FALTA);
 
@@ -128,16 +129,19 @@ export const desligamentoFaltas = pgTable(
   (t) => [primaryKey({ columns: [t.desligamentoId, t.faltaId] })],
 );
 
-// Vaga do estagiário liberada pelo desligamento, aguardando realocação (RF37). Só
-// o vínculo de um paciente novo pelo RF21 a ocupa; a reversão (RF38) a encerra.
+// Vaga do estagiário liberada pelo desligamento (RF37) ou pela perda da vaga por
+// contribuição pendente (RF43), aguardando realocação. Só o vínculo de um paciente
+// novo pelo RF21 a ocupa; a reversão (RF38) encerra a do desligamento.
 export const vagasLiberadas = pgTable(
   "vagas_liberadas",
   {
     id: uuid("id").primaryKey().defaultRandom(),
     desligamentoId: uuid("desligamento_id")
-      .notNull()
       .unique()
       .references(() => desligamentosPorFaltas.id),
+    perdaVagaId: uuid("perda_vaga_id")
+      .unique()
+      .references(() => perdasVaga.id),
     estagiarioId: uuid("estagiario_id")
       .notNull()
       .references(() => usuarios.id),
@@ -154,6 +158,11 @@ export const vagasLiberadas = pgTable(
     encerradaEm: timestamp("encerrada_em", { withTimezone: true }),
   },
   (t) => [
+    // Cada vaga vem de um desligamento ou de uma perda da vaga, nunca dos dois.
+    check(
+      "vagas_origem_unica",
+      sql`(${t.desligamentoId} is null) <> (${t.perdaVagaId} is null)`,
+    ),
     check(
       "vagas_ocupacao_completa",
       sql`(${t.ocupadaEm} is null) = (${t.ocupadaPorVinculoId} is null)`,
