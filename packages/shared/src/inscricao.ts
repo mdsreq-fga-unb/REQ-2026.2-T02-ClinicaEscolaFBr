@@ -45,8 +45,10 @@ const telefone = (mensagem: string) =>
 
 // Validação de formato, sem consulta de identidade ou upload de documentos.
 // Da ficha de identificação da Clínica Escola (DF43), o endereço completo
-// (DF56) e o contato de emergência (DF51) são obrigatórios; sexo, profissão,
-// escolaridade, WhatsApp e o documento do responsável continuam opcionais.
+// (DF56) e o nome e o telefone do contato de emergência (DF51) são
+// obrigatórios. O grau de parentesco continua opcional, que é o padrão adotado
+// até a FBr dizer se bastam o nome e o telefone (pendência de validação). Sexo,
+// profissão, escolaridade, WhatsApp e o documento do responsável também.
 const dadosBase = z.object({
   nomeCompleto: obrigatorio(200),
   dataNascimento: z.iso
@@ -99,7 +101,7 @@ const dadosBase = z.object({
     .union([z.literal(""), z.email("Informe um e-mail válido.").max(254)])
     .default(""),
   contatoEmergenciaNome: obrigatorio(200),
-  contatoEmergenciaParentesco: obrigatorio(50),
+  contatoEmergenciaParentesco: opcional(50),
   contatoEmergenciaTelefone: z
     .string()
     .trim()

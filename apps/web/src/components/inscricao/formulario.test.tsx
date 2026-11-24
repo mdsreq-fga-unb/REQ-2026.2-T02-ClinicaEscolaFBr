@@ -135,7 +135,6 @@ describe("Formulário RF1/RF2", () => {
       "cidadeUf",
       "cep",
       "contatoEmergenciaNome",
-      "contatoEmergenciaParentesco",
       "contatoEmergenciaTelefone",
     ])
       preencher(campo, "");
@@ -145,13 +144,16 @@ describe("Formulário RF1/RF2", () => {
       "cidadeUf",
       "cep",
       "contatoEmergenciaNome",
-      "contatoEmergenciaParentesco",
       "contatoEmergenciaTelefone",
     ]) {
       const controle = document.getElementById(campo);
       expect(controle).toHaveAttribute("aria-invalid", "true");
       expect(controle).toBeRequired();
     }
+    // O grau de parentesco fica opcional até a resposta da FBr.
+    expect(
+      document.getElementById("contatoEmergenciaParentesco"),
+    ).not.toBeRequired();
     expect(document.getElementById("nomeCompleto")).toHaveValue(
       "Pessoa Fictícia",
     );

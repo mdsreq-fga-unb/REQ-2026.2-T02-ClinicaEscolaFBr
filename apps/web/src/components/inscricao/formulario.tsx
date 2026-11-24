@@ -49,10 +49,12 @@ const vazio = Object.fromEntries(
   Object.keys(rotulos).map((campo) => [campo, ""]),
 ) as Valores;
 // Dados da ficha de identificação da Clínica Escola que continuam opcionais
-// (DF43). O RG também é opcional (DF60). O endereço completo (DF56) e o contato
-// de emergência (DF51) são obrigatórios.
+// (DF43). O RG também é opcional (DF60). O endereço completo (DF56) e o nome e o
+// telefone do contato de emergência (DF51) são obrigatórios; o grau de
+// parentesco fica opcional até a resposta da FBr (pendência de validação).
 const opcionais: Campo[] = [
   "rg",
+  "contatoEmergenciaParentesco",
   "sexo",
   "profissao",
   "escolaridade",

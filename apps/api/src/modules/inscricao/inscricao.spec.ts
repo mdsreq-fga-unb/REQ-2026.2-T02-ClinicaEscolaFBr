@@ -61,7 +61,6 @@ describe('RF1/RF2: contrato compartilhado', () => {
     'cep',
     'estadoCivil',
     'contatoEmergenciaNome',
-    'contatoEmergenciaParentesco',
     'contatoEmergenciaTelefone',
     'queixa',
     'percepcaoUrgencia',
@@ -123,6 +122,9 @@ describe('RF1/RF2: contrato compartilhado', () => {
         profissao: '',
         escolaridade: '',
         whatsapp: '',
+        // Padrão até a resposta da FBr: só o nome e o telefone do contato de
+        // emergência são obrigatórios (pendência de validação).
+        contatoEmergenciaParentesco: '',
       }).success,
     ).toBe(true);
   });
