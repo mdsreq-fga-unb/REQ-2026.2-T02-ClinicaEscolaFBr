@@ -29,40 +29,49 @@ Esta página reúne as técnicas de representação usadas no projeto e mostra c
 
 O diagrama mostra o caminho de um paciente no MVP, da inscrição ao encerramento. Cada atividade diz quem a faz, com uma cor por perfil, e o requisito que a implementa. As decisões em losango são as que mudam o caminho do paciente. Os caminhos de exceção mais longos, como a reversão do desligamento ([RF38](funcionais.md#rf38)) e a transferência de caso ([RF25](funcionais.md#rf25)), ficam no projeto de cada feature.
 
+<div class="diagrama-largo" markdown>
+
 ```mermaid
 flowchart TD
     A([Início]) --> B["Paciente ou responsável<br>inscreve-se e aceita o termo<br>RF1, RF57"]
     B --> C["Coordenação<br>tria e registra a prioridade<br>RF4, RF6"]
     C --> D["Coordenação<br>ordena a fila de espera<br>RF7"]
-    D -.->|"consulta, com a identidade verificada"| D2["Paciente ou responsável<br>vê a situação na fila<br>RF52, RF8"]
+    D -.->|"a qualquer momento"| D2["Paciente ou responsável<br>vê a situação na fila<br>RF52, RF8"]
     D --> E["Coordenação<br>distribui o caso ao supervisor<br>RF18, RF20"]
     E --> F["Supervisor<br>vincula o estagiário<br>RF21, RF66"]
     F --> G["Estagiário<br>registra anamnese e contrato<br>RF69"]
     G --> H["Secretaria<br>agenda a sessão<br>RF10"]
     H --> I{"O paciente<br>compareceu?"}
-    I -->|"sim"| J["Estagiário<br>registra a evolução<br>RF28"]
     I -->|"não"| K["Secretaria<br>registra a falta<br>RF34, RF35"]
-    K --> L{"Atingiu o limite<br>de faltas?<br>RF36"}
-    L -->|"não"| H
-    L -->|"sim"| M["Secretaria ou coordenação<br>desliga por faltas<br>RF37"]
+    I -->|"sim"| J["Estagiário<br>registra a evolução<br>RF28"]
+    K --> L{"Atingiu o limite<br>de faltas? RF36"}
     J --> N{"Objetivos do ciclo<br>alcançados?"}
-    N -->|"não"| H
+    L -->|"sim"| M["Secretaria ou coordenação<br>desliga por faltas<br>RF37"]
+    L -->|"não"| R["Próxima sessão"]
+    N -->|"não"| R
     N -->|"sim"| O["Estagiário pede a alta<br>e o supervisor confirma<br>RF68"]
-    O --> P["Estagiário escreve e o supervisor<br>aprova o relatório final<br>RF33"]
+    R --> H
+    O --> P["Estagiário escreve e<br>o supervisor aprova<br>o relatório final<br>RF33"]
     P --> Q["Secretaria imprime e<br>entrega o relatório<br>RF33"]
-    M --> Z([Vaga liberada])
-    Q --> Z
-    classDef paciente fill:#e8f1fb,stroke:#3a6ea5;
-    classDef coordenacao fill:#eef7ee,stroke:#3f7d3f;
-    classDef supervisor fill:#fbf3e4,stroke:#9a6a12;
-    classDef secretaria fill:#f4ecf7,stroke:#7a4b8c;
-    classDef estagiario fill:#fdecec,stroke:#a33f3f;
+    Q --> Z([Fim: vaga liberada])
+    M --> Z
+    classDef paciente fill:#e8f1fb,stroke:#3a6ea5,color:#1b2a3a;
+    classDef coordenacao fill:#eef7ee,stroke:#3f7d3f,color:#1b2a3a;
+    classDef supervisor fill:#fbf3e4,stroke:#9a6a12,color:#1b2a3a;
+    classDef secretaria fill:#f4ecf7,stroke:#7a4b8c,color:#1b2a3a;
+    classDef estagiario fill:#fdecec,stroke:#a33f3f,color:#1b2a3a;
+    classDef varios fill:#eef1f4,stroke:#5b6875,color:#1b2a3a;
     class B,D2 paciente;
     class C,D,E coordenacao;
     class F supervisor;
-    class H,K,M,Q secretaria;
-    class G,J,O,P estagiario;
+    class H,K,Q secretaria;
+    class G,J,P estagiario;
+    class M,O,R varios;
 ```
+
+</div>
+
+**Legenda:** cada cor é um perfil. <span style="background:#e8f1fb;border:1px solid #3a6ea5;padding:0 .4em;color:#1b2a3a">paciente ou responsável</span> <span style="background:#eef7ee;border:1px solid #3f7d3f;padding:0 .4em;color:#1b2a3a">coordenação</span> <span style="background:#fbf3e4;border:1px solid #9a6a12;padding:0 .4em;color:#1b2a3a">supervisor</span> <span style="background:#fdecec;border:1px solid #a33f3f;padding:0 .4em;color:#1b2a3a">estagiário</span> <span style="background:#f4ecf7;border:1px solid #7a4b8c;padding:0 .4em;color:#1b2a3a">secretaria</span> <span style="background:#eef1f4;border:1px solid #5b6875;padding:0 .4em;color:#1b2a3a">mais de um perfil</span>. Os losangos são decisões, e a linha tracejada é uma consulta que o paciente pode fazer a qualquer momento, sem mudar o caminho. No celular, deslize o diagrama para os lados.
 
 ## Mapa de histórias { #mapa-de-historias }
 
