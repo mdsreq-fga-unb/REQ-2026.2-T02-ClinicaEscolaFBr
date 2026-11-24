@@ -540,3 +540,45 @@ A equipe perguntou se a próxima data seria uma sugestão, baseada nos horários
 | Protótipo do Ciclo 5 e o que já está no ambiente de validação | Validados, com a análise dos supervisores Alexandre e Ana | [DF59](../../requisitos/decisoes-fbr.md#df59); R7.3 das sete features do Ciclo 5 |
 | Cancelamento por ausência do estagiário (RF17) | No cancelamento da sessão, já apontar a próxima data de atendimento | Pendente do detalhe pedido em 16/11. A equipe propõe tratar isso depois do MVP, junto com o reagendamento (RF12, fora do MVP), para não atrasar a construção. Até lá, o RF17 segue o protótipo: o aviso diz que a secretaria entra em contato para marcar outro horário. Ver as [pendências de validação](../../requisitos/analise-feedback.md#pendencias-de-validacao-com-a-fbr) |
 | Onze pontos em aberto do e-mail de 14/11 | Sem resposta ponto a ponto ("No mais está ótimo") | Continuam nas [pendências de validação](../../requisitos/analise-feedback.md#pendencias-de-validacao-com-a-fbr), com os valores padrão adotados |
+
+## Validação das funcionalidades do Ciclo 5 pela FBr (24/11) { #validacao-das-funcionalidades-do-ciclo-5-pela-fbr }
+
+**Data:** 24/11/2026
+**Local:** grupo "Sistema Clínica Escola FBr" no WhatsApp
+**Participantes:** pela FBr, Robson Araújo, que analisou o sistema com os professores Alexandre e Lauana e com a supervisora de estágio Elaine; pela equipe, Gabriel da Cunha Barbaceli e os demais integrantes do grupo.
+
+Depois da entrega da Unidade 3, a equipe pediu no grupo duas validações, com prazo até 20/11:
+
+1. **Protótipos do Ciclo 6**, as telas das 14 features do ciclo, com os quatro pontos da capa do PDF: quem registra o complemento da evolução (RF30), a reclassificação da falta do estagiário (RF40 e RF63), o modelo da declaração de comparecimento (RF45) e a base legal da revogação do consentimento (RF65).
+2. **As seis features do Ciclo 5 que entraram no ambiente de validação depois da [validação de 16/11](#validacao-do-ciclo-5-pela-fbr)**, com um roteiro do passo a passo de cada uma, a conta a usar e o que conferir:
+    - **Contribuição social (RF41):** a secretaria registra o pagamento, e a coordenação define o valor da contribuição;
+    - **Correção de evolução (RF29):** o estagiário corrige a evolução, e a versão anterior fica guardada;
+    - **Faltas dos estagiários (RF39):** a consulta do supervisor e da coordenação;
+    - **Registro de acessos ao prontuário (RF56):** a consulta da coordenação;
+    - **Aviso de ausência do estagiário (RF17):** o paciente recebe o aviso por e-mail, e, quando o e-mail não chega, a secretaria vê na Agenda a mensagem pronta para o WhatsApp;
+    - **Sessões com presença registrada (RF44):** a lista para o paciente, depois da verificação de identidade (RF52), e para a secretaria, na ficha do paciente.
+
+Sem resposta no prazo, a equipe voltou a pedir o retorno no grupo, marcando Robson Araújo e Thiago Viana. Em 24/11, às 11h12, Robson Araújo mandou uma foto da tela de uma inscrição feita por ele no ambiente de validação (a inscrição 2026-00374, registrada às 11h11) e, às 11h13, um áudio de 25 segundos com a validação. Às 11h40, a equipe agradeceu e perguntou se o protótipo do Ciclo 6 estava aceito, lembrando que há dúvidas em aberto. Às 11h46, ele respondeu que tentaria responder à tarde, com outra supervisora.
+
+![Pedido da equipe, foto da inscrição e áudio de Robson Araújo no grupo da FBr, com o telefone e as fotos de perfil cobertos](../../assets/fbr/whatsapp-2026-11-24-1.jpg){ width="300" }
+![Pergunta da equipe sobre o protótipo do Ciclo 6 e resposta de Robson Araújo, com o telefone e as fotos de perfil cobertos](../../assets/fbr/whatsapp-2026-11-24-2.jpg){ width="300" }
+
+_Figura 23 — Validação das funcionalidades do Ciclo 5 por Robson Araújo no grupo da FBr, em 24/11/2026. O telefone e as fotos de perfil foram cobertos, e o áudio não foi publicado._
+
+### Resposta de Robson Araújo
+
+Transcrição do áudio:
+
+> Olá, bom dia, tudo bem? Acabei aqui, tô aqui junto com o professor Alexandre, professor Lauana, e também a supervisora de estágio Elaine. Tô deixando aqui rapidinho para a gente ver. Tá tudo ok, tá a contento, consegue gerar todas as informações que a gente precisa para qualquer documento que já tá existente e rodando hoje dos documentos que são exigidos pelo Conselho Regional de Psicologia.
+
+Mensagem escrita, em resposta à pergunta da equipe:
+
+> Agora no período vespertino tentarei responder elas c outra supervisora
+
+### Resultado
+
+| Ponto | Resposta | Registro |
+| --- | --- | --- |
+| As seis features do Ciclo 5 no ambiente de validação (RF41, RF29, RF39, RF56, RF17 e RF44) | "Tá tudo ok, tá a contento", depois da análise com os professores Alexandre e Lauana e com a supervisora Elaine | [DF62](../../requisitos/decisoes-fbr.md#df62); demonstração e aceite (D5 e D6) das seis features |
+| Documentos exigidos pelo CRP | O sistema gera todas as informações que a clínica precisa para os documentos exigidos pelo Conselho Regional de Psicologia que ela já usa | [DF62](../../requisitos/decisoes-fbr.md#df62) |
+| Protótipos do Ciclo 6 e os quatro pontos da capa do PDF | Ainda sem resposta; Robson Araújo disse que tentaria responder na tarde de 24/11, com outra supervisora | O R7.3 das 14 features do Ciclo 6 continua aberto, e os quatro pontos continuam nas [pendências de validação](../../requisitos/analise-feedback.md#pendencias-de-validacao-com-a-fbr), com os valores padrão adotados |

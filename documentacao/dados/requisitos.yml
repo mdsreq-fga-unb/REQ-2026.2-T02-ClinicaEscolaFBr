@@ -1752,6 +1752,11 @@ decisoes:
   fonte: validação da FBr por WhatsApp
   decisao: O protótipo do Ciclo 5 (RF17, RF29, RF39, RF41, RF44, RF48 e RF56) e o que já está no ambiente de validação foram validados por Robson Araújo, que os analisou com os supervisores Alexandre e Ana. Ele pediu que, no cancelamento da sessão pelo estagiário, a próxima data de atendimento já seja apontada; o detalhe desse pedido está nas pendências de validação.
 
+- id: DF62
+  data: 24/11/2026
+  fonte: validação da FBr por WhatsApp
+  decisao: As seis features do Ciclo 5 que entraram no ambiente de validação depois de 16/11 (RF17, RF29, RF39, RF41, RF44 e RF56) foram validadas por Robson Araújo, que analisou o sistema com os professores Alexandre e Lauana e com a supervisora de estágio Elaine. Ele disse que está "tudo ok, a contento", e que o sistema gera todas as informações de que a clínica precisa para os documentos exigidos pelo Conselho Regional de Psicologia que ela já usa.
+
 conjuntos:
 - area: Inscrição no atendimento
   conjunto: Inscrição on-line
