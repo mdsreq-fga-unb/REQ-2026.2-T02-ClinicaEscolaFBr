@@ -3,6 +3,7 @@ import { AcessosProntuarioController } from './acessos-prontuario.controller';
 import { AcessosProntuarioService } from './acessos-prontuario.service';
 import { AssiduidadeModule } from '../assiduidade/assiduidade.module';
 import { CorrecoesEvolucaoService } from './correcoes-evolucao.service';
+import { ElaboracaoRelatorioService } from './elaboracao-relatorio.service';
 import { PoliticaProntuario } from './politica-prontuario';
 import { ProntuariosController } from './prontuarios.controller';
 import { ProntuariosService } from './prontuarios.service';
@@ -22,6 +23,7 @@ import { RelatoriosFinaisService } from './relatorios-finais.service';
     AcessosProntuarioService,
     CorrecoesEvolucaoService,
     RelatoriosFinaisService,
+    ElaboracaoRelatorioService,
   ],
   exports: [PoliticaProntuario],
 })

@@ -40,6 +40,11 @@ export const OPERACOES_PRONTUARIO: Record<
   abrir_impressao_relatorio_final: 'visualizacao',
   imprimir_relatorio_final: 'criacao',
   registrar_entrega_relatorio_final: 'criacao',
+  // Elaboração, envio e decisão do relatório final (RF33).
+  consultar_elaboracao_relatorio_final: 'visualizacao',
+  salvar_rascunho_relatorio_final: 'alteracao',
+  enviar_relatorio_final: 'criacao',
+  decidir_relatorio_final: 'alteracao',
 };
 
 export function tipoDeAcesso(

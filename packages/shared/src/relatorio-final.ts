@@ -127,3 +127,114 @@ export type RelatorioParaImpressao = {
   secoes: SecoesRelatorio;
   aprovadaEm: string;
 };
+
+// Elaboração pelo estagiário e revisão pelo supervisor (RF33). O limite de cada
+// seção é proposta da equipe, nas pendências de validação com a FBr.
+export const LIMITE_SECAO_RELATORIO = 5000;
+export const LIMITE_OBSERVACOES_RELATORIO = 1000;
+// Referência institucional do encerramento do ciclo: fora dela, o envio exige a
+// justificativa.
+export const SESSOES_MINIMAS_RELATORIO = 8;
+export const SESSOES_MAXIMAS_RELATORIO = 10;
+export const foraDaFaixaDoRelatorio = (sessoes: number) =>
+  sessoes < SESSOES_MINIMAS_RELATORIO || sessoes > SESSOES_MAXIMAS_RELATORIO;
+
+const milhar = (n: number) => n.toLocaleString("pt-BR");
+const textoAte = (limite: number) =>
+  z
+    .string("Escreva o texto.")
+    .trim()
+    .max(limite, `Use no máximo ${milhar(limite)} caracteres.`);
+const secaoRascunho = textoAte(LIMITE_SECAO_RELATORIO);
+const secaoEnvio = (mensagem: string) =>
+  z
+    .string(mensagem)
+    .trim()
+    .min(1, mensagem)
+    .max(
+      LIMITE_SECAO_RELATORIO,
+      `Use no máximo ${milhar(LIMITE_SECAO_RELATORIO)} caracteres.`,
+    );
+const justificativaExcecao = textoAte(LIMITE_OBSERVACOES_RELATORIO)
+  .nullish()
+  .transform((texto) => texto || null);
+
+// O rascunho aceita seções em branco; o envio exige todas.
+export const rascunhoRelatorioSchema = z.object({
+  finalidade: secaoRascunho,
+  demanda: secaoRascunho,
+  procedimentos: secaoRascunho,
+  analise: secaoRascunho,
+  conclusao: secaoRascunho,
+  justificativaExcecao,
+});
+export type RascunhoRelatorio = z.infer<typeof rascunhoRelatorioSchema>;
+
+export const envioRelatorioSchema = z.object({
+  finalidade: secaoEnvio("Escreva a finalidade do relatório."),
+  demanda: secaoEnvio("Descreva a demanda."),
+  procedimentos: secaoEnvio("Descreva os procedimentos."),
+  analise: secaoEnvio("Escreva a análise."),
+  conclusao: secaoEnvio("Escreva a conclusão."),
+  justificativaExcecao,
+});
+
+// A devolução exige as observações; a aprovação não as guarda, e por isso as recusa.
+export const decisaoRelatorioSchema = z
+  .object({
+    decisao: z.enum(["aprovar", "devolver"], {
+      error: "Escolha aprovar ou devolver.",
+    }),
+    observacoes: textoAte(LIMITE_OBSERVACOES_RELATORIO)
+      .nullish()
+      .transform((texto) => texto || null),
+  })
+  .refine((d) => d.decisao !== "devolver" || d.observacoes, {
+    path: ["observacoes"],
+    message: "Para devolver o relatório, escreva as observações.",
+  })
+  .refine((d) => d.decisao !== "aprovar" || !d.observacoes, {
+    path: ["observacoes"],
+    message:
+      "As observações só vão na devolução. Apague o texto para aprovar o relatório.",
+  });
+export type DecisaoRelatorio = z.infer<typeof decisaoRelatorioSchema>;
+
+// Sessão realizada do ciclo, na ordem em que aconteceu. Sem evolução, é uma lacuna,
+// que a equipe revisa: o sistema não completa o prontuário.
+export type SessaoDoRelatorio = {
+  id: string;
+  numero: number;
+  // AAAA-MM-DD, no horário de Brasília.
+  data: string;
+  temEvolucao: boolean;
+};
+
+export type VersaoComTexto = {
+  versao: number;
+  estado: EstadoRelatorio;
+  autor: string;
+  enviadaEm: string | null;
+  secoes: SecoesRelatorio;
+  justificativaExcecao: string | null;
+  // Sessões e evoluções fixadas no envio; nulas no rascunho.
+  origem: { sessoes: string[]; evolucoes: string[] } | null;
+  observacoes: string | null;
+};
+
+// GET /casos/:id/relatorio-final/elaboracao: o que a elaboração e a revisão mostram.
+export type ElaboracaoDoRelatorio = {
+  casoId: string;
+  prontuarioId: string;
+  ciclo: number;
+  paciente: string;
+  solicitante: string | null;
+  estagiario: string | null;
+  supervisor: { nome: string; crp: string | null } | null;
+  sessoes: SessaoDoRelatorio[];
+  semEvolucoes: boolean;
+  exigeJustificativa: boolean;
+  // Da mais recente para a mais antiga; o rascunho só vem para o estagiário.
+  versoes: VersaoComTexto[];
+  acoes: { elaborar: boolean; decidir: boolean };
+};

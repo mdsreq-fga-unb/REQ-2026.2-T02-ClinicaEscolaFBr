@@ -40,7 +40,7 @@ const decisor = aliasedTable(usuarios, 'decisor');
 
 // Nenhum prontuário tem este id: a política registra a tentativa e nega, com a
 // mesma resposta do relatório que existe e não é do usuário (RNF25).
-const PRONTUARIO_INEXISTENTE = '00000000-0000-0000-0000-000000000000';
+export const PRONTUARIO_INEXISTENTE = '00000000-0000-0000-0000-000000000000';
 
 // Quem imprime a versão aprovada (RF33): o estagiário responsável e o supervisor
 // do caso, na finalização em PDF, e a secretaria, para a entrega. A coordenação
@@ -49,7 +49,7 @@ const PERFIS_DA_IMPRESSAO = new Set(['estagiario', 'supervisor', 'secretaria']);
 
 // Relatório final do ciclo (RF33): a consulta das versões e a impressão e a
 // entrega da versão aprovada. A elaboração do rascunho, o envio e a decisão do
-// supervisor usam as mesmas tabelas (versoes_relatorio).
+// supervisor ficam no ElaboracaoRelatorioService.
 @Injectable()
 export class RelatoriosFinaisService {
   constructor(
@@ -60,7 +60,7 @@ export class RelatoriosFinaisService {
   ) {}
 
   // O caso e o prontuário do ciclo pedido, ou do ciclo atual do caso.
-  private async doCiclo(casoId: string, ciclo?: number) {
+  async doCiclo(casoId: string, ciclo?: number) {
     const [caso] = await this.db
       .select({
         id: casos.id,
@@ -85,13 +85,16 @@ export class RelatoriosFinaisService {
     return { caso, ciclo: cicloPedido, prontuarioId: prontuario?.id ?? null };
   }
 
-  private async versoesDoProntuario(prontuarioId: string) {
+  async versoesDoProntuario(prontuarioId: string) {
     return this.db
       .select({
         id: versoesRelatorio.id,
         versao: versoesRelatorio.versao,
         estado: versoesRelatorio.estado,
         secoesCifradas: versoesRelatorio.secoesCifradas,
+        justificativaExcecaoCifrada:
+          versoesRelatorio.justificativaExcecaoCifrada,
+        origem: versoesRelatorio.origem,
         enviadaEm: versoesRelatorio.enviadaEm,
         decididaEm: versoesRelatorio.decididaEm,
         observacoesCifradas: versoesRelatorio.observacoesCifradas,
