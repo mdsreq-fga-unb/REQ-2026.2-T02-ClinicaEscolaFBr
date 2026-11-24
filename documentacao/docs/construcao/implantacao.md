@@ -78,6 +78,19 @@ Procedimentos de segurança que só se completam com o sistema publicado, exigid
 | Registros de acesso ao prontuário gravados, sem poder ser alterados nem apagados | Testes da API que citam o RNF52 | RNF52 |
 | Usuário da aplicação no banco só insere e consulta os registros que não podem mudar, inclusive em tabelas novas com o mesmo gatilho | `usuario-da-aplicacao.spec.ts` | RNF52 |
 | A suíte e2e inteira passa com a API conectada como `clinica_app` | Job "e2e" do CI | RNF52 |
+| Formulário de outra página com o cookie da sessão recusado, e entradas com erro limitadas por origem | `requisicao-forjada.spec.ts` | RNF49 |
+
+### Proteção contra outras páginas e tentativas em massa { #protecao-contra-outras-paginas }
+
+A web e a API ficam no mesmo site (`*.fbr.edu.br`), para o cookie da sessão chegar à API ([DT09](arquitetura.md#dt09)). Por isso, o cookie `SameSite=Lax` não basta: uma página de outro sistema da FBr conseguiria enviar um formulário à API com o cookie de quem está logado. A API tem três proteções:
+
+- **Origem da web:** as requisições que alteram dados (`POST`, `PUT`, `PATCH` e `DELETE`) com o cabeçalho `Origin` de outro endereço recebem 403. Sem o `Origin`, a requisição não veio de uma página.
+- **Só JSON:** essas requisições, quando têm corpo, precisam ser `application/json`. Formulário e texto recebem 415.
+- **Entradas com erro por origem:** depois de 30 senhas erradas do mesmo endereço em 10 minutos (`LIMITE_ENTRADAS_POR_ORIGEM`), a entrada é recusada com 429, sem conferir a senha. O bloqueio de 15 minutos continua valendo por conta ([DF25](../requisitos/decisoes-fbr.md#df25)). As entradas certas não contam, para a equipe da clínica, que sai pelo mesmo endereço, não ser barrada.
+
+A web envia os cabeçalhos de segurança em todas as páginas: não pode ser embutida em outra página (`frame-ancestors 'none'` e `X-Frame-Options`), só usa HTTPS depois da primeira visita (HSTS) e não envia o endereço da página a outros sites (`Referrer-Policy: no-referrer`), o que protege os links com token da confirmação de presença e da ativação da conta.
+
+O teste `requisicao-forjada.spec.ts` envia o formulário de outra página com o cookie da coordenação e confere que nenhuma conta é criada nem desativada.
 
 ### Usuário da aplicação no banco (RNF52) { #usuario-da-aplicacao-no-banco-rnf52 }
 
