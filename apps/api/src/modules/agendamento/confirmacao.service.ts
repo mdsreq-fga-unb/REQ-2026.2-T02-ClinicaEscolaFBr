@@ -25,6 +25,7 @@ import {
 } from '../../auditoria/auditoria.service';
 import type { UsuarioAutenticado } from '../../auth/usuario-autenticado';
 import { DB } from '../../database/database.module';
+import { semRevogacao } from '../../common/consentimento';
 import { ParametrosService } from '../../parametros/parametros.service';
 import { hashToken } from '../acesso/credenciais';
 import { MINUTO } from './horario';
@@ -105,6 +106,7 @@ export class ConfirmacaoService {
       .where(
         and(
           eq(sessoesAtendimento.status, 'agendada'),
+          semRevogacao(inscricoes.id),
           gt(sessoesAtendimento.inicio, agora),
           lt(
             sessoesAtendimento.inicio,
