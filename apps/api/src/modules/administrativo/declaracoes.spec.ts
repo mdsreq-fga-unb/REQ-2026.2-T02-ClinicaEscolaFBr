@@ -564,6 +564,51 @@ describe('Sessões com presença registrada e declaração de comparecimento (RF
       await http().post(`/declaracoes/sessoes/${s1105}/emissao`).expect(401);
     });
 
+    // A matriz do RNF38 num teste só, com os dois caminhos de acesso: a sessão
+    // institucional da secretaria (RF50) e a verificação de identidade do
+    // paciente ou responsável (RF52). A reemissão (RF46) está fora do MVP.
+    it('autorização das declarações por perfil: a secretaria autenticada lista e emite para qualquer paciente, o paciente com a identidade verificada só para as próprias sessões, e sem verificação, o estagiário e o supervisor não listam nem emitem (RF50, RF52, RNF38)', async () => {
+      const listaDaFicha = (casoId: string) =>
+        http().get(`/pacientes/${casoId}/sessoes-realizadas`);
+
+      // Secretaria, com a sessão institucional (RF50): qualquer paciente.
+      await listaDaFicha(casoA).set(como('secretaria')).expect(200);
+      await listaDaFicha(casoB).set(como('secretaria')).expect(200);
+      await emitirPelaEquipe(s1105, 'secretaria').expect(201);
+      await emitirPelaEquipe(sessaoB, 'secretaria').expect(201);
+      // Sem a sessão institucional, as rotas da equipe recusam.
+      await listaDaFicha(casoA).expect(401);
+      await http().post(`/declaracoes/sessoes/${s1105}/emissao`).expect(401);
+
+      // Estagiário e supervisor do caso: nem listam nem emitem.
+      for (const chave of ['ana', 'supervisor']) {
+        await listaDaFicha(casoA).set(como(chave)).expect(403);
+        await emitirPelaEquipe(s1105, chave).expect(403);
+      }
+
+      // Paciente ou responsável com a identidade verificada (RF52): só as
+      // sessões da própria inscrição.
+      const cookieA = await verificar(inscricaoA);
+      const lista = await http()
+        .get('/declaracoes/minhas-sessoes')
+        .set('Cookie', cookieA)
+        .expect(200);
+      const ids = (lista.body as { id: string }[]).map((s) => s.id);
+      expect(ids).toEqual(expect.arrayContaining([s1105, s1029]));
+      expect(ids).not.toContain(sessaoB);
+      await emitirComo(s1105, cookieA).expect(201);
+      await emitirComo(sessaoB, cookieA).expect(403);
+
+      // Sem a verificação, nada é listado nem emitido.
+      await http().get('/declaracoes/minhas-sessoes').expect(401);
+      await http()
+        .post(`/declaracoes/minhas-sessoes/${s1105}/emissao`)
+        .expect(401);
+
+      // Só as três emissões permitidas ficaram registradas.
+      expect(await db.select().from(emissoesDeclaracao)).toHaveLength(3);
+    });
+
     it('a secretaria recebe 404 para a sessão que não existe e 400 para o id inválido', async () => {
       await emitirPelaEquipe(
         '00000000-0000-4000-8000-000000000000',
