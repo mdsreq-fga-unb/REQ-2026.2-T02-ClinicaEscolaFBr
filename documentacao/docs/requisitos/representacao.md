@@ -49,10 +49,10 @@ flowchart TD
     L -->|"sim"| M["Secretaria ou coordenação<br>desliga por faltas<br>RF37"]
     L -->|"não"| R["Próxima sessão"]
     N -->|"não"| R
-    N -->|"sim"| O["Estagiário pede a alta<br>e o supervisor confirma<br>RF68"]
+    N -->|"sim"| P["Estagiário escreve e<br>o supervisor aprova<br>o relatório final<br>RF33"]
     R --> H
-    O --> P["Estagiário escreve e<br>o supervisor aprova<br>o relatório final<br>RF33"]
-    P --> Q["Secretaria imprime e<br>entrega o relatório<br>RF33"]
+    P --> O["Estagiário pede a alta<br>e o supervisor confirma<br>RF68"]
+    O --> Q["Secretaria imprime e<br>entrega o relatório<br>RF33"]
     Q --> Z([Fim: vaga liberada])
     M --> Z
     classDef paciente fill:#e8f1fb,stroke:#3a6ea5,color:#1b2a3a;
@@ -71,7 +71,7 @@ flowchart TD
 
 </div>
 
-**Legenda:** cada cor é um perfil. <span style="background:#e8f1fb;border:1px solid #3a6ea5;padding:0 .4em;color:#1b2a3a">paciente ou responsável</span> <span style="background:#eef7ee;border:1px solid #3f7d3f;padding:0 .4em;color:#1b2a3a">coordenação</span> <span style="background:#fbf3e4;border:1px solid #9a6a12;padding:0 .4em;color:#1b2a3a">supervisor</span> <span style="background:#fdecec;border:1px solid #a33f3f;padding:0 .4em;color:#1b2a3a">estagiário</span> <span style="background:#f4ecf7;border:1px solid #7a4b8c;padding:0 .4em;color:#1b2a3a">secretaria</span> <span style="background:#eef1f4;border:1px solid #5b6875;padding:0 .4em;color:#1b2a3a">mais de um perfil</span>. Os losangos são decisões, e a linha tracejada é uma consulta que o paciente pode fazer a qualquer momento, sem mudar o caminho. No celular, deslize o diagrama para os lados.
+**Legenda:** cada cor é um perfil. <span style="background:#e8f1fb;border:1px solid #3a6ea5;padding:0 .4em;color:#1b2a3a">paciente ou responsável</span> <span style="background:#eef7ee;border:1px solid #3f7d3f;padding:0 .4em;color:#1b2a3a">coordenação</span> <span style="background:#fbf3e4;border:1px solid #9a6a12;padding:0 .4em;color:#1b2a3a">supervisor</span> <span style="background:#fdecec;border:1px solid #a33f3f;padding:0 .4em;color:#1b2a3a">estagiário</span> <span style="background:#f4ecf7;border:1px solid #7a4b8c;padding:0 .4em;color:#1b2a3a">secretaria</span> <span style="background:#eef1f4;border:1px solid #5b6875;padding:0 .4em;color:#1b2a3a">mais de um perfil</span>. O relatório final vem antes da alta: depois da confirmação, o vínculo do estagiário termina e ele não edita mais o relatório. Os losangos são decisões, e a linha tracejada é uma consulta que o paciente pode fazer a qualquer momento, sem mudar o caminho. No celular, deslize o diagrama para os lados.
 
 ## Mapa das features pela jornada (inspirado no USM) { #mapa-de-historias }
 
