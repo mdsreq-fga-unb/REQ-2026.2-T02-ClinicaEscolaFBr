@@ -24,6 +24,10 @@ on:
         description: "Contar como evidência do D4.5 (só contra a homologação)"
         type: boolean
         default: false
+      somente_rnf47:
+        description: "Rodar só a carga dos indicadores (RNF47), sem a do RNF12 e do RNF21 antes"
+        type: boolean
+        default: false
   schedule:
     # Todo dia 1º, como alerta antecipado de desempenho.
     - cron: "0 11 1 * *"
@@ -88,7 +92,11 @@ jobs:
           AMBIENTE_DE_TESTE=sim node dist/scripts/semear-carga.js
           node dist/main &
           for i in $(seq 1 30); do curl -sf http://localhost:3333/health && break; sleep 1; done
+      # O RNF47 pode rodar sozinho: logo depois dos 30 usuários do RNF12 e do
+      # RNF21, o servidor ainda está carregado, e a consulta mais lenta dos
+      # indicadores sai distorcida (17/11: percentil 95 de 1,6 s e máximo de 12,8 s).
       - name: Rodar a carga
+        if: ${{ !inputs.somente_rnf47 }}
         run: |
           mkdir -p relatorio-testes
           ./k6 run --quiet \
