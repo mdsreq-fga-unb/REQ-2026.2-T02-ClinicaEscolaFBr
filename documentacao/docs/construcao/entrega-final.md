@@ -39,7 +39,7 @@ As PRs abertas em 24/11 entram nesta ordem. A ordem respeita as que estão empil
 | 9 | [#295](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/pull/295) | Relatório institucional em PDF (RF49) | — | — |
 | 10 | [#297](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/pull/297) | Correções do Ciclo 6 (sessão expirada, fila, ficha) | — | — |
 | 11 | [#305](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/pull/305) | Contato de emergência e endereço completo obrigatórios na inscrição (RF1) | — | Corrige também o e2e instável do RF44 |
-| 12 | [#301](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/pull/301) | Encerramento por alta (RF68) | `0022` → `0026` | Renumerar antes do merge |
+| 12 | [#301](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/pull/301) | Encerramento por alta (RF68) | `0026` | Empilhada sobre a #310, já renumerada |
 | 13 | [#306](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/pull/306) | RNF27 associado ao RF30 no catálogo | — | — |
 | 14 | [#302](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/pull/302) | Estado das features no catálogo | — | — |
 | 15 | [#311](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/pull/311) | Validação das funcionalidades do Ciclo 5 pela FBr (24/11) | — | — |
@@ -52,7 +52,7 @@ As PRs abertas em 24/11 entram nesta ordem. A ordem respeita as que estão empil
 
 - **Uma de cada vez.** Depois de cada merge, espere o CI da `development` e o workflow **Implantação** da validação terminarem verdes antes da próxima. Se a validação quebrar, reverta a PR antes de seguir.
 - **PRs empilhadas.** Quando a PR de baixo entra e a branch dela é apagada, o GitHub muda a base da PR de cima para a `development`. Se não mudar, troque a base à mão e espere o CI rodar de novo: nas PRs empilhadas, o CI completo só roda com a base na `development`.
-- **Migration repetida.** Duas PRs que criam a mesma migration (`0022` na #294 e na #301, por exemplo) não podem entrar com o mesmo número. Na PR que entra depois:
+- **Migration repetida.** Duas PRs que criam uma migration com o mesmo número não podem entrar as duas assim. Os números da tabela já não se repetem, mas uma PR nova pode repetir. Na PR que entra depois:
     1. atualize a branch com a `development`;
     2. apague a migration e o snapshot dela, e a entrada dela no `meta/_journal.json`;
     3. gere de novo com `pnpm --filter @clinica/database db:generate --name <nome>`;
