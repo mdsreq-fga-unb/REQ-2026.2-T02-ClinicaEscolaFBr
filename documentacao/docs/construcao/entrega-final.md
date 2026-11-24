@@ -98,7 +98,7 @@ Roteiro para a FBr testar na validação as features que ainda não têm o aceit
 | RF29 · Correção da evolução | Corrija uma evolução sem motivo e depois com motivo | Sem motivo, é recusada. Com motivo, a versão anterior continua guardada |
 | RF30 · Complemento da evolução | Acrescente um complemento a uma evolução | O complemento aparece separado da evolução e das correções, com autor e data/hora, sem mudar o que já estava registrado |
 | RF31 e RF32 · Consulta da evolução | Abra a evolução de uma sessão e o histórico do ciclo | Aparecem o original, as correções e os complementos, em ordem, com a situação de validação de cada evolução |
-| RF68 · Alta | Registre a alta de um paciente, com data e motivo | O caso aguarda a confirmação do supervisor; só depois disso fica encerrado |
+| RF68 · Alta | Registre a alta de um paciente, com data e motivo. Registre outra com uma data anterior ao início do atendimento e cancele um pedido feito por engano | O caso aguarda a confirmação do supervisor; só depois disso fica encerrado. A data anterior é recusada, e o pedido cancelado fica no histórico, com o motivo |
 | RF33 · Relatório final | Escreva o relatório do ciclo, envie para revisão e, depois da aprovação, finalize em PDF | Sessões sem evolução aparecem apontadas, sem texto criado pelo sistema. Com menos de 8 ou mais de 10 sessões, o envio pede a justificativa. A versão aprovada não muda mais |
 
 ### Supervisor
@@ -106,7 +106,7 @@ Roteiro para a FBr testar na validação as features que ainda não têm o aceit
 | Feature | Faça | Deve acontecer |
 | --- | --- | --- |
 | RF67 · Validação da evolução | Valide uma evolução. Depois, peça ao estagiário uma correção nela | A evolução fica validada, com o seu nome e a data/hora. Depois da correção, volta a "pendente de validação" |
-| RF68 · Confirmação da alta | Confirme a alta registrada pelo estagiário | O caso fica encerrado por alta, a vaga é liberada e não aceita mais agendamento |
+| RF68 · Confirmação da alta | Confirme a alta registrada pelo estagiário. Num outro pedido, recuse com o motivo | O caso fica encerrado por alta, a vaga é liberada e não aceita mais agendamento. Na recusa, o caso continua em atendimento, e o estagiário pode pedir de novo |
 | RF33 · Revisão do relatório | Devolva um relatório sem observações, depois com observações. Aprove a versão seguinte | Sem observações, a devolução é recusada. As duas versões ficam na lista, e a aprovada mostra o seu nome e a data |
 | RF39, RF40 e RF63 · Faltas do estagiário | Consulte as faltas de um estagiário seu, num semestre com três ausências registradas | Aparecem só as ausências reais, sem o nome do paciente. Na terceira, aparece a sinalização de reprovação |
 
@@ -121,6 +121,19 @@ Roteiro para a FBr testar na validação as features que ainda não têm o aceit
 | RF64 · Decisão sobre a reprovação | Registre a decisão sobre um estagiário sinalizado, primeiro sem justificativa | Sem justificativa, é recusada. Com ela, a sinalização se encerra e a decisão fica no histórico |
 | RF68 · Reabertura | Reabra um caso encerrado por alta neste semestre, com o motivo | O caso volta a "em atendimento", com o mesmo prontuário |
 | RF33 · Consulta do relatório | Abra o relatório final de um caso | As versões aparecem só para leitura, sem aprovar nem imprimir |
+
+### Teste de usabilidade da emissão da declaração (RNF41) { #teste-de-usabilidade-da-emissao-da-declaracao-rnf41 }
+
+O [RNF41](../requisitos/nao-funcionais.md#rnf41) pede que a declaração de comparecimento saia em até 3 interações a partir da tela do paciente, sem treinamento. A contagem de interações já é conferida por um e2e ([#312](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/pull/312)). Falta o teste com pessoas, no [patamar mínimo de lançamento](../requisitos/priorizacao-e-mvp.md#patamar-minimo-de-lancamento-dos-rnfs-evolutivos): pelo menos **3 pessoas da secretaria** e **3 pacientes ou responsáveis**, sem ajuda. Sem ele, o RF44 (#226) e o RF45 (#280) não chegam a "Aceita", porque o D4.5 exige as duas evidências.
+
+| Quem | Ponto de partida | Tarefa | Anotar |
+| --- | --- | --- | --- |
+| 3 pessoas da secretaria | A ficha de um paciente com uma sessão realizada | "Emita e imprima a declaração de comparecimento da última sessão deste paciente" | Se concluiu sem ajuda, quantos toques ou cliques fez a partir da ficha e onde hesitou |
+| 3 pacientes ou responsáveis (podem ser pessoas da clínica, com a inscrição de um paciente fictício) | A página "Declarações", já com a identidade verificada | "Emita e imprima a declaração da sua última sessão" | Os mesmos itens |
+
+- **Atende:** todos concluem sem ajuda, em até 3 interações. Se alguém não concluir, a equipe registra onde a pessoa parou e trata como correção (D6.2).
+- **Preparação:** a equipe deixa os pacientes fictícios com uma sessão realizada e a identidade verificável, e quem aplica o teste não explica a tela antes.
+- **Registro:** com a resposta da FBr, a equipe registra `/rnf RNF41 <link>` nas issues do RF44 e do RF45, com o número de participantes por público, quantos concluíram sem ajuda e o maior número de interações observado.
 
 ## Publicação em produção { #publicacao-em-producao }
 
