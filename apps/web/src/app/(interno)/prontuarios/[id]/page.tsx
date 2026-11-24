@@ -39,6 +39,10 @@ import {
   LeituraEvolucao,
   type EvolucaoRegistrada,
 } from "@/components/prontuario/fichas";
+import {
+  SeloValidacao,
+  ValidacaoDaEvolucao,
+} from "@/components/prontuario/validacao-evolucao";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { api, ErroApi } from "@/lib/api";
 import { dataBr, dataHoraBr, idade, NOMES_SITUACAO_CASO } from "@/lib/formato";
@@ -462,6 +466,11 @@ export default function ProntuarioPage() {
                           {(atendimento.evolucao!.versaoAtual ?? 1) > 1 &&
                             ` · versão ${atendimento.evolucao!.versaoAtual} · atual`}
                         </span>
+                        {atendimento.evolucao!.validacao && (
+                          <SeloValidacao
+                            situacao={atendimento.evolucao!.validacao.situacao}
+                          />
+                        )}
                         <span className="text-marca underline underline-offset-4">
                           Ver evolução
                         </span>
@@ -485,6 +494,12 @@ export default function ProntuarioPage() {
                       prontuarioId={p.id}
                       evolucao={atendimento.evolucao!}
                       numeroNoCiclo={atendimento.numeroNoCiclo}
+                    />
+                    <ValidacaoDaEvolucao
+                      prontuarioId={p.id}
+                      evolucao={atendimento.evolucao!}
+                      numeroNoCiclo={atendimento.numeroNoCiclo}
+                      supervisor={p.supervisor}
                     />
                   </details>
                   <AcaoCorrecao

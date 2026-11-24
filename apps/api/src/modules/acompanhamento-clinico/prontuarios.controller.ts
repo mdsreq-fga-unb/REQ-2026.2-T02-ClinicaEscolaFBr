@@ -30,6 +30,7 @@ import { ZodValidationPipe } from '../../common/zod-validation.pipe';
 import { ComplementosEvolucaoService } from './complementos-evolucao.service';
 import { CorrecoesEvolucaoService } from './correcoes-evolucao.service';
 import { ProntuariosService } from './prontuarios.service';
+import { ValidacoesEvolucaoService } from './validacoes-evolucao.service';
 
 // Restrição de acesso ao prontuário (RF55).
 @Controller()
@@ -39,6 +40,7 @@ export class ProntuariosController {
     private readonly prontuarios: ProntuariosService,
     private readonly correcoes: CorrecoesEvolucaoService,
     private readonly complementos: ComplementosEvolucaoService,
+    private readonly validacoes: ValidacoesEvolucaoService,
   ) {}
 
   // Qualquer perfil pode tentar: a política decide e registra a tentativa.
@@ -117,6 +119,17 @@ export class ProntuariosController {
     @UsuarioAtual() usuario: UsuarioAutenticado,
   ) {
     return this.complementos.registrar(id, evolucaoId, corpo, usuario);
+  }
+
+  // Validação da evolução pelo supervisor do caso (RF67).
+  @Post('prontuarios/:id/evolucoes/:evolucaoId/validacao')
+  @Header('Cache-Control', 'no-store')
+  validarEvolucao(
+    @Param('id', ParseUUIDPipe) id: string,
+    @Param('evolucaoId', ParseUUIDPipe) evolucaoId: string,
+    @UsuarioAtual() usuario: UsuarioAutenticado,
+  ) {
+    return this.validacoes.validar(id, evolucaoId, usuario);
   }
 
   // Data-limite para corrigir evoluções no semestre vigente (RF29): só a coordenação.

@@ -16,6 +16,7 @@ export * from "./indicadores";
 export * from "./acessos-prontuario";
 export * from "./correcao-evolucao";
 export * from "./complemento-evolucao";
+export * from "./validacao-evolucao";
 export * from "./faltas-estagiario";
 export * from "./contribuicao";
 export * from "./declaracoes";

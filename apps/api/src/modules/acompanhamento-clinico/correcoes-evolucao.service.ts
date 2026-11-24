@@ -33,6 +33,7 @@ import type { UsuarioAutenticado } from '../../auth/usuario-autenticado';
 import { cifrar, decifrar } from '../../common/criptografia';
 import { DB } from '../../database/database.module';
 import { PoliticaProntuario } from './politica-prontuario';
+import { travarEvolucao } from './trava-evolucao';
 
 type Leitor = Db | Transacao;
 
@@ -189,11 +190,8 @@ export class CorrecoesEvolucaoService {
           message: `O prazo para corrigir evoluções deste semestre terminou em ${dataBr(dataLimite!)}.`,
           dataLimite,
         });
-      // Trava a evolução para calcular a versão seguinte: o FOR UPDATE pediria a
-      // permissão de UPDATE, que o usuário da aplicação não tem nas evoluções.
-      await tx.execute(
-        sql`select pg_advisory_xact_lock(hashtextextended(${`correcao_evolucao:${evolucaoId}`}, 0))`,
-      );
+      // Trava a evolução para calcular a versão seguinte.
+      await travarEvolucao(tx, evolucaoId);
       const [ultima] = await tx
         .select({ versao: correcoesEvolucao.versao })
         .from(correcoesEvolucao)
@@ -231,6 +229,9 @@ export class CorrecoesEvolucaoService {
               }),
           motivoCifrado: cifrar(dados.motivo, chave),
           corrigidaPor: usuario.id,
+          // Depois da trava, e não o início da transação: a validação (RF67) compara
+          // as datas.
+          corrigidaEm: sql`clock_timestamp()`,
         })
         .returning({
           id: correcoesEvolucao.id,

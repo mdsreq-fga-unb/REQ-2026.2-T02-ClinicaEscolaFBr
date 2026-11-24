@@ -185,3 +185,25 @@ export const complementosEvolucao = pgTable(
     ),
   ],
 );
+
+// RF67: a validação do supervisor não guarda cópia do conteúdo: vale para o que existia
+// em validada_em. A situação (validada ou pendente) é calculada na leitura. Somente
+// inserção (gatilho impedir_alteracao_registro).
+export const validacoesEvolucao = pgTable(
+  "validacoes_evolucao",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    evolucaoId: uuid("evolucao_id")
+      .notNull()
+      .references(() => evolucoes.id),
+    validadaPor: uuid("validada_por")
+      .notNull()
+      .references(() => usuarios.id),
+    validadaEm: timestamp("validada_em", { withTimezone: true })
+      .notNull()
+      .defaultNow(),
+  },
+  (t) => [
+    index("validacoes_evolucao_evolucao_idx").on(t.evolucaoId, t.validadaEm),
+  ],
+);

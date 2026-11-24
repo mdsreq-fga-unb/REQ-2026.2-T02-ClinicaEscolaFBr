@@ -7,6 +7,7 @@ import { CorrecoesEvolucaoService } from './correcoes-evolucao.service';
 import { PoliticaProntuario } from './politica-prontuario';
 import { ProntuariosController } from './prontuarios.controller';
 import { ProntuariosService } from './prontuarios.service';
+import { ValidacoesEvolucaoService } from './validacoes-evolucao.service';
 
 @Module({
   imports: [AssiduidadeModule],
@@ -17,6 +18,7 @@ import { ProntuariosService } from './prontuarios.service';
     AcessosProntuarioService,
     CorrecoesEvolucaoService,
     ComplementosEvolucaoService,
+    ValidacoesEvolucaoService,
   ],
   exports: [PoliticaProntuario],
 })

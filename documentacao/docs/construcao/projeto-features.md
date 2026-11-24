@@ -2111,6 +2111,14 @@ sequenceDiagram
 
 **Dependências e riscos:** depende do RF28 e lê o RF29 e o RF30. Se o RF30 atrasar, a regra vale só com as correções, e o complemento entra quando for integrado.
 
+**Na implementação:**
+
+- **Banco.** A tabela `validacoes_evolucao` é somente inserção, com o gatilho `impedir_alteracao_registro` (RNF27), e o script do `clinica_app` tira dela o `UPDATE` e o `DELETE`.
+- **Ordem das datas.** A correção (RF29), o complemento (RF30) e a validação usam a mesma trava consultiva da evolução, e a data de cada um é a do instante da gravação, depois da trava. Assim, uma mudança que esperou a validação não fica com a data anterior à dela. No empate, a evolução fica pendente.
+- **Resposta.** O `GET /prontuarios/:id` traz, em cada evolução, `validacao`, com `situacao`, `ultima` (o supervisor e a data/hora), `mudanca` (o que a devolveu a pendente) e `permitida`. O `409` traz a validação atual.
+- **Acesso.** A política usa o modo `escrita`, com a condição do perfil de supervisor, e a tentativa negada fica no registro de acessos (RF56), como no RF29 e no RF30.
+- **Telas.** A etiqueta fica no título de cada evolução; a validação anterior, o motivo da volta a pendente e o botão, dentro dela, depois do conteúdo. Ao salvar um complemento numa evolução validada, o aviso diz que ela voltou a ficar pendente.
+
 ---
 
 ### RF31 — Consultar evolução de uma sessão específica ([#274](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/issues/274))

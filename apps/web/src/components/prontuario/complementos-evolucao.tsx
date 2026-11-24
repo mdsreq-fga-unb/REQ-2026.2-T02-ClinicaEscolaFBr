@@ -274,6 +274,8 @@ export function ComplementosEvolucao({
 }) {
   const [aberto, setAberto] = useState(false);
   const [salvo, setSalvo] = useState(false);
+  // Estava validada quando o complemento foi salvo (RF67).
+  const [voltouAPendente, setVoltouAPendente] = useState(false);
   const complementos = evolucao.complementos ?? [];
   const permitido = evolucao.complemento?.permitido ?? false;
   const aviso = evolucao.complemento?.aviso ?? null;
@@ -288,7 +290,12 @@ export function ComplementosEvolucao({
       <h3 id={idTitulo} className="text-[15px] font-bold text-marca">
         Complementos
       </h3>
-      {salvo && <Aviso tipo="sucesso" titulo="Complemento salvo." focar />}
+      {salvo && (
+        <Aviso tipo="sucesso" titulo="Complemento salvo." focar>
+          {voltouAPendente &&
+            "A evolução volta a ficar pendente de validação pelo supervisor."}
+        </Aviso>
+      )}
       {complementos.length > 0 ? (
         <LinhaDoTempoEvolucao evolucao={evolucao} />
       ) : (
@@ -315,6 +322,7 @@ export function ComplementosEvolucao({
             aoSalvar={() => {
               setAberto(false);
               setSalvo(true);
+              setVoltouAPendente(evolucao.validacao?.situacao === "validada");
             }}
           />
         ) : (
