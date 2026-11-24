@@ -39,14 +39,16 @@ As PRs abertas em 24/11 entram nesta ordem. A ordem respeita as que estão empil
 | 9 | [#295](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/pull/295) | Relatório institucional em PDF (RF49) | — | — |
 | 10 | [#297](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/pull/297) | Correções do Ciclo 6 (sessão expirada, fila, ficha) | — | — |
 | 11 | [#305](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/pull/305) | Contato de emergência e endereço completo obrigatórios na inscrição (RF1) | — | Corrige também o e2e instável do RF44 |
-| 12 | [#301](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/pull/301) | Encerramento por alta (RF68) | `0026` | Empilhada sobre a #310, já renumerada |
-| 13 | [#306](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/pull/306) | RNF27 associado ao RF30 no catálogo | — | — |
-| 14 | [#302](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/pull/302) | Estado das features no catálogo | — | — |
-| 15 | [#311](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/pull/311) | Validação das funcionalidades do Ciclo 5 pela FBr (24/11) | — | — |
-| 16 | [#313](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/pull/313) | Carga só do RNF47 | — | — |
-| 17 | [#304](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/pull/304) | Entrega final e o fim do Ciclo 7 | — | — |
-| 18 | [#314](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/pull/314) | Unidade 4 no menu e Representação de requisitos | — | Empilhada sobre a #304 |
-| 19 em diante | As features dos demais Líderes, como [#307](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/pull/307) (RF43), [#308](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/pull/308) (RF30) e [#309](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/pull/309) (RF67, empilhada sobre a #308) | Na ordem em que forem aprovadas | Próximo número livre, a partir da `0027` | Renumerar antes do merge |
+| 12 | [#317](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/pull/317) | Segurança da auditoria: origem e formato das requisições, entradas com erro por origem e cabeçalhos da web | — | — |
+| 13 | [#318](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/pull/318) | Arquitetura técnica atualizada e textos desatualizados corrigidos | — | — |
+| 14 | [#301](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/pull/301) | Encerramento por alta (RF68) | `0026` | Empilhada sobre a #310, já renumerada |
+| 15 | [#306](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/pull/306) | RNF27 associado ao RF30 no catálogo | — | — |
+| 16 | [#302](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/pull/302) | Estado das features no catálogo | — | — |
+| 17 | [#311](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/pull/311) | Validação das funcionalidades do Ciclo 5 pela FBr (24/11) | — | — |
+| 18 | [#313](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/pull/313) | Carga só do RNF47 | — | — |
+| 19 | [#304](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/pull/304) | Entrega final e o fim do Ciclo 7 | — | — |
+| 20 | [#314](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/pull/314) | Unidade 4 no menu e Representação de requisitos | — | Empilhada sobre a #304 |
+| 21 em diante | As features dos demais Líderes, como [#307](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/pull/307) (RF43), [#308](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/pull/308) (RF30) e [#309](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/pull/309) (RF67, empilhada sobre a #308) | Na ordem em que forem aprovadas | Próximo número livre, a partir da `0027` | Renumerar antes do merge |
 
 **Regras da integração:**
 
