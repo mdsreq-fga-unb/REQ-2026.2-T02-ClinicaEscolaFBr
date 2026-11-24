@@ -27,6 +27,7 @@ import {
   AcessoNegadoAoProntuario,
   voltarDoPerfil,
 } from "@/components/prontuario/acesso-negado";
+import { ComplementosEvolucao } from "@/components/prontuario/complementos-evolucao";
 import {
   camposDaFicha,
   diaBr,
@@ -480,6 +481,11 @@ export default function ProntuarioPage() {
                         numeroNoCiclo={atendimento.numeroNoCiclo}
                       />
                     )}
+                    <ComplementosEvolucao
+                      prontuarioId={p.id}
+                      evolucao={atendimento.evolucao!}
+                      numeroNoCiclo={atendimento.numeroNoCiclo}
+                    />
                   </details>
                   <AcaoCorrecao
                     prontuarioId={p.id}

@@ -10,6 +10,7 @@ import {
   SECOES_ANAMNESE,
   type Anamnese,
   type CampoEvolucao,
+  type ComplementoEvolucao,
   type Contrato,
   type Evolucao,
   type SecaoAnamnese,
@@ -574,6 +575,9 @@ export type EvolucaoRegistrada = Record<CampoEvolucao, string | null> & {
     prazoEncerrado: boolean;
     permitida: boolean;
   };
+  // Complementos, em ordem cronológica, e se quem consulta pode adicionar (RF30).
+  complementos?: ComplementoEvolucao[];
+  complemento?: { permitido: boolean; aviso: string | null };
 };
 
 export function LeituraEvolucao({

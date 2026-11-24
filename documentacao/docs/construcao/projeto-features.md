@@ -2060,6 +2060,15 @@ sequenceDiagram
 
 **Dependências e riscos:** depende do RF28 (#149) e lê as versões do RF29 (#224). A resposta da FBr sobre quem registra pode abrir o registro ao supervisor; a rota já recebe o perfil, e a mudança fica na política.
 
+**Na implementação:**
+
+- **Banco.** A tabela `complementos_evolucao` é somente inserção, com o gatilho `impedir_alteracao_registro`, e o script do `clinica_app` tira dela o `UPDATE` e o `DELETE`. O `registrado_em` é o instante da gravação, e não o do início da transação, que pode ter esperado a trava do caso.
+- **Acesso.** A política usa o modo `escrita`, com a condição do perfil de estagiário, para a tentativa do supervisor também ficar registrada como negada (RF56). O corpo é validado no serviço, depois da política, como no RF29.
+- **Caso encerrado.** O serviço trava o caso e confere de novo a situação e o vínculo, para uma alta, um desligamento ou uma transferência no meio não deixar passar o registro. Como a alta e o desligamento encerram o vínculo, o antigo responsável recebe o `403` da política; o `422`, com a `situacao`, é a segunda barreira. O aviso do caso encerrado aparece para quem ainda consulta o prontuário.
+- **Transferência (RF25).** O novo responsável complementa também a evolução registrada pelo anterior, e cada complemento mantém o autor.
+- **Resposta.** O `GET /prontuarios/:id` traz, em cada evolução, `complementos` e `complemento` (`permitido` e `aviso`).
+- **Telas.** Seção "Complementos" dentro de cada evolução, com a linha do tempo (registro original, correções com o que mudou e complementos) e o botão "Adicionar complemento", que abre o formulário. A data da alta entra no aviso quando o RF68 for integrado.
+
 ---
 
 ### RF67 — Validar evolução pelo supervisor ([#272](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/issues/272))

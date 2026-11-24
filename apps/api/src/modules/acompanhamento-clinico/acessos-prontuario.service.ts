@@ -34,6 +34,7 @@ export const OPERACOES_PRONTUARIO: Record<
   registrar_evolucao: 'criacao',
   marcar_sessao_realizada: 'alteracao',
   corrigir_evolucao: 'alteracao',
+  complementar_evolucao: 'criacao',
 };
 
 export function tipoDeAcesso(

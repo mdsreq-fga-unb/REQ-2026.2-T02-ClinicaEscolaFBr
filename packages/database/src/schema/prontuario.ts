@@ -159,3 +159,29 @@ export const correcoesEvolucao = pgTable(
     ),
   ],
 );
+
+// RF30: o complemento é informação adicional e não altera a evolução nem as correções.
+// O texto fica cifrado (RNF51), e a ordem é a de registrado_em. Somente inserção
+// (gatilho impedir_alteracao_registro).
+export const complementosEvolucao = pgTable(
+  "complementos_evolucao",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    evolucaoId: uuid("evolucao_id")
+      .notNull()
+      .references(() => evolucoes.id),
+    textoCifrado: text("texto_cifrado").notNull(),
+    registradoPor: uuid("registrado_por")
+      .notNull()
+      .references(() => usuarios.id),
+    registradoEm: timestamp("registrado_em", { withTimezone: true })
+      .notNull()
+      .defaultNow(),
+  },
+  (t) => [
+    index("complementos_evolucao_evolucao_idx").on(
+      t.evolucaoId,
+      t.registradoEm,
+    ),
+  ],
+);

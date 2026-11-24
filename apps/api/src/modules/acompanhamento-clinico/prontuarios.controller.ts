@@ -27,6 +27,7 @@ import {
   type UsuarioAutenticado,
 } from '../../auth/usuario-autenticado';
 import { ZodValidationPipe } from '../../common/zod-validation.pipe';
+import { ComplementosEvolucaoService } from './complementos-evolucao.service';
 import { CorrecoesEvolucaoService } from './correcoes-evolucao.service';
 import { ProntuariosService } from './prontuarios.service';
 
@@ -37,6 +38,7 @@ export class ProntuariosController {
   constructor(
     private readonly prontuarios: ProntuariosService,
     private readonly correcoes: CorrecoesEvolucaoService,
+    private readonly complementos: ComplementosEvolucaoService,
   ) {}
 
   // Qualquer perfil pode tentar: a política decide e registra a tentativa.
@@ -102,6 +104,19 @@ export class ProntuariosController {
     @UsuarioAtual() usuario: UsuarioAutenticado,
   ) {
     return this.correcoes.corrigir(id, evolucaoId, corpo, usuario);
+  }
+
+  // Complemento da evolução (RF30). O corpo é validado no serviço, depois da política
+  // de acesso, como na correção.
+  @Post('prontuarios/:id/evolucoes/:evolucaoId/complementos')
+  @Header('Cache-Control', 'no-store')
+  complementarEvolucao(
+    @Param('id', ParseUUIDPipe) id: string,
+    @Param('evolucaoId', ParseUUIDPipe) evolucaoId: string,
+    @Body() corpo: unknown,
+    @UsuarioAtual() usuario: UsuarioAutenticado,
+  ) {
+    return this.complementos.registrar(id, evolucaoId, corpo, usuario);
   }
 
   // Data-limite para corrigir evoluções no semestre vigente (RF29): só a coordenação.

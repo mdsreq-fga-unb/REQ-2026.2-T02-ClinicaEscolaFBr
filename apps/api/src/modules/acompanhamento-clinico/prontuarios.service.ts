@@ -34,6 +34,7 @@ import { cifrar, decifrar } from '../../common/criptografia';
 import { AuditoriaService } from '../../auditoria/auditoria.service';
 import type { UsuarioAutenticado } from '../../auth/usuario-autenticado';
 import {
+  avisoSemComplemento,
   correcaoNoPrazo,
   LIMITE_FALTAS_CICLO,
   semestreDaSessao,
@@ -51,6 +52,7 @@ import { DB } from '../../database/database.module';
 import { acoesDeCancelamento } from '../agendamento/acoes-cancelamento';
 import { DesligamentosService } from '../assiduidade/desligamentos.service';
 import { FaltasService } from '../assiduidade/faltas.service';
+import { complementosDasEvolucoes } from './complementos-evolucao.service';
 import {
   correcoesDasEvolucoes,
   dataLimiteDoSemestre,
@@ -222,6 +224,22 @@ export class ProntuariosService {
       evolucoesRows.map((e) => e.id),
       chave,
     );
+    const complementos = await complementosDasEvolucoes(
+      this.db,
+      evolucoesRows.map((e) => e.id),
+      chave,
+    );
+    // O caso encerrado não aceita complemento (RF30): o aviso traz a data do
+    // desligamento, quando há.
+    const avisoComplemento = avisoSemComplemento(
+      caso.situacao,
+      caso.situacao === 'desligado_por_faltas'
+        ? await this.dataDoDesligamento(
+            prontuario.casoId,
+            prontuario.cicloAtendimento,
+          )
+        : null,
+    );
     const inicioDaSessao = new Map(sessoes.map((s) => [s.id, s.inicio]));
     const semestres = [
       ...new Set(
@@ -367,6 +385,14 @@ export class ProntuariosService {
                 prazoEncerrado: !noPrazo,
                 permitida:
                   noPrazo && podeCorrigirPorPerfil(evolucao.registradaPor),
+              },
+              // Informação adicional, separada das versões da correção (RF30). Quem
+              // chega aqui com o perfil de estagiário é o responsável pelo caso.
+              complementos: complementos.get(evolucao.id) ?? [],
+              complemento: {
+                permitido:
+                  usuario.perfil === 'estagiario' && avisoComplemento === null,
+                aviso: avisoComplemento,
               },
             };
           })(),
@@ -632,6 +658,17 @@ export class ProntuariosService {
       );
       return { registrado: true };
     });
+  }
+
+  private async dataDoDesligamento(casoId: string, ciclo: number) {
+    const desligamentos = await this.desligamentos.doCiclo(
+      casoId,
+      ciclo,
+      false,
+    );
+    return (
+      desligamentos.find((d) => d.revertidoEm === null)?.dataDecisao ?? null
+    );
   }
 
   private async queixaDaInscricao(casoId: string) {
