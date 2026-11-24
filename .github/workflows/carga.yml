@@ -109,6 +109,8 @@ jobs:
       - name: Rodar a carga dos indicadores (RNF47)
         if: success() || failure()
         run: |
+          # A pasta é criada também aqui, para quando a carga anterior é pulada.
+          mkdir -p relatorio-testes
           ./k6 run --quiet \
             -e API="${API_ALVO:-http://localhost:3333}" \
             -e RELATORIO=relatorio-testes/carga-rnf47.json \
