@@ -397,6 +397,39 @@ class Catalogo:
         resumo = "; ".join(f"{e}: {contagem[e]}" for e in ORDEM_ESTADOS if e in contagem)
         return "\n".join(linhas) + f"\n\n_Total: {len(itens)} features ({resumo})._"
 
+    # Ordem das atividades na jornada do paciente na clínica, a espinha dorsal do
+    # mapa de histórias; as CPs transversais ficam no fim.
+    JORNADA = ["CP1", "CP2", "CP3", "CP5", "CP4", "CP6", "CP7", "CP9", "CP8", "CP10", "CP13", "CP11", "CP12", "CP14"]
+
+    def mapa_historias(self):
+        """Mapa de histórias (USM) a partir do catálogo: as linhas são as atividades
+        (CPs, na ordem da jornada), as colunas são as entregas (ciclos do MVP e
+        versões posteriores) e cada célula traz as features da atividade naquela
+        entrega, na ordem do backlog."""
+        vigentes = [r for r in self.rfs if not r.get("removido")]
+        ciclos = sorted({r["ciclo"] for r in vigentes if r.get("mvp") and r.get("ciclo")})
+        cabecalho = "| Atividade (CP) | " + " | ".join(f"Ciclo {c}" for c in ciclos) + " | Versões posteriores |"
+        linhas = [cabecalho, "| --- " * (len(ciclos) + 2) + "|"]
+        for cp in self.JORNADA:
+            da_cp = [r for r in vigentes if r["cp"] == cp]
+            if not da_cp:
+                continue
+            celulas = []
+            for c in ciclos:
+                itens = sorted((r for r in da_cp if r.get("mvp") and r.get("ciclo") == c), key=lambda r: r["ordem"])
+                celulas.append(self._celula_mapa(itens))
+            posteriores = sorted((r for r in da_cp if not r.get("mvp")), key=lambda r: numero(r["id"]))
+            celulas.append(self._celula_mapa(posteriores))
+            linhas.append(f"| **{cp}** {self.dados['cps'][cp]} | " + " | ".join(celulas) + " |")
+        return "\n".join(linhas)
+
+    def _celula_mapa(self, itens):
+        # Um bloco só por célula: no celular, a tabela vira cartões com flexbox, e
+        # o link e o nome soltos iriam para colunas diferentes.
+        if not itens:
+            return "—"
+        return "<span>" + "<br>".join(f"{self.link(r['id'])} {r['nome']}" for r in itens) + "</span>"
+
     def tabela_posteriores(self):
         linhas = ["| Feature (RF) | CP | Líder de Feature | Issue |", "| --- | --- | --- | --- |"]
         for r in self.rfs:
@@ -559,7 +592,8 @@ def define_env(env):
 
     for nome in ("tabela_consolidada", "tabela_mvp", "lista_fora_do_mvp", "matriz", "tabela_rnfs",
                  "indice", "origem", "registro", "tabela_decisoes", "tabela_situacao_ciclos",
-                 "tabela_ciclo", "tabela_andamento", "tabela_posteriores", "tabela_conjuntos", "link", "rfs_da_cp"):
+                 "tabela_ciclo", "tabela_andamento", "tabela_posteriores", "tabela_conjuntos", "link", "rfs_da_cp",
+                 "mapa_historias"):
         env.macro(na_pagina(getattr(cat, nome)), nome)
     env.variables["composicao_mvp"] = cat.composicao_mvp()
 

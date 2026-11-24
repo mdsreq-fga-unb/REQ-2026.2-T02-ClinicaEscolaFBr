@@ -140,7 +140,13 @@ Os documentos não são publicados no site, porque são modelos internos da clí
 
 ### Representação
 
-O processo previa diagramas de atividades "quando necessário". Os fluxos com várias decisões, como a inscrição em três etapas, o desligamento e a reversão, e a confirmação e o cancelamento da sessão, foram representados por diagramas de sequência com os caminhos alternativos (blocos `alt`), no [projeto das features](../construcao/projeto-features.md) dos Ciclos 3, 4 e 5, porque eles mostram, no mesmo desenho, quem faz cada passo e o que o sistema grava. Por isso, nenhum diagrama de atividades foi necessário. As situações do caso e da sessão estão nas listas de situações do modelo, e a visão geral do processo da clínica está no Rich Picture do [Cenário Atual](../produto/cenario-atual.md).
+O processo previa diagramas de atividades "quando necessário". Os fluxos com várias decisões, como a inscrição em três etapas, o desligamento e a reversão, e a confirmação e o cancelamento da sessão, foram representados por diagramas de sequência com os caminhos alternativos (blocos `alt`), no [projeto das features](../construcao/projeto-features.md) dos Ciclos 3, 4 e 5, porque eles mostram, no mesmo desenho, quem faz cada passo e o que o sistema grava. Por isso, nenhum diagrama de atividades foi necessário nas features. As situações do caso e da sessão estão nas listas de situações do modelo, e a visão geral do processo da clínica está no Rich Picture do [Cenário Atual](../produto/cenario-atual.md).
+
+Na Unidade 4, com o MVP inteiro projetado, a equipe juntou as representações numa página só, [Representação de requisitos](../requisitos/representacao.md), e acrescentou três que olham o produto inteiro:
+
+- um diagrama de atividades da jornada do paciente, da inscrição ao encerramento;
+- o mapa de histórias (USM), com as atividades, as features e o ciclo de cada uma;
+- a especificação de um caso de uso (RF68), com os fluxos alternativos e de exceção.
 
 ### Verificação
 

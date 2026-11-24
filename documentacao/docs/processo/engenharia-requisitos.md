@@ -32,11 +32,16 @@ O processo de ER separa técnicas, práticas, ferramentas e resultados. Entrevis
 
 ### Representação de Requisitos
 
+!!! info "Aplicação"
+    Cada técnica aplicada ao projeto, com os exemplos, está em [Representação de requisitos](../requisitos/representacao.md).
+
 - **Rich Picture:** será utilizado para representar visualmente o contexto da Clínica Escola, incluindo os stakeholders envolvidos, seus relacionamentos, problemas existentes e elementos relevantes do ambiente no qual a solução será inserida.
 
 - **Modelagem de Domínio:** será utilizada para representar os principais conceitos, relações e regras existentes no domínio da Clínica Escola, fornecendo uma visão compartilhada que servirá de base para a identificação e organização das features.
 
 - **Diagramas de Atividades:** serão utilizados quando necessário para representar fluxos relevantes do sistema, como inscrição, triagem, organização da fila de espera, agendamento e confirmação de presença.
+
+- **Mapa de histórias (USM) e especificação de caso de uso:** acrescentados na Unidade 4, com o conteúdo da disciplina. O mapa mostra o produto inteiro pela jornada de quem usa, com o ciclo de cada feature. O caso de uso detalha o diálogo entre os atores e o sistema numa feature com vários atores e exceções.
 
 ### Verificação e Validação de Requisitos
 
