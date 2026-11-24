@@ -1,5 +1,6 @@
 "use client";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { HistoricoEvolucoesDoPaciente } from "@/components/prontuario/historico-evolucoes";
 import { Eye, Lock, PencilLine, TriangleAlert } from "lucide-react";
 import Link from "next/link";
 import { useParams } from "next/navigation";
@@ -199,6 +200,7 @@ export default function ProntuarioPage() {
           ["historico-responsaveis", "Responsáveis"],
           ["sessoes-ciclo", "Sessões do ciclo"],
           ["evolucoes", "Evoluções"],
+          ["historico-evolucoes", "Histórico de evoluções"],
           ["alta", "Encerramento por alta"],
           ["relatorio", "Relatório final"],
         ].map(([alvo, rotulo]) => (
@@ -514,6 +516,7 @@ export default function ProntuarioPage() {
           <p className="ui-dica">Sem registro neste ciclo.</p>
         )}
       </section>
+      <HistoricoEvolucoesDoPaciente prontuarioId={p.id} />
       <HistoricoFaltas
         id="historico-faltas"
         contagem={p.faltasNoCiclo}

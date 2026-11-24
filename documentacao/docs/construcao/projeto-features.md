@@ -2170,6 +2170,8 @@ _Ciclo 6._
 
 **Dependências e riscos:** depende do RF27, do RF28, do RF29 e do RF30, e mostra o RF67.
 
+**Integração local (24/11/2026):** o histórico usa os complementos da RF30 (#308) e a situação calculada pela RF67 (#309), ainda pendentes de merge. O detalhe abre na própria linha, como permitido na prancha, enquanto não há rota RF31. A operação de auditoria é `consultar_historico_evolucoes`, para consultas permitidas e negadas; os textos clínicos são decifrados após autorização, só para a resposta, sem inclusão nos logs. Fluxo, sequência e dependências: [integração da RF32](integracao-rf32-ciclo6.md).
+
 ---
 
 ### RF68 — Encerrar caso por alta ([#273](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/issues/273))

@@ -83,12 +83,13 @@ describe("elementos mínimos do prontuário (RF27, RNF25, RNF51, RNF52)", () => 
       "Responsáveis",
       "Sessões do ciclo",
       "Evoluções",
+      "Histórico de evoluções",
       "Encerramento por alta",
       "Relatório final",
     ]) {
       expect(screen.getByRole("link", { name: nome })).toBeTruthy();
     }
-    expect(irPara.querySelectorAll("a")).toHaveLength(7);
+    expect(irPara.querySelectorAll("a")).toHaveLength(8);
     expect(
       screen.getByText("Não há sessões registradas neste ciclo."),
     ).toBeTruthy();

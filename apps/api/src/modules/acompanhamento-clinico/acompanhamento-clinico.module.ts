@@ -1,4 +1,5 @@
 import { Module } from '@nestjs/common';
+import { HistoricoEvolucoesService } from './historico-evolucoes.service';
 import { AcessosProntuarioController } from './acessos-prontuario.controller';
 import { AcessosProntuarioService } from './acessos-prontuario.service';
 import { AssiduidadeModule } from '../assiduidade/assiduidade.module';
@@ -13,6 +14,7 @@ import { ValidacoesEvolucaoService } from './validacoes-evolucao.service';
   imports: [AssiduidadeModule],
   controllers: [ProntuariosController, AcessosProntuarioController],
   providers: [
+    HistoricoEvolucoesService,
     PoliticaProntuario,
     ProntuariosService,
     AcessosProntuarioService,
