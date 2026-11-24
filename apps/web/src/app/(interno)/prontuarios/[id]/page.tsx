@@ -568,8 +568,18 @@ export default function ProntuarioPage() {
           <h2 id="titulo-relatorio" className="ui-h2">
             Relatório final
           </h2>
-          {/* Versões do relatório final (RF33); a elaboração e a revisão entram
-              acima delas. */}
+          {/* Versões do relatório final (RF33); a elaboração e a revisão têm a
+              página delas. */}
+          <Link
+            href={`/relatorio-final/${p.casoId}?ciclo=${p.cicloAtendimento}`}
+            className={`${buttonVariants({ variant: "outline" })} mb-3 w-fit max-sm:w-full`}
+          >
+            {sessao?.perfil === "estagiario"
+              ? "Elaborar relatório"
+              : sessao?.perfil === "supervisor"
+                ? "Revisar relatório"
+                : "Ver relatório"}
+          </Link>
           <VersoesDoRelatorio
             casoId={p.casoId}
             ciclo={p.cicloAtendimento}
