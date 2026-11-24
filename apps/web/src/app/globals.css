@@ -360,3 +360,14 @@
   background: var(--accent);
   color: var(--primary);
 }
+
+/* Impressão (RF33): folha A4 com margens; a página esconde o menu e os botões. */
+@media print {
+  @page {
+    size: A4;
+    margin: 2cm;
+  }
+  body {
+    background: white;
+  }
+}

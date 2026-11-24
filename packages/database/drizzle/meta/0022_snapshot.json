@@ -1,5 +1,5 @@
 {
-  "id": "f07ea0fd-b50a-4d0d-97b3-240e6b53298c",
+  "id": "7befe84d-f373-4811-820b-959f436d693c",
   "prevId": "27a19959-e183-4a5a-9afb-55aeedeaff82",
   "version": "7",
   "dialect": "postgresql",
@@ -106,6 +106,12 @@
           "typeSchema": "public",
           "primaryKey": false,
           "notNull": true
+        },
+        "crp": {
+          "name": "crp",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
         },
         "situacao": {
           "name": "situacao",
@@ -880,273 +886,6 @@
       },
       "compositePrimaryKeys": {},
       "uniqueConstraints": {},
-      "policies": {},
-      "checkConstraints": {},
-      "isRLSEnabled": false
-    },
-    "public.encerramentos_alta": {
-      "name": "encerramentos_alta",
-      "schema": "",
-      "columns": {
-        "id": {
-          "name": "id",
-          "type": "uuid",
-          "primaryKey": true,
-          "notNull": true,
-          "default": "gen_random_uuid()"
-        },
-        "caso_id": {
-          "name": "caso_id",
-          "type": "uuid",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "ciclo_atendimento": {
-          "name": "ciclo_atendimento",
-          "type": "integer",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "data_alta": {
-          "name": "data_alta",
-          "type": "date",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "motivo_cifrado": {
-          "name": "motivo_cifrado",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "pedida_por": {
-          "name": "pedida_por",
-          "type": "uuid",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "pedida_em": {
-          "name": "pedida_em",
-          "type": "timestamp with time zone",
-          "primaryKey": false,
-          "notNull": true,
-          "default": "now()"
-        },
-        "confirmada_por": {
-          "name": "confirmada_por",
-          "type": "uuid",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "confirmada_em": {
-          "name": "confirmada_em",
-          "type": "timestamp with time zone",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "cancelado_por": {
-          "name": "cancelado_por",
-          "type": "uuid",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "cancelado_em": {
-          "name": "cancelado_em",
-          "type": "timestamp with time zone",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "forma_cancelamento": {
-          "name": "forma_cancelamento",
-          "type": "forma_cancelamento_alta",
-          "typeSchema": "public",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "motivo_cancelamento_cifrado": {
-          "name": "motivo_cancelamento_cifrado",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false
-        }
-      },
-      "indexes": {
-        "encerramentos_alta_caso": {
-          "name": "encerramentos_alta_caso",
-          "columns": [
-            {
-              "expression": "caso_id",
-              "isExpression": false,
-              "asc": true,
-              "nulls": "last"
-            },
-            {
-              "expression": "pedida_em",
-              "isExpression": false,
-              "asc": true,
-              "nulls": "last"
-            }
-          ],
-          "isUnique": false,
-          "concurrently": false,
-          "method": "btree",
-          "with": {}
-        },
-        "encerramentos_alta_pedido_aberto": {
-          "name": "encerramentos_alta_pedido_aberto",
-          "columns": [
-            {
-              "expression": "caso_id",
-              "isExpression": false,
-              "asc": true,
-              "nulls": "last"
-            }
-          ],
-          "isUnique": true,
-          "where": "\"encerramentos_alta\".\"confirmada_em\" is null and \"encerramentos_alta\".\"cancelado_em\" is null",
-          "concurrently": false,
-          "method": "btree",
-          "with": {}
-        }
-      },
-      "foreignKeys": {
-        "encerramentos_alta_caso_id_casos_id_fk": {
-          "name": "encerramentos_alta_caso_id_casos_id_fk",
-          "tableFrom": "encerramentos_alta",
-          "tableTo": "casos",
-          "columnsFrom": ["caso_id"],
-          "columnsTo": ["id"],
-          "onDelete": "no action",
-          "onUpdate": "no action"
-        },
-        "encerramentos_alta_pedida_por_usuarios_id_fk": {
-          "name": "encerramentos_alta_pedida_por_usuarios_id_fk",
-          "tableFrom": "encerramentos_alta",
-          "tableTo": "usuarios",
-          "columnsFrom": ["pedida_por"],
-          "columnsTo": ["id"],
-          "onDelete": "no action",
-          "onUpdate": "no action"
-        },
-        "encerramentos_alta_confirmada_por_usuarios_id_fk": {
-          "name": "encerramentos_alta_confirmada_por_usuarios_id_fk",
-          "tableFrom": "encerramentos_alta",
-          "tableTo": "usuarios",
-          "columnsFrom": ["confirmada_por"],
-          "columnsTo": ["id"],
-          "onDelete": "no action",
-          "onUpdate": "no action"
-        },
-        "encerramentos_alta_cancelado_por_usuarios_id_fk": {
-          "name": "encerramentos_alta_cancelado_por_usuarios_id_fk",
-          "tableFrom": "encerramentos_alta",
-          "tableTo": "usuarios",
-          "columnsFrom": ["cancelado_por"],
-          "columnsTo": ["id"],
-          "onDelete": "no action",
-          "onUpdate": "no action"
-        }
-      },
-      "compositePrimaryKeys": {},
-      "uniqueConstraints": {},
-      "policies": {},
-      "checkConstraints": {
-        "encerramentos_alta_confirmacao_completa": {
-          "name": "encerramentos_alta_confirmacao_completa",
-          "value": "(\"encerramentos_alta\".\"confirmada_por\" is null) = (\"encerramentos_alta\".\"confirmada_em\" is null)"
-        },
-        "encerramentos_alta_cancelamento_completo": {
-          "name": "encerramentos_alta_cancelamento_completo",
-          "value": "(\"encerramentos_alta\".\"cancelado_por\" is null) = (\"encerramentos_alta\".\"cancelado_em\" is null) and (\"encerramentos_alta\".\"cancelado_em\" is null) = (\"encerramentos_alta\".\"forma_cancelamento\" is null) and (\"encerramentos_alta\".\"forma_cancelamento\" is null) = (\"encerramentos_alta\".\"motivo_cancelamento_cifrado\" is null)"
-        },
-        "encerramentos_alta_confirmado_ou_cancelado": {
-          "name": "encerramentos_alta_confirmado_ou_cancelado",
-          "value": "\"encerramentos_alta\".\"confirmada_em\" is null or \"encerramentos_alta\".\"cancelado_em\" is null"
-        }
-      },
-      "isRLSEnabled": false
-    },
-    "public.reaberturas_caso": {
-      "name": "reaberturas_caso",
-      "schema": "",
-      "columns": {
-        "id": {
-          "name": "id",
-          "type": "uuid",
-          "primaryKey": true,
-          "notNull": true,
-          "default": "gen_random_uuid()"
-        },
-        "encerramento_id": {
-          "name": "encerramento_id",
-          "type": "uuid",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "pedida_por": {
-          "name": "pedida_por",
-          "type": "uuid",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "reaberta_por": {
-          "name": "reaberta_por",
-          "type": "uuid",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "reaberta_em": {
-          "name": "reaberta_em",
-          "type": "timestamp with time zone",
-          "primaryKey": false,
-          "notNull": true,
-          "default": "now()"
-        },
-        "motivo_cifrado": {
-          "name": "motivo_cifrado",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true
-        }
-      },
-      "indexes": {},
-      "foreignKeys": {
-        "reaberturas_caso_encerramento_id_encerramentos_alta_id_fk": {
-          "name": "reaberturas_caso_encerramento_id_encerramentos_alta_id_fk",
-          "tableFrom": "reaberturas_caso",
-          "tableTo": "encerramentos_alta",
-          "columnsFrom": ["encerramento_id"],
-          "columnsTo": ["id"],
-          "onDelete": "no action",
-          "onUpdate": "no action"
-        },
-        "reaberturas_caso_pedida_por_usuarios_id_fk": {
-          "name": "reaberturas_caso_pedida_por_usuarios_id_fk",
-          "tableFrom": "reaberturas_caso",
-          "tableTo": "usuarios",
-          "columnsFrom": ["pedida_por"],
-          "columnsTo": ["id"],
-          "onDelete": "no action",
-          "onUpdate": "no action"
-        },
-        "reaberturas_caso_reaberta_por_usuarios_id_fk": {
-          "name": "reaberturas_caso_reaberta_por_usuarios_id_fk",
-          "tableFrom": "reaberturas_caso",
-          "tableTo": "usuarios",
-          "columnsFrom": ["reaberta_por"],
-          "columnsTo": ["id"],
-          "onDelete": "no action",
-          "onUpdate": "no action"
-        }
-      },
-      "compositePrimaryKeys": {},
-      "uniqueConstraints": {
-        "reaberturas_caso_encerramento_id_unique": {
-          "name": "reaberturas_caso_encerramento_id_unique",
-          "nullsNotDistinct": false,
-          "columns": ["encerramento_id"]
-        }
-      },
       "policies": {},
       "checkConstraints": {},
       "isRLSEnabled": false
@@ -3001,13 +2740,7 @@
           "name": "desligamento_id",
           "type": "uuid",
           "primaryKey": false,
-          "notNull": false
-        },
-        "alta_id": {
-          "name": "alta_id",
-          "type": "uuid",
-          "primaryKey": false,
-          "notNull": false
+          "notNull": true
         },
         "estagiario_id": {
           "name": "estagiario_id",
@@ -3074,15 +2807,6 @@
           "onDelete": "no action",
           "onUpdate": "no action"
         },
-        "vagas_liberadas_alta_id_encerramentos_alta_id_fk": {
-          "name": "vagas_liberadas_alta_id_encerramentos_alta_id_fk",
-          "tableFrom": "vagas_liberadas",
-          "tableTo": "encerramentos_alta",
-          "columnsFrom": ["alta_id"],
-          "columnsTo": ["id"],
-          "onDelete": "no action",
-          "onUpdate": "no action"
-        },
         "vagas_liberadas_estagiario_id_usuarios_id_fk": {
           "name": "vagas_liberadas_estagiario_id_usuarios_id_fk",
           "tableFrom": "vagas_liberadas",
@@ -3117,19 +2841,10 @@
           "name": "vagas_liberadas_desligamento_id_unique",
           "nullsNotDistinct": false,
           "columns": ["desligamento_id"]
-        },
-        "vagas_liberadas_alta_id_unique": {
-          "name": "vagas_liberadas_alta_id_unique",
-          "nullsNotDistinct": false,
-          "columns": ["alta_id"]
         }
       },
       "policies": {},
       "checkConstraints": {
-        "vagas_origem_unica": {
-          "name": "vagas_origem_unica",
-          "value": "(\"vagas_liberadas\".\"desligamento_id\" is null) <> (\"vagas_liberadas\".\"alta_id\" is null)"
-        },
         "vagas_ocupacao_completa": {
           "name": "vagas_ocupacao_completa",
           "value": "(\"vagas_liberadas\".\"ocupada_em\" is null) = (\"vagas_liberadas\".\"ocupada_por_vinculo_id\" is null)"
@@ -3479,16 +3194,6 @@
       "schema": "public",
       "values": ["email", "whatsapp", "ligacao"]
     },
-    "public.forma_cancelamento_alta": {
-      "name": "forma_cancelamento_alta",
-      "schema": "public",
-      "values": [
-        "cancelado_pelo_estagiario",
-        "recusado_pelo_supervisor",
-        "encerrado_pela_transferencia",
-        "encerrado_pelo_desligamento"
-      ]
-    },
     "public.situacao_caso": {
       "name": "situacao_caso",
       "schema": "public",
@@ -3498,8 +3203,7 @@
         "em_atendimento",
         "encerrado",
         "desligado_por_faltas",
-        "aguardando_vaga",
-        "encerrado_por_alta"
+        "aguardando_vaga"
       ]
     },
     "public.tipo_transferencia_caso": {

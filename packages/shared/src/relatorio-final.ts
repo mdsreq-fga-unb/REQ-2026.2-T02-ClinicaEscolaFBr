@@ -1,0 +1,240 @@
+import { z } from "zod";
+import { dataValida, hojeEmBrasilia } from "./datas";
+
+// Relatório final do ciclo de atendimento (RF33), no modelo de relatório
+// psicológico da Clínica Escola (DF42). Um relatório por prontuário (caso e
+// ciclo), com as versões numeradas. Só o rascunho muda; a versão enviada para
+// revisão fica fixa, e o supervisor a aprova ou a devolve.
+export const ESTADOS_RELATORIO = [
+  "rascunho",
+  "em_revisao",
+  "devolvido",
+  "aprovado",
+] as const;
+export type EstadoRelatorio = (typeof ESTADOS_RELATORIO)[number];
+
+export const NOMES_ESTADO_RELATORIO: Record<EstadoRelatorio, string> = {
+  rascunho: "Rascunho",
+  em_revisao: "Em revisão",
+  devolvido: "Devolvida para ajustes",
+  aprovado: "Aprovada",
+};
+
+// Seções escritas pelo estagiário, na ordem do modelo (DF42). A identificação
+// (paciente, solicitante, estagiário e supervisor com o CRP) vem do caso; só a
+// finalidade dela é escrita. O texto fica cifrado num JSON (RNF51).
+export const SECOES_RELATORIO = [
+  ["finalidade", "Finalidade do relatório"],
+  ["demanda", "Descrição da demanda"],
+  ["procedimentos", "Procedimentos"],
+  ["analise", "Análise"],
+  ["conclusao", "Conclusão"],
+] as const;
+export type SecaoRelatorio = (typeof SECOES_RELATORIO)[number][0];
+export type SecoesRelatorio = Record<SecaoRelatorio, string>;
+
+// Quem recebeu a via impressa (RF33): o paciente ou, se menor de idade, o
+// responsável legal.
+export const DESTINATARIOS_RELATORIO = [
+  "paciente",
+  "responsavel_legal",
+] as const;
+export type DestinatarioRelatorio = (typeof DESTINATARIOS_RELATORIO)[number];
+export const NOMES_DESTINATARIO_RELATORIO: Record<
+  DestinatarioRelatorio,
+  string
+> = {
+  paciente: "Paciente",
+  responsavel_legal: "Responsável legal",
+};
+
+// Registro da entrega pela secretaria (RF33): antes, ela confirma que a via foi
+// assinada pelo estagiário e pelo supervisor. A data não pode ser futura.
+export const entregaRelatorioSchema = z.object({
+  viaAssinada: z.literal(true, {
+    error:
+      "Confirme que a via impressa foi assinada pelo estagiário e pelo supervisor.",
+  }),
+  entregueA: z.enum(DESTINATARIOS_RELATORIO, {
+    error: "Informe a quem o relatório foi entregue.",
+  }),
+  entregueEm: z
+    .string({ error: "Informe a data da entrega." })
+    .refine(dataValida, "Informe a data da entrega.")
+    .refine(
+      (data) => !dataValida(data) || data <= hojeEmBrasilia(),
+      "A data da entrega não pode ser futura.",
+    ),
+});
+export type EntregaRelatorio = z.infer<typeof entregaRelatorioSchema>;
+
+// Uma versão na lista "Versões" (estagiário, supervisor e coordenação). A
+// secretaria recebe só a versão aprovada, sem as observações.
+export type VersaoDoRelatorio = {
+  versao: number;
+  estado: EstadoRelatorio;
+  autor: string;
+  // Datas e horas em ISO 8601; a tela mostra o horário de Brasília.
+  enviadaEm: string | null;
+  decisao: {
+    por: string;
+    em: string;
+    // Só na devolução, e nunca para a secretaria.
+    observacoes: string | null;
+  } | null;
+};
+
+export type ImpressaoDoRelatorio = { por: string; em: string };
+
+export type EntregaRegistrada = {
+  versao: number;
+  entregueA: DestinatarioRelatorio;
+  // Data da entrega (AAAA-MM-DD).
+  entregueEm: string;
+  registradaPor: string;
+  registradaEm: string;
+};
+
+// GET /casos/:id/relatorio-final: o relatório do ciclo (o atual, se a consulta
+// não informar). `null` quando o ciclo ainda não tem relatório.
+export type RelatorioFinalDoCiclo = {
+  casoId: string;
+  ciclo: number;
+  paciente: string;
+  // Da inscrição, para a secretaria escolher a quem entregou (RF33).
+  responsavelLegal: string | null;
+  versoes: VersaoDoRelatorio[];
+  aprovada: { versao: number; aprovadaPor: string; aprovadaEm: string } | null;
+  impressoes: ImpressaoDoRelatorio[];
+  entrega: EntregaRegistrada | null;
+};
+
+// Versão para impressão (RF33): só a aprovada. A página monta o documento com
+// os campos das assinaturas manuscritas; não há download nem envio.
+export type RelatorioParaImpressao = {
+  casoId: string;
+  ciclo: number;
+  versao: number;
+  paciente: string;
+  // O responsável legal, quando há um na inscrição; senão, o próprio paciente.
+  solicitante: string | null;
+  estagiario: string;
+  // crp é nulo se o supervisor foi cadastrado antes do campo e a coordenação
+  // ainda não o informou (RF53); a página deixa a linha para preencher à mão.
+  supervisor: { nome: string; crp: string | null };
+  // Primeira sessão realizada no ciclo (AAAA-MM-DD), ou nula se não houver.
+  inicioAcompanhamento: string | null;
+  secoes: SecoesRelatorio;
+  aprovadaEm: string;
+};
+
+// Elaboração pelo estagiário e revisão pelo supervisor (RF33). O limite de cada
+// seção é proposta da equipe, nas pendências de validação com a FBr.
+export const LIMITE_SECAO_RELATORIO = 5000;
+export const LIMITE_OBSERVACOES_RELATORIO = 1000;
+// Referência institucional do encerramento do ciclo: fora dela, o envio exige a
+// justificativa.
+export const SESSOES_MINIMAS_RELATORIO = 8;
+export const SESSOES_MAXIMAS_RELATORIO = 10;
+export const foraDaFaixaDoRelatorio = (sessoes: number) =>
+  sessoes < SESSOES_MINIMAS_RELATORIO || sessoes > SESSOES_MAXIMAS_RELATORIO;
+
+const milhar = (n: number) => n.toLocaleString("pt-BR");
+const textoAte = (limite: number) =>
+  z
+    .string("Escreva o texto.")
+    .trim()
+    .max(limite, `Use no máximo ${milhar(limite)} caracteres.`);
+const secaoRascunho = textoAte(LIMITE_SECAO_RELATORIO);
+const secaoEnvio = (mensagem: string) =>
+  z
+    .string(mensagem)
+    .trim()
+    .min(1, mensagem)
+    .max(
+      LIMITE_SECAO_RELATORIO,
+      `Use no máximo ${milhar(LIMITE_SECAO_RELATORIO)} caracteres.`,
+    );
+const justificativaExcecao = textoAte(LIMITE_OBSERVACOES_RELATORIO)
+  .nullish()
+  .transform((texto) => texto || null);
+
+// O rascunho aceita seções em branco; o envio exige todas.
+export const rascunhoRelatorioSchema = z.object({
+  finalidade: secaoRascunho,
+  demanda: secaoRascunho,
+  procedimentos: secaoRascunho,
+  analise: secaoRascunho,
+  conclusao: secaoRascunho,
+  justificativaExcecao,
+});
+export type RascunhoRelatorio = z.infer<typeof rascunhoRelatorioSchema>;
+
+export const envioRelatorioSchema = z.object({
+  finalidade: secaoEnvio("Escreva a finalidade do relatório."),
+  demanda: secaoEnvio("Descreva a demanda."),
+  procedimentos: secaoEnvio("Descreva os procedimentos."),
+  analise: secaoEnvio("Escreva a análise."),
+  conclusao: secaoEnvio("Escreva a conclusão."),
+  justificativaExcecao,
+});
+
+// A devolução exige as observações; a aprovação não as guarda, e por isso as recusa.
+export const decisaoRelatorioSchema = z
+  .object({
+    decisao: z.enum(["aprovar", "devolver"], {
+      error: "Escolha aprovar ou devolver.",
+    }),
+    observacoes: textoAte(LIMITE_OBSERVACOES_RELATORIO)
+      .nullish()
+      .transform((texto) => texto || null),
+  })
+  .refine((d) => d.decisao !== "devolver" || d.observacoes, {
+    path: ["observacoes"],
+    message: "Para devolver o relatório, escreva as observações.",
+  })
+  .refine((d) => d.decisao !== "aprovar" || !d.observacoes, {
+    path: ["observacoes"],
+    message:
+      "As observações só vão na devolução. Apague o texto para aprovar o relatório.",
+  });
+export type DecisaoRelatorio = z.infer<typeof decisaoRelatorioSchema>;
+
+// Sessão realizada do ciclo, na ordem em que aconteceu. Sem evolução, é uma lacuna,
+// que a equipe revisa: o sistema não completa o prontuário.
+export type SessaoDoRelatorio = {
+  id: string;
+  numero: number;
+  // AAAA-MM-DD, no horário de Brasília.
+  data: string;
+  temEvolucao: boolean;
+};
+
+export type VersaoComTexto = {
+  versao: number;
+  estado: EstadoRelatorio;
+  autor: string;
+  enviadaEm: string | null;
+  secoes: SecoesRelatorio;
+  justificativaExcecao: string | null;
+  // Sessões e evoluções fixadas no envio; nulas no rascunho.
+  origem: { sessoes: string[]; evolucoes: string[] } | null;
+  observacoes: string | null;
+};
+
+// GET /casos/:id/relatorio-final/elaboracao: o que a elaboração e a revisão mostram.
+export type ElaboracaoDoRelatorio = {
+  casoId: string;
+  prontuarioId: string;
+  ciclo: number;
+  paciente: string;
+  solicitante: string | null;
+  estagiario: string | null;
+  supervisor: { nome: string; crp: string | null } | null;
+  sessoes: SessaoDoRelatorio[];
+  semEvolucoes: boolean;
+  exigeJustificativa: boolean;
+  // Da mais recente para a mais antiga; o rascunho só vem para o estagiário.
+  versoes: VersaoComTexto[];
+  acoes: { elaborar: boolean; decidir: boolean };
+};

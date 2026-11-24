@@ -18,8 +18,16 @@ const verificacao = (): VerificacaoAtual => ({
 
 // Sessões das 14h de Brasília (17h UTC), como na prancha 8-2.
 const SESSOES: SessaoComPresenca[] = [
-  { inicio: "2026-11-05T17:00:00.000Z", estagiario: "Ana Beatriz Costa" },
-  { inicio: "2026-10-29T17:00:00.000Z", estagiario: "Ana Beatriz Costa" },
+  {
+    id: "00000000-0000-4000-8000-000000001105",
+    inicio: "2026-11-05T17:00:00.000Z",
+    estagiario: "Ana Beatriz Costa",
+  },
+  {
+    id: "00000000-0000-4000-8000-000000001029",
+    inicio: "2026-10-29T17:00:00.000Z",
+    estagiario: "Ana Beatriz Costa",
+  },
 ];
 
 test.describe("Leitor de tela nas sessões com presença registrada", () => {
