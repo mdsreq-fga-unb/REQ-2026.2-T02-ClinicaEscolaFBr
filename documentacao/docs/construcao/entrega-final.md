@@ -24,23 +24,29 @@ O prazo das features é quarta porque a produção só sai depois do aceite da F
 
 ## Ordem de integração { #ordem-de-integracao }
 
-As PRs abertas em 23/11 entram nesta ordem. A ordem respeita as que estão empilhadas e os números das migrations:
+As PRs abertas em 24/11 entram nesta ordem. A ordem respeita as que estão empilhadas e os números das migrations:
 
 | Ordem | PR | O que traz | Migration | Observação |
 | --- | --- | --- | --- | --- |
 | 1 | [#298](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/pull/298) | Dependências da documentação | — | — |
-| 2 | [#299](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/pull/299) | Dependências do código | — | O e2e do RF44 em 320 px falhou uma vez e passou na nova execução; se voltar a falhar, a PR fica para depois da produção |
+| 2 | [#299](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/pull/299) | Dependências do código | — | O e2e do RF44 em 320 px falha às vezes até a #305 entrar; se falhar, rode de novo |
 | 3 | [#294](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/pull/294) | CRP do supervisor (RF53) | `0022` | — |
 | 4 | [#296](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/pull/296) | API da declaração de comparecimento (RF45) | `0023` | Empilhada sobre a #294 |
 | 5 | [#303](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/pull/303) | Relatório final: modelo, impressão e entrega (RF33) | `0024` | Empilhada sobre a #296 |
-| 6 | [#300](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/pull/300) | Tela da declaração (RF45) | — | Usa a API da #296 |
-| 7 | [#295](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/pull/295) | Relatório institucional em PDF (RF49) | — | — |
-| 8 | [#297](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/pull/297) | Correções do Ciclo 6 (sessão expirada, fila, ficha) | — | — |
-| 9 | [#305](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/pull/305) | Contato de emergência e endereço completo obrigatórios na inscrição (RF1) | — | — |
-| 10 | [#301](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/pull/301) | Encerramento por alta (RF68) | `0022` → `0025` | Renumerar antes do merge |
-| 11 | [#302](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/pull/302) | Estado das features no catálogo | — | — |
-| 12 | [#304](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/pull/304) | Entrega final e o fim do Ciclo 7 | — | — |
-| 13 em diante | As features dos demais Líderes | Na ordem em que forem aprovadas | Próximo número livre | Renumerar antes do merge |
+| 6 | [#310](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/pull/310) | Relatório final: elaboração, envio e revisão (RF33) | `0025` | Empilhada sobre a #303 |
+| 7 | [#300](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/pull/300) | Tela da declaração (RF45) | — | Usa a API da #296 |
+| 8 | [#312](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/pull/312) | e2e da emissão da declaração (RNF41) | — | Empilhada sobre a #300 |
+| 9 | [#295](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/pull/295) | Relatório institucional em PDF (RF49) | — | — |
+| 10 | [#297](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/pull/297) | Correções do Ciclo 6 (sessão expirada, fila, ficha) | — | — |
+| 11 | [#305](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/pull/305) | Contato de emergência e endereço completo obrigatórios na inscrição (RF1) | — | Corrige também o e2e instável do RF44 |
+| 12 | [#301](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/pull/301) | Encerramento por alta (RF68) | `0022` → `0026` | Renumerar antes do merge |
+| 13 | [#306](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/pull/306) | RNF27 associado ao RF30 no catálogo | — | — |
+| 14 | [#302](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/pull/302) | Estado das features no catálogo | — | — |
+| 15 | [#311](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/pull/311) | Validação das funcionalidades do Ciclo 5 pela FBr (24/11) | — | — |
+| 16 | [#313](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/pull/313) | Carga só do RNF47 | — | — |
+| 17 | [#304](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/pull/304) | Entrega final e o fim do Ciclo 7 | — | — |
+| 18 | [#314](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/pull/314) | Unidade 4 no menu e Representação de requisitos | — | Empilhada sobre a #304 |
+| 19 em diante | As features dos demais Líderes, como [#307](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/pull/307) (RF43), [#308](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/pull/308) (RF30) e [#309](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/pull/309) (RF67, empilhada sobre a #308) | Na ordem em que forem aprovadas | Próximo número livre, a partir da `0027` | Renumerar antes do merge |
 
 **Regras da integração:**
 
@@ -52,7 +58,7 @@ As PRs abertas em 23/11 entram nesta ordem. A ordem respeita as que estão empil
     3. gere de novo com `pnpm --filter @clinica/database db:generate --name <nome>`;
     4. copie para o arquivo novo o SQL escrito à mão (gatilhos e comentários), que o gerador não recria;
     5. rode os testes da API.
-- **Versão do histórico repetida.** Cada PR já tem a sua linha no [histórico de versões](../index.md). Se duas usarem o mesmo número, a que entra depois passa para o próximo número livre. A #300 usa a 3.95, que é da #297.
+- **Versão do histórico repetida.** Cada PR já tem a sua linha no [histórico de versões](../index.md). Se duas usarem o mesmo número, a que entra depois passa para o próximo número livre. Já se repetem: a 3.95 (#297 e #300), a 3.101 (#307 e #311), a 3.102 (#308 e #312), a 3.103 (#305 e #309) e a 3.104 (#310; a #314 já passou para a 3.105).
 - **Marcos nas issues.** O merge marca o D4.3. O bot marca os marcos que dependem de comentário: `/de-acordo`, `/demonstrada` e `/aceite`. Confira se a aprovação da PR marcou o D3.1.
 
 ## Roteiro de homologação { #roteiro-de-homologacao }
