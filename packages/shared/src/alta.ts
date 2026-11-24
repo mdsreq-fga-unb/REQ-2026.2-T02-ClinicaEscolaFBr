@@ -114,6 +114,10 @@ export type SituacaoAlta = {
   sessoesSemEvolucao: number;
   // Por que a coordenação não pode reabrir (outro semestre ou outro ciclo).
   bloqueioReabertura: string | null;
+  // O ciclo tem evoluções, e o relatório final dele (RF33) ainda não foi
+  // aprovado: a confirmação da alta espera a aprovação, porque depois dela o
+  // estagiário perde o acesso ao caso e não corrige mais o relatório.
+  relatorioPendente: boolean;
   // Quem pode ter pedido a reabertura: o estagiário cujo atendimento a alta
   // encerrou e o supervisor do caso.
   pedidoPorOpcoes: {

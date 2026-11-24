@@ -26,10 +26,13 @@ import {
   casos,
   encerramentosAlta,
   evolucoes,
+  prontuarios,
   reaberturasCaso,
+  relatoriosFinais,
   sessoesAtendimento,
   usuarios,
   vagasLiberadas,
+  versoesRelatorio,
   vinculosEstagiario,
   type Db,
 } from '@clinica/database';
@@ -59,6 +62,9 @@ const reabridor = aliasedTable(usuarios, 'reabridor');
 const pedinteReabertura = aliasedTable(usuarios, 'pedinte_reabertura');
 const cancelador = aliasedTable(usuarios, 'cancelador');
 const estagiarioDaAlta = aliasedTable(usuarios, 'estagiario_da_alta');
+
+const relatorioPendente = (ciclo: number) =>
+  `Aprove o relatório final do ciclo ${ciclo} antes de confirmar a alta. Depois da confirmação, o estagiário perde o acesso ao caso e não consegue mais corrigir o relatório.`;
 
 // AAAA-MM-DD para DD/MM/AAAA, nas mensagens.
 const dataBr = (data: string) => data.split('-').reverse().join('/');
@@ -164,9 +170,14 @@ export class AltaService {
       }
     }
 
+    const pendente =
+      caso.situacao === 'em_atendimento' &&
+      (await this.relatorioPendente(this.db, casoId, caso.ciclo));
+
     return {
       situacao: caso.situacao,
       ciclo: caso.ciclo,
+      relatorioPendente: pendente,
       sessoesRealizadas: realizadas?.total ?? 0,
       pedidoAberto: pedidoAberto && this.semIds(pedidoAberto),
       historico: historico.map((r) => this.semIds(r)),
@@ -275,6 +286,11 @@ export class AltaService {
         throw new ConflictException(
           'Não há alta aguardando confirmação neste caso.',
         );
+      }
+      // Com o vínculo encerrado, o estagiário não corrige mais o relatório
+      // final (RF33): ele tem de estar aprovado antes da alta.
+      if (await this.relatorioPendente(tx, casoId, caso.ciclo)) {
+        throw new UnprocessableEntityException(relatorioPendente(caso.ciclo));
       }
       // A transferência e o desligamento fecham o pedido; isto só protege
       // contra um pedido de quem já não atende o caso.
@@ -588,6 +604,47 @@ export class AltaService {
       );
       return { forma };
     });
+  }
+
+  // O ciclo tem alguma evolução e nenhuma versão aprovada do relatório final
+  // (RF33). Sem evoluções, o relatório não pode ser gerado, e a alta segue.
+  private async relatorioPendente(
+    banco: Db | Transacao,
+    casoId: string,
+    ciclo: number,
+  ) {
+    const [comEvolucao] = await banco
+      .select({ id: evolucoes.id })
+      .from(evolucoes)
+      .innerJoin(
+        sessoesAtendimento,
+        eq(sessoesAtendimento.id, evolucoes.sessaoId),
+      )
+      .where(
+        and(
+          eq(sessoesAtendimento.casoId, casoId),
+          eq(sessoesAtendimento.cicloAtendimento, ciclo),
+        ),
+      )
+      .limit(1);
+    if (!comEvolucao) return false;
+    const [aprovada] = await banco
+      .select({ id: versoesRelatorio.id })
+      .from(versoesRelatorio)
+      .innerJoin(
+        relatoriosFinais,
+        eq(relatoriosFinais.id, versoesRelatorio.relatorioId),
+      )
+      .innerJoin(prontuarios, eq(prontuarios.id, relatoriosFinais.prontuarioId))
+      .where(
+        and(
+          eq(prontuarios.casoId, casoId),
+          eq(prontuarios.cicloAtendimento, ciclo),
+          eq(versoesRelatorio.estado, 'aprovado'),
+        ),
+      )
+      .limit(1);
+    return !aprovada;
   }
 
   // Pedido aberto do caso (nem confirmado nem cancelado), travado.

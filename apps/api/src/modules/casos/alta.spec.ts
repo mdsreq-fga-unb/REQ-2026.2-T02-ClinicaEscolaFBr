@@ -9,12 +9,15 @@ import {
   casos,
   decisoesPrioridade,
   encerramentosAlta,
+  evolucoes,
   inscricoes,
   parametros,
   reaberturasCaso,
+  relatoriosFinais,
   sessoesAtendimento,
   usuarios,
   vagasLiberadas,
+  versoesRelatorio,
   vinculosEstagiario,
   type Db,
 } from '@clinica/database';
@@ -369,7 +372,11 @@ describe('Encerrar caso por alta (RF68)', () => {
     const daAna = await situacao(caso, 'ana');
     expect(daAna.acoes.pedir).toBe(true);
     expect(daAna.sessoesSemEvolucao).toBe(1);
-    expect(daAna).toMatchObject({ ciclo: 1, sessoesRealizadas: 1 });
+    expect(daAna).toMatchObject({
+      ciclo: 1,
+      sessoesRealizadas: 1,
+      relatorioPendente: false,
+    });
     await pedir(caso).expect(201);
     const daSecretaria = await situacao(caso, 'secretaria');
     expect(daSecretaria.pedidoAberto?.motivo).toBeNull();
@@ -669,5 +676,58 @@ describe('Encerrar caso por alta (RF68)', () => {
     expect((await situacao(caso, 'ana')).acoes.pedir).toBe(true);
     await pedir(caso).expect(201);
     await confirmar(caso).expect(200);
+  });
+
+  it('com evoluções no ciclo, a alta só é confirmada depois de o supervisor aprovar o relatório final (RF68, RF33)', async () => {
+    const { caso, prontuarioId } = await casoAtivo();
+    const sessaoId = await sessao(caso, -48);
+    await db.insert(evolucoes).values({
+      prontuarioId,
+      sessaoId,
+      queixaCifrada: cifrar('queixa da sessão', CHAVE_TESTE),
+      planejamentoCifrado: cifrar('planejamento', CHAVE_TESTE),
+      registradaPor: pessoas.ana.id,
+    });
+    expect((await situacao(caso, 'ana')).relatorioPendente).toBe(true);
+    await pedir(caso).expect(201);
+    expect((await situacao(caso, 'ricardo')).relatorioPendente).toBe(true);
+
+    const versao = (
+      relatorioId: string,
+      numero: number,
+      estado: 'devolvido' | 'aprovado',
+    ) =>
+      db.insert(versoesRelatorio).values({
+        relatorioId,
+        versao: numero,
+        estado,
+        secoesCifradas: cifrar('{}', CHAVE_TESTE),
+        autorId: pessoas.ana.id,
+        enviadaEm: new Date(),
+        origem: { sessoes: [sessaoId], evolucoes: [] },
+        decididaPor: pessoas.ricardo.id,
+        decididaEm: new Date(),
+        observacoesCifradas:
+          estado === 'devolvido' ? cifrar('Revisar.', CHAVE_TESTE) : null,
+      });
+    // Sem relatório e com o relatório devolvido, a confirmação é recusada, e o
+    // caso continua em atendimento, com o pedido aberto.
+    const semRelatorio = await confirmar(caso).expect(422);
+    expect(semRelatorio.body.message).toContain(
+      'Aprove o relatório final do ciclo 1',
+    );
+    const [relatorio] = await db
+      .insert(relatoriosFinais)
+      .values({ prontuarioId })
+      .returning();
+    await versao(relatorio.id, 1, 'devolvido');
+    await confirmar(caso).expect(422);
+    expect(await situacaoDoCaso(caso)).toBe('em_atendimento');
+    expect((await situacao(caso, 'ricardo')).pedidoAberto).not.toBeNull();
+
+    await versao(relatorio.id, 2, 'aprovado');
+    expect((await situacao(caso, 'ricardo')).relatorioPendente).toBe(false);
+    await confirmar(caso).expect(200);
+    expect(await situacaoDoCaso(caso)).toBe('encerrado_por_alta');
   });
 });

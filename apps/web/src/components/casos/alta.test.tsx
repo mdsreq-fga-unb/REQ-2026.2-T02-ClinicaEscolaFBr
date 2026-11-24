@@ -39,6 +39,7 @@ const situacao = (dados: Partial<SituacaoAlta> = {}): SituacaoAlta => ({
   supervisor: "Ricardo Menezes",
   sessoesSemEvolucao: 0,
   bloqueioReabertura: null,
+  relatorioPendente: false,
   pedidoPorOpcoes: [],
   ciclo: 1,
   sessoesRealizadas: 9,
@@ -190,6 +191,66 @@ describe("Encerrar caso por alta (RF68, prancha 6-5)", () => {
     expect(chamadas.find((c) => c.metodo === "POST")?.caminho).toBe(
       "/casos/c1/alta/confirmacao",
     );
+  });
+
+  it("com o relatório final do ciclo pendente, o estagiário é avisado e o supervisor não confirma a alta (RF33)", async () => {
+    simular(
+      situacao({
+        acoes: {
+          pedir: true,
+          confirmar: false,
+          cancelar: false,
+          recusar: false,
+          reabrir: false,
+        },
+        relatorioPendente: true,
+      }),
+    );
+    abrir();
+    fireEvent.click(
+      await screen.findByRole("button", { name: "Registrar alta" }),
+    );
+    expect(
+      screen.getByText("O relatório final do ciclo 1 ainda não foi aprovado."),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole("link", { name: "Abrir o relatório final" }),
+    ).toHaveAttribute("href", "/relatorio-final/c1?ciclo=1");
+    cleanup();
+
+    const chamadas = simular(
+      situacao({
+        pedidoAberto: registro(),
+        acoes: {
+          pedir: false,
+          confirmar: true,
+          cancelar: false,
+          recusar: true,
+          reabrir: false,
+        },
+        relatorioPendente: true,
+      }),
+    );
+    abrir();
+    const botao = await screen.findByRole("button", { name: "Confirmar alta" });
+    expect(botao).toHaveAttribute("aria-disabled", "true");
+    expect(botao).toHaveAccessibleDescription(
+      /o estagiário perde o acesso ao caso e não consegue mais corrigir o relatório/,
+    );
+    expect(
+      screen.getByText(
+        "Aprove o relatório final do ciclo 1 antes de confirmar a alta.",
+      ),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole("link", { name: "Revisar o relatório final" }),
+    ).toHaveAttribute("href", "/relatorio-final/c1?ciclo=1");
+    fireEvent.click(botao);
+    expect(chamadas.filter((c) => c.metodo === "POST")).toHaveLength(0);
+    // A recusa continua disponível.
+    expect(
+      screen.getByRole("button", { name: "Recusar alta" }),
+    ).not.toHaveAttribute("aria-disabled");
   });
 
   it("os outros perfis veem só a etiqueta do pedido, sem o botão de confirmar", async () => {

@@ -2227,12 +2227,13 @@ sequenceDiagram
 - **Pedido errado (revisão da PR).** Como só há um pedido aberto por caso e o registro não é alterado, o pedido com a data ou o motivo errado pode ser cancelado pelo estagiário que o fez ou recusado pelo supervisor, sempre com o motivo, e um pedido novo pode ser feito. O pedido fechado guarda quem, quando, a forma e o motivo cifrado, e aparece em "Pedidos de alta não confirmados".
 - **Transferência e desligamento.** A transferência (RF25) e o desligamento por faltas (RF37) fecham o pedido aberto, com a forma própria. Sem isso, o supervisor confirmaria o pedido do estagiário anterior e encerraria o atendimento do novo. Na reabertura, o caso volta ao estagiário cujo vínculo a alta encerrou (o da vaga liberada), e não a quem pediu a alta.
 - **Sessões sem evolução.** Antes de enviar a alta, o estagiário vê quantas sessões realizadas do ciclo ainda estão sem evolução. Depois da alta, ele perde o vínculo e não registra mais evolução (RF28).
+- **Relatório final antes da alta (revisão da PR do RF33).** Se o ciclo tem evoluções, a confirmação da alta espera o relatório final do ciclo (RF33) ser aprovado, e a API recusa com 422 enquanto ele não existe, está em revisão ou foi devolvido. Sem isso, o supervisor confirmaria a alta com o relatório em revisão, e o estagiário, sem o vínculo, não conseguiria mais corrigi-lo; só a reabertura resolveria. O ciclo sem evoluções não tem relatório a gerar, e a alta segue. O estagiário vê o aviso no formulário da alta, e o supervisor vê "Confirmar alta" indisponível, com o motivo ligado ao botão e o link para o relatório.
 - **Sigilo (RNF17 e RNF51).** O motivo da alta e o da reabertura são cifrados e ficam fora da auditoria. A secretaria vê a alta sem o motivo.
 - **Proteção no banco (RNF27).** Depois de confirmada, a alta não é alterada nem apagada (`proteger_campos_preenchidos`). A reabertura é só inserção, e a vaga mantém a origem fixa.
 - **Outras regras.** O vínculo de estagiário (RF21) recusa o caso encerrado por alta com 409. O agendamento (RF10) recusa com 422, com a mensagem própria. A triagem e a consulta da fila (RF8) tratam o caso como encerrado.
 - **Telas.** Seção "Alta" na ficha do paciente, para todos os perfis que veem o caso:
     - o formulário do estagiário, com a data, o motivo, o aviso das sessões sem evolução e o nome do supervisor que confirma;
-    - a etiqueta "Alta aguardando confirmação do supervisor", e o pedido com "Confirmar alta" e "Recusar alta" para o supervisor;
+    - a etiqueta "Alta aguardando confirmação do supervisor", e o pedido com "Confirmar alta" e "Recusar alta" para o supervisor, com o aviso do relatório final pendente;
     - "Cancelar pedido de alta" para o estagiário que pediu, e o diálogo do motivo do cancelamento ou da recusa;
     - o caso "Encerrado por alta em …", com a confirmação e a vaga liberada;
     - o diálogo "Reabrir o caso de …?" da coordenação, com quem pediu e o motivo;

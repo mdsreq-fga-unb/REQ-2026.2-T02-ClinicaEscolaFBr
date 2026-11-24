@@ -1,5 +1,6 @@
 "use client";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import Link from "next/link";
 import { useId, useState, type FormEvent, type ReactNode } from "react";
 import {
   cancelamentoAltaSchema,
@@ -146,6 +147,8 @@ export function AltaDoCaso({ casoId, nome }: { casoId: string; nome: string }) {
         <PedidoAberto
           casoId={casoId}
           pedido={alta.pedidoAberto}
+          ciclo={alta.ciclo}
+          relatorioPendente={alta.relatorioPendente}
           podeConfirmar={alta.acoes.confirmar}
           podeCancelar={alta.acoes.cancelar}
           podeRecusar={alta.acoes.recusar}
@@ -350,6 +353,21 @@ function PedidoDeAlta({
           Registre antes de enviar.
         </Aviso>
       )}
+      {alta.relatorioPendente && (
+        <Aviso
+          tipo="alerta"
+          titulo={`O relatório final do ciclo ${alta.ciclo} ainda não foi aprovado.`}
+        >
+          O supervisor só confirma a alta depois de aprovar o relatório, porque
+          depois da alta você não consegue mais corrigi-lo.{" "}
+          <Link
+            href={`/relatorio-final/${casoId}?ciclo=${alta.ciclo}`}
+            className="underline"
+          >
+            Abrir o relatório final
+          </Link>
+        </Aviso>
+      )}
       {/* Frase única, sem negrito, como na prancha 6-5. */}
       <Aviso
         tipo="info"
@@ -383,6 +401,8 @@ function PedidoDeAlta({
 function PedidoAberto({
   casoId,
   pedido,
+  ciclo,
+  relatorioPendente,
   podeConfirmar,
   podeCancelar,
   podeRecusar,
@@ -391,6 +411,8 @@ function PedidoAberto({
 }: {
   casoId: string;
   pedido: RegistroAlta;
+  ciclo: number;
+  relatorioPendente: boolean;
   podeConfirmar: boolean;
   podeCancelar: boolean;
   podeRecusar: boolean;
@@ -460,6 +482,23 @@ function PedidoAberto({
             agendamentos nem evoluções. As sessões futuras são canceladas, sem
             contar falta.
           </p>
+          {relatorioPendente && (
+            <Aviso
+              tipo="alerta"
+              titulo={`Aprove o relatório final do ciclo ${ciclo} antes de confirmar a alta.`}
+            >
+              <span id="alta-relatorio-pendente">
+                Depois da confirmação, o estagiário perde o acesso ao caso e não
+                consegue mais corrigir o relatório.
+              </span>{" "}
+              <Link
+                href={`/relatorio-final/${casoId}?ciclo=${ciclo}`}
+                className="underline"
+              >
+                Revisar o relatório final
+              </Link>
+            </Aviso>
+          )}
           {confirmacao.isError && (
             <Aviso tipo="erro" titulo="Não foi possível confirmar a alta.">
               {confirmacao.error instanceof ErroApi &&
@@ -478,9 +517,17 @@ function PedidoAberto({
                 Recusar alta
               </Button>
             )}
+            {/* Indisponível com o motivo ligado ao botão (RNF56), como o
+                agendamento do caso encerrado. */}
             <Button
               disabled={confirmacao.isPending}
-              onClick={() => confirmacao.mutate()}
+              aria-disabled={relatorioPendente || undefined}
+              aria-describedby={
+                relatorioPendente ? "alta-relatorio-pendente" : undefined
+              }
+              onClick={() => {
+                if (!relatorioPendente) confirmacao.mutate();
+              }}
             >
               {confirmacao.isPending ? "Confirmando…" : "Confirmar alta"}
             </Button>
