@@ -145,7 +145,7 @@ O processo previa diagramas de atividades "quando necessário". Os fluxos com v�
 Na Unidade 4, com o MVP inteiro projetado, a equipe juntou as representações numa página só, [Representação de requisitos](../requisitos/representacao.md), e acrescentou três que olham o produto inteiro:
 
 - um diagrama de atividades da jornada do paciente, da inscrição ao encerramento;
-- o mapa de histórias (USM), com as atividades, as features e o ciclo de cada uma;
+- o mapa das features pela jornada, inspirado no USM, com as áreas e os conjuntos de features do FDD e o ciclo de cada feature;
 - a especificação de um caso de uso (RF68), com os fluxos alternativos e de exceção.
 
 ### Verificação

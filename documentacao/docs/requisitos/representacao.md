@@ -22,7 +22,7 @@ Esta página reúne as técnicas de representação usadas no projeto e mostra c
 | Diagrama de sequência | O caminho de cada operação entre o usuário, a API e o banco, com os desvios de acesso e de erro | [Projeto das features](../construcao/projeto-features.md) | No "Projetar por feature" |
 | Protótipo de alta fidelidade | As telas de cada feature, com os estados de erro, vazio e acesso negado | [Protótipos](../construcao/prototipos.md) | No "Projetar por feature", validado com a FBr |
 | Diagrama de atividades | A jornada do paciente na clínica, de ponta a ponta | [Abaixo](#diagrama-de-atividades-jornada-do-paciente) | Unidade 4 |
-| Mapa de histórias (USM) | As atividades do usuário, as features de cada uma e a entrega em que cada feature entrou | [Abaixo](#mapa-de-historias) | Gerado do catálogo a cada publicação |
+| Mapa das features pela jornada (inspirado no USM) | A lista de features do FDD e o ciclo de cada uma, na ordem da jornada | [Abaixo](#mapa-de-historias) | Gerado do catálogo a cada publicação |
 | Especificação de caso de uso | O diálogo entre o ator e o sistema numa feature, com os fluxos alternativos e de exceção | [Abaixo](#especificacao-de-caso-de-uso-encerrar-caso-por-alta) | Unidade 4 |
 
 ## Diagrama de atividades: jornada do paciente { #diagrama-de-atividades-jornada-do-paciente }
@@ -73,15 +73,17 @@ flowchart TD
 
 **Legenda:** cada cor é um perfil. <span style="background:#e8f1fb;border:1px solid #3a6ea5;padding:0 .4em;color:#1b2a3a">paciente ou responsável</span> <span style="background:#eef7ee;border:1px solid #3f7d3f;padding:0 .4em;color:#1b2a3a">coordenação</span> <span style="background:#fbf3e4;border:1px solid #9a6a12;padding:0 .4em;color:#1b2a3a">supervisor</span> <span style="background:#fdecec;border:1px solid #a33f3f;padding:0 .4em;color:#1b2a3a">estagiário</span> <span style="background:#f4ecf7;border:1px solid #7a4b8c;padding:0 .4em;color:#1b2a3a">secretaria</span> <span style="background:#eef1f4;border:1px solid #5b6875;padding:0 .4em;color:#1b2a3a">mais de um perfil</span>. Os losangos são decisões, e a linha tracejada é uma consulta que o paciente pode fazer a qualquer momento, sem mudar o caminho. No celular, deslize o diagrama para os lados.
 
-## Mapa de histórias { #mapa-de-historias }
+## Mapa das features pela jornada (inspirado no USM) { #mapa-de-historias }
 
-O mapa de histórias (User Story Mapping) organiza o produto pela jornada de quem usa:
+No FDD, o produto é organizado na **lista de features**, em três níveis: área, conjunto de features e feature, no formato `<ação> <resultado> <objeto>`. No "Planejar por feature", cada feature recebe o ciclo em que é construída, a partir da [priorização por valor e esforço](priorizacao-e-mvp.md) e das dependências.
 
-- **espinha dorsal:** as atividades do usuário, que no projeto são as características de produto (CPs), na ordem em que acontecem na clínica;
-- **corpo:** as features de cada atividade, as histórias do mapa, escritas como features do FDD;
-- **fatias:** as entregas, com os ciclos de construção do MVP e as versões posteriores.
+O mapa abaixo mostra essa mesma lista e esse mesmo plano, dispostos como num mapa de histórias (User Story Mapping):
 
-O primeiro ciclo de construção (Ciclo 3) atravessa a jornada inteira, da inscrição ao prontuário, para que o primeiro incremento já fosse utilizável de ponta a ponta. Os ciclos seguintes aprofundam cada atividade. O mapa é gerado do [catálogo de requisitos](priorizacao-e-mvp.md#catalogo-de-requisitos), a mesma fonte do backlog, e por isso não fica desatualizado.
+- **linhas:** as áreas e os conjuntos de features do FDD, na ordem em que acontecem na jornada do paciente na clínica;
+- **colunas:** as entregas, com os ciclos de construção do MVP e as versões posteriores;
+- **células:** as features de cada conjunto naquela entrega.
+
+Ele não é uma técnica de planejamento do processo: foi montado depois do plano por feature, para enxergar o produto pela jornada de quem usa. Por isso, as células são features do FDD, e não histórias de usuário no formato "como…, quero…, para…". O que o mapa mostra e a lista não deixa ver é que o primeiro ciclo de construção (Ciclo 3) atravessou a jornada inteira, da inscrição ao prontuário, para que o primeiro incremento já fosse utilizável de ponta a ponta. Os ciclos seguintes aprofundaram cada área. O mapa é gerado do [catálogo de requisitos](priorizacao-e-mvp.md#catalogo-de-requisitos), a mesma fonte da lista de features e do backlog.
 
 {{ mapa_historias() }}
 

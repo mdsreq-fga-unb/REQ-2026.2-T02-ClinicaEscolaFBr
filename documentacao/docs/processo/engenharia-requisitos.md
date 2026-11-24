@@ -41,7 +41,7 @@ O processo de ER separa técnicas, práticas, ferramentas e resultados. Entrevis
 
 - **Diagramas de Atividades:** serão utilizados quando necessário para representar fluxos relevantes do sistema, como inscrição, triagem, organização da fila de espera, agendamento e confirmação de presença.
 
-- **Mapa de histórias (USM) e especificação de caso de uso:** acrescentados na Unidade 4, com o conteúdo da disciplina. O mapa mostra o produto inteiro pela jornada de quem usa, com o ciclo de cada feature. O caso de uso detalha o diálogo entre os atores e o sistema numa feature com vários atores e exceções.
+- **Mapa das features pela jornada (inspirado no USM) e especificação de caso de uso:** acrescentados na Unidade 4, com o conteúdo da disciplina. O mapa mostra a lista de features do FDD e o ciclo de cada uma na ordem da jornada de quem usa; ele não substitui o planejamento por feature. O caso de uso detalha o diálogo entre os atores e o sistema numa feature com vários atores e exceções.
 
 ### Verificação e Validação de Requisitos
 

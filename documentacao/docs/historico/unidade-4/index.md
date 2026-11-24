@@ -36,7 +36,7 @@ Estado de cada feature do Ciclo 6, copiado das issues para o [catálogo de requi
 
 - [:material-calendar-month-outline: **Cronograma e Entregas** Atividades do Ciclo 6 e os entregáveis da unidade, com onde está cada um.](cronograma.md)
 - [:material-rocket-launch-outline: **Entrega final** Datas, ordem de integração, roteiro de homologação e publicação em produção.](../../construcao/entrega-final.md)
-- [:material-vector-polyline: **Representação de requisitos** As técnicas aplicadas ao projeto, com o diagrama de atividades, o mapa de histórias e um caso de uso.](../../requisitos/representacao.md)
+- [:material-vector-polyline: **Representação de requisitos** As técnicas aplicadas ao projeto, com o diagrama de atividades, o mapa das features pela jornada e um caso de uso.](../../requisitos/representacao.md)
 - [:material-sitemap-outline: **Projeto das features** Modelo detalhado e diagramas das features, incluindo as do Ciclo 6.](../../construcao/projeto-features.md)
 - [:material-cellphone-link: **Protótipos** Telas das features, incluindo as do Ciclo 6.](../../construcao/prototipos.md)
 
