@@ -8,8 +8,12 @@ import {
   within,
 } from "@testing-library/react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import type { DeclaracaoComparecimento } from "@clinica/shared";
+import type {
+  AutorizacaoMenor,
+  DeclaracaoComparecimento,
+} from "@clinica/shared";
 import { afterEach, describe, expect, it, vi } from "vitest";
+import { AutorizacaoMenorDaFicha } from "./autorizacao-menor";
 import {
   MinhasSessoes,
   SessoesComPresencaDaFicha,
@@ -106,7 +110,7 @@ describe("RF45: emissão pelo paciente ou responsável", () => {
     );
     expect(folha).toHaveTextContent("Brasília, 20 de novembro de 2026.");
     expect(folha).toHaveTextContent("Ricardo Menezes");
-    expect(folha).toHaveTextContent("Psicólogo responsável · CRP 01/12345");
+    expect(folha).toHaveTextContent("Psicólogo(a) responsável · CRP 01/12345");
     expect(folha).toHaveTextContent("Carimbo do psicólogo responsável");
     // Sem dado clínico (RNF6) e só para imprimir: nada de download nem e-mail.
     expect(folha.textContent).not.toMatch(/queixa|prioridade|diagnóstico/i);
@@ -155,7 +159,7 @@ describe("RF45: emissão pelo paciente ou responsável", () => {
     await emitirDaSessao();
     const folha = await screen.findByRole("article");
     expect(folha).toHaveTextContent("Ricardo Menezes");
-    expect(folha).toHaveTextContent(/Psicólogo responsável · CRP _+/);
+    expect(folha).toHaveTextContent(/Psicólogo\(a\) responsável · CRP _+/);
     expect(folha.textContent).not.toMatch(/null|undefined/);
   });
 
@@ -335,5 +339,100 @@ describe("RF45: emissão pela secretaria, na ficha do paciente", () => {
       "href",
       "/entrar",
     );
+  });
+
+  it("registrar a autorização na mesma ficha tira o aviso de autorização pendente, e os outros avisos ficam", async () => {
+    const message =
+      "A Autorização para Acompanhamento Psicoterapêutico de Crianças e Adolescentes ainda não foi registrada. Registre a entrega na ficha do paciente antes de emitir a declaração.";
+    const autorizacao: AutorizacaoMenor = {
+      menor: true,
+      responsavelLegal: "Fernanda Lima",
+      autorizacao: {
+        entregueEm: "2026-11-03",
+        registradoPor: "Juliana Rocha",
+        registradoEm: "2026-11-03T13:15:00.000Z",
+      },
+    };
+    vi.mocked(api).mockImplementation(async (caminho, init) => {
+      if (caminho.endsWith("/emissao"))
+        throw new ErroApi(422, message, {
+          message,
+          motivo: "autorizacao_pendente",
+        });
+      if (caminho.endsWith("/autorizacao-menor"))
+        return init?.method === "PUT"
+          ? autorizacao
+          : { ...autorizacao, autorizacao: null };
+      return SESSOES;
+    });
+    abrir(
+      <>
+        <AutorizacaoMenorDaFicha
+          casoId="c1"
+          nome="João Pedro Lima"
+          dataNascimento="2014-01-01"
+        />
+        <SessoesComPresencaDaFicha casoId="c1" />
+      </>,
+    );
+    await emitirDaSessao();
+    const secao = screen.getByRole("region", {
+      name: "Sessões com presença registrada",
+    });
+    expect(await within(secao).findByRole("alert")).toHaveTextContent(message);
+
+    fireEvent.click(
+      screen.getByLabelText(
+        "A autorização assinada presencialmente foi entregue à clínica",
+      ),
+    );
+    fireEvent.click(screen.getByRole("button", { name: "Registrar" }));
+    await screen.findByRole("status", { name: /Autorização registrada\./ });
+    await waitFor(() =>
+      expect(within(secao).queryByRole("alert")).not.toBeInTheDocument(),
+    );
+    // A lista continua, pronta para uma nova tentativa.
+    expect(within(secao).getByRole("table")).toBeInTheDocument();
+  });
+
+  it("registrar a autorização não tira o aviso de sessão sem presença", async () => {
+    const message = "A sessão de 05/11/2026 foi registrada como falta.";
+    vi.mocked(api).mockImplementation(async (caminho, init) => {
+      if (caminho.endsWith("/emissao"))
+        throw new ErroApi(422, message, { message, motivo: "sem_presenca" });
+      if (caminho.endsWith("/autorizacao-menor"))
+        return init?.method === "PUT"
+          ? {
+              menor: true,
+              responsavelLegal: null,
+              autorizacao: {
+                entregueEm: "2026-11-03",
+                registradoPor: "Juliana Rocha",
+                registradoEm: "2026-11-03T13:15:00.000Z",
+              },
+            }
+          : { menor: true, responsavelLegal: null, autorizacao: null };
+      return SESSOES;
+    });
+    abrir(
+      <>
+        <AutorizacaoMenorDaFicha
+          casoId="c1"
+          nome="João Pedro Lima"
+          dataNascimento="2014-01-01"
+        />
+        <SessoesComPresencaDaFicha casoId="c1" />
+      </>,
+    );
+    await emitirDaSessao();
+    expect(await screen.findByRole("status", { name: message })).toBeVisible();
+    fireEvent.click(
+      screen.getByLabelText(
+        "A autorização assinada presencialmente foi entregue à clínica",
+      ),
+    );
+    fireEvent.click(screen.getByRole("button", { name: "Registrar" }));
+    await screen.findByRole("status", { name: /Autorização registrada\./ });
+    expect(screen.getByRole("status", { name: message })).toBeVisible();
   });
 });

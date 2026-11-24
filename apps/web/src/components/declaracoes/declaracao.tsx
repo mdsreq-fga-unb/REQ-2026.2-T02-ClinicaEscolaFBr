@@ -2,7 +2,7 @@
 import { useMutation } from "@tanstack/react-query";
 import { Lock } from "lucide-react";
 import Link from "next/link";
-import { useEffect, useId, useRef, useState } from "react";
+import { useCallback, useEffect, useId, useRef, useState } from "react";
 import {
   MOTIVOS_SEM_DECLARACAO,
   type DeclaracaoComparecimento,
@@ -52,6 +52,16 @@ export function useEmissaoDeclaracao({
   // Muda a cada pedido, para o aviso receber o foco de novo se se repetir.
   const [tentativa, setTentativa] = useState(0);
   const ultima = useRef<string | null>(null);
+
+  const limparRecusa = useCallback(
+    (motivo: RecusaDeclaracao["motivo"]) =>
+      setAviso((atual) =>
+        atual?.tipo === "recusa" && atual.recusa.motivo === motivo
+          ? null
+          : atual,
+      ),
+    [],
+  );
 
   const mutacao = useMutation({
     mutationFn: (sessaoId: string) =>
@@ -104,6 +114,10 @@ export function useEmissaoDeclaracao({
       setTentativa((t) => t + 1);
       mutacao.mutate(sessaoId);
     },
+    // Tira o aviso da recusa com esse motivo: quando a causa deixa de existir (a
+    // autorização foi registrada na mesma ficha), o aviso vermelho não fica mais
+    // dizendo que a declaração não sai. Outros avisos continuam.
+    limparRecusa,
     voltar() {
       setPrevia(null);
       setNegado(false);
@@ -249,7 +263,7 @@ export function FolhaDeclaracao({
         <div className="min-w-0 flex-1 border-t border-black pt-1.5 text-center text-[14px] leading-[1.5]">
           <p className="m-0">{psicologoResponsavel.nome}</p>
           <p className="m-0">
-            Psicólogo responsável · {linhaCrp(psicologoResponsavel.crp)}
+            Psicólogo(a) responsável · {linhaCrp(psicologoResponsavel.crp)}
           </p>
         </div>
         <div

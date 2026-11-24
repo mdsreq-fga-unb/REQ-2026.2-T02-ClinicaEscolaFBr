@@ -11,6 +11,11 @@ import { Button } from "@/components/ui/button";
 import { api, ErroApi } from "@/lib/api";
 import { dataHoraBr, hojeBr, idade } from "@/lib/formato";
 
+// Chave da autorização na ficha: a seção das sessões a observa, para tirar o
+// aviso de "autorização pendente" quando a secretaria a registra.
+export const chaveAutorizacaoMenor = (casoId: string) =>
+  ["pacientes", casoId, "autorizacao-menor"] as const;
+
 // "12 anos", "1 ano".
 const anos = (n: number) => (n === 1 ? "1 ano" : `${n} anos`);
 
@@ -37,7 +42,7 @@ export function AutorizacaoMenorDaFicha({
   nome: string;
   dataNascimento: string;
 }) {
-  const chave = ["pacientes", casoId, "autorizacao-menor"];
+  const chave = chaveAutorizacaoMenor(casoId);
   const cliente = useQueryClient();
   const titulo = useId();
   const [registradoAgora, setRegistradoAgora] = useState(false);

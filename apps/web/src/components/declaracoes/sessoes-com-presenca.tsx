@@ -1,8 +1,12 @@
 "use client";
 import { useEffect, useState } from "react";
-import { useQuery } from "@tanstack/react-query";
+import { skipToken, useQuery } from "@tanstack/react-query";
 import { Lock } from "lucide-react";
-import type { SessaoComPresenca, VerificacaoAtual } from "@clinica/shared";
+import type {
+  AutorizacaoMenor,
+  SessaoComPresenca,
+  VerificacaoAtual,
+} from "@clinica/shared";
 import { Aviso } from "@/components/comum/aviso";
 import {
   AvisoDaEmissao,
@@ -10,6 +14,7 @@ import {
   PreVisualizacaoDeclaracao,
   useEmissaoDeclaracao,
 } from "@/components/declaracoes/declaracao";
+import { chaveAutorizacaoMenor } from "@/components/declaracoes/autorizacao-menor";
 import { Button } from "@/components/ui/button";
 import { VerificacaoIdentidade } from "@/components/verificacao/verificacao-identidade";
 import { api, ErroApi } from "@/lib/api";
@@ -247,6 +252,18 @@ export function SessoesComPresencaDaFicha({ casoId }: { casoId: string }) {
   const emissao = useEmissaoDeclaracao({
     caminho: (sessaoId) => `/declaracoes/sessoes/${sessaoId}/emissao`,
   });
+  // Só observa a autorização que o bloco da ficha carrega e registra (sem
+  // buscar): quando ela é registrada, o aviso de "autorização pendente" some.
+  const autorizacaoRegistradaEm = useQuery({
+    queryKey: chaveAutorizacaoMenor(casoId),
+    queryFn: skipToken,
+    select: (dados: AutorizacaoMenor) =>
+      dados.autorizacao?.registradoEm ?? null,
+  }).data;
+  const { limparRecusa } = emissao;
+  useEffect(() => {
+    if (autorizacaoRegistradaEm) limparRecusa("autorizacao_pendente");
+  }, [autorizacaoRegistradaEm, limparRecusa]);
   if (consulta.error instanceof ErroApi && consulta.error.status === 403)
     return (
       <section aria-labelledby="sessoes-presenca" className="ui-cartao gap-2">
