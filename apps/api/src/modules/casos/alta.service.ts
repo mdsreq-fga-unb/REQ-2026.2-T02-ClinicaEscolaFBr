@@ -37,6 +37,7 @@ import {
   hojeEmBrasilia,
   semestreDaData,
   STATUS_SESSAO_EM_ABERTO,
+  type CancelamentoAlta,
   type PedidoAlta,
   type ReaberturaCaso,
   type RegistroAlta,
@@ -50,11 +51,17 @@ import {
 import type { UsuarioAutenticado } from '../../auth/usuario-autenticado';
 import { cifrar, decifrar } from '../../common/criptografia';
 import { DB } from '../../database/database.module';
+import { fecharPedidoDeAlta } from './pedido-alta';
 
 const pedinte = aliasedTable(usuarios, 'pedinte');
 const confirmador = aliasedTable(usuarios, 'confirmador');
 const reabridor = aliasedTable(usuarios, 'reabridor');
 const pedinteReabertura = aliasedTable(usuarios, 'pedinte_reabertura');
+const cancelador = aliasedTable(usuarios, 'cancelador');
+const estagiarioDaAlta = aliasedTable(usuarios, 'estagiario_da_alta');
+
+// AAAA-MM-DD para DD/MM/AAAA, nas mensagens.
+const dataBr = (data: string) => data.split('-').reverse().join('/');
 
 const SEM_ACESSO =
   'Você não pode registrar esta ação. Só o estagiário responsável registra a alta, só o supervisor do caso a confirma e só a coordenação reabre o caso.';
@@ -84,7 +91,7 @@ export class AltaService {
     casoId: string,
     usuario: UsuarioAutenticado,
   ): Promise<SituacaoAlta> {
-    const { caso, estagiarioId, supervisorId, supervisor } =
+    const { caso, estagiarioId, supervisorId, supervisor, vinculadoEm } =
       await this.responsaveis(this.db, casoId);
     const papel = this.papel(usuario, estagiarioId, supervisorId);
     if (!papel) {
@@ -93,8 +100,10 @@ export class AltaService {
     }
     const comMotivo = usuario.perfil !== 'secretaria';
     const registros = await this.registros(casoId, comMotivo);
-    const pedidoAberto = registros.find((r) => !r.confirmadaEm) ?? null;
+    const pedidoAberto =
+      registros.find((r) => !r.confirmadaEm && !r.cancelamento) ?? null;
     const historico = registros.filter((r) => r.confirmadaEm);
+    const cancelados = registros.filter((r) => r.cancelamento);
     const vigente =
       caso.situacao === 'encerrado_por_alta'
         ? (historico.find((r) => !r.reabertura) ?? null)
@@ -136,12 +145,17 @@ export class AltaService {
 
     const pedidoPorOpcoes: SituacaoAlta['pedidoPorOpcoes'] = [];
     if (vigente && usuario.perfil === 'coordenacao') {
+      // O estagiário cujo vínculo a alta encerrou, o mesmo da vaga liberada.
       pedidoPorOpcoes.push({
-        id: vigente.pedidaPorId,
-        nome: vigente.pedidaPor,
+        id: vigente.estagiarioAltaId,
+        nome: vigente.estagiarioAlta,
         papel: 'estagiario',
       });
-      if (supervisorId && supervisor && supervisorId !== vigente.pedidaPorId) {
+      if (
+        supervisorId &&
+        supervisor &&
+        supervisorId !== vigente.estagiarioAltaId
+      ) {
         pedidoPorOpcoes.push({
           id: supervisorId,
           nome: supervisor,
@@ -156,6 +170,7 @@ export class AltaService {
       sessoesRealizadas: realizadas?.total ?? 0,
       pedidoAberto: pedidoAberto && this.semIds(pedidoAberto),
       historico: historico.map((r) => this.semIds(r)),
+      cancelados: cancelados.map((r) => this.semIds(r)),
       acoes: {
         pedir:
           papel === 'estagiario' &&
@@ -165,9 +180,19 @@ export class AltaService {
           papel === 'supervisor' &&
           caso.situacao === 'em_atendimento' &&
           !!pedidoAberto,
+        cancelar:
+          papel === 'estagiario' &&
+          caso.situacao === 'em_atendimento' &&
+          pedidoAberto?.pedidaPorId === usuario.id,
+        recusar:
+          papel === 'supervisor' &&
+          caso.situacao === 'em_atendimento' &&
+          !!pedidoAberto,
         reabrir:
           usuario.perfil === 'coordenacao' && !!vigente && !bloqueioReabertura,
       },
+      dataMinimaAlta:
+        papel === 'estagiario' ? this.dataMinimaAlta(vinculadoEm).data : null,
       supervisor,
       sessoesSemEvolucao,
       bloqueioReabertura,
@@ -180,13 +205,28 @@ export class AltaService {
   async pedir(casoId: string, dados: PedidoAlta, usuario: UsuarioAutenticado) {
     await this.exigir(casoId, usuario, 'estagiario', 'pedir_alta');
     return this.db.transaction(async (tx) => {
-      const { caso, estagiarioId } = await this.responsaveis(tx, casoId, true);
+      const { caso, estagiarioId, vinculadoEm } = await this.responsaveis(
+        tx,
+        casoId,
+        true,
+      );
       // Conferido de novo, travado: uma transferência no meio muda o responsável.
       if (estagiarioId !== usuario.id) throw new ForbiddenException(SEM_ACESSO);
       if (caso.situacao !== 'em_atendimento') {
         throw new UnprocessableEntityException(
           'Só o caso em atendimento pode ser encerrado por alta.',
         );
+      }
+      // Uma data antiga digitada por engano impediria a reabertura (outro
+      // semestre) e não teria correção depois da confirmação.
+      const minima = this.dataMinimaAlta(vinculadoEm);
+      if (dados.dataAlta < minima.data) {
+        throw new BadRequestException([
+          {
+            path: ['dataAlta'],
+            message: `A data da alta não pode ser anterior a ${dataBr(minima.data)}, ${minima.motivo}.`,
+          },
+        ]);
       }
       const [pedido] = await tx
         .insert(encerramentosAlta)
@@ -230,22 +270,17 @@ export class AltaService {
       const { caso, vinculoId, estagiarioId, supervisorId } =
         await this.responsaveis(tx, casoId, true);
       if (supervisorId !== usuario.id) throw new ForbiddenException(SEM_ACESSO);
-      const [pedido] = await tx
-        .select({
-          id: encerramentosAlta.id,
-          dataAlta: encerramentosAlta.dataAlta,
-        })
-        .from(encerramentosAlta)
-        .where(
-          and(
-            eq(encerramentosAlta.casoId, casoId),
-            isNull(encerramentosAlta.confirmadaEm),
-          ),
-        )
-        .for('update');
+      const pedido = await this.pedidoAberto(tx, casoId);
       if (!pedido) {
         throw new ConflictException(
           'Não há alta aguardando confirmação neste caso.',
+        );
+      }
+      // A transferência e o desligamento fecham o pedido; isto só protege
+      // contra um pedido de quem já não atende o caso.
+      if (pedido.pedidaPor !== estagiarioId) {
+        throw new ConflictException(
+          'A alta foi pedida por um estagiário que não atende mais este caso. Recuse o pedido.',
         );
       }
       if (caso.situacao !== 'em_atendimento' || !vinculoId || !estagiarioId) {
@@ -358,17 +393,26 @@ export class AltaService {
         casoId,
         true,
       );
+      // O caso volta ao estagiário cujo vínculo a alta encerrou (o da vaga
+      // liberada), e não a quem pediu a alta.
       const [alta] = await tx
         .select({
           id: encerramentosAlta.id,
           ciclo: encerramentosAlta.cicloAtendimento,
           dataAlta: encerramentosAlta.dataAlta,
-          estagiarioId: encerramentosAlta.pedidaPor,
-          estagiario: pedinte.nome,
-          estagiarioSituacao: pedinte.situacao,
+          estagiarioId: vagasLiberadas.estagiarioId,
+          estagiario: estagiarioDaAlta.nome,
+          estagiarioSituacao: estagiarioDaAlta.situacao,
         })
         .from(encerramentosAlta)
-        .innerJoin(pedinte, eq(pedinte.id, encerramentosAlta.pedidaPor))
+        .innerJoin(
+          vagasLiberadas,
+          eq(vagasLiberadas.altaId, encerramentosAlta.id),
+        )
+        .innerJoin(
+          estagiarioDaAlta,
+          eq(estagiarioDaAlta.id, vagasLiberadas.estagiarioId),
+        )
         .where(
           and(
             eq(encerramentosAlta.casoId, casoId),
@@ -470,6 +514,117 @@ export class AltaService {
     });
   }
 
+  // Cancelamento do pedido aberto pelo estagiário que o fez, com o motivo. O
+  // caso continua em atendimento, e um pedido novo pode ser feito.
+  async cancelar(
+    casoId: string,
+    dados: CancelamentoAlta,
+    usuario: UsuarioAutenticado,
+  ) {
+    await this.exigir(casoId, usuario, 'estagiario', 'cancelar_pedido_alta');
+    return this.fechar(casoId, dados, usuario, 'estagiario');
+  }
+
+  // Recusa do pedido aberto pelo supervisor do caso, com o motivo.
+  async recusar(
+    casoId: string,
+    dados: CancelamentoAlta,
+    usuario: UsuarioAutenticado,
+  ) {
+    await this.exigir(casoId, usuario, 'supervisor', 'recusar_pedido_alta');
+    return this.fechar(casoId, dados, usuario, 'supervisor');
+  }
+
+  private async fechar(
+    casoId: string,
+    dados: CancelamentoAlta,
+    usuario: UsuarioAutenticado,
+    papel: 'estagiario' | 'supervisor',
+  ) {
+    return this.db.transaction(async (tx) => {
+      const { caso, estagiarioId, supervisorId } = await this.responsaveis(
+        tx,
+        casoId,
+        true,
+      );
+      const responsavel = papel === 'estagiario' ? estagiarioId : supervisorId;
+      if (responsavel !== usuario.id) throw new ForbiddenException(SEM_ACESSO);
+      const pedido = await this.pedidoAberto(tx, casoId);
+      if (!pedido || caso.situacao !== 'em_atendimento') {
+        throw new ConflictException(
+          'Não há alta aguardando confirmação neste caso.',
+        );
+      }
+      if (papel === 'estagiario' && pedido.pedidaPor !== usuario.id) {
+        throw new ForbiddenException(
+          'Só o estagiário que pediu a alta pode cancelar o pedido.',
+        );
+      }
+      const forma =
+        papel === 'estagiario'
+          ? 'cancelado_pelo_estagiario'
+          : 'recusado_pelo_supervisor';
+      await fecharPedidoDeAlta(tx, {
+        casoId,
+        autorId: usuario.id,
+        forma,
+        motivo: dados.motivo,
+        chave: this.chave,
+      });
+      await this.auditoria.registrar(
+        {
+          usuarioId: usuario.id,
+          operacao:
+            papel === 'estagiario'
+              ? 'cancelar_pedido_alta'
+              : 'recusar_pedido_alta',
+          entidade: 'encerramentos_alta',
+          entidadeId: pedido.id,
+          dadosAnteriores: { situacao: 'aguardando_confirmacao' },
+          // O motivo fica só cifrado no pedido, nunca na auditoria.
+          dadosNovos: { casoId, forma, motivoInformado: true },
+        },
+        tx,
+      );
+      return { forma };
+    });
+  }
+
+  // Pedido aberto do caso (nem confirmado nem cancelado), travado.
+  private async pedidoAberto(tx: Transacao, casoId: string) {
+    const [pedido] = await tx
+      .select({
+        id: encerramentosAlta.id,
+        dataAlta: encerramentosAlta.dataAlta,
+        pedidaPor: encerramentosAlta.pedidaPor,
+      })
+      .from(encerramentosAlta)
+      .where(
+        and(
+          eq(encerramentosAlta.casoId, casoId),
+          isNull(encerramentosAlta.confirmadaEm),
+          isNull(encerramentosAlta.canceladoEm),
+        ),
+      )
+      .for('update');
+    return pedido ?? null;
+  }
+
+  // Primeira data aceita na alta: o início do atendimento pelo estagiário atual
+  // no caso ou o início do semestre, o que for mais recente. Assim a alta nunca
+  // é de antes do vínculo nem de outro semestre, o que impediria a reabertura.
+  private dataMinimaAlta(vinculadoEm: Date | null) {
+    const hoje = hojeEmBrasilia();
+    const semestre = `${hoje.slice(0, 4)}-${Number(hoje.slice(5, 7)) <= 6 ? '01' : '07'}-01`;
+    const vinculo = vinculadoEm ? hojeEmBrasilia(vinculadoEm) : null;
+    return vinculo && vinculo > semestre
+      ? {
+          data: vinculo,
+          motivo: 'quando você passou a atender este caso',
+        }
+      : { data: semestre, motivo: 'início do semestre' };
+  }
+
   // Reabertura só no semestre e no ciclo da alta: depois, é inscrição nova (RF1).
   private bloqueioReabertura(
     dataAlta: string,
@@ -520,6 +675,7 @@ export class AltaService {
         .select({
           id: vinculosEstagiario.id,
           estagiarioId: vinculosEstagiario.estagiarioId,
+          vinculadoEm: vinculosEstagiario.vinculadoEm,
         })
         .from(vinculosEstagiario)
         .where(
@@ -549,6 +705,7 @@ export class AltaService {
       caso,
       vinculoId: vinculo?.id ?? null,
       estagiarioId: vinculo?.estagiarioId ?? null,
+      vinculadoEm: vinculo?.vinculadoEm ?? null,
       supervisorId: atribuicao?.supervisorId ?? null,
       supervisor: atribuicao?.nome ?? null,
     };
@@ -566,6 +723,12 @@ export class AltaService {
         pedidaEm: encerramentosAlta.pedidaEm,
         confirmadaPor: confirmador.nome,
         confirmadaEm: encerramentosAlta.confirmadaEm,
+        canceladoPor: cancelador.nome,
+        canceladoEm: encerramentosAlta.canceladoEm,
+        formaCancelamento: encerramentosAlta.formaCancelamento,
+        motivoCancelamentoCifrado: encerramentosAlta.motivoCancelamentoCifrado,
+        estagiarioAltaId: vagasLiberadas.estagiarioId,
+        estagiarioAlta: estagiarioDaAlta.nome,
       })
       .from(encerramentosAlta)
       // Os dois como leftJoin: um innerJoin seguido de leftJoin de dois apelidos
@@ -574,6 +737,12 @@ export class AltaService {
       .leftJoin(
         confirmador,
         eq(confirmador.id, encerramentosAlta.confirmadaPor),
+      )
+      .leftJoin(cancelador, eq(cancelador.id, encerramentosAlta.canceladoPor))
+      .leftJoin(vagasLiberadas, eq(vagasLiberadas.altaId, encerramentosAlta.id))
+      .leftJoin(
+        estagiarioDaAlta,
+        eq(estagiarioDaAlta.id, vagasLiberadas.estagiarioId),
       )
       .where(eq(encerramentosAlta.casoId, casoId))
       .orderBy(desc(encerramentosAlta.pedidaEm));
@@ -604,12 +773,24 @@ export class AltaService {
         id: l.id,
         ciclo: l.ciclo,
         pedidaPorId: l.pedidaPorId,
+        // Sem a vaga (pedido aberto ou cancelado), vale quem pediu.
+        estagiarioAltaId: l.estagiarioAltaId ?? l.pedidaPorId,
+        estagiarioAlta: l.estagiarioAlta ?? l.pedidaPor ?? '',
         dataAlta: l.dataAlta,
         motivo: abrir(l.motivoCifrado),
         pedidaPor: l.pedidaPor ?? '',
         pedidaEm: l.pedidaEm.toISOString(),
         confirmadaPor: l.confirmadaPor,
         confirmadaEm: l.confirmadaEm?.toISOString() ?? null,
+        cancelamento:
+          l.canceladoEm && l.formaCancelamento && l.motivoCancelamentoCifrado
+            ? {
+                forma: l.formaCancelamento,
+                por: l.canceladoPor ?? '',
+                em: l.canceladoEm.toISOString(),
+                motivo: abrir(l.motivoCancelamentoCifrado),
+              }
+            : null,
         reabertura: r
           ? {
               pedidaPor: r.pedidaPor,
@@ -625,8 +806,15 @@ export class AltaService {
   private semIds({
     ciclo: _ciclo,
     pedidaPorId: _pedidaPorId,
+    estagiarioAltaId: _estagiarioAltaId,
+    estagiarioAlta: _estagiarioAlta,
     ...registro
-  }: RegistroAlta & { ciclo: number; pedidaPorId: string }): RegistroAlta {
+  }: RegistroAlta & {
+    ciclo: number;
+    pedidaPorId: string;
+    estagiarioAltaId: string;
+    estagiarioAlta: string;
+  }): RegistroAlta {
     return registro;
   }
 

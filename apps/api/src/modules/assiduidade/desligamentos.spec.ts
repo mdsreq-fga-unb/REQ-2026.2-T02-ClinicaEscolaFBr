@@ -10,6 +10,7 @@ import {
   casos,
   decisoesPrioridade,
   desligamentoFaltas,
+  encerramentosAlta,
   desligamentosPorFaltas,
   faltasPaciente,
   inscricoes,
@@ -355,6 +356,34 @@ describe('Alerta, desligamento por faltas e reversão (RF36, RF37, RF38)', () =>
         classificacao: 'no_prazo',
         desligamentoId: null,
       });
+    });
+
+    it('o desligamento fecha o pedido de alta aberto, que não pode mais ser confirmado (RF37, RF68)', async () => {
+      const caso = await casoNoLimite();
+      await http()
+        .post(`/casos/${caso}/alta`)
+        .set(como('ana'))
+        .send({
+          dataAlta: new Date().toLocaleDateString('sv-SE', {
+            timeZone: 'America/Sao_Paulo',
+          }),
+          motivo: 'Objetivos alcançados.',
+        })
+        .expect(201);
+      await desligar(caso).expect(201);
+      const [pedido] = await db
+        .select()
+        .from(encerramentosAlta)
+        .where(eq(encerramentosAlta.casoId, caso));
+      expect(pedido).toMatchObject({
+        formaCancelamento: 'encerrado_pelo_desligamento',
+        canceladoPor: pessoas.secretaria.id,
+        confirmadaEm: null,
+      });
+      await http()
+        .post(`/casos/${caso}/alta/confirmacao`)
+        .set(como('carla'))
+        .expect(409);
     });
 
     it('um segundo pedido de desligamento do mesmo caso é recusado (422)', async () => {

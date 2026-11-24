@@ -10,8 +10,11 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import {
+  cancelamentoAltaSchema,
   pedidoAltaSchema,
   reaberturaCasoSchema,
+  recusaAltaSchema,
+  type CancelamentoAlta,
   type PedidoAlta,
   type ReaberturaCaso,
 } from '@clinica/shared';
@@ -56,6 +59,27 @@ export class AltaController {
     @UsuarioAtual() usuario: UsuarioAutenticado,
   ) {
     return this.alta.confirmar(id, usuario);
+  }
+
+  @Post('alta/cancelamento')
+  @HttpCode(200)
+  cancelar(
+    @Param('id', ParseUUIDPipe) id: string,
+    @Body(new ZodValidationPipe(cancelamentoAltaSchema))
+    dados: CancelamentoAlta,
+    @UsuarioAtual() usuario: UsuarioAutenticado,
+  ) {
+    return this.alta.cancelar(id, dados, usuario);
+  }
+
+  @Post('alta/recusa')
+  @HttpCode(200)
+  recusar(
+    @Param('id', ParseUUIDPipe) id: string,
+    @Body(new ZodValidationPipe(recusaAltaSchema)) dados: CancelamentoAlta,
+    @UsuarioAtual() usuario: UsuarioAutenticado,
+  ) {
+    return this.alta.recusar(id, dados, usuario);
   }
 
   @Post('reabertura')

@@ -14,6 +14,8 @@ const motivo = (rotulo: string) =>
     .max(LIMITE_MOTIVO_ALTA, `Use no máximo ${LIMITE_MOTIVO_ALTA} caracteres.`);
 
 // A data da alta não pode ser futura: o pedido registra uma alta que aconteceu.
+// O limite mínimo (o início do atendimento pelo estagiário no caso, ou o do
+// semestre) depende do caso e é conferido na API, que o devolve na situação.
 export const pedidoAltaSchema = z.object({
   dataAlta: z
     .string()
@@ -25,6 +27,28 @@ export const pedidoAltaSchema = z.object({
   motivo: motivo("da alta"),
 });
 export type PedidoAlta = z.infer<typeof pedidoAltaSchema>;
+
+// Pedido aberto com um erro: o estagiário que pediu o cancela, ou o supervisor
+// do caso o recusa, sempre com o motivo. Depois, um pedido novo pode ser feito.
+export const cancelamentoAltaSchema = z.object({
+  motivo: motivo("do cancelamento"),
+});
+export const recusaAltaSchema = z.object({ motivo: motivo("da recusa") });
+export type CancelamentoAlta = z.infer<typeof cancelamentoAltaSchema>;
+
+export const FORMAS_CANCELAMENTO_ALTA = [
+  "cancelado_pelo_estagiario",
+  "recusado_pelo_supervisor",
+  "encerrado_pela_transferencia",
+  "encerrado_pelo_desligamento",
+] as const;
+export type FormaCancelamentoAlta = (typeof FORMAS_CANCELAMENTO_ALTA)[number];
+export const NOMES_CANCELAMENTO_ALTA: Record<FormaCancelamentoAlta, string> = {
+  cancelado_pelo_estagiario: "Pedido cancelado pelo estagiário",
+  recusado_pelo_supervisor: "Pedido recusado pelo supervisor",
+  encerrado_pela_transferencia: "Pedido encerrado pela transferência do caso",
+  encerrado_pelo_desligamento: "Pedido encerrado pelo desligamento do caso",
+};
 
 // Quem pediu a reabertura: o estagiário da alta ou o supervisor do caso.
 export const reaberturaCasoSchema = z.object({
@@ -43,6 +67,14 @@ export type RegistroAlta = {
   pedidaEm: string;
   confirmadaPor: string | null;
   confirmadaEm: string | null;
+  // Pedido que terminou sem a confirmação. O motivo segue a regra do motivo da
+  // alta: a secretaria não o vê.
+  cancelamento: {
+    forma: FormaCancelamentoAlta;
+    por: string;
+    em: string;
+    motivo: string | null;
+  } | null;
   reabertura: {
     pedidaPor: string;
     reabertaPor: string;
@@ -62,14 +94,28 @@ export type SituacaoAlta = {
   // Todas as altas confirmadas do caso, da mais recente para a mais antiga, com
   // a reabertura quando houve.
   historico: RegistroAlta[];
-  acoes: { pedir: boolean; confirmar: boolean; reabrir: boolean };
+  // Pedidos que terminaram sem a confirmação, do mais recente para o mais antigo.
+  cancelados: RegistroAlta[];
+  acoes: {
+    pedir: boolean;
+    confirmar: boolean;
+    // O estagiário que pediu cancela o próprio pedido; o supervisor o recusa.
+    cancelar: boolean;
+    recusar: boolean;
+    reabrir: boolean;
+  };
+  // Primeira data aceita na alta (AAAA-MM-DD): o início do atendimento pelo
+  // estagiário atual no caso, ou o início do semestre, o que for mais recente.
+  // Nula para quem não pede a alta.
+  dataMinimaAlta: string | null;
   supervisor: string | null;
   // Sessões realizadas do ciclo sem evolução: depois da alta, o estagiário não
   // registra mais evolução no caso (RF28). Só para o estagiário e o supervisor.
   sessoesSemEvolucao: number;
   // Por que a coordenação não pode reabrir (outro semestre ou outro ciclo).
   bloqueioReabertura: string | null;
-  // Quem pode ter pedido a reabertura: o estagiário da alta e o supervisor.
+  // Quem pode ter pedido a reabertura: o estagiário cujo atendimento a alta
+  // encerrou e o supervisor do caso.
   pedidoPorOpcoes: {
     id: string;
     nome: string;

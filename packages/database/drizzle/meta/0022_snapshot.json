@@ -1,5 +1,5 @@
 {
-  "id": "f4fbae28-0088-4d05-a2cb-f28fd777637c",
+  "id": "f07ea0fd-b50a-4d0d-97b3-240e6b53298c",
   "prevId": "27a19959-e183-4a5a-9afb-55aeedeaff82",
   "version": "7",
   "dialect": "postgresql",
@@ -943,6 +943,31 @@
           "type": "timestamp with time zone",
           "primaryKey": false,
           "notNull": false
+        },
+        "cancelado_por": {
+          "name": "cancelado_por",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "cancelado_em": {
+          "name": "cancelado_em",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "forma_cancelamento": {
+          "name": "forma_cancelamento",
+          "type": "forma_cancelamento_alta",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "motivo_cancelamento_cifrado": {
+          "name": "motivo_cancelamento_cifrado",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
         }
       },
       "indexes": {
@@ -978,7 +1003,7 @@
             }
           ],
           "isUnique": true,
-          "where": "\"encerramentos_alta\".\"confirmada_em\" is null",
+          "where": "\"encerramentos_alta\".\"confirmada_em\" is null and \"encerramentos_alta\".\"cancelado_em\" is null",
           "concurrently": false,
           "method": "btree",
           "with": {}
@@ -1011,6 +1036,15 @@
           "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
+        },
+        "encerramentos_alta_cancelado_por_usuarios_id_fk": {
+          "name": "encerramentos_alta_cancelado_por_usuarios_id_fk",
+          "tableFrom": "encerramentos_alta",
+          "tableTo": "usuarios",
+          "columnsFrom": ["cancelado_por"],
+          "columnsTo": ["id"],
+          "onDelete": "no action",
+          "onUpdate": "no action"
         }
       },
       "compositePrimaryKeys": {},
@@ -1020,6 +1054,14 @@
         "encerramentos_alta_confirmacao_completa": {
           "name": "encerramentos_alta_confirmacao_completa",
           "value": "(\"encerramentos_alta\".\"confirmada_por\" is null) = (\"encerramentos_alta\".\"confirmada_em\" is null)"
+        },
+        "encerramentos_alta_cancelamento_completo": {
+          "name": "encerramentos_alta_cancelamento_completo",
+          "value": "(\"encerramentos_alta\".\"cancelado_por\" is null) = (\"encerramentos_alta\".\"cancelado_em\" is null) and (\"encerramentos_alta\".\"cancelado_em\" is null) = (\"encerramentos_alta\".\"forma_cancelamento\" is null) and (\"encerramentos_alta\".\"forma_cancelamento\" is null) = (\"encerramentos_alta\".\"motivo_cancelamento_cifrado\" is null)"
+        },
+        "encerramentos_alta_confirmado_ou_cancelado": {
+          "name": "encerramentos_alta_confirmado_ou_cancelado",
+          "value": "\"encerramentos_alta\".\"confirmada_em\" is null or \"encerramentos_alta\".\"cancelado_em\" is null"
         }
       },
       "isRLSEnabled": false
@@ -3436,6 +3478,16 @@
       "name": "canal",
       "schema": "public",
       "values": ["email", "whatsapp", "ligacao"]
+    },
+    "public.forma_cancelamento_alta": {
+      "name": "forma_cancelamento_alta",
+      "schema": "public",
+      "values": [
+        "cancelado_pelo_estagiario",
+        "recusado_pelo_supervisor",
+        "encerrado_pela_transferencia",
+        "encerrado_pelo_desligamento"
+      ]
     },
     "public.situacao_caso": {
       "name": "situacao_caso",

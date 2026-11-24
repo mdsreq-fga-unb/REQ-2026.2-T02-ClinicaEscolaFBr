@@ -181,11 +181,22 @@ export const transferenciasCaso = pgTable(
   ],
 );
 
+// Como um pedido de alta aberto termina sem ser confirmado (RF68): o estagiário
+// que pediu o cancela, o supervisor do caso o recusa, ou a transferência (RF25) e
+// o desligamento (RF37) o encerram, porque o caso deixa de ter aquele estagiário.
+export const formaCancelamentoAltaEnum = pgEnum("forma_cancelamento_alta", [
+  "cancelado_pelo_estagiario",
+  "recusado_pelo_supervisor",
+  "encerrado_pela_transferencia",
+  "encerrado_pelo_desligamento",
+]);
+
 // Encerramento por alta (RF68): o pedido do estagiário responsável e a
 // confirmação do supervisor do caso. Enquanto confirmada_em é nulo, o caso
-// continua em atendimento. Um único pedido aberto por caso. O motivo é cifrado
-// (RNF51), e o registro não é apagado nem alterado depois de confirmado (RNF27):
-// a reabertura é uma linha própria.
+// continua em atendimento. Um único pedido aberto por caso: o pedido errado é
+// cancelado ou recusado, com autor, data/hora e motivo, e abre espaço para um
+// novo. Os motivos são cifrados (RNF51), e nada é apagado nem alterado depois
+// de preenchido (RNF27): a reabertura é uma linha própria.
 export const encerramentosAlta = pgTable(
   "encerramentos_alta",
   {
@@ -204,15 +215,27 @@ export const encerramentosAlta = pgTable(
       .defaultNow(),
     confirmadaPor: uuid("confirmada_por").references(() => usuarios.id),
     confirmadaEm: timestamp("confirmada_em", { withTimezone: true }),
+    canceladoPor: uuid("cancelado_por").references(() => usuarios.id),
+    canceladoEm: timestamp("cancelado_em", { withTimezone: true }),
+    formaCancelamento: formaCancelamentoAltaEnum("forma_cancelamento"),
+    motivoCancelamentoCifrado: text("motivo_cancelamento_cifrado"),
   },
   (t) => [
     index("encerramentos_alta_caso").on(t.casoId, t.pedidaEm),
     uniqueIndex("encerramentos_alta_pedido_aberto")
       .on(t.casoId)
-      .where(sql`${t.confirmadaEm} is null`),
+      .where(sql`${t.confirmadaEm} is null and ${t.canceladoEm} is null`),
     check(
       "encerramentos_alta_confirmacao_completa",
       sql`(${t.confirmadaPor} is null) = (${t.confirmadaEm} is null)`,
+    ),
+    check(
+      "encerramentos_alta_cancelamento_completo",
+      sql`(${t.canceladoPor} is null) = (${t.canceladoEm} is null) and (${t.canceladoEm} is null) = (${t.formaCancelamento} is null) and (${t.formaCancelamento} is null) = (${t.motivoCancelamentoCifrado} is null)`,
+    ),
+    check(
+      "encerramentos_alta_confirmado_ou_cancelado",
+      sql`${t.confirmadaEm} is null or ${t.canceladoEm} is null`,
     ),
   ],
 );

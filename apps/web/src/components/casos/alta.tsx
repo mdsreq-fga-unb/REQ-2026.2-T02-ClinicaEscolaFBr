@@ -2,9 +2,12 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useId, useState, type FormEvent, type ReactNode } from "react";
 import {
+  cancelamentoAltaSchema,
   LIMITE_MOTIVO_ALTA,
+  NOMES_CANCELAMENTO_ALTA,
   pedidoAltaSchema,
   reaberturaCasoSchema,
+  recusaAltaSchema,
   type RegistroAlta,
   type ResultadoReabertura,
   type SituacaoAlta,
@@ -23,8 +26,9 @@ import { api, ErroApi } from "@/lib/api";
 import { dataBr, dataHoraBr, hojeBr } from "@/lib/formato";
 
 // Encerramento do caso por alta (RF68, prancha 6-5), na ficha do paciente. A API
-// diz o que cada perfil pode fazer: o estagiário responsável pede, o supervisor
-// do caso confirma e a coordenação reabre. A secretaria vê a alta sem o motivo.
+// diz o que cada perfil pode fazer: o estagiário responsável pede (e cancela o
+// próprio pedido), o supervisor do caso confirma ou recusa, e a coordenação
+// reabre. A secretaria vê a alta sem o motivo.
 
 // Tira o ponto final do texto digitado, que entra no meio de uma frase.
 const semPontoFinal = (texto: string) => texto.trim().replace(/[.!?]+$/, "");
@@ -85,7 +89,11 @@ export function AltaDoCaso({ casoId, nome }: { casoId: string; nome: string }) {
       : null;
   const reabertas = alta.historico.filter((r) => r.reabertura);
   const nada =
-    !alta.acoes.pedir && !alta.pedidoAberto && !vigente && !reabertas.length;
+    !alta.acoes.pedir &&
+    !alta.pedidoAberto &&
+    !vigente &&
+    !reabertas.length &&
+    !alta.cancelados.length;
   if (nada && !concluido) return null;
 
   // O título segue a prancha 6-5 para cada situação: o pedido do estagiário, a
@@ -139,11 +147,20 @@ export function AltaDoCaso({ casoId, nome }: { casoId: string; nome: string }) {
           casoId={casoId}
           pedido={alta.pedidoAberto}
           podeConfirmar={alta.acoes.confirmar}
+          podeCancelar={alta.acoes.cancelar}
+          podeRecusar={alta.acoes.recusar}
           aoConfirmar={(canceladas) =>
             atualizar(
               canceladas
                 ? `Alta confirmada. O caso foi encerrado, a vaga foi liberada e ${canceladas === 1 ? "1 sessão futura foi cancelada" : `${canceladas} sessões futuras foram canceladas`}.`
                 : "Alta confirmada. O caso foi encerrado e a vaga foi liberada.",
+            )
+          }
+          aoFechar={(recusado) =>
+            atualizar(
+              recusado
+                ? "Alta recusada. O caso continua em atendimento, e o estagiário pode fazer um novo pedido."
+                : "Pedido de alta cancelado. O caso continua em atendimento.",
             )
           }
         />
@@ -175,6 +192,24 @@ export function AltaDoCaso({ casoId, nome }: { casoId: string; nome: string }) {
                 {r.reabertura!.pedidaPor}
                 {r.reabertura!.motivo
                   ? `: ${semPontoFinal(r.reabertura!.motivo)}`
+                  : ""}
+                .
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
+      {alta.cancelados.length > 0 && (
+        <div className="flex flex-col gap-2">
+          <h3 className="ui-rotulo">Pedidos de alta não confirmados</h3>
+          <ul className="flex flex-col gap-1.5 text-sm">
+            {alta.cancelados.map((r) => (
+              <li key={r.id}>
+                {NOMES_CANCELAMENTO_ALTA[r.cancelamento!.forma]} (
+                {r.cancelamento!.por}, {emHora(r.cancelamento!.em)}): alta de{" "}
+                {dataBr(r.dataAlta)}, pedida por {r.pedidaPor}
+                {r.cancelamento!.motivo
+                  ? `. Motivo: ${semPontoFinal(r.cancelamento!.motivo)}`
                   : ""}
                 .
               </li>
@@ -248,12 +283,17 @@ function PedidoDeAlta({
       </div>
     );
 
+  const minima = alta.dataMinimaAlta;
   const enviar = (evento: FormEvent) => {
     evento.preventDefault();
     const resultado = pedidoAltaSchema.safeParse({ dataAlta, motivo });
-    if (!resultado.success) {
+    // A primeira data aceita vem da API; a API confere de novo.
+    const antesDoInicio = !!minima && !!dataAlta && dataAlta < minima;
+    if (!resultado.success || antesDoInicio) {
       const novos: Record<string, string> = {};
-      for (const p of resultado.error.issues)
+      if (antesDoInicio)
+        novos.dataAlta = `A data da alta não pode ser anterior a ${dataBr(minima)}.`;
+      for (const p of resultado.error?.issues ?? [])
         novos[String(p.path[0])] ??= p.message;
       setErros(novos);
       document
@@ -270,6 +310,7 @@ function PedidoDeAlta({
       <Campo
         id={`${id}-data`}
         rotulo="Data da alta"
+        dica={minima ? `A partir de ${dataBr(minima)}.` : undefined}
         erro={erros.dataAlta}
         className="sm:max-w-[240px]"
       >
@@ -277,6 +318,7 @@ function PedidoDeAlta({
           <input
             {...props}
             type="date"
+            min={minima ?? undefined}
             max={hojeBr()}
             className={classeEntrada}
             value={dataAlta}
@@ -342,13 +384,20 @@ function PedidoAberto({
   casoId,
   pedido,
   podeConfirmar,
+  podeCancelar,
+  podeRecusar,
   aoConfirmar,
+  aoFechar,
 }: {
   casoId: string;
   pedido: RegistroAlta;
   podeConfirmar: boolean;
+  podeCancelar: boolean;
+  podeRecusar: boolean;
   aoConfirmar: (sessoesCanceladas: number) => void;
+  aoFechar: (recusado: boolean) => void;
 }) {
+  const [fechando, setFechando] = useState<"cancelar" | "recusar" | null>(null);
   const confirmacao = useMutation({
     mutationFn: () =>
       api<{ sessoesCanceladas: number }>(`/casos/${casoId}/alta/confirmacao`, {
@@ -360,9 +409,36 @@ function PedidoAberto({
     <div className="flex flex-col gap-3">
       {!podeConfirmar && (
         <p className="ui-dica m-0">
-          Pedida por {pedido.pedidaPor} em {emHora(pedido.pedidaEm)}. Enquanto
-          isso, o caso continua em atendimento.
+          Pedida por {pedido.pedidaPor} em {emHora(pedido.pedidaEm)}, com a data
+          de {dataBr(pedido.dataAlta)}. Enquanto isso, o caso continua em
+          atendimento.
         </p>
+      )}
+      {podeCancelar && (
+        <div className="flex flex-col items-start gap-2">
+          <p className="ui-dica m-0">
+            Se a data ou o motivo estiverem errados, cancele o pedido e registre
+            a alta de novo.
+          </p>
+          <Button
+            variant="outline"
+            className="max-sm:w-full"
+            onClick={() => setFechando("cancelar")}
+          >
+            Cancelar pedido de alta
+          </Button>
+        </div>
+      )}
+      {fechando && (
+        <DialogoMotivo
+          casoId={casoId}
+          acao={fechando}
+          aoFechar={() => setFechando(null)}
+          aoConcluir={() => {
+            setFechando(null);
+            aoFechar(fechando === "recusar");
+          }}
+        />
       )}
       {podeConfirmar && (
         <>
@@ -392,13 +468,23 @@ function PedidoAberto({
                 : "Tente novamente em instantes."}
             </Aviso>
           )}
-          <Button
-            className="self-end max-sm:w-full"
-            disabled={confirmacao.isPending}
-            onClick={() => confirmacao.mutate()}
-          >
-            {confirmacao.isPending ? "Confirmando…" : "Confirmar alta"}
-          </Button>
+          <div className="flex flex-wrap justify-end gap-3 max-sm:[&>*]:w-full">
+            {podeRecusar && (
+              <Button
+                variant="outline"
+                disabled={confirmacao.isPending}
+                onClick={() => setFechando("recusar")}
+              >
+                Recusar alta
+              </Button>
+            )}
+            <Button
+              disabled={confirmacao.isPending}
+              onClick={() => confirmacao.mutate()}
+            >
+              {confirmacao.isPending ? "Confirmando…" : "Confirmar alta"}
+            </Button>
+          </div>
         </>
       )}
     </div>
@@ -492,6 +578,113 @@ function CasoEncerrado({
         />
       )}
     </div>
+  );
+}
+
+const FORMULARIO_MOTIVO = "motivo-pedido-alta";
+
+// Cancelamento do pedido pelo estagiário que o fez ou recusa pelo supervisor,
+// sempre com o motivo. O caso continua em atendimento.
+function DialogoMotivo({
+  casoId,
+  acao,
+  aoFechar,
+  aoConcluir,
+}: {
+  casoId: string;
+  acao: "cancelar" | "recusar";
+  aoFechar: () => void;
+  aoConcluir: () => void;
+}) {
+  const recusa = acao === "recusar";
+  const [motivo, setMotivo] = useState("");
+  const [erros, setErros] = useState<Record<string, string>>({});
+  const envio = useMutation({
+    mutationFn: (dados: { motivo: string }) =>
+      api(`/casos/${casoId}/alta/${recusa ? "recusa" : "cancelamento"}`, {
+        method: "POST",
+        body: JSON.stringify(dados),
+      }),
+    onSuccess: aoConcluir,
+    onError: (erro) => {
+      const campos = errosDaApi(erro);
+      if (campos) setErros(campos);
+    },
+  });
+  const enviar = (evento: FormEvent) => {
+    evento.preventDefault();
+    const resultado = (
+      recusa ? recusaAltaSchema : cancelamentoAltaSchema
+    ).safeParse({ motivo });
+    if (!resultado.success) {
+      setErros({ motivo: resultado.error.issues[0].message });
+      return;
+    }
+    setErros({});
+    envio.mutate(resultado.data);
+  };
+  return (
+    <Dialogo
+      aberto
+      aoFechar={aoFechar}
+      titulo={recusa ? "Recusar a alta?" : "Cancelar o pedido de alta?"}
+      rodape={
+        <>
+          <Button type="button" variant="outline" onClick={aoFechar}>
+            Voltar
+          </Button>
+          <Button
+            type="submit"
+            form={FORMULARIO_MOTIVO}
+            data-principal
+            disabled={envio.isPending}
+          >
+            {recusa ? "Recusar alta" : "Cancelar pedido"}
+          </Button>
+        </>
+      }
+    >
+      <form
+        id={FORMULARIO_MOTIVO}
+        noValidate
+        onSubmit={enviar}
+        className="flex flex-col gap-4"
+      >
+        <Campo
+          rotulo={recusa ? "Motivo da recusa" : "Motivo do cancelamento"}
+          erro={erros.motivo}
+        >
+          {(props) => (
+            <textarea
+              {...props}
+              maxLength={LIMITE_MOTIVO_ALTA}
+              className={`${classeTextoLongo} min-h-[96px]`}
+              value={motivo}
+              onChange={(e) => setMotivo(e.target.value)}
+            />
+          )}
+        </Campo>
+        <p className="ui-dica m-0">
+          {recusa
+            ? "O caso continua em atendimento, e o estagiário pode fazer um novo pedido. A recusa fica no histórico do caso."
+            : "O caso continua em atendimento, e você pode registrar a alta de novo. O cancelamento fica no histórico do caso."}
+        </p>
+        {envio.isError && !errosDaApi(envio.error) && (
+          <Aviso
+            tipo="erro"
+            titulo={
+              recusa
+                ? "Não foi possível recusar a alta."
+                : "Não foi possível cancelar o pedido."
+            }
+          >
+            {envio.error instanceof ErroApi && envio.error.status !== 500
+              ? envio.error.message
+              : "Tente novamente em instantes."}
+          </Aviso>
+        )}
+      </form>
+    </Dialogo>
   );
 }
 

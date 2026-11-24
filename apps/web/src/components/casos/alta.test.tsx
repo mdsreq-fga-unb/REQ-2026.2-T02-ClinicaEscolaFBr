@@ -1,6 +1,12 @@
 import "@testing-library/jest-dom/vitest";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { cleanup, fireEvent, render, screen } from "@testing-library/react";
+import {
+  cleanup,
+  fireEvent,
+  render,
+  screen,
+  within,
+} from "@testing-library/react";
 import { afterEach, beforeAll, describe, expect, it, vi } from "vitest";
 import type { RegistroAlta, SituacaoAlta } from "@clinica/shared";
 import { AltaDoCaso } from "./alta";
@@ -13,6 +19,7 @@ const registro = (dados: Partial<RegistroAlta> = {}): RegistroAlta => ({
   pedidaEm: "2026-12-01T18:30:00Z",
   confirmadaPor: null,
   confirmadaEm: null,
+  cancelamento: null,
   reabertura: null,
   ...dados,
 });
@@ -20,7 +27,15 @@ const situacao = (dados: Partial<SituacaoAlta> = {}): SituacaoAlta => ({
   situacao: "em_atendimento",
   pedidoAberto: null,
   historico: [],
-  acoes: { pedir: false, confirmar: false, reabrir: false },
+  cancelados: [],
+  dataMinimaAlta: null,
+  acoes: {
+    pedir: false,
+    confirmar: false,
+    cancelar: false,
+    recusar: false,
+    reabrir: false,
+  },
   supervisor: "Ricardo Menezes",
   sessoesSemEvolucao: 0,
   bloqueioReabertura: null,
@@ -89,7 +104,13 @@ describe("Encerrar caso por alta (RF68, prancha 6-5)", () => {
   it("o estagiário responsável envia a alta para a confirmação, com o aviso das sessões sem evolução", async () => {
     const chamadas = simular(
       situacao({
-        acoes: { pedir: true, confirmar: false, reabrir: false },
+        acoes: {
+          pedir: true,
+          confirmar: false,
+          cancelar: false,
+          recusar: false,
+          reabrir: false,
+        },
         sessoesSemEvolucao: 2,
       }),
     );
@@ -141,7 +162,13 @@ describe("Encerrar caso por alta (RF68, prancha 6-5)", () => {
     const chamadas = simular(
       situacao({
         pedidoAberto: registro(),
-        acoes: { pedir: false, confirmar: true, reabrir: false },
+        acoes: {
+          pedir: false,
+          confirmar: true,
+          cancelar: false,
+          recusar: false,
+          reabrir: false,
+        },
       }),
       { sessoesCanceladas: 2 },
     );
@@ -184,7 +211,13 @@ describe("Encerrar caso por alta (RF68, prancha 6-5)", () => {
       situacao({
         situacao: "encerrado_por_alta",
         historico: [confirmada],
-        acoes: { pedir: false, confirmar: false, reabrir: true },
+        acoes: {
+          pedir: false,
+          confirmar: false,
+          cancelar: false,
+          recusar: false,
+          reabrir: true,
+        },
         pedidoPorOpcoes: [
           {
             id: "00000000-0000-4000-8000-00000000000a",
@@ -278,5 +311,140 @@ describe("Encerrar caso por alta (RF68, prancha 6-5)", () => {
     abrir();
     await new Promise((r) => setTimeout(r, 50));
     expect(screen.queryByRole("heading", { name: "Alta" })).toBeNull();
+  });
+
+  it("a data da alta não pode ser anterior à primeira data aceita pela API", async () => {
+    const chamadas = simular(
+      situacao({
+        acoes: {
+          pedir: true,
+          confirmar: false,
+          cancelar: false,
+          recusar: false,
+          reabrir: false,
+        },
+        dataMinimaAlta: "2026-11-20",
+      }),
+    );
+    abrir();
+    fireEvent.click(
+      await screen.findByRole("button", { name: "Registrar alta" }),
+    );
+    const data = screen.getByLabelText("Data da alta");
+    expect(data).toHaveAttribute("min", "2026-11-20");
+    expect(data).toHaveAccessibleDescription("A partir de 20/11/2026.");
+    fireEvent.change(data, { target: { value: "2026-11-10" } });
+    fireEvent.change(screen.getByLabelText("Motivo da alta"), {
+      target: { value: "Objetivos alcançados." },
+    });
+    fireEvent.click(
+      screen.getByRole("button", { name: "Enviar para confirmação" }),
+    );
+    expect(
+      await screen.findByText(
+        "A data da alta não pode ser anterior a 20/11/2026.",
+      ),
+    ).toBeInTheDocument();
+    expect(chamadas.filter((c) => c.metodo === "POST")).toHaveLength(0);
+  });
+
+  it("o estagiário cancela o próprio pedido, com o motivo", async () => {
+    const chamadas = simular(
+      situacao({
+        pedidoAberto: registro(),
+        acoes: {
+          pedir: false,
+          confirmar: false,
+          cancelar: true,
+          recusar: false,
+          reabrir: false,
+        },
+      }),
+      { forma: "cancelado_pelo_estagiario" },
+    );
+    abrir();
+    fireEvent.click(
+      await screen.findByRole("button", { name: "Cancelar pedido de alta" }),
+    );
+    fireEvent.click(screen.getByRole("button", { name: "Cancelar pedido" }));
+    expect(
+      await screen.findByText("Informe o motivo do cancelamento."),
+    ).toBeInTheDocument();
+    fireEvent.change(screen.getByLabelText("Motivo do cancelamento"), {
+      target: { value: "Data da alta errada." },
+    });
+    fireEvent.click(screen.getByRole("button", { name: "Cancelar pedido" }));
+    expect(
+      await screen.findByText(/Pedido de alta cancelado/),
+    ).toBeInTheDocument();
+    expect(chamadas.find((c) => c.metodo === "POST")).toEqual({
+      metodo: "POST",
+      caminho: "/casos/c1/alta/cancelamento",
+      corpo: { motivo: "Data da alta errada." },
+    });
+  });
+
+  it("o supervisor recusa a alta, com o motivo", async () => {
+    const chamadas = simular(
+      situacao({
+        pedidoAberto: registro(),
+        acoes: {
+          pedir: false,
+          confirmar: true,
+          cancelar: false,
+          recusar: true,
+          reabrir: false,
+        },
+      }),
+      { forma: "recusado_pelo_supervisor" },
+    );
+    abrir();
+    fireEvent.click(
+      await screen.findByRole("button", { name: "Recusar alta" }),
+    );
+    fireEvent.change(screen.getByLabelText("Motivo da recusa"), {
+      target: { value: "Ainda há sessões combinadas." },
+    });
+    fireEvent.click(
+      within(screen.getByRole("dialog")).getByRole("button", {
+        name: "Recusar alta",
+      }),
+    );
+    expect(await screen.findByText(/Alta recusada/)).toBeInTheDocument();
+    expect(chamadas.find((c) => c.metodo === "POST")).toEqual({
+      metodo: "POST",
+      caminho: "/casos/c1/alta/recusa",
+      corpo: { motivo: "Ainda há sessões combinadas." },
+    });
+  });
+
+  it("os pedidos não confirmados ficam no histórico, com quem os fechou e o motivo", async () => {
+    simular(
+      situacao({
+        acoes: {
+          pedir: true,
+          confirmar: false,
+          cancelar: false,
+          recusar: false,
+          reabrir: false,
+        },
+        cancelados: [
+          registro({
+            cancelamento: {
+              forma: "recusado_pelo_supervisor",
+              por: "Ricardo Menezes",
+              em: "2026-12-01T20:02:00Z",
+              motivo: "Ainda há sessões combinadas.",
+            },
+          }),
+        ],
+      }),
+    );
+    abrir();
+    expect(
+      await screen.findByText(
+        /Pedido recusado pelo supervisor \(Ricardo Menezes, 01\/12\/2026, às 17:02\): alta de 01\/12\/2026, pedida por Ana Beatriz Costa. Motivo: Ainda há sessões combinadas\./,
+      ),
+    ).toBeInTheDocument();
   });
 });

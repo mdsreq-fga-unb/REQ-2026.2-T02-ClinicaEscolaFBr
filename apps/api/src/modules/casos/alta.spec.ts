@@ -202,6 +202,13 @@ describe('Encerrar caso por alta (RF68)', () => {
       );
   const confirmar = (caso: string, quem = 'ricardo') =>
     http().post(`/casos/${caso}/alta/confirmacao`).set(como(quem));
+  const cancelar = (caso: string, motivo: string, quem = 'ana') =>
+    http()
+      .post(`/casos/${caso}/alta/cancelamento`)
+      .set(como(quem))
+      .send({ motivo });
+  const recusar = (caso: string, motivo: string, quem = 'ricardo') =>
+    http().post(`/casos/${caso}/alta/recusa`).set(como(quem)).send({ motivo });
   const reabrir = (caso: string, corpo: object, quem = 'coordenacao') =>
     http().post(`/casos/${caso}/reabertura`).set(como(quem)).send(corpo);
   const situacao = async (caso: string, quem: string) =>
@@ -231,6 +238,8 @@ describe('Encerrar caso por alta (RF68)', () => {
     expect(visto.acoes).toEqual({
       pedir: false,
       confirmar: true,
+      cancelar: false,
+      recusar: true,
       reabrir: false,
     });
     // O motivo fica cifrado no banco e fora da auditoria.
@@ -368,6 +377,8 @@ describe('Encerrar caso por alta (RF68)', () => {
     expect(daSecretaria.acoes).toEqual({
       pedir: false,
       confirmar: false,
+      cancelar: false,
+      recusar: false,
       reabrir: false,
     });
   });
@@ -501,5 +512,162 @@ describe('Encerrar caso por alta (RF68)', () => {
         .set({ altaId: null })
         .where(eq(vagasLiberadas.id, vaga.id)),
     ).rejects.toThrow();
+  });
+
+  it('a transferência fecha o pedido aberto, e a reabertura devolve o caso ao estagiário cuja alta foi confirmada (RF68, RF25)', async () => {
+    const { caso } = await casoAtivo();
+    await pedir(caso).expect(201);
+    await http()
+      .post(`/casos/${caso}/transferencia`)
+      .set(como('coordenacao'))
+      .send({ estagiarioId: pessoas.camila.id, motivo: 'Troca de turno.' })
+      .expect(201);
+    // O pedido da Ana não vale mais: o supervisor não encerra o atendimento da
+    // Camila por ele.
+    await confirmar(caso).expect(409);
+    const [fechado] = await db.select().from(encerramentosAlta);
+    expect(fechado).toMatchObject({
+      formaCancelamento: 'encerrado_pela_transferencia',
+      canceladoPor: pessoas.coordenacao.id,
+      confirmadaEm: null,
+    });
+    const visto = await situacao(caso, 'ricardo');
+    expect(visto.pedidoAberto).toBeNull();
+    expect(visto.cancelados[0].cancelamento).toMatchObject({
+      forma: 'encerrado_pela_transferencia',
+      por: 'Helena Duarte',
+    });
+
+    await pedir(caso, 'camila').expect(201);
+    await confirmar(caso).expect(200);
+    const [vaga] = await db
+      .select()
+      .from(vagasLiberadas)
+      .where(and(eq(vagasLiberadas.estagiarioId, pessoas.camila.id)));
+    expect(vaga).toBeDefined();
+    const daCoordenacao = await situacao(caso, 'coordenacao');
+    expect(daCoordenacao.pedidoPorOpcoes[0]).toEqual({
+      id: pessoas.camila.id,
+      nome: 'Camila Souza',
+      papel: 'estagiario',
+    });
+    // A Ana não é mais opção de quem pediu a reabertura.
+    await reabrir(caso, {
+      pedidaPor: pessoas.ana.id,
+      motivo: 'Retorno',
+    }).expect(400);
+    const res = await reabrir(caso, {
+      pedidaPor: pessoas.camila.id,
+      motivo: 'A paciente pediu para retomar.',
+    }).expect(200);
+    expect(res.body).toMatchObject({
+      situacao: 'em_atendimento',
+      estagiario: 'Camila Souza',
+    });
+    const [vigente] = await db
+      .select()
+      .from(vinculosEstagiario)
+      .where(
+        and(
+          eq(vinculosEstagiario.casoId, caso),
+          eq(vinculosEstagiario.vigente, true),
+        ),
+      );
+    expect(vigente.estagiarioId).toBe(pessoas.camila.id);
+  });
+
+  it('a data da alta não pode ser anterior ao início do atendimento pelo estagiário nem ao do semestre (RF68)', async () => {
+    const { caso } = await casoAtivo();
+    // O vínculo da Ana começou hoje: hoje é a primeira data aceita.
+    expect((await situacao(caso, 'ana')).dataMinimaAlta).toBe(hoje);
+    expect((await situacao(caso, 'ricardo')).dataMinimaAlta).toBeNull();
+    const ontem = hojeEmBrasilia(new Date(Date.now() - 24 * HORA));
+    const antes = await pedir(caso, 'ana', {
+      dataAlta: ontem,
+      motivo: 'Data digitada errada.',
+    }).expect(400);
+    expect(antes.body.message[0]).toMatchObject({
+      path: ['dataAlta'],
+      message: expect.stringContaining('quando você passou a atender'),
+    });
+    await pedir(caso, 'ana', {
+      dataAlta: '2025-03-01',
+      motivo: 'Data digitada errada.',
+    }).expect(400);
+    expect(await db.select().from(encerramentosAlta)).toHaveLength(0);
+
+    // Com o vínculo de um semestre anterior, vale o início do semestre.
+    await db
+      .update(vinculosEstagiario)
+      .set({ vinculadoEm: new Date('2025-08-01T12:00:00Z') })
+      .where(eq(vinculosEstagiario.casoId, caso));
+    const semestre = `${hoje.slice(0, 4)}-${Number(hoje.slice(5, 7)) <= 6 ? '01' : '07'}-01`;
+    expect((await situacao(caso, 'ana')).dataMinimaAlta).toBe(semestre);
+    await pedir(caso, 'ana', { dataAlta: semestre, motivo: 'Alta.' }).expect(
+      201,
+    );
+  });
+
+  it('o pedido errado é cancelado pelo estagiário ou recusado pelo supervisor, com o motivo, e um novo pedido pode ser feito (RF68)', async () => {
+    const { caso } = await casoAtivo();
+    await pedir(caso).expect(201);
+    expect((await situacao(caso, 'ana')).acoes).toMatchObject({
+      cancelar: true,
+      recusar: false,
+    });
+    await cancelar(caso, '  ').expect(400);
+    for (const quem of ['ricardo', 'camila', 'secretaria', 'coordenacao']) {
+      await cancelar(caso, 'Data errada.', quem).expect(403);
+    }
+    expect(await negadas('cancelar_pedido_alta_negada')).toHaveLength(4);
+    await cancelar(caso, 'Data da alta errada.').expect(200);
+    expect(await situacaoDoCaso(caso)).toBe('em_atendimento');
+    await confirmar(caso).expect(409);
+
+    await pedir(caso).expect(201);
+    for (const quem of ['ana', 'patricia', 'secretaria', 'coordenacao']) {
+      await recusar(caso, 'Ainda não.', quem).expect(403);
+    }
+    expect(await negadas('recusar_pedido_alta_negada')).toHaveLength(4);
+    await recusar(caso, 'A paciente ainda tem sessões combinadas.').expect(200);
+    await recusar(caso, 'De novo.').expect(409);
+
+    const visto = await situacao(caso, 'ricardo');
+    expect(visto.pedidoAberto).toBeNull();
+    expect(visto.historico).toHaveLength(0);
+    expect(visto.cancelados.map((r) => r.cancelamento)).toEqual([
+      expect.objectContaining({
+        forma: 'recusado_pelo_supervisor',
+        por: 'Ricardo Menezes',
+        motivo: 'A paciente ainda tem sessões combinadas.',
+      }),
+      expect.objectContaining({
+        forma: 'cancelado_pelo_estagiario',
+        por: 'Ana Beatriz Costa',
+        motivo: 'Data da alta errada.',
+      }),
+    ]);
+    // A secretaria vê o cancelamento sem o motivo (RNF17).
+    const daSecretaria = await situacao(caso, 'secretaria');
+    expect(daSecretaria.cancelados[0].cancelamento?.motivo).toBeNull();
+    // O motivo fica cifrado e fora da auditoria.
+    const linhas = await db.select().from(encerramentosAlta);
+    for (const l of linhas) {
+      expect(l.motivoCancelamentoCifrado).not.toContain('errada');
+    }
+    const [registro] = await negadas('recusar_pedido_alta');
+    expect(JSON.stringify(registro.dadosNovos)).not.toContain('sessões');
+    // O cancelamento não muda depois de registrado (RNF27).
+    await expect(
+      db
+        .update(encerramentosAlta)
+        .set({ canceladoPor: pessoas.patricia.id })
+        .where(eq(encerramentosAlta.casoId, caso)),
+    ).rejects.toThrow();
+
+    // Liberado para um pedido novo.
+    expect((await situacao(caso, 'ana')).acoes.pedir).toBe(true);
+    await pedir(caso).expect(201);
+    await confirmar(caso).expect(200);
   });
 });

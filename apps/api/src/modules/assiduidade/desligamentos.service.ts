@@ -51,6 +51,7 @@ import type { UsuarioAutenticado } from '../../auth/usuario-autenticado';
 import { cifrar, decifrar } from '../../common/criptografia';
 import { FilaService } from '../fila/fila.service';
 import { DB } from '../../database/database.module';
+import { fecharPedidoDeAlta } from '../casos/pedido-alta';
 
 const SEM_ALERTA =
   'Este paciente não tem alerta de limite de faltas pendente: o desligamento por faltas só é possível com o limite atingido.';
@@ -223,6 +224,14 @@ export class DesligamentosService {
         .update(casos)
         .set({ situacao: 'desligado_por_faltas' })
         .where(eq(casos.id, casoId));
+      // O pedido de alta aberto (RF68) deixa de valer: o caso sai do atendimento.
+      const pedidoAltaFechado = await fecharPedidoDeAlta(tx, {
+        casoId,
+        autorId: usuario.id,
+        forma: 'encerrado_pelo_desligamento',
+        motivo: 'Caso desligado por faltas antes da confirmação da alta.',
+        chave: this.config.getOrThrow<string>('CHAVE_DADOS'),
+      });
       await this.auditoria.registrar(
         {
           usuarioId: usuario.id,
@@ -239,6 +248,7 @@ export class DesligamentosService {
             faltas: faltas.map((f) => f.id),
             sessoesCanceladas: canceladas,
             vagaId: vaga.id,
+            pedidoAltaFechado,
           },
         },
         tx,
