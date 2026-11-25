@@ -25,7 +25,7 @@
 #   entrega: observação sobre a entrega (por exemplo, entrega parcial)
 #   origem: decisões com a FBr (DF) que fundamentam o requisito
 
-atualizado_em: 12/11/2026
+atualizado_em: 23/11/2026
 
 cps:
   CP1: Inscrição on-line
@@ -91,7 +91,7 @@ rfs:
   lider: Jônatas
   depende: [RF1]
   issue: 89
-  estado: Demonstrada
+  estado: Aceita
 
 - id: RF3
   nome: Registrar inscrição assistida
@@ -115,7 +115,7 @@ rfs:
   lider: Luís Henrique
   depende: [RF1]
   issue: 90
-  estado: Código inspecionado
+  estado: Aceita
   origem: [DF19]
 
 - id: RF5
@@ -140,7 +140,7 @@ rfs:
   depende: [RF4]
   apoio: [RF5]
   issue: 91
-  estado: Promovida para a versão integrada
+  estado: Aceita
   origem: [DF03, DF26]
 
 - id: RF7
@@ -155,7 +155,7 @@ rfs:
   lider: Jônatas
   depende: [RF6]
   issue: 140
-  estado: Design inspecionado
+  estado: Aceita
   origem: [DF16, DF33, DF57]
 
 - id: RF8
@@ -170,7 +170,7 @@ rfs:
   lider: Jônatas
   depende: [RF52, RF7]
   issue: 155
-  estado: Código concluído
+  estado: Aceita
   origem: [DF40, DF55, DF65]
 
 - id: RF9
@@ -211,7 +211,7 @@ rfs:
   lider: Nicolas
   depende: [RF10, RF21]
   issue: 141
-  estado: Código inspecionado
+  estado: Aceita
   origem: [DF57]
 
 - id: RF12
@@ -245,7 +245,7 @@ rfs:
   lider: Nicolas
   depende: [RF10]
   issue: 142
-  estado: Código inspecionado
+  estado: Aceita
   origem: [DF24, DF45, DF48]
 
 - id: RF15
@@ -260,7 +260,7 @@ rfs:
   lider: Nicolas
   depende: [RF10]
   issue: 143
-  estado: Código inspecionado
+  estado: Aceita
   origem: [DF10, DF20, DF24]
 
 - id: RF16
@@ -306,7 +306,7 @@ rfs:
   lider: Maria Clara
   depende: [RF6]
   issue: 92
-  estado: Código inspecionado
+  estado: Aceita
   origem: [DF16]
 
 - id: RF19
@@ -331,7 +331,7 @@ rfs:
   lider: Maria Clara
   depende: [RF18, RF6]
   issue: 94
-  estado: Código inspecionado
+  estado: Aceita
   origem: [DF17, DF26]
 
 - id: RF21
@@ -346,7 +346,7 @@ rfs:
   lider: Maria Clara
   depende: [RF20, RF53, RF54]
   issue: 95
-  estado: Código inspecionado
+  estado: Aceita
   origem: [DF17, DF27]
 
 - id: RF22
@@ -361,7 +361,7 @@ rfs:
   lider: Maria Clara
   depende: [RF21]
   issue: 145
-  estado: Código concluído
+  estado: Aceita
 
 - id: RF23
   nome: Consultar casos sob responsabilidade do estagiário ou supervisor
@@ -375,7 +375,7 @@ rfs:
   lider: Maria Clara
   depende: [RF21]
   issue: 146
-  estado: Código concluído
+  estado: Aceita
 
 - id: RF24
   nome: Visualizar distribuição de casos por supervisor
@@ -398,7 +398,7 @@ rfs:
   lider: Maria Clara
   depende: [RF21]
   issue: 147
-  estado: Código concluído
+  estado: Aceita
   origem: [DF08, DF09, DF28, DF50]
 
 - id: RF26
@@ -437,7 +437,7 @@ rfs:
   lider: Luís Henrique
   depende: [RF21]
   issue: 97
-  estado: Código inspecionado
+  estado: Aceita
 
 - id: RF69
   nome: Registrar anamnese e contrato terapêutico do paciente
@@ -451,7 +451,7 @@ rfs:
   lider: Luís Henrique
   depende: [RF66]
   issue: 130
-  estado: Código concluído
+  estado: Aceita
   origem: [DF20, DF37, DF41, DF61]
 
 - id: RF28
@@ -466,7 +466,7 @@ rfs:
   lider: Luís Henrique
   depende: [RF10, RF21]
   issue: 149
-  estado: Código concluído
+  estado: Aceita
   origem: [DF23, DF38]
 
 - id: RF29
@@ -481,7 +481,7 @@ rfs:
   lider: Luís Henrique
   depende: [RF28]
   issue: 224
-  estado: Código concluído
+  estado: Promovida para a versão integrada
   origem: [DF11]
 
 - id: RF30
@@ -585,7 +585,7 @@ rfs:
   lider: Gabriel
   depende: [RF10, RF14, RF15]
   issue: 150
-  estado: Promovida para a versão integrada
+  estado: Aceita
   origem: [DF52]
 
 - id: RF35
@@ -600,7 +600,7 @@ rfs:
   lider: Gabriel
   depende: [RF15, RF34]
   issue: 151
-  estado: Promovida para a versão integrada
+  estado: Aceita
   origem: [DF20, DF58]
 
 - id: RF36
@@ -615,7 +615,7 @@ rfs:
   lider: Gabriel
   depende: [RF35]
   issue: 152
-  estado: Promovida para a versão integrada
+  estado: Aceita
 
 - id: RF37
   nome: Desligar paciente por faltas e liberar vaga
@@ -629,7 +629,7 @@ rfs:
   lider: Gabriel
   depende: [RF36]
   issue: 153
-  estado: Promovida para a versão integrada
+  estado: Aceita
   origem: [DF53]
 
 - id: RF38
@@ -644,7 +644,7 @@ rfs:
   lider: Gabriel
   depende: [RF37]
   issue: 154
-  estado: Promovida para a versão integrada
+  estado: Aceita
   origem: [DF58]
 
 - id: RF39
@@ -659,7 +659,7 @@ rfs:
   lider: Nicolas
   depende: [RF16]
   issue: 225
-  estado: Código concluído
+  estado: Promovida para a versão integrada
 
 - id: RF40
   nome: Contabilizar faltas do estagiário no semestre
@@ -716,7 +716,7 @@ rfs:
   ordem: 37
   lider: Joaquim
   issue: 43
-  estado: Código concluído
+  estado: Promovida para a versão integrada
   origem: [DF05, DF15]
 
 - id: RF42
@@ -759,7 +759,7 @@ rfs:
   lider: Maria Clara
   depende: [RF52]
   issue: 226
-  estado: Código concluído
+  estado: Código inspecionado
   entrega: 'parcial no Ciclo 5: a lista é só de consulta; a escolha da sessão para a declaração chega com o RF45, no Ciclo 6'
 
 - id: RF45
@@ -806,7 +806,7 @@ rfs:
   lider: Gabriel
   depende: [RF37, RF38, RF21]
   issue: 22
-  estado: Código concluído
+  estado: Código inspecionado
   entrega: 'parcial no Ciclo 5: até o encerramento por alta (RF68), do Ciclo 6, o atendimento ativo considera só o desligamento por faltas e o fim do vínculo sem um novo vínculo'
 
 - id: RF49
@@ -920,7 +920,7 @@ rfs:
   ordem: 40
   lider: Jônatas
   issue: 51
-  estado: Código concluído
+  estado: Promovida para a versão integrada
   origem: [DF29]
 
 - id: RF57
