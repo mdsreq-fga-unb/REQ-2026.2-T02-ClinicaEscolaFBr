@@ -162,6 +162,13 @@
       "when": 1795570631844,
       "tag": "0022_reclassificacao_falta",
       "breakpoints": true
+    },
+    {
+      "idx": 23,
+      "version": "7",
+      "when": 1795575533874,
+      "tag": "0023_sinalizacao_reprovacao",
+      "breakpoints": true
     }
   ]
 }

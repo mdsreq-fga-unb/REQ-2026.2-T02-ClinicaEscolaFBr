@@ -131,3 +131,43 @@ export type ResultadoReclassificacao = {
 // hoje e os que têm falta registrada enquanto o caso era dele; para a
 // coordenação, todos.
 export type EstagiarioComFaltas = { id: string; nome: string };
+
+// Sinalização de reprovação do estagiário por faltas (RF63): gerada quando a
+// contagem do semestre chega ao limite, uma vez por estagiário e semestre. Fica
+// aberta até a decisão da coordenação (RF64) ou até uma reclassificação deixar a
+// contagem abaixo do limite.
+export const MOTIVOS_ENCERRAMENTO_SINALIZACAO = [
+  "decisao",
+  "contagem_abaixo_do_limite",
+] as const;
+export type MotivoEncerramentoSinalizacao =
+  (typeof MOTIVOS_ENCERRAMENTO_SINALIZACAO)[number];
+
+export const consultaSinalizacoesSchema = z.object({
+  situacao: z.enum(["abertas", "todas"]).default("abertas"),
+  estagiarioId: z.uuid("Escolha um estagiário da lista.").optional(),
+});
+export type ConsultaSinalizacoes = z.infer<typeof consultaSinalizacoesSchema>;
+
+export type SinalizacaoReprovacao = {
+  id: string;
+  estagiario: { id: string; nome: string };
+  semestre: string;
+  geradaEm: string;
+  encerradaEm: string | null;
+  motivoEncerramento: MotivoEncerramentoSinalizacao | null;
+  // A falta cuja reclassificação encerrou a sinalização sem decisão: o início da
+  // sessão e o momento da reclassificação.
+  faltaReclassificada: { inicio: string; em: string } | null;
+  // A contagem atual do semestre, que continua mudando depois da sinalização.
+  faltas: number;
+  // Para o supervisor, as sessões são só as dos casos dele, e as outras faltas
+  // entram só neste número (RNF35), como na contagem do RF40.
+  faltasDeOutrosSupervisores: number;
+  // Início de cada sessão que conta, da mais antiga para a mais recente.
+  sessoes: string[];
+  // Os supervisores com o estagiário hoje (CP4), que recebem a sinalização.
+  supervisores: string[];
+};
+
+export type Sinalizacoes = { sinalizacoes: SinalizacaoReprovacao[] };

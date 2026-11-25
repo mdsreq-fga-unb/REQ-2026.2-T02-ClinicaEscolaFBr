@@ -17,6 +17,7 @@ import {
   AVISOS_PACIENTE,
   CANAIS_AVISO_MANUAL,
   CLASSIFICACOES_CANCELAMENTO,
+  MOTIVOS_ENCERRAMENTO_SINALIZACAO,
   ORIGENS_CANCELAMENTO,
   ORIGENS_FALTA,
 } from "@clinica/shared";
@@ -261,3 +262,54 @@ export const reclassificacoesFalta = pgTable("reclassificacoes_falta", {
     .notNull()
     .defaultNow(),
 });
+
+export const motivoEncerramentoSinalizacaoEnum = pgEnum(
+  "motivo_encerramento_sinalizacao",
+  MOTIVOS_ENCERRAMENTO_SINALIZACAO,
+);
+
+// Sinalização de reprovação do estagiário por faltas (RF63): gerada na transação
+// da ausência (RF16) que leva a contagem do semestre a 3, no máximo uma aberta por
+// estagiário e semestre (índice único parcial). É encerrada pela decisão da
+// coordenação (RF64) ou, sem decisão, pela reclassificação (RF40) que deixa a
+// contagem abaixo do limite, que fica guardada. Os dados da geração não mudam, e
+// os do encerramento só são preenchidos uma vez, com o gatilho
+// proteger_campos_preenchidos.
+export const sinalizacoesReprovacao = pgTable(
+  "sinalizacoes_reprovacao",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    estagiarioId: uuid("estagiario_id")
+      .notNull()
+      .references(() => usuarios.id),
+    semestre: text("semestre").notNull(),
+    geradaEm: timestamp("gerada_em", { withTimezone: true })
+      .notNull()
+      .defaultNow(),
+    encerradaEm: timestamp("encerrada_em", { withTimezone: true }),
+    motivoEncerramento: motivoEncerramentoSinalizacaoEnum(
+      "motivo_encerramento",
+    ),
+    reclassificacaoId: uuid("reclassificacao_id").references(
+      () => reclassificacoesFalta.id,
+    ),
+  },
+  (t) => [
+    uniqueIndex("sinalizacoes_reprovacao_aberta")
+      .on(t.estagiarioId, t.semestre)
+      .where(sql`${t.encerradaEm} is null`),
+    index("sinalizacoes_reprovacao_estagiario").on(t.estagiarioId, t.semestre),
+    check(
+      "sinalizacoes_reprovacao_semestre",
+      sql`${t.semestre} ~ '^[0-9]{4}/[12]$'`,
+    ),
+    check(
+      "sinalizacoes_reprovacao_encerramento",
+      sql`(${t.encerradaEm} is null) = (${t.motivoEncerramento} is null)`,
+    ),
+    check(
+      "sinalizacoes_reprovacao_reclassificacao",
+      sql`(${t.reclassificacaoId} is not null) = (coalesce(${t.motivoEncerramento}::text, '') = 'contagem_abaixo_do_limite')`,
+    ),
+  ],
+);
