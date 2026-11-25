@@ -142,7 +142,8 @@ export function LinhaDoTempoEvolucao({
   );
 }
 
-// Formulário do complemento, só para o estagiário responsável (RF30).
+// Formulário do complemento, para o estagiário responsável e o supervisor do caso
+// (RF30, DF68).
 function FormularioComplemento({
   prontuarioId,
   evolucaoId,
@@ -261,8 +262,9 @@ const focarDepois = (id: string) =>
   requestAnimationFrame(() => document.getElementById(id)?.focus());
 
 // Seção "Complementos" de cada evolução do prontuário (RF30): a linha do tempo, para
-// todos que consultam, e o formulário, só para o estagiário responsável com o caso em
-// atendimento.
+// todos que consultam, e o formulário, para o estagiário responsável com o caso em
+// atendimento e para o supervisor do caso a qualquer momento (DF68). A API diz se
+// quem consulta pode complementar.
 export function ComplementosEvolucao({
   prontuarioId,
   evolucao,

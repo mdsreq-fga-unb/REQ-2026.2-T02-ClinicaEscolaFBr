@@ -188,6 +188,7 @@ describe('Registrar complemento de evolução (RF30)', () => {
     await criar('estagiarioB', 'João Victor Almeida', 'estagiario');
     await criar('estagiarioOutroCaso', 'Paula Nunes', 'estagiario');
     await criar('supervisor', 'Ricardo Menezes', 'supervisor');
+    await criar('outroSupervisor', 'Patrícia Nogueira', 'supervisor');
     await criar('secretaria', 'Juliana Rocha', 'secretaria');
     await criar('coordenacao', 'Helena Duarte', 'coordenacao');
 
@@ -366,9 +367,9 @@ describe('Registrar complemento de evolução (RF30)', () => {
     expect(await gravados()).toHaveLength(1);
   });
 
-  it('o supervisor, a coordenação, a secretaria e o estagiário de outro caso não complementam, e a tentativa fica registrada (RF30, RF55, RF56, RNF25)', async () => {
+  it('o supervisor de outro caso, a coordenação, a secretaria e o estagiário de outro caso não complementam, e a tentativa fica registrada (RF30, RF55, RF56, RNF25)', async () => {
     for (const quem of [
-      pessoas.supervisor,
+      pessoas.outroSupervisor,
       pessoas.coordenacao,
       pessoas.secretaria,
       pessoas.estagiarioOutroCaso,
@@ -396,12 +397,50 @@ describe('Registrar complemento de evolução (RF30)', () => {
         ),
       );
     expect(negados).toHaveLength(5);
-    // Eles consultam sem a ação de complementar.
-    for (const quem of [pessoas.supervisor, pessoas.coordenacao])
-      expect((await evolucaoNoProntuario(quem)).complemento).toEqual({
-        permitido: false,
-        aviso: null,
-      });
+    // A coordenação consulta sem a ação de complementar.
+    expect(
+      (await evolucaoNoProntuario(pessoas.coordenacao)).complemento,
+    ).toEqual({ permitido: false, aviso: null });
+  });
+
+  it('o supervisor do caso registra o complemento a qualquer momento, também com o caso desligado, e fica como autor (RF30, DF68)', async () => {
+    await registrar('Do estagiário.', pessoas.estagiarioA);
+    jest.setSystemTime(new Date('2026-11-17T15:00:00Z'));
+    const doSupervisor = await registrar(ORIENTACAO, pessoas.supervisor);
+    expect(doSupervisor).toMatchObject({ autor: 'Ricardo Menezes' });
+    expect(
+      (await evolucaoNoProntuario(pessoas.supervisor)).complemento,
+    ).toEqual({ permitido: true, aviso: null });
+
+    // Sem prazo e em qualquer situação do caso, enquanto for o supervisor dele.
+    jest.setSystemTime(new Date('2027-03-01T15:00:00Z'));
+    await db.update(casos).set({ situacao: 'desligado_por_faltas' });
+    await registrar('Depois do desligamento.', pessoas.supervisor);
+    expect(
+      (await evolucaoNoProntuario(pessoas.supervisor)).complemento,
+    ).toEqual({ permitido: true, aviso: null });
+
+    const evolucao = await evolucaoNoProntuario(pessoas.supervisor);
+    expect(evolucao.complementos.map((c) => [c.autor, c.texto])).toEqual([
+      ['Ana Beatriz Costa', 'Do estagiário.'],
+      ['Ricardo Menezes', ORIENTACAO],
+      ['Ricardo Menezes', 'Depois do desligamento.'],
+    ]);
+
+    // Depois da transferência para outro supervisor, quem complementa é o novo.
+    await db
+      .update(atribuicoesSupervisor)
+      .set({ vigente: false, encerradaEm: new Date() })
+      .where(eq(atribuicoesSupervisor.casoId, casoId));
+    await db.insert(atribuicoesSupervisor).values({
+      casoId,
+      supervisorId: pessoas.outroSupervisor.id,
+      atribuidoPor: pessoas.coordenacao.id,
+    });
+    await expect(
+      registrar(ORIENTACAO, pessoas.supervisor),
+    ).rejects.toBeInstanceOf(ForbiddenException);
+    await registrar('Do novo supervisor.', pessoas.outroSupervisor);
   });
 
   it('depois da transferência, só o novo responsável complementa, e o autor de cada registro é mantido (RF30, RF25)', async () => {
@@ -453,7 +492,7 @@ describe('Registrar complemento de evolução (RF30)', () => {
         (erro as UnprocessableEntityException).getResponse(),
       ).toMatchObject({ situacao });
       expect(
-        (await evolucaoNoProntuario(pessoas.supervisor)).complemento,
+        (await evolucaoNoProntuario(pessoas.estagiarioA)).complemento,
       ).toEqual({ permitido: false, aviso });
     }
     expect(await gravados()).toHaveLength(0);
@@ -505,7 +544,8 @@ describe('Registrar complemento de evolução (RF30)', () => {
     expect(criado.headers['cache-control']).toBe('no-store');
     const vazio = await enviar(pessoas.estagiarioA, ' ').expect(400);
     expect(vazio.body.message[0].path).toEqual(['texto']);
-    await enviar(pessoas.supervisor, ORIENTACAO).expect(403);
+    await enviar(pessoas.outroSupervisor, ORIENTACAO).expect(403);
+    await enviar(pessoas.supervisor, ORIENTACAO).expect(201);
     await enviar(null, ORIENTACAO).expect(401);
     await db.update(casos).set({ situacao: 'desligado_por_faltas' });
     const recusado = await enviar(pessoas.estagiarioA, ORIENTACAO).expect(422);

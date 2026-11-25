@@ -1,6 +1,6 @@
 {
-  "id": "cf2e2c4d-e168-4108-98d0-d693c48da832",
-  "prevId": "150e3f89-d217-47d3-9a25-51ebbb1c56e9",
+  "id": "e769622e-fbb1-439a-b16c-f94720d8971f",
+  "prevId": "103dd3d9-dfd1-4d24-a8eb-f7d785c85eb1",
   "version": "7",
   "dialect": "postgresql",
   "tables": {
@@ -1595,92 +1595,6 @@
       "checkConstraints": {},
       "isRLSEnabled": false
     },
-    "public.complementos_evolucao": {
-      "name": "complementos_evolucao",
-      "schema": "",
-      "columns": {
-        "id": {
-          "name": "id",
-          "type": "uuid",
-          "primaryKey": true,
-          "notNull": true,
-          "default": "gen_random_uuid()"
-        },
-        "evolucao_id": {
-          "name": "evolucao_id",
-          "type": "uuid",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "texto_cifrado": {
-          "name": "texto_cifrado",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "registrado_por": {
-          "name": "registrado_por",
-          "type": "uuid",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "registrado_em": {
-          "name": "registrado_em",
-          "type": "timestamp with time zone",
-          "primaryKey": false,
-          "notNull": true,
-          "default": "now()"
-        }
-      },
-      "indexes": {
-        "complementos_evolucao_evolucao_idx": {
-          "name": "complementos_evolucao_evolucao_idx",
-          "columns": [
-            {
-              "expression": "evolucao_id",
-              "isExpression": false,
-              "asc": true,
-              "nulls": "last"
-            },
-            {
-              "expression": "registrado_em",
-              "isExpression": false,
-              "asc": true,
-              "nulls": "last"
-            }
-          ],
-          "isUnique": false,
-          "concurrently": false,
-          "method": "btree",
-          "with": {}
-        }
-      },
-      "foreignKeys": {
-        "complementos_evolucao_evolucao_id_evolucoes_id_fk": {
-          "name": "complementos_evolucao_evolucao_id_evolucoes_id_fk",
-          "tableFrom": "complementos_evolucao",
-          "tableTo": "evolucoes",
-          "columnsFrom": ["evolucao_id"],
-          "columnsTo": ["id"],
-          "onDelete": "no action",
-          "onUpdate": "no action"
-        },
-        "complementos_evolucao_registrado_por_usuarios_id_fk": {
-          "name": "complementos_evolucao_registrado_por_usuarios_id_fk",
-          "tableFrom": "complementos_evolucao",
-          "tableTo": "usuarios",
-          "columnsFrom": ["registrado_por"],
-          "columnsTo": ["id"],
-          "onDelete": "no action",
-          "onUpdate": "no action"
-        }
-      },
-      "compositePrimaryKeys": {},
-      "uniqueConstraints": {},
-      "policies": {},
-      "checkConstraints": {},
-      "isRLSEnabled": false
-    },
     "public.correcoes_evolucao": {
       "name": "correcoes_evolucao",
       "schema": "",
@@ -2093,86 +2007,6 @@
           "columns": ["caso_id", "ciclo_atendimento"]
         }
       },
-      "policies": {},
-      "checkConstraints": {},
-      "isRLSEnabled": false
-    },
-    "public.validacoes_evolucao": {
-      "name": "validacoes_evolucao",
-      "schema": "",
-      "columns": {
-        "id": {
-          "name": "id",
-          "type": "uuid",
-          "primaryKey": true,
-          "notNull": true,
-          "default": "gen_random_uuid()"
-        },
-        "evolucao_id": {
-          "name": "evolucao_id",
-          "type": "uuid",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "validada_por": {
-          "name": "validada_por",
-          "type": "uuid",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "validada_em": {
-          "name": "validada_em",
-          "type": "timestamp with time zone",
-          "primaryKey": false,
-          "notNull": true,
-          "default": "now()"
-        }
-      },
-      "indexes": {
-        "validacoes_evolucao_evolucao_idx": {
-          "name": "validacoes_evolucao_evolucao_idx",
-          "columns": [
-            {
-              "expression": "evolucao_id",
-              "isExpression": false,
-              "asc": true,
-              "nulls": "last"
-            },
-            {
-              "expression": "validada_em",
-              "isExpression": false,
-              "asc": true,
-              "nulls": "last"
-            }
-          ],
-          "isUnique": false,
-          "concurrently": false,
-          "method": "btree",
-          "with": {}
-        }
-      },
-      "foreignKeys": {
-        "validacoes_evolucao_evolucao_id_evolucoes_id_fk": {
-          "name": "validacoes_evolucao_evolucao_id_evolucoes_id_fk",
-          "tableFrom": "validacoes_evolucao",
-          "tableTo": "evolucoes",
-          "columnsFrom": ["evolucao_id"],
-          "columnsTo": ["id"],
-          "onDelete": "no action",
-          "onUpdate": "no action"
-        },
-        "validacoes_evolucao_validada_por_usuarios_id_fk": {
-          "name": "validacoes_evolucao_validada_por_usuarios_id_fk",
-          "tableFrom": "validacoes_evolucao",
-          "tableTo": "usuarios",
-          "columnsFrom": ["validada_por"],
-          "columnsTo": ["id"],
-          "onDelete": "no action",
-          "onUpdate": "no action"
-        }
-      },
-      "compositePrimaryKeys": {},
-      "uniqueConstraints": {},
       "policies": {},
       "checkConstraints": {},
       "isRLSEnabled": false
@@ -3223,6 +3057,172 @@
       "checkConstraints": {},
       "isRLSEnabled": false
     },
+    "public.autorizacoes_menor": {
+      "name": "autorizacoes_menor",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "inscricao_id": {
+          "name": "inscricao_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "entregue_em": {
+          "name": "entregue_em",
+          "type": "date",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "registrado_por": {
+          "name": "registrado_por",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "registrado_em": {
+          "name": "registrado_em",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "autorizacoes_menor_inscricao_id_inscricoes_id_fk": {
+          "name": "autorizacoes_menor_inscricao_id_inscricoes_id_fk",
+          "tableFrom": "autorizacoes_menor",
+          "tableTo": "inscricoes",
+          "columnsFrom": ["inscricao_id"],
+          "columnsTo": ["id"],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "autorizacoes_menor_registrado_por_usuarios_id_fk": {
+          "name": "autorizacoes_menor_registrado_por_usuarios_id_fk",
+          "tableFrom": "autorizacoes_menor",
+          "tableTo": "usuarios",
+          "columnsFrom": ["registrado_por"],
+          "columnsTo": ["id"],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {
+        "autorizacoes_menor_inscricao_id_unique": {
+          "name": "autorizacoes_menor_inscricao_id_unique",
+          "nullsNotDistinct": false,
+          "columns": ["inscricao_id"]
+        }
+      },
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.emissoes_declaracao": {
+      "name": "emissoes_declaracao",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "sessao_id": {
+          "name": "sessao_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "inscricao_id": {
+          "name": "inscricao_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "canal": {
+          "name": "canal",
+          "type": "canal_declaracao",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "emitida_por": {
+          "name": "emitida_por",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "tipo": {
+          "name": "tipo",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'emissao'"
+        },
+        "emitida_em": {
+          "name": "emitida_em",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "emissoes_declaracao_sessao_id_sessoes_atendimento_id_fk": {
+          "name": "emissoes_declaracao_sessao_id_sessoes_atendimento_id_fk",
+          "tableFrom": "emissoes_declaracao",
+          "tableTo": "sessoes_atendimento",
+          "columnsFrom": ["sessao_id"],
+          "columnsTo": ["id"],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "emissoes_declaracao_inscricao_id_inscricoes_id_fk": {
+          "name": "emissoes_declaracao_inscricao_id_inscricoes_id_fk",
+          "tableFrom": "emissoes_declaracao",
+          "tableTo": "inscricoes",
+          "columnsFrom": ["inscricao_id"],
+          "columnsTo": ["id"],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "emissoes_declaracao_emitida_por_usuarios_id_fk": {
+          "name": "emissoes_declaracao_emitida_por_usuarios_id_fk",
+          "tableFrom": "emissoes_declaracao",
+          "tableTo": "usuarios",
+          "columnsFrom": ["emitida_por"],
+          "columnsTo": ["id"],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {
+        "emissoes_declaracao_autor_do_canal": {
+          "name": "emissoes_declaracao_autor_do_canal",
+          "value": "(\"emissoes_declaracao\".\"canal\" = 'secretaria') = (\"emissoes_declaracao\".\"emitida_por\" is not null)"
+        },
+        "emissoes_declaracao_tipo": {
+          "name": "emissoes_declaracao_tipo",
+          "value": "\"emissoes_declaracao\".\"tipo\" in ('emissao', 'reemissao')"
+        }
+      },
+      "isRLSEnabled": false
+    },
     "public.pagamentos_contribuicao": {
       "name": "pagamentos_contribuicao",
       "schema": "",
@@ -3336,6 +3336,127 @@
         }
       },
       "isRLSEnabled": false
+    },
+    "public.revogacoes_consentimento": {
+      "name": "revogacoes_consentimento",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "inscricao_id": {
+          "name": "inscricao_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "versao_termo": {
+          "name": "versao_termo",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "solicitante": {
+          "name": "solicitante",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "forma_verificacao": {
+          "name": "forma_verificacao",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "documento_cifrado": {
+          "name": "documento_cifrado",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "verificacao_id": {
+          "name": "verificacao_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "registrada_por": {
+          "name": "registrada_por",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "registrada_em": {
+          "name": "registrada_em",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "revogacoes_consentimento_inscricao_id_inscricoes_id_fk": {
+          "name": "revogacoes_consentimento_inscricao_id_inscricoes_id_fk",
+          "tableFrom": "revogacoes_consentimento",
+          "tableTo": "inscricoes",
+          "columnsFrom": ["inscricao_id"],
+          "columnsTo": ["id"],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "revogacoes_consentimento_versao_termo_versoes_termo_versao_fk": {
+          "name": "revogacoes_consentimento_versao_termo_versoes_termo_versao_fk",
+          "tableFrom": "revogacoes_consentimento",
+          "tableTo": "versoes_termo",
+          "columnsFrom": ["versao_termo"],
+          "columnsTo": ["versao"],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "revogacoes_consentimento_verificacao_id_verificacoes_identidade_id_fk": {
+          "name": "revogacoes_consentimento_verificacao_id_verificacoes_identidade_id_fk",
+          "tableFrom": "revogacoes_consentimento",
+          "tableTo": "verificacoes_identidade",
+          "columnsFrom": ["verificacao_id"],
+          "columnsTo": ["id"],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "revogacoes_consentimento_registrada_por_usuarios_id_fk": {
+          "name": "revogacoes_consentimento_registrada_por_usuarios_id_fk",
+          "tableFrom": "revogacoes_consentimento",
+          "tableTo": "usuarios",
+          "columnsFrom": ["registrada_por"],
+          "columnsTo": ["id"],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {
+        "revogacoes_consentimento_inscricao_id_unique": {
+          "name": "revogacoes_consentimento_inscricao_id_unique",
+          "nullsNotDistinct": false,
+          "columns": ["inscricao_id"]
+        }
+      },
+      "policies": {},
+      "checkConstraints": {
+        "revogacoes_solicitante": {
+          "name": "revogacoes_solicitante",
+          "value": "\"revogacoes_consentimento\".\"solicitante\" in ('titular', 'responsavel')"
+        },
+        "revogacoes_identidade": {
+          "name": "revogacoes_identidade",
+          "value": "(\"revogacoes_consentimento\".\"forma_verificacao\" = 'documento' and \"revogacoes_consentimento\".\"documento_cifrado\" is not null and \"revogacoes_consentimento\".\"verificacao_id\" is null) or (\"revogacoes_consentimento\".\"forma_verificacao\" = 'verificacao_rf52' and \"revogacoes_consentimento\".\"verificacao_id\" is not null and \"revogacoes_consentimento\".\"documento_cifrado\" is null)"
+        }
+      },
+      "isRLSEnabled": false
     }
   },
   "enums": {
@@ -3363,7 +3484,8 @@
         "em_atendimento",
         "encerrado",
         "desligado_por_faltas",
-        "aguardando_vaga"
+        "aguardando_vaga",
+        "cancelado_por_revogacao"
       ]
     },
     "public.tipo_transferencia_caso": {
@@ -3428,6 +3550,11 @@
       "name": "origem_falta",
       "schema": "public",
       "values": ["falta", "cancelamento_fora_do_prazo"]
+    },
+    "public.canal_declaracao": {
+      "name": "canal_declaracao",
+      "schema": "public",
+      "values": ["secretaria", "verificacao"]
     },
     "public.forma_pagamento": {
       "name": "forma_pagamento",

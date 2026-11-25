@@ -4,7 +4,6 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import type { ReactNode } from "react";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import {
-  AVISO_EMISSAO,
   DeclaracoesDoPaciente,
   MinhasSessoes,
   SessoesComPresencaDaFicha,
@@ -23,9 +22,21 @@ afterEach(() => {
 
 // Sessões das 14h de Brasília (17h UTC), como na prancha 8-2.
 const SESSOES = [
-  { inicio: "2026-11-05T17:00:00.000Z", estagiario: "Ana Beatriz Costa" },
-  { inicio: "2026-10-29T17:00:00.000Z", estagiario: "Ana Beatriz Costa" },
-  { inicio: "2026-10-22T17:00:00.000Z", estagiario: "Pedro Henrique Lima" },
+  {
+    id: "00000000-0000-4000-8000-000000001105",
+    inicio: "2026-11-05T17:00:00.000Z",
+    estagiario: "Ana Beatriz Costa",
+  },
+  {
+    id: "00000000-0000-4000-8000-000000001029",
+    inicio: "2026-10-29T17:00:00.000Z",
+    estagiario: "Ana Beatriz Costa",
+  },
+  {
+    id: "00000000-0000-4000-8000-000000001022",
+    inicio: "2026-10-22T17:00:00.000Z",
+    estagiario: "Pedro Henrique Lima",
+  },
 ];
 
 function abrir(conteudo: ReactNode) {
@@ -59,20 +70,32 @@ describe("RF44: sessões do paciente ou do responsável", () => {
     });
     expect(
       screen.getAllByRole("columnheader").map((c) => c.textContent),
-    ).toEqual(["Data", "Horário", "Estagiário"]);
+    ).toEqual(["Data", "Horário", "Estagiário", "Declaração"]);
     const linhas = tabela.querySelectorAll("tbody tr");
     expect(linhas).toHaveLength(3);
-    expect(linhas[0]).toHaveTextContent("05/11/202614:00Ana Beatriz Costa");
-    expect(linhas[2]).toHaveTextContent("22/10/202614:00Pedro Henrique Lima");
+    expect(linhas[0]).toHaveTextContent(
+      "05/11/202614:00Ana Beatriz CostaEmitir declaração",
+    );
+    expect(linhas[2]).toHaveTextContent(
+      "22/10/202614:00Pedro Henrique LimaEmitir declaração",
+    );
     // Os mesmos dados em cartões, para o celular (RNF58).
     expect(
       screen.getByRole("list", {
         name: "Sessões com presença registrada da inscrição 2026-00398",
       }),
     ).toHaveTextContent("05/11/2026, 14:00");
-    expect(screen.getByText(AVISO_EMISSAO)).toBeInTheDocument();
-    // Só consulta até o RF45: nenhuma ação na lista.
-    expect(screen.queryByRole("button")).not.toBeInTheDocument();
+    // O aviso de que a emissão não estava disponível saiu com o RF45.
+    expect(
+      screen.queryByText(/emissão da declaração pelo sistema/),
+    ).not.toBeInTheDocument();
+    // Uma ação por sessão, na tabela e nos cartões, com a sessão no nome (RF45).
+    expect(
+      screen.getAllByRole("button", {
+        name: "Emitir declaração da sessão de 05/11/2026",
+      }),
+    ).toHaveLength(2);
+    expect(screen.getAllByRole("button")).toHaveLength(6);
   });
 
   it("sem sessão realizada, mostra o título do estado vazio, sem erro técnico (RF44)", async () => {
