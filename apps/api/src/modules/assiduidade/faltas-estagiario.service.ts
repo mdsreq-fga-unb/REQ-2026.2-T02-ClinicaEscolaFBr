@@ -144,23 +144,7 @@ export class FaltasEstagiarioService {
         .orderBy(asc(usuarios.nome));
     }
     const [hoje, comFaltas] = await Promise.all([
-      this.db
-        .selectDistinct({ id: usuarios.id, nome: usuarios.nome })
-        .from(atribuicoesSupervisor)
-        .innerJoin(
-          vinculosEstagiario,
-          and(
-            eq(vinculosEstagiario.casoId, atribuicoesSupervisor.casoId),
-            eq(vinculosEstagiario.vigente, true),
-          ),
-        )
-        .innerJoin(usuarios, eq(usuarios.id, vinculosEstagiario.estagiarioId))
-        .where(
-          and(
-            eq(atribuicoesSupervisor.supervisorId, usuario.id),
-            eq(atribuicoesSupervisor.vigente, true),
-          ),
-        ),
+      this.estagiariosDeHoje(usuario.id),
       this.db
         .selectDistinct({ id: usuarios.id, nome: usuarios.nome })
         .from(cancelamentosSessao)
@@ -182,6 +166,29 @@ export class FaltasEstagiarioService {
     return [...porId.values()].sort((a, b) =>
       a.nome.localeCompare(b.nome, 'pt-BR'),
     );
+  }
+
+  // Os estagiários do supervisor hoje, pela definição única da CP4: vínculo
+  // vigente num caso com a atribuição vigente dele. A faixa da sinalização de
+  // reprovação (RF63) vai para eles.
+  estagiariosDeHoje(supervisorId: string): Promise<EstagiarioComFaltas[]> {
+    return this.db
+      .selectDistinct({ id: usuarios.id, nome: usuarios.nome })
+      .from(atribuicoesSupervisor)
+      .innerJoin(
+        vinculosEstagiario,
+        and(
+          eq(vinculosEstagiario.casoId, atribuicoesSupervisor.casoId),
+          eq(vinculosEstagiario.vigente, true),
+        ),
+      )
+      .innerJoin(usuarios, eq(usuarios.id, vinculosEstagiario.estagiarioId))
+      .where(
+        and(
+          eq(atribuicoesSupervisor.supervisorId, supervisorId),
+          eq(atribuicoesSupervisor.vigente, true),
+        ),
+      );
   }
 }
 
