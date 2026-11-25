@@ -901,7 +901,7 @@ _Critérios de aceitação:_
 - A secretaria imprime apenas a versão aprovada e, antes de registrar quem entregou e quando, confirma que a via foi assinada; não há download nem envio por e-mail ao destinatário.
 - Ciclo encerrado com menos de 8 ou mais de 10 sessões exige justificativa da exceção na submissão do relatório.
 
-_Rastreabilidade:_ Feature "Gerar relatório final de evolução" → CP8 — Geração do relatório final de evolução → OE5/OE6. Dependência: RF28, RF32 (CP7); integração: RF53 (CP12), que passa a guardar o número do CRP do supervisor, usado na identificação do relatório; restrição transversal: RF55 (CP12).{{ origem("RF33") }}
+_Rastreabilidade:_ Feature "Gerar relatório final de evolução" → CP8 — Geração do relatório final de evolução → OE5/OE6. Dependência: RF28, RF32 (CP7); restrição transversal: RF55 (CP12).{{ origem("RF33") }}
 
 {{ registro("RF33") }}
 
@@ -1199,26 +1199,26 @@ _Rastreabilidade:_ Feature "Listar sessões com comparecimento registrado do pac
 
 **RF45 — Emitir declaração de comparecimento do paciente**{ #rf45 }
 
-- O sistema deve gerar automaticamente a declaração de comparecimento para a sessão selecionada (RF44), contendo, no mínimo, a data, o horário e o nome do estagiário que realizou o atendimento, em formato pronto para impressão, já que, conforme confirmado pela Clínica Escola, a entrega ao paciente é impressa (o documento pode ser gerado e pré-visualizado em tela antes da impressão, mas a entrega em si não deve ser feita por download ou e-mail).
+- O sistema deve gerar automaticamente a declaração de comparecimento para a sessão selecionada (RF44), no texto do modelo da Clínica Escola, com o nome do paciente, a data e os horários de início e de término da sessão, em formato pronto para impressão, já que, conforme confirmado pela Clínica Escola, a entrega ao paciente é impressa (o documento pode ser gerado e pré-visualizado em tela antes da impressão, mas a entrega em si não deve ser feita por download ou e-mail).
 - A emissão só é permitida para sessão com presença registrada; sessões com falta ou cancelamento não geram declaração.
 - A declaração não deve conter informação clínica (queixa, prioridade, diagnóstico, evolução), preservando o sigilo do atendimento, e pode indicar que o atendimento é de natureza psicológica, sem necessidade de texto neutro.
 - Para paciente menor de idade, a retirada da declaração pelo responsável legal exige que a Autorização para Acompanhamento Psicoterapêutico de Crianças e Adolescentes, assinada presencialmente, já esteja preenchida; sem essa autorização, a declaração não deve ser emitida para o responsável.
 - Toda emissão é auditada conforme o RNF39.
-- Além de data, horário e nome do estagiário, o documento deve conter a assinatura e o carimbo do psicólogo responsável e o número de CRP, conforme o modelo fornecido pela Clínica Escola. Até a FBr confirmar o modelo e quem assina, o psicólogo responsável é o supervisor do caso, com o número do CRP guardado no cadastro do supervisor (RF53).
-- A entrega da Autorização para Acompanhamento Psicoterapêutico de Crianças e Adolescentes, assinada presencialmente, é registrada pela secretaria na ficha do paciente, com a data e quem registrou; é esse registro que libera a emissão para o responsável legal. O registro é uma proposta da equipe, pendente de validação com a FBr.
+- O documento segue o modelo da Clínica Escola: "Declaro para os devidos fins que <nome do paciente> compareceu à Clínica-Escola de Psicologia da Faculdade Brasília – FBr no dia <data> das <início> às <término>.", seguido do espaço para a assinatura e o carimbo do psicólogo responsável e para o número de CRP. A assinatura e o carimbo são feitos à mão na via impressa, e o carimbo já traz o CRP, que por isso não é guardado no sistema.
+- A entrega da Autorização para Acompanhamento Psicoterapêutico de Crianças e Adolescentes, assinada presencialmente, é registrada pela secretaria na ficha do paciente, com a data e quem registrou; é esse registro que libera a emissão para o responsável legal.
 
 _Critérios de aceitação:_
 
-- A emissão para sessão com presença registrada, solicitada pela secretaria ou pelo paciente/responsável, gera o documento com data, horário e nome do estagiário conforme o registro da sessão, e a emissão fica auditada (RNF39).
+- A emissão para sessão com presença registrada, solicitada pela secretaria ou pelo paciente/responsável, gera o documento com o nome do paciente, a data e os horários de início e de término, conforme o registro da sessão, e a emissão fica auditada (RNF39).
 - Sessão sem presença registrada (falta ou cancelamento) não gera declaração; o motivo é informado.
 - Usuário sem permissão para a sessão não emite a declaração, e a tentativa é registrada.
 - Paciente ou responsável com identidade verificada (RF52) não emite declaração de sessão de outro paciente.
-- O documento, em pré-visualização ou impresso, contém a assinatura e o carimbo do psicólogo responsável e o número de CRP, além da data, do horário e do nome do estagiário.
+- O documento, em pré-visualização ou impresso, segue o texto do modelo da Clínica Escola e traz o espaço para a assinatura, o carimbo e o CRP do psicólogo responsável.
 - Para paciente menor de idade sem a Autorização para Acompanhamento Psicoterapêutico de Crianças e Adolescentes preenchida, a emissão é bloqueada e a pendência é informada.
 - Para paciente menor de idade com a autorização preenchida, o responsável legal emite a declaração normalmente.
 - O documento só pode ser visualizado em tela e impresso, sem download nem envio por e-mail.
 
-_Rastreabilidade:_ Feature "Emitir declaração de comparecimento do paciente" → CP10 — Registros administrativos do atendimento → OE6/OE4. Dependência: RF52 (CP12), RF44; integração: RF53 (CP12), que passa a guardar o número do CRP do supervisor.{{ origem("RF45") }}
+_Rastreabilidade:_ Feature "Emitir declaração de comparecimento do paciente" → CP10 — Registros administrativos do atendimento → OE6/OE4. Dependência: RF52 (CP12), RF44.{{ origem("RF45") }}
 
 {{ registro("RF45") }}
 
@@ -1380,7 +1380,7 @@ O sistema deve permitir que um usuário com perfil de coordenação cadastre usu
 2. **Ativação e senha inicial:** ao abrir o link, o próprio usuário define sua senha, que deve atender às regras do RNF49; a conta passa a "ativa" e o link deixa de valer.
 3. **Reenvio:** enquanto o usuário estiver pendente, a coordenação pode reenviar o convite, o que gera um novo link e invalida o anterior.
 
-Para o perfil de supervisor, o cadastro pede também o número de inscrição no CRP, obrigatório, que a coordenação pode corrigir depois; ele aparece no relatório final (RF33) e na declaração de comparecimento (RF45). Um usuário pendente de ativação não consegue se autenticar (RF50). O cadastro, o reenvio do convite e a ativação ficam registrados na trilha de auditoria, com o autor, o usuário afetado e a data/hora.
+Um usuário pendente de ativação não consegue se autenticar (RF50). O cadastro, o reenvio do convite e a ativação ficam registrados na trilha de auditoria, com o autor, o usuário afetado e a data/hora.
 
 _Critérios de aceitação:_
 
@@ -1389,11 +1389,10 @@ _Critérios de aceitação:_
 - Link de ativação já usado ou com mais de 72 horas é recusado, com orientação para pedir novo convite à coordenação.
 - O reenvio do convite a usuário pendente invalida o link anterior.
 - E-mail já cadastrado não pode ser cadastrado de novo.
-- O cadastro de supervisor sem o número do CRP é recusado, com o campo indicado; a correção do número pela coordenação fica na auditoria.
 - Usuário sem perfil de coordenação não consegue cadastrar usuários.
 - O cadastro, o reenvio do convite e a ativação ficam registrados na auditoria, com o autor, o usuário afetado e a data/hora.
 
-_Rastreabilidade:_ Feature "Cadastrar usuário institucional com perfil de acesso" → CP12 — Segurança, sigilo e controle de acesso → OE7/OE5. Integração: RF33 (CP8) e RF45 (CP10), que mostram o CRP do supervisor.{{ origem("RF53") }}
+_Rastreabilidade:_ Feature "Cadastrar usuário institucional com perfil de acesso" → CP12 — Segurança, sigilo e controle de acesso → OE7/OE5.{{ origem("RF53") }}
 
 {{ registro("RF53") }}
 

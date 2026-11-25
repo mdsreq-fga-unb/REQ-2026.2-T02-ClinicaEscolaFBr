@@ -397,10 +397,6 @@ describe('Sessões com presença registrada e declaração de comparecimento (RF
           situacao: 'ativo',
         })
         .returning();
-      await db
-        .update(usuarios)
-        .set({ crp: '01/12345' })
-        .where(eq(usuarios.id, pessoas.supervisor.id));
       await db.insert(atribuicoesSupervisor).values([
         {
           casoId: casoA,
@@ -436,7 +432,7 @@ describe('Sessões com presença registrada e declaração de comparecimento (RF
     const auditoriaDe = (operacao: string) =>
       db.select().from(auditoria).where(eq(auditoria.operacao, operacao));
 
-    it('o paciente verificado emite a declaração da sessão com presença, com o supervisor e o CRP, e a emissão fica registrada', async () => {
+    it('o paciente verificado emite a declaração da sessão com presença, com os dados do modelo da FBr, e a emissão fica registrada (DF70)', async () => {
       const res = await emitirComo(s1105, await verificar(inscricaoA)).expect(
         201,
       );
@@ -445,9 +441,11 @@ describe('Sessões com presença registrada e declaração de comparecimento (RF
         emissaoId: expect.any(String),
         emitidaEm: expect.any(String),
         paciente: 'Mariana Alves Toledo',
-        sessao: { id: s1105, inicio: '2026-11-05T17:00:00.000Z' },
-        estagiario: 'Ana Beatriz Costa',
-        psicologoResponsavel: { nome: 'Carla Mendes', crp: '01/12345' },
+        sessao: {
+          id: s1105,
+          inicio: '2026-11-05T17:00:00.000Z',
+          termino: '2026-11-05T17:50:00.000Z',
+        },
       });
       const [emissao] = await db.select().from(emissoesDeclaracao);
       expect(emissao).toMatchObject({
@@ -480,14 +478,19 @@ describe('Sessões com presença registrada e declaração de comparecimento (RF
       );
     });
 
-    it('o psicólogo responsável é o supervisor na data da sessão, mesmo depois da transferência, e o CRP vem nulo se não foi informado', async () => {
+    it('não traz o estagiário, o supervisor nem o CRP: o psicólogo responsável assina e carimba no papel (DF70, DF71)', async () => {
       const res = await emitirComo(s1029, await verificar(inscricaoA)).expect(
         201,
       );
-      expect(res.body.psicologoResponsavel).toEqual({
-        nome: 'Ricardo Menezes',
-        crp: null,
-      });
+      expect(Object.keys(res.body).sort()).toEqual([
+        'emissaoId',
+        'emitidaEm',
+        'paciente',
+        'sessao',
+      ]);
+      expect(JSON.stringify(res.body)).not.toMatch(
+        /Ana Beatriz|Carla Mendes|Ricardo Menezes|crp/i,
+      );
     });
 
     it.each([

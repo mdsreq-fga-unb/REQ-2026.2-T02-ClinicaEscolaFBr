@@ -1,1 +1,0 @@
-ALTER TABLE "usuarios" ADD COLUMN "crp" text;
