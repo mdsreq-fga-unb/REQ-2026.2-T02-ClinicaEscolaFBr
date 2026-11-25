@@ -11,6 +11,15 @@ export class ErroApi extends Error {
   }
 }
 
+// Avisado a cada 401 de rota que não é a própria consulta da sessão. A área
+// interna usa isso para conferir a sessão de novo e levar à entrada quando ela
+// expirou (RNF50), inclusive nas ações que chamam a API fora do React Query.
+let aoRecusarSessao: (() => void) | null = null;
+export function quandoRecusarSessao(funcao: (() => void) | null) {
+  aoRecusarSessao = funcao;
+}
+const ROTAS_DA_SESSAO = ["/auth/sessao", "/auth/login", "/auth/logout"];
+
 export async function api<T>(caminho: string, init?: RequestInit): Promise<T> {
   const resposta = await fetch(`${BASE}${caminho}`, {
     ...init,
@@ -26,6 +35,9 @@ export async function api<T>(caminho: string, init?: RequestInit): Promise<T> {
       typeof corpo?.message === "string"
         ? corpo.message
         : `Erro ${resposta.status} em ${caminho}`;
+    if (resposta.status === 401 && !ROTAS_DA_SESSAO.includes(caminho)) {
+      aoRecusarSessao?.();
+    }
     throw new ErroApi(resposta.status, mensagem, corpo);
   }
   if (resposta.status === 204) return undefined as T;

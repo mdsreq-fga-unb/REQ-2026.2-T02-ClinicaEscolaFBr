@@ -397,6 +397,46 @@ class Catalogo:
         resumo = "; ".join(f"{e}: {contagem[e]}" for e in ORDEM_ESTADOS if e in contagem)
         return "\n".join(linhas) + f"\n\n_Total: {len(itens)} features ({resumo})._"
 
+    # Ordem das áreas do FDD na jornada do paciente na clínica; as transversais
+    # ficam no fim.
+    JORNADA = [
+        "Inscrição no atendimento", "Triagem clínica", "Gestão da fila de espera", "Gestão de casos",
+        "Agendamento e acompanhamento de sessões", "Acompanhamento clínico", "Assiduidade e alertas",
+        "Registros administrativos do atendimento", "Continuidade do atendimento", "Gestão institucional",
+        "Acesso e segurança", "Acessibilidade e usabilidade",
+    ]
+
+    def mapa_historias(self):
+        """Mapa das features pela jornada, inspirado no USM, a partir da lista de
+        features do FDD: as linhas são as áreas e os conjuntos de features, na ordem
+        da jornada; as colunas são os ciclos do MVP e as versões posteriores; cada
+        célula traz as features do conjunto naquela entrega, na ordem do backlog."""
+        vigentes = [r for r in self.rfs if not r.get("removido")]
+        ciclos = sorted({r["ciclo"] for r in vigentes if r.get("mvp") and r.get("ciclo")})
+        cabecalho = "| Área e conjunto de features (FDD) | " + " | ".join(f"Ciclo {c}" for c in ciclos) + " | Versões posteriores |"
+        linhas = [cabecalho, "| --- " * (len(ciclos) + 2) + "|"]
+        ordem = {a: n for n, a in enumerate(self.JORNADA)}
+        conjuntos = sorted(self.dados["conjuntos"], key=lambda c: ordem.get(c["area"], len(ordem)))
+        for c in conjuntos:
+            membros = [self.por_codigo[x] for x in c["rfs"] if x in self.por_codigo and not self.por_codigo[x].get("removido")]
+            if not membros:
+                continue
+            celulas = []
+            for n in ciclos:
+                itens = sorted((r for r in membros if r.get("mvp") and r.get("ciclo") == n), key=lambda r: r["ordem"])
+                celulas.append(self._celula_mapa(itens))
+            posteriores = sorted((r for r in membros if not r.get("mvp")), key=lambda r: numero(r["id"]))
+            celulas.append(self._celula_mapa(posteriores))
+            linhas.append(f"| **{c['area']}**<br>{c['conjunto']} | " + " | ".join(celulas) + " |")
+        return "\n".join(linhas)
+
+    def _celula_mapa(self, itens):
+        # Um bloco só por célula: no celular, a tabela vira cartões com flexbox, e
+        # o link e o nome soltos iriam para colunas diferentes.
+        if not itens:
+            return "—"
+        return "<span>" + "<br>".join(f"{self.link(r['id'])} {r['nome']}" for r in itens) + "</span>"
+
     def tabela_posteriores(self):
         linhas = ["| Feature (RF) | CP | Líder de Feature | Issue |", "| --- | --- | --- | --- |"]
         for r in self.rfs:
@@ -559,7 +599,8 @@ def define_env(env):
 
     for nome in ("tabela_consolidada", "tabela_mvp", "lista_fora_do_mvp", "matriz", "tabela_rnfs",
                  "indice", "origem", "registro", "tabela_decisoes", "tabela_situacao_ciclos",
-                 "tabela_ciclo", "tabela_andamento", "tabela_posteriores", "tabela_conjuntos", "link", "rfs_da_cp"):
+                 "tabela_ciclo", "tabela_andamento", "tabela_posteriores", "tabela_conjuntos", "link", "rfs_da_cp",
+                 "mapa_historias"):
         env.macro(na_pagina(getattr(cat, nome)), nome)
     env.variables["composicao_mvp"] = cat.composicao_mvp()
 

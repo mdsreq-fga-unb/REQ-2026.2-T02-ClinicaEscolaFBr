@@ -9,5 +9,6 @@ import { TransferenciaService } from './transferencia.service';
   imports: [AssiduidadeModule, FilaModule],
   controllers: [CasosController],
   providers: [CasosService, TransferenciaService],
+  exports: [CasosService],
 })
 export class CasosModule {}
