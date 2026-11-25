@@ -53,6 +53,7 @@ const sessao = (
   cancelamento: null,
   prontuarioId: null,
   acoes: DO_ESTAGIARIO,
+  contribuicaoPendente: false,
   ...dados,
 });
 
@@ -176,6 +177,26 @@ describe("Agenda de sessões do estagiário (RF11)", () => {
       "Sexta-feira, 06/11/2026",
       "Nenhuma sessão neste dia.",
     ]);
+  });
+
+  it("a 1ª sessão do ciclo de quem não pagou a contribuição mostra a indicação, em texto (RF42)", async () => {
+    simularApi(
+      comAgenda([
+        sessao("s1", "2026-11-05T17:00:00.000Z", {
+          paciente: "João Pedro Lima",
+          contribuicaoPendente: true,
+        }),
+        sessao("s2", "2026-11-05T18:00:00.000Z"),
+      ]),
+    );
+    abrir();
+    await screen.findByText("2 sessões");
+    const linhas = within(tabela()).getAllByRole("row");
+    const doJoao = linhas.find((l) => l.textContent?.includes("João Pedro"))!;
+    expect(doJoao.textContent).toContain("Contribuição pendente · 1ª sessão");
+    expect(
+      linhas.filter((l) => l.textContent?.includes("Contribuição pendente")),
+    ).toHaveLength(1);
   });
 
   it("cada linha leva à ação certa: prontuário, falta e cancelamento", async () => {

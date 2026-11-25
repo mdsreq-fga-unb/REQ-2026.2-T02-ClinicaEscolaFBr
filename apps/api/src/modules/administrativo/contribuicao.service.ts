@@ -5,12 +5,26 @@ import {
   NotFoundException,
   UnprocessableEntityException,
 } from '@nestjs/common';
-import { and, asc, desc, eq, gte, lt, sql, type SQL } from 'drizzle-orm';
+import {
+  and,
+  asc,
+  desc,
+  eq,
+  gte,
+  inArray,
+  lt,
+  min,
+  notInArray,
+  sql,
+  type SQL,
+} from 'drizzle-orm';
 import {
   alteracoesParametro,
   casos,
+  inscricoes,
   pagamentosContribuicao,
   parametros,
+  sessoesAtendimento,
   usuarios,
   vinculosEstagiario,
   type Db,
@@ -20,7 +34,9 @@ import {
   PARAMETROS_PADRAO,
   prazoDaContribuicao,
   type CicloAnteriorContribuicao,
+  type ContribuicaoDoPaciente,
   type CorrecaoContribuicao,
+  type FiltroContribuicoes,
   type RegistroContribuicao,
   type SituacaoContribuicao,
   type ValorContribuicao,
@@ -30,6 +46,7 @@ import {
   AuditoriaService,
   type Transacao,
 } from '../../auditoria/auditoria.service';
+import { FORA_DA_PRIMEIRA_SESSAO } from '../../common/contribuicao-pendente';
 import type { UsuarioAutenticado } from '../../auth/usuario-autenticado';
 import { DB } from '../../database/database.module';
 import { numeroDoParametro } from '../../parametros/parametros.service';
@@ -68,6 +85,93 @@ export class ContribuicaoService {
 
   async situacao(casoId: string): Promise<SituacaoContribuicao> {
     return this.montarSituacao(this.db, await this.caso(this.db, casoId));
+  }
+
+  // Situação da contribuição dos pacientes em atendimento, no ciclo atual de cada
+  // caso (RF42). "Pendente" é o caso sem pagamento no ciclo; "efetivada" traz a
+  // data do pagamento da versão vigente. Na pendente, o prazo é o mesmo da ficha
+  // (RF41), contado do primeiro vínculo depois da última entrada na fila.
+  async listar({
+    situacao,
+  }: FiltroContribuicoes): Promise<ContribuicaoDoPaciente[]> {
+    const lista = await this.db
+      .select({
+        id: casos.id,
+        ciclo: casos.cicloAtendimento,
+        entradaNaFilaEm: casos.entradaNaFilaEm,
+        paciente: inscricoes.nomeCompleto,
+      })
+      .from(casos)
+      .innerJoin(inscricoes, eq(inscricoes.id, casos.inscricaoId))
+      .where(eq(casos.situacao, 'em_atendimento'))
+      .orderBy(asc(inscricoes.nomeCompleto));
+    if (lista.length === 0) return [];
+    const ids = lista.map((c) => c.id);
+
+    // Versão vigente do pagamento do ciclo atual de cada caso: a de maior número.
+    const pagamentos = await this.db
+      .selectDistinctOn([pagamentosContribuicao.casoId], {
+        casoId: pagamentosContribuicao.casoId,
+        pagoEm: pagamentosContribuicao.pagoEm,
+      })
+      .from(pagamentosContribuicao)
+      .innerJoin(
+        casos,
+        and(
+          eq(casos.id, pagamentosContribuicao.casoId),
+          eq(casos.cicloAtendimento, pagamentosContribuicao.cicloAtendimento),
+        ),
+      )
+      .where(inArray(pagamentosContribuicao.casoId, ids))
+      .orderBy(
+        pagamentosContribuicao.casoId,
+        desc(pagamentosContribuicao.versao),
+      );
+    const pagoEm = new Map(pagamentos.map((p) => [p.casoId, p.pagoEm]));
+
+    // Primeira sessão do ciclo atual, sem as canceladas nem as faltas do
+    // paciente, como na indicação da agenda.
+    const primeiras = await this.db
+      .select({
+        casoId: sessoesAtendimento.casoId,
+        inicio: min(sessoesAtendimento.inicio),
+      })
+      .from(sessoesAtendimento)
+      .innerJoin(
+        casos,
+        and(
+          eq(casos.id, sessoesAtendimento.casoId),
+          eq(casos.cicloAtendimento, sessoesAtendimento.cicloAtendimento),
+        ),
+      )
+      .where(
+        and(
+          inArray(sessoesAtendimento.casoId, ids),
+          notInArray(sessoesAtendimento.status, [...FORA_DA_PRIMEIRA_SESSAO]),
+        ),
+      )
+      .groupBy(sessoesAtendimento.casoId);
+    const primeira = new Map(primeiras.map((p) => [p.casoId, p.inicio]));
+
+    const resultado: ContribuicaoDoPaciente[] = [];
+    for (const caso of lista) {
+      const pago = pagoEm.get(caso.id) ?? null;
+      const atual = pago ? 'efetivada' : 'pendente';
+      if (situacao && situacao !== atual) continue;
+      const vinculadoEm = pago
+        ? null
+        : await this.primeiroVinculo(this.db, caso);
+      const inicio = primeira.get(caso.id);
+      resultado.push({
+        casoId: caso.id,
+        paciente: caso.paciente,
+        situacao: atual,
+        primeiraSessao: inicio ? new Date(inicio).toISOString() : null,
+        pagoEm: pago,
+        prazoAte: vinculadoEm ? prazoDaContribuicao(vinculadoEm) : null,
+      });
+    }
+    return resultado;
   }
 
   // O caso fica travado até o fim da transação: dois registros ao mesmo tempo

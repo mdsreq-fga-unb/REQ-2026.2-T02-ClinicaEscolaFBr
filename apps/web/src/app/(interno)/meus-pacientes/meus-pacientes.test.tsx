@@ -18,9 +18,15 @@ const caso = (nome: string, extra: Record<string, unknown> = {}) => ({
   ...extra,
 });
 const CASOS = [
-  caso("Mariana Alves Toledo", { prioridade: "amarela" }),
-  caso("Tatiane Moreira Lopes"),
-  caso("Gustavo Henrique Dias", { situacao: "aguardando_vaga" }),
+  caso("Mariana Alves Toledo", {
+    prioridade: "amarela",
+    contribuicao: "efetivada",
+  }),
+  caso("Tatiane Moreira Lopes", { contribuicao: "pendente" }),
+  caso("Gustavo Henrique Dias", {
+    situacao: "aguardando_vaga",
+    contribuicao: null,
+  }),
 ];
 
 function simularApi(perfil = "estagiario", casos: unknown = CASOS) {
@@ -60,7 +66,7 @@ describe("Meus pacientes do estagiário (RF23)", () => {
     vi.unstubAllGlobals();
   });
 
-  it("mostra o paciente, a prioridade, a situação e o supervisor de cada caso, sem número nem dado clínico (RF23, RNF17)", async () => {
+  it("mostra o paciente, a prioridade, a situação, o supervisor e a contribuição de cada caso, sem número nem dado clínico (RF23, RF42, RNF17)", async () => {
     simularApi();
     abrir();
     const tabela = await screen.findByRole("table", {
@@ -74,6 +80,7 @@ describe("Meus pacientes do estagiário (RF23)", () => {
       "Prioridade clínica",
       "Situação do caso",
       "Supervisor",
+      "Contribuição",
       "Ações",
     ]);
     const linhas = Array.from(tabela.querySelectorAll("tbody tr")).map((l) =>
@@ -84,8 +91,11 @@ describe("Meus pacientes do estagiário (RF23)", () => {
       "Amarela",
       "Em atendimento",
       "Ricardo Menezes",
+      "Efetivada",
       "Ver fichaAbrir prontuário",
     ]);
+    expect(linhas[1][4]).toBe("Pendente");
+    expect(linhas[2][4]).toBe("—");
     expect(document.body.textContent).not.toMatch(/2026-00001|queixa/i);
   });
 
