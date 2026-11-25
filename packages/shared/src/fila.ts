@@ -12,7 +12,13 @@ export type InscritoNaFila = {
 };
 export type FilaEspera = {
   inscritos: InscritoNaFila[];
-  pendentes: { numero: string; nome: string; criadaEm: string }[];
+  // inscricaoId abre a triagem da inscrição pela lista da fila.
+  pendentes: {
+    inscricaoId: string;
+    numero: string;
+    nome: string;
+    criadaEm: string;
+  }[];
 };
 
 // Consulta individual (DF55): a posição pertence somente à fila interna da equipe.

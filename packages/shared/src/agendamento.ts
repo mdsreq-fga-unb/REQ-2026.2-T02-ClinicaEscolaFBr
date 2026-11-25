@@ -54,6 +54,7 @@ export type ResultadoAgendamento = {
   canal: Canal;
   // Canal e-mail: o link sai na hora; false quando o envio falhou.
   linkEnviadoPorEmail: boolean;
+  comunicacaoSuspensa?: boolean;
   // Canal WhatsApp ou ligação: a secretaria envia a mensagem pronta (DF24).
   whatsapp: { celular: string; mensagem: string; url: string } | null;
 };

@@ -1,4 +1,10 @@
-import { Inject, Injectable, NotFoundException } from '@nestjs/common';
+import {
+  Inject,
+  Injectable,
+  NotFoundException,
+  UnprocessableEntityException,
+} from '@nestjs/common';
+import { revogada, semRevogacao } from '../../common/consentimento';
 import { ConfigService } from '@nestjs/config';
 import {
   decisoesPrioridade,
@@ -14,7 +20,7 @@ import {
   desc,
   eq,
   exists,
-  ne,
+  notInArray,
   notExists,
   or,
   sql,
@@ -46,7 +52,7 @@ export class TriagemService {
     const [{ total }] = await this.db
       .select({ total: count() })
       .from(inscricoes)
-      .where(this.semDecisao());
+      .where(and(this.semDecisao(), semRevogacao(inscricoes.id)));
     return { total };
   }
 
@@ -62,7 +68,7 @@ export class TriagemService {
         historicoRelevante: inscricoes.historicoRelevanteCifrado,
       })
       .from(inscricoes)
-      .where(this.semDecisao())
+      .where(and(this.semDecisao(), semRevogacao(inscricoes.id)))
       .orderBy(
         ordem === 'recentes'
           ? desc(inscricoes.criadaEm)
@@ -118,7 +124,10 @@ export class TriagemService {
                 .where(
                   and(
                     eq(casos.inscricaoId, inscricoes.id),
-                    ne(casos.situacao, 'encerrado'),
+                    notInArray(casos.situacao, [
+                      'encerrado',
+                      'encerrado_por_alta',
+                    ]),
                   ),
                 ),
             ),
@@ -179,7 +188,7 @@ export class TriagemService {
       .innerJoin(usuarios, eq(usuarios.id, decisoesPrioridade.decididaPor))
       // Casos encerrados saem da lista, para ela não crescer sem limite (RNF21).
       .innerJoin(casos, eq(casos.inscricaoId, decisoesPrioridade.inscricaoId))
-      .where(ne(casos.situacao, 'encerrado'))
+      .where(notInArray(casos.situacao, ['encerrado', 'encerrado_por_alta']))
       .orderBy(
         asc(decisoesPrioridade.inscricaoId),
         desc(decisoesPrioridade.decididaEm),
@@ -222,6 +231,10 @@ export class TriagemService {
         .where(eq(inscricoes.id, inscricaoId))
         .for('update');
       if (!inscricao) throw new NotFoundException('Inscrição não encontrada.');
+      if (await revogada(tx, inscricaoId))
+        throw new UnprocessableEntityException(
+          'O consentimento desta inscrição foi revogado.',
+        );
 
       const [anterior] = await tx
         .select({

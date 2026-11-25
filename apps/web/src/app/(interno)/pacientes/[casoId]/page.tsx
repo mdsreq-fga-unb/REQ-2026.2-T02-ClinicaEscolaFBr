@@ -47,12 +47,16 @@ import {
   VagaPerdida,
 } from "@/components/administrativo/perda-vaga";
 import { AcessoNegado } from "@/components/comum/acesso-negado";
+import { AltaDoCaso } from "@/components/casos/alta";
+import { AutorizacaoMenorDaFicha } from "@/components/declaracoes/autorizacao-menor";
 import { SessoesComPresencaDaFicha } from "@/components/declaracoes/sessoes-com-presenca";
+import { ImpressaoEEntregaDoRelatorio } from "@/components/relatorio-final/relatorio-final";
 import { Aviso } from "@/components/comum/aviso";
 import { Dados } from "@/components/comum/dados";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { api, ErroApi } from "@/lib/api";
 import { useSessao } from "@/lib/sessao";
+import { CartaoConsentimento } from "@/components/consentimento/consentimento";
 import { dataBr, dataHoraBr, NOMES_CANAL } from "@/lib/formato";
 
 type DadosAdministrativos = {
@@ -118,8 +122,10 @@ const VOLTAR = {
 // a contribuição social do ciclo (RF41), que a coordenação só consulta. O
 // estagiário e o supervisor, e o caso que ainda aguarda distribuição, veem só a
 // identificação (prancha 2-3). O conteúdo clínico fica no prontuário. As sessões
-// com presença registrada (RF44) são só da secretaria; os outros perfis veem, no
-// lugar da lista, que ela não é do seu perfil (prancha 8-2, RNF38).
+// com presença registrada (RF44) são só da secretaria, que também emite a
+// declaração de comparecimento (RF45) e registra a autorização de menor; os
+// outros perfis veem, no lugar da lista, que ela não é do seu perfil (prancha 8-2,
+// RNF38).
 export default function PacientePage() {
   const { casoId } = useParams<{ casoId: string }>();
   const { data: sessao } = useSessao();
@@ -285,6 +291,7 @@ export default function PacientePage() {
         {(secretaria || coordenacao) && <VagaPerdida casoId={r.casoId} />}
         {secretaria && avisoClinico}
         {quadro()}
+        <CartaoConsentimento casoId={casoId} />
         <section aria-labelledby="identificacao" className="ui-cartao">
           <h2 id="identificacao" className="ui-h2">
             Identificação
@@ -306,7 +313,12 @@ export default function PacientePage() {
             ]}
           />
         </section>
-        <SessoesComPresencaDaFicha casoId={r.casoId} />
+        {/* Alta do caso (RF68): o estagiário e o supervisor do caso veem a ficha
+            por aqui. */}
+        <AltaDoCaso casoId={r.casoId} nome={r.nome} />
+        {/* A lista do RF44 é só da secretaria (RNF38): nos outros perfis, a
+            seção nem aparece, em vez de um aviso de acesso negado. */}
+        {secretaria && <SessoesComPresencaDaFicha casoId={r.casoId} />}
         {dialogoVincular}
       </div>
     );
@@ -433,6 +445,7 @@ export default function PacientePage() {
         />
       )}
       {d.prontuarioId === undefined && avisoClinico}
+      <CartaoConsentimento casoId={casoId} />
       {quadro(
         coordenacao && d.supervisor && TRANSFERIVEIS.includes(d.situacao) ? (
           <Button
@@ -513,9 +526,23 @@ export default function PacientePage() {
           />
         </div>
       )}
+      {/* Alta do caso (RF68): pedido, confirmação, encerramento e reabertura. */}
+      <AltaDoCaso casoId={d.casoId} nome={d.nome} />
+      {/* Autorização de menor (RF45): só a secretaria registra, e o bloco só
+          aparece para paciente menor de idade. */}
+      {secretaria && (
+        <AutorizacaoMenorDaFicha
+          casoId={d.casoId}
+          nome={d.nome}
+          dataNascimento={d.dataNascimento}
+        />
+      )}
       {/* Sessões com presença registrada (RF44): de todos os ciclos do caso,
-          só para consulta até a emissão da declaração (RF45). */}
-      <SessoesComPresencaDaFicha casoId={d.casoId} />
+          só para a secretaria (RNF38); nos outros perfis, a seção não aparece. */}
+      {secretaria && <SessoesComPresencaDaFicha casoId={d.casoId} />}
+      {/* Impressão e entrega do relatório final aprovado (RF33): só a
+          secretaria, que não vê as outras versões nem o prontuário. */}
+      {secretaria && <ImpressaoEEntregaDoRelatorio casoId={d.casoId} />}
       <HistoricoFaltas
         id="historico-faltas"
         contagem={d.faltasNoCiclo}

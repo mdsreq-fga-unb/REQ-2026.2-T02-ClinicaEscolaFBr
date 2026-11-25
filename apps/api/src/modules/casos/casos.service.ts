@@ -27,6 +27,7 @@ import {
   desligamentosPorFaltas,
   inscricoes,
   prontuarios,
+  revogacoesConsentimento,
   usuarios,
   vinculosEstagiario,
   type Db,
@@ -133,7 +134,11 @@ export class CasosService {
       .where(
         and(
           eq(atribuicoesSupervisor.vigente, true),
-          notInArray(casos.situacao, ['encerrado', 'desligado_por_faltas']),
+          notInArray(casos.situacao, [
+            'encerrado',
+            'desligado_por_faltas',
+            'encerrado_por_alta',
+          ]),
           supervisorId
             ? eq(atribuicoesSupervisor.supervisorId, supervisorId)
             : undefined,
@@ -307,6 +312,7 @@ export class CasosService {
         nome: inscricoes.nomeCompleto,
         situacao: casos.situacao,
         ciclo: casos.cicloAtendimento,
+        consentimentoRevogadoEm: revogacoesConsentimento.registradaEm,
         estagiarioId: vinculosEstagiario.estagiarioId,
         estagiario: estagiario.nome,
         supervisor: supervisor.nome,
@@ -315,6 +321,10 @@ export class CasosService {
       .from(atribuicoesSupervisor)
       .innerJoin(casos, eq(casos.id, atribuicoesSupervisor.casoId))
       .innerJoin(inscricoes, eq(inscricoes.id, casos.inscricaoId))
+      .leftJoin(
+        revogacoesConsentimento,
+        eq(revogacoesConsentimento.inscricaoId, inscricoes.id),
+      )
       .leftJoin(
         supervisor,
         eq(supervisor.id, atribuicoesSupervisor.supervisorId),
@@ -400,6 +410,9 @@ export class CasosService {
         prontuarioId: l.prontuarioId,
         situacao: l.situacao,
         vinculoEncerradoEm: decisao?.decididoEm.toISOString() ?? null,
+        ...(l.consentimentoRevogadoEm
+          ? { consentimentoRevogadoEm: l.consentimentoRevogadoEm.toISOString() }
+          : {}),
       };
     });
   }
@@ -483,6 +496,12 @@ export class CasosService {
         }
         if (caso.situacao === 'encerrado') {
           throw new ConflictException('Este caso está encerrado.');
+        }
+        // A alta só se desfaz pela reabertura da coordenação (RF68).
+        if (caso.situacao === 'encerrado_por_alta') {
+          throw new ConflictException(
+            'Caso encerrado por alta: só a coordenação reabre o caso.',
+          );
         }
         // Um vínculo novo devolveria o caso desligado ao atendimento sem registrar a
         // reversão (RF38). O caso que aguarda vaga já foi revertido e aceita.

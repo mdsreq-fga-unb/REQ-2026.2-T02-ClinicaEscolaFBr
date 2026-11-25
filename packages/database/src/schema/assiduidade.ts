@@ -21,7 +21,7 @@ import {
   ORIGENS_FALTA,
 } from "@clinica/shared";
 import { usuarios } from "./base";
-import { casos, vinculosEstagiario } from "./casos";
+import { casos, encerramentosAlta, vinculosEstagiario } from "./casos";
 import { sessoesAtendimento } from "./agendamento";
 import { perdasVaga } from "./administrativo";
 
@@ -129,16 +129,20 @@ export const desligamentoFaltas = pgTable(
   (t) => [primaryKey({ columns: [t.desligamentoId, t.faltaId] })],
 );
 
-// Vaga do estagiário liberada pelo desligamento (RF37) ou pela perda da vaga por
-// contribuição pendente (RF43), aguardando realocação. Só o vínculo de um paciente
-// novo pelo RF21 a ocupa; a reversão (RF38) encerra a do desligamento.
+// Vaga do estagiário liberada pelo desligamento, aguardando realocação (RF37). Só
+// o vínculo de um paciente novo pelo RF21 a ocupa; a reversão (RF38) a encerra.
 export const vagasLiberadas = pgTable(
   "vagas_liberadas",
   {
     id: uuid("id").primaryKey().defaultRandom(),
+    // A vaga vem do desligamento por faltas (RF37), da alta (RF68) ou da perda
+    // da vaga pela contribuição pendente (RF43).
     desligamentoId: uuid("desligamento_id")
       .unique()
       .references(() => desligamentosPorFaltas.id),
+    altaId: uuid("alta_id")
+      .unique()
+      .references(() => encerramentosAlta.id),
     perdaVagaId: uuid("perda_vaga_id")
       .unique()
       .references(() => perdasVaga.id),
@@ -158,10 +162,11 @@ export const vagasLiberadas = pgTable(
     encerradaEm: timestamp("encerrada_em", { withTimezone: true }),
   },
   (t) => [
-    // Cada vaga vem de um desligamento ou de uma perda da vaga, nunca dos dois.
+    // Exatamente uma origem: o desligamento (RF37), a alta (RF68) ou a perda da
+    // vaga pela contribuição pendente (RF43).
     check(
       "vagas_origem_unica",
-      sql`(${t.desligamentoId} is null) <> (${t.perdaVagaId} is null)`,
+      sql`num_nonnulls(${t.desligamentoId}, ${t.altaId}, ${t.perdaVagaId}) = 1`,
     ),
     check(
       "vagas_ocupacao_completa",

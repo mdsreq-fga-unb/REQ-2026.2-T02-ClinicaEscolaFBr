@@ -478,5 +478,20 @@ describe('Contribuição pendente: prazo vencido e perda da vaga (RF43, DF33)', 
         .set({ perdaVagaId: null })
         .where(and(eq(vagasLiberadas.estagiarioId, pessoas.ana.id))),
     ).rejects.toThrow();
+    // Cada vaga tem exatamente uma origem: desligamento, alta ou perda da vaga.
+    const [perda] = await db.select().from(perdasVaga);
+    await expect(
+      db.insert(vagasLiberadas).values({
+        estagiarioId: pessoas.ana.id,
+        supervisorId: pessoas.carla.id,
+      }),
+    ).rejects.toThrow();
+    await expect(
+      db.insert(vagasLiberadas).values({
+        perdaVagaId: perda.id,
+        estagiarioId: pessoas.ana.id,
+        supervisorId: pessoas.carla.id,
+      }),
+    ).rejects.toThrow();
   });
 });

@@ -60,11 +60,14 @@ const ESTILO_SITUACAO: Record<SituacaoCaso, string> = {
   encerrado: "border-[#c3cfd8] bg-[#eef1f4] text-[#4a5864]",
   desligado_por_faltas: "border-[#efb4ad] bg-erro-fundo text-destructive",
   aguardando_vaga: "border-[#f0cf9f] bg-alerta-fundo text-[#8a4600]",
+  cancelado_por_revogacao: "border-[#c3cfd8] bg-[#eef1f4] text-[#4a5864]",
+  encerrado_por_alta: "border-[#c3cfd8] bg-[#eef1f4] text-[#4a5864]",
 };
 const ICONE_SITUACAO: Partial<Record<SituacaoCaso, typeof Check>> = {
   em_atendimento: Check,
   desligado_por_faltas: UserX,
   aguardando_vaga: Clock,
+  encerrado_por_alta: Check,
 };
 
 export function SeloSituacaoCaso({ situacao }: { situacao: SituacaoCaso }) {
@@ -126,7 +129,7 @@ export function FaixaAlertas({ perfil }: { perfil: Perfil }) {
     : "Avalie o desligamento.";
 
   return (
-    <div role="status" className="flex flex-col">
+    <div role="status" className="flex flex-col print:hidden">
       {limite.length === 1 && (
         <div className="flex flex-wrap items-center gap-x-5 gap-y-3 border-b-4 border-[#8f1a10] bg-destructive px-4 py-3 text-white md:px-10">
           <AlertTriangle aria-hidden className="size-5 shrink-0" />

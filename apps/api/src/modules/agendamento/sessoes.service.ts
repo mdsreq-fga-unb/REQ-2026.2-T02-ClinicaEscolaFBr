@@ -17,7 +17,7 @@ import {
   ilike,
   inArray,
   lt,
-  ne,
+  notInArray,
   or,
 } from 'drizzle-orm';
 import {
@@ -43,6 +43,11 @@ import type { UsuarioAutenticado } from '../../auth/usuario-autenticado';
 import { AuditoriaService } from '../../auditoria/auditoria.service';
 import { escaparLike } from '../../common/busca';
 import { DB } from '../../database/database.module';
+import {
+  comunicarSePermitido,
+  exigirConsentimento,
+  semRevogacao,
+} from '../../common/consentimento';
 import { EmailService } from '../../notificacoes/email.service';
 import { ParametrosService } from '../../parametros/parametros.service';
 import { ContribuicaoPendenteService } from '../administrativo/contribuicao-pendente.service';
@@ -123,7 +128,8 @@ export class SessoesService {
       .leftJoin(estagiario, eq(estagiario.id, vinculosEstagiario.estagiarioId))
       .where(
         and(
-          ne(casos.situacao, 'encerrado'),
+          notInArray(casos.situacao, ['encerrado', 'encerrado_por_alta']),
+          semRevogacao(inscricoes.id),
           busca
             ? ilike(inscricoes.nomeCompleto, `%${escaparLike(busca)}%`)
             : undefined,
@@ -195,6 +201,12 @@ export class SessoesService {
     autor: UsuarioAutenticado,
   ): Promise<ResultadoAgendamento> {
     const paciente = await this.buscarPaciente(dados.casoId);
+    // A alta encerra o vínculo: o motivo certo vem antes do "sem estagiário" (RF68).
+    if (paciente.situacao === 'encerrado_por_alta') {
+      throw new UnprocessableEntityException(
+        'Caso encerrado por alta. Para um novo agendamento, a coordenação precisa reabrir o caso.',
+      );
+    }
     if (autor.perfil === 'estagiario' && paciente.estagiarioId !== autor.id) {
       throw new ForbiddenException(NAO_RESPONSAVEL);
     }
@@ -256,6 +268,7 @@ export class SessoesService {
     // exclusão do banco decidem (RNF9).
     const sessao = await this.db
       .transaction(async (tx) => {
+        await exigirConsentimento(tx, dados.casoId);
         const [sessao] = await tx
           .insert(sessoesAtendimento)
           .values({
@@ -315,33 +328,40 @@ export class SessoesService {
 
     // Canal e-mail: o link sai depois do commit; se falhar, a sessão continua agendada
     // e a tela avisa. Canal WhatsApp ou ligação: a secretaria envia a mensagem (DF24).
-    if (paciente.canal === 'email' && paciente.email) {
-      try {
-        await this.enviarLink(
-          paciente.email,
-          paciente.nome,
-          inicio,
-          link,
-          prazoHoras,
-          podeConfirmar,
-        );
-        resultado.linkEnviadoPorEmail = true;
-      } catch (erro) {
-        this.logger.error(`Link da sessão ${sessao.id} não enviado`, erro);
-      }
-    } else if (paciente.celular) {
-      const mensagem = this.mensagemWhatsapp(
-        paciente.nome,
-        inicio,
-        link,
-        podeConfirmar,
-      );
-      resultado.whatsapp = {
-        celular: formatarCelular(paciente.celular),
-        mensagem,
-        url: linkDoWhatsapp(paciente.celular, mensagem),
-      };
-    }
+    const comunicacao = await comunicarSePermitido(
+      this.db,
+      dados.casoId,
+      async () => {
+        if (paciente.canal === 'email' && paciente.email) {
+          try {
+            await this.enviarLink(
+              paciente.email,
+              paciente.nome,
+              inicio,
+              link,
+              prazoHoras,
+              podeConfirmar,
+            );
+            resultado.linkEnviadoPorEmail = true;
+          } catch (erro) {
+            this.logger.error(`Link da sessão ${sessao.id} não enviado`, erro);
+          }
+        } else if (paciente.celular) {
+          const mensagem = this.mensagemWhatsapp(
+            paciente.nome,
+            inicio,
+            link,
+            podeConfirmar,
+          );
+          resultado.whatsapp = {
+            celular: formatarCelular(paciente.celular),
+            mensagem,
+            url: linkDoWhatsapp(paciente.celular, mensagem),
+          };
+        }
+      },
+    );
+    if (!comunicacao.enviado) resultado.comunicacaoSuspensa = true;
     return resultado;
   }
 
@@ -350,6 +370,7 @@ export class SessoesService {
     const [sessao] = await this.db
       .select({
         id: sessoesAtendimento.id,
+        casoId: sessoesAtendimento.casoId,
         estagiarioId: sessoesAtendimento.estagiarioId,
         mensagemWhatsappEm: sessoesAtendimento.mensagemWhatsappEm,
       })
@@ -361,6 +382,7 @@ export class SessoesService {
     }
     const agora = new Date();
     await this.db.transaction(async (tx) => {
+      await exigirConsentimento(tx, sessao.casoId);
       await tx
         .update(sessoesAtendimento)
         .set({ mensagemWhatsappEm: agora })

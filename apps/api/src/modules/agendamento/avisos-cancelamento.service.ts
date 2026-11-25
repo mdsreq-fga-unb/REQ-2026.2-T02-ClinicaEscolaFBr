@@ -22,6 +22,7 @@ import type {
 import { AuditoriaService } from '../../auditoria/auditoria.service';
 import type { UsuarioAutenticado } from '../../auth/usuario-autenticado';
 import { DB } from '../../database/database.module';
+import { exigirConsentimento, semRevogacao } from '../../common/consentimento';
 import { mensagemDaAusencia } from './aviso-cancelamento';
 import { formatarCelular, linkDoWhatsapp, MINUTO } from './horario';
 
@@ -70,6 +71,7 @@ export class AvisosCancelamentoService {
       .where(
         and(
           eq(cancelamentosSessao.classificacao, 'ausencia_estagiario'),
+          semRevogacao(inscricoes.id),
           isNull(cancelamentosSessao.avisoManualEm),
           or(
             inArray(cancelamentosSessao.avisoPaciente, [
@@ -109,7 +111,18 @@ export class AvisosCancelamentoService {
     { canal }: AvisoManual,
     autor: UsuarioAutenticado,
   ): Promise<AvisoRegistrado> {
+    const [referencia] = await this.db
+      .select({ casoId: sessoesAtendimento.casoId })
+      .from(cancelamentosSessao)
+      .innerJoin(
+        sessoesAtendimento,
+        eq(sessoesAtendimento.id, cancelamentosSessao.sessaoId),
+      )
+      .where(eq(cancelamentosSessao.id, id));
+    if (!referencia)
+      throw new NotFoundException('Cancelamento não encontrado.');
     return this.db.transaction(async (tx) => {
+      await exigirConsentimento(tx, referencia.casoId);
       const [cancelamento] = await tx
         .select({
           aviso: cancelamentosSessao.avisoPaciente,

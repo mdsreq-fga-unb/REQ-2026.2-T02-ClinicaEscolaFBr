@@ -14,6 +14,15 @@ export const dataHoraBr = (valor: string | null | undefined) =>
     ? `${dataBr(valor)}, ${new Date(valor).toLocaleTimeString("pt-BR", { hour: "2-digit", minute: "2-digit", timeZone: FUSO })}`
     : "—";
 
+// "20 de novembro de 2026", no horário de Brasília (declaração de comparecimento).
+export const dataPorExtensoBr = (valor: string) =>
+  new Date(valor).toLocaleDateString("pt-BR", {
+    day: "numeric",
+    month: "long",
+    year: "numeric",
+    timeZone: FUSO,
+  });
+
 // Data de hoje em Brasília, no formato AAAA-MM-DD dos campos de data.
 export const hojeBr = () =>
   new Intl.DateTimeFormat("en-CA", { timeZone: FUSO }).format(new Date());
@@ -69,6 +78,8 @@ export const NOMES_SITUACAO_CASO = {
   encerrado: "Encerrado",
   desligado_por_faltas: "Desligado por faltas",
   aguardando_vaga: "Em atendimento · aguardando vaga",
+  cancelado_por_revogacao: "Cancelada por revogação do consentimento",
+  encerrado_por_alta: "Encerrado por alta",
 } as const;
 
 export const NOMES_CANAL = {

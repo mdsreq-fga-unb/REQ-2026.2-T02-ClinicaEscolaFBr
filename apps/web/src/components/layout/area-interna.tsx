@@ -5,7 +5,7 @@ import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useRef, useState, type ReactNode } from "react";
 import { FaixaAlertas } from "@/components/assiduidade/desligamento";
-import { api, ErroApi } from "@/lib/api";
+import { api } from "@/lib/api";
 import { NOMES_PERFIL, useSessao, type UsuarioDaSessao } from "@/lib/sessao";
 import { cn } from "@/lib/utils";
 import { MENU_POR_PERFIL, tituloDaPagina } from "./menu";
@@ -37,7 +37,7 @@ const iniciais = (nome: string) =>
 
 // Inscrições aguardando triagem, no item "Triagem" do menu, como no protótipo.
 // A rota devolve só o total, sem as respostas das inscrições.
-function useTriagemPendente(usuario: UsuarioDaSessao | undefined) {
+function useTriagemPendente(usuario: UsuarioDaSessao | null | undefined) {
   const clinico =
     usuario?.perfil === "supervisor" || usuario?.perfil === "coordenacao";
   const consulta = useQuery({
@@ -142,7 +142,7 @@ function Navegacao({
 // Área interna da equipe: menu lateral fixo por perfil no computador e menu em
 // gaveta no celular, como no protótipo aprovado.
 export function AreaInterna({ children }: { children: ReactNode }) {
-  const { data: usuario, error, isPending } = useSessao();
+  const { data: usuario, isPending } = useSessao();
   const caminho = usePathname();
   const router = useRouter();
   const queryClient = useQueryClient();
@@ -152,10 +152,24 @@ export function AreaInterna({ children }: { children: ReactNode }) {
   const [falhaNaSaida, setFalhaNaSaida] = useState(false);
   const pendentes = useTriagemPendente(usuario);
 
+  // Sem sessão: os dados da pessoa em cache são apagados e a área interna leva à
+  // entrada. Só quando havia uma pessoa nesta aba e a sessão acabou (expirada
+  // por inatividade, RNF50) a entrada avisa que a sessão foi encerrada; quem
+  // abre uma página interna sem ter entrado, ou depois de sair, só vê a entrada.
+  const tinhaSessao = useRef(false);
   useEffect(() => {
-    if (error instanceof ErroApi && error.status === 401)
-      router.replace("/entrar");
-  }, [error, router]);
+    if (usuario) {
+      tinhaSessao.current = true;
+      return;
+    }
+    if (usuario !== null) return;
+    queryClient.removeQueries({
+      predicate: (consulta) => consulta.queryKey[0] !== "sessao",
+    });
+    router.replace(
+      tinhaSessao.current ? "/entrar?sessao=encerrada" : "/entrar",
+    );
+  }, [usuario, router, queryClient]);
 
   useEffect(() => {
     const dialogo = gaveta.current;
@@ -200,8 +214,8 @@ export function AreaInterna({ children }: { children: ReactNode }) {
   };
 
   return (
-    <div className="min-h-[calc(100dvh-var(--altura-faixa,0px))] md:flex">
-      <header className="flex min-h-14 items-center gap-1 bg-marca px-1.5 text-white md:hidden">
+    <div className="min-h-[calc(100dvh-var(--altura-faixa,0px))] md:flex print:block! print:min-h-0">
+      <header className="flex min-h-14 items-center gap-1 bg-marca px-1.5 text-white md:hidden print:hidden!">
         <button
           type="button"
           aria-label="Abrir menu"
@@ -258,7 +272,7 @@ export function AreaInterna({ children }: { children: ReactNode }) {
       </dialog>
       <aside
         aria-label="Menu lateral"
-        className="hidden w-[264px] shrink-0 flex-col gap-7 overflow-y-auto bg-sidebar px-3.5 py-5 text-sidebar-foreground md:sticky md:top-[var(--altura-faixa,0px)] md:flex md:h-[calc(100dvh-var(--altura-faixa,0px))]"
+        className="hidden w-[264px] shrink-0 flex-col gap-7 overflow-y-auto bg-sidebar px-3.5 py-5 text-sidebar-foreground md:sticky md:top-[var(--altura-faixa,0px)] md:flex md:h-[calc(100dvh-var(--altura-faixa,0px))] print:hidden!"
       >
         <div className="px-1.5">
           <Marca />
@@ -270,7 +284,7 @@ export function AreaInterna({ children }: { children: ReactNode }) {
         <FaixaAlertas perfil={usuario.perfil} />
         <main
           id="conteudo"
-          className="min-w-0 flex-1 px-4 pt-5 pb-8 md:px-10 md:py-8"
+          className="min-w-0 flex-1 px-4 pt-5 pb-8 md:px-10 md:py-8 print:p-0"
         >
           {children}
         </main>

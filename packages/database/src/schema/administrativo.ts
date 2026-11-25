@@ -10,9 +10,11 @@ import {
   unique,
   uuid,
 } from "drizzle-orm/pg-core";
-import { FORMAS_PAGAMENTO } from "@clinica/shared";
+import { CANAIS_DECLARACAO, FORMAS_PAGAMENTO } from "@clinica/shared";
 import { usuarios } from "./base";
+import { sessoesAtendimento } from "./agendamento";
 import { casos, vinculosEstagiario } from "./casos";
+import { inscricoes } from "./inscricao";
 
 export const formaPagamentoEnum = pgEnum("forma_pagamento", FORMAS_PAGAMENTO);
 
@@ -61,6 +63,64 @@ export const pagamentosContribuicao = pgTable(
     ),
   ],
 );
+
+// Emissão da declaração de comparecimento (RF45, RNF39): só inserção (gatilho
+// impedir_alteracao_registro). Guarda a sessão de origem, o paciente
+// (inscrição), o canal, quem emitiu e o tipo de operação; a reemissão (RF46)
+// entra como "reemissao" quando for construída. Pelo canal "verificacao", o
+// paciente ou o responsável não tem conta, e emitida_por fica nulo.
+export const canalDeclaracaoEnum = pgEnum(
+  "canal_declaracao",
+  CANAIS_DECLARACAO,
+);
+
+export const emissoesDeclaracao = pgTable(
+  "emissoes_declaracao",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    sessaoId: uuid("sessao_id")
+      .notNull()
+      .references(() => sessoesAtendimento.id),
+    inscricaoId: uuid("inscricao_id")
+      .notNull()
+      .references(() => inscricoes.id),
+    canal: canalDeclaracaoEnum("canal").notNull(),
+    emitidaPor: uuid("emitida_por").references(() => usuarios.id),
+    tipo: text("tipo").notNull().default("emissao"),
+    emitidaEm: timestamp("emitida_em", { withTimezone: true })
+      .notNull()
+      .defaultNow(),
+  },
+  (t) => [
+    check(
+      "emissoes_declaracao_autor_do_canal",
+      sql`(${t.canal} = 'secretaria') = (${t.emitidaPor} is not null)`,
+    ),
+    check(
+      "emissoes_declaracao_tipo",
+      sql`${t.tipo} in ('emissao', 'reemissao')`,
+    ),
+  ],
+);
+
+// Entrega da Autorização para Acompanhamento Psicoterapêutico de Crianças e
+// Adolescentes, assinada presencialmente (RF45, proposta da equipe a validar com
+// a FBr). Uma por inscrição; a secretaria pode corrigir a data, e a auditoria
+// guarda a anterior. É o registro que libera a declaração de um menor.
+export const autorizacoesMenor = pgTable("autorizacoes_menor", {
+  id: uuid("id").primaryKey().defaultRandom(),
+  inscricaoId: uuid("inscricao_id")
+    .notNull()
+    .unique()
+    .references(() => inscricoes.id),
+  entregueEm: date("entregue_em").notNull(),
+  registradoPor: uuid("registrado_por")
+    .notNull()
+    .references(() => usuarios.id),
+  registradoEm: timestamp("registrado_em", { withTimezone: true })
+    .notNull()
+    .defaultNow(),
+});
 
 // Perda da vaga pela contribuição pendente (RF43, DF33), confirmada pela
 // secretaria ou pela coordenação depois do prazo de 10 dias corridos. Encerra o

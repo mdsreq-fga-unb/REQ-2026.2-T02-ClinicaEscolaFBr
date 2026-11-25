@@ -70,3 +70,63 @@ describe("Sair do sistema (RF51)", () => {
     expect(client.getQueryData(["sessao"])).toBeUndefined();
   });
 });
+
+describe("Sessão expirada por inatividade (RNF50)", () => {
+  beforeEach(() => replace.mockReset());
+  afterEach(() => {
+    cleanup();
+    vi.unstubAllGlobals();
+  });
+
+  // Antes, o usuário antigo ficava no cache junto com o 401: a área interna
+  // mandava para /entrar, e /entrar, vendo o usuário, mandava de volta.
+  it("leva à entrada uma vez, sem o usuário antigo no cache e sem os dados da pessoa", async () => {
+    let expirou = false;
+    const json = (corpo: unknown, status = 200) =>
+      new Response(JSON.stringify(corpo), {
+        status,
+        headers: { "Content-Type": "application/json" },
+      });
+    vi.stubGlobal(
+      "fetch",
+      vi.fn(async (url: string) => {
+        if (url.endsWith("/auth/sessao")) {
+          return expirou
+            ? json({ message: "Sessão encerrada." }, 401)
+            : json({ id: "1", nome: "Ana Costa", perfil: "coordenacao" });
+        }
+        // Triagem com zero inscrições e nenhum alerta de faltas.
+        return json(url.includes("/total") ? { total: 0 } : null);
+      }),
+    );
+    const client = abrirAreaInterna();
+    await screen.findByText("Conteúdo interno");
+    client.setQueryData(["usuarios", ""], [{ nome: "Pessoa da equipe" }]);
+
+    expirou = true;
+    await client.invalidateQueries({ queryKey: ["sessao"] });
+
+    await vi.waitFor(() =>
+      expect(replace).toHaveBeenCalledWith("/entrar?sessao=encerrada"),
+    );
+    expect(client.getQueryData(["sessao"])).toBeNull();
+    expect(client.getQueryData(["usuarios", ""])).toBeUndefined();
+    expect(screen.queryByText("Conteúdo interno")).toBeNull();
+  });
+
+  it("sem ter entrado nesta aba, leva à entrada sem o aviso de sessão encerrada", async () => {
+    vi.stubGlobal(
+      "fetch",
+      vi.fn(
+        async () =>
+          new Response(JSON.stringify({ message: "Sessão encerrada." }), {
+            status: 401,
+            headers: { "Content-Type": "application/json" },
+          }),
+      ),
+    );
+    abrirAreaInterna();
+    await vi.waitFor(() => expect(replace).toHaveBeenCalledWith("/entrar"));
+    expect(replace).not.toHaveBeenCalledWith("/entrar?sessao=encerrada");
+  });
+});

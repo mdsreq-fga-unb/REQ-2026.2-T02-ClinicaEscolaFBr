@@ -1,4 +1,5 @@
 export * from "./perfis";
+export * from "./revogacao";
 export * from "./situacao-usuario";
 export * from "./dominio-ciclo-3";
 export * from "./acesso";
@@ -13,8 +14,10 @@ export * from "./verificacao";
 export * from "./fila";
 export * from "./casos";
 export * from "./indicadores";
+export * from "./alta";
 export * from "./acessos-prontuario";
 export * from "./correcao-evolucao";
 export * from "./faltas-estagiario";
 export * from "./contribuicao";
 export * from "./declaracoes";
+export * from "./relatorio-final";

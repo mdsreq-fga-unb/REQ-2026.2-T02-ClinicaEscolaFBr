@@ -169,6 +169,34 @@
       "when": 1795638904658,
       "tag": "0023_declaracao_comparecimento",
       "breakpoints": true
+    },
+    {
+      "idx": 24,
+      "version": "7",
+      "when": 1795638964658,
+      "tag": "0024_relatorio_final",
+      "breakpoints": true
+    },
+    {
+      "idx": 25,
+      "version": "7",
+      "when": 1795639024658,
+      "tag": "0025_autor_do_rascunho",
+      "breakpoints": true
+    },
+    {
+      "idx": 26,
+      "version": "7",
+      "when": 1795639084658,
+      "tag": "0026_alta",
+      "breakpoints": true
+    },
+    {
+      "idx": 27,
+      "version": "7",
+      "when": 1795647693528,
+      "tag": "0027_perda_vaga_contribuicao",
+      "breakpoints": true
     }
   ]
 }

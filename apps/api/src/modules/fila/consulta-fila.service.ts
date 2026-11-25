@@ -4,6 +4,7 @@ import type { SituacaoInscricao } from '@clinica/shared';
 import { eq } from 'drizzle-orm';
 import { DB } from '../../database/database.module';
 import { AuditoriaService } from '../../auditoria/auditoria.service';
+import { revogada } from '../../common/consentimento';
 @Injectable()
 export class ConsultaFilaService {
   constructor(
@@ -35,10 +36,16 @@ export class ConsultaFilaService {
           );
         const estado = inscricao.situacao;
         // DF55: a consulta informa só a situação; a ordenação permanece interna ao RF7.
-        const situacao: SituacaoInscricao['situacao'] =
-          estado === 'em_atendimento'
+        const situacao: SituacaoInscricao['situacao'] = (await revogada(
+          tx,
+          inscricao.id,
+        ))
+          ? 'procure_secretaria'
+          : estado === 'em_atendimento'
             ? 'em_atendimento'
-            : estado === 'encerrado' || estado === 'desligado_por_faltas'
+            : estado === 'encerrado' ||
+                estado === 'desligado_por_faltas' ||
+                estado === 'encerrado_por_alta'
               ? 'procure_secretaria'
               : 'em_triagem';
         await this.auditoria.registrar(

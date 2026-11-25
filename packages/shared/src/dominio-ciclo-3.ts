@@ -99,7 +99,8 @@ export type Evolucao = z.infer<typeof evolucaoSchema>;
 export const SESSOES_POR_FECHAMENTO_AVALIATIVO = 10;
 
 // Situação do caso ao longo da distribuição (RF18 a RF21), do desligamento por
-// faltas (RF37) e da reversão que encontra a vaga já ocupada (RF38).
+// faltas (RF37), da reversão que encontra a vaga já ocupada (RF38) e da alta
+// (RF68), que é um encerramento com motivo próprio, distinto do desligamento.
 export const SITUACOES_CASO = [
   "aguardando_distribuicao",
   "aguardando_vinculo",
@@ -107,6 +108,8 @@ export const SITUACOES_CASO = [
   "encerrado",
   "desligado_por_faltas",
   "aguardando_vaga",
+  "cancelado_por_revogacao",
+  "encerrado_por_alta",
 ] as const;
 export const situacaoCasoSchema = z.enum(SITUACOES_CASO);
 export type SituacaoCaso = z.infer<typeof situacaoCasoSchema>;
