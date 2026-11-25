@@ -28,6 +28,7 @@ export const OPERACOES_PRONTUARIO: Record<
   Exclude<OperacaoAcesso, 'acesso_negado'>
 > = {
   consultar_prontuario: 'visualizacao',
+  consultar_historico_evolucoes: 'visualizacao',
   registrar_dados_iniciais: 'criacao',
   registrar_anamnese: 'criacao',
   registrar_contrato: 'criacao',

@@ -20,3 +20,4 @@ export * from "./validacao-evolucao";
 export * from "./faltas-estagiario";
 export * from "./contribuicao";
 export * from "./declaracoes";
+export * from "./historico-evolucoes";

@@ -2170,6 +2170,15 @@ _Ciclo 6._
 
 **Dependências e riscos:** depende do RF27, do RF28, do RF29 e do RF30, e mostra o RF67.
 
+**Na implementação:**
+
+- **Rota.** `GET /prontuarios/:id/evolucoes?ciclo=`, sem cache (`no-store`), com a política de leitura do prontuário (RF55). A consulta permitida e a negada vão para o registro de acessos como `consultar_historico_evolucoes` (RF56), e o prontuário inexistente recebe o mesmo `403`.
+- **Ciclos.** O ciclo atual é o padrão, e o seletor só lista os ciclos do mesmo caso; o ciclo sem evolução mostra o estado vazio.
+- **Registros.** Cada sessão traz o original, as correções do RF29 (com versão e motivo) e os complementos do RF30, em ordem, com autor e data/hora, e a situação de validação do RF67. Os textos são decifrados só depois da política de acesso e não vão para a auditoria.
+- **Transferências.** As do RF25 aparecem com os responsáveis anteriores e novos, sem o motivo. Como a transferência não guarda o ciclo, o período vai da criação do prontuário do ciclo até a do seguinte.
+- **Tela.** Seção de histórico no prontuário, com tabela no computador, cartões no celular e os registros abertos na própria linha, enquanto não existe a rota do RF31.
+- **Dependências.** Empilhada sobre a #309 (RF67), que vem sobre a #308 (RF30). O RF32 não tem migration.
+
 ---
 
 ### RF68 — Encerrar caso por alta ([#273](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/issues/273))
