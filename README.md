@@ -47,7 +47,7 @@ O **Clínica Escola FBr** digitaliza as etapas permitidas pela regulação — i
 
 O sistema atende a cinco públicos:
 
-- **Pacientes e responsáveis:** inscrição on-line, consulta da posição na fila e confirmação de presença;
+- **Pacientes e responsáveis:** inscrição on-line, consulta da situação da inscrição, confirmação de presença e declaração de comparecimento;
 - **Secretaria:** gestão de inscrições, triagem e fila de espera;
 - **Estagiários:** agendamento, registro de evolução e prontuário;
 - **Supervisores:** acompanhamento e supervisão dos casos;

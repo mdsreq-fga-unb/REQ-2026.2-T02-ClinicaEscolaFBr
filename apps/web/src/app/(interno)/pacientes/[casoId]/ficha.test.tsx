@@ -12,6 +12,7 @@ function simularApi(
   responsaveis: Resposta,
   dados: Resposta = [404, {}],
   contribuicao: Resposta = [404, {}],
+  autorizacao: Resposta = [404, {}],
 ) {
   const chamadas: string[] = [];
   vi.stubGlobal(
@@ -26,7 +27,9 @@ function simularApi(
             ? dados
             : url.endsWith("/casos/c1/contribuicao")
               ? contribuicao
-              : [404, {}];
+              : url.endsWith("/pacientes/c1/autorizacao-menor")
+                ? autorizacao
+                : [404, {}];
       return new Response(JSON.stringify(corpo), {
         status,
         headers: { "Content-Type": "application/json" },
@@ -148,6 +151,37 @@ describe("Ficha do paciente com os responsáveis (RF22)", () => {
         .getAttribute("href"),
     ).toBe("/meus-pacientes");
   });
+
+  it.each(["coordenacao", "supervisor"])(
+    "para %s, a ficha não mostra a lista de sessões com presença nem um aviso sobre ela, e não a consulta (RF44, RNF38)",
+    async (perfil) => {
+      const chamadas = simularApi(perfil, [
+        200,
+        perfil === "coordenacao"
+          ? {
+              ...ROBERTO,
+              situacao: "aguardando_distribuicao",
+              supervisor: null,
+            }
+          : ROBERTO,
+      ]);
+      abrir();
+      await screen.findByRole("region", { name: "Identificação" });
+      expect(
+        screen.queryByRole("region", {
+          name: "Sessões com presença registrada",
+        }),
+      ).toBeNull();
+      expect(
+        screen.queryByRole("region", {
+          name: "Você não tem acesso a esta lista",
+        }),
+      ).toBeNull();
+      expect(chamadas.some((u) => u.includes("sessoes-realizadas"))).toBe(
+        false,
+      );
+    },
+  );
 
   it("caso sem supervisor abre para a coordenação, com o quadro e a identificação (RF22)", async () => {
     const chamadas = simularApi("coordenacao", [
@@ -303,6 +337,57 @@ describe("Ficha do paciente com os responsáveis (RF22)", () => {
     expect(
       daCoordenacao.some((u) => u.endsWith("/casos/c1/contribuicao")),
     ).toBe(true);
+  });
+
+  it("a secretaria vê o bloco da autorização de menor antes das sessões com presença; a coordenação não (RF45)", async () => {
+    const MENOR: Resposta = [
+      200,
+      { menor: true, responsavelLegal: "Fernanda Lima", autorizacao: null },
+    ];
+    const chamadas = simularApi(
+      "secretaria",
+      [200, MARIANA_RESPONSAVEIS],
+      [200, MARIANA_ADMINISTRATIVOS],
+      [404, {}],
+      MENOR,
+    );
+    abrir();
+    const bloco = await screen.findByRole("region", {
+      name: "Autorização para acompanhamento de criança ou adolescente",
+    });
+    expect(
+      chamadas.some((u) => u.endsWith("/pacientes/c1/autorizacao-menor")),
+    ).toBe(true);
+    expect(bloco.textContent).toContain("responsável legal: Fernanda Lima");
+    const sessoes = screen.getByRole("region", {
+      name: "Sessões com presença registrada",
+    });
+    expect(
+      Boolean(
+        bloco.compareDocumentPosition(sessoes) &
+        Node.DOCUMENT_POSITION_FOLLOWING,
+      ),
+    ).toBe(true);
+
+    cleanup();
+    const daCoordenacao = simularApi(
+      "coordenacao",
+      [200, MARIANA_RESPONSAVEIS],
+      [200, MARIANA_ADMINISTRATIVOS],
+      [404, {}],
+      MENOR,
+    );
+    abrir();
+    await screen.findByRole("region", { name: "Dados administrativos" });
+    // A autorização é da secretaria: a coordenação nem consulta a rota.
+    expect(daCoordenacao.some((u) => u.endsWith("/autorizacao-menor"))).toBe(
+      false,
+    );
+    expect(
+      screen.queryByRole("region", {
+        name: "Autorização para acompanhamento de criança ou adolescente",
+      }),
+    ).toBeNull();
   });
 });
 

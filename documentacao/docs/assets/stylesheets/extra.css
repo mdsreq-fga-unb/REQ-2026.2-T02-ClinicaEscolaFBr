@@ -879,6 +879,15 @@ body {
   overflow-x: auto;
 }
 
+/* Diagrama alto e com muito texto: no celular, ele mantém uma largura legível e
+   rola dentro da própria área, em vez de encolher a letra. */
+.md-typeset .diagrama-largo {
+  overflow-x: auto;
+}
+.md-typeset .diagrama-largo .mermaid {
+  min-width: 600px;
+}
+
 /* ==========================================================================
    5. Tabelas
    ========================================================================== */
