@@ -16,12 +16,15 @@ export function Dados({
           : "grid gap-x-6 gap-y-3.5 sm:grid-cols-2"
       }
     >
+      {/* min-w-0 e overflow-wrap: anywhere deixam a coluna da grade encolher e
+          quebram um valor longo sem espaço (um e-mail, por exemplo) só quando ele
+          não cabe, sem rolagem lateral em 320 px (RNF56). */}
       {itens.map(([rotulo, valor]) => (
-        <div key={rotulo}>
+        <div key={rotulo} className="min-w-0">
           <dt className="text-[13px] font-semibold text-muted-foreground">
             {rotulo}
           </dt>
-          <dd className="mt-0.5 text-[15px] font-semibold break-words">
+          <dd className="mt-0.5 text-[15px] font-semibold [overflow-wrap:anywhere]">
             {valor ?? "—"}
           </dd>
         </div>

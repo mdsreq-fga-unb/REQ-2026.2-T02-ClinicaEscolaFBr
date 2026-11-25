@@ -108,6 +108,7 @@ export const SITUACOES_CASO = [
   "encerrado",
   "desligado_por_faltas",
   "aguardando_vaga",
+  "cancelado_por_revogacao",
   "encerrado_por_alta",
 ] as const;
 export const situacaoCasoSchema = z.enum(SITUACOES_CASO);

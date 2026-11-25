@@ -62,6 +62,7 @@ export type CasoDoSupervisor = {
   situacao: SituacaoCaso;
   // Fim do vínculo encerrado pelo desligamento (RF37), quando não há estagiário.
   vinculoEncerradoEm: string | null;
+  consentimentoRevogadoEm?: string;
 };
 
 // Caso da lista "Meus pacientes" do estagiário e "Meus casos" do supervisor (RF23).

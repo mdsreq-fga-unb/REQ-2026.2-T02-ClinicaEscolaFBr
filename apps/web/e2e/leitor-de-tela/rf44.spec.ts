@@ -4,9 +4,9 @@ import type { SessaoComPresenca, VerificacaoAtual } from "@clinica/shared";
 import { anexarFala, irAte, simularRotas } from "./apoio";
 
 // RNF43 e RNF56 do RF44: com o VoiceOver de verdade, a pessoa que já confirmou a
-// identidade (RF52) ouve o título da página, o aviso sobre a emissão, a tabela
-// pelo nome (a legenda) e, em cada linha, a data, o horário e o estagiário. Sem
-// sessão com presença, ouve o título do estado vazio. A API é simulada com os
+// identidade (RF52) ouve o título da página, a orientação para escolher a sessão,
+// a tabela pelo nome (a legenda) e, em cada linha, a data, o horário e o
+// estagiário. Sem sessão com presença, ouve o título do estado vazio. A API é simulada com os
 // tipos de @clinica/shared, como nos outros testes desta pasta.
 
 const NUMERO = "2026-00398";
@@ -31,7 +31,7 @@ const SESSOES: SessaoComPresenca[] = [
 ];
 
 test.describe("Leitor de tela nas sessões com presença registrada", () => {
-  test("com o VoiceOver, a pessoa ouve o título, o aviso da emissão, a tabela e a data, o horário e o estagiário de cada sessão (RF44, RNF43, RNF56)", async ({
+  test("com o VoiceOver, a pessoa ouve o título, a orientação da emissão, a tabela e a data, o horário e o estagiário de cada sessão (RF44, RNF43, RNF56)", async ({
     page,
     voiceOver,
   }) => {
@@ -48,7 +48,7 @@ test.describe("Leitor de tela nas sessões com presença registrada", () => {
       await irAte(voiceOver, "Identidade confirmada.");
       await irAte(
         voiceOver,
-        "A emissão da declaração pelo sistema ainda não está disponível.",
+        "Escolha a sessão para emitir a declaração de comparecimento.",
       );
       // A tabela é anunciada pela legenda, e as células pelos cabeçalhos.
       await irAte(

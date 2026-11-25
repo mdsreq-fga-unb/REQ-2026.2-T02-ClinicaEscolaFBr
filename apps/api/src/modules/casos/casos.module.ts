@@ -11,5 +11,6 @@ import { TransferenciaService } from './transferencia.service';
   imports: [AssiduidadeModule, FilaModule],
   controllers: [CasosController, AltaController],
   providers: [CasosService, TransferenciaService, AltaService],
+  exports: [CasosService],
 })
 export class CasosModule {}
