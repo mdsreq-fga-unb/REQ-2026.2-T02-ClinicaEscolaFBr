@@ -107,12 +107,6 @@
           "primaryKey": false,
           "notNull": true
         },
-        "crp": {
-          "name": "crp",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false
-        },
         "situacao": {
           "name": "situacao",
           "type": "situacao_usuario",

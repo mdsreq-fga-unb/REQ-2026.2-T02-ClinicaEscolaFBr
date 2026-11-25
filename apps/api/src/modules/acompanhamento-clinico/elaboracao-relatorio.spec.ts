@@ -150,7 +150,6 @@ describe('Relatório final: elaboração, envio e decisão (RF33)', () => {
       chave: string,
       nome: string,
       perfil: UsuarioAutenticado['perfil'],
-      crp?: string,
     ) => {
       const [u] = await db
         .insert(usuarios)
@@ -159,20 +158,14 @@ describe('Relatório final: elaboração, envio e decisão (RF33)', () => {
           email: `${chave}@fbr.edu.br`,
           perfil,
           situacao: 'ativo',
-          crp: crp ?? null,
         })
         .returning();
       pessoas[chave] = { id: u.id, nome, perfil };
     };
     await criar('estagiario', 'Ana Beatriz Costa', 'estagiario');
     await criar('estagiarioOutroCaso', 'Paula Nunes', 'estagiario');
-    await criar('supervisor', 'Ricardo Menezes', 'supervisor', '01/12345');
-    await criar(
-      'outroSupervisor',
-      'Patrícia Nogueira',
-      'supervisor',
-      '01/54321',
-    );
+    await criar('supervisor', 'Ricardo Menezes', 'supervisor');
+    await criar('outroSupervisor', 'Patrícia Nogueira', 'supervisor');
     await criar('secretaria', 'Juliana Rocha', 'secretaria');
     await criar('coordenacao', 'Helena Duarte', 'coordenacao');
 
@@ -258,7 +251,7 @@ describe('Relatório final: elaboração, envio e decisão (RF33)', () => {
         paciente: 'Mariana Alves Toledo',
         solicitante: null,
         estagiario: 'Ana Beatriz Costa',
-        supervisor: { nome: 'Ricardo Menezes', crp: '01/12345' },
+        supervisor: { nome: 'Ricardo Menezes' },
         semEvolucoes: false,
         exigeJustificativa: false,
         versoes: [],

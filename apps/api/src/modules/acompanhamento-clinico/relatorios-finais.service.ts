@@ -100,7 +100,6 @@ export class RelatoriosFinaisService {
         observacoesCifradas: versoesRelatorio.observacoesCifradas,
         autor: autor.nome,
         decisor: decisor.nome,
-        crpDecisor: decisor.crp,
       })
       .from(versoesRelatorio)
       .innerJoin(
@@ -291,7 +290,7 @@ export class RelatoriosFinaisService {
       paciente: alvo.caso.paciente,
       solicitante: alvo.caso.responsavelLegal,
       estagiario: aprovada.autor ?? '',
-      supervisor: { nome: aprovada.decisor ?? '', crp: aprovada.crpDecisor },
+      supervisor: { nome: aprovada.decisor ?? '' },
       inicioAcompanhamento: inicio?.primeira
         ? hojeEmBrasilia(new Date(inicio.primeira))
         : null,

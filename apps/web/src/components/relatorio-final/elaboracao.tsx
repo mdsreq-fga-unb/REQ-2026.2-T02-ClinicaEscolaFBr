@@ -122,11 +122,7 @@ function Identificacao({ r }: { r: ElaboracaoDoRelatorio }) {
         ["Paciente", r.paciente],
         ["Solicitante", r.solicitante ?? "Próprio paciente"],
         ["Autoria (estágio)", r.estagiario],
-        [
-          "Supervisão",
-          r.supervisor &&
-            `${r.supervisor.nome} · ${r.supervisor.crp ? `CRP ${r.supervisor.crp}` : "CRP não informado"}`,
-        ],
+        ["Supervisão", r.supervisor?.nome],
       ]}
     />
   );

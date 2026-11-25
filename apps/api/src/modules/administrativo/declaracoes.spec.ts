@@ -397,10 +397,6 @@ describe('Sessões com presença registrada e declaração de comparecimento (RF
           situacao: 'ativo',
         })
         .returning();
-      await db
-        .update(usuarios)
-        .set({ crp: '01/12345' })
-        .where(eq(usuarios.id, pessoas.supervisor.id));
       await db.insert(atribuicoesSupervisor).values([
         {
           casoId: casoA,
@@ -436,7 +432,7 @@ describe('Sessões com presença registrada e declaração de comparecimento (RF
     const auditoriaDe = (operacao: string) =>
       db.select().from(auditoria).where(eq(auditoria.operacao, operacao));
 
-    it('o paciente verificado emite a declaração da sessão com presença, com o supervisor e o CRP, e a emissão fica registrada', async () => {
+    it('o paciente verificado emite a declaração da sessão com presença, com os dados do modelo da FBr, e a emissão fica registrada (DF70)', async () => {
       const res = await emitirComo(s1105, await verificar(inscricaoA)).expect(
         201,
       );
@@ -445,9 +441,11 @@ describe('Sessões com presença registrada e declaração de comparecimento (RF
         emissaoId: expect.any(String),
         emitidaEm: expect.any(String),
         paciente: 'Mariana Alves Toledo',
-        sessao: { id: s1105, inicio: '2026-11-05T17:00:00.000Z' },
-        estagiario: 'Ana Beatriz Costa',
-        psicologoResponsavel: { nome: 'Carla Mendes', crp: '01/12345' },
+        sessao: {
+          id: s1105,
+          inicio: '2026-11-05T17:00:00.000Z',
+          termino: '2026-11-05T17:50:00.000Z',
+        },
       });
       const [emissao] = await db.select().from(emissoesDeclaracao);
       expect(emissao).toMatchObject({
@@ -480,14 +478,19 @@ describe('Sessões com presença registrada e declaração de comparecimento (RF
       );
     });
 
-    it('o psicólogo responsável é o supervisor na data da sessão, mesmo depois da transferência, e o CRP vem nulo se não foi informado', async () => {
+    it('não traz o estagiário, o supervisor nem o CRP: o psicólogo responsável assina e carimba no papel (DF70, DF71)', async () => {
       const res = await emitirComo(s1029, await verificar(inscricaoA)).expect(
         201,
       );
-      expect(res.body.psicologoResponsavel).toEqual({
-        nome: 'Ricardo Menezes',
-        crp: null,
-      });
+      expect(Object.keys(res.body).sort()).toEqual([
+        'emissaoId',
+        'emitidaEm',
+        'paciente',
+        'sessao',
+      ]);
+      expect(JSON.stringify(res.body)).not.toMatch(
+        /Ana Beatriz|Carla Mendes|Ricardo Menezes|crp/i,
+      );
     });
 
     it.each([
@@ -562,6 +565,51 @@ describe('Sessões com presença registrada e declaração de comparecimento (RF
         .post(`/declaracoes/minhas-sessoes/${s1105}/emissao`)
         .expect(401);
       await http().post(`/declaracoes/sessoes/${s1105}/emissao`).expect(401);
+    });
+
+    // A matriz do RNF38 num teste só, com os dois caminhos de acesso: a sessão
+    // institucional da secretaria (RF50) e a verificação de identidade do
+    // paciente ou responsável (RF52). A reemissão (RF46) está fora do MVP.
+    it('autorização das declarações por perfil: a secretaria autenticada lista e emite para qualquer paciente, o paciente com a identidade verificada só para as próprias sessões, e sem verificação, o estagiário e o supervisor não listam nem emitem (RF50, RF52, RNF38)', async () => {
+      const listaDaFicha = (casoId: string) =>
+        http().get(`/pacientes/${casoId}/sessoes-realizadas`);
+
+      // Secretaria, com a sessão institucional (RF50): qualquer paciente.
+      await listaDaFicha(casoA).set(como('secretaria')).expect(200);
+      await listaDaFicha(casoB).set(como('secretaria')).expect(200);
+      await emitirPelaEquipe(s1105, 'secretaria').expect(201);
+      await emitirPelaEquipe(sessaoB, 'secretaria').expect(201);
+      // Sem a sessão institucional, as rotas da equipe recusam.
+      await listaDaFicha(casoA).expect(401);
+      await http().post(`/declaracoes/sessoes/${s1105}/emissao`).expect(401);
+
+      // Estagiário e supervisor do caso: nem listam nem emitem.
+      for (const chave of ['ana', 'supervisor']) {
+        await listaDaFicha(casoA).set(como(chave)).expect(403);
+        await emitirPelaEquipe(s1105, chave).expect(403);
+      }
+
+      // Paciente ou responsável com a identidade verificada (RF52): só as
+      // sessões da própria inscrição.
+      const cookieA = await verificar(inscricaoA);
+      const lista = await http()
+        .get('/declaracoes/minhas-sessoes')
+        .set('Cookie', cookieA)
+        .expect(200);
+      const ids = (lista.body as { id: string }[]).map((s) => s.id);
+      expect(ids).toEqual(expect.arrayContaining([s1105, s1029]));
+      expect(ids).not.toContain(sessaoB);
+      await emitirComo(s1105, cookieA).expect(201);
+      await emitirComo(sessaoB, cookieA).expect(403);
+
+      // Sem a verificação, nada é listado nem emitido.
+      await http().get('/declaracoes/minhas-sessoes').expect(401);
+      await http()
+        .post(`/declaracoes/minhas-sessoes/${s1105}/emissao`)
+        .expect(401);
+
+      // Só as três emissões permitidas ficaram registradas.
+      expect(await db.select().from(emissoesDeclaracao)).toHaveLength(3);
     });
 
     it('a secretaria recebe 404 para a sessão que não existe e 400 para o id inválido', async () => {

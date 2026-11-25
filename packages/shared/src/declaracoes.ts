@@ -18,20 +18,19 @@ export type SessaoComPresenca = {
 export const CANAIS_DECLARACAO = ["secretaria", "verificacao"] as const;
 export type CanalDeclaracao = (typeof CANAIS_DECLARACAO)[number];
 
-// Declaração emitida (RF45): os dados para a página de impressão, sem nenhum
-// dado clínico. A tela monta o texto; o modelo, quem assina e o CRP aguardam a
-// FBr, e até lá o psicólogo responsável é o supervisor do caso na data da
-// sessão, com o CRP do cadastro (RF53).
+// Declaração emitida (RF45): os dados do modelo da Clínica Escola (DF70), sem
+// nenhum dado clínico. A tela monta o texto "Declaro para os devidos fins que
+// <paciente> compareceu… no dia <data> das <início> às <término>". A assinatura,
+// o carimbo e o CRP do psicólogo responsável são feitos à mão no papel, porque o
+// carimbo já traz o CRP (DF71).
 export type DeclaracaoComparecimento = {
   emissaoId: string;
-  // Data e hora da emissão (ISO 8601); a tela mostra "Brasília, 16 de novembro de 2026."
+  // Data e hora da emissão (ISO 8601), registrada (RNF39) e não impressa.
   emitidaEm: string;
   paciente: string;
-  sessao: { id: string; inicio: string };
-  estagiario: string;
-  // crp é nulo se o supervisor foi cadastrado antes do campo e a coordenação
-  // ainda não o informou (RF53); a tela deixa a linha para preencher à mão.
-  psicologoResponsavel: { nome: string; crp: string | null };
+  // Início e término da sessão (ISO 8601); a tela mostra a data e os horários
+  // de Brasília.
+  sessao: { id: string; inicio: string; termino: string };
 };
 
 // Por que a declaração não sai (422), para a tela escolher o aviso: sessão sem
