@@ -380,6 +380,7 @@ describe('Sinalização de reprovação do estagiário (RF63, RNF35)', () => {
             em('2026-11-12T16:00:00').toISOString(),
           ],
           supervisores: ['Carla Mendes'],
+          decisoes: [],
         },
       ]);
     }
