@@ -36,9 +36,15 @@ function dados(menor = false) {
   preencher("cpf", "11144477735");
   preencher("rg", "MG-12.345 SSP/MG");
   preencher("endereco", "Rua Fictícia, 10");
+  preencher("bairro", "Asa Norte");
+  preencher("cidadeUf", "Brasília/DF");
+  preencher("cep", "70000-000");
   preencher("estadoCivil", "Solteiro(a)");
   preencher("celular", "(61) 99999-9999");
   preencher("email", "teste@example.com");
+  preencher("contatoEmergenciaNome", "Contato Fictício");
+  preencher("contatoEmergenciaParentesco", "Irmã");
+  preencher("contatoEmergenciaTelefone", "(61) 3333-4444");
 }
 function triagem() {
   preencher("queixa", "Queixa fictícia privada");
@@ -114,6 +120,44 @@ describe("Formulário RF1/RF2", () => {
       "true",
     );
     preencher("cpfResponsavel", "52998224725");
+    continuar();
+    expect(
+      screen.getByRole("heading", {
+        name: "Sobre o atendimento que você procura",
+      }),
+    ).toHaveFocus();
+  });
+  it("exige o endereço completo e o contato de emergência, mantendo os outros campos (DF51, DF56)", () => {
+    render(<FormularioInscricao />);
+    dados();
+    for (const campo of [
+      "bairro",
+      "cidadeUf",
+      "cep",
+      "contatoEmergenciaNome",
+      "contatoEmergenciaTelefone",
+    ])
+      preencher(campo, "");
+    continuar();
+    for (const campo of [
+      "bairro",
+      "cidadeUf",
+      "cep",
+      "contatoEmergenciaNome",
+      "contatoEmergenciaTelefone",
+    ]) {
+      const controle = document.getElementById(campo);
+      expect(controle).toHaveAttribute("aria-invalid", "true");
+      expect(controle).toBeRequired();
+    }
+    // O grau de parentesco fica opcional até a resposta da FBr.
+    expect(
+      document.getElementById("contatoEmergenciaParentesco"),
+    ).not.toBeRequired();
+    expect(document.getElementById("nomeCompleto")).toHaveValue(
+      "Pessoa Fictícia",
+    );
+    dados();
     continuar();
     expect(
       screen.getByRole("heading", {

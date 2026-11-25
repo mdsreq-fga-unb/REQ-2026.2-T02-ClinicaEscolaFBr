@@ -19,7 +19,7 @@ _Catálogo atualizado em {{ catalogo_atualizado_em }}._
 | Unidade 1 — Visão e planejamento | 07/09/2026 (apresentação em 08/09) | Encerrado | Cenário, solução proposta, estratégia de ESW, Engenharia de Requisitos e gestão do projeto | [Vídeo de apresentação](https://youtu.be/ysMmYmttAH8) |
 | Unidade 2 — Requisitos e priorização | 13/10/2026 | Encerrado | Requisitos, priorização, MVP validado com a FBr, DoR, DoD e backlog | [Vídeo de apresentação](https://youtu.be/XUJEFZv7Pn8) e [release `unidade-2`](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/releases/tag/unidade-2) |
 | [Unidade 3 — Construção do MVP](../historico/unidade-3/index.md) | 17/11/2026 | Encerrado | Incrementos dos Ciclos 3 a 5, com todas as CPs do MVP com ao menos um incremento construído | [Vídeo de apresentação](https://youtu.be/Fl5qtrEf79g) |
-| Unidade 4 — Entrega final | 10/12/2026 | Aguardando | MVP integrado e aceito pela FBr | — |
+| Unidade 4 — Entrega final | 01/12/2026 | Aguardando | MVP integrado, aceito pela FBr na validação e publicado em produção; apresentação final | — |
 
 ## Etapas e ciclos
 
@@ -31,8 +31,10 @@ _Catálogo atualizado em {{ catalogo_atualizado_em }}._
 | Ciclo 3 | {{ ciclos[3].periodo }} | {{ ciclos[3].status }} | Projetar por Feature / Construir por Feature | Representação (modelo detalhado e diagramas) e verificação e validação (inspeção de design, código e demonstração, conforme o [processo de validação](../processo/equipe-e-cliente.md#73-processo-de-validacao)). | Base técnica do projeto (concluída em 21/10, [PR #82](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/pull/82)), DoR e [projeto das features](../construcao/projeto-features.md) e incremento demonstrado com as 13 features do ciclo, começando pelos itens de base (acesso, inscrição, triagem e distribuição de casos). | [Cronograma da Unidade 3, Ciclo 3](../historico/unidade-3/cronograma.md#ciclo-3) e [backlog do ciclo](backlog.md#ciclo-3) |
 | Ciclo 4 | {{ ciclos[4].periodo }} | {{ ciclos[4].status }} | Projetar por Feature / Construir por Feature | Idem ao Ciclo 3, com organização e atualização da rastreabilidade e dos relatórios de progresso. | Incremento demonstrado com as {{ ciclos[4].features }} features do ciclo (o RF51, previsto para o Ciclo 4, foi antecipado para o Ciclo 3). | [Cronograma da Unidade 3, Ciclo 4](../historico/unidade-3/cronograma.md#ciclo-4) e [backlog do ciclo](backlog.md#ciclo-4) |
 | Ciclo 5 | {{ ciclos[5].periodo }} | {{ ciclos[5].status }} | Projetar por Feature / Construir por Feature | Idem ao Ciclo 3; consolidação dos incrementos construídos na Unidade 3. | Incremento com as {{ ciclos[5].features }} features do ciclo e todas as CPs do MVP com ao menos um incremento construído — entrega da Unidade 3 em 17/11/2026. | [Cronograma da Unidade 3, Ciclo 5](../historico/unidade-3/cronograma.md#ciclo-5) e [backlog do ciclo](backlog.md#ciclo-5) |
-| Ciclo 6 | {{ ciclos[6].periodo }} | {{ ciclos[6].status }} | Projetar por Feature / Construir por Feature / Integração | Idem ao Ciclo 3, aplicado aos itens do ciclo; verificação e validação das pendências apontadas nas demonstrações anteriores; organização e atualização da rastreabilidade entre requisitos, features e entregas. | Construção do MVP concluída até 01/12/2026, com as {{ ciclos[6].features }} features do ciclo, os incrementos integrados e as pendências dos Ciclos 3 a 5 corrigidas. | [Backlog do Ciclo 6](backlog.md#ciclo-6) |
-| Ciclo 7 | {{ ciclos[7].periodo }} | {{ ciclos[7].status }} | Integração / Aceite Final | Verificação e validação final (demonstração integrada e aceite, conforme o [processo de validação](../processo/equipe-e-cliente.md#73-processo-de-validacao)). | Sem novas features: MVP aceito pela FBr e estabilizado, apresentação e entrega final da Unidade 4 em 10/12/2026. | [Backlog do Ciclo 7](backlog.md#ciclo-7) |
+| Ciclo 6 | {{ ciclos[6].periodo }} | {{ ciclos[6].status }} | Projetar por Feature / Construir por Feature / Integração / Aceite | Idem ao Ciclo 3, aplicado aos itens do ciclo; verificação e validação das pendências apontadas nas demonstrações anteriores; homologação com a FBr na validação e aceite; organização e atualização da rastreabilidade entre requisitos, features e entregas. | MVP construído, com as {{ ciclos[6].features }} features do ciclo e as pendências dos Ciclos 3 a 5 corrigidas, aceito pela FBr na validação e publicado em produção até 01/12/2026, início das apresentações finais ([Entrega final](../construcao/entrega-final.md)). | [Backlog do Ciclo 6](backlog.md#ciclo-6) |
+
+!!! info "Sem Ciclo 7"
+    O cronograma previa um Ciclo 7, de 02/12 a 10/12, só para a demonstração integrada, o aceite e a entrega da Unidade 4. Em 17/11/2026, o professor definiu que o site precisa estar publicado em produção em 01/12/2026, início das apresentações finais. Por isso, a integração final, a homologação e o aceite da FBr e a publicação em produção passaram para dentro do Ciclo 6, e o Ciclo 7 deixou de existir. O passo a passo está em [Entrega final](../construcao/entrega-final.md).
 
 ## Previsto e realizado
 
@@ -82,22 +84,23 @@ _Situação no fim de 16/11/2026, véspera do fechamento do ciclo, em 17/11._
 | Design inspecionado (DoD 1) | 12/11 | Projeto e protótipos do ciclo em [#251](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/pull/251); inspeções registradas entre 14 e 16/11 | Atrasado | — |
 | Código concluído e inspecionado (DoD 2 e 3) | 15/11 | PRs abertas entre 13 e 16/11: RF48 ([#259](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/pull/259)), RF41 ([#263](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/pull/263)), RF29 ([#267](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/pull/267)), RF39 ([#288](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/pull/288)), RF56 ([#269](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/pull/269)) e RF17 ([#286](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/pull/286)); RF44 ([#292](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/pull/292)) às 23:17 de 16/11, revisada e integrada no mesmo dia | Atrasado | — |
 | Promovido para a versão integrada (DoD 4) | 16/11 | RF48 integrado em 14/11; RF41, RF29, RF39, RF56, RF17 e RF44 em 16/11 | Concluído no prazo: 7 de 7 features | — |
-| Demonstrada (DoD 5) | 17/11 | Protótipo e incremento enviados à FBr por e-mail em 14/11 e validados por Robson Araújo, com os supervisores, em 16/11 ([validação de 16/11](../historico/unidade-3/reunioes.md#validacao-do-ciclo-5-pela-fbr), [DF59](../requisitos/decisoes-fbr.md#df59)) | Validado antes do marco | Registro da demonstração (D5) e do aceite (D6) nas issues; detalhe do pedido sobre o cancelamento (RF17) |
+| Demonstrada (DoD 5) | 17/11 | Protótipo e incremento enviados à FBr por e-mail em 14/11 e validados por Robson Araújo, com os supervisores, em 16/11 ([validação de 16/11](../historico/unidade-3/reunioes.md#validacao-do-ciclo-5-pela-fbr), [DF59](../requisitos/decisoes-fbr.md#df59)); as seis features integradas depois (RF41, RF29, RF39, RF56, RF17 e RF44) foram validadas no ambiente de validação em 24/11 ([validação de 24/11](../historico/unidade-3/reunioes.md#validacao-das-funcionalidades-do-ciclo-5-pela-fbr), [DF62](../requisitos/decisoes-fbr.md#df62)), com a demonstração e o aceite (D5 e D6) registrados nas issues | RF48 validado antes do marco; as outras seis, em 24/11, com 7 dias de atraso | Detalhe do pedido sobre o cancelamento (RF17) |
 | Fechamento | 17/11 | Fechamento registrado feature a feature, com a situação de 16/11 ([Ciclo 5](#ciclo-5-fechado-em-17112026)) | Concluído no prazo | — |
 
 ### Ciclo 6, marco a marco
 
-_Situação em 16/11/2026, antes do início do ciclo (18/11 a 01/12)._
+_Situação em 23/11/2026. Os marcos depois do DoR foram replanejados para a produção em 01/12 ([Entrega final](../construcao/entrega-final.md#datas))._
 
 | Marco | Previsto | Realizado | Situação | Pendências |
 | --- | --- | --- | --- | --- |
 | Planejamento e issues | 17/11 | Issues das {{ ciclos[6].features }} features criadas em 16/11 ([#282](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/pull/282)) | Concluído antes do prazo | — |
-| DoR | 17/11 | Pré-avaliação em 16/11 ([#287](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/pull/287)), com os critérios que faltavam nos requisitos e cinco novas pendências com a FBr | Em andamento | Projeto e protótipos (R7.2 e R7.3), confirmação dos Líderes (R8.1 e R8.3), features de que dependem (R1.3) e respostas da FBr (R4.2 a R4.4) |
-| Design inspecionado (DoD 1) | 21/11 | — | Previsto | — |
-| Código concluído e inspecionado (DoD 2 e 3) | 28/11 | — | Previsto | — |
-| Promovido para a versão integrada (DoD 4) | 30/11 | — | Previsto | — |
-| Demonstrada (DoD 5) | 01/12 | — | Previsto | — |
-| Fechamento | 01/12 | — | Previsto | — |
+| DoR | 17/11 | Pré-avaliação em 16/11 ([#287](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/pull/287)), com os critérios que faltavam nos requisitos e cinco novas pendências com a FBr; R8.3 marcado em todas as features em 23/11 | Em andamento | Protótipos validados pela FBr (R7.3), confirmação dos Líderes (R8.1), features de que dependem (R1.3) e respostas da FBr (R4.2 a R4.4) |
+| Design inspecionado (DoD 1) | 21/11 | — | Atrasado | Inspeção de cada feature pelo Líder com o revisor da issue |
+| Código concluído e inspecionado (DoD 2 e 3) | 25/11 | — | Previsto | — |
+| Promovido para a versão integrada (DoD 4) | 25/11, ou na liberação do repositório pelo professor, se for depois | — | Previsto | — |
+| Homologação e aceite da FBr na validação (DoD 5 e 6) | 27/11 | — | Previsto | — |
+| Publicação em produção | 30/11 | — | Previsto | — |
+| Fechamento e apresentação final | 01/12 | — | Previsto | — |
 
 ## Pontos de controle por feature
 
@@ -107,9 +110,9 @@ Cada feature passa pelos marcos do FDD, registrados no checklist do [DoR e do Do
 | --- | --- | --- | --- | --- | --- |
 | DoR aprovado | Checklist do DoR e registro da avaliação | 21/10 | 27/10 (avaliado no fechamento do Ciclo 3) | 10/11 | 17/11 |
 | Design inspecionado (DoD 1) | Comentário da inspeção com o "de acordo" do Líder e do revisor | 23/10 | 31/10 | 12/11 | 21/11 |
-| Código concluído e inspecionado (DoD 2 e 3) | PR aprovado por outro integrante, com os testes passando | 26/10 | 07/11 | 15/11 | 28/11 |
-| Promovido para a versão integrada (DoD 4) | PR mesclado na `development` | 27/10 | 09/11 | 16/11 | 30/11 |
-| Demonstrada (DoD 5) | Registro da reunião com a FBr | 28/10 a 10/11, com os incrementos do Ciclo 4 | 10/11 | 17/11 | 01/12 |
+| Código concluído e inspecionado (DoD 2 e 3) | PR aprovado por outro integrante, com os testes passando | 26/10 | 07/11 | 15/11 | 25/11 |
+| Promovido para a versão integrada (DoD 4) | PR mesclado na `development` | 27/10 | 09/11 | 16/11 | 25/11, ou na liberação do repositório |
+| Demonstrada (DoD 5) | Registro da reunião com a FBr | 28/10 a 10/11, com os incrementos do Ciclo 4 | 10/11 | 17/11 | 27/11, na homologação |
 
 ## Carga por Líder de Feature e ciclo
 

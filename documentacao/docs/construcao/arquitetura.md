@@ -33,7 +33,7 @@ flowchart LR
 
 | Parte | Tecnologia | Onde está | O que faz |
 | --- | --- | --- | --- |
-| Web | Next.js e React | `apps/web` | Páginas públicas, em `src/app/(publico)` (inscrição, entrada, ativação da conta), e área interna, em `src/app/(interno)` (painel, triagem, distribuição, casos, agendamento, prontuários e usuários). Não acessa o banco: tudo passa pela API. |
+| Web | Next.js e React | `apps/web` | Páginas públicas, em `src/app/(publico)`: inscrição, consulta da situação da inscrição, confirmação de presença, sessões com presença registrada, entrada e ativação da conta. Área interna, em `src/app/(interno)`: painel, triagem, fila de espera, distribuição, meus casos, meus pacientes, pacientes, agenda, agendamento, prontuários, faltas dos estagiários, indicadores, registro de acessos, parâmetros e usuários. Não acessa o banco: tudo passa pela API. |
 | API | NestJS | `apps/api` | Regras de negócio, controle de acesso, auditoria e envio de e-mails. Um módulo por área do FDD, em `src/modules`. |
 | Tipos e validações compartilhados | TypeScript e Zod | `packages/shared` | Esquemas de entrada, perfis e regras de domínio usados pela web e pela API, para que as duas validem do mesmo jeito. |
 | Banco de dados | PostgreSQL e Drizzle ORM | `packages/database` | Tabelas (`src/schema`), migrations versionadas (`drizzle/`) e o script do usuário da aplicação (`sql/usuario-da-aplicacao.sql`). |
@@ -49,13 +49,13 @@ Cada módulo da API corresponde a uma área do FDD e a uma ou mais CPs. A últim
 | --- | --- | --- | --- |
 | `inscricao` | CP1 | `POST /inscricoes` | {{ rfs_da_cp("CP1") }} |
 | `triagem` | CP2 | `GET /triagem/inscricoes`, `POST /triagem/inscricoes/:id/prioridade` | {{ rfs_da_cp("CP2") }} |
-| `fila` | CP3 | ainda sem rotas | {{ rfs_da_cp("CP3") }} |
-| `agendamento` | CP4 | `POST /sessoes`, `GET /sessoes/agenda`, `POST /sessoes/:id/whatsapp` | {{ rfs_da_cp("CP4") }} |
-| `casos` | CP5 | `GET /casos/aguardando-distribuicao`, `POST /casos/:id/supervisor`, `POST /casos/:id/estagiario`, `GET /casos/meus` | {{ rfs_da_cp("CP5") }} |
-| `acompanhamento-clinico` | CP6, CP7 e CP8 | `GET /prontuarios/:id`, `POST /prontuarios/:id/dados-iniciais`, `POST /prontuarios/:id/sessoes/:sessaoId/evolucoes` | {{ rfs_da_cp("CP6", "CP7", "CP8") }} |
-| `assiduidade` | CP9 | ainda sem rotas | {{ rfs_da_cp("CP9") }} |
-| `administrativo` | CP10 | ainda sem rotas | {{ rfs_da_cp("CP10") }} |
-| `institucional` | CP11 | ainda sem rotas | {{ rfs_da_cp("CP11") }} |
+| `fila` | CP3 | `GET /fila`, `GET /fila/minha-situacao`, `GET /fila/situacao` | {{ rfs_da_cp("CP3") }} |
+| `agendamento` | CP4 | `POST /sessoes`, `GET /agenda`, `POST /confirmacao/:token/confirmar`, `POST /sessoes/:id/cancelamento`, `POST /sessoes/:id/ausencia-estagiario` | {{ rfs_da_cp("CP4") }} |
+| `casos` | CP5 | `GET /casos/aguardando-distribuicao`, `POST /casos/:id/supervisor`, `POST /casos/:id/estagiario`, `GET /casos/meus`, `GET /pacientes`, `POST /casos/:id/transferencia` | {{ rfs_da_cp("CP5") }} |
+| `acompanhamento-clinico` | CP6, CP7 e CP8 | `GET /prontuarios/:id`, `POST /prontuarios/:id/anamnese`, `POST /prontuarios/:id/contrato`, `POST /prontuarios/:id/sessoes/:sessaoId/evolucoes`, `POST /prontuarios/:id/evolucoes/:evolucaoId/correcoes`, `GET /acessos-prontuario` | {{ rfs_da_cp("CP6", "CP7", "CP8") }} |
+| `assiduidade` | CP9 | `POST /sessoes/:id/falta`, `POST /faltas/:id/justificativa`, `GET /faltas/alertas`, `POST /casos/:id/desligamento`, `POST /desligamentos/:id/reversao`, `GET /faltas-estagiarios` | {{ rfs_da_cp("CP9") }} |
+| `administrativo` | CP10 | `POST /casos/:id/contribuicao`, `GET /casos/:id/contribuicao`, `PUT /parametros/valor-contribuicao`, `GET /declaracoes/minhas-sessoes`, `GET /pacientes/:casoId/sessoes-realizadas` | {{ rfs_da_cp("CP10") }} |
+| `institucional` | CP11 | `GET /indicadores`, `PUT /vagas-ofertadas/:semestre` | {{ rfs_da_cp("CP11") }} |
 | `acesso` | CP12 | `POST /auth/login`, `POST /auth/logout`, `GET /auth/sessao`, `/usuarios`, `/ativacao` | {{ rfs_da_cp("CP12") }} |
 
 Fora dos módulos de área, a API tem serviços transversais usados por todos eles:
@@ -98,7 +98,7 @@ sequenceDiagram
 2. **Perfil:** cada rota declara os perfis que a usam (`@Perfis(...)`). Perfil fora da lista recebe 403.
 3. **Validação:** o corpo da requisição passa pelo esquema Zod do `packages/shared`; dado inválido volta com 400 e a mensagem do campo.
 4. **Regra de negócio:** o serviço do módulo aplica as regras do requisito. Quando há regra de acesso a dado clínico, ela fica numa política própria, como a `politica-prontuario.ts`, que registra todo acesso, permitido ou negado.
-5. **Banco:** a operação e o registro de auditoria entram na mesma transação. A API se conecta como `clinica_app`, que não consegue alterar nem apagar os registros que só aceitam inserção.
+5. **Banco:** a operação e o registro de auditoria entram na mesma transação. Na implantação, a API se conecta como `clinica_app`, que não consegue alterar nem apagar os registros que só aceitam inserção ([DT10](#dt10)). A troca da conexão em cada ambiente está nas [pendências da implantação](implantacao.md#pendencias); até ela, os gatilhos do banco continuam recusando a alteração e a exclusão.
 
 ## Decisões técnicas { #decisoes-tecnicas }
 

@@ -8,7 +8,8 @@ import { Button } from "@/components/ui/button";
 import { VerificacaoIdentidade } from "@/components/verificacao/verificacao-identidade";
 import { api, ErroApi } from "@/lib/api";
 import { dataHoraBr } from "@/lib/formato";
-// Nomes confirmados pela FBr na DF55; o encaminhamento à secretaria segue pendente.
+// Nomes confirmados pela FBr na DF55. O caso encerrado ou desligado aparece como
+// "Desligado", com a orientação de procurar a secretaria (DF65).
 const estados = {
   em_triagem: {
     titulo: "Em triagem",
@@ -25,9 +26,9 @@ const estados = {
     classe: "border-[#a3d4b3] bg-sucesso-fundo text-[#1b5e33]",
   },
   procure_secretaria: {
-    titulo: "Procure a secretaria",
+    titulo: "Desligado",
     texto:
-      "Entre em contato com a secretaria da clínica para informações sobre sua inscrição.",
+      "Procure a secretaria da clínica para informações sobre sua inscrição.",
     Icone: Info,
     classe: "border-[#a9cfe0] bg-info-fundo text-primary",
   },

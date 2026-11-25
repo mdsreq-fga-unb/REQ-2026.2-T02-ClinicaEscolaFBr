@@ -89,7 +89,7 @@ export class SessoesService {
         // Compara com a hora de agora, e não com a do início da entrada: um
         // bloqueio antigo que venceu durante a espera não vale mais.
         if (depois?.bloqueadoAte && depois.bloqueadoAte > new Date()) {
-          throw this.bloqueio(depois.bloqueadoAte);
+          throw this.bloqueio(depois.bloqueadoAte, true);
         }
         throw new UnauthorizedException(MENSAGEM_CREDENCIAIS);
       }
@@ -286,7 +286,7 @@ export class SessoesService {
       tentativa.tentativas = 0;
       tentativa.bloqueadoAte = minutos(MINUTOS_BLOQUEIO);
       this.desconhecidos.set(email, tentativa);
-      throw this.bloqueio(tentativa.bloqueadoAte);
+      throw this.bloqueio(tentativa.bloqueadoAte, true);
     }
     this.desconhecidos.set(email, tentativa);
     throw new UnauthorizedException(MENSAGEM_CREDENCIAIS);
@@ -306,8 +306,23 @@ export class SessoesService {
     if (maisAntigo !== undefined) this.desconhecidos.delete(maisAntigo);
   }
 
-  private bloqueio(ate: Date) {
-    return new HttpException(
+  // `porSenhaErrada`: o 423 veio de uma senha errada, a que bloqueou a conta. A
+  // entrada numa conta que já estava bloqueada nem confere a senha.
+  private bloqueio(ate: Date, porSenhaErrada = false) {
+    return new ContaBloqueada(ate, porSenhaErrada);
+  }
+}
+
+// Conta bloqueada por 15 minutos (DF25). O limite por origem (RNF49) conta só o
+// bloqueio causado por uma senha errada: a tentativa numa conta já bloqueada não
+// confere a senha, e contá-la deixaria a rede inteira da clínica sem entrar por
+// causa de uma pessoa clicando em "Entrar" várias vezes.
+export class ContaBloqueada extends HttpException {
+  constructor(
+    ate: Date,
+    readonly porSenhaErrada: boolean,
+  ) {
+    super(
       {
         statusCode: HttpStatus.LOCKED,
         message: `Acesso bloqueado por ${MINUTOS_BLOQUEIO} minutos.`,

@@ -8,3 +8,4 @@ export * from "./parametros";
 export * from "./assiduidade";
 export * from "./verificacao";
 export * from "./administrativo";
+export * from "./revogacao";

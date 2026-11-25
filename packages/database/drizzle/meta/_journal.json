@@ -159,22 +159,36 @@
     {
       "idx": 22,
       "version": "7",
-      "when": 1795570631844,
-      "tag": "0022_reclassificacao_falta",
+      "when": 1795269382182,
+      "tag": "0022_rf65_revogacao_consentimento",
       "breakpoints": true
     },
     {
       "idx": 23,
       "version": "7",
-      "when": 1795575533874,
-      "tag": "0023_sinalizacao_reprovacao",
+      "when": 1795638904658,
+      "tag": "0023_declaracao_comparecimento",
       "breakpoints": true
     },
     {
       "idx": 24,
       "version": "7",
-      "when": 1795576872294,
-      "tag": "0024_decisao_reprovacao",
+      "when": 1795650332495,
+      "tag": "0024_reclassificacao_falta",
+      "breakpoints": true
+    },
+    {
+      "idx": 25,
+      "version": "7",
+      "when": 1795650492899,
+      "tag": "0025_sinalizacao_reprovacao",
+      "breakpoints": true
+    },
+    {
+      "idx": 26,
+      "version": "7",
+      "when": 1795650633659,
+      "tag": "0026_decisao_reprovacao",
       "breakpoints": true
     }
   ]
