@@ -7,6 +7,7 @@ import {
   ParseIntPipe,
   ParseUUIDPipe,
   Post,
+  Put,
   Query,
   UseGuards,
 } from '@nestjs/common';
@@ -17,6 +18,7 @@ import {
   type UsuarioAutenticado,
 } from '../../auth/usuario-autenticado';
 import { ZodValidationPipe } from '../../common/zod-validation.pipe';
+import { ElaboracaoRelatorioService } from './elaboracao-relatorio.service';
 import { RelatoriosFinaisService } from './relatorios-finais.service';
 
 const cicloOpcional = new ParseIntPipe({ optional: true });
@@ -27,7 +29,10 @@ const cicloOpcional = new ParseIntPipe({ optional: true });
 @Controller('casos/:id/relatorio-final')
 @UseGuards(AutenticadoGuard)
 export class RelatoriosFinaisController {
-  constructor(private readonly relatorios: RelatoriosFinaisService) {}
+  constructor(
+    private readonly relatorios: RelatoriosFinaisService,
+    private readonly elaboracao: ElaboracaoRelatorioService,
+  ) {}
 
   @Get()
   @Header('Cache-Control', 'no-store')
@@ -37,6 +42,52 @@ export class RelatoriosFinaisController {
     @UsuarioAtual() usuario: UsuarioAutenticado,
   ) {
     return this.relatorios.consultar(casoId, ciclo, usuario);
+  }
+
+  // Elaboração, envio e decisão. O corpo é validado no serviço, depois da política de
+  // acesso, para o 403 não depender do que foi enviado (RNF25).
+  @Get('elaboracao')
+  @Header('Cache-Control', 'no-store')
+  consultarElaboracao(
+    @Param('id', ParseUUIDPipe) casoId: string,
+    @Query('ciclo', cicloOpcional) ciclo: number | undefined,
+    @UsuarioAtual() usuario: UsuarioAutenticado,
+  ) {
+    return this.elaboracao.consultar(casoId, ciclo, usuario);
+  }
+
+  @Put('rascunho')
+  @Header('Cache-Control', 'no-store')
+  salvarRascunho(
+    @Param('id', ParseUUIDPipe) casoId: string,
+    @Query('ciclo', cicloOpcional) ciclo: number | undefined,
+    @Body() corpo: unknown,
+    @UsuarioAtual() usuario: UsuarioAutenticado,
+  ) {
+    return this.elaboracao.salvarRascunho(casoId, ciclo, corpo, usuario);
+  }
+
+  @Post('envio')
+  @Header('Cache-Control', 'no-store')
+  enviar(
+    @Param('id', ParseUUIDPipe) casoId: string,
+    @Query('ciclo', cicloOpcional) ciclo: number | undefined,
+    @Body() corpo: unknown,
+    @UsuarioAtual() usuario: UsuarioAutenticado,
+  ) {
+    return this.elaboracao.enviar(casoId, ciclo, corpo, usuario);
+  }
+
+  @Post('versoes/:versao/decisao')
+  @Header('Cache-Control', 'no-store')
+  decidir(
+    @Param('id', ParseUUIDPipe) casoId: string,
+    @Param('versao', ParseIntPipe) versao: number,
+    @Query('ciclo', cicloOpcional) ciclo: number | undefined,
+    @Body() corpo: unknown,
+    @UsuarioAtual() usuario: UsuarioAutenticado,
+  ) {
+    return this.elaboracao.decidir(casoId, ciclo, versao, corpo, usuario);
   }
 
   @Get('versoes/:versao/impressao')
