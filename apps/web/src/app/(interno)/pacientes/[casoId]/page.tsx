@@ -278,7 +278,9 @@ export default function PacientePage() {
             ]}
           />
         </section>
-        <SessoesComPresencaDaFicha casoId={r.casoId} />
+        {/* A lista do RF44 é só da secretaria (RNF38): nos outros perfis, a
+            seção nem aparece, em vez de um aviso de acesso negado. */}
+        {secretaria && <SessoesComPresencaDaFicha casoId={r.casoId} />}
         {dialogoVincular}
       </div>
     );
@@ -475,8 +477,8 @@ export default function PacientePage() {
         />
       )}
       {/* Sessões com presença registrada (RF44): de todos os ciclos do caso,
-          só para consulta até a emissão da declaração (RF45). */}
-      <SessoesComPresencaDaFicha casoId={d.casoId} />
+          só para a secretaria (RNF38); nos outros perfis, a seção não aparece. */}
+      {secretaria && <SessoesComPresencaDaFicha casoId={d.casoId} />}
       <HistoricoFaltas
         id="historico-faltas"
         contagem={d.faltasNoCiclo}
