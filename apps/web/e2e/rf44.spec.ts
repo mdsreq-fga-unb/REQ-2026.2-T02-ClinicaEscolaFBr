@@ -1,21 +1,14 @@
-import {
-  expect,
-  test,
-  type APIRequestContext,
-  type Page,
-} from "@playwright/test";
-import { createDb, sessoesAtendimento, usuarios } from "@clinica/database";
-import type { StatusSessao } from "@clinica/shared";
+import { expect, test, type Page } from "@playwright/test";
+import { EQUIPE, SENHA_EQUIPE } from "./equipe";
 import {
   API,
-  criarCasoTriado,
   entrar,
   fecharContextos,
   focoVisivel,
   semViolacoes,
   tabAte,
 } from "./apoio";
-import { EQUIPE, SENHA_EQUIPE } from "./equipe";
+import { criarCaso, verificar } from "./apoio-declaracoes";
 
 // Sessões com presença registrada (RF44), de ponta a ponta, com a API, o banco e
 // a verificação de identidade reais (RF52). Dados de teste do projeto: uma
@@ -24,12 +17,6 @@ import { EQUIPE, SENHA_EQUIPE } from "./equipe";
 // sem sessão realizada (estado vazio). A página pública passa pelo axe, sem
 // rolagem lateral, em 320, 360, 768, 1024, 1366 e 1920 px (RNF56 a RNF58).
 
-const DIA = 24 * 60 * 60 * 1000;
-
-const url = () =>
-  process.env.DATABASE_URL ??
-  "postgresql://clinica:clinica@localhost:5432/clinica";
-
 const semRolagemLateral = (page: Page) =>
   page.evaluate(
     () => document.documentElement.scrollWidth <= window.innerWidth,
@@ -37,97 +24,6 @@ const semRolagemLateral = (page: Page) =>
 
 const dataBr = (d: Date) =>
   d.toLocaleDateString("pt-BR", { timeZone: "America/Sao_Paulo" });
-
-// Caso em atendimento no ciclo 2, com um estagiário só dele, para as sessões não
-// colidirem na agenda com as de outras execuções no mesmo banco (RNF9).
-async function criarCaso(
-  playwright: Parameters<typeof criarCasoTriado>[0],
-  nome: string,
-  email: string,
-  sessoes: { dias: number; status: StatusSessao; ciclo?: number }[],
-) {
-  await criarCasoTriado(playwright, nome, email);
-  const db = createDb(url());
-  try {
-    const inscricao = await db.query.inscricoes.findFirst({
-      columns: { id: true, numero: true },
-      where: (i, { eq }) => eq(i.nomeCompleto, nome),
-    });
-    const caso = await db.query.casos.findFirst({
-      columns: { id: true },
-      where: (c, { eq }) => eq(c.inscricaoId, inscricao!.id),
-    });
-    await db.$client.query(
-      "update casos set situacao = 'em_atendimento', ciclo_atendimento = 2 where id = $1",
-      [caso!.id],
-    );
-    const secretaria = await db.query.usuarios.findFirst({
-      columns: { id: true },
-      where: (u, { eq }) => eq(u.email, EQUIPE.secretaria.email),
-    });
-    const marca = `${Date.now()}${Math.floor(Math.random() * 1000)}`;
-    const [estagiario] = await db
-      .insert(usuarios)
-      .values({
-        nome: `Estagiária RF44 ${marca}`,
-        email: `estagiario.rf44.${marca}@fbr.edu.br`,
-        perfil: "estagiario",
-        situacao: "ativo",
-      })
-      .returning();
-    const inicios: Record<string, Date[]> = {};
-    for (const { dias, status, ciclo = 2 } of sessoes) {
-      const inicio = new Date(Date.now() + dias * DIA);
-      const termino = new Date(inicio.getTime() + 50 * 60_000);
-      await db.insert(sessoesAtendimento).values({
-        casoId: caso!.id,
-        cicloAtendimento: ciclo,
-        estagiarioId: estagiario.id,
-        inicio,
-        termino,
-        fimIntervaloAnotacoes: new Date(termino.getTime() + 10 * 60_000),
-        status,
-        agendadaPor: secretaria!.id,
-      });
-      (inicios[status] ??= []).push(inicio);
-    }
-    return {
-      numero: inscricao!.numero,
-      casoId: caso!.id,
-      estagiario: estagiario.nome,
-      inicios,
-    };
-  } finally {
-    await db.$client.end();
-  }
-}
-
-// Pede o código pela tela e o lê na caixa do SMTP local dos testes.
-async function verificar(
-  page: Page,
-  request: APIRequestContext,
-  numero: string,
-  email: string,
-) {
-  const caixa = `http://127.0.0.1:8026/mensagens?para=${encodeURIComponent(email)}`;
-  const antes = (await (await request.get(caixa)).json()).length;
-  await page.getByLabel("CPF ou número da inscrição").fill(numero);
-  await page.getByRole("button", { name: "Enviar código" }).click();
-  let codigo = "";
-  await expect
-    .poll(async () => {
-      const mensagens = await (await request.get(caixa)).json();
-      if (mensagens.length <= antes) return 0;
-      codigo =
-        /(\d{6})<\/p>/.exec(
-          (mensagens.at(-1)?.corpo || "").replace(/=\r\n/g, ""),
-        )?.[1] || "";
-      return codigo.length;
-    })
-    .toBe(6);
-  await page.getByLabel("Código de 6 dígitos").fill(codigo);
-  await page.getByRole("button", { name: "Confirmar", exact: true }).click();
-}
 
 test.afterEach(fecharContextos);
 
