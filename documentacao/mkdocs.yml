@@ -178,7 +178,6 @@ nav:
   - Construção do MVP:
       - Arquitetura técnica: construcao/arquitetura.md
       - Projeto das features: construcao/projeto-features.md
-      - Integração do histórico (RF32): construcao/integracao-rf32-ciclo6.md
       - Protótipos: construcao/prototipos.md
       - Termo de consentimento (versão 0.1): construcao/termo-consentimento.md
       - Implantação e operação:
