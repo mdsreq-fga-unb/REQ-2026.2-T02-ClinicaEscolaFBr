@@ -17,7 +17,7 @@ As operações medidas são as que existem hoje:
 
 ### Indicadores operacionais (RNF47)
 
-Depois do cenário de referência, o mesmo workflow roda o RNF47 sobre a mesma massa de dados:
+Depois do cenário de referência, o mesmo workflow roda o RNF47 sobre a mesma massa de dados. A opção `somente_rnf47` roda só o RNF47, sem o cenário de referência antes, para separar o tempo dos indicadores do efeito da carga anterior. Essa execução é só diagnóstico e nunca conta como evidência do D4.5, mesmo contra a homologação: o Feature Status lê só o artefato `rnfs-carga` mais novo da `development`, e um artefato só com o RNF47 apagaria a evidência do RNF12 e do RNF21.
 
 - **Carga:** 10 pessoas da coordenação ao mesmo tempo, por 5 minutos, cada uma com a sua conta, consultando os indicadores do RF48 de um período de 12 meses que termina no dia da consulta, o maior que o RNF47 cobre.
 - **Limite:** o RNF47 diz "em até 5 segundos", sem falar em percentil. Por isso, o limite vale para a consulta mais lenta, e não para o percentil 95, e pelo menos 99% das respostas precisam estar certas.
