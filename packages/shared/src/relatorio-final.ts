@@ -21,7 +21,7 @@ export const NOMES_ESTADO_RELATORIO: Record<EstadoRelatorio, string> = {
 };
 
 // Seções escritas pelo estagiário, na ordem do modelo (DF42). A identificação
-// (paciente, solicitante, estagiário e supervisor com o CRP) vem do caso; só a
+// (paciente, solicitante, estagiário e supervisor) vem do caso; só a
 // finalidade dela é escrita. O texto fica cifrado num JSON (RNF51).
 export const SECOES_RELATORIO = [
   ["finalidade", "Finalidade do relatório"],
@@ -119,9 +119,9 @@ export type RelatorioParaImpressao = {
   // O responsável legal, quando há um na inscrição; senão, o próprio paciente.
   solicitante: string | null;
   estagiario: string;
-  // crp é nulo se o supervisor foi cadastrado antes do campo e a coordenação
-  // ainda não o informou (RF53); a página deixa a linha para preencher à mão.
-  supervisor: { nome: string; crp: string | null };
+  // O CRP não é cadastrado: vem no carimbo do supervisor, feito à mão na via
+  // impressa junto com a assinatura (DF71).
+  supervisor: { nome: string };
   // Primeira sessão realizada no ciclo (AAAA-MM-DD), ou nula se não houver.
   inicioAcompanhamento: string | null;
   secoes: SecoesRelatorio;

@@ -84,12 +84,11 @@ export default function ImpressaoRelatorioFinalPage() {
   }
 
   const r = consulta.data;
-  const crp = r.supervisor.crp ? `CRP ${r.supervisor.crp}` : "CRP ________";
   const identificacao = [
     `Paciente: ${r.paciente}.`,
     `Solicitante: ${r.solicitante ?? r.paciente}.`,
     `Autoria: ${r.estagiario}, estagiário(a) de Psicologia.`,
-    `Supervisão: ${r.supervisor.nome}, ${crp}.`,
+    `Supervisão: ${r.supervisor.nome}.`,
     `Finalidade: ${comPonto(r.secoes.finalidade)}`,
   ].join(" ");
   const secoes = [
@@ -167,7 +166,11 @@ export default function ImpressaoRelatorioFinalPage() {
         <div className="grid break-inside-avoid gap-12 text-center text-[13px] sm:grid-cols-2 print:grid-cols-2">
           {[
             [r.estagiario, "Estagiário(a) de Psicologia"],
-            [r.supervisor.nome, `Psicólogo(a) supervisor(a) · ${crp}`],
+            // Assinatura e carimbo à mão: o carimbo já traz o CRP (DF71).
+            [
+              r.supervisor.nome,
+              "Psicólogo(a) supervisor(a) · assinatura e carimbo com o CRP",
+            ],
           ].map(([nome, papel]) => (
             <div key={papel} className="border-t border-black pt-2">
               <p className="m-0">{nome}</p>

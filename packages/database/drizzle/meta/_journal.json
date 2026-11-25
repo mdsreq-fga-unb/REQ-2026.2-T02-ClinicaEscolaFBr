@@ -159,19 +159,12 @@
     {
       "idx": 22,
       "version": "7",
-      "when": 1795177534102,
-      "tag": "0022_crp_supervisor",
-      "breakpoints": true
-    },
-    {
-      "idx": 23,
-      "version": "7",
       "when": 1795183680324,
       "tag": "0023_declaracao_comparecimento",
       "breakpoints": true
     },
     {
-      "idx": 24,
+      "idx": 23,
       "version": "7",
       "when": 1795457708418,
       "tag": "0024_relatorio_final",

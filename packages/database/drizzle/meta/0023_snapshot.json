@@ -1,6 +1,6 @@
 {
   "id": "8cedcbda-39a4-4871-8acf-b5faa5c43d0e",
-  "prevId": "7befe84d-f373-4811-820b-959f436d693c",
+  "prevId": "27a19959-e183-4a5a-9afb-55aeedeaff82",
   "version": "7",
   "dialect": "postgresql",
   "tables": {
@@ -106,12 +106,6 @@
           "typeSchema": "public",
           "primaryKey": false,
           "notNull": true
-        },
-        "crp": {
-          "name": "crp",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false
         },
         "situacao": {
           "name": "situacao",
