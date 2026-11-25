@@ -171,7 +171,7 @@ rfs:
   depende: [RF52, RF7]
   issue: 155
   estado: Aceita
-  origem: [DF40, DF55]
+  origem: [DF40, DF55, DF65]
 
 - id: RF9
   nome: Manter e informar condições gerais da fila
@@ -1726,6 +1726,11 @@ decisoes:
   data: 12/11/2026
   fonte: respostas da FBr por WhatsApp
   decisao: Os dados mínimos para o reconhecimento do paciente na inscrição incluem o endereço completo (rua, bairro, cidade e CEP), além do contato de emergência (DF51), para eventual fiscalização. Respondido por Robson Araújo.
+
+- id: DF65
+  data: 25/11/2026
+  fonte: respostas da FBr por WhatsApp
+  decisao: Na consulta da fila (RF8), o inscrito com o caso encerrado ou desligado vê "Desligado" e a orientação de procurar a secretaria. Respondido por Robson Araújo.
 
 - id: DF57
   data: 12/11/2026

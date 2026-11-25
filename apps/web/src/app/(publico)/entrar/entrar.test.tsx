@@ -86,4 +86,21 @@ describe("Entrar no sistema (RF50)", () => {
     });
     expect((botao as HTMLButtonElement).disabled).toBe(true);
   });
+
+  it("vindo da sessão encerrada por inatividade, avisa e fica na entrada (RNF50)", async () => {
+    simularApi({ status: 401, corpo: {} });
+    window.history.replaceState(null, "", "/entrar?sessao=encerrada");
+    const client = new QueryClient({
+      defaultOptions: { queries: { retry: false } },
+    });
+    render(
+      <QueryClientProvider client={client}>
+        <EntrarPage />
+      </QueryClientProvider>,
+    );
+    expect(await screen.findByText("Sua sessão foi encerrada.")).toBeTruthy();
+    await vi.waitFor(() => expect(client.getQueryData(["sessao"])).toBeNull());
+    expect(replace).not.toHaveBeenCalled();
+    window.history.replaceState(null, "", "/");
+  });
 });

@@ -161,8 +161,9 @@ export function DeclaracoesDoPaciente() {
 }
 
 // Seção "Sessões com presença registrada" da ficha do paciente. Só a secretaria
-// lista (RNF38); para o estagiário, o supervisor e a coordenação, a API
-// responde 403, e a seção mostra que a lista não é do perfil.
+// lista (RNF38), e a ficha só mostra a seção para ela. Se a API ainda assim
+// responder 403 (por exemplo, perfil alterado durante o uso), a seção mostra
+// que a lista não é do perfil.
 export function SessoesComPresencaDaFicha({ casoId }: { casoId: string }) {
   const consulta = useQuery({
     queryKey: ["pacientes", casoId, "sessoes-realizadas"],
