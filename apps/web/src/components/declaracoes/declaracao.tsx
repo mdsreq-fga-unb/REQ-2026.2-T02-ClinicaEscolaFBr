@@ -11,11 +11,11 @@ import {
 import { Aviso } from "@/components/comum/aviso";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { api, ErroApi } from "@/lib/api";
-import { dataBr, dataHoraBr, dataPorExtensoBr, horaBr } from "@/lib/formato";
+import { dataBr, dataHoraBr, horaBr } from "@/lib/formato";
 
 // Declaração de comparecimento (RF45, prancha 8-3). A API devolve só os dados; o
-// texto da declaração é desta tela. O modelo, quem assina e o CRP aguardam a FBr
-// (pontos a confirmar do Ciclo 6): até lá, o texto segue a prancha.
+// texto da declaração é desta tela e segue o modelo da Clínica Escola (DF70). A
+// assinatura, o carimbo e o CRP são feitos à mão na via impressa (DF71).
 
 // Atributo que marca o botão "Emitir declaração" de cada sessão na lista.
 const ATRIBUTO_SESSAO = "data-emitir-sessao";
@@ -217,13 +217,10 @@ export function DeclaracaoNegada({ aoVoltar }: { aoVoltar: () => void }) {
   );
 }
 
-// "CRP 01/12345", ou a linha em branco para preencher à mão quando o supervisor
-// ainda não tem o número no cadastro (RF53).
-const linhaCrp = (crp: string | null) => `CRP ${crp ?? "____________"}`;
-
-// A folha da declaração, sem dado clínico (RNF6): o nome do paciente, a data, o
-// horário e o estagiário, com a indicação de atendimento psicológico. A classe
-// `folha-declaracao` é a que o estilo de impressão (globals.css) mantém na página.
+// A folha da declaração, no texto do modelo da Clínica Escola (DF70) e sem dado
+// clínico (RNF37): o nome do paciente, a data e os horários de início e de término
+// da sessão. A classe `folha-declaracao` é a que o estilo de impressão
+// (globals.css) mantém na página.
 export function FolhaDeclaracao({
   declaracao,
 }: {
@@ -233,15 +230,14 @@ export function FolhaDeclaracao({
   const tituloRef = useRef<HTMLHeadingElement>(null);
   // O leitor de tela começa pelo título do documento, e não pelo fim da página.
   useEffect(() => tituloRef.current?.focus(), []);
-  const { paciente, sessao, estagiario, psicologoResponsavel, emitidaEm } =
-    declaracao;
+  const { paciente, sessao } = declaracao;
   return (
     <article
       aria-labelledby={titulo}
       className="folha-declaracao mx-auto flex w-full max-w-[794px] flex-col gap-8 border border-border bg-white px-6 py-10 font-serif text-[16px] leading-[1.7] text-black shadow-sm sm:px-16 sm:py-16"
     >
       <p className="m-0 font-sans text-[14px] font-bold text-marca">
-        Clínica Escola de Psicologia · Faculdade Brasília
+        Faculdade Brasília
       </p>
       <h2
         id={titulo}
@@ -252,26 +248,18 @@ export function FolhaDeclaracao({
         Declaração de comparecimento
       </h2>
       <p className="m-0">
-        Declaramos, para os devidos fins, que <strong>{paciente}</strong>{" "}
-        compareceu a atendimento psicológico na Clínica Escola de Psicologia da
-        Faculdade Brasília no dia <strong>{dataBr(sessao.inicio)}</strong>, às{" "}
-        <strong>{horaBr(new Date(sessao.inicio))}</strong>, realizado pelo(a)
-        estagiário(a) de Psicologia <strong>{estagiario}</strong>.
+        Declaro para os devidos fins que <strong>{paciente}</strong> compareceu
+        à Clínica-Escola de Psicologia da Faculdade Brasília – FBr no dia{" "}
+        <strong>{dataBr(sessao.inicio)}</strong> das{" "}
+        <strong>{horaBr(new Date(sessao.inicio))}</strong> às{" "}
+        <strong>{horaBr(new Date(sessao.termino))}</strong>.
       </p>
-      <p className="m-0">Brasília, {dataPorExtensoBr(emitidaEm)}.</p>
-      <div className="mt-6 flex flex-col gap-8 sm:flex-row sm:items-end sm:justify-between">
-        <div className="min-w-0 flex-1 border-t border-black pt-1.5 text-center text-[14px] leading-[1.5]">
-          <p className="m-0">{psicologoResponsavel.nome}</p>
-          <p className="m-0">
-            Psicólogo(a) responsável · {linhaCrp(psicologoResponsavel.crp)}
-          </p>
-        </div>
-        <div
-          aria-hidden
-          className="flex h-[100px] w-full items-center justify-center rounded-md border border-dashed border-[#75848f] p-3 text-center font-sans text-[13px] leading-[1.4] text-muted-foreground sm:w-[200px] sm:shrink-0"
-        >
-          Carimbo do psicólogo responsável
-        </div>
+      {/* Espaço da assinatura e do carimbo, que já traz o CRP (DF71). */}
+      <div className="mt-16 flex max-w-[360px] flex-col gap-3 text-[15px] leading-[1.5]">
+        <p className="m-0 border-t border-black pt-1.5">
+          Assinatura e Carimbo do Psicólogo Responsável
+        </p>
+        <p className="m-0">CRP: ____________________</p>
       </div>
     </article>
   );

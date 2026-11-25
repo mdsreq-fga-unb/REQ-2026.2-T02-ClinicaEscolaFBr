@@ -1,46 +1,28 @@
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import {
-  cleanup,
-  fireEvent,
-  render,
-  screen,
-  within,
-} from "@testing-library/react";
+import { cleanup, fireEvent, render, screen } from "@testing-library/react";
 import { afterEach, beforeAll, describe, expect, it, vi } from "vitest";
 import type { UsuarioListado } from "@clinica/shared";
 import UsuariosPage from "./page";
 
-const usuario = (dados: Partial<UsuarioListado>): UsuarioListado => ({
-  id: "u1",
-  nome: "Pessoa Fictícia",
-  email: "pessoa@fbr.edu.br",
-  perfil: "estagiario",
-  crp: null,
-  situacao: "ativo",
-  conviteEnviadoEm: null,
-  conviteExpiraEm: null,
-  conviteVencido: false,
-  desativadoEm: null,
-  ...dados,
-});
-const LISTA = [
-  usuario({
+const LISTA: UsuarioListado[] = [
+  {
     id: "s1",
     nome: "Carla Souza",
+    email: "carla@fbr.edu.br",
     perfil: "supervisor",
-    crp: "01/12345",
-  }),
-  usuario({ id: "s2", nome: "Rui Prado", perfil: "supervisor" }),
+    situacao: "ativo",
+    conviteEnviadoEm: null,
+    conviteExpiraEm: null,
+    conviteVencido: false,
+    desativadoEm: null,
+  },
 ];
-
-type Chamada = { metodo: string; caminho: string; corpo?: unknown };
 const clientes: QueryClient[] = [];
 
-function simular() {
-  const chamadas: Chamada[] = [];
+function abrir() {
   vi.stubGlobal(
     "fetch",
-    vi.fn(async (caminho: string, opcoes?: RequestInit) => {
+    vi.fn(async (caminho: string) => {
       const url = new URL(caminho.replace(/^undefined/, "http://teste"));
       if (url.pathname === "/auth/sessao") {
         return Response.json({
@@ -49,24 +31,9 @@ function simular() {
           perfil: "coordenacao",
         });
       }
-      const metodo = opcoes?.method ?? "GET";
-      chamadas.push({
-        metodo,
-        caminho: url.pathname,
-        corpo: opcoes?.body ? JSON.parse(String(opcoes.body)) : undefined,
-      });
-      if (metodo === "GET") return Response.json(LISTA);
-      if (metodo === "PUT") return new Response(null, { status: 204 });
-      return Response.json(
-        { id: "novo", situacao: "pendente_ativacao", conviteEnviado: true },
-        { status: 201 },
-      );
+      return Response.json(LISTA);
     }),
   );
-  return chamadas;
-}
-
-function abrir() {
   const client = new QueryClient({
     defaultOptions: { queries: { retry: false } },
   });
@@ -78,7 +45,7 @@ function abrir() {
   );
 }
 
-describe("CRP do supervisor na gestão de usuários (RF53)", () => {
+describe("Cadastro de usuário pela coordenação (RF53)", () => {
   beforeAll(() => {
     // O jsdom não abre o <dialog> nativo.
     HTMLDialogElement.prototype.showModal ??= function (
@@ -98,88 +65,25 @@ describe("CRP do supervisor na gestão de usuários (RF53)", () => {
     vi.unstubAllGlobals();
   });
 
-  it("mostra o CRP do supervisor e avisa quando ele não foi informado", async () => {
-    simular();
-    abrir();
-    const tabela = await screen.findByRole("table", {
-      name: "Usuários cadastrados",
-    });
-    expect(within(tabela).getByText("CRP 01/12345")).toBeTruthy();
-    expect(within(tabela).getByText("CRP não informado")).toBeTruthy();
-    expect(
-      within(tabela).getByRole("button", {
-        name: /Corrigir CRP\s*de Carla Souza/,
-      }),
-    ).toBeTruthy();
-    expect(
-      within(tabela).getByRole("button", {
-        name: /Informar CRP\s*de Rui Prado/,
-      }),
-    ).toBeTruthy();
-  });
-
-  it("pede o CRP só para o perfil de supervisor e recusa o cadastro sem ele", async () => {
-    const chamadas = simular();
+  it("com o formulário vazio, mostra todos os erros em português de uma vez", async () => {
     abrir();
     await screen.findByRole("table");
     fireEvent.click(screen.getByRole("button", { name: "Cadastrar usuário" }));
-    fireEvent.change(screen.getByLabelText("Nome completo"), {
-      target: { value: "Ana Clara Lopes" },
-    });
-    fireEvent.change(screen.getByLabelText("E-mail"), {
-      target: { value: "ana@fbr.edu.br" },
-    });
-    fireEvent.click(screen.getByLabelText("Estagiário"));
-    expect(screen.queryByLabelText(/Número do CRP/)).toBeNull();
-
-    fireEvent.click(screen.getByLabelText("Supervisor"));
-    const crp = screen.getByLabelText(/Número do CRP/);
     fireEvent.click(
       screen.getByRole("button", { name: "Salvar e enviar convite" }),
     );
-    expect(
-      await screen.findByText("Informe o número do CRP do supervisor."),
-    ).toBeTruthy();
-    expect(crp.getAttribute("aria-invalid")).toBe("true");
-    expect(chamadas.filter((c) => c.metodo === "POST")).toHaveLength(0);
-
-    fireEvent.change(crp, { target: { value: "CRP 01/23456" } });
-    fireEvent.click(
-      screen.getByRole("button", { name: "Salvar e enviar convite" }),
-    );
-    await vi.waitFor(() =>
-      expect(chamadas.find((c) => c.metodo === "POST")?.corpo).toMatchObject({
-        perfil: "supervisor",
-        crp: "01/23456",
-      }),
-    );
+    expect(await screen.findByText("Informe o nome completo.")).toBeTruthy();
+    expect(screen.getByText("Informe um e-mail válido.")).toBeTruthy();
+    expect(screen.getByText("Escolha um perfil.")).toBeTruthy();
+    expect(screen.queryByText(/Invalid input/)).toBeNull();
   });
 
-  it("a coordenação informa o CRP de um supervisor pela lista", async () => {
-    const chamadas = simular();
+  it("não pede CRP no cadastro de supervisor: ele vem no carimbo (DF71)", async () => {
     abrir();
-    const tabela = await screen.findByRole("table", {
-      name: "Usuários cadastrados",
-    });
-    fireEvent.click(
-      within(tabela).getByRole("button", {
-        name: /Informar CRP\s*de Rui Prado/,
-      }),
-    );
-    const campo = screen.getByLabelText(/Número do CRP/);
-    fireEvent.change(campo, { target: { value: "123" } });
-    fireEvent.click(screen.getByRole("button", { name: "Salvar CRP" }));
-    expect(
-      await screen.findByText("Informe o CRP no formato 01/12345."),
-    ).toBeTruthy();
-
-    fireEvent.change(campo, { target: { value: "01/77777" } });
-    fireEvent.click(screen.getByRole("button", { name: "Salvar CRP" }));
-    expect(await screen.findByText("CRP de Rui Prado salvo.")).toBeTruthy();
-    expect(chamadas.find((c) => c.metodo === "PUT")).toEqual({
-      metodo: "PUT",
-      caminho: "/usuarios/s2/crp",
-      corpo: { crp: "01/77777" },
-    });
+    await screen.findByRole("table");
+    fireEvent.click(screen.getByRole("button", { name: "Cadastrar usuário" }));
+    fireEvent.click(screen.getByLabelText("Supervisor"));
+    expect(screen.queryByLabelText(/CRP/)).toBeNull();
+    expect(screen.queryByText(/CRP/)).toBeNull();
   });
 });

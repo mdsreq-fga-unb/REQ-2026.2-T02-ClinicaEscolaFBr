@@ -7,7 +7,6 @@ import {
   UnprocessableEntityException,
 } from '@nestjs/common';
 import {
-  atribuicoesSupervisor,
   autorizacoesMenor,
   casos,
   emissoesDeclaracao,
@@ -27,7 +26,7 @@ import {
   type SessaoComPresenca,
   type StatusSessao,
 } from '@clinica/shared';
-import { and, desc, eq, gt, isNull, lte, or, type SQL } from 'drizzle-orm';
+import { and, desc, eq, type SQL } from 'drizzle-orm';
 import { AuditoriaService } from '../../auditoria/auditoria.service';
 import type { UsuarioAutenticado } from '../../auth/usuario-autenticado';
 import { DB } from '../../database/database.module';
@@ -164,10 +163,9 @@ export class DeclaracoesService {
     const [sessao] = await this.db
       .select({
         id: sessoesAtendimento.id,
-        casoId: sessoesAtendimento.casoId,
         inicio: sessoesAtendimento.inicio,
+        termino: sessoesAtendimento.termino,
         status: sessoesAtendimento.status,
-        estagiario: usuarios.nome,
         inscricaoId: casos.inscricaoId,
         paciente: inscricoes.nomeCompleto,
         dataNascimento: inscricoes.dataNascimento,
@@ -175,7 +173,6 @@ export class DeclaracoesService {
       .from(sessoesAtendimento)
       .innerJoin(casos, eq(casos.id, sessoesAtendimento.casoId))
       .innerJoin(inscricoes, eq(inscricoes.id, casos.inscricaoId))
-      .innerJoin(usuarios, eq(usuarios.id, sessoesAtendimento.estagiarioId))
       .where(eq(sessoesAtendimento.id, sessaoId));
 
     if (
@@ -217,10 +214,6 @@ export class DeclaracoesService {
       }
     }
 
-    const psicologo = await this.supervisorNaSessao(
-      sessao.casoId,
-      sessao.inicio,
-    );
     const emitidaPor =
       solicitante.canal === 'secretaria' ? solicitante.usuario.id : null;
     const emissao = await this.db.transaction(async (tx) => {
@@ -255,45 +248,12 @@ export class DeclaracoesService {
       emissaoId: emissao.id,
       emitidaEm: emissao.emitidaEm.toISOString(),
       paciente: sessao.paciente,
-      sessao: { id: sessao.id, inicio: sessao.inicio.toISOString() },
-      estagiario: sessao.estagiario,
-      psicologoResponsavel: psicologo,
+      sessao: {
+        id: sessao.id,
+        inicio: sessao.inicio.toISOString(),
+        termino: sessao.termino.toISOString(),
+      },
     };
-  }
-
-  // Psicólogo responsável até a FBr confirmar o modelo: o supervisor do caso na
-  // data da sessão, mesmo que o caso tenha sido transferido depois (RF25). Sem
-  // atribuição naquela data, vale a atribuição vigente.
-  private async supervisorNaSessao(casoId: string, inicio: Date) {
-    const campos = { nome: usuarios.nome, crp: usuarios.crp };
-    const [naData] = await this.db
-      .select(campos)
-      .from(atribuicoesSupervisor)
-      .innerJoin(usuarios, eq(usuarios.id, atribuicoesSupervisor.supervisorId))
-      .where(
-        and(
-          eq(atribuicoesSupervisor.casoId, casoId),
-          lte(atribuicoesSupervisor.atribuidoEm, inicio),
-          or(
-            isNull(atribuicoesSupervisor.encerradaEm),
-            gt(atribuicoesSupervisor.encerradaEm, inicio),
-          ),
-        ),
-      )
-      .orderBy(desc(atribuicoesSupervisor.atribuidoEm))
-      .limit(1);
-    if (naData) return naData;
-    const [vigente] = await this.db
-      .select(campos)
-      .from(atribuicoesSupervisor)
-      .innerJoin(usuarios, eq(usuarios.id, atribuicoesSupervisor.supervisorId))
-      .where(
-        and(
-          eq(atribuicoesSupervisor.casoId, casoId),
-          eq(atribuicoesSupervisor.vigente, true),
-        ),
-      );
-    return vigente ?? { nome: '', crp: null };
   }
 
   // Tentativa negada (RNF39): quem tentou, a sessão pedida e o canal, sem

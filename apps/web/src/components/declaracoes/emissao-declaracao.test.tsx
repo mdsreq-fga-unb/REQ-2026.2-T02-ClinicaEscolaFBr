@@ -53,9 +53,8 @@ const DECLARACAO: DeclaracaoComparecimento = {
   sessao: {
     id: SESSOES[0].id,
     inicio: SESSOES[0].inicio,
+    termino: "2026-11-05T17:50:00.000Z",
   },
-  estagiario: "Ana Beatriz Costa",
-  psicologoResponsavel: { nome: "Ricardo Menezes", crp: "01/12345" },
 };
 
 const verificacao = () => ({
@@ -102,16 +101,17 @@ describe("RF45: emissão pelo paciente ou responsável", () => {
       `/declaracoes/minhas-sessoes/${SESSOES[0].id}/emissao`,
       { method: "POST", cache: "no-store" },
     );
+    expect(folha).toHaveTextContent("Faculdade Brasília");
+    // Texto do modelo da Clínica Escola (DF70), sem o estagiário.
     expect(folha).toHaveTextContent(
-      "Clínica Escola de Psicologia · Faculdade Brasília",
+      "Declaro para os devidos fins que Mariana Alves Toledo compareceu à Clínica-Escola de Psicologia da Faculdade Brasília – FBr no dia 05/11/2026 das 14:00 às 14:50.",
     );
+    expect(folha.textContent).not.toMatch(/Ana Beatriz|estagiári/i);
+    // Assinatura, carimbo e CRP à mão: o carimbo já traz o CRP (DF71).
     expect(folha).toHaveTextContent(
-      "Declaramos, para os devidos fins, que Mariana Alves Toledo compareceu a atendimento psicológico na Clínica Escola de Psicologia da Faculdade Brasília no dia 05/11/2026, às 14:00, realizado pelo(a) estagiário(a) de Psicologia Ana Beatriz Costa.",
+      "Assinatura e Carimbo do Psicólogo Responsável",
     );
-    expect(folha).toHaveTextContent("Brasília, 20 de novembro de 2026.");
-    expect(folha).toHaveTextContent("Ricardo Menezes");
-    expect(folha).toHaveTextContent("Psicólogo(a) responsável · CRP 01/12345");
-    expect(folha).toHaveTextContent("Carimbo do psicólogo responsável");
+    expect(folha).toHaveTextContent(/CRP: _+/);
     // Sem dado clínico (RNF6) e só para imprimir: nada de download nem e-mail.
     expect(folha.textContent).not.toMatch(/queixa|prioridade|diagnóstico/i);
     expect(
@@ -148,19 +148,6 @@ describe("RF45: emissão pelo paciente ou responsável", () => {
         })[0],
       ).toHaveFocus(),
     );
-  });
-
-  it("sem o CRP no cadastro do supervisor, deixa a linha para preencher à mão (RF53)", async () => {
-    simular(async () => ({
-      ...DECLARACAO,
-      psicologoResponsavel: { nome: "Ricardo Menezes", crp: null },
-    }));
-    abrir(<MinhasSessoes verificacao={verificacao()} />);
-    await emitirDaSessao();
-    const folha = await screen.findByRole("article");
-    expect(folha).toHaveTextContent("Ricardo Menezes");
-    expect(folha).toHaveTextContent(/Psicólogo\(a\) responsável · CRP _+/);
-    expect(folha.textContent).not.toMatch(/null|undefined/);
   });
 
   it("422 de sessão sem presença mostra o aviso amarelo com a mensagem pronta, e a lista continua", async () => {
