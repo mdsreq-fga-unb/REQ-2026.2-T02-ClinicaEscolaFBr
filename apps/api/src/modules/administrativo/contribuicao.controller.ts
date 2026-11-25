@@ -7,13 +7,16 @@ import {
   ParseUUIDPipe,
   Post,
   Put,
+  Query,
   UseGuards,
 } from '@nestjs/common';
 import {
   correcaoContribuicaoSchema,
+  filtroContribuicoesSchema,
   registroContribuicaoSchema,
   valorContribuicaoSchema,
   type CorrecaoContribuicao,
+  type FiltroContribuicoes,
   type RegistroContribuicao,
   type ValorContribuicaoEntrada,
 } from '@clinica/shared';
@@ -36,6 +39,18 @@ import { ContribuicaoService } from './contribuicao.service';
 @UseGuards(AutenticadoGuard, PerfisGuard)
 export class ContribuicaoController {
   constructor(private readonly contribuicao: ContribuicaoService) {}
+
+  // Situação da contribuição dos pacientes em atendimento (RF42): secretaria e
+  // coordenação; o supervisor e o estagiário recebem 403.
+  @Get('contribuicoes')
+  @Perfis('secretaria', 'coordenacao')
+  @Header('Cache-Control', 'no-store')
+  listar(
+    @Query(new ZodValidationPipe(filtroContribuicoesSchema))
+    filtro: FiltroContribuicoes,
+  ) {
+    return this.contribuicao.listar(filtro);
+  }
 
   @Get('casos/:id/contribuicao')
   @Perfis('secretaria', 'coordenacao')

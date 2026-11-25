@@ -231,6 +231,13 @@ export function AgendaDeSessoes({
   const situacao = (s: SessaoDaAgenda) => (
     <span className="flex flex-wrap items-center gap-2">
       <SeloSessao status={s.status} cancelamento={s.cancelamento} />
+      {/* A 1ª sessão do ciclo de quem não pagou só informa; a partir da 2ª, o
+          RF43 bloqueia o agendamento (RF42). */}
+      {s.contribuicaoPendente && (
+        <span className="ui-selo w-fit border-[#f0cf9f] bg-alerta-fundo text-[#8a4600]">
+          Contribuição pendente · 1ª sessão
+        </span>
+      )}
       {(s.status === "agendada" || s.status === "confirmada") &&
         new Date(s.inicio).getTime() <= agora && (
           <span className="ui-meta">Horário já passou</span>
