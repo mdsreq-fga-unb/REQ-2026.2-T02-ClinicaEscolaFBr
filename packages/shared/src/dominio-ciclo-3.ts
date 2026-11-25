@@ -107,6 +107,7 @@ export const SITUACOES_CASO = [
   "encerrado",
   "desligado_por_faltas",
   "aguardando_vaga",
+  "cancelado_por_revogacao",
 ] as const;
 export const situacaoCasoSchema = z.enum(SITUACOES_CASO);
 export type SituacaoCaso = z.infer<typeof situacaoCasoSchema>;

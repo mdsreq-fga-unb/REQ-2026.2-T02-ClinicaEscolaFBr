@@ -9,9 +9,16 @@ export async function preencherDados(page: Page, menor = false) {
   await page.locator("#cpf").fill("11144477735");
   await page.locator("#rg").fill("MG-12.345.678 SSP/MG");
   await page.locator("#endereco").fill("Rua Fictícia, 10, Brasília DF");
+  await page.locator("#bairro").fill("Asa Norte");
+  await page.locator("#cidadeUf").fill("Brasília/DF");
+  await page.locator("#cep").fill("70000-000");
   await page.locator("#estadoCivil").selectOption("Solteiro(a)");
   await page.locator("#celular").fill("61999999999");
   await page.locator("#email").fill("ficticio@example.com");
+  // Contato de emergência obrigatório (DF51).
+  await page.locator("#contatoEmergenciaNome").fill("Contato Fictício E2E");
+  await page.locator("#contatoEmergenciaParentesco").fill("Irmã");
+  await page.locator("#contatoEmergenciaTelefone").fill("6133334444");
 }
 export async function preencherTriagem(page: Page) {
   await page
