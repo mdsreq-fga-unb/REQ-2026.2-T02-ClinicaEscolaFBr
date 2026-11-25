@@ -51,7 +51,7 @@ O sistema deve permitir que o interessado realize uma solicitação de atendimen
 - O formulário deve exigir, como campos obrigatórios — confirmados pela Clínica Escola na reunião de 26/08/2026 ([ata](../historico/unidade-1/reunioes.md)) —, os seguintes: nome completo, data de nascimento, CPF, endereço, estado civil e a queixa (motivo da busca pelo atendimento); quando o interessado for menor de idade, o formulário deve exigir também o nome do responsável legal.
 - Para viabilizar os lembretes e a verificação de identidade previstos nos RF13 e RF52, o interessado deve informar o **e-mail** e o **telefone celular**, os dois obrigatórios, e a inscrição avisa que os contatos da clínica são feitos por e-mail ([DF48](decisoes-fbr.md#df48)). A inscrição não pede mais a escolha do canal preferencial. As mensagens automáticas do sistema vão por e-mail, e o celular fica para os contatos da secretaria por WhatsApp ou ligação. O SMS não é usado. As inscrições feitas antes da DF48, com o canal escolhido e às vezes só o celular, continuam seguindo a [DF24](decisoes-fbr.md#df24).
 - O formulário também deve coletar, para a triagem, a percepção de urgência e um campo de histórico relevante informado pelo interessado, ambos como declarações do próprio solicitante.
-- O formulário também deve coletar os dados da ficha de identificação da Clínica Escola que os campos acima não cobrem ([DF43](decisoes-fbr.md#df43)): sexo, profissão, escolaridade, bairro, cidade, CEP, WhatsApp, contato de emergência e, para menor de idade, o CPF e o documento que comprova a responsabilidade legal. O contato de emergência é obrigatório ([DF51](decisoes-fbr.md#df51)), assim como o endereço completo, com bairro, cidade e CEP, que a FBr incluiu nos dados mínimos para o reconhecimento do paciente, para eventual fiscalização ([DF56](decisoes-fbr.md#df56)). O CPF do responsável legal também é obrigatório na inscrição de menor de idade ([DF47](decisoes-fbr.md#df47)), porque o consentimento do RF57 é dado pelo responsável. Os demais (sexo, profissão, escolaridade, WhatsApp e o documento do responsável) continuam opcionais.
+- O formulário também deve coletar os dados da ficha de identificação da Clínica Escola que os campos acima não cobrem ([DF43](decisoes-fbr.md#df43)): sexo, profissão, escolaridade, bairro, cidade, CEP, WhatsApp, contato de emergência e, para menor de idade, o CPF e o documento que comprova a responsabilidade legal. O contato de emergência é obrigatório ([DF51](decisoes-fbr.md#df51)): o nome e o telefone são obrigatórios, e o grau de parentesco é opcional ([DF64](decisoes-fbr.md#df64)), assim como o endereço completo, com bairro, cidade e CEP, que a FBr incluiu nos dados mínimos para o reconhecimento do paciente, para eventual fiscalização ([DF56](decisoes-fbr.md#df56)). O CPF do responsável legal também é obrigatório na inscrição de menor de idade ([DF47](decisoes-fbr.md#df47)), porque o consentimento do RF57 é dado pelo responsável. Os demais (sexo, profissão, escolaridade, WhatsApp e o documento do responsável) continuam opcionais.
 - O RG é opcional, sem o órgão emissor e o estado, porque a nova Carteira de Identidade Nacional usa o CPF como número único ([DF60](decisoes-fbr.md#df60)).
 - O CPF e o RG, quando informado, são coletados apenas como texto informado pelo próprio interessado — a Clínica Escola não exige, nem o sistema deve solicitar, o envio de cópia digitalizada desses documentos.
 - O sistema deve validar o formato dos dados de contato, verificar os campos obrigatórios e solicitar a confirmação do interessado antes de registrar a inscrição.
@@ -84,7 +84,7 @@ _Critérios de aceitação:_
 
 - Para interessado menor de idade, calculado pela data de nascimento, o envio sem o nome ou sem o CPF do responsável legal é bloqueado e o campo é indicado.
 
-- O envio sem o contato de emergência ou sem o endereço completo (endereço, bairro, cidade e CEP) é bloqueado e o campo é indicado ([DF51](decisoes-fbr.md#df51) e [DF56](decisoes-fbr.md#df56)).
+- O envio sem o nome ou o telefone do contato de emergência, ou sem o endereço completo (endereço, bairro, cidade e CEP), é bloqueado e o campo é indicado; o grau de parentesco pode ficar em branco ([DF51](decisoes-fbr.md#df51), [DF56](decisoes-fbr.md#df56) e [DF64](decisoes-fbr.md#df64)).
 
 _Rastreabilidade:_ Feature "Registrar solicitação de atendimento on-line" → CP1 — Inscrição on-line → OE1/OE4. Restrição transversal: CP12 — Segurança, sigilo e controle de acesso.{{ origem("RF1") }}
 
@@ -700,6 +700,23 @@ _Rastreabilidade:_ Feature "Registrar anamnese e contrato terapêutico do pacien
 
 {{ registro("RF69") }}
 
+#### Feature — Corrigir anamnese e contrato terapêutico do paciente
+
+**RF70 — Corrigir anamnese e contrato terapêutico do paciente**{ #rf70 }
+
+O sistema deve permitir que o estagiário responsável e o supervisor do caso corrijam a anamnese e o contrato terapêutico já registrados (RF69), sem apagar o conteúdo anterior: cada correção gera uma nova versão, com o autor, a data/hora e o motivo, como na correção da evolução (RF29), e o prontuário mostra a versão vigente e o histórico das anteriores. Em 25/11/2026, a Clínica Escola respondeu que "seria bom deixar a possibilidade de corrigir" ([DF67](decisoes-fbr.md#df67)); o requisito, inclusive a correção pelo supervisor do caso, é proposta da equipe, a confirmar com a FBr. O requisito fica fora do MVP e é construído depois da entrega final; até lá, vale o RF69, em que cada parte é registrada uma única vez.
+
+_Critérios de aceitação:_
+
+- A correção da anamnese ou do contrato pelo estagiário responsável ou pelo supervisor do caso, com motivo, gera uma nova versão com autor e data/hora, sem apagar a anterior.
+- A correção sem motivo não é salva, com o campo indicado.
+- O prontuário mostra a versão vigente e o histórico das versões anteriores, com o autor, a data/hora e o motivo de cada uma.
+- Usuário que não é o estagiário responsável nem o supervisor do caso não corrige a anamnese nem o contrato.
+
+_Rastreabilidade:_ Feature "Corrigir anamnese e contrato terapêutico do paciente" → CP6 — Prontuário eletrônico → OE5/OE6. Dependência: RF69. Restrição transversal: CP12 — Segurança, sigilo e controle de acesso.{{ origem("RF70") }}
+
+{{ registro("RF70") }}
+
 #### Feature — Consultar prontuário do paciente [#148](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/issues/148)
 
 **RF27 — Consultar prontuário do paciente**{ #rf27 }
@@ -755,7 +772,7 @@ _Rastreabilidade:_ Feature "Registrar evolução da sessão realizada" → CP7 �
 
 **RF29 — Corrigir evolução registrada**{ #rf29 }
 
-O sistema deve permitir que o estagiário responsável, ou o supervisor do caso, corrija um registro de evolução já salvo, preservando o conteúdo original para fins de auditoria — não deve haver sobrescrita silenciosa. Toda correção deve exigir e registrar autor, data/hora e motivo da alteração. Conforme confirmado pela Clínica Escola, a correção é permitida até as datas das provas do semestre letivo vigente. Como a gestão acadêmica está fora do escopo, essa data é o parâmetro "data-limite para correção de evoluções", que a coordenação registra no início de cada semestre a partir do calendário acadêmico da FBr; a alteração guarda o valor anterior, o novo, o autor e a data/hora. O mesmo prazo vale para o estagiário e para o supervisor do caso. Enquanto a data do semestre não for registrada, a correção continua permitida e o sistema avisa a coordenação de que o parâmetro está pendente. A aplicação do mesmo prazo ao supervisor é uma proposta da equipe, registrada nas [pendências de validação com a FBr](analise-feedback.md#pendencias-de-validacao-com-a-fbr).
+O sistema deve permitir que o estagiário responsável, ou o supervisor do caso, corrija um registro de evolução já salvo, preservando o conteúdo original para fins de auditoria — não deve haver sobrescrita silenciosa. Toda correção deve exigir e registrar autor, data/hora e motivo da alteração. Conforme confirmado pela Clínica Escola, a correção é permitida até as datas das provas do semestre letivo vigente. Como a gestão acadêmica está fora do escopo, essa data é o parâmetro "data-limite para correção de evoluções", que a coordenação registra no início de cada semestre a partir do calendário acadêmico da FBr; a alteração guarda o valor anterior, o novo, o autor e a data/hora. O mesmo prazo vale para o estagiário e para o supervisor do caso, como a FBr confirmou em 25/11/2026 ([DF66](decisoes-fbr.md#df66)). Enquanto a data do semestre não for registrada, a correção continua permitida e o sistema avisa a coordenação de que o parâmetro está pendente.
 
 _Critérios de aceitação:_
 
@@ -1045,7 +1062,7 @@ _Rastreabilidade:_ Feature "Consolidar faltas do estagiário para a supervisão"
 
 **RF40 — Contabilizar faltas do estagiário no semestre**{ #rf40 }
 
-O sistema deve manter, por estagiário e por semestre letivo, a contagem cumulativa de faltas do estagiário a sessões, incrementada a cada sessão cancelada por ausência real do estagiário (RF16) e exibida na relação consultada pela supervisão (RF39). Cancelamentos registrados como administrativos para remarcação (RF16), usados enquanto o RF12 ficar para uma entrega posterior, não incrementam essa contagem. O semestre de cada falta é o da data da sessão (1º semestre de janeiro a junho, 2º de julho a dezembro), como na data-limite do RF29, porque a gestão do calendário acadêmico está fora do escopo. A contagem recomeça do zero a cada semestre e não é alterada pela sinalização de reprovação (RF63) nem pela decisão institucional (RF64); a ausência registrada por engano é reclassificada pela coordenação como cancelamento administrativo para remarcação, com motivo, autor e data/hora, e a contagem é recalculada. Essa reclassificação é uma proposta da equipe, pendente de validação com a FBr, como a escolha das faltas na reversão do desligamento do paciente (RF38).
+O sistema deve manter, por estagiário e por semestre letivo, a contagem cumulativa de faltas do estagiário a sessões, incrementada a cada sessão cancelada por ausência real do estagiário (RF16) e exibida na relação consultada pela supervisão (RF39). Cancelamentos registrados como administrativos para remarcação (RF16), usados enquanto o RF12 ficar para uma entrega posterior, não incrementam essa contagem. O semestre de cada falta é o da data da sessão (1º semestre de janeiro a junho, 2º de julho a dezembro), como na data-limite do RF29, porque a gestão do calendário acadêmico está fora do escopo. A contagem recomeça do zero a cada semestre e não é alterada pela sinalização de reprovação (RF63) nem pela decisão institucional (RF64); a ausência registrada por engano é reclassificada pela coordenação como cancelamento administrativo para remarcação, com motivo, autor e data/hora, e a contagem é recalculada. A reclassificação foi confirmada pela FBr em 25/11/2026 ([DF69](decisoes-fbr.md#df69)).
 
 _Critérios de aceitação:_
 
