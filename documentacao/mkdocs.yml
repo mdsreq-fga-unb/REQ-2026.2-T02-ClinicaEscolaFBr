@@ -164,6 +164,7 @@ nav:
       - Requisitos:
           - Requisitos funcionais: requisitos/funcionais.md
           - Requisitos não funcionais: requisitos/nao-funcionais.md
+          - Representação de requisitos: requisitos/representacao.md
           - Análise do feedback: requisitos/analise-feedback.md
           - Decisões com a FBr: requisitos/decisoes-fbr.md
           - DoR e DoD: requisitos/dor-dod.md
@@ -175,6 +176,7 @@ nav:
       - Equipe e cliente: processo/equipe-e-cliente.md
       - Boas práticas no GitHub: processo/boas-praticas-github.md
       - Estudo de FDD: processo/estudo-fdd.md
+      - Utilização de IA e ferramentas de apoio: processo/uso-de-ia.md
   - Construção do MVP:
       - Arquitetura técnica: construcao/arquitetura.md
       - Projeto das features: construcao/projeto-features.md
@@ -186,7 +188,10 @@ nav:
           - Teste de carga: construcao/teste-de-carga.md
           - "Entrega final: integração, homologação e produção": construcao/entrega-final.md
   - Histórico das unidades:
-      - Unidade 3 (em andamento):
+      - Unidade 4 (em andamento):
+          - Início da unidade: historico/unidade-4/index.md
+          - Cronograma e Entregas: historico/unidade-4/cronograma.md
+      - Unidade 3 (entregue em 17/11):
           - Início da unidade: historico/unidade-3/index.md
           - Cronograma e Entregas: historico/unidade-3/cronograma.md
           - Reuniões: historico/unidade-3/reunioes.md
