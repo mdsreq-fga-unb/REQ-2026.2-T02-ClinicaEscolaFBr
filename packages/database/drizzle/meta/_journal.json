@@ -155,6 +155,13 @@
       "when": 1794883383302,
       "tag": "0021_rg_opcional",
       "breakpoints": true
+    },
+    {
+      "idx": 22,
+      "version": "7",
+      "when": 1795570631844,
+      "tag": "0022_reclassificacao_falta",
+      "breakpoints": true
     }
   ]
 }
