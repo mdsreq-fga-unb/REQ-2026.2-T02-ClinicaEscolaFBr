@@ -176,6 +176,7 @@ nav:
       - Equipe e cliente: processo/equipe-e-cliente.md
       - Boas práticas no GitHub: processo/boas-praticas-github.md
       - Estudo de FDD: processo/estudo-fdd.md
+      - Utilização de IA e ferramentas de apoio: processo/uso-de-ia.md
   - Construção do MVP:
       - Arquitetura técnica: construcao/arquitetura.md
       - Projeto das features: construcao/projeto-features.md
