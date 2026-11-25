@@ -231,7 +231,14 @@ function SessaoAgendada({
 
   return (
     <section aria-label="Sessão agendada" className="ui-cartao max-w-[640px]">
-      {resultado.canal === "email" &&
+      {resultado.comunicacaoSuspensa && (
+        <Aviso tipo="alerta" titulo="Sessão agendada antes da revogação.">
+          O consentimento foi revogado e a comunicação ao titular foi suspensa.
+          Procure o supervisor para conduzir o encerramento.
+        </Aviso>
+      )}
+      {!resultado.comunicacaoSuspensa &&
+        resultado.canal === "email" &&
         (resultado.linkEnviadoPorEmail ? (
           <Aviso tipo="sucesso" titulo="Sessão agendada.">
             Link de confirmação enviado por e-mail.

@@ -265,7 +265,7 @@ _Rastreabilidade:_ Feature "Ordenar inscritos na fila de espera" → CP3 — Fil
 
 **RF8 — Consultar posição individual na fila**{ #rf8 }
 
-O sistema deve permitir que o inscrito consulte a situação atual da sua inscrição na fila de espera da Clínica Escola FBr, localizando a solicitação por CPF ou número de inscrição. Antes de apresentar o resultado, o fluxo deve executar a verificação de identidade definida no RF52. A consulta mostra **"Em triagem"** enquanto o inscrito ainda não foi chamado para o atendimento, e **"Em atendimento"** depois de chamado, inclusive enquanto ele aguarda o contato da clínica ou responde a ele ([DF55](decisoes-fbr.md#df55)). O inscrito é chamado quando o caso é vinculado a um estagiário (RF21). A posição na fila **não aparece** para o inscrito, para não gerar expectativa, porque a captação de pacientes é semestral; a ordem da fila (RF7) continua sendo vista só pela equipe. O nome da feature foi mantido para preservar a rastreabilidade. As condições de privacidade e de comunicação do resultado são estabelecidas, respectivamente, pelos RNF6 e RNF7.
+O sistema deve permitir que o inscrito consulte a situação atual da sua inscrição na fila de espera da Clínica Escola FBr, localizando a solicitação por CPF ou número de inscrição. Antes de apresentar o resultado, o fluxo deve executar a verificação de identidade definida no RF52. A consulta mostra **"Em triagem"** enquanto o inscrito ainda não foi chamado para o atendimento, e **"Em atendimento"** depois de chamado, inclusive enquanto ele aguarda o contato da clínica ou responde a ele ([DF55](decisoes-fbr.md#df55)). Depois que o caso é encerrado ou desligado, a consulta mostra **"Desligado"** e orienta o inscrito a procurar a secretaria ([DF65](decisoes-fbr.md#df65)). O inscrito é chamado quando o caso é vinculado a um estagiário (RF21). A posição na fila **não aparece** para o inscrito, para não gerar expectativa, porque a captação de pacientes é semestral; a ordem da fila (RF7) continua sendo vista só pela equipe. O nome da feature foi mantido para preservar a rastreabilidade. As condições de privacidade e de comunicação do resultado são estabelecidas, respectivamente, pelos RNF6 e RNF7.
 
 _Critérios de aceitação:_
 
@@ -274,6 +274,8 @@ _Critérios de aceitação:_
 - Sem verificação de identidade concluída, a consulta é negada, conforme o RNF6.
 
 - Depois que o caso é vinculado a um estagiário (RF21), uma nova consulta autorizada mostra "Em atendimento".
+
+- Com o caso encerrado ou desligado, a consulta autorizada mostra "Desligado" e a orientação de procurar a secretaria.
 
 _Rastreabilidade:_ Feature "Consultar posição individual na fila" → CP3 — Fila de espera e consulta de posição → OE4/OE7 → IS03 — Expectativa sobre a fila. Dependência: RF52 — Verificar identidade do paciente ou responsável (CP12).{{ origem("RF8") }}
 
