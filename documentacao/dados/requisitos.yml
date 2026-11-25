@@ -571,7 +571,7 @@ rfs:
   depende: [RF28, RF32]
   issue: 131
   estado: Planejada
-  origem: [DF04, DF12, DF23, DF36, DF42, DF54]
+  origem: [DF04, DF12, DF23, DF36, DF42, DF54, DF71]
 
 - id: RF34
   nome: Registrar falta do paciente na sessão
@@ -775,6 +775,7 @@ rfs:
   depende: [RF52]
   issue: 280
   estado: Planejada
+  origem: [DF70, DF71, DF72]
 
 - id: RF46
   nome: Reemitir declaração de comparecimento
@@ -879,7 +880,7 @@ rfs:
   lider: Gabriel
   issue: 48
   estado: Código inspecionado
-  origem: [DF30]
+  origem: [DF30, DF71]
 
 - id: RF54
   nome: Desativar usuário institucional
@@ -1270,6 +1271,7 @@ rnfs:
   classificacao: Associado a RF do MVP
   relacionado: RF45
   justificativa: Evita inclusão de dados clínicos desnecessários no documento.
+  origem: [DF70]
 
 - id: RNF38
   nome: Autorização para emissão e consulta
@@ -1736,6 +1738,21 @@ decisoes:
   data: 12/11/2026
   fonte: respostas da FBr por WhatsApp
   decisao: Na reversão de um desligamento por faltas feito por engano (RF38), a coordenação escolhe quais faltas deixam de contar. Respondido por Robson Araújo.
+
+- id: DF70
+  data: 25/11/2026
+  fonte: respostas da FBr por WhatsApp
+  decisao: A declaração de comparecimento segue o modelo da Clínica Escola, na pasta de documentos indicada por Robson Araújo, "Declaro para os devidos fins que <paciente> compareceu à Clínica-Escola de Psicologia da Faculdade Brasília – FBr no dia <data> das <início> às <término>.", seguido da assinatura e do carimbo do psicólogo responsável e do CRP. O modelo não traz o nome do estagiário. Respondido por Robson Araújo.
+
+- id: DF71
+  data: 25/11/2026
+  fonte: respostas da FBr por WhatsApp
+  decisao: O número do CRP não é cadastrado no sistema. Na declaração de comparecimento e no relatório final, ele vem no carimbo do psicólogo responsável, feito à mão na via impressa junto com a assinatura. Respondido por Robson Araújo.
+
+- id: DF72
+  data: 25/11/2026
+  fonte: respostas da FBr por WhatsApp
+  decisao: A secretaria registra no sistema que recebeu a autorização assinada para o acompanhamento de criança ou adolescente, com a data, e a declaração de comparecimento para o responsável legal só é emitida depois desse registro. Respondido por Robson Araújo.
 
 - id: DF60
   data: 06/11/2026
