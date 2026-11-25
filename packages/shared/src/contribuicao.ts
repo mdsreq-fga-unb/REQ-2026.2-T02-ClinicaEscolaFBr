@@ -154,6 +154,31 @@ export function centavosDoCampo(texto: string): number | null {
   return Number(reais) * 100 + Number(centavos.padEnd(2, "0"));
 }
 
+// Consulta da situação da contribuição dos pacientes em atendimento (RF42). Sem o
+// filtro, a lista traz as duas situações.
+export const SITUACOES_CONTRIBUICAO = ["pendente", "efetivada"] as const;
+export type SituacaoDaContribuicao = (typeof SITUACOES_CONTRIBUICAO)[number];
+export const filtroContribuicoesSchema = z.object({
+  situacao: z.enum(SITUACOES_CONTRIBUICAO).optional(),
+});
+export type FiltroContribuicoes = z.infer<typeof filtroContribuicoesSchema>;
+
+// Paciente em atendimento e a contribuição do ciclo atual (RF42): sem a forma nem
+// o valor, que ficam na ficha do paciente (RF41).
+export type ContribuicaoDoPaciente = {
+  casoId: string;
+  paciente: string;
+  situacao: SituacaoDaContribuicao;
+  // Primeira sessão do ciclo atual que não foi cancelada (AAAA-MM-DDTHH:mm ISO), ou
+  // nula se nenhuma foi agendada.
+  primeiraSessao: string | null;
+  // Data do pagamento da versão vigente (AAAA-MM-DD), só quando efetivada.
+  pagoEm: string | null;
+  // Último dia do prazo para pagar (AAAA-MM-DD), só quando pendente e já com
+  // vínculo.
+  prazoAte: string | null;
+};
+
 // Bloqueio do agendamento e perda da vaga (RF43).
 
 // O prazo terminou: o último dia para pagar já passou, em Brasília. Vinculado em
@@ -164,7 +189,7 @@ export const prazoVencido = (ate: string, agora = new Date()) =>
 // Situação da contribuição mostrada no "Agendar sessão" (RF43). A 1ª sessão do
 // ciclo nunca é bloqueada; da 2ª em diante, o agendamento exige o pagamento.
 export type ContribuicaoNoAgendamento = {
-  situacao: "pendente" | "efetivada";
+  situacao: SituacaoDaContribuicao;
   // Pendente com uma sessão já realizada no ciclo: o agendamento é recusado.
   bloqueia: boolean;
   // Data do pagamento vigente, só para a secretaria, que registra o pagamento.

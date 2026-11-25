@@ -27,6 +27,7 @@ import { AuditoriaService } from '../../auditoria/auditoria.service';
 import type { UsuarioAutenticado } from '../../auth/usuario-autenticado';
 import { DB } from '../../database/database.module';
 import { numeroDoParametro } from '../../parametros/parametros.service';
+import { primeirasSessoesComContribuicaoPendente } from '../../common/contribuicao-pendente';
 import { acoesDeCancelamento } from './acoes-cancelamento';
 import { inicioDoDia, MINUTO } from './horario';
 
@@ -164,6 +165,11 @@ export class AgendaService {
         await acoesDeCancelamento(this.db, casoId, usuario),
       );
     }
+    // A 1ª sessão do ciclo atual do paciente sem a contribuição paga (RF42).
+    const comContribuicaoPendente =
+      await primeirasSessoesComContribuicaoPendente(this.db, [
+        ...acoesPorCaso.keys(),
+      ]);
     return {
       estagiario,
       de: filtro.de,
@@ -180,6 +186,7 @@ export class AgendaService {
           termino: s.termino.toISOString(),
           cancelamento:
             classificacao && origem ? { classificacao, origem } : null,
+          contribuicaoPendente: comContribuicaoPendente.has(s.id),
           acoes: {
             pedidoPaciente: acoes.pedidoPaciente,
             administrativo: acoes.administrativo,

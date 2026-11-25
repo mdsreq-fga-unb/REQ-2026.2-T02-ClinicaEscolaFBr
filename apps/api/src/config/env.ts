@@ -23,6 +23,8 @@ const envSchema = z.object({
   // Pedidos de código e conferências da verificação de identidade por origem a
   // cada 10 minutos, em cada rota (RF52).
   LIMITE_VERIFICACAO_POR_ORIGEM: z.coerce.number().int().positive().default(30),
+  // Entradas com erro por origem a cada 10 minutos (RNF49).
+  LIMITE_ENTRADAS_POR_ORIGEM: z.coerce.number().int().positive().default(30),
   // Proxies à frente da API na implantação, para o req.ip ser o do visitante.
   SALTOS_DE_PROXY: z.coerce.number().int().nonnegative().default(0),
   // Chave da criptografia em repouso dos dados de saúde (RNF51): 32 bytes em base64.

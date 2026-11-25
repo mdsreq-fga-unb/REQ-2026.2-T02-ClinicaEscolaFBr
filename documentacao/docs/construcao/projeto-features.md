@@ -2946,6 +2946,14 @@ _Ciclo 6._
 
 **Dependências e riscos:** depende do RF41 (#43), integrado no Ciclo 5, e do agendamento da CP4.
 
+**Na implementação:**
+
+- **Lista.** `GET /contribuicoes?situacao=`, sem cache, com `@Perfis('secretaria', 'coordenacao')`; o supervisor e o estagiário recebem `403`, e a situação desconhecida, `400`. Cada linha traz o paciente, a situação no ciclo atual, a 1ª sessão do ciclo que não foi cancelada nem teve falta do paciente (como no RF43, a contribuição só bloqueia depois de uma sessão realizada), a data do pagamento da versão vigente (só na efetivada) e o último dia do prazo (só na pendente com vínculo), calculado pela mesma `prazoDaContribuicao` da ficha (RF41). A forma e o valor ficam só na ficha.
+- **Cálculo único.** `casosComContribuicaoPendente` e `primeirasSessoesComContribuicaoPendente` (`common/contribuicao-pendente.ts`) leem os pagamentos do ciclo atual na hora, para a lista, a agenda e "Meus pacientes" não divergirem e a indicação sumir assim que o pagamento é registrado.
+- **Agenda.** A indicação "Contribuição pendente · 1ª sessão" (`contribuicaoPendente`) vai na agenda do estagiário e do supervisor (RF11). A secretaria não tem agenda do dia com os pacientes, só as sessões sem confirmação; ela acompanha pela página "Contribuição social", aberta pelo menu.
+- **Meus pacientes.** O `GET /casos/meus` traz `contribuicao` (`pendente` ou `efetivada`) só para o estagiário e só nos casos em atendimento; a lista do supervisor não recebe o campo.
+- **Tela.** Página "Contribuição social" (`/contribuicoes`), no menu da secretaria e da coordenação, com o filtro "Situação" (Todas, Pendente, Efetivada), a contagem anunciada em `role="status"`, a tabela com `caption` (com "Prazo para pagar" no filtro pendente) e os cartões no celular. O nome do paciente leva à ficha, onde o pagamento é registrado.
+
 ---
 
 ### RF43 — Bloquear agendamento por contribuição social pendente ([#279](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/issues/279))

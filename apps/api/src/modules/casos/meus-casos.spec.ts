@@ -9,6 +9,7 @@ import {
   decisoesPrioridade,
   desligamentosPorFaltas,
   inscricoes,
+  pagamentosContribuicao,
   prontuarios,
   usuarios,
   vinculosEstagiario,
@@ -229,6 +230,32 @@ describe('Casos sob responsabilidade do estagiário ou supervisor (RF23)', () =>
       prontuarioId: mariana.prontuarioId,
     });
     expect(JSON.stringify(r.body)).not.toMatch(/sigilos|queixa/i);
+  });
+
+  it('o estagiário vê só a situação da contribuição dos seus casos em atendimento, sem a forma nem o valor; o supervisor não recebe o campo (RF42)', async () => {
+    const { mariana } = await cenario();
+    await db.insert(pagamentosContribuicao).values({
+      casoId: mariana.casoId,
+      cicloAtendimento: 1,
+      versao: 1,
+      valorCentavos: 3500,
+      pagoEm: '2026-11-10',
+      forma: 'pix',
+      registradoPor: pessoas.secretaria.id,
+    });
+    const r = await meus('ana').expect(200);
+    expect(
+      r.body.map((c: { nome: string; contribuicao: string }) => [
+        c.nome,
+        c.contribuicao,
+      ]),
+    ).toEqual([
+      ['Mariana Alves Toledo', 'efetivada'],
+      ['Tatiane Moreira Lopes', 'pendente'],
+    ]);
+    expect(JSON.stringify(r.body)).not.toMatch(/pix|3500|pagoEm/);
+    const doSupervisor = await meus('ricardo').expect(200);
+    expect(doSupervisor.body[0]).not.toHaveProperty('contribuicao');
   });
 
   it('o supervisor vê os casos sob a sua responsabilidade e os dos seus estagiários, e nenhum de outro supervisor (RF23, RNF16, RNF17)', async () => {
