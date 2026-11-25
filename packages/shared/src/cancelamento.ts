@@ -61,7 +61,10 @@ export type AusenciaEstagiario = z.infer<typeof ausenciaEstagiarioSchema>;
 // ausência do estagiário). Sem e-mail, ou com falha no envio, a secretaria avisa
 // pelo WhatsApp (RF17). O pedido do próprio paciente não gera aviso.
 export type AvisoAoPaciente =
-  "email_enviado" | "email_nao_enviado" | "sem_email";
+  | "email_enviado"
+  | "email_nao_enviado"
+  | "sem_email"
+  | "consentimento_revogado";
 
 // O aviso gravado no cancelamento por ausência do estagiário (RF17). O
 // `envio_pendente` entra na transação do RF16, antes do envio, e passa a
