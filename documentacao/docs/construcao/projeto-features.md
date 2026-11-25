@@ -866,6 +866,14 @@ sequenceDiagram
 
 **Dependências e riscos:** depende do RF57 (#52) e do RF52 (#47), e integra o RF7, o RF10, o RF14, o RF17 e o RF55. A migration acrescenta o valor `cancelado_por_revogacao` ao enum `situacao_caso`.
 
+**Na implementação:**
+
+- **Verificação da identidade.** Com o documento, a secretaria descreve o documento conferido, e a descrição fica cifrada (`documento_cifrado`, RNF51), fora da auditoria e da resposta. Com o RF52, a API confere uma verificação válida, não encerrada e da mesma inscrição; marcar a opção não basta. Para criança ou adolescente, quem pede é o responsável legal cadastrado.
+- **Registro.** A `revogacoes_consentimento` guarda a versão aceita, quem pediu, a forma de verificação, quem registrou e quando, uma por inscrição, com o gatilho `impedir_alteracao_registro`. O aceite original não muda. A repetição recebe `409`, e a inscrição sem aceite registrado recebe `422`. A auditoria `revogar_consentimento` traz a situação anterior e a nova do caso.
+- **Efeitos.** O caso que aguarda distribuição, vínculo ou vaga passa a `cancelado_por_revogacao` e sai da fila; a inscrição sem triagem sai das listas. O caso em atendimento mantém vínculo, sessões e prontuário, e o supervisor vê o aviso em "Meus casos" e na ficha. Novos agendamentos são recusados, e os envios do agendamento (RF14) e do aviso de ausência (RF17) conferem a revogação sob a trava do caso.
+- **Produção.** Com o termo provisório, a revogação fica bloqueada em produção, como a inscrição.
+- **Migration.** `0022_rf65_revogacao_consentimento`; na integração, é renumerada se outra PR já tiver usado o número.
+
 ---
 
 ## Inscrição on-line (CP1)

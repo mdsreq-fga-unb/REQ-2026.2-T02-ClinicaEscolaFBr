@@ -10,6 +10,7 @@ import {
 import { CORES, corSchema, type Cor, type FilaEspera } from '@clinica/shared';
 import { and, asc, desc, eq, inArray, notExists } from 'drizzle-orm';
 import { DB } from '../../database/database.module';
+import { semRevogacao } from '../../common/consentimento';
 import { decifrar } from '../../common/criptografia';
 
 @Injectable()
@@ -96,11 +97,14 @@ export class FilaService {
         })
         .from(inscricoes)
         .where(
-          notExists(
-            this.db
-              .select({ id: decisoesPrioridade.id })
-              .from(decisoesPrioridade)
-              .where(eq(decisoesPrioridade.inscricaoId, inscricoes.id)),
+          and(
+            semRevogacao(inscricoes.id),
+            notExists(
+              this.db
+                .select({ id: decisoesPrioridade.id })
+                .from(decisoesPrioridade)
+                .where(eq(decisoesPrioridade.inscricaoId, inscricoes.id)),
+            ),
           ),
         )
         .orderBy(asc(inscricoes.criadaEm), asc(inscricoes.numero)),
