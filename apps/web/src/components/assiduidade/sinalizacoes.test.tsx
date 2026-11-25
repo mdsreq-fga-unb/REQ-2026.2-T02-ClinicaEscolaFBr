@@ -55,6 +55,7 @@ const LUCAS: SinalizacaoReprovacao = {
     "2026-11-12T19:00:00.000Z",
   ],
   supervisores: ["Ricardo Menezes"],
+  decisoes: [],
 };
 const RAFAEL: SinalizacaoReprovacao = {
   ...LUCAS,
