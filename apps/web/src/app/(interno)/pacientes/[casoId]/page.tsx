@@ -48,6 +48,7 @@ import { Dados } from "@/components/comum/dados";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { api, ErroApi } from "@/lib/api";
 import { useSessao } from "@/lib/sessao";
+import { CartaoConsentimento } from "@/components/consentimento/consentimento";
 import { dataBr, dataHoraBr, NOMES_CANAL } from "@/lib/formato";
 
 type DadosAdministrativos = {
@@ -258,6 +259,7 @@ export default function PacientePage() {
         <h1 className="ui-titulo">{r.nome}</h1>
         {secretaria && avisoClinico}
         {quadro()}
+        <CartaoConsentimento casoId={casoId} />
         <section aria-labelledby="identificacao" className="ui-cartao">
           <h2 id="identificacao" className="ui-h2">
             Identificação
@@ -279,7 +281,9 @@ export default function PacientePage() {
             ]}
           />
         </section>
-        <SessoesComPresencaDaFicha casoId={r.casoId} />
+        {/* A lista do RF44 é só da secretaria (RNF38): nos outros perfis, a
+            seção nem aparece, em vez de um aviso de acesso negado. */}
+        {secretaria && <SessoesComPresencaDaFicha casoId={r.casoId} />}
         {dialogoVincular}
       </div>
     );
@@ -396,6 +400,7 @@ export default function PacientePage() {
       </div>
 
       {d.prontuarioId === undefined && avisoClinico}
+      <CartaoConsentimento casoId={casoId} />
       {quadro(
         coordenacao && d.supervisor && TRANSFERIVEIS.includes(d.situacao) ? (
           <Button

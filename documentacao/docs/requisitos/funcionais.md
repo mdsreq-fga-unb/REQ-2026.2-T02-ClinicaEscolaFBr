@@ -265,7 +265,7 @@ _Rastreabilidade:_ Feature "Ordenar inscritos na fila de espera" → CP3 — Fil
 
 **RF8 — Consultar posição individual na fila**{ #rf8 }
 
-O sistema deve permitir que o inscrito consulte a situação atual da sua inscrição na fila de espera da Clínica Escola FBr, localizando a solicitação por CPF ou número de inscrição. Antes de apresentar o resultado, o fluxo deve executar a verificação de identidade definida no RF52. A consulta mostra **"Em triagem"** enquanto o inscrito ainda não foi chamado para o atendimento, e **"Em atendimento"** depois de chamado, inclusive enquanto ele aguarda o contato da clínica ou responde a ele ([DF55](decisoes-fbr.md#df55)). O inscrito é chamado quando o caso é vinculado a um estagiário (RF21). A posição na fila **não aparece** para o inscrito, para não gerar expectativa, porque a captação de pacientes é semestral; a ordem da fila (RF7) continua sendo vista só pela equipe. O nome da feature foi mantido para preservar a rastreabilidade. As condições de privacidade e de comunicação do resultado são estabelecidas, respectivamente, pelos RNF6 e RNF7.
+O sistema deve permitir que o inscrito consulte a situação atual da sua inscrição na fila de espera da Clínica Escola FBr, localizando a solicitação por CPF ou número de inscrição. Antes de apresentar o resultado, o fluxo deve executar a verificação de identidade definida no RF52. A consulta mostra **"Em triagem"** enquanto o inscrito ainda não foi chamado para o atendimento, e **"Em atendimento"** depois de chamado, inclusive enquanto ele aguarda o contato da clínica ou responde a ele ([DF55](decisoes-fbr.md#df55)). Depois que o caso é encerrado ou desligado, a consulta mostra **"Desligado"** e orienta o inscrito a procurar a secretaria ([DF65](decisoes-fbr.md#df65)). O inscrito é chamado quando o caso é vinculado a um estagiário (RF21). A posição na fila **não aparece** para o inscrito, para não gerar expectativa, porque a captação de pacientes é semestral; a ordem da fila (RF7) continua sendo vista só pela equipe. O nome da feature foi mantido para preservar a rastreabilidade. As condições de privacidade e de comunicação do resultado são estabelecidas, respectivamente, pelos RNF6 e RNF7.
 
 _Critérios de aceitação:_
 
@@ -274,6 +274,8 @@ _Critérios de aceitação:_
 - Sem verificação de identidade concluída, a consulta é negada, conforme o RNF6.
 
 - Depois que o caso é vinculado a um estagiário (RF21), uma nova consulta autorizada mostra "Em atendimento".
+
+- Com o caso encerrado ou desligado, a consulta autorizada mostra "Desligado" e a orientação de procurar a secretaria.
 
 _Rastreabilidade:_ Feature "Consultar posição individual na fila" → CP3 — Fila de espera e consulta de posição → OE4/OE7 → IS03 — Expectativa sobre a fila. Dependência: RF52 — Verificar identidade do paciente ou responsável (CP12).{{ origem("RF8") }}
 
@@ -341,7 +343,7 @@ Os canais de contato com o paciente (e-mail, WhatsApp e ligação, sem SMS), a d
 - O registro de auditoria do agendamento segue o RNF10.
 - Ao confirmar o agendamento, o sistema envia automaticamente ao **e-mail** do paciente o link de confirmação de presença utilizado pelo RF14 quando o canal da inscrição é o e-mail: é o caso de toda inscrição feita depois da [DF48](decisoes-fbr.md#df48), que pede o e-mail e avisa que os contatos da clínica são feitos por ele, e das anteriores em que o paciente escolheu o e-mail. Nas inscrições anteriores à [DF48](decisoes-fbr.md#df48), em que o paciente escolheu **WhatsApp** ou **ligação** como canal preferencial, o sistema mostra a quem agendou um botão "Enviar pelo WhatsApp", que abre o WhatsApp com a mensagem pronta para o celular do paciente (data, horário e link), e registra quando o botão foi usado. Para quem preferiu ligação, a mensagem também serve de roteiro da ligação.
 
-**Entrega parcial no Ciclo 3.** O agendamento entregue no Ciclo 3 já gera o link de confirmação de presença e o envia ao paciente como descrito acima. A página que recebe o link e registra a confirmação é a do [RF14](#rf14), prevista para o Ciclo 4: até ela ser entregue, o paciente recebe o link, mas não consegue confirmar a presença por ele. O link passa a funcionar com a entrega do RF14. Os critérios de aceitação sobre o envio do link são verificados no Ciclo 3; a confirmação pela página do link é verificada nos critérios do RF14.
+**Entrega em duas partes.** O agendamento, entregue no Ciclo 3, gera o link de confirmação de presença e o envia ao paciente como descrito acima. A página que recebe o link e registra a confirmação é a do [RF14](#rf14), entregue no Ciclo 4. Os critérios de aceitação sobre o envio do link são verificados aqui; a confirmação pela página do link, nos critérios do RF14.
 
 _Critérios de aceitação:_
 

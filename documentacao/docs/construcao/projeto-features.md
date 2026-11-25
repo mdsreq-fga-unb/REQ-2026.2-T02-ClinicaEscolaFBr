@@ -433,7 +433,7 @@ _Construída no Ciclo 3._
 - `POST /auth/login` (pública): recebe e-mail e senha e devolve um cookie de sessão `httpOnly`.
 - `POST /auth/logout`.
 
-O `SessaoGuard` valida a sessão em cada requisição e preenche `req.usuario`, que o `PerfisGuard` já usa. A cada requisição válida, ele renova `expiraEm` para 30 minutos depois, e a sessão parada por 30 minutos expira (RNF50). O cookie é `httpOnly`, `Secure` e `SameSite=Lax`, e só o hash do token fica no banco.
+O `SessaoGuard` valida a sessão em cada requisição e preenche `req.usuario`, que o `PerfisGuard` já usa. A cada requisição válida, ele renova `expiraEm` para 30 minutos depois, e a sessão parada por 30 minutos expira (RNF50). Na tela, o 401 de qualquer chamada faz a sessão ser consultada de novo. A sessão encerrada vira `null`, e não erro, para o usuário anterior não ficar no cache. Assim, a área interna leva uma vez a `/entrar?sessao=encerrada`, com o aviso "Sua sessão foi encerrada.", e apaga os dados da pessoa. O cookie é `httpOnly`, `Secure` e `SameSite=Lax`, e só o hash do token fica no banco.
 
 ```mermaid
 sequenceDiagram
@@ -863,6 +863,14 @@ sequenceDiagram
 
 **Dependências e riscos:** depende do RF57 (#52) e do RF52 (#47), e integra o RF7, o RF10, o RF14, o RF17 e o RF55. A migration acrescenta o valor `cancelado_por_revogacao` ao enum `situacao_caso`.
 
+**Na implementação:**
+
+- **Verificação da identidade.** Com o documento, a secretaria descreve o documento conferido, e a descrição fica cifrada (`documento_cifrado`, RNF51), fora da auditoria e da resposta. Com o RF52, a API confere uma verificação válida, não encerrada e da mesma inscrição; marcar a opção não basta. Para criança ou adolescente, quem pede é o responsável legal cadastrado.
+- **Registro.** A `revogacoes_consentimento` guarda a versão aceita, quem pediu, a forma de verificação, quem registrou e quando, uma por inscrição, com o gatilho `impedir_alteracao_registro`. O aceite original não muda. A repetição recebe `409`, e a inscrição sem aceite registrado recebe `422`. A auditoria `revogar_consentimento` traz a situação anterior e a nova do caso.
+- **Efeitos.** O caso que aguarda distribuição, vínculo ou vaga passa a `cancelado_por_revogacao` e sai da fila; a inscrição sem triagem sai das listas. O caso em atendimento mantém vínculo, sessões e prontuário, e o supervisor vê o aviso em "Meus casos" e na ficha. Novos agendamentos são recusados, e os envios do agendamento (RF14) e do aviso de ausência (RF17) conferem a revogação sob a trava do caso.
+- **Produção.** Com o termo provisório, a revogação fica bloqueada em produção, como a inscrição.
+- **Migration.** `0022_rf65_revogacao_consentimento`; na integração, é renumerada se outra PR já tiver usado o número.
+
 ---
 
 ## Inscrição on-line (CP1)
@@ -1083,7 +1091,7 @@ _Construída no Ciclo 4._
 | --- | --- |
 | Sem caso (inscrição sem prioridade), `aguardando_distribuicao`, `aguardando_vinculo` ou `aguardando_vaga` | Em triagem, sem a posição |
 | `em_atendimento` | Em atendimento |
-| `encerrado` ou `desligado_por_faltas` | Procure a secretaria |
+| `encerrado` ou `desligado_por_faltas` | Desligado, procure a secretaria ([DF65](../requisitos/decisoes-fbr.md#df65)) |
 
 ```mermaid
 sequenceDiagram
@@ -1113,7 +1121,7 @@ sequenceDiagram
 | Sem verificação válida, `401` sem dado | Sem verificação, a consulta é negada |
 | A situação vem de `casos.situacao`, lida na hora; a posição não é calculada nem devolvida (DF55) | Depois do vínculo com um estagiário, uma nova consulta mostra "Em atendimento" |
 
-**Decisões de projeto:** a resposta não traz a posição nem a cor (DF55 e RNF17). Ela vem com o aviso de que estar em triagem não garante data de atendimento, porque a captação é semestral (RNF7). O "procure a secretaria", para o caso encerrado ou desligado, continua como encaminhamento à secretaria e é uma proposta da equipe, registrada nas pendências de validação. O horário "Consulta feita em…" vem da API, junto com a resposta.
+**Decisões de projeto:** a resposta não traz a posição nem a cor (DF55 e RNF17). Ela vem com o aviso de que estar em triagem não garante data de atendimento, porque a captação é semestral (RNF7). Para o caso encerrado ou desligado, a consulta mostra "Desligado" e orienta a procurar a secretaria, como a FBr respondeu em 25/11 ([DF65](../requisitos/decisoes-fbr.md#df65)). O horário "Consulta feita em…" vem da API, junto com a resposta.
 
 **Acessibilidade (RNF56 a RNF58):** o resultado, que carrega depois da verificação, é anunciado com `role="status"`. O aviso do 401 usa `role="alert"`, recebe o foco e traz o botão "Confirmar identidade", que recarrega a página para recomeçar a verificação (se o componente da #202 ganhar uma função para recomeçar, ela substitui o recarregamento). A situação tem ícone e texto, e não só cor, e a página é conferida a 320 px sem rolagem lateral.
 
@@ -2848,7 +2856,7 @@ sequenceDiagram
 
 **Decisões de projeto:** a lista não tem ação até o RF45 (Ciclo 6). O aviso "A emissão da declaração pelo sistema ainda não está disponível. Para pedir a sua, procure a secretaria da clínica." é uma proposta da equipe, como diz a prancha. As sessões de ciclos anteriores entram, porque a declaração pode ser pedida depois do fim do atendimento.
 
-**Telas:** página `/declaracoes`, depois dos dois passos do RF52 (o mesmo componente do RF8), com "Inscrição AAAA-NNNNN", o aviso, a tabela (cartões no celular) e "Encerrar consulta". Na ficha da secretaria, a seção "Sessões com presença registrada". O estagiário, o supervisor e a coordenação que abrem a rota interna veem a tela "Você não tem acesso a esta lista". Protótipo: [prancha 8-2](prototipos.md#rf44).
+**Telas:** página `/declaracoes`, depois dos dois passos do RF52 (o mesmo componente do RF8), com "Inscrição AAAA-NNNNN", o aviso, a tabela (cartões no celular) e "Encerrar consulta". Na ficha da secretaria, a seção "Sessões com presença registrada". Para o estagiário, o supervisor e a coordenação, a seção não aparece na ficha; se a rota responder 403, a seção mostra "Você não tem acesso a esta lista". Protótipo: [prancha 8-2](prototipos.md#rf44).
 
 **Acessibilidade (RNF56 a RNF58):** tabela com `caption` e cabeçalhos; o estado vazio é um título com o texto. Como `/declaracoes` é pública, o e2e roda o axe e confere a falta de rolagem lateral em 320, 360, 768, 1024, 1366 e 1920 px (RNF58), e o foco reforçado dos controles com o `focoVisivel` (RNF57). O RNF56 também é verificado com o leitor de tela, num teste em `e2e/leitor-de-tela/`, como o da verificação do RF52, conforme o nível de rigor da [estratégia de V&V](../processo/verificacao-e-validacao.md).
 
@@ -2862,7 +2870,7 @@ sequenceDiagram
 - **Rota pública:** só a inscrição do `VerificacaoGuard`; id na query é ignorado. A inscrição sem caso, ainda na triagem, recebe a lista vazia. O teste confere o `401` sem cookie, com cookie inválido, para a sessão da equipe e depois de "Encerrar consulta".
 - **Rota da secretaria:** `404` para o caso que não existe e `400` para o id inválido, além do `403` para o estagiário, o supervisor e a coordenação.
 - **Resposta:** só `inicio` (ISO 8601, exibido no horário de Brasília) e `estagiario`. O teste confere as chaves e procura no corpo o nome, o CPF, o número da inscrição e o e-mail do paciente.
-- **Tela:** a página `/declaracoes` usa o `VerificacaoIdentidade` do RF52 com o título "Sessões com presença registrada". O padrão continua "Consultar minha inscrição", e o RF8 não muda. Quando a verificação vence, a lista some e a tela pede a confirmação de novo, sem chamar a API. Na ficha do paciente, a seção aparece para todos os perfis, e os que não são da secretaria veem "Você não tem acesso a esta lista", como na prancha 8-2.
+- **Tela:** a página `/declaracoes` usa o `VerificacaoIdentidade` do RF52 com o título "Sessões com presença registrada". O padrão continua "Consultar minha inscrição", e o RF8 não muda. Quando a verificação vence, a lista some e a tela pede a confirmação de novo, sem chamar a API. Na ficha do paciente, a seção aparece só para a secretaria. A prancha 8-2 mostrava "Você não tem acesso a esta lista" para os outros perfis, mas na validação o aviso confundia: parecia uma lista que existe e está bloqueada. Desde a versão 3.95, a seção não aparece, e a ficha não consulta a rota.
 - **RNFs:** o RNF38, o RNF6, o RNF43 e o RNF56 a RNF58 têm testes da API, do componente, do e2e (axe, rolagem lateral e foco nas seis larguras) e do VoiceOver. O **RNF41** (usabilidade da emissão) é verificado com o RF45, que traz a emissão; esta entrega é só a lista.
 
 ---
