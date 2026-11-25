@@ -157,6 +157,13 @@ describe('Fila de espera (RF7)', () => {
       resultado.inscritos.map((i: { posicao: number }) => i.posicao),
     ).toEqual([1, 2, 3, 4]);
     expect(resultado.pendentes).toHaveLength(1);
+    // O id abre a triagem da inscrição pendente pela tela da fila.
+    expect(resultado.pendentes[0]).toEqual({
+      inscricaoId: expect.any(String),
+      numero: expect.any(String),
+      nome: expect.any(String),
+      criadaEm: expect.any(String),
+    });
     expect(JSON.stringify(resultado)).not.toMatch(
       /queixa|cpf|email|corCifrada|Urgência fictícia/,
     );
@@ -237,6 +244,39 @@ describe('Fila de espera (RF7)', () => {
       );
     },
   );
+  it('busca o próximo inscrito de vários supervisores com uma ordenação só (#268)', async () => {
+    const id = await inscrever(diasAtras(10));
+    await classificar(id, 'amarela');
+    const [caso] = await db
+      .update(casos)
+      .set({ situacao: 'aguardando_vinculo' })
+      .where(eq(casos.inscricaoId, id))
+      .returning();
+    await db.insert(atribuicoesSupervisor).values({
+      casoId: caso.id,
+      supervisorId: pessoas.supervisor.id,
+      atribuidoPor: pessoas.coordenacao.id,
+    });
+    const service = app.get(FilaService);
+    const ordenada = jest.spyOn(
+      service as unknown as { ordenada: () => Promise<unknown> },
+      'ordenada',
+    );
+    const proximos = await service.proximosElegiveis([
+      pessoas.supervisor.id,
+      pessoas.coordenacao.id,
+    ]);
+    expect(ordenada).toHaveBeenCalledTimes(1);
+    ordenada.mockRestore();
+    expect(proximos.get(pessoas.coordenacao.id)).toBeUndefined();
+    expect(proximos.get(pessoas.supervisor.id)).toEqual(
+      await service.proximoElegivel(pessoas.supervisor.id),
+    );
+    expect(proximos.get(pessoas.supervisor.id)).toMatchObject({
+      prioridade: 'amarela',
+    });
+  });
+
   it('retorna as duas listas vazias', async () => {
     expect(await fila()).toEqual({ inscritos: [], pendentes: [] });
   });

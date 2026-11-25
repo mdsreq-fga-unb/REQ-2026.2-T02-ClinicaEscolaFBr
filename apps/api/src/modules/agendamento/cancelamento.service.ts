@@ -37,6 +37,7 @@ import {
 import type { UsuarioAutenticado } from '../../auth/usuario-autenticado';
 import { cifrar } from '../../common/criptografia';
 import { DB } from '../../database/database.module';
+import { comunicarSePermitido, revogada } from '../../common/consentimento';
 import { EmailService } from '../../notificacoes/email.service';
 import { ParametrosService } from '../../parametros/parametros.service';
 import { FaltasService } from '../assiduidade/faltas.service';
@@ -193,6 +194,8 @@ export class CancelamentoService {
       });
       return { resultado, paciente };
     });
+    if (await revogada(this.db, paciente.inscricaoId))
+      return { ...resultado, avisoAoPaciente: 'consentimento_revogado' };
     if (!paciente.email) {
       return { ...resultado, avisoAoPaciente: 'sem_email' };
     }
@@ -201,7 +204,7 @@ export class CancelamentoService {
       { ...paciente, email: paciente.email },
       'ausencia',
     );
-    await this.gravarAviso(id, aviso);
+    if (aviso !== 'consentimento_revogado') await this.gravarAviso(id, aviso);
     return { ...resultado, avisoAoPaciente: aviso };
   }
 
@@ -339,6 +342,8 @@ export class CancelamentoService {
     const [paciente] = await banco
       .select({
         nome: inscricoes.nomeCompleto,
+        inscricaoId: inscricoes.id,
+        casoId: casos.id,
         email: inscricoes.email,
         inicio: sessoesAtendimento.inicio,
       })
@@ -357,6 +362,8 @@ export class CancelamentoService {
     motivo: MotivoDoAviso,
   ): Promise<AvisoAoPaciente> {
     const paciente = await this.paciente(this.db, sessaoId);
+    if (paciente && (await revogada(this.db, paciente.inscricaoId)))
+      return 'consentimento_revogado';
     if (!paciente?.email) return 'sem_email';
     return this.enviarAviso(
       sessaoId,
@@ -369,18 +376,20 @@ export class CancelamentoService {
   // mensagem pronta do WhatsApp (RF17).
   private async enviarAviso(
     sessaoId: string,
-    paciente: { nome: string; email: string; inicio: Date },
+    paciente: { nome: string; email: string; inicio: Date; casoId: string },
     motivo: MotivoDoAviso,
-  ): Promise<'email_enviado' | 'email_nao_enviado'> {
+  ): Promise<'email_enviado' | 'email_nao_enviado' | 'consentimento_revogado'> {
     try {
-      await this.email.enviar(
-        paciente.email,
-        'Sessão cancelada na Clínica Escola FBr',
-        paragrafosDoAviso(paciente.nome, paciente.inicio, motivo)
-          .map((paragrafo) => `<p>${escaparHtml(paragrafo)}</p>`)
-          .join('\n'),
+      const envio = await comunicarSePermitido(this.db, paciente.casoId, () =>
+        this.email.enviar(
+          paciente.email,
+          'Sessão cancelada na Clínica Escola FBr',
+          paragrafosDoAviso(paciente.nome, paciente.inicio, motivo)
+            .map((paragrafo) => `<p>${escaparHtml(paragrafo)}</p>`)
+            .join('\n'),
+        ),
       );
-      return 'email_enviado';
+      return envio.enviado ? 'email_enviado' : 'consentimento_revogado';
     } catch (erro) {
       this.logger.error(`Aviso do cancelamento ${sessaoId} não enviado`, erro);
       return 'email_nao_enviado';

@@ -535,7 +535,7 @@ Este conjunto reúne quatro features (ver [Requisitos Funcionais](funcionais.md)
 
 **RNF37 — Privacidade dos dados na declaração**{ #rnf37 }
 
-A declaração de comparecimento deve conter exatamente os seguintes campos, e nenhum outro: nome do paciente, data e horário da sessão, nome do estagiário que realizou o atendimento, assinatura e carimbo do psicólogo responsável e o número de CRP (RF45). Nenhum dado clínico (queixa, prioridade, diagnóstico, evolução) pode constar do documento. O modelo institucional do documento é mantido pela coordenação como versão vigente, aprovada pela Clínica Escola; qualquer alteração do modelo gera uma nova versão, sem afetar declarações já emitidas sob a versão anterior.
+A declaração de comparecimento deve conter exatamente os seguintes campos, e nenhum outro: nome do paciente, data e horários de início e de término da sessão, e o espaço para a assinatura e o carimbo do psicólogo responsável e para o número de CRP, preenchidos à mão na via impressa, como no modelo da Clínica Escola (RF45). Nenhum dado clínico (queixa, prioridade, diagnóstico, evolução) pode constar do documento. O modelo institucional do documento é mantido pela coordenação como versão vigente, aprovada pela Clínica Escola; qualquer alteração do modelo gera uma nova versão, sem afetar declarações já emitidas sob a versão anterior.
 
 A conformidade deve ser verificada por revisão do modelo do documento vigente, confirmando que contém exatamente os campos listados, e por teste do conteúdo efetivamente gerado, confirmando a ausência de campos clínicos ou adicionais.
 

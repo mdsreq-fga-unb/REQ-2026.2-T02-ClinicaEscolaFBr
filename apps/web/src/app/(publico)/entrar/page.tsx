@@ -3,7 +3,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { Eye, EyeOff } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useSyncExternalStore } from "react";
 import { loginSchema } from "@clinica/shared";
 import { Aviso } from "@/components/comum/aviso";
 import { Campo, classeEntradaPublica } from "@/components/comum/campo";
@@ -13,6 +13,8 @@ import { Button } from "@/components/ui/button";
 import { api, ErroApi } from "@/lib/api";
 import { horaBr } from "@/lib/formato";
 import { useSessao, type UsuarioDaSessao } from "@/lib/sessao";
+
+const semAssinatura = () => () => {};
 
 // Entrada da equipe no sistema (RF50): erro genérico e bloqueio de 15 minutos (RNF49).
 export default function EntrarPage() {
@@ -24,6 +26,14 @@ export default function EntrarPage() {
   const [senhaVisivel, setSenhaVisivel] = useState(false);
   const [erros, setErros] = useState<{ email?: string; senha?: string }>({});
   const [bloqueadoAte, setBloqueadoAte] = useState<Date | null>(null);
+  // Vindo da área interna sem sessão (RNF50), avisa por que pediu a entrada. A
+  // URL é lida só no navegador; no servidor, o aviso não aparece.
+  const sessaoEncerrada = useSyncExternalStore(
+    semAssinatura,
+    () =>
+      new URLSearchParams(window.location.search).get("sessao") === "encerrada",
+    () => false,
+  );
 
   // Quem já tem sessão vai direto para a página inicial do seu perfil.
   useEffect(() => {
@@ -95,6 +105,12 @@ export default function EntrarPage() {
         </p>
       </div>
 
+      {sessaoEncerrada && !entrada.isError && (
+        <Aviso tipo="info" titulo="Sua sessão foi encerrada.">
+          Por segurança, a sessão termina depois de 30 minutos sem uso. Entre de
+          novo para continuar.
+        </Aviso>
+      )}
       {credenciaisIncorretas && (
         <Aviso tipo="erro" titulo="E-mail ou senha incorretos.">
           Confira os dados e tente novamente.

@@ -213,6 +213,9 @@ const ORIGENS_EXIGIDAS = {
   RNF56: ["e2e", "leitor-de-tela"],
   // As 3 interações (e2e) e o teste de tarefa com pessoas (registro).
   RNF22: ["e2e", "registro"],
+  // A emissão da declaração em até 3 interações (e2e) e o teste de tarefa com
+  // pessoas da secretaria e pacientes ou responsáveis (registro).
+  RNF41: ["e2e", "registro"],
 };
 
 const temOrigem = (linha, origem) =>
