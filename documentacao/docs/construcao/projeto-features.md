@@ -2021,20 +2021,20 @@ sequenceDiagram
 
 _Ciclo 6._
 
-**Rota** (módulo `acompanhamento-clinico`): `POST /prontuarios/:id/evolucoes/:evolucaoId/complementos` (estagiário responsável, com vínculo vigente; pelo `PoliticaProntuario` com o modo `escrita`). Recebe o `texto`. Grava um `ComplementoEvolucao` e registra o acesso como `complementar_evolucao` (RF56). O `GET /prontuarios/:id` passa a trazer, em cada evolução, os complementos em ordem cronológica.
+**Rota** (módulo `acompanhamento-clinico`): `POST /prontuarios/:id/evolucoes/:evolucaoId/complementos` (estagiário responsável, com vínculo vigente, e supervisor do caso, com a atribuição vigente; pelo `PoliticaProntuario` com o modo `escrita`). Recebe o `texto`. Grava um `ComplementoEvolucao` e registra o acesso como `complementar_evolucao` (RF56). O `GET /prontuarios/:id` passa a trazer, em cada evolução, os complementos em ordem cronológica.
 
 ```mermaid
 sequenceDiagram
-    actor U as Estagiário responsável
+    actor U as Estagiário responsável ou supervisor do caso
     participant A as API (acompanhamento-clínico)
     participant DB as Banco
     U->>A: POST .../evolucoes/:evolucaoId/complementos (texto)
     A->>DB: política do prontuário (vínculo vigente), registra o acesso
-    alt sem vínculo vigente ou outro perfil
+    alt sem vínculo ou atribuição vigente, ou outro perfil
         A-->>U: 403, igual para prontuário inexistente (RNF25)
     else texto vazio ou acima de 1.000 caracteres
         A-->>U: 400 com o campo, nada gravado
-    else caso encerrado por alta ou desligado
+    else estagiário com o caso encerrado por alta ou desligado
         A-->>U: 422 com a situação do caso
     else
         A->>DB: insere ComplementoEvolucao cifrado (RNF51) e auditoria (RNF10)
@@ -2046,24 +2046,25 @@ sequenceDiagram
 | --- | --- |
 | Tabela só de inserção; a `Evolucao` e as correções não mudam | O complemento fica associado à evolução, sem alterar o conteúdo salvo, com autor e data/hora próprios |
 | Os complementos vêm ordenados por `registrado_em`, com o tipo `complemento`, separado das versões do RF29 | A consulta mostra o original e todos os complementos em ordem, distinguindo-os das correções |
-| Política do prontuário com o modo `escrita`, só para o perfil de estagiário com vínculo vigente; o supervisor e a coordenação recebem 403 | Usuário sem vínculo clínico vigente não adiciona complemento |
+| Política do prontuário com o modo `escrita`, para o estagiário com vínculo vigente e o supervisor com a atribuição vigente; a coordenação, a secretaria e os outros recebem 403 | Usuário sem vínculo clínico vigente não adiciona complemento |
 | Zod: `texto` obrigatório, de 1 a 1.000 caracteres depois do `trim` | Complemento vazio ou acima do limite é recusado, com o campo indicado |
-| O serviço confere a situação do caso: só `em_atendimento` aceita | Caso encerrado por alta ou desligado não aceita novo complemento |
+| Para o estagiário, o serviço confere a situação do caso: só `em_atendimento` aceita | Caso encerrado por alta ou desligado não aceita novo complemento do estagiário |
+| Para o supervisor, não há conferência da situação nem prazo ([DF68](../requisitos/decisoes-fbr.md#df68)) | O supervisor do caso adiciona complemento sem prazo, também com o caso desligado ou encerrado |
 
-**Decisões de projeto:** o complemento é um texto livre, e não a ficha da DF38, porque é informação adicional, e não revisão do conteúdo. Quem registra e se há prazo são pendências com a FBr; até a resposta, vale o requisito: só o estagiário responsável, enquanto o caso estiver em atendimento, sem prazo. Um complemento novo devolve a evolução validada para "pendente de validação" (RF67), sem escrita extra, porque a situação é calculada na leitura.
+**Decisões de projeto:** o complemento é um texto livre, e não a ficha da DF38, porque é informação adicional, e não revisão do conteúdo. Quem registra e o prazo foram respondidos pela FBr em 25/11 ([DF68](../requisitos/decisoes-fbr.md#df68)): o estagiário responsável, enquanto o caso estiver em atendimento, e o supervisor do caso, a qualquer momento. O complemento do supervisor também devolve a evolução validada a "pendente de validação", e ele a valida de novo. Um complemento novo devolve a evolução validada para "pendente de validação" (RF67), sem escrita extra, porque a situação é calculada na leitura.
 
-**Telas:** em cada evolução do prontuário, a seção "Complementos" com o campo "Novo complemento" e o botão "Salvar complemento", visível só para o estagiário responsável com o caso em atendimento. Erro com o aviso "O complemento não foi salvo." e o link para o campo; depois de salvo, o aviso de sucesso e a linha do tempo da evolução. No caso encerrado, o aviso sem o campo. Protótipo: [prancha 6-1](prototipos.md#rf30).
+**Telas:** em cada evolução do prontuário, a seção "Complementos" com o campo "Novo complemento" e o botão "Salvar complemento", visível para o estagiário responsável com o caso em atendimento e para o supervisor do caso. Erro com o aviso "O complemento não foi salvo." e o link para o campo; depois de salvo, o aviso de sucesso e a linha do tempo da evolução. No caso encerrado, o aviso sem o campo. Protótipo: [prancha 6-1](prototipos.md#rf30).
 
 **Acessibilidade (RNF56 a RNF58):** o aviso de erro recebe o foco e leva ao campo; o contador de caracteres segue o do RF28; a linha do tempo é uma lista, com o tipo de cada item escrito, e não só pela cor.
 
-**Dados de teste:** o estagiário responsável adicionando dois complementos (ordem preservada, original intacto); complemento vazio e com 1.001 caracteres (400); o supervisor, a coordenação, a secretaria e o estagiário de outro caso (403); o caso encerrado por alta e o desligado (422); uma evolução validada que recebe complemento (volta a pendente); o `clinica_app` tentando alterar um complemento (recusado pelo banco).
+**Dados de teste:** o estagiário responsável adicionando dois complementos (ordem preservada, original intacto); complemento vazio e com 1.001 caracteres (400); o supervisor do caso registrando, também com o caso desligado; o supervisor de outro caso, a coordenação, a secretaria e o estagiário de outro caso (403); o caso encerrado por alta e o desligado para o estagiário (422); uma evolução validada que recebe complemento (volta a pendente); o `clinica_app` tentando alterar um complemento (recusado pelo banco).
 
-**Dependências e riscos:** depende do RF28 (#149) e lê as versões do RF29 (#224). A resposta da FBr sobre quem registra pode abrir o registro ao supervisor; a rota já recebe o perfil, e a mudança fica na política.
+**Dependências e riscos:** depende do RF28 (#149) e lê as versões do RF29 (#224). Com a DF68, o supervisor passou a registrar, e a mudança ficou na política e no serviço.
 
 **Na implementação:**
 
 - **Banco.** A tabela `complementos_evolucao` é somente inserção, com o gatilho `impedir_alteracao_registro`, e o script do `clinica_app` tira dela o `UPDATE` e o `DELETE`. O `registrado_em` é o instante da gravação, e não o do início da transação, que pode ter esperado a trava do caso.
-- **Acesso.** A política usa o modo `escrita`, com a condição do perfil de estagiário, para a tentativa do supervisor também ficar registrada como negada (RF56). O corpo é validado no serviço, depois da política, como no RF29.
+- **Acesso.** A política usa o modo `escrita`, com a condição do perfil de estagiário ou de supervisor, para a tentativa dos outros perfis também ficar registrada como negada (RF56). O supervisor é o da atribuição vigente, conferido de novo na transação, como o vínculo do estagiário. O corpo é validado no serviço, depois da política, como no RF29.
 - **Caso encerrado.** O serviço trava o caso e confere de novo a situação e o vínculo, para uma alta, um desligamento ou uma transferência no meio não deixar passar o registro. Como a alta e o desligamento encerram o vínculo, o antigo responsável recebe o `403` da política; o `422`, com a `situacao`, é a segunda barreira. O aviso do caso encerrado aparece para quem ainda consulta o prontuário.
 - **Transferência (RF25).** O novo responsável complementa também a evolução registrada pelo anterior, e cada complemento mantém o autor.
 - **Resposta.** O `GET /prontuarios/:id` traz, em cada evolução, `complementos` e `complemento` (`permitido` e `aviso`).

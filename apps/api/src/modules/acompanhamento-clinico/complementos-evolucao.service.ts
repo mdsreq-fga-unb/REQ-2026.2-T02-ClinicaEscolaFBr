@@ -9,6 +9,7 @@ import {
 import { ConfigService } from '@nestjs/config';
 import { and, asc, eq, inArray, sql } from 'drizzle-orm';
 import {
+  atribuicoesSupervisor,
   casos,
   complementosEvolucao,
   evolucoes,
@@ -82,9 +83,12 @@ export class ComplementosEvolucaoService {
     private readonly auditoria: AuditoriaService,
   ) {}
 
-  // Só o estagiário responsável, com vínculo vigente, registra: os demais recebem 403,
-  // igual para prontuário inexistente (RNF25). Texto vazio ou acima do limite: 400, com
-  // o campo. Caso fora de atendimento (alta, desligamento): 422, com a situação.
+  // Registram o estagiário responsável, com vínculo vigente, e o supervisor do caso,
+  // com a atribuição vigente (DF68). Os demais recebem 403, igual para prontuário
+  // inexistente (RNF25). Texto vazio ou acima do limite: 400, com o campo. O
+  // estagiário só complementa o caso em atendimento (alta, desligamento: 422, com a
+  // situação); o supervisor complementa a qualquer momento, sem prazo e em qualquer
+  // situação do caso, enquanto for o supervisor dele (DF68).
   async registrar(
     prontuarioId: string,
     evolucaoId: string,
@@ -96,8 +100,9 @@ export class ComplementosEvolucaoService {
       prontuarioId,
       'complementar_evolucao',
       'escrita',
-      usuario.perfil === 'estagiario',
+      usuario.perfil === 'estagiario' || usuario.perfil === 'supervisor',
     );
+    const supervisor = usuario.perfil === 'supervisor';
     const [evolucao] = await this.db
       .select({ id: evolucoes.id })
       .from(evolucoes)
@@ -115,30 +120,42 @@ export class ComplementosEvolucaoService {
     const chave = this.config.getOrThrow<string>('CHAVE_DADOS');
 
     return this.db.transaction(async (tx) => {
-      // O caso fica travado e o vínculo é conferido de novo, para uma alta, um
-      // desligamento ou uma transferência no meio não deixar passar o registro.
+      // O caso fica travado e o vínculo (ou a atribuição) é conferido de novo, para
+      // uma alta, um desligamento ou uma transferência no meio não deixar passar o
+      // registro.
       const [caso] = await tx
         .select({ situacao: casos.situacao })
         .from(casos)
         .where(eq(casos.id, prontuario.casoId))
         .for('update');
-      const aviso = avisoSemComplemento(caso.situacao);
+      const aviso = supervisor ? null : avisoSemComplemento(caso.situacao);
       if (aviso)
         throw new UnprocessableEntityException({
           message: aviso,
           situacao: caso.situacao,
         });
-      const [vinculo] = await tx
-        .select({ id: vinculosEstagiario.id })
-        .from(vinculosEstagiario)
-        .where(
-          and(
-            eq(vinculosEstagiario.casoId, prontuario.casoId),
-            eq(vinculosEstagiario.estagiarioId, usuario.id),
-            eq(vinculosEstagiario.vigente, true),
-          ),
-        );
-      if (!vinculo)
+      const [responsavel] = supervisor
+        ? await tx
+            .select({ id: atribuicoesSupervisor.id })
+            .from(atribuicoesSupervisor)
+            .where(
+              and(
+                eq(atribuicoesSupervisor.casoId, prontuario.casoId),
+                eq(atribuicoesSupervisor.supervisorId, usuario.id),
+                eq(atribuicoesSupervisor.vigente, true),
+              ),
+            )
+        : await tx
+            .select({ id: vinculosEstagiario.id })
+            .from(vinculosEstagiario)
+            .where(
+              and(
+                eq(vinculosEstagiario.casoId, prontuario.casoId),
+                eq(vinculosEstagiario.estagiarioId, usuario.id),
+                eq(vinculosEstagiario.vigente, true),
+              ),
+            );
+      if (!responsavel)
         throw new ForbiddenException('Você não tem acesso a este prontuário.');
       const [registro] = await tx
         .insert(complementosEvolucao)

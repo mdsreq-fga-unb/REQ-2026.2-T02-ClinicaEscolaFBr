@@ -772,15 +772,16 @@ _Rastreabilidade:_ Feature "Corrigir evolução registrada" → CP7 — Registro
 
 **RF30 — Registrar complemento de evolução da sessão**{ #rf30 }
 
-O sistema deve permitir que o estagiário responsável adicione um complemento a um registro de evolução já salvo de uma sessão, sem alterar ou substituir o conteúdo já registrado. Diferente da correção (RF29), que revisa um conteúdo considerado incorreto, o complemento é uma informação adicional (por exemplo, uma observação posterior do estagiário ou uma orientação do supervisor) que se soma ao registro original, preservando a ordem cronológica dos complementos. Cada complemento deve identificar o autor e o momento do registro, de forma equivalente ao registro original. O complemento é um texto livre, com o mesmo limite de caracteres dos campos da evolução (RF28), e é registrado pelo estagiário responsável; a orientação do supervisor entra como complemento registrado pelo estagiário. O complemento é aceito enquanto o caso estiver em atendimento: depois do encerramento por alta (RF68) ou do desligamento (RF37), não há novo complemento. Quem pode registrar o complemento e se há prazo são pendências de validação com a FBr; até a resposta, valem essas regras.
+O sistema deve permitir que o estagiário responsável e o supervisor do caso adicionem um complemento a um registro de evolução já salvo de uma sessão, sem alterar ou substituir o conteúdo já registrado. Diferente da correção (RF29), que revisa um conteúdo considerado incorreto, o complemento é uma informação adicional (por exemplo, uma observação posterior do estagiário ou uma orientação do supervisor) que se soma ao registro original, preservando a ordem cronológica dos complementos. Cada complemento deve identificar o autor e o momento do registro, de forma equivalente ao registro original. O complemento é um texto livre, com o mesmo limite de caracteres dos campos da evolução (RF28). O estagiário responsável registra o complemento enquanto o caso estiver em atendimento: depois do encerramento por alta (RF68) ou do desligamento (RF37), ele não registra novo complemento. O supervisor do caso registra o complemento a qualquer momento, sem prazo e em qualquer situação do caso, enquanto for o supervisor responsável.
 
 _Critérios de aceitação:_
 
-- O complemento adicionado pelo estagiário responsável fica associado à evolução original, sem alterar o conteúdo já salvo, com autor e data/hora próprios.
+- O complemento adicionado pelo estagiário responsável ou pelo supervisor do caso fica associado à evolução original, sem alterar o conteúdo já salvo, com autor e data/hora próprios.
 - A consulta da evolução (RF31/RF32) mostra o registro original e todos os complementos em ordem cronológica, distinguindo-os das correções (RF29).
 - Usuário sem vínculo clínico vigente com o caso não consegue adicionar complemento.
 - Complemento vazio ou acima do limite de caracteres é recusado, com o campo indicado.
-- Caso encerrado por alta (RF68) ou desligado (RF37) não aceita novo complemento.
+- Caso encerrado por alta (RF68) ou desligado (RF37) não aceita novo complemento do estagiário.
+- O supervisor do caso adiciona complemento sem prazo, também com o caso desligado ou encerrado, enquanto for o supervisor responsável.
 
 _Rastreabilidade:_ Feature "Registrar complemento de evolução da sessão" → CP7 — Registro de evolução por sessão → OE5. Dependência: RF28.{{ origem("RF30") }}
 

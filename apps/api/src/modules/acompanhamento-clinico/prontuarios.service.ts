@@ -387,13 +387,19 @@ export class ProntuariosService {
                   noPrazo && podeCorrigirPorPerfil(evolucao.registradaPor),
               },
               // Informação adicional, separada das versões da correção (RF30). Quem
-              // chega aqui com o perfil de estagiário é o responsável pelo caso.
+              // chega aqui com o perfil de estagiário ou de supervisor é o responsável
+              // pelo caso. O supervisor complementa em qualquer situação do caso, sem
+              // prazo (DF68); o estagiário, só com o caso em atendimento.
               complementos: complementos.get(evolucao.id) ?? [],
-              complemento: {
-                permitido:
-                  usuario.perfil === 'estagiario' && avisoComplemento === null,
-                aviso: avisoComplemento,
-              },
+              complemento:
+                usuario.perfil === 'supervisor'
+                  ? { permitido: true, aviso: null }
+                  : {
+                      permitido:
+                        usuario.perfil === 'estagiario' &&
+                        avisoComplemento === null,
+                      aviso: avisoComplemento,
+                    },
             };
           })(),
         }),
