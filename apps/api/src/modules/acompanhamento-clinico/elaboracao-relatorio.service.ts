@@ -182,7 +182,7 @@ export class ElaboracaoRelatorioService {
           ),
         ),
       this.db
-        .select({ nome: usuarios.nome, crp: usuarios.crp })
+        .select({ nome: usuarios.nome })
         .from(atribuicoesSupervisor)
         .innerJoin(
           usuarios,

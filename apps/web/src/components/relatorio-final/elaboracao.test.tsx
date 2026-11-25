@@ -59,7 +59,7 @@ const elaboracao = (
   paciente: "Mariana Alves Toledo",
   solicitante: null,
   estagiario: "Ana Beatriz Costa",
-  supervisor: { nome: "Ricardo Menezes", crp: "01/12345" },
+  supervisor: { nome: "Ricardo Menezes" },
   sessoes: sessoes(9),
   semEvolucoes: false,
   exigeJustificativa: false,
@@ -160,7 +160,7 @@ describe("Elaboração do relatório final (RF33)", () => {
     expect(
       screen.getByText("A sessão 6 (13/10/2026) não tem evolução registrada."),
     ).toBeTruthy();
-    expect(screen.getByText("Ricardo Menezes · CRP 01/12345")).toBeTruthy();
+    expect(screen.getByText("Ricardo Menezes")).toBeTruthy();
     expect(
       screen.getByText(/Início do acompanhamento: 08\/10\/2026/),
     ).toBeTruthy();

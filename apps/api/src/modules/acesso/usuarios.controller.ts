@@ -6,16 +6,13 @@ import {
   Param,
   ParseUUIDPipe,
   Post,
-  Put,
   Query,
   UseGuards,
 } from '@nestjs/common';
 import {
   cadastroUsuarioSchema,
-  correcaoCrpSchema,
   filtroUsuariosSchema,
-  type CadastroUsuarioValidado,
-  type CorrecaoCrp,
+  type CadastroUsuario,
   type FiltroUsuarios,
 } from '@clinica/shared';
 import { Perfis } from '../../auth/perfis.decorator';
@@ -44,22 +41,10 @@ export class UsuariosController {
 
   @Post()
   cadastrar(
-    @Body(new ZodValidationPipe(cadastroUsuarioSchema))
-    dados: CadastroUsuarioValidado,
+    @Body(new ZodValidationPipe(cadastroUsuarioSchema)) dados: CadastroUsuario,
     @UsuarioAtual() autor: UsuarioAutenticado,
   ) {
     return this.usuarios.cadastrar(dados, autor);
-  }
-
-  // Correção do CRP do supervisor (RF53).
-  @Put(':id/crp')
-  @HttpCode(204)
-  corrigirCrp(
-    @Param('id', ParseUUIDPipe) id: string,
-    @Body(new ZodValidationPipe(correcaoCrpSchema)) dados: CorrecaoCrp,
-    @UsuarioAtual() autor: UsuarioAutenticado,
-  ) {
-    return this.usuarios.corrigirCrp(id, dados, autor);
   }
 
   @Post(':id/convite')

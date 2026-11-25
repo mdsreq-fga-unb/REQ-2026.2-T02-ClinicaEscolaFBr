@@ -4,10 +4,9 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
 import {
   cadastroUsuarioSchema,
-  correcaoCrpSchema,
   PERFIS,
   SITUACOES_USUARIO,
-  type CadastroUsuarioValidado,
+  type CadastroUsuario,
   type Perfil,
   type ResultadoCadastroUsuario,
   type SituacaoUsuario,
@@ -59,34 +58,7 @@ function Situacao({ usuario }: { usuario: UsuarioListado }) {
   );
 }
 
-// CRP do supervisor (RF53): sem o número, o relatório final (RF33) e a
-// declaração (RF45) ficam sem a identificação do psicólogo responsável.
-function PerfilUsuario({ usuario }: { usuario: UsuarioListado }) {
-  return (
-    <div>
-      {NOMES_PERFIL[usuario.perfil]}
-      {usuario.perfil === "supervisor" &&
-        (usuario.crp ? (
-          <p className="ui-meta mt-1">CRP {usuario.crp}</p>
-        ) : (
-          <p className="mt-1 text-sm font-semibold text-[#8a4500]">
-            CRP não informado
-          </p>
-        ))}
-    </div>
-  );
-}
-
 const FORMULARIO_CADASTRO = "cadastro-usuario";
-const FORMULARIO_CRP = "correcao-crp";
-const DICA_CRP = "Região e número, como em 01/12345.";
-
-type DadosCadastro = {
-  nome?: string;
-  email?: string;
-  perfil?: Perfil;
-  crp?: string;
-};
 
 function FormularioCadastro({
   aoConcluir,
@@ -95,13 +67,18 @@ function FormularioCadastro({
   aoConcluir: (email: string, conviteEnviado: boolean) => void;
   aoEnviar: (enviando: boolean) => void;
 }) {
-  const [dados, setDados] = useState<DadosCadastro>({});
+  // Os campos de texto começam vazios, e não indefinidos: senão, o nome em branco
+  // recebe a mensagem padrão do Zod, em inglês, no lugar de "Informe o nome".
+  const [dados, setDados] = useState<Partial<CadastroUsuario>>({
+    nome: "",
+    email: "",
+  });
   const [erros, setErros] = useState<
-    Partial<Record<keyof DadosCadastro, string>>
+    Partial<Record<keyof CadastroUsuario, string>>
   >({});
   const cliente = useQueryClient();
   const cadastro = useMutation({
-    mutationFn: (valores: CadastroUsuarioValidado) =>
+    mutationFn: (valores: CadastroUsuario) =>
       api<ResultadoCadastroUsuario>("/usuarios", {
         method: "POST",
         body: JSON.stringify(valores),
@@ -128,7 +105,7 @@ function FormularioCadastro({
     if (!resultado.success) {
       const novos: typeof erros = {};
       for (const problema of resultado.error.issues) {
-        const campo = problema.path[0] as keyof DadosCadastro;
+        const campo = problema.path[0] as keyof CadastroUsuario;
         novos[campo] ??=
           campo === "perfil" ? "Escolha um perfil." : problema.message;
       }
@@ -204,20 +181,6 @@ function FormularioCadastro({
           </p>
         )}
       </fieldset>
-      {dados.perfil === "supervisor" && (
-        <Campo rotulo="Número do CRP" dica={DICA_CRP} erro={erros.crp}>
-          {(props) => (
-            <input
-              {...props}
-              className={classeEntrada}
-              autoComplete="off"
-              inputMode="numeric"
-              value={dados.crp ?? ""}
-              onChange={(e) => setDados({ ...dados, crp: e.target.value })}
-            />
-          )}
-        </Campo>
-      )}
       <p className="rounded-[12px] border border-[#a9cfe0] bg-info-fundo px-4 py-3.5 text-[15px]">
         Ao salvar, a conta fica “Pendente de ativação” e a pessoa recebe um
         convite por e-mail para criar a própria senha.
@@ -234,83 +197,7 @@ function FormularioCadastro({
   );
 }
 
-function FormularioCrp({
-  usuario,
-  aoConcluir,
-  aoEnviar,
-}: {
-  usuario: UsuarioListado;
-  aoConcluir: () => void;
-  aoEnviar: (enviando: boolean) => void;
-}) {
-  const [crp, setCrp] = useState(usuario.crp ?? "");
-  const [erro, setErro] = useState<string>();
-  const cliente = useQueryClient();
-  const correcao = useMutation({
-    mutationFn: (valor: string) =>
-      api(`/usuarios/${usuario.id}/crp`, {
-        method: "PUT",
-        body: JSON.stringify({ crp: valor }),
-      }),
-    onMutate: () => aoEnviar(true),
-    onSettled: () => aoEnviar(false),
-    onSuccess: () => {
-      void cliente.invalidateQueries({ queryKey: ["usuarios"] });
-      aoConcluir();
-    },
-  });
-
-  const enviar = (evento: React.FormEvent) => {
-    evento.preventDefault();
-    const resultado = correcaoCrpSchema.safeParse({ crp });
-    if (!resultado.success) {
-      setErro(
-        crp.trim()
-          ? resultado.error.issues[0].message
-          : "Informe o número do CRP do supervisor.",
-      );
-      return;
-    }
-    setErro(undefined);
-    correcao.mutate(resultado.data.crp);
-  };
-
-  return (
-    <form
-      id={FORMULARIO_CRP}
-      noValidate
-      onSubmit={enviar}
-      className="flex flex-col gap-[18px]"
-    >
-      <Campo rotulo="Número do CRP" dica={DICA_CRP} erro={erro}>
-        {(props) => (
-          <input
-            {...props}
-            className={classeEntrada}
-            autoComplete="off"
-            inputMode="numeric"
-            value={crp}
-            onChange={(e) => setCrp(e.target.value)}
-          />
-        )}
-      </Campo>
-      <p className="ui-dica">
-        O número aparece no relatório final e na declaração de comparecimento. A
-        alteração fica registrada na auditoria.
-      </p>
-      {correcao.isError && (
-        <Aviso tipo="erro" titulo="Não foi possível salvar o CRP.">
-          {correcao.error instanceof ErroApi && correcao.error.status === 409
-            ? correcao.error.message
-            : "Tente novamente em instantes."}
-        </Aviso>
-      )}
-    </form>
-  );
-}
-
-// Usuários da equipe: cadastro, convite, reenvio, CRP do supervisor e
-// desativação (RF53 e RF54).
+// Usuários da equipe: cadastro, convite, reenvio e desativação (RF53 e RF54).
 export default function UsuariosPage() {
   const { data: sessao } = useSessao();
   const cliente = useQueryClient();
@@ -328,8 +215,6 @@ export default function UsuariosPage() {
   const [paraDesativar, setParaDesativar] = useState<UsuarioListado | null>(
     null,
   );
-  const [paraCrp, setParaCrp] = useState<UsuarioListado | null>(null);
-  const [salvandoCrp, setSalvandoCrp] = useState(false);
   const [mensagem, setMensagem] = useState<{
     tipo?: "sucesso" | "alerta";
     titulo: string;
@@ -373,7 +258,7 @@ export default function UsuariosPage() {
   // Ações de cada linha, chamadas como função para não recriar um componente a cada render.
   const acoes = (u: UsuarioListado) => {
     return (
-      <div className="flex flex-wrap gap-1 md:justify-end">
+      <div className="flex flex-wrap gap-1 xl:justify-end">
         {u.situacao === "pendente_ativacao" && (
           <Button
             variant="ghost"
@@ -381,12 +266,6 @@ export default function UsuariosPage() {
             disabled={reenvio.isPending}
           >
             Reenviar convite<span className="sr-only"> para {u.nome}</span>
-          </Button>
-        )}
-        {u.perfil === "supervisor" && u.situacao !== "desativado" && (
-          <Button variant="ghost" onClick={() => setParaCrp(u)}>
-            {u.crp ? "Corrigir CRP" : "Informar CRP"}
-            <span className="sr-only"> de {u.nome}</span>
           </Button>
         )}
         {u.situacao !== "desativado" && u.id !== sessao?.id && (
@@ -514,7 +393,11 @@ export default function UsuariosPage() {
         )}
         {lista.data && lista.data.length > 0 && (
           <>
-            <table className="ui-tabela max-md:hidden">
+            {/* Tabela só a partir de 1280 px: abaixo disso, com o menu lateral,
+                as cinco colunas não cabem, e o e-mail quebrava letra por letra
+                (RNF56). Até lá, a lista de cartões. A largura mínima do e-mail
+                deixa um endereço comum numa linha só. */}
+            <table className="ui-tabela max-xl:hidden">
               <caption className="sr-only">Usuários cadastrados</caption>
               <thead>
                 <tr>
@@ -539,10 +422,8 @@ export default function UsuariosPage() {
                         <span className="ui-meta font-normal"> (você)</span>
                       )}
                     </th>
-                    <td className="break-all">{u.email}</td>
-                    <td>
-                      <PerfilUsuario usuario={u} />
-                    </td>
+                    <td className="min-w-[16rem] break-all">{u.email}</td>
+                    <td>{NOMES_PERFIL[u.perfil]}</td>
                     <td>
                       <Situacao usuario={u} />
                     </td>
@@ -551,7 +432,7 @@ export default function UsuariosPage() {
                 ))}
               </tbody>
             </table>
-            <ul className="divide-y divide-border md:hidden">
+            <ul className="divide-y divide-border xl:hidden">
               {lista.data.map((u) => (
                 <li key={u.id} className="flex flex-col gap-2 p-4">
                   <p className="font-semibold">
@@ -561,9 +442,7 @@ export default function UsuariosPage() {
                     )}
                   </p>
                   <p className="text-sm break-all">{u.email}</p>
-                  <div className="text-sm">
-                    <PerfilUsuario usuario={u} />
-                  </div>
+                  <p className="text-sm">{NOMES_PERFIL[u.perfil]}</p>
                   <Situacao usuario={u} />
                   {acoes(u)}
                 </li>
@@ -616,46 +495,6 @@ export default function UsuariosPage() {
                         'O e-mail não pôde ser enviado agora. Use "Reenviar convite" na linha da pessoa para tentar de novo.',
                     },
               );
-            }}
-          />
-        )}
-      </Dialogo>
-
-      <Dialogo
-        aberto={!!paraCrp}
-        aoFechar={() => setParaCrp(null)}
-        titulo={`CRP de ${paraCrp?.nome ?? ""}`}
-        rodape={
-          <>
-            <Button
-              type="button"
-              variant="outline"
-              onClick={() => setParaCrp(null)}
-            >
-              Cancelar
-            </Button>
-            <Button
-              type="submit"
-              form={FORMULARIO_CRP}
-              data-principal
-              disabled={salvandoCrp}
-            >
-              Salvar CRP
-            </Button>
-          </>
-        }
-      >
-        {paraCrp && (
-          <FormularioCrp
-            usuario={paraCrp}
-            aoEnviar={setSalvandoCrp}
-            aoConcluir={() => {
-              setMensagem({
-                titulo: `CRP de ${paraCrp.nome} salvo.`,
-                texto:
-                  "O número passa a aparecer no relatório final e na declaração de comparecimento.",
-              });
-              setParaCrp(null);
             }}
           />
         )}
