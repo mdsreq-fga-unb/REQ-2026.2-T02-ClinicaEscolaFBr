@@ -27,6 +27,7 @@ import {
   desligamentosPorFaltas,
   inscricoes,
   prontuarios,
+  revogacoesConsentimento,
   usuarios,
   vinculosEstagiario,
   type Db,
@@ -53,6 +54,7 @@ import { DB } from '../../database/database.module';
 import { ParametrosService } from '../../parametros/parametros.service';
 import { FilaService } from '../fila/fila.service';
 import { DesligamentosService } from '../assiduidade/desligamentos.service';
+import { casosComContribuicaoPendente } from '../../common/contribuicao-pendente';
 
 const estagiario = aliasedTable(usuarios, 'estagiario');
 const supervisor = aliasedTable(usuarios, 'supervisor');
@@ -305,6 +307,7 @@ export class CasosService {
         nome: inscricoes.nomeCompleto,
         situacao: casos.situacao,
         ciclo: casos.cicloAtendimento,
+        consentimentoRevogadoEm: revogacoesConsentimento.registradaEm,
         estagiarioId: vinculosEstagiario.estagiarioId,
         estagiario: estagiario.nome,
         supervisor: supervisor.nome,
@@ -313,6 +316,10 @@ export class CasosService {
       .from(atribuicoesSupervisor)
       .innerJoin(casos, eq(casos.id, atribuicoesSupervisor.casoId))
       .innerJoin(inscricoes, eq(inscricoes.id, casos.inscricaoId))
+      .leftJoin(
+        revogacoesConsentimento,
+        eq(revogacoesConsentimento.inscricaoId, inscricoes.id),
+      )
       .leftJoin(
         supervisor,
         eq(supervisor.id, atribuicoesSupervisor.supervisorId),
@@ -380,6 +387,14 @@ export class CasosService {
             desc(vinculosEstagiario.vinculadoEm),
           )
       : [];
+    // A situação da contribuição vai só para o estagiário, nos casos em
+    // atendimento, sem a forma nem o valor (RF42).
+    const emAtendimento = linhas
+      .filter((l) => l.situacao === 'em_atendimento')
+      .map((l) => l.casoId);
+    const pendentes = doEstagiario
+      ? await casosComContribuicaoPendente(this.db, emAtendimento)
+      : null;
     return linhas.map((l) => {
       const decisao = decisoes.find((d) => d.casoId === l.casoId);
       const anterior = decisao
@@ -398,6 +413,17 @@ export class CasosService {
         prontuarioId: l.prontuarioId,
         situacao: l.situacao,
         vinculoEncerradoEm: decisao?.decididoEm.toISOString() ?? null,
+        ...(pendentes && {
+          contribuicao:
+            l.situacao === 'em_atendimento'
+              ? pendentes.has(l.casoId)
+                ? ('pendente' as const)
+                : ('efetivada' as const)
+              : null,
+        }),
+        ...(l.consentimentoRevogadoEm
+          ? { consentimentoRevogadoEm: l.consentimentoRevogadoEm.toISOString() }
+          : {}),
       };
     });
   }
