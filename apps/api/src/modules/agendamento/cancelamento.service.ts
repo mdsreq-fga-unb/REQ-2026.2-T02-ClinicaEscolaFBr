@@ -19,6 +19,7 @@ import {
 } from '@clinica/database';
 import {
   STATUS_SESSAO_EM_ABERTO,
+  semestreDaSessao,
   type AusenciaEstagiario,
   type AvisoAoPaciente,
   type AvisoPaciente,
@@ -40,7 +41,10 @@ import { DB } from '../../database/database.module';
 import { EmailService } from '../../notificacoes/email.service';
 import { ParametrosService } from '../../parametros/parametros.service';
 import { FaltasService } from '../assiduidade/faltas.service';
-import { travarFaltasDoEstagiario } from '../assiduidade/faltas-semestre.service';
+import {
+  reavaliarSinalizacao,
+  travarFaltasDoEstagiario,
+} from '../assiduidade/contagem-faltas';
 import { acoesDeCancelamento } from './acoes-cancelamento';
 import { paragrafosDoAviso, type MotivoDoAviso } from './aviso-cancelamento';
 import {
@@ -196,6 +200,13 @@ export class CancelamentoService {
         usuario,
         avisoPaciente: paciente.email ? 'envio_pendente' : 'sem_email',
       });
+      // Com a ausência contada, a sinalização de reprovação (RF63) é gerada se a
+      // contagem do semestre da sessão chegou ao limite.
+      await reavaliarSinalizacao(
+        tx,
+        sessao.estagiarioId,
+        semestreDaSessao(sessao.inicio),
+      );
       return { resultado, paciente };
     });
     if (!paciente.email) {
