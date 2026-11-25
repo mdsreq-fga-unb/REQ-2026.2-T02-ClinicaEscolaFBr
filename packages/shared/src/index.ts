@@ -1,4 +1,5 @@
 export * from "./perfis";
+export * from "./revogacao";
 export * from "./situacao-usuario";
 export * from "./dominio-ciclo-3";
 export * from "./acesso";

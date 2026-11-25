@@ -3739,6 +3739,127 @@
         }
       },
       "isRLSEnabled": false
+    },
+    "public.revogacoes_consentimento": {
+      "name": "revogacoes_consentimento",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "inscricao_id": {
+          "name": "inscricao_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "versao_termo": {
+          "name": "versao_termo",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "solicitante": {
+          "name": "solicitante",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "forma_verificacao": {
+          "name": "forma_verificacao",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "documento_cifrado": {
+          "name": "documento_cifrado",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "verificacao_id": {
+          "name": "verificacao_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "registrada_por": {
+          "name": "registrada_por",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "registrada_em": {
+          "name": "registrada_em",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "revogacoes_consentimento_inscricao_id_inscricoes_id_fk": {
+          "name": "revogacoes_consentimento_inscricao_id_inscricoes_id_fk",
+          "tableFrom": "revogacoes_consentimento",
+          "tableTo": "inscricoes",
+          "columnsFrom": ["inscricao_id"],
+          "columnsTo": ["id"],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "revogacoes_consentimento_versao_termo_versoes_termo_versao_fk": {
+          "name": "revogacoes_consentimento_versao_termo_versoes_termo_versao_fk",
+          "tableFrom": "revogacoes_consentimento",
+          "tableTo": "versoes_termo",
+          "columnsFrom": ["versao_termo"],
+          "columnsTo": ["versao"],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "revogacoes_consentimento_verificacao_id_verificacoes_identidade_id_fk": {
+          "name": "revogacoes_consentimento_verificacao_id_verificacoes_identidade_id_fk",
+          "tableFrom": "revogacoes_consentimento",
+          "tableTo": "verificacoes_identidade",
+          "columnsFrom": ["verificacao_id"],
+          "columnsTo": ["id"],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "revogacoes_consentimento_registrada_por_usuarios_id_fk": {
+          "name": "revogacoes_consentimento_registrada_por_usuarios_id_fk",
+          "tableFrom": "revogacoes_consentimento",
+          "tableTo": "usuarios",
+          "columnsFrom": ["registrada_por"],
+          "columnsTo": ["id"],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {
+        "revogacoes_consentimento_inscricao_id_unique": {
+          "name": "revogacoes_consentimento_inscricao_id_unique",
+          "nullsNotDistinct": false,
+          "columns": ["inscricao_id"]
+        }
+      },
+      "policies": {},
+      "checkConstraints": {
+        "revogacoes_solicitante": {
+          "name": "revogacoes_solicitante",
+          "value": "\"revogacoes_consentimento\".\"solicitante\" in ('titular', 'responsavel')"
+        },
+        "revogacoes_identidade": {
+          "name": "revogacoes_identidade",
+          "value": "(\"revogacoes_consentimento\".\"forma_verificacao\" = 'documento' and \"revogacoes_consentimento\".\"documento_cifrado\" is not null and \"revogacoes_consentimento\".\"verificacao_id\" is null) or (\"revogacoes_consentimento\".\"forma_verificacao\" = 'verificacao_rf52' and \"revogacoes_consentimento\".\"verificacao_id\" is not null and \"revogacoes_consentimento\".\"documento_cifrado\" is null)"
+        }
+      },
+      "isRLSEnabled": false
     }
   },
   "enums": {
@@ -3766,7 +3887,8 @@
         "em_atendimento",
         "encerrado",
         "desligado_por_faltas",
-        "aguardando_vaga"
+        "aguardando_vaga",
+        "cancelado_por_revogacao"
       ]
     },
     "public.tipo_transferencia_caso": {

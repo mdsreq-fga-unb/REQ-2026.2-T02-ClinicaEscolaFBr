@@ -276,13 +276,9 @@ export class DesligamentosService {
         ),
       )
       .orderBy(asc(vagasLiberadas.liberadaEm));
-    const proximos = new Map(
-      await Promise.all(
-        [...new Set(linhas.map((v) => v.supervisorId))].map(
-          async (id) => [id, await this.fila.proximoElegivel(id)] as const,
-        ),
-      ),
-    );
+    const proximos = await this.fila.proximosElegiveis([
+      ...new Set(linhas.map((v) => v.supervisorId)),
+    ]);
     return linhas.map((v) => ({
       id: v.id,
       estagiario: v.estagiario,
