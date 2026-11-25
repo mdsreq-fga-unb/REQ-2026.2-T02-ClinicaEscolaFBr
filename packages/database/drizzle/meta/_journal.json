@@ -159,8 +159,15 @@
     {
       "idx": 22,
       "version": "7",
-      "when": 1795473040399,
-      "tag": "0022_perda_vaga_contribuicao",
+      "when": 1795269382182,
+      "tag": "0022_rf65_revogacao_consentimento",
+      "breakpoints": true
+    },
+    {
+      "idx": 23,
+      "version": "7",
+      "when": 1795638904658,
+      "tag": "0023_declaracao_comparecimento",
       "breakpoints": true
     }
   ]
