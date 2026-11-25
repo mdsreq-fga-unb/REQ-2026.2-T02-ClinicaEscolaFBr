@@ -2144,6 +2144,19 @@ _Ciclo 6._
 
 **Dependências e riscos:** depende do RF28, do RF29 e do RF30, e mostra o RF67. Se o RF30 ou o RF67 atrasarem, a página sai sem esses itens, que entram depois.
 
+**Na implementação:**
+
+- **Rota.** `GET /prontuarios/:id/sessoes/:sessaoId/evolucao`, sem cache. Registra `consultar_evolucao` no registro de acessos (RF56), classificada como visualização, e reaproveita a leitura do prontuário, filtrada pela sessão. A sessão de outro prontuário recebe o mesmo `403` do acesso negado (RNF25). A resposta traz o paciente, o supervisor, a sessão, a evolução (ou `null`) e as `acoes` de quem consulta: `registrar`, `corrigir`, `complementar` e `validar`. Para a coordenação, as quatro vêm falsas.
+- **Tela.** A página `/prontuarios/:id/sessoes/:sessaoId/evolucao` já era a do registro da evolução (RF28). Com a evolução registrada, ela passa a ser a "Evolução da sessão N":
+    - o cabeçalho com o paciente, a data, o estagiário e o supervisor;
+    - "Conteúdo atual", com a situação e a validação do RF67;
+    - "Histórico desta evolução", com a linha do tempo do RF30;
+    - "Corrigir evolução" e "Adicionar complemento", só para quem pode;
+    - para a coordenação, o aviso de consulta registrada.
+  Sem evolução, a página continua com o formulário do RF28 para o estagiário responsável, e os outros perfis veem "Ainda não há evolução registrada para esta sessão.".
+- **Acesso pelo prontuário.** Na seção "Sessões do ciclo", a sessão com evolução tem o link "Abrir evolução da sessão nº N".
+- **Empilhada** sobre o RF32 (#316), que vem sobre o RF67 (#309) e o RF30 (#308).
+
 ---
 
 ### RF32 — Consultar histórico de evolução do paciente ([#275](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/issues/275))

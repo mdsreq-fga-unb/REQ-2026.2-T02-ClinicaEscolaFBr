@@ -390,10 +390,14 @@ export default function ProntuarioPage() {
                       Evolução
                     </span>
                     {atendimento.evolucao ? (
-                      <span className="text-sm">
-                        Sessão nº {atendimento.numeroNoCiclo ?? "—"} ·
-                        registrada
-                      </span>
+                      // A evolução da sessão, com o histórico (RF31).
+                      <Link
+                        className="text-sm font-semibold text-marca underline underline-offset-4"
+                        href={`/prontuarios/${p.id}/sessoes/${atendimento.id}/evolucao`}
+                      >
+                        Abrir evolução da sessão nº{" "}
+                        {atendimento.numeroNoCiclo ?? "—"}
+                      </Link>
                     ) : responsavel && atendimento.status === "realizada" ? (
                       <Link
                         className={buttonVariants({

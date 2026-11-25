@@ -34,6 +34,7 @@ import { CorrecoesEvolucaoService } from './correcoes-evolucao.service';
 import { ProntuariosService } from './prontuarios.service';
 import { ValidacoesEvolucaoService } from './validacoes-evolucao.service';
 import { HistoricoEvolucoesService } from './historico-evolucoes.service';
+import { EvolucaoDaSessaoService } from './evolucao-da-sessao.service';
 
 // Restrição de acesso ao prontuário (RF55).
 @Controller()
@@ -45,6 +46,7 @@ export class ProntuariosController {
     private readonly complementos: ComplementosEvolucaoService,
     private readonly validacoes: ValidacoesEvolucaoService,
     private readonly historico: HistoricoEvolucoesService,
+    private readonly evolucaoDaSessao: EvolucaoDaSessaoService,
   ) {}
 
   // Qualquer perfil pode tentar: a política decide e registra a tentativa.
@@ -67,6 +69,17 @@ export class ProntuariosController {
     @UsuarioAtual() usuario: UsuarioAutenticado,
   ) {
     return this.historico.consultar(id, filtro.ciclo, usuario);
+  }
+
+  // Evolução de uma sessão específica, com o histórico e as ações (RF31).
+  @Get('prontuarios/:id/sessoes/:sessaoId/evolucao')
+  @Header('Cache-Control', 'no-store')
+  consultarEvolucaoDaSessao(
+    @Param('id', ParseUUIDPipe) id: string,
+    @Param('sessaoId', ParseUUIDPipe) sessaoId: string,
+    @UsuarioAtual() usuario: UsuarioAutenticado,
+  ) {
+    return this.evolucaoDaSessao.consultar(id, sessaoId, usuario);
   }
 
   // Anamnese e contrato salvos separados, cada um uma vez (RF69).
