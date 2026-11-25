@@ -66,6 +66,9 @@ export type SessaoDaAgenda = {
   cancelamento: CancelamentoDaSessao | null;
   prontuarioId: string | null;
   acoes: AcoesDaSessaoNaAgenda;
+  // A 1ª sessão do ciclo atual de paciente sem o pagamento da contribuição
+  // registrado (RF42). Calculada na leitura: some quando o pagamento é registrado.
+  contribuicaoPendente: boolean;
 };
 
 export type AgendaDoEstagiario = {

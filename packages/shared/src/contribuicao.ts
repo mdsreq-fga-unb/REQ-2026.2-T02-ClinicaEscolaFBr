@@ -153,3 +153,28 @@ export function centavosDoCampo(texto: string): number | null {
   const [reais, centavos = ""] = limpo.replace(/\./g, "").split(",");
   return Number(reais) * 100 + Number(centavos.padEnd(2, "0"));
 }
+
+// Consulta da situação da contribuição dos pacientes em atendimento (RF42). Sem o
+// filtro, a lista traz as duas situações.
+export const SITUACOES_CONTRIBUICAO = ["pendente", "efetivada"] as const;
+export type SituacaoDaContribuicao = (typeof SITUACOES_CONTRIBUICAO)[number];
+export const filtroContribuicoesSchema = z.object({
+  situacao: z.enum(SITUACOES_CONTRIBUICAO).optional(),
+});
+export type FiltroContribuicoes = z.infer<typeof filtroContribuicoesSchema>;
+
+// Paciente em atendimento e a contribuição do ciclo atual (RF42): sem a forma nem
+// o valor, que ficam na ficha do paciente (RF41).
+export type ContribuicaoDoPaciente = {
+  casoId: string;
+  paciente: string;
+  situacao: SituacaoDaContribuicao;
+  // Primeira sessão do ciclo atual que não foi cancelada (AAAA-MM-DDTHH:mm ISO), ou
+  // nula se nenhuma foi agendada.
+  primeiraSessao: string | null;
+  // Data do pagamento da versão vigente (AAAA-MM-DD), só quando efetivada.
+  pagoEm: string | null;
+  // Último dia do prazo para pagar (AAAA-MM-DD), só quando pendente e já com
+  // vínculo.
+  prazoAte: string | null;
+};

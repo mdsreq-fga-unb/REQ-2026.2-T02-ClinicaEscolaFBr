@@ -3,6 +3,7 @@ import { useQuery } from "@tanstack/react-query";
 import { User } from "lucide-react";
 import Link from "next/link";
 import type { CasoSobResponsabilidade, SituacaoCaso } from "@clinica/shared";
+import { Selo } from "@/components/administrativo/contribuicao";
 import { SeloSituacaoCaso } from "@/components/assiduidade/desligamento";
 import { Prioridade } from "@/components/casos/prioridade";
 import { Aviso } from "@/components/comum/aviso";
@@ -20,7 +21,8 @@ function resumo(casos: CasoSobResponsabilidade[]) {
 }
 
 // "Meus pacientes" do estagiário (RF23, prancha 4-1): só os casos com vínculo
-// vigente dele, com o paciente, a prioridade clínica, a situação e o supervisor.
+// vigente dele, com o paciente, a prioridade clínica, a situação, o supervisor e a
+// situação da contribuição social no ciclo atual (RF42), sem a forma nem o valor.
 // A prioridade é a exceção do RNF17 para os próprios casos; a queixa e os dados
 // de triagem não aparecem.
 export default function MeusPacientesPage() {
@@ -125,6 +127,7 @@ export default function MeusPacientesPage() {
                   <th scope="col">Prioridade clínica</th>
                   <th scope="col">Situação do caso</th>
                   <th scope="col">Supervisor</th>
+                  <th scope="col">Contribuição</th>
                   <th scope="col">
                     <span className="sr-only">Ações</span>
                   </th>
@@ -141,6 +144,13 @@ export default function MeusPacientesPage() {
                       <SeloSituacaoCaso situacao={caso.situacao} />
                     </td>
                     <td>{caso.supervisor ?? "—"}</td>
+                    <td>
+                      {caso.contribuicao ? (
+                        <Selo tipo={caso.contribuicao} />
+                      ) : (
+                        "—"
+                      )}
+                    </td>
                     <td className="text-right">{acoes(caso)}</td>
                   </tr>
                 ))}
@@ -159,6 +169,11 @@ export default function MeusPacientesPage() {
                   <p className="text-sm text-muted-foreground">
                     Supervisor: {caso.supervisor ?? "—"}
                   </p>
+                  {caso.contribuicao && (
+                    <p className="flex flex-wrap items-center gap-2 text-sm text-muted-foreground">
+                      Contribuição: <Selo tipo={caso.contribuicao} />
+                    </p>
+                  )}
                   {acoes(caso, true)}
                 </li>
               ))}

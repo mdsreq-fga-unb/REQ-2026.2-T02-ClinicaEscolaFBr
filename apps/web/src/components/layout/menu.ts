@@ -2,6 +2,7 @@ import {
   BarChart3,
   CalendarDays,
   CalendarPlus,
+  HandCoins,
   FileText,
   Folder,
   History,
@@ -37,9 +38,16 @@ const faltasEstagiarios = {
   Icone: UserX,
 };
 
+// Contribuição social (RF42), na prancha 8-1: da secretaria e da coordenação.
+const contribuicoes = {
+  rotulo: "Contribuição social",
+  href: "/contribuicoes",
+  Icone: HandCoins,
+};
+
 // Navegação interna por perfil, como no protótipo aprovado pela FBr.
 export const MENU_POR_PERFIL: Record<Perfil, ItemMenu[]> = {
-  secretaria: [agenda, agendar, pacientes],
+  secretaria: [agenda, agendar, pacientes, contribuicoes],
   estagiario: [
     { rotulo: "Meus pacientes", href: "/meus-pacientes", Icone: User },
     agenda,
@@ -58,6 +66,7 @@ export const MENU_POR_PERFIL: Record<Perfil, ItemMenu[]> = {
     { rotulo: "Fila de espera", href: "/fila", Icone: Users },
     distribuicao,
     pacientes,
+    contribuicoes,
     { rotulo: "Usuários", href: "/usuarios", Icone: Users },
     faltasEstagiarios,
     // Indicadores operacionais (RF48), na prancha 9-1.

@@ -62,6 +62,9 @@ export type CasoDoSupervisor = {
   situacao: SituacaoCaso;
   // Fim do vínculo encerrado pelo desligamento (RF37), quando não há estagiário.
   vinculoEncerradoEm: string | null;
+  // Situação da contribuição social no ciclo atual (RF42): só na lista do
+  // estagiário e só para o caso em atendimento; sem a forma nem o valor.
+  contribuicao?: "pendente" | "efetivada" | null;
 };
 
 // Caso da lista "Meus pacientes" do estagiário e "Meus casos" do supervisor (RF23).
