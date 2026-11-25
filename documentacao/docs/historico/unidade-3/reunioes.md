@@ -582,3 +582,32 @@ Mensagem escrita, em resposta à pergunta da equipe:
 | As seis features do Ciclo 5 no ambiente de validação (RF41, RF29, RF39, RF56, RF17 e RF44) | "Tá tudo ok, tá a contento", depois da análise com os professores Alexandre e Lauana e com a supervisora Elaine | [DF62](../../requisitos/decisoes-fbr.md#df62); demonstração e aceite (D5 e D6) das seis features |
 | Documentos exigidos pelo CRP | O sistema gera todas as informações que a clínica precisa para os documentos exigidos pelo Conselho Regional de Psicologia que ela já usa | [DF62](../../requisitos/decisoes-fbr.md#df62) |
 | Protótipos do Ciclo 6 e os quatro pontos da capa do PDF | Ainda sem resposta; Robson Araújo disse que tentaria responder na tarde de 24/11, com outra supervisora | O R7.3 das 14 features do Ciclo 6 continua aberto, e os quatro pontos continuam nas [pendências de validação](../../requisitos/analise-feedback.md#pendencias-de-validacao-com-a-fbr), com os valores padrão adotados |
+
+## Respostas da FBr às dúvidas pendentes (25/11) { #respostas-da-fbr-as-duvidas-pendentes-2511 }
+
+**Data:** 25/11/2026
+**Local:** grupo "Sistema Clínica Escola FBr" no WhatsApp
+**Participantes:** pela FBr, Robson Araújo; pela equipe, Gabriel da Cunha Barbaceli e os demais integrantes do grupo.
+
+Depois da [validação de 24/11](#validacao-das-funcionalidades-do-ciclo-5-pela-fbr), a equipe explicou no grupo, às 11h09, que as dúvidas em aberto tratam de como as funcionalidades do sistema vão funcionar, umas já implementadas e outras ainda por implementar, e mandou de novo o link dos [protótipos do Ciclo 6](../../construcao/prototipos.md), que ainda precisam do aceite. Às 11h11, listou as dúvidas: sete do e-mail de 14/11 e cinco novas, do Ciclo 6, cada uma com o valor que a equipe adotou até a resposta. Às 11h33, Robson Araújo respondeu cada uma, logo abaixo da pergunta, e às 11h34 mandou o link com os documentos usados na Clínica Escola, já registrados no Conselho de Psicologia. A equipe disse que mandaria o passo a passo da dúvida 7 e que aguarda a confirmação dos protótipos do Ciclo 6.
+
+### Resultado
+
+As respostas estão transcritas em letras minúsculas; no grupo, foram escritas em maiúsculas.
+
+| Dúvida | Resposta de Robson Araújo | Registro |
+| --- | --- | --- |
+| 1. Termo de consentimento: quem do Jurídico revisa e quando, a base legal dos dados de saúde e o canal dos direitos do titular | "Termo de consentimento tem no link dos documentos enviados" | O termo da pasta é o Termo de Consentimento Livre e Esclarecido do contrato terapêutico, para pesquisa ([DF63](../../requisitos/decisoes-fbr.md#df63)). O Jurídico, a base legal e o canal continuam nas [pendências](../../requisitos/analise-feedback.md#pendencias-de-validacao-com-a-fbr) |
+| 2. Contato de emergência: bastam nome e telefone? | "Sim, somente estes dados" | [DF64](../../requisitos/decisoes-fbr.md#df64) |
+| 3. Consulta da fila: o que o inscrito vê depois que o caso é encerrado ou desligado? | "Desligado, procure a secretaria" | DF65, na PR do RF8 |
+| 4. Correção da evolução: o supervisor tem o mesmo prazo do estagiário? | "Sim" | [DF66](../../requisitos/decisoes-fbr.md#df66) |
+| 5. Anamnese e contrato: precisam poder ser corrigidos depois de salvos? | "Seria bom deixar a possibilidade de corrigir" | [DF67](../../requisitos/decisoes-fbr.md#df67); RF70, fora do MVP |
+| 6. Cópia de segurança: onde guardar as cópias, fora do servidor, e quem cuida delas? | "Não sei" | A pergunta vai para Thiago Viana, da infraestrutura, e fica nas pendências |
+| 7. Voluntários: a secretaria pode testar a inscrição e a confirmação de presença com voluntários, sem dados reais? | "A monitora olhou mas não soube mexer no sistema" | A equipe manda um passo a passo em PDF; fica nas pendências até o teste |
+| Ciclo 6, 1. Complemento da evolução: o supervisor pode registrar o complemento? Há prazo? | "Os supervisores devem poder corrigir a qualquer momento" | DF68, na PR do RF30; a leitura da equipe fica para confirmar nas pendências |
+| Ciclo 6, 2. Falta do estagiário registrada por engano: a coordenação pode reclassificar, com motivo, e a contagem é refeita? | "Isso mesmo" | [DF69](../../requisitos/decisoes-fbr.md#df69) |
+| Ciclo 6, 3. Declaração de comparecimento: o modelo e quem assina e carimba | "Todos documentos no link abaixo" | O modelo da pasta da Clínica Escola: DF70, na PR do RF45 |
+| Ciclo 6, 4. CRP do supervisor: pode ser informado pela coordenação no cadastro? | "Deixa para colocar com o carimbo que já vem o CRP" | DF71: o CRP sai do cadastro (RF53) e vem no carimbo |
+| Ciclo 6, 5. Autorização de menores: a secretaria registra no sistema que recebeu a autorização? | "Sim, com a data" | DF72, na PR do RF45 |
+
+Os protótipos do Ciclo 6 ainda não foram aceitos: o R7.3 das features do ciclo continua aberto.

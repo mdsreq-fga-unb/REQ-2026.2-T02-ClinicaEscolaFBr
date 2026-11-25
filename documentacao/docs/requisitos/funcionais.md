@@ -698,6 +698,23 @@ _Rastreabilidade:_ Feature "Registrar anamnese e contrato terapêutico do pacien
 
 {{ registro("RF69") }}
 
+#### Feature — Corrigir anamnese e contrato terapêutico do paciente
+
+**RF70 — Corrigir anamnese e contrato terapêutico do paciente**{ #rf70 }
+
+O sistema deve permitir que o estagiário responsável e o supervisor do caso corrijam a anamnese e o contrato terapêutico já registrados (RF69), sem apagar o conteúdo anterior: cada correção gera uma nova versão, com o autor, a data/hora e o motivo, como na correção da evolução (RF29), e o prontuário mostra a versão vigente e o histórico das anteriores. A Clínica Escola pediu essa possibilidade em 25/11/2026 ([DF67](decisoes-fbr.md#df67)). O requisito fica fora do MVP e é construído depois da entrega final; até lá, vale o RF69, em que cada parte é registrada uma única vez.
+
+_Critérios de aceitação:_
+
+- A correção da anamnese ou do contrato pelo estagiário responsável ou pelo supervisor do caso, com motivo, gera uma nova versão com autor e data/hora, sem apagar a anterior.
+- A correção sem motivo não é salva, com o campo indicado.
+- O prontuário mostra a versão vigente e o histórico das versões anteriores, com o autor, a data/hora e o motivo de cada uma.
+- Usuário que não é o estagiário responsável nem o supervisor do caso não corrige a anamnese nem o contrato.
+
+_Rastreabilidade:_ Feature "Corrigir anamnese e contrato terapêutico do paciente" → CP6 — Prontuário eletrônico → OE5/OE6. Dependência: RF69. Restrição transversal: CP12 — Segurança, sigilo e controle de acesso.{{ origem("RF70") }}
+
+{{ registro("RF70") }}
+
 #### Feature — Consultar prontuário do paciente [#148](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/issues/148)
 
 **RF27 — Consultar prontuário do paciente**{ #rf27 }
@@ -753,7 +770,7 @@ _Rastreabilidade:_ Feature "Registrar evolução da sessão realizada" → CP7 �
 
 **RF29 — Corrigir evolução registrada**{ #rf29 }
 
-O sistema deve permitir que o estagiário responsável, ou o supervisor do caso, corrija um registro de evolução já salvo, preservando o conteúdo original para fins de auditoria — não deve haver sobrescrita silenciosa. Toda correção deve exigir e registrar autor, data/hora e motivo da alteração. Conforme confirmado pela Clínica Escola, a correção é permitida até as datas das provas do semestre letivo vigente. Como a gestão acadêmica está fora do escopo, essa data é o parâmetro "data-limite para correção de evoluções", que a coordenação registra no início de cada semestre a partir do calendário acadêmico da FBr; a alteração guarda o valor anterior, o novo, o autor e a data/hora. O mesmo prazo vale para o estagiário e para o supervisor do caso. Enquanto a data do semestre não for registrada, a correção continua permitida e o sistema avisa a coordenação de que o parâmetro está pendente. A aplicação do mesmo prazo ao supervisor é uma proposta da equipe, registrada nas [pendências de validação com a FBr](analise-feedback.md#pendencias-de-validacao-com-a-fbr).
+O sistema deve permitir que o estagiário responsável, ou o supervisor do caso, corrija um registro de evolução já salvo, preservando o conteúdo original para fins de auditoria — não deve haver sobrescrita silenciosa. Toda correção deve exigir e registrar autor, data/hora e motivo da alteração. Conforme confirmado pela Clínica Escola, a correção é permitida até as datas das provas do semestre letivo vigente. Como a gestão acadêmica está fora do escopo, essa data é o parâmetro "data-limite para correção de evoluções", que a coordenação registra no início de cada semestre a partir do calendário acadêmico da FBr; a alteração guarda o valor anterior, o novo, o autor e a data/hora. O mesmo prazo vale para o estagiário e para o supervisor do caso, como a FBr confirmou em 25/11/2026 ([DF66](decisoes-fbr.md#df66)). Enquanto a data do semestre não for registrada, a correção continua permitida e o sistema avisa a coordenação de que o parâmetro está pendente.
 
 _Critérios de aceitação:_
 
@@ -1043,7 +1060,7 @@ _Rastreabilidade:_ Feature "Consolidar faltas do estagiário para a supervisão"
 
 **RF40 — Contabilizar faltas do estagiário no semestre**{ #rf40 }
 
-O sistema deve manter, por estagiário e por semestre letivo, a contagem cumulativa de faltas do estagiário a sessões, incrementada a cada sessão cancelada por ausência real do estagiário (RF16) e exibida na relação consultada pela supervisão (RF39). Cancelamentos registrados como administrativos para remarcação (RF16), usados enquanto o RF12 ficar para uma entrega posterior, não incrementam essa contagem. O semestre de cada falta é o da data da sessão (1º semestre de janeiro a junho, 2º de julho a dezembro), como na data-limite do RF29, porque a gestão do calendário acadêmico está fora do escopo. A contagem recomeça do zero a cada semestre e não é alterada pela sinalização de reprovação (RF63) nem pela decisão institucional (RF64); a ausência registrada por engano é reclassificada pela coordenação como cancelamento administrativo para remarcação, com motivo, autor e data/hora, e a contagem é recalculada. Essa reclassificação é uma proposta da equipe, pendente de validação com a FBr, como a escolha das faltas na reversão do desligamento do paciente (RF38).
+O sistema deve manter, por estagiário e por semestre letivo, a contagem cumulativa de faltas do estagiário a sessões, incrementada a cada sessão cancelada por ausência real do estagiário (RF16) e exibida na relação consultada pela supervisão (RF39). Cancelamentos registrados como administrativos para remarcação (RF16), usados enquanto o RF12 ficar para uma entrega posterior, não incrementam essa contagem. O semestre de cada falta é o da data da sessão (1º semestre de janeiro a junho, 2º de julho a dezembro), como na data-limite do RF29, porque a gestão do calendário acadêmico está fora do escopo. A contagem recomeça do zero a cada semestre e não é alterada pela sinalização de reprovação (RF63) nem pela decisão institucional (RF64); a ausência registrada por engano é reclassificada pela coordenação como cancelamento administrativo para remarcação, com motivo, autor e data/hora, e a contagem é recalculada. A reclassificação foi confirmada pela FBr em 25/11/2026 ([DF69](decisoes-fbr.md#df69)).
 
 _Critérios de aceitação:_
 
