@@ -483,9 +483,9 @@ export default function PacientePage() {
           dataNascimento={d.dataNascimento}
         />
       )}
-      {/* Sessões com presença registrada (RF44): de todos os ciclos do caso. A
-          secretaria emite a declaração de comparecimento por aqui (RF45). */}
-      <SessoesComPresencaDaFicha casoId={d.casoId} />
+      {/* Sessões com presença registrada (RF44): de todos os ciclos do caso,
+          só para a secretaria (RNF38); nos outros perfis, a seção não aparece. */}
+      {secretaria && <SessoesComPresencaDaFicha casoId={d.casoId} />}
       <HistoricoFaltas
         id="historico-faltas"
         contagem={d.faltasNoCiclo}
