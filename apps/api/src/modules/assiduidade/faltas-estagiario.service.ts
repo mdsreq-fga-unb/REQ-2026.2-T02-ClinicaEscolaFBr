@@ -13,9 +13,11 @@ import {
   or,
   type SQL,
 } from 'drizzle-orm';
+import { alias } from 'drizzle-orm/pg-core';
 import {
   atribuicoesSupervisor,
   cancelamentosSessao,
+  reclassificacoesFalta,
   sessoesAtendimento,
   usuarios,
   vinculosEstagiario,
@@ -31,7 +33,7 @@ import type { UsuarioAutenticado } from '../../auth/usuario-autenticado';
 import { DB } from '../../database/database.module';
 import { inicioDoDia, MINUTO } from '../agendamento/horario';
 
-const SEM_ACESSO =
+export const SEM_ACESSO =
   'Você não tem acesso à relação de faltas deste estagiário. Esta consulta é do supervisor responsável pelo estagiário e da coordenação.';
 
 // Relação de faltas do estagiário (RF39), para o supervisor e a coordenação
@@ -46,7 +48,9 @@ export class FaltasEstagiarioService {
   // As sessões canceladas por ausência real do estagiário (RF16) no período, pelo
   // início da sessão, em dias inteiros de Brasília. O cancelamento para remarcar
   // (administrativo) não é falta. A consulta não passa pela inscrição, e o motivo
-  // da ausência não sai do banco: nem o paciente nem o motivo chegam à resposta.
+  // da ausência não sai do banco: nem o paciente nem o motivo chegam à resposta. A
+  // ausência reclassificada pela coordenação (RF40) continua na lista, marcada, e
+  // sai da contagem; o motivo da reclassificação fica na consulta do semestre.
   async consultar(
     { estagiarioId, inicio, fim }: ConsultaFaltasEstagiario,
     usuario: UsuarioAutenticado,
@@ -65,6 +69,7 @@ export class FaltasEstagiarioService {
         throw new ForbiddenException(SEM_ACESSO);
       }
     }
+    const reclassificador = alias(usuarios, 'reclassificador');
     const linhas = await this.db
       .select({
         id: cancelamentosSessao.id,
@@ -72,6 +77,8 @@ export class FaltasEstagiarioService {
         estagiario: usuarios.nome,
         inicio: sessoesAtendimento.inicio,
         registradaEm: cancelamentosSessao.registradoEm,
+        reclassificadaEm: reclassificacoesFalta.reclassificadaEm,
+        reclassificadaPor: reclassificador.nome,
       })
       .from(cancelamentosSessao)
       .innerJoin(
@@ -79,6 +86,14 @@ export class FaltasEstagiarioService {
         eq(sessoesAtendimento.id, cancelamentosSessao.sessaoId),
       )
       .innerJoin(usuarios, eq(usuarios.id, sessoesAtendimento.estagiarioId))
+      .leftJoin(
+        reclassificacoesFalta,
+        eq(reclassificacoesFalta.cancelamentoId, cancelamentosSessao.id),
+      )
+      .leftJoin(
+        reclassificador,
+        eq(reclassificador.id, reclassificacoesFalta.reclassificadaPor),
+      )
       .where(
         and(
           eq(cancelamentosSessao.classificacao, 'ausencia_estagiario'),
@@ -90,7 +105,7 @@ export class FaltasEstagiarioService {
           estagiarioId
             ? eq(sessoesAtendimento.estagiarioId, estagiarioId)
             : undefined,
-          supervisor ? this.doSupervisor(usuario.id) : undefined,
+          supervisor ? faltaDoSupervisor(this.db, usuario.id) : undefined,
         ),
       )
       .orderBy(desc(sessoesAtendimento.inicio), asc(usuarios.nome));
@@ -102,6 +117,13 @@ export class FaltasEstagiarioService {
         estagiario: { id: l.estagiarioId, nome: l.estagiario },
         inicio: l.inicio.toISOString(),
         registradaEm: l.registradaEm.toISOString(),
+        reclassificada: l.reclassificadaEm
+          ? {
+              por: l.reclassificadaPor ?? '',
+              em: l.reclassificadaEm.toISOString(),
+              motivo: null,
+            }
+          : null,
       })),
     };
   }
@@ -150,7 +172,7 @@ export class FaltasEstagiarioService {
         .where(
           and(
             eq(cancelamentosSessao.classificacao, 'ausencia_estagiario'),
-            this.doSupervisor(usuario.id),
+            faltaDoSupervisor(this.db, usuario.id),
           ),
         ),
     ]);
@@ -161,35 +183,35 @@ export class FaltasEstagiarioService {
       a.nome.localeCompare(b.nome, 'pt-BR'),
     );
   }
+}
 
-  // A falta é do supervisor que tinha o caso no momento do registro da ausência:
-  // nesse momento o estagiário da sessão tinha o vínculo com o caso e era
-  // supervisionado por ele. Pela data da sessão, uma ausência registrada antes de
-  // uma transferência iria para o novo supervisor, que nunca supervisionou aquele
-  // estagiário (RNF35). A atribuição encerrada continua valendo para o passado,
-  // pela `encerradaEm` (RF48).
-  private doSupervisor(supervisorId: string): SQL {
-    return exists(
-      this.db
-        .select({ id: atribuicoesSupervisor.id })
-        .from(atribuicoesSupervisor)
-        .where(
-          and(
-            eq(atribuicoesSupervisor.casoId, sessoesAtendimento.casoId),
-            eq(atribuicoesSupervisor.supervisorId, supervisorId),
-            lte(
-              atribuicoesSupervisor.atribuidoEm,
+// A falta é do supervisor que tinha o caso no momento do registro da ausência:
+// nesse momento o estagiário da sessão tinha o vínculo com o caso e era
+// supervisionado por ele. Pela data da sessão, uma ausência registrada antes de
+// uma transferência iria para o novo supervisor, que nunca supervisionou aquele
+// estagiário (RNF35). A atribuição encerrada continua valendo para o passado,
+// pela `encerradaEm` (RF48).
+export function faltaDoSupervisor(db: Db, supervisorId: string): SQL {
+  return exists(
+    db
+      .select({ id: atribuicoesSupervisor.id })
+      .from(atribuicoesSupervisor)
+      .where(
+        and(
+          eq(atribuicoesSupervisor.casoId, sessoesAtendimento.casoId),
+          eq(atribuicoesSupervisor.supervisorId, supervisorId),
+          lte(
+            atribuicoesSupervisor.atribuidoEm,
+            cancelamentosSessao.registradoEm,
+          ),
+          or(
+            isNull(atribuicoesSupervisor.encerradaEm),
+            gt(
+              atribuicoesSupervisor.encerradaEm,
               cancelamentosSessao.registradoEm,
-            ),
-            or(
-              isNull(atribuicoesSupervisor.encerradaEm),
-              gt(
-                atribuicoesSupervisor.encerradaEm,
-                cancelamentosSessao.registradoEm,
-              ),
             ),
           ),
         ),
-    );
-  }
+      ),
+  );
 }
