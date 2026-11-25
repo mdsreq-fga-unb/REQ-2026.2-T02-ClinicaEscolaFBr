@@ -4,6 +4,9 @@ name: Carga
 # equipe por 10 minutos, sobre a massa de dois semestres (semear-carga). Em
 # seguida, o RNF47: 10 pessoas da coordenação consultando os indicadores de um
 # período de 12 meses (RF48), cada consulta em até 5 segundos.
+# - Com "somente_rnf47": roda só o RNF47, sem o cenário de referência antes. Nunca
+#   conta como evidência do D4.5, para não trocar o artefato rnfs-carga, que traz o
+#   RNF12 e o RNF21, por um só com o RNF47.
 # - Sem "api": sobe a API e o banco no próprio runner. Serve de alerta antecipado,
 #   mas não é evidência, porque o RNF pede um ambiente igual ao de produção.
 # - Com "api" e "homologacao": roda contra a homologação, e o resultado entra no
@@ -63,7 +66,10 @@ jobs:
       CHAVE_DADOS: AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=
       SENHA_CARGA: ${{ secrets.SENHA_CARGA || 'senha-so-do-teste-de-carga-1' }}
       API_ALVO: ${{ inputs.api }}
-      EVIDENCIA: ${{ inputs.homologacao && inputs.api != '' }}
+      # A execução só do RNF47 nunca conta, para não substituir a evidência do
+      # RNF12 e do RNF21 no artefato rnfs-carga mais novo da development.
+      EVIDENCIA: ${{ inputs.homologacao && inputs.api != '' && !inputs.somente_rnf47 }}
+      SOMENTE_RNF47: ${{ inputs.somente_rnf47 }}
       # A evidência do D4.5 é sempre o cenário de referência completo (10 minutos);
       # a duração escolhida só vale para as execuções que não contam.
       DURACAO: ${{ (inputs.homologacao && inputs.api != '') && '10m' || inputs.duracao || '10m' }}
@@ -92,9 +98,10 @@ jobs:
           AMBIENTE_DE_TESTE=sim node dist/scripts/semear-carga.js
           node dist/main &
           for i in $(seq 1 30); do curl -sf http://localhost:3333/health && break; sleep 1; done
-      # O RNF47 pode rodar sozinho: logo depois dos 30 usuários do RNF12 e do
-      # RNF21, o servidor ainda está carregado, e a consulta mais lenta dos
-      # indicadores sai distorcida (17/11: percentil 95 de 1,6 s e máximo de 12,8 s).
+      # O RNF47 pode rodar sozinho, para separar o tempo dos indicadores do efeito
+      # da carga anterior. Isso não resolve a lentidão: sozinho, o RNF47 também
+      # falhou (percentil 95 de 4,5 s e máximo de 16 s), e a causa está sendo
+      # investigada na VPS.
       - name: Rodar a carga
         if: ${{ !inputs.somente_rnf47 }}
         run: |
@@ -121,7 +128,9 @@ jobs:
         run: |
           cat relatorio-testes/carga.md >> "$GITHUB_STEP_SUMMARY" || true
           cat relatorio-testes/carga-rnf47.md >> "$GITHUB_STEP_SUMMARY" || true
-          if [ "$EVIDENCIA" != "true" ]; then
+          if [ "$SOMENTE_RNF47" = "true" ]; then
+            echo "Execução só do RNF47: diagnóstico, sem contar como evidência do D4.5." >> "$GITHUB_STEP_SUMMARY"
+          elif [ "$EVIDENCIA" != "true" ]; then
             echo "Execução no runner: alerta antecipado, sem contar como evidência do D4.5." >> "$GITHUB_STEP_SUMMARY"
           fi
       # Só a execução contra a homologação vira evidência do D4.5.
