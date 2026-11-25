@@ -278,6 +278,8 @@ describe('Agenda de sessões do estagiário (RF11)', () => {
           'acoes',
           'cancelamento',
           'casoId',
+          // Indicação administrativa da 1ª sessão sem contribuição paga (RF42).
+          'contribuicaoPendente',
           'id',
           'inicio',
           'paciente',

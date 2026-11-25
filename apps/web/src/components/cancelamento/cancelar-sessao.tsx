@@ -385,6 +385,12 @@ export function ResultadoDoCancelamento({
         {resultado.avisoAoPaciente === "email_enviado" &&
           " O paciente foi avisado por e-mail."}
       </Aviso>
+      {resultado.avisoAoPaciente === "consentimento_revogado" && (
+        <Aviso
+          tipo="alerta"
+          titulo="Comunicação suspensa por revogação do consentimento."
+        />
+      )}
       {resultado.avisoAoPaciente === "sem_email" && (
         <Aviso
           tipo="alerta"

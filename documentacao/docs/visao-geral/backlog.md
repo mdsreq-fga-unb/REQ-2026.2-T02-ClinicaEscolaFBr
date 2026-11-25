@@ -31,7 +31,7 @@ O backlog segue o processo **Planejar por Feature** do FDD:
 - **Feature (RF):** cada feature declara um requisito funcional e leva à sua declaração completa.
 - **Ordem:** ordem de construção, ciclo a ciclo, respeitando as dependências declaradas na rastreabilidade de cada RF. Os itens que servem de base para os demais (acesso, inscrição, triagem, distribuição de casos e agendamento) vêm primeiro.
 - **Depende de:** lista só as dependências obrigatórias, sempre pelo RF necessário; integrações e apoios opcionais ficam na rastreabilidade de cada RF ([como ler a rastreabilidade](../requisitos/funcionais.md#como-ler-a-rastreabilidade)).
-- **Ciclo:** ciclo em que a feature passa pelos processos **Projetar por Feature** e **Construir por Feature**. A carga de cada Líder de Feature foi distribuída pelas horas estimadas na [escala de esforço](../requisitos/priorizacao-e-mvp.md#10212-escalas-adotadas), e cada CP do MVP tem ao menos um incremento construído até a entrega da Unidade 3, em 17/11, menos a CP8: o único requisito dela no MVP, o relatório final (RF33), entrou no MVP a pedido da FBr já no Ciclo 6 ([Revisão da lista de features](execucao-do-processo.md#2-revisao-da-lista-de-features)). A construção do MVP termina no Ciclo 6, como combinado com a FBr; o Ciclo 7 fica reservado à demonstração integrada, ao aceite da FBr e à entrega da Unidade 4, em 10/12.
+- **Ciclo:** ciclo em que a feature passa pelos processos **Projetar por Feature** e **Construir por Feature**. A carga de cada Líder de Feature foi distribuída pelas horas estimadas na [escala de esforço](../requisitos/priorizacao-e-mvp.md#10212-escalas-adotadas), e cada CP do MVP tem ao menos um incremento construído até a entrega da Unidade 3, em 17/11, menos a CP8: o único requisito dela no MVP, o relatório final (RF33), entrou no MVP a pedido da FBr já no Ciclo 6 ([Revisão da lista de features](execucao-do-processo.md#2-revisao-da-lista-de-features)). A construção do MVP termina no Ciclo 6, como combinado com a FBr. O Ciclo 6 inclui também a homologação, o aceite da FBr e a publicação em produção até 01/12, início das apresentações finais: o Ciclo 7, previsto para isso, deixou de existir quando o professor antecipou a entrega, em 17/11 ([Entrega final](../construcao/entrega-final.md)).
 - **Líder de Feature:** integrante que conduz o projeto, a construção e a demonstração da feature, conforme a [composição da equipe](../processo/equipe-e-cliente.md#71-composicao-da-equipe). Cada feature tem ainda a revisão cruzada de outro integrante nas inspeções de design e de código.
 - **Issue:** issue do GitHub em que a feature é acompanhada e em que as avaliações do [DoR e do DoD](../requisitos/dor-dod.md) são registradas, quando já criada.
 
@@ -58,10 +58,6 @@ Ao fim deste ciclo, em 17/11, acontece a entrega da Unidade 3: todas as CPs do M
 ### Ciclo 6 ({{ ciclos[6].periodo }}) · {{ ciclos[6].status }} { #ciclo-6 }
 
 {{ tabela_ciclo(6) }}
-
-### Ciclo 7 ({{ ciclos[7].periodo }}) · {{ ciclos[7].status }} { #ciclo-7 }
-
-Sem novas features: demonstração integrada do MVP, aceite da FBr, correções apontadas e entrega da Unidade 4, em 10/12.
 
 ## Versões posteriores { #versoes-posteriores }
 
