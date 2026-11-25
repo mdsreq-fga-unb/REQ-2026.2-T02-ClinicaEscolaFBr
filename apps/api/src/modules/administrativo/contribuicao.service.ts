@@ -14,7 +14,7 @@ import {
   inArray,
   lt,
   min,
-  ne,
+  notInArray,
   sql,
   type SQL,
 } from 'drizzle-orm';
@@ -46,6 +46,7 @@ import {
   AuditoriaService,
   type Transacao,
 } from '../../auditoria/auditoria.service';
+import { FORA_DA_PRIMEIRA_SESSAO } from '../../common/contribuicao-pendente';
 import type { UsuarioAutenticado } from '../../auth/usuario-autenticado';
 import { DB } from '../../database/database.module';
 import { numeroDoParametro } from '../../parametros/parametros.service';
@@ -128,7 +129,8 @@ export class ContribuicaoService {
       );
     const pagoEm = new Map(pagamentos.map((p) => [p.casoId, p.pagoEm]));
 
-    // Primeira sessão do ciclo atual que não foi cancelada.
+    // Primeira sessão do ciclo atual, sem as canceladas nem as faltas do
+    // paciente, como na indicação da agenda.
     const primeiras = await this.db
       .select({
         casoId: sessoesAtendimento.casoId,
@@ -145,7 +147,7 @@ export class ContribuicaoService {
       .where(
         and(
           inArray(sessoesAtendimento.casoId, ids),
-          ne(sessoesAtendimento.status, 'cancelada'),
+          notInArray(sessoesAtendimento.status, [...FORA_DA_PRIMEIRA_SESSAO]),
         ),
       )
       .groupBy(sessoesAtendimento.casoId);

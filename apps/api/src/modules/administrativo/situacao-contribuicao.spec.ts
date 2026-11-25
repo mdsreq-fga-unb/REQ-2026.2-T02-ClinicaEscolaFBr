@@ -261,6 +261,17 @@ describe('Situação da contribuição social dos pacientes (RF42)', () => {
     await request(app.getHttpServer()).get('/contribuicoes').expect(401);
   });
 
+  it('a sessão com falta do paciente não conta como a 1ª: a indicação vai para a seguinte, como no RF43 (RF42)', async () => {
+    const mariana = await criarCaso('Mariana Alves Toledo');
+    await sessao(mariana.id, -2, 'falta_paciente');
+    const seguinte = await sessao(mariana.id, 3, 'agendada');
+    expect(
+      await primeirasSessoesComContribuicaoPendente(db, [mariana.id]),
+    ).toEqual(new Set([seguinte.id]));
+    const res = await listar('secretaria').expect(200);
+    expect(res.body[0].primeiraSessao).toBe(seguinte.inicio.toISOString());
+  });
+
   it('a indicação vai só para a 1ª sessão do ciclo de quem não pagou, e some com o pagamento (RF42)', async () => {
     const mariana = await criarCaso('Mariana Alves Toledo');
     const joao = await criarCaso('João Pedro Lima');

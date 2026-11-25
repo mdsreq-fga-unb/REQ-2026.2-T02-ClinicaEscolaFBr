@@ -1,4 +1,4 @@
-import { and, asc, eq, inArray, ne, notExists, sql } from 'drizzle-orm';
+import { and, asc, eq, inArray, notExists, notInArray, sql } from 'drizzle-orm';
 import {
   casos,
   pagamentosContribuicao,
@@ -38,9 +38,15 @@ export async function casosComContribuicaoPendente(
   return new Set(linhas.map((l) => l.id));
 }
 
+// Status que não contam como a 1ª sessão do ciclo (RF42): a cancelada e a falta
+// do paciente. Como no RF43, a contribuição só passa a bloquear depois de uma
+// sessão realizada; até lá, a próxima sessão ainda é a "1ª".
+export const FORA_DA_PRIMEIRA_SESSAO = ['cancelada', 'falta_paciente'] as const;
+
 // A 1ª sessão do ciclo atual de cada caso sem pagamento: a de início mais cedo
-// entre as que não foram canceladas (RF42). É nela que a agenda avisa da
-// contribuição pendente; a partir da 2ª, o RF43 bloqueia o agendamento.
+// entre as que não foram canceladas nem tiveram falta do paciente (RF42). É nela
+// que a agenda avisa da contribuição pendente; a partir da 2ª, o RF43 bloqueia o
+// agendamento.
 export async function primeirasSessoesComContribuicaoPendente(
   banco: Leitor,
   casoIds: string[],
@@ -61,7 +67,7 @@ export async function primeirasSessoesComContribuicaoPendente(
     .where(
       and(
         inArray(sessoesAtendimento.casoId, casoIds),
-        ne(sessoesAtendimento.status, 'cancelada'),
+        notInArray(sessoesAtendimento.status, [...FORA_DA_PRIMEIRA_SESSAO]),
         semPagamentoNoCicloAtual(banco),
       ),
     )
