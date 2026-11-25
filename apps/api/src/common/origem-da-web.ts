@@ -15,6 +15,10 @@ export const FORMATO_RECUSADO = 'Envie os dados em JSON.';
 //   não carrega a sessão de ninguém por engano;
 // - o corpo tem de ser JSON. Um formulário HTML só envia texto ou
 //   x-www-form-urlencoded, e o JSON exige a checagem de CORS do navegador.
+// Atenção: a web manda Referrer-Policy: no-referrer, e com isso um POST feito na
+// mesma origem sai com "Origin: null" e recebe 403. Hoje não acontece, porque a
+// API fica em outro host. Se um dia a API for servida pela própria web (/api),
+// é preciso aceitar a mesma origem aqui, ou todas as escritas quebram.
 export function exigirOrigemDaWeb(webUrl: string) {
   const origemDaWeb = new URL(webUrl).origin;
   return (req: Request, res: Response, next: NextFunction) => {

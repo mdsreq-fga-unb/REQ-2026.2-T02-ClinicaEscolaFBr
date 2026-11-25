@@ -10,8 +10,10 @@ const MAX_ORIGENS = 10_000;
 
 // O bloqueio de 15 minutos na 3ª senha errada vale por conta (DF25). Sem um
 // limite por origem, quem testa senhas de muitas contas a partir do mesmo
-// endereço bloquearia todas elas. Só as entradas com erro contam: a equipe da
-// clínica, que sai pelo mesmo endereço, entra quantas vezes precisar.
+// endereço bloquearia todas elas. Só as senhas erradas contam: a entrada certa e
+// a tentativa numa conta já bloqueada não gastam o limite. Ainda assim, 30
+// senhas erradas da mesma rede (a clínica sai por um endereço só) barram a rede
+// por até 10 minutos; o limite pode subir com LIMITE_ENTRADAS_POR_ORIGEM.
 // A contagem fica na memória, como nos limites da inscrição (RF1) e da
 // verificação (RF52): zera quando a API reinicia e basta enquanto a API roda
 // numa instância só. Atrás de proxy, SALTOS_DE_PROXY faz a origem ser o visitante.

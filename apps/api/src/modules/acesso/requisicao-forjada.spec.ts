@@ -80,6 +80,10 @@ describe('Proteção da sessão contra outras páginas e tentativas em massa (RN
 
   beforeEach(async () => {
     await limpar();
+    // A contagem por origem fica na memória da API: cada teste começa do zero.
+    (
+      app.get(FalhasDeEntrada) as unknown as { falhas: Map<string, number[]> }
+    ).falhas.clear();
     await db.insert(usuarios).values([
       {
         nome: 'Helena Duarte',
@@ -205,6 +209,23 @@ describe('Proteção da sessão contra outras páginas e tentativas em massa (RN
     const recusada = await entrar('juliana@fbr.edu.br').expect(429);
     expect(recusada.body.message).toMatch(/Muitas tentativas de entrada/);
     expect((await contasCom('juliana@fbr.edu.br'))[0].tentativasFalhas).toBe(1);
+  });
+
+  it('as tentativas numa conta já bloqueada não gastam o limite da origem (RNF49, DF25)', async () => {
+    await db
+      .update(usuarios)
+      .set({ bloqueadoAte: new Date(Date.now() + 15 * 60_000) })
+      .where(eq(usuarios.email, 'juliana@fbr.edu.br'));
+    // Alguém da mesma rede clica em "Entrar" várias vezes na conta bloqueada.
+    for (let i = 0; i < 5; i += 1)
+      await entrar('juliana@fbr.edu.br').expect(423);
+    // O resto da equipe, que sai pelo mesmo endereço, continua entrando.
+    await entrar('helena@fbr.edu.br').expect(200);
+    // A senha errada que bloqueia a conta conta: 401, 401 e o 423 do bloqueio.
+    await entrar('helena@fbr.edu.br', 'errada111').expect(401);
+    await entrar('helena@fbr.edu.br', 'errada222').expect(401);
+    await entrar('helena@fbr.edu.br', 'errada333').expect(423);
+    await entrar('ninguem@fbr.edu.br', 'errada111').expect(429);
   });
 });
 

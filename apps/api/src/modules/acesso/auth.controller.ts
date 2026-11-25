@@ -20,7 +20,7 @@ import {
 import { ZodValidationPipe } from '../../common/zod-validation.pipe';
 import { COOKIE_SESSAO, opcoesCookieSessao } from './cookie-sessao';
 import { FalhasDeEntrada } from './falhas-de-entrada';
-import { SessoesService } from './sessoes.service';
+import { ContaBloqueada, SessoesService } from './sessoes.service';
 
 // Entrada, sessão e saída do sistema (RF50 e RF51).
 @Controller('auth')
@@ -45,10 +45,11 @@ export class AuthController {
       res.cookie(COOKIE_SESSAO, token, this.opcoesCookie());
       return usuario;
     } catch (erro) {
-      // Senha errada (401) e conta bloqueada (423) contam para a origem (RNF49).
+      // Contam para a origem (RNF49) a senha errada (401) e a senha errada que
+      // bloqueou a conta (423). A tentativa numa conta já bloqueada não conta.
       if (
-        erro instanceof HttpException &&
-        [401, 423].includes(erro.getStatus())
+        (erro instanceof HttpException && erro.getStatus() === 401) ||
+        (erro instanceof ContaBloqueada && erro.porSenhaErrada)
       )
         this.falhas.registrar(origem);
       throw erro;
