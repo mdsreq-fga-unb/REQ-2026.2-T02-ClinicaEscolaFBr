@@ -17,6 +17,7 @@ import {
   AVISOS_PACIENTE,
   CANAIS_AVISO_MANUAL,
   CLASSIFICACOES_CANCELAMENTO,
+  DECISOES_REPROVACAO,
   MOTIVOS_ENCERRAMENTO_SINALIZACAO,
   ORIGENS_CANCELAMENTO,
   ORIGENS_FALTA,
@@ -312,4 +313,33 @@ export const sinalizacoesReprovacao = pgTable(
       sql`(${t.reclassificacaoId} is not null) = (coalesce(${t.motivoEncerramento}::text, '') = 'contagem_abaixo_do_limite')`,
     ),
   ],
+);
+
+export const decisaoReprovacaoEnum = pgEnum(
+  "decisao_reprovacao",
+  DECISOES_REPROVACAO,
+);
+
+// Decisão institucional sobre a sinalização de reprovação (RF64), registrada pela
+// coordenação. A primeira encerra a sinalização aberta; uma decisão nova, depois de
+// a contagem mudar, é outra linha, e nenhuma é apagada. A justificativa é cifrada,
+// porque pode trazer dado pessoal do estagiário (RNF51). Só inserção, com o
+// gatilho impedir_alteracao_registro.
+export const decisoesReprovacao = pgTable(
+  "decisoes_reprovacao",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    sinalizacaoId: uuid("sinalizacao_id")
+      .notNull()
+      .references(() => sinalizacoesReprovacao.id),
+    decisao: decisaoReprovacaoEnum("decisao").notNull(),
+    justificativaCifrada: text("justificativa_cifrada").notNull(),
+    decididaPor: uuid("decidida_por")
+      .notNull()
+      .references(() => usuarios.id),
+    decididaEm: timestamp("decidida_em", { withTimezone: true })
+      .notNull()
+      .defaultNow(),
+  },
+  (t) => [index("decisoes_reprovacao_sinalizacao").on(t.sinalizacaoId)],
 );

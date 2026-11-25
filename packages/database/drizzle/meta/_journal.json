@@ -169,6 +169,13 @@
       "when": 1795575533874,
       "tag": "0023_sinalizacao_reprovacao",
       "breakpoints": true
+    },
+    {
+      "idx": 24,
+      "version": "7",
+      "when": 1795576872294,
+      "tag": "0024_decisao_reprovacao",
+      "breakpoints": true
     }
   ]
 }
