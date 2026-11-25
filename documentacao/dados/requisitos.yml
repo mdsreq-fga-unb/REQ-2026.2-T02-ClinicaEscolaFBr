@@ -687,7 +687,7 @@ rfs:
   lider: Nicolas
   depende: [RF40]
   issue: 277
-  estado: Planejada
+  estado: Código concluído
   origem: [DF12, DF54]
 
 - id: RF64
