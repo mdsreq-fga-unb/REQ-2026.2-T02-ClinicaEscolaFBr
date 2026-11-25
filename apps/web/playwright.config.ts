@@ -47,6 +47,7 @@ export default defineConfig({
         SMTP_HOST: "127.0.0.1",
         SMTP_PORT: "1026",
         LIMITE_INSCRICOES_POR_ORIGEM: "1000",
+        LIMITE_ENTRADAS_POR_ORIGEM: "1000",
       },
       reuseExistingServer: false,
       timeout: 60_000,

@@ -65,6 +65,7 @@ jobs:
       # A mesma imagem do serviço acima: o pg_dump é da versão do servidor.
       IMAGEM_POSTGRES: postgres:17.10
       LIMITE_INSCRICOES_POR_ORIGEM: "1000"
+      LIMITE_ENTRADAS_POR_ORIGEM: "1000"
     steps:
       - uses: actions/checkout@v7
       - uses: pnpm/action-setup@v6

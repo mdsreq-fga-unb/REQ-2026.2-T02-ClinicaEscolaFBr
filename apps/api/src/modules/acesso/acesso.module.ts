@@ -2,6 +2,7 @@ import { Module } from '@nestjs/common';
 import { APP_GUARD } from '@nestjs/core';
 import { AtivacaoController } from './ativacao.controller';
 import { AuthController } from './auth.controller';
+import { FalhasDeEntrada } from './falhas-de-entrada';
 import { SessaoGuard } from './sessao.guard';
 import { SessoesService } from './sessoes.service';
 import { UsuariosController } from './usuarios.controller';
@@ -20,6 +21,7 @@ import { VerificacaoService } from './verificacao.service';
   providers: [
     UsuariosService,
     SessoesService,
+    FalhasDeEntrada,
     VerificacaoService,
     VerificacaoGuard,
     // Lê a sessão em todas as rotas, antes dos guards de cada controller (RF50).
