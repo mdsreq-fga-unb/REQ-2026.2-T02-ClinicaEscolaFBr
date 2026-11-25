@@ -305,6 +305,28 @@ test("RNF51 e RNF52 exigem os testes e o registro da implantação", () => {
   );
 });
 
+test("RNF41 exige o e2e das interações e o registro do teste com pessoas", () => {
+  const e2e = {
+    nome: "o paciente emite a declaração em até 3 interações (RF45, RNF41)",
+    origem: "e2e",
+  };
+  const registro = { rnf: "RNF41", link: "https://x/teste", autor: "a" };
+  const linha = (testes, registros = []) => ({
+    rnf: "RNF41",
+    testes,
+    registros,
+  });
+
+  // O e2e conta as interações, mas não substitui o teste com pessoas.
+  assert.equal(R.todosVerificados([linha([e2e])]), false);
+  assert.equal(R.todosVerificados([linha([], [registro])]), false);
+  assert.equal(R.todosVerificados([linha([e2e], [registro])]), true);
+  assert.match(
+    R.comentarioRnfs([linha([e2e])], "https://x/runs/1"),
+    /\| RNF41 \| ⏳ falta: registro com \/rnf \|/,
+  );
+});
+
 test("RNF10 e RNF25 exigem os testes e o registro da inspeção", () => {
   for (const rnf of ["RNF10", "RNF25"]) {
     const api = { nome: `teste (RF10, ${rnf})`, origem: "api" };

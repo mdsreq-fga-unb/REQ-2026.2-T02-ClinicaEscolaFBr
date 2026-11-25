@@ -31,10 +31,16 @@ const valido = () => ({
   cpf: '11144477735',
   rg: 'MG-12.345.678 SSP/MG',
   endereco: 'Rua de Teste, 10, Brasília DF',
+  bairro: 'Asa Norte',
+  cidadeUf: 'Brasília/DF',
+  cep: '70000-000',
   estadoCivil: 'Solteiro(a)',
   responsavelLegal: '',
   celular: '(61) 99999-9999',
   email: 'teste@example.com',
+  contatoEmergenciaNome: 'Contato Fictício',
+  contatoEmergenciaParentesco: 'Irmã',
+  contatoEmergenciaTelefone: '(61) 3333-4444',
   queixa: 'Queixa fictícia privada',
   percepcaoUrgencia: 'Urgência fictícia privada',
   historicoRelevante: 'Histórico fictício privado',
@@ -50,7 +56,12 @@ describe('RF1/RF2: contrato compartilhado', () => {
     'dataNascimento',
     'cpf',
     'endereco',
+    'bairro',
+    'cidadeUf',
+    'cep',
     'estadoCivil',
+    'contatoEmergenciaNome',
+    'contatoEmergenciaTelefone',
     'queixa',
     'percepcaoUrgencia',
     'historicoRelevante',
@@ -103,7 +114,19 @@ describe('RF1/RF2: contrato compartilhado', () => {
     ).toBe(false);
   });
   it('aceita a inscrição sem os dados opcionais da ficha de identificação (DF43)', () => {
-    expect(inscricaoSchema.safeParse(valido()).success).toBe(true);
+    const { rg: _rg, ...semOpcionais } = valido();
+    expect(
+      inscricaoSchema.safeParse({
+        ...semOpcionais,
+        sexo: '',
+        profissao: '',
+        escolaridade: '',
+        whatsapp: '',
+        // Padrão até a resposta da FBr: só o nome e o telefone do contato de
+        // emergência são obrigatórios (pendência de validação).
+        contatoEmergenciaParentesco: '',
+      }).success,
+    ).toBe(true);
   });
   it('descarta os dados do responsável de adulto, sem conferir o formato (DF43, LGPD)', () => {
     const resultado = inscricaoSchema.safeParse({

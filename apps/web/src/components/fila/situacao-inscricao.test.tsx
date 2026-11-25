@@ -33,7 +33,7 @@ describe("RF8: resultado público", () => {
   it.each([
     ["em_triagem", "Em triagem"],
     ["em_atendimento", "Em atendimento"],
-    ["procure_secretaria", "Procure a secretaria"],
+    ["procure_secretaria", "Desligado"],
   ])(
     "anuncia %s sem posição e com horário de Brasília (RF8, DF55, RNF6, RNF56)",
     async (situacao, titulo) => {

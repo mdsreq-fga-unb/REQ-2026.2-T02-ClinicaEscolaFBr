@@ -27,6 +27,7 @@ import {
   desligamentosPorFaltas,
   inscricoes,
   prontuarios,
+  revogacoesConsentimento,
   usuarios,
   vinculosEstagiario,
   type Db,
@@ -306,6 +307,7 @@ export class CasosService {
         nome: inscricoes.nomeCompleto,
         situacao: casos.situacao,
         ciclo: casos.cicloAtendimento,
+        consentimentoRevogadoEm: revogacoesConsentimento.registradaEm,
         estagiarioId: vinculosEstagiario.estagiarioId,
         estagiario: estagiario.nome,
         supervisor: supervisor.nome,
@@ -314,6 +316,10 @@ export class CasosService {
       .from(atribuicoesSupervisor)
       .innerJoin(casos, eq(casos.id, atribuicoesSupervisor.casoId))
       .innerJoin(inscricoes, eq(inscricoes.id, casos.inscricaoId))
+      .leftJoin(
+        revogacoesConsentimento,
+        eq(revogacoesConsentimento.inscricaoId, inscricoes.id),
+      )
       .leftJoin(
         supervisor,
         eq(supervisor.id, atribuicoesSupervisor.supervisorId),
@@ -415,6 +421,9 @@ export class CasosService {
                 : ('efetivada' as const)
               : null,
         }),
+        ...(l.consentimentoRevogadoEm
+          ? { consentimentoRevogadoEm: l.consentimentoRevogadoEm.toISOString() }
+          : {}),
       };
     });
   }

@@ -7,6 +7,7 @@ import {
   Folder,
   History,
   Inbox,
+  ListOrdered,
   SlidersHorizontal,
   Shuffle,
   User,
@@ -63,7 +64,8 @@ export const MENU_POR_PERFIL: Record<Perfil, ItemMenu[]> = {
   ],
   coordenacao: [
     triagem,
-    { rotulo: "Fila de espera", href: "/fila", Icone: Users },
+    // Lista numerada, como na prancha 6-1 (#268).
+    { rotulo: "Fila de espera", href: "/fila", Icone: ListOrdered },
     distribuicao,
     pacientes,
     contribuicoes,
