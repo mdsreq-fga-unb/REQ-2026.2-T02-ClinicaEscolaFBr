@@ -1,9 +1,20 @@
 "use client";
 import { useEffect, useState } from "react";
-import { useQuery } from "@tanstack/react-query";
+import { skipToken, useQuery } from "@tanstack/react-query";
 import { Lock } from "lucide-react";
-import type { SessaoComPresenca, VerificacaoAtual } from "@clinica/shared";
+import type {
+  AutorizacaoMenor,
+  SessaoComPresenca,
+  VerificacaoAtual,
+} from "@clinica/shared";
 import { Aviso } from "@/components/comum/aviso";
+import {
+  AvisoDaEmissao,
+  DeclaracaoNegada,
+  PreVisualizacaoDeclaracao,
+  useEmissaoDeclaracao,
+} from "@/components/declaracoes/declaracao";
+import { chaveAutorizacaoMenor } from "@/components/declaracoes/autorizacao-menor";
 import { Button } from "@/components/ui/button";
 import { VerificacaoIdentidade } from "@/components/verificacao/verificacao-identidade";
 import { api, ErroApi } from "@/lib/api";
@@ -11,21 +22,55 @@ import { dataBr, horaBr } from "@/lib/formato";
 
 export const TITULO_SESSOES = "Sessões com presença registrada";
 
-// Proposta da equipe (prancha 8-2), até a emissão pelo sistema (RF45, Ciclo 6).
-export const AVISO_EMISSAO =
-  "A emissão da declaração pelo sistema ainda não está disponível. Para pedir a sua, procure a secretaria da clínica.";
-
 const horario = (inicio: string) => horaBr(new Date(inicio));
+
+// Botão "Emitir declaração" da sessão (RF45, prancha 8-3). O nome acessível diz a
+// sessão; enquanto a emissão corre, os botões ficam desabilitados, e o da sessão
+// em emissão mostra "Emitindo…".
+function BotaoEmitir({
+  sessao,
+  aoEmitir,
+  emitindo,
+  className,
+}: {
+  sessao: SessaoComPresenca;
+  aoEmitir: (sessao: SessaoComPresenca) => void;
+  emitindo: string | null;
+  className?: string;
+}) {
+  const estaEmitindo = emitindo === sessao.id;
+  return (
+    <Button
+      data-emitir-sessao={sessao.id}
+      className={className}
+      disabled={emitindo !== null}
+      aria-label={
+        estaEmitindo
+          ? undefined
+          : `Emitir declaração da sessão de ${dataBr(sessao.inicio)}`
+      }
+      onClick={() => aoEmitir(sessao)}
+    >
+      {estaEmitindo ? "Emitindo…" : "Emitir declaração"}
+    </Button>
+  );
+}
 
 // Lista das sessões com presença registrada (RF44, prancha 8-2): tabela com
 // legenda e cabeçalhos a partir de 640 px e cartões no celular (RNF56 a RNF58).
-// Só de consulta: a escolha da sessão para a declaração chega com o RF45.
+// Com `aoEmitir`, cada sessão ganha o botão "Emitir declaração" (RF45, prancha
+// 8-3); sem ele, a lista é só de consulta.
 export function ListaSessoesComPresenca({
   sessoes,
   legenda,
+  aoEmitir,
+  emitindo = null,
 }: {
   sessoes: SessaoComPresenca[];
   legenda: string;
+  aoEmitir?: (sessao: SessaoComPresenca) => void;
+  // Id da sessão em emissão, se houver.
+  emitindo?: string | null;
 }) {
   return (
     <>
@@ -37,28 +82,46 @@ export function ListaSessoesComPresenca({
               <th scope="col">Data</th>
               <th scope="col">Horário</th>
               <th scope="col">Estagiário</th>
+              {aoEmitir && <th scope="col">Declaração</th>}
             </tr>
           </thead>
           <tbody>
-            {sessoes.map((s, i) => (
-              <tr key={`${s.inicio}-${i}`}>
+            {sessoes.map((s) => (
+              <tr key={s.id}>
                 <td className="whitespace-nowrap">{dataBr(s.inicio)}</td>
                 <td className="whitespace-nowrap">{horario(s.inicio)}</td>
                 <td>{s.estagiario}</td>
+                {aoEmitir && (
+                  <td>
+                    <BotaoEmitir
+                      sessao={s}
+                      aoEmitir={aoEmitir}
+                      emitindo={emitindo}
+                    />
+                  </td>
+                )}
               </tr>
             ))}
           </tbody>
         </table>
       </div>
       <ul aria-label={legenda} className="ui-lista-celular sm:hidden">
-        {sessoes.map((s, i) => (
-          <li key={`${s.inicio}-${i}`} className="ui-item-celular gap-1">
+        {sessoes.map((s) => (
+          <li key={s.id} className="ui-item-celular gap-1">
             <span className="font-bold">
               {dataBr(s.inicio)}, {horario(s.inicio)}
             </span>
             <span className="text-sm text-muted-foreground">
               {s.estagiario}
             </span>
+            {aoEmitir && (
+              <BotaoEmitir
+                sessao={s}
+                aoEmitir={aoEmitir}
+                emitindo={emitindo}
+                className="mt-2 w-full"
+              />
+            )}
           </li>
         ))}
       </ul>
@@ -108,6 +171,11 @@ export function MinhasSessoes({
     gcTime: 0,
     enabled: !expirada,
   });
+  // A emissão (RF45): o 401 pede a verificação de novo, como a lista.
+  const emissao = useEmissaoDeclaracao({
+    caminho: (sessaoId) => `/declaracoes/minhas-sessoes/${sessaoId}/emissao`,
+    aoNaoAutenticado: () => setExpirada(true),
+  });
   if (
     expirada ||
     (consulta.error instanceof ErroApi && consulta.error.status === 401)
@@ -137,15 +205,26 @@ export function MinhasSessoes({
     return (
       <SemSessoesComPresenca texto="Ainda não há sessão com presença registrada nesta inscrição." />
     );
+  if (emissao.previa)
+    return (
+      <PreVisualizacaoDeclaracao
+        declaracao={emissao.previa}
+        aoVoltar={emissao.voltar}
+      />
+    );
+  if (emissao.negado) return <DeclaracaoNegada aoVoltar={emissao.voltar} />;
   return (
     <>
       <p className="ui-dica">
-        Só aparecem as sessões em que a presença foi registrada.
+        Escolha a sessão para emitir a declaração de comparecimento. Só aparecem
+        as sessões em que a presença foi registrada.
       </p>
-      <Aviso tipo="info" titulo={AVISO_EMISSAO} />
+      <AvisoDaEmissao emissao={emissao} />
       <ListaSessoesComPresenca
         sessoes={consulta.data}
         legenda={`${TITULO_SESSOES} da inscrição ${verificacao.numero}`}
+        aoEmitir={(s) => emissao.emitir(s.id)}
+        emitindo={emissao.emitindo}
       />
     </>
   );
@@ -171,6 +250,21 @@ export function SessoesComPresencaDaFicha({ casoId }: { casoId: string }) {
       api<SessaoComPresenca[]>(`/pacientes/${casoId}/sessoes-realizadas`),
     retry: false,
   });
+  const emissao = useEmissaoDeclaracao({
+    caminho: (sessaoId) => `/declaracoes/sessoes/${sessaoId}/emissao`,
+  });
+  // Só observa a autorização que o bloco da ficha carrega e registra (sem
+  // buscar): quando ela é registrada, o aviso de "autorização pendente" some.
+  const autorizacaoRegistradaEm = useQuery({
+    queryKey: chaveAutorizacaoMenor(casoId),
+    queryFn: skipToken,
+    select: (dados: AutorizacaoMenor) =>
+      dados.autorizacao?.registradoEm ?? null,
+  }).data;
+  const { limparRecusa } = emissao;
+  useEffect(() => {
+    if (autorizacaoRegistradaEm) limparRecusa("autorizacao_pendente");
+  }, [autorizacaoRegistradaEm, limparRecusa]);
   if (consulta.error instanceof ErroApi && consulta.error.status === 403)
     return (
       <section aria-labelledby="sessoes-presenca" className="ui-cartao gap-2">
@@ -184,11 +278,20 @@ export function SessoesComPresencaDaFicha({ casoId }: { casoId: string }) {
         </p>
       </section>
     );
+  if (emissao.previa)
+    return (
+      <PreVisualizacaoDeclaracao
+        declaracao={emissao.previa}
+        aoVoltar={emissao.voltar}
+      />
+    );
+  if (emissao.negado) return <DeclaracaoNegada aoVoltar={emissao.voltar} />;
   return (
     <section aria-labelledby="sessoes-presenca" className="ui-cartao">
       <h2 id="sessoes-presenca" className="ui-h2">
         {TITULO_SESSOES}
       </h2>
+      <AvisoDaEmissao emissao={emissao} />
       {consulta.isPending ? (
         <p role="status">Carregando as sessões…</p>
       ) : consulta.isError ? (
@@ -201,6 +304,8 @@ export function SessoesComPresencaDaFicha({ casoId }: { casoId: string }) {
         <ListaSessoesComPresenca
           sessoes={consulta.data}
           legenda={TITULO_SESSOES}
+          aoEmitir={(s) => emissao.emitir(s.id)}
+          emitindo={emissao.emitindo}
         />
       ) : (
         <p className="ui-dica">
