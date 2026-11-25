@@ -2767,6 +2767,15 @@ sequenceDiagram
 
 **Dependências e riscos:** depende do RF63.
 
+**Na implementação (ajustes da inspeção de design de 24/11):**
+
+- **Migration:** a `0024_decisao_reprovacao`, depois da `0023` do RF63, cria a `decisoes_reprovacao`, com o enum `decisao_reprovacao` (`confirmada`, `nao_aplicada`) e o gatilho `decisoes_reprovacao_somente_insercao`, que usa o `impedir_alteracao_registro`. O script do usuário da aplicação tira dela o `UPDATE` e o `DELETE`.
+- **Rota:** `POST /sinalizacoes-reprovacao/:id/decisoes` (coordenação) responde `201` com a decisão, o autor e a data/hora. A primeira decisão encerra a sinalização com o motivo `decisao`; numa sinalização já decidida, a decisão nova fica ao lado da anterior. A linha da sinalização fica travada (`for update`) durante a transação (D1.3): duas decisões ao mesmo tempo não a encerram duas vezes, e uma reclassificação ao mesmo tempo ou espera a decisão (e não encerra mais nada) ou a encerra antes (e a decisão recebe `409`).
+- **Erros (apontamento 1):** `400` sem justificativa, sem a escolha ou com mais de 1.000 caracteres; `403` para quem não é da coordenação; `404` para a sinalização inexistente; `409` para a sinalização encerrada por `contagem_abaixo_do_limite`, que não chegou a uma decisão. O supervisor não registra decisão e só consulta as sinalizações dos estagiários dele, pela regra do RF63.
+- **O que o supervisor vê (apontamento 2):** a decisão, quem registrou e quando, **sem a justificativa**, como no recorte "Supervisor · Só consulta" da prancha 7-3; o recorte "Histórico do estagiário" com as justificativas vale para a coordenação. É a mesma regra do motivo da reclassificação no RF40.
+- **Justificativa (apontamento 3):** obrigatória, com até 1.000 caracteres, cifrada (`justificativa_cifrada`, RNF51). A auditoria (`registrar_decisao_reprovacao`) guarda a situação anterior (`aberta` ou `decidida`), a decisão e só `justificativaInformada: true`.
+- **Tela:** na página "Sinalizações de reprovação", a coordenação tem "Registrar decisão" nas abertas e "Registrar nova decisão" no histórico de cada sinalização decidida. O histórico é uma lista ordenada com a sinalização e as decisões, da mais antiga para a mais recente, a contagem atual e, quando ela ficou abaixo de 3, "A decisão registrada continua valendo". O diálogo tem as opções num `fieldset` com `legend`, nenhuma marcada de início, o resumo do erro com link para o campo e, também no celular, o resumo das faltas e o aviso de que a decisão não muda a contagem (nit 4).
+
 ---
 
 ## Registros administrativos (CP10)
