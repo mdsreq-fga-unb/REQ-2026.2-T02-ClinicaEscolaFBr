@@ -8,6 +8,7 @@ import {
   Inbox,
   SlidersHorizontal,
   Shuffle,
+  TriangleAlert,
   User,
   Users,
   UserX,
@@ -37,6 +38,14 @@ const faltasEstagiarios = {
   Icone: UserX,
 };
 
+// Sinalizações de reprovação do estagiário (RF63), na prancha 7-2: do supervisor e
+// da coordenação.
+const sinalizacoesReprovacao = {
+  rotulo: "Sinalizações de reprovação",
+  href: "/sinalizacoes-reprovacao",
+  Icone: TriangleAlert,
+};
+
 // Navegação interna por perfil, como no protótipo aprovado pela FBr.
 export const MENU_POR_PERFIL: Record<Perfil, ItemMenu[]> = {
   secretaria: [agenda, agendar, pacientes],
@@ -52,6 +61,7 @@ export const MENU_POR_PERFIL: Record<Perfil, ItemMenu[]> = {
     agenda,
     { rotulo: "Meus casos", href: "/meus-casos", Icone: Folder },
     faltasEstagiarios,
+    sinalizacoesReprovacao,
   ],
   coordenacao: [
     triagem,
@@ -60,6 +70,7 @@ export const MENU_POR_PERFIL: Record<Perfil, ItemMenu[]> = {
     pacientes,
     { rotulo: "Usuários", href: "/usuarios", Icone: Users },
     faltasEstagiarios,
+    sinalizacoesReprovacao,
     // Indicadores operacionais (RF48), na prancha 9-1.
     { rotulo: "Indicadores", href: "/indicadores", Icone: BarChart3 },
     {
