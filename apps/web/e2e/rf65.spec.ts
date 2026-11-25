@@ -8,7 +8,8 @@ async function paciente(menor = false) {
   const url = new URL(process.env.DATABASE_URL!);
   if (
     !["localhost", "127.0.0.1"].includes(url.hostname) ||
-    !url.pathname.startsWith("/clinica_rf1_test_")
+    // No CI, o banco do job é descartável; localmente, só o banco de testes.
+    (!url.pathname.startsWith("/clinica_rf1_test_") && !process.env.CI)
   )
     throw new Error("RF65 exige banco local descartável.");
   const db = createDb(url.href);
