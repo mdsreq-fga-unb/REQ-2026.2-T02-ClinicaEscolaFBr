@@ -260,6 +260,7 @@ test('inscrição sem violações WCAG 2.2 AA em 320px (RF1, RNF56, RNF58)', ...
     | RNF10 | api (auditoria de cada operação) e registro (inspeção de que a interface não altera nem apaga os registros) |
     | RNF22 | e2e (as 3 interações) e registro (teste de tarefa com pessoas) |
     | RNF24 | e2e (teclado e contraste) e leitor de tela |
+    | RNF41 | e2e (a emissão em até 3 interações) e registro (teste de tarefa com pessoas da secretaria e pacientes ou responsáveis) |
     | RNF25 | api (respostas negadas sem conteúdo) e registro (inspeção da interface com registros completos e incompletos, antes e depois da transferência) |
     | RNF51 | api (criptografia no banco) e registro (HTTPS, TLS, chaves e troca de chave na implantação) |
     | RNF52 | api (registros que não se alteram) e registro (permissões do banco e consulta do RF56) |

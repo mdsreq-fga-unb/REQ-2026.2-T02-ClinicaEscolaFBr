@@ -1,9 +1,12 @@
 "use client";
 import { useQuery } from "@tanstack/react-query";
+import { Check, Clock, Lock } from "lucide-react";
+import Link from "next/link";
 import type { FilaEspera } from "@clinica/shared";
 import { Prioridade } from "@/components/casos/prioridade";
 import { Aviso } from "@/components/comum/aviso";
-import { Button } from "@/components/ui/button";
+import { MENU_POR_PERFIL } from "@/components/layout/menu";
+import { Button, buttonVariants } from "@/components/ui/button";
 import { api, ErroApi } from "@/lib/api";
 import { dataBr } from "@/lib/formato";
 import { useSessao } from "@/lib/sessao";
@@ -21,13 +24,27 @@ export default function FilaPage() {
   if (
     !permitida ||
     (fila.error instanceof ErroApi && [401, 403].includes(fila.error.status))
-  )
+  ) {
+    // Acesso negado da prancha 6-1: cartão com o cadeado e a volta para a
+    // página inicial do perfil, sem nenhum nome de inscrito.
+    const inicio = MENU_POR_PERFIL[usuario.perfil][0];
     return (
-      <Aviso tipo="alerta" titulo="Você não tem acesso à fila de espera." focar>
-        A fila é consultada pela coordenação. Para informações, fale com a
-        coordenação.
-      </Aviso>
+      <div className="mx-auto mt-10 flex max-w-[640px] flex-col items-center gap-3.5 px-4 py-10 text-center md:px-10 md:py-[72px]">
+        <span aria-hidden className="ui-vazio-icone">
+          <Lock className="size-7" />
+        </span>
+        <h1 className="ui-titulo">Você não tem acesso à fila de espera.</h1>
+        <p className="text-base">
+          A fila de espera é consultada pela equipe que distribui os casos. Se
+          você precisa de alguma informação sobre um inscrito, fale com a
+          coordenação.
+        </p>
+        <Link href={inicio.href} className={buttonVariants()}>
+          Voltar para {inicio.rotulo.toLowerCase()}
+        </Link>
+      </div>
     );
+  }
   return (
     <div className="space-y-6">
       <div className="flex flex-wrap items-start justify-between gap-4">
@@ -68,18 +85,19 @@ export default function FilaPage() {
                 perda da vaga, vale a data da volta.
               </p>
               {fila.data.inscritos.length === 0 ? (
-                <div className="p-8 text-center">
-                  <h2 className="font-semibold">
-                    Não há inscritos na fila de espera.
-                  </h2>
-                  <p className="mt-2 text-muted-foreground">
+                <div className="ui-vazio">
+                  <span aria-hidden className="ui-vazio-icone">
+                    <Check className="size-7" />
+                  </span>
+                  <h2 className="ui-h2">Não há inscritos na fila de espera.</h2>
+                  <p className="ui-subtitulo m-0 max-w-[460px]">
                     Os inscritos entram na fila quando a prioridade clínica é
                     confirmada na triagem.
                   </p>
                 </div>
               ) : (
                 <div
-                  className="overflow-x-auto focus-visible:outline-2 focus-visible:outline-primary"
+                  className="relative overflow-x-auto focus-visible:outline-2 focus-visible:outline-primary"
                   tabIndex={0}
                   role="region"
                   aria-label="Tabela da fila de espera"
@@ -98,18 +116,30 @@ export default function FilaPage() {
                             {t}
                           </th>
                         ))}
+                        <th className="p-4" scope="col">
+                          <span className="sr-only">Ações</span>
+                        </th>
                       </tr>
                     </thead>
                     <tbody>
                       {fila.data.inscritos.map((i) => (
                         <tr key={i.inscricaoId} className="border-t">
                           <td className="p-4 font-bold">{i.posicao}</td>
-                          <td className="p-4">{i.numero}</td>
+                          <td className="p-4 font-semibold">{i.numero}</td>
                           <td className="p-4 font-semibold">{i.nome}</td>
                           <td className="p-4">
                             <Prioridade cor={i.prioridade} />
                           </td>
                           <td className="p-4">{dataBr(i.entradaEm)}</td>
+                          <td className="p-4 text-right">
+                            <Link
+                              href={`/pacientes/${i.casoId}`}
+                              aria-label={`Ver ficha de ${i.nome}`}
+                              className={buttonVariants({ variant: "ghost" })}
+                            >
+                              Ver ficha
+                            </Link>
+                          </td>
                         </tr>
                       ))}
                     </tbody>
@@ -130,19 +160,58 @@ export default function FilaPage() {
                   Não há inscrições com prioridade pendente.
                 </p>
               ) : (
-                <ul className="divide-y">
-                  {fila.data.pendentes.map((i) => (
-                    <li
-                      key={i.numero}
-                      className="flex flex-wrap justify-between gap-3 p-4 text-sm"
-                    >
-                      <span>
-                        {i.numero} · <strong>{i.nome}</strong>
-                      </span>
-                      <span>{dataBr(i.criadaEm)} · Pendente de triagem</span>
-                    </li>
-                  ))}
-                </ul>
+                <div
+                  className="relative overflow-x-auto focus-visible:outline-2 focus-visible:outline-primary"
+                  tabIndex={0}
+                  role="region"
+                  aria-label="Tabela das inscrições com prioridade pendente"
+                >
+                  <table className="w-full text-left text-sm">
+                    <thead className="bg-muted">
+                      <tr>
+                        {[
+                          "Inscrição",
+                          "Nome",
+                          "Data da inscrição",
+                          "Situação",
+                        ].map((t) => (
+                          <th className="p-4" key={t} scope="col">
+                            {t}
+                          </th>
+                        ))}
+                        <th className="p-4" scope="col">
+                          <span className="sr-only">Ações</span>
+                        </th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {fila.data.pendentes.map((i) => (
+                        <tr key={i.inscricaoId} className="border-t">
+                          <td className="p-4 font-semibold">{i.numero}</td>
+                          <td className="p-4">{i.nome}</td>
+                          <td className="p-4">{dataBr(i.criadaEm)}</td>
+                          <td className="p-4">
+                            <span className="ui-selo border-[#f0cf9f] bg-alerta-fundo text-[#8a4600]">
+                              <Clock aria-hidden className="size-3.5" />
+                              Pendente de triagem
+                            </span>
+                          </td>
+                          <td className="p-4 text-right">
+                            {/* A coordenação também tria (RF4 e RF6): a
+                                inscrição pendente abre direto na triagem. */}
+                            <Link
+                              href={`/triagem/${i.inscricaoId}`}
+                              aria-label={`Abrir triagem da inscrição ${i.numero}`}
+                              className={buttonVariants({ variant: "ghost" })}
+                            >
+                              Abrir triagem
+                            </Link>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
               )}
             </section>
           </>
