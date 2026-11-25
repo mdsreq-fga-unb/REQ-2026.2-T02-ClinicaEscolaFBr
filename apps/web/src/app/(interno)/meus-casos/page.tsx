@@ -211,6 +211,18 @@ export default function MeusCasosPage() {
           O prontuário do caso foi criado.
         </Aviso>
       )}
+      {todos
+        .filter((c) => c.consentimentoRevogadoEm)
+        .map((c) => (
+          <Aviso
+            key={c.casoId}
+            tipo="alerta"
+            titulo={`${c.nome} revogou o consentimento em ${dataBr(c.consentimentoRevogadoEm!)}.`}
+          >
+            Novos agendamentos estão bloqueados e as comunicações ao titular
+            foram suspensas. Conduza o encerramento do atendimento.
+          </Aviso>
+        ))}
 
       {transferido && <AvisoTransferencia resultado={transferido} />}
 

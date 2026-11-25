@@ -1,6 +1,6 @@
 {
-  "id": "c7d6ff42-3ff8-43c1-8055-9320b920c731",
-  "prevId": "83c7c5e9-f289-4ca8-ac38-ace2dc660082",
+  "id": "e769622e-fbb1-439a-b16c-f94720d8971f",
+  "prevId": "103dd3d9-dfd1-4d24-a8eb-f7d785c85eb1",
   "version": "7",
   "dialect": "postgresql",
   "tables": {
@@ -2719,210 +2719,6 @@
       },
       "isRLSEnabled": false
     },
-    "public.reclassificacoes_falta": {
-      "name": "reclassificacoes_falta",
-      "schema": "",
-      "columns": {
-        "id": {
-          "name": "id",
-          "type": "uuid",
-          "primaryKey": true,
-          "notNull": true,
-          "default": "gen_random_uuid()"
-        },
-        "cancelamento_id": {
-          "name": "cancelamento_id",
-          "type": "uuid",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "motivo_cifrado": {
-          "name": "motivo_cifrado",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "reclassificada_por": {
-          "name": "reclassificada_por",
-          "type": "uuid",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "reclassificada_em": {
-          "name": "reclassificada_em",
-          "type": "timestamp with time zone",
-          "primaryKey": false,
-          "notNull": true,
-          "default": "now()"
-        }
-      },
-      "indexes": {},
-      "foreignKeys": {
-        "reclassificacoes_falta_cancelamento_id_cancelamentos_sessao_id_fk": {
-          "name": "reclassificacoes_falta_cancelamento_id_cancelamentos_sessao_id_fk",
-          "tableFrom": "reclassificacoes_falta",
-          "tableTo": "cancelamentos_sessao",
-          "columnsFrom": ["cancelamento_id"],
-          "columnsTo": ["id"],
-          "onDelete": "no action",
-          "onUpdate": "no action"
-        },
-        "reclassificacoes_falta_reclassificada_por_usuarios_id_fk": {
-          "name": "reclassificacoes_falta_reclassificada_por_usuarios_id_fk",
-          "tableFrom": "reclassificacoes_falta",
-          "tableTo": "usuarios",
-          "columnsFrom": ["reclassificada_por"],
-          "columnsTo": ["id"],
-          "onDelete": "no action",
-          "onUpdate": "no action"
-        }
-      },
-      "compositePrimaryKeys": {},
-      "uniqueConstraints": {
-        "reclassificacoes_falta_cancelamento": {
-          "name": "reclassificacoes_falta_cancelamento",
-          "nullsNotDistinct": false,
-          "columns": ["cancelamento_id"]
-        }
-      },
-      "policies": {},
-      "checkConstraints": {},
-      "isRLSEnabled": false
-    },
-    "public.sinalizacoes_reprovacao": {
-      "name": "sinalizacoes_reprovacao",
-      "schema": "",
-      "columns": {
-        "id": {
-          "name": "id",
-          "type": "uuid",
-          "primaryKey": true,
-          "notNull": true,
-          "default": "gen_random_uuid()"
-        },
-        "estagiario_id": {
-          "name": "estagiario_id",
-          "type": "uuid",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "semestre": {
-          "name": "semestre",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "gerada_em": {
-          "name": "gerada_em",
-          "type": "timestamp with time zone",
-          "primaryKey": false,
-          "notNull": true,
-          "default": "now()"
-        },
-        "encerrada_em": {
-          "name": "encerrada_em",
-          "type": "timestamp with time zone",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "motivo_encerramento": {
-          "name": "motivo_encerramento",
-          "type": "motivo_encerramento_sinalizacao",
-          "typeSchema": "public",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "reclassificacao_id": {
-          "name": "reclassificacao_id",
-          "type": "uuid",
-          "primaryKey": false,
-          "notNull": false
-        }
-      },
-      "indexes": {
-        "sinalizacoes_reprovacao_aberta": {
-          "name": "sinalizacoes_reprovacao_aberta",
-          "columns": [
-            {
-              "expression": "estagiario_id",
-              "isExpression": false,
-              "asc": true,
-              "nulls": "last"
-            },
-            {
-              "expression": "semestre",
-              "isExpression": false,
-              "asc": true,
-              "nulls": "last"
-            }
-          ],
-          "isUnique": true,
-          "where": "\"sinalizacoes_reprovacao\".\"encerrada_em\" is null",
-          "concurrently": false,
-          "method": "btree",
-          "with": {}
-        },
-        "sinalizacoes_reprovacao_estagiario": {
-          "name": "sinalizacoes_reprovacao_estagiario",
-          "columns": [
-            {
-              "expression": "estagiario_id",
-              "isExpression": false,
-              "asc": true,
-              "nulls": "last"
-            },
-            {
-              "expression": "semestre",
-              "isExpression": false,
-              "asc": true,
-              "nulls": "last"
-            }
-          ],
-          "isUnique": false,
-          "concurrently": false,
-          "method": "btree",
-          "with": {}
-        }
-      },
-      "foreignKeys": {
-        "sinalizacoes_reprovacao_estagiario_id_usuarios_id_fk": {
-          "name": "sinalizacoes_reprovacao_estagiario_id_usuarios_id_fk",
-          "tableFrom": "sinalizacoes_reprovacao",
-          "tableTo": "usuarios",
-          "columnsFrom": ["estagiario_id"],
-          "columnsTo": ["id"],
-          "onDelete": "no action",
-          "onUpdate": "no action"
-        },
-        "sinalizacoes_reprovacao_reclassificacao_id_reclassificacoes_falta_id_fk": {
-          "name": "sinalizacoes_reprovacao_reclassificacao_id_reclassificacoes_falta_id_fk",
-          "tableFrom": "sinalizacoes_reprovacao",
-          "tableTo": "reclassificacoes_falta",
-          "columnsFrom": ["reclassificacao_id"],
-          "columnsTo": ["id"],
-          "onDelete": "no action",
-          "onUpdate": "no action"
-        }
-      },
-      "compositePrimaryKeys": {},
-      "uniqueConstraints": {},
-      "policies": {},
-      "checkConstraints": {
-        "sinalizacoes_reprovacao_semestre": {
-          "name": "sinalizacoes_reprovacao_semestre",
-          "value": "\"sinalizacoes_reprovacao\".\"semestre\" ~ '^[0-9]{4}/[12]$'"
-        },
-        "sinalizacoes_reprovacao_encerramento": {
-          "name": "sinalizacoes_reprovacao_encerramento",
-          "value": "(\"sinalizacoes_reprovacao\".\"encerrada_em\" is null) = (\"sinalizacoes_reprovacao\".\"motivo_encerramento\" is null)"
-        },
-        "sinalizacoes_reprovacao_reclassificacao": {
-          "name": "sinalizacoes_reprovacao_reclassificacao",
-          "value": "(\"sinalizacoes_reprovacao\".\"reclassificacao_id\" is not null) = (coalesce(\"sinalizacoes_reprovacao\".\"motivo_encerramento\"::text, '') = 'contagem_abaixo_do_limite')"
-        }
-      },
-      "isRLSEnabled": false
-    },
     "public.vagas_liberadas": {
       "name": "vagas_liberadas",
       "schema": "",
@@ -3261,6 +3057,172 @@
       "checkConstraints": {},
       "isRLSEnabled": false
     },
+    "public.autorizacoes_menor": {
+      "name": "autorizacoes_menor",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "inscricao_id": {
+          "name": "inscricao_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "entregue_em": {
+          "name": "entregue_em",
+          "type": "date",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "registrado_por": {
+          "name": "registrado_por",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "registrado_em": {
+          "name": "registrado_em",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "autorizacoes_menor_inscricao_id_inscricoes_id_fk": {
+          "name": "autorizacoes_menor_inscricao_id_inscricoes_id_fk",
+          "tableFrom": "autorizacoes_menor",
+          "tableTo": "inscricoes",
+          "columnsFrom": ["inscricao_id"],
+          "columnsTo": ["id"],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "autorizacoes_menor_registrado_por_usuarios_id_fk": {
+          "name": "autorizacoes_menor_registrado_por_usuarios_id_fk",
+          "tableFrom": "autorizacoes_menor",
+          "tableTo": "usuarios",
+          "columnsFrom": ["registrado_por"],
+          "columnsTo": ["id"],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {
+        "autorizacoes_menor_inscricao_id_unique": {
+          "name": "autorizacoes_menor_inscricao_id_unique",
+          "nullsNotDistinct": false,
+          "columns": ["inscricao_id"]
+        }
+      },
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.emissoes_declaracao": {
+      "name": "emissoes_declaracao",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "sessao_id": {
+          "name": "sessao_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "inscricao_id": {
+          "name": "inscricao_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "canal": {
+          "name": "canal",
+          "type": "canal_declaracao",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "emitida_por": {
+          "name": "emitida_por",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "tipo": {
+          "name": "tipo",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'emissao'"
+        },
+        "emitida_em": {
+          "name": "emitida_em",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "emissoes_declaracao_sessao_id_sessoes_atendimento_id_fk": {
+          "name": "emissoes_declaracao_sessao_id_sessoes_atendimento_id_fk",
+          "tableFrom": "emissoes_declaracao",
+          "tableTo": "sessoes_atendimento",
+          "columnsFrom": ["sessao_id"],
+          "columnsTo": ["id"],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "emissoes_declaracao_inscricao_id_inscricoes_id_fk": {
+          "name": "emissoes_declaracao_inscricao_id_inscricoes_id_fk",
+          "tableFrom": "emissoes_declaracao",
+          "tableTo": "inscricoes",
+          "columnsFrom": ["inscricao_id"],
+          "columnsTo": ["id"],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "emissoes_declaracao_emitida_por_usuarios_id_fk": {
+          "name": "emissoes_declaracao_emitida_por_usuarios_id_fk",
+          "tableFrom": "emissoes_declaracao",
+          "tableTo": "usuarios",
+          "columnsFrom": ["emitida_por"],
+          "columnsTo": ["id"],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {
+        "emissoes_declaracao_autor_do_canal": {
+          "name": "emissoes_declaracao_autor_do_canal",
+          "value": "(\"emissoes_declaracao\".\"canal\" = 'secretaria') = (\"emissoes_declaracao\".\"emitida_por\" is not null)"
+        },
+        "emissoes_declaracao_tipo": {
+          "name": "emissoes_declaracao_tipo",
+          "value": "\"emissoes_declaracao\".\"tipo\" in ('emissao', 'reemissao')"
+        }
+      },
+      "isRLSEnabled": false
+    },
     "public.pagamentos_contribuicao": {
       "name": "pagamentos_contribuicao",
       "schema": "",
@@ -3374,6 +3336,127 @@
         }
       },
       "isRLSEnabled": false
+    },
+    "public.revogacoes_consentimento": {
+      "name": "revogacoes_consentimento",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "inscricao_id": {
+          "name": "inscricao_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "versao_termo": {
+          "name": "versao_termo",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "solicitante": {
+          "name": "solicitante",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "forma_verificacao": {
+          "name": "forma_verificacao",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "documento_cifrado": {
+          "name": "documento_cifrado",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "verificacao_id": {
+          "name": "verificacao_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "registrada_por": {
+          "name": "registrada_por",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "registrada_em": {
+          "name": "registrada_em",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "revogacoes_consentimento_inscricao_id_inscricoes_id_fk": {
+          "name": "revogacoes_consentimento_inscricao_id_inscricoes_id_fk",
+          "tableFrom": "revogacoes_consentimento",
+          "tableTo": "inscricoes",
+          "columnsFrom": ["inscricao_id"],
+          "columnsTo": ["id"],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "revogacoes_consentimento_versao_termo_versoes_termo_versao_fk": {
+          "name": "revogacoes_consentimento_versao_termo_versoes_termo_versao_fk",
+          "tableFrom": "revogacoes_consentimento",
+          "tableTo": "versoes_termo",
+          "columnsFrom": ["versao_termo"],
+          "columnsTo": ["versao"],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "revogacoes_consentimento_verificacao_id_verificacoes_identidade_id_fk": {
+          "name": "revogacoes_consentimento_verificacao_id_verificacoes_identidade_id_fk",
+          "tableFrom": "revogacoes_consentimento",
+          "tableTo": "verificacoes_identidade",
+          "columnsFrom": ["verificacao_id"],
+          "columnsTo": ["id"],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "revogacoes_consentimento_registrada_por_usuarios_id_fk": {
+          "name": "revogacoes_consentimento_registrada_por_usuarios_id_fk",
+          "tableFrom": "revogacoes_consentimento",
+          "tableTo": "usuarios",
+          "columnsFrom": ["registrada_por"],
+          "columnsTo": ["id"],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {
+        "revogacoes_consentimento_inscricao_id_unique": {
+          "name": "revogacoes_consentimento_inscricao_id_unique",
+          "nullsNotDistinct": false,
+          "columns": ["inscricao_id"]
+        }
+      },
+      "policies": {},
+      "checkConstraints": {
+        "revogacoes_solicitante": {
+          "name": "revogacoes_solicitante",
+          "value": "\"revogacoes_consentimento\".\"solicitante\" in ('titular', 'responsavel')"
+        },
+        "revogacoes_identidade": {
+          "name": "revogacoes_identidade",
+          "value": "(\"revogacoes_consentimento\".\"forma_verificacao\" = 'documento' and \"revogacoes_consentimento\".\"documento_cifrado\" is not null and \"revogacoes_consentimento\".\"verificacao_id\" is null) or (\"revogacoes_consentimento\".\"forma_verificacao\" = 'verificacao_rf52' and \"revogacoes_consentimento\".\"verificacao_id\" is not null and \"revogacoes_consentimento\".\"documento_cifrado\" is null)"
+        }
+      },
+      "isRLSEnabled": false
     }
   },
   "enums": {
@@ -3401,7 +3484,8 @@
         "em_atendimento",
         "encerrado",
         "desligado_por_faltas",
-        "aguardando_vaga"
+        "aguardando_vaga",
+        "cancelado_por_revogacao"
       ]
     },
     "public.tipo_transferencia_caso": {
@@ -3451,11 +3535,6 @@
         "desligamento"
       ]
     },
-    "public.motivo_encerramento_sinalizacao": {
-      "name": "motivo_encerramento_sinalizacao",
-      "schema": "public",
-      "values": ["decisao", "contagem_abaixo_do_limite"]
-    },
     "public.origem_cancelamento": {
       "name": "origem_cancelamento",
       "schema": "public",
@@ -3471,6 +3550,11 @@
       "name": "origem_falta",
       "schema": "public",
       "values": ["falta", "cancelamento_fora_do_prazo"]
+    },
+    "public.canal_declaracao": {
+      "name": "canal_declaracao",
+      "schema": "public",
+      "values": ["secretaria", "verificacao"]
     },
     "public.forma_pagamento": {
       "name": "forma_pagamento",

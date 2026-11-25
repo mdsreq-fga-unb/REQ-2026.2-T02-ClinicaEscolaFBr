@@ -60,7 +60,13 @@ const SELOS = {
   },
 } as const;
 
-function Selo({ tipo, texto }: { tipo: keyof typeof SELOS; texto?: string }) {
+export function Selo({
+  tipo,
+  texto,
+}: {
+  tipo: keyof typeof SELOS;
+  texto?: string;
+}) {
   const { classe, Icone, texto: padrao } = SELOS[tipo];
   return (
     <span className={cn("ui-selo w-fit", classe)}>
