@@ -119,7 +119,10 @@ export default function MeusPacientesPage() {
             ))}
           </ul>
           <div className="ui-painel">
-            <table className="ui-tabela max-lg:hidden">
+            {/* Tabela só a partir de 1280 px: com a coluna da contribuição (RF42),
+                as seis colunas não cabem em 1024 px ao lado do menu lateral
+                (RNF58). Até lá, os cartões. */}
+            <table className="ui-tabela max-xl:hidden">
               <caption className="sr-only">Pacientes vinculados a você</caption>
               <thead>
                 <tr>
@@ -156,7 +159,7 @@ export default function MeusPacientesPage() {
                 ))}
               </tbody>
             </table>
-            <ul className="ui-lista-celular p-3 lg:hidden">
+            <ul className="ui-lista-celular p-3 xl:hidden">
               {casos.map((caso) => (
                 <li key={caso.casoId} className="ui-item-celular">
                   <div className="flex items-center justify-between gap-2">
