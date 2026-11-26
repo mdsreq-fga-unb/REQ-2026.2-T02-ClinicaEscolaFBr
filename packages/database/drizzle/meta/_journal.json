@@ -218,6 +218,13 @@
       "when": 1795664696149,
       "tag": "0030_validacao_de_evolucao",
       "breakpoints": true
+    },
+    {
+      "idx": 31,
+      "version": "7",
+      "when": 1795665615024,
+      "tag": "0031_alta",
+      "breakpoints": true
     }
   ]
 }

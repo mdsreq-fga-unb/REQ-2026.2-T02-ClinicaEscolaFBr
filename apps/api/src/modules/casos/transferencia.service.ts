@@ -44,6 +44,7 @@ import { cifrar } from '../../common/criptografia';
 import { DB } from '../../database/database.module';
 import { ParametrosService } from '../../parametros/parametros.service';
 import { CasosService } from './casos.service';
+import { fecharPedidoDeAlta } from './pedido-alta';
 
 type Transacao = Parameters<Parameters<Db['transaction']>[0]>[0];
 type Leitura = Pick<Db, 'select' | 'selectDistinct'>;
@@ -337,6 +338,7 @@ export class TransferenciaService {
                 notInArray(casos.situacao, [
                   'encerrado',
                   'desligado_por_faltas',
+                  'encerrado_por_alta',
                 ]),
               ),
             );
@@ -385,11 +387,21 @@ export class TransferenciaService {
         // o acesso, e o caso aguarda o vínculo pelo novo supervisor.
         const encerraVinculo =
           !!caso.vinculo && (trocaEstagiario || trocaSupervisor);
+        // Um pedido de alta aberto (RF68) é do estagiário que deixa o caso:
+        // confirmá-lo depois encerraria o atendimento do novo responsável.
+        let pedidoAltaFechado: string | null = null;
         if (encerraVinculo) {
           await tx
             .update(vinculosEstagiario)
             .set({ vigente: false, encerradoEm: sql`now()` })
             .where(eq(vinculosEstagiario.id, caso.vinculo!.id));
+          pedidoAltaFechado = await fecharPedidoDeAlta(tx, {
+            casoId,
+            autorId: autor.id,
+            forma: 'encerrado_pela_transferencia',
+            motivo: 'Caso transferido antes da confirmação da alta.',
+            chave,
+          });
         }
         let vinculoNovo: string | null = null;
         if (novoEstagiario) {
@@ -516,6 +528,7 @@ export class TransferenciaService {
               vinculoId: vinculoNovo,
               sessoesCanceladas: canceladas,
               acimaDoLimite,
+              pedidoAltaFechado,
             },
           },
           tx,

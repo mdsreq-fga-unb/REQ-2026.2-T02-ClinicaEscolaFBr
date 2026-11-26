@@ -270,9 +270,8 @@ export const versoesRelatorio = pgTable(
     uniqueIndex("versoes_relatorio_uma_aberta")
       .on(t.relatorioId)
       .where(sql`${t.estado} in ('rascunho', 'em_revisao')`),
-    uniqueIndex("versoes_relatorio_uma_aprovada")
-      .on(t.relatorioId)
-      .where(sql`${t.estado} = 'aprovado'`),
+    // Pode haver mais de uma versão aprovada: depois de uma reabertura (RF68), as
+    // evoluções novas pedem uma versão nova, e a anterior fica preservada (DF36).
     // Enviada: com a data do envio e a origem. Decidida: com o supervisor e a
     // data/hora. Devolvida: com as observações.
     check(

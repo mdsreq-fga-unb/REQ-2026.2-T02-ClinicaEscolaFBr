@@ -128,22 +128,35 @@ export type ListaDePacientes = {
 };
 
 // Situação de distribuição (prancha 2-3): o caso tem os dois responsáveis, só o
-// supervisor, ou nenhum.
+// supervisor, ou nenhum. O caso encerrado (alta, RF68, ou desligamento por
+// faltas, RF37) fica sem estagiário porque o atendimento terminou, e não porque
+// aguarda vínculo.
 export const SITUACOES_DISTRIBUICAO = [
   "distribuido",
   "aguardando_estagiario",
   "pendente",
+  "encerrado",
 ] as const;
 export type SituacaoDistribuicao = (typeof SITUACOES_DISTRIBUICAO)[number];
 
+const SITUACOES_ENCERRADAS: SituacaoCaso[] = [
+  "encerrado",
+  "encerrado_por_alta",
+  "desligado_por_faltas",
+];
+
 export const situacaoDistribuicao = (
-  r: Pick<ResponsaveisDoCaso, "supervisor" | "estagiario">,
+  r: Pick<ResponsaveisDoCaso, "supervisor" | "estagiario"> & {
+    situacao?: SituacaoCaso;
+  },
 ): SituacaoDistribuicao =>
-  !r.supervisor
-    ? "pendente"
-    : r.estagiario
-      ? "distribuido"
-      : "aguardando_estagiario";
+  r.situacao && SITUACOES_ENCERRADAS.includes(r.situacao)
+    ? "encerrado"
+    : !r.supervisor
+      ? "pendente"
+      : r.estagiario
+        ? "distribuido"
+        : "aguardando_estagiario";
 
 // Transferência de caso (RF25). O supervisor responsável troca só o estagiário, por
 // outro estagiário dele; a coordenação troca o supervisor e, se indicar, o

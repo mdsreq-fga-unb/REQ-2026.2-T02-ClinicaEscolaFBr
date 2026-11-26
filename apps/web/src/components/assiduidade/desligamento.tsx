@@ -61,11 +61,13 @@ const ESTILO_SITUACAO: Record<SituacaoCaso, string> = {
   desligado_por_faltas: "border-[#efb4ad] bg-erro-fundo text-destructive",
   aguardando_vaga: "border-[#f0cf9f] bg-alerta-fundo text-[#8a4600]",
   cancelado_por_revogacao: "border-[#c3cfd8] bg-[#eef1f4] text-[#4a5864]",
+  encerrado_por_alta: "border-[#c3cfd8] bg-[#eef1f4] text-[#4a5864]",
 };
 const ICONE_SITUACAO: Partial<Record<SituacaoCaso, typeof Check>> = {
   em_atendimento: Check,
   desligado_por_faltas: UserX,
   aguardando_vaga: Clock,
+  encerrado_por_alta: Check,
 };
 
 export function SeloSituacaoCaso({ situacao }: { situacao: SituacaoCaso }) {

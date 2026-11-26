@@ -23,7 +23,7 @@ import {
   ORIGENS_FALTA,
 } from "@clinica/shared";
 import { usuarios } from "./base";
-import { casos, vinculosEstagiario } from "./casos";
+import { casos, encerramentosAlta, vinculosEstagiario } from "./casos";
 import { sessoesAtendimento } from "./agendamento";
 
 export const origemFaltaEnum = pgEnum("origem_falta", ORIGENS_FALTA);
@@ -136,10 +136,13 @@ export const vagasLiberadas = pgTable(
   "vagas_liberadas",
   {
     id: uuid("id").primaryKey().defaultRandom(),
+    // A vaga vem do desligamento por faltas (RF37) ou da alta (RF68).
     desligamentoId: uuid("desligamento_id")
-      .notNull()
       .unique()
       .references(() => desligamentosPorFaltas.id),
+    altaId: uuid("alta_id")
+      .unique()
+      .references(() => encerramentosAlta.id),
     estagiarioId: uuid("estagiario_id")
       .notNull()
       .references(() => usuarios.id),
@@ -156,6 +159,10 @@ export const vagasLiberadas = pgTable(
     encerradaEm: timestamp("encerrada_em", { withTimezone: true }),
   },
   (t) => [
+    check(
+      "vagas_origem_unica",
+      sql`(${t.desligamentoId} is null) <> (${t.altaId} is null)`,
+    ),
     check(
       "vagas_ocupacao_completa",
       sql`(${t.ocupadaEm} is null) = (${t.ocupadaPorVinculoId} is null)`,

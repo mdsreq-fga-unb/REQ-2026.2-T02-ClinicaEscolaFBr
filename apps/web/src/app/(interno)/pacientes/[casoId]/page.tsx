@@ -41,6 +41,7 @@ import {
 import { DialogoVincular } from "@/components/casos/vincular";
 import { CartaoContribuicao } from "@/components/administrativo/contribuicao";
 import { AcessoNegado } from "@/components/comum/acesso-negado";
+import { AltaDoCaso } from "@/components/casos/alta";
 import { AutorizacaoMenorDaFicha } from "@/components/declaracoes/autorizacao-menor";
 import { SessoesComPresencaDaFicha } from "@/components/declaracoes/sessoes-com-presenca";
 import { ImpressaoEEntregaDoRelatorio } from "@/components/relatorio-final/relatorio-final";
@@ -282,6 +283,9 @@ export default function PacientePage() {
             ]}
           />
         </section>
+        {/* Alta do caso (RF68): o estagiário e o supervisor do caso veem a ficha
+            por aqui. */}
+        <AltaDoCaso casoId={r.casoId} nome={r.nome} />
         {/* A lista do RF44 é só da secretaria (RNF38): nos outros perfis, a
             seção nem aparece, em vez de um aviso de acesso negado. */}
         {secretaria && <SessoesComPresencaDaFicha casoId={r.casoId} />}
@@ -480,6 +484,8 @@ export default function PacientePage() {
           somenteLeitura={coordenacao}
         />
       )}
+      {/* Alta do caso (RF68): pedido, confirmação, encerramento e reabertura. */}
+      <AltaDoCaso casoId={d.casoId} nome={d.nome} />
       {/* Autorização de menor (RF45): só a secretaria registra, e o bloco só
           aparece para paciente menor de idade. */}
       {secretaria && (
