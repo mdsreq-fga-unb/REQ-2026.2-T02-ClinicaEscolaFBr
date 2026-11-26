@@ -4,6 +4,7 @@ import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import cookieParser from 'cookie-parser';
 import helmet from 'helmet';
 import { AppModule } from './app.module';
+import { exigirOrigemDaWeb } from './common/origem-da-web';
 
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
@@ -13,6 +14,8 @@ async function bootstrap() {
   app.use(helmet());
   app.use(cookieParser());
   app.enableCors({ origin: process.env.WEB_URL, credentials: true });
+  // Recusa o formulário ou o envio de outra página com o cookie da sessão.
+  if (process.env.WEB_URL) app.use(exigirOrigemDaWeb(process.env.WEB_URL));
 
   // A documentação da API (/docs) fica só fora de produção.
   if (process.env.NODE_ENV !== 'production') {

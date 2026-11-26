@@ -51,6 +51,10 @@ services:
       SMTP_FROM: ${SMTP_FROM:?}
       SMTP_EHLO: ${SMTP_EHLO:-}
       SALTOS_DE_PROXY: ${SALTOS_DE_PROXY:-1}
+      # Limites por endereço de origem (RF1, RF52 e RNF49), na janela de cada um.
+      LIMITE_INSCRICOES_POR_ORIGEM: ${LIMITE_INSCRICOES_POR_ORIGEM:-20}
+      LIMITE_VERIFICACAO_POR_ORIGEM: ${LIMITE_VERIFICACAO_POR_ORIGEM:-30}
+      LIMITE_ENTRADAS_POR_ORIGEM: ${LIMITE_ENTRADAS_POR_ORIGEM:-30}
       # Inscrição pública fechada até o termo de consentimento (RF57).
       INSCRICAO_ABERTA: ${INSCRICAO_ABERTA:-false}
     depends_on:
