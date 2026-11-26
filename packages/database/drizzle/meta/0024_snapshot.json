@@ -1,5 +1,5 @@
 {
-  "id": "51e02337-3ed9-4e7a-ac05-60188d488125",
+  "id": "8fd42514-d688-454e-aef0-c979d3380e7f",
   "prevId": "e769622e-fbb1-439a-b16c-f94720d8971f",
   "version": "7",
   "dialect": "postgresql",
@@ -1722,6 +1722,94 @@
       },
       "isRLSEnabled": false
     },
+    "public.entregas_relatorio": {
+      "name": "entregas_relatorio",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "versao_id": {
+          "name": "versao_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "via_assinada": {
+          "name": "via_assinada",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "entregue_a": {
+          "name": "entregue_a",
+          "type": "destinatario_relatorio",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "entregue_em": {
+          "name": "entregue_em",
+          "type": "date",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "registrada_por": {
+          "name": "registrada_por",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "registrada_em": {
+          "name": "registrada_em",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "entregas_relatorio_versao_id_versoes_relatorio_id_fk": {
+          "name": "entregas_relatorio_versao_id_versoes_relatorio_id_fk",
+          "tableFrom": "entregas_relatorio",
+          "tableTo": "versoes_relatorio",
+          "columnsFrom": ["versao_id"],
+          "columnsTo": ["id"],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "entregas_relatorio_registrada_por_usuarios_id_fk": {
+          "name": "entregas_relatorio_registrada_por_usuarios_id_fk",
+          "tableFrom": "entregas_relatorio",
+          "tableTo": "usuarios",
+          "columnsFrom": ["registrada_por"],
+          "columnsTo": ["id"],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {
+        "entregas_relatorio_versao_id_unique": {
+          "name": "entregas_relatorio_versao_id_unique",
+          "nullsNotDistinct": false,
+          "columns": ["versao_id"]
+        }
+      },
+      "policies": {},
+      "checkConstraints": {
+        "entregas_relatorio_via_assinada": {
+          "name": "entregas_relatorio_via_assinada",
+          "value": "\"entregas_relatorio\".\"via_assinada\""
+        }
+      },
+      "isRLSEnabled": false
+    },
     "public.evolucoes": {
       "name": "evolucoes",
       "schema": "",
@@ -1846,6 +1934,86 @@
           "value": "(\"evolucoes\".\"queixa_cifrada\" IS NOT NULL AND \"evolucoes\".\"planejamento_cifrado\" IS NOT NULL) OR (\"evolucoes\".\"humor_aparencia_cifrado\" IS NOT NULL AND \"evolucoes\".\"conteudo_trabalhado_cifrado\" IS NOT NULL AND \"evolucoes\".\"tecnicas_utilizadas_cifrado\" IS NOT NULL AND \"evolucoes\".\"plano_proxima_sessao_cifrado\" IS NOT NULL)"
         }
       },
+      "isRLSEnabled": false
+    },
+    "public.impressoes_relatorio": {
+      "name": "impressoes_relatorio",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "versao_id": {
+          "name": "versao_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "impressa_por": {
+          "name": "impressa_por",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "impressa_em": {
+          "name": "impressa_em",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {
+        "impressoes_relatorio_versao": {
+          "name": "impressoes_relatorio_versao",
+          "columns": [
+            {
+              "expression": "versao_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "impressa_em",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {
+        "impressoes_relatorio_versao_id_versoes_relatorio_id_fk": {
+          "name": "impressoes_relatorio_versao_id_versoes_relatorio_id_fk",
+          "tableFrom": "impressoes_relatorio",
+          "tableTo": "versoes_relatorio",
+          "columnsFrom": ["versao_id"],
+          "columnsTo": ["id"],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "impressoes_relatorio_impressa_por_usuarios_id_fk": {
+          "name": "impressoes_relatorio_impressa_por_usuarios_id_fk",
+          "tableFrom": "impressoes_relatorio",
+          "tableTo": "usuarios",
+          "columnsFrom": ["impressa_por"],
+          "columnsTo": ["id"],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
       "isRLSEnabled": false
     },
     "public.prontuarios": {
@@ -2009,6 +2177,241 @@
       },
       "policies": {},
       "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.relatorios_finais": {
+      "name": "relatorios_finais",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "prontuario_id": {
+          "name": "prontuario_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "criado_em": {
+          "name": "criado_em",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "relatorios_finais_prontuario_id_prontuarios_id_fk": {
+          "name": "relatorios_finais_prontuario_id_prontuarios_id_fk",
+          "tableFrom": "relatorios_finais",
+          "tableTo": "prontuarios",
+          "columnsFrom": ["prontuario_id"],
+          "columnsTo": ["id"],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {
+        "relatorios_finais_prontuario_id_unique": {
+          "name": "relatorios_finais_prontuario_id_unique",
+          "nullsNotDistinct": false,
+          "columns": ["prontuario_id"]
+        }
+      },
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.versoes_relatorio": {
+      "name": "versoes_relatorio",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "relatorio_id": {
+          "name": "relatorio_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "versao": {
+          "name": "versao",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "estado": {
+          "name": "estado",
+          "type": "estado_relatorio",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'rascunho'"
+        },
+        "secoes_cifradas": {
+          "name": "secoes_cifradas",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "justificativa_excecao_cifrada": {
+          "name": "justificativa_excecao_cifrada",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "origem": {
+          "name": "origem",
+          "type": "jsonb",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "autor_id": {
+          "name": "autor_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "criada_em": {
+          "name": "criada_em",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "atualizada_em": {
+          "name": "atualizada_em",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "enviada_em": {
+          "name": "enviada_em",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "decidida_por": {
+          "name": "decidida_por",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "decidida_em": {
+          "name": "decidida_em",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "observacoes_cifradas": {
+          "name": "observacoes_cifradas",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        }
+      },
+      "indexes": {
+        "versoes_relatorio_uma_aberta": {
+          "name": "versoes_relatorio_uma_aberta",
+          "columns": [
+            {
+              "expression": "relatorio_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": true,
+          "where": "\"versoes_relatorio\".\"estado\" in ('rascunho', 'em_revisao')",
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "versoes_relatorio_uma_aprovada": {
+          "name": "versoes_relatorio_uma_aprovada",
+          "columns": [
+            {
+              "expression": "relatorio_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": true,
+          "where": "\"versoes_relatorio\".\"estado\" = 'aprovado'",
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {
+        "versoes_relatorio_relatorio_id_relatorios_finais_id_fk": {
+          "name": "versoes_relatorio_relatorio_id_relatorios_finais_id_fk",
+          "tableFrom": "versoes_relatorio",
+          "tableTo": "relatorios_finais",
+          "columnsFrom": ["relatorio_id"],
+          "columnsTo": ["id"],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "versoes_relatorio_autor_id_usuarios_id_fk": {
+          "name": "versoes_relatorio_autor_id_usuarios_id_fk",
+          "tableFrom": "versoes_relatorio",
+          "tableTo": "usuarios",
+          "columnsFrom": ["autor_id"],
+          "columnsTo": ["id"],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "versoes_relatorio_decidida_por_usuarios_id_fk": {
+          "name": "versoes_relatorio_decidida_por_usuarios_id_fk",
+          "tableFrom": "versoes_relatorio",
+          "tableTo": "usuarios",
+          "columnsFrom": ["decidida_por"],
+          "columnsTo": ["id"],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {
+        "versoes_relatorio_versao": {
+          "name": "versoes_relatorio_versao",
+          "nullsNotDistinct": false,
+          "columns": ["relatorio_id", "versao"]
+        }
+      },
+      "policies": {},
+      "checkConstraints": {
+        "versoes_relatorio_versao_positiva": {
+          "name": "versoes_relatorio_versao_positiva",
+          "value": "\"versoes_relatorio\".\"versao\" >= 1"
+        },
+        "versoes_relatorio_envio": {
+          "name": "versoes_relatorio_envio",
+          "value": "\"versoes_relatorio\".\"estado\" = 'rascunho' OR (\"versoes_relatorio\".\"enviada_em\" IS NOT NULL AND \"versoes_relatorio\".\"origem\" IS NOT NULL)"
+        },
+        "versoes_relatorio_decisao": {
+          "name": "versoes_relatorio_decisao",
+          "value": "(\"versoes_relatorio\".\"estado\" in ('aprovado', 'devolvido')) = (\"versoes_relatorio\".\"decidida_por\" IS NOT NULL AND \"versoes_relatorio\".\"decidida_em\" IS NOT NULL)"
+        },
+        "versoes_relatorio_observacoes": {
+          "name": "versoes_relatorio_observacoes",
+          "value": "(\"versoes_relatorio\".\"estado\" = 'devolvido') = (\"versoes_relatorio\".\"observacoes_cifradas\" IS NOT NULL)"
+        }
+      },
       "isRLSEnabled": false
     },
     "public.alteracoes_parametro": {
@@ -2717,76 +3120,6 @@
           "value": "(\"faltas_paciente\".\"retirada_em\" is null) = (\"faltas_paciente\".\"retirada_por\" is null)"
         }
       },
-      "isRLSEnabled": false
-    },
-    "public.reclassificacoes_falta": {
-      "name": "reclassificacoes_falta",
-      "schema": "",
-      "columns": {
-        "id": {
-          "name": "id",
-          "type": "uuid",
-          "primaryKey": true,
-          "notNull": true,
-          "default": "gen_random_uuid()"
-        },
-        "cancelamento_id": {
-          "name": "cancelamento_id",
-          "type": "uuid",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "motivo_cifrado": {
-          "name": "motivo_cifrado",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "reclassificada_por": {
-          "name": "reclassificada_por",
-          "type": "uuid",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "reclassificada_em": {
-          "name": "reclassificada_em",
-          "type": "timestamp with time zone",
-          "primaryKey": false,
-          "notNull": true,
-          "default": "now()"
-        }
-      },
-      "indexes": {},
-      "foreignKeys": {
-        "reclassificacoes_falta_cancelamento_id_cancelamentos_sessao_id_fk": {
-          "name": "reclassificacoes_falta_cancelamento_id_cancelamentos_sessao_id_fk",
-          "tableFrom": "reclassificacoes_falta",
-          "tableTo": "cancelamentos_sessao",
-          "columnsFrom": ["cancelamento_id"],
-          "columnsTo": ["id"],
-          "onDelete": "no action",
-          "onUpdate": "no action"
-        },
-        "reclassificacoes_falta_reclassificada_por_usuarios_id_fk": {
-          "name": "reclassificacoes_falta_reclassificada_por_usuarios_id_fk",
-          "tableFrom": "reclassificacoes_falta",
-          "tableTo": "usuarios",
-          "columnsFrom": ["reclassificada_por"],
-          "columnsTo": ["id"],
-          "onDelete": "no action",
-          "onUpdate": "no action"
-        }
-      },
-      "compositePrimaryKeys": {},
-      "uniqueConstraints": {
-        "reclassificacoes_falta_cancelamento": {
-          "name": "reclassificacoes_falta_cancelamento",
-          "nullsNotDistinct": false,
-          "columns": ["cancelamento_id"]
-        }
-      },
-      "policies": {},
-      "checkConstraints": {},
       "isRLSEnabled": false
     },
     "public.vagas_liberadas": {
@@ -3578,6 +3911,16 @@
         "realizada",
         "falta_paciente"
       ]
+    },
+    "public.destinatario_relatorio": {
+      "name": "destinatario_relatorio",
+      "schema": "public",
+      "values": ["paciente", "responsavel_legal"]
+    },
+    "public.estado_relatorio": {
+      "name": "estado_relatorio",
+      "schema": "public",
+      "values": ["rascunho", "em_revisao", "devolvido", "aprovado"]
     },
     "public.aviso_paciente": {
       "name": "aviso_paciente",

@@ -2279,6 +2279,26 @@ sequenceDiagram
 
 **Dependências e riscos:** depende do RF28 e do RF32. É a maior feature do ciclo; se apertar, a impressão e a entrega podem ser integradas numa segunda PR, depois do fluxo de revisão.
 
+**Na implementação (modelo, impressão e entrega):** a primeira PR do RF33 traz o modelo inteiro e a parte da secretaria; a elaboração do rascunho, o envio e a decisão do supervisor entram depois, sobre as mesmas tabelas.
+
+- **Banco (migration 0024):** `relatorios_finais` (um por prontuário), `versoes_relatorio`, `impressoes_relatorio` e `entregas_relatorio`. O gatilho `proteger_versao_relatorio` deixa o rascunho mudar e passar só para "em revisão"; a versão em revisão só recebe a decisão, sem mudar o texto nem a origem; a aprovada e a devolvida ficam fixas, e nenhuma versão é apagada. Índices únicos garantem uma versão aberta e uma aprovada por relatório. A impressão e a entrega só aceitam a versão aprovada (gatilho `exigir_versao_relatorio_aprovada`) e são só inserção; a entrega tem o `check` da via assinada.
+- **Rotas:** `GET /casos/:id/relatorio-final`, a lista de versões; a secretaria recebe só a aprovada, sem as observações. `GET .../versoes/:versao/impressao` devolve a versão aprovada para a página de impressão, e `POST .../versoes/:versao/impressoes` registra quem imprimiu e quando: a impressão foi separada da abertura da página, para o registro ser feito quando a pessoa manda imprimir, não quando só olha a página. `POST .../entrega` é só da secretaria, depois de imprimir, uma vez por versão, com a data entre a aprovação e hoje e o responsável legal só quando a inscrição tem um. A coordenação consulta as versões, mas não imprime. Toda consulta, permitida ou negada, entra no registro de acessos (RNF52), com a política do prontuário no modo `relatorio_final`, a única exceção da secretaria (RF55).
+- **Telas:** na ficha do paciente, o cartão "Relatório final de {nome}" da secretaria, com o selo "Aprovado em", "Imprimir", a última impressão e "Registrar a entrega" (a confirmação da via assinada com os nomes do estagiário e do supervisor, a quem foi entregue e a data), ou o aviso "Relatório ainda não aprovado". No prontuário, a seção "Relatório final" lista as versões com a situação e, na aprovada, "Finalizar em PDF" para o estagiário e o supervisor. A página de impressão segue a prancha 6-6 e esconde o menu e os botões na impressão (folha A4, uma página no exemplo da prancha).
+- **Testes:** 18 testes da API, com as negações por perfil e as regras do banco, e 9 da tela; a tela foi conferida no navegador contra a prancha 6-6, em 1366 e 390 px, e o PDF gerado pela impressão.
+
+**Na implementação (elaboração, envio e decisão):** a segunda PR do RF33, sobre as mesmas tabelas.
+
+- **Consulta separada.** O texto das versões, as sessões, as lacunas e a identificação vêm em `GET /casos/:id/relatorio-final/elaboracao` (estagiário responsável, supervisor do caso e coordenação, pela política no modo `leitura`), e não no `GET /casos/:id/relatorio-final`, que a secretaria também usa. Assim, a resposta da secretaria continua sem conteúdo clínico. O rascunho só vai para o estagiário.
+- **Escrita.** `PUT .../rascunho` aceita seções em branco; `POST .../envio` recebe o texto e o fixa na mesma transação, com as sessões e as evoluções de origem, e exige todas as seções. A política usa o modo `registro_estagiario`. O corpo é validado depois dela, e o vínculo é conferido de novo com o caso travado. Com a versão em revisão ou aprovada, a resposta é `409`.
+- **Justificativa.** Conta as sessões `realizada` do ciclo. Fora de 8 a 10, o envio sem a justificativa recebe `400` com o campo; dentro da faixa, ela não é guardada.
+- **Decisão.** Só o supervisor do caso, na versão em revisão. A aprovação com observações escritas é recusada, para o texto não se perder sem aviso, e a tela pede a confirmação antes de aprovar.
+- **Autoria (migration 0025).** O gatilho da 0024 fixava o autor também no rascunho. Depois de uma transferência (RF25), o novo responsável continua o rascunho, que passa a ser dele; enviada, a autoria não muda.
+- **Lacunas.** São as sessões realizadas sem evolução. A evolução incompleta não existe no banco, pelo `check` da ficha completa.
+- **Limites.** 5.000 caracteres por seção e 1.000 na justificativa e nas observações, propostas da equipe para validar com a FBr.
+- **Telas.** Página "Relatório final · ciclo N" (`/relatorio-final/:casoId`), aberta pela seção do prontuário, com o formulário, a revisão e as versões enviadas para leitura, cada uma com os registros de origem e o aviso do que veio depois do envio. Sair com texto não salvo pede a confirmação do navegador.
+- **Alta (RF68).** A alta encerra o vínculo, e o estagiário perde o acesso à elaboração: o relatório precisa ser enviado antes da confirmação da alta, ou o caso precisa ser reaberto.
+
+
 ---
 
 ## Controle de assiduidade e alertas (CP9)
@@ -2686,7 +2706,7 @@ sequenceDiagram
 
 **Na implementação (ajustes da inspeção de design de 24/11):**
 
-- **Migration:** a `0024_reclassificacao_falta`, depois da `0023` da declaração de comparecimento (RF45), cria a `reclassificacoes_falta`, com o `unique` em `cancelamento_id`, e o gatilho `reclassificacoes_falta_somente_insercao`, que usa o `impedir_alteracao_registro`. O script do usuário da aplicação tira dele o `UPDATE` e o `DELETE`. O `cancelamentos_sessao` não muda, e a restrição `cancelamentos_aviso_paciente` da `0020` continua valendo.
+- **Migration:** a `0026_reclassificacao_falta`, depois da `0025` do relatório final (RF33), cria a `reclassificacoes_falta`, com o `unique` em `cancelamento_id`, e o gatilho `reclassificacoes_falta_somente_insercao`, que usa o `impedir_alteracao_registro`. O script do usuário da aplicação tira dele o `UPDATE` e o `DELETE`. O `cancelamentos_sessao` não muda, e a restrição `cancelamentos_aviso_paciente` da `0020` continua valendo.
 - **Supervisor com o estagiário em casos de outros supervisores (apontamento 1):** a contagem e a situação são sempre as do estagiário no semestre inteiro, em todos os casos, porque o limite do RF63 vale para todas as faltas dele. As linhas com a data e o horário são só as dos casos do supervisor, pela mesma regra do RF39 (a atribuição no momento do registro da ausência), e as outras aparecem só como "N faltas em casos de outros supervisores", sem a data (RNF35). A coordenação vê todas as linhas. A regra fica na função `faltaDoSupervisor`, compartilhada com o RF39, para o RF63 usá-la também na faixa (apontamento 2 da inspeção do RF63).
 - **Reclassificação na relação do RF39 (apontamento 2):** a ausência reclassificada continua na relação do período, com a data e o horário riscados e o texto "Reclassificada como cancelamento administrativo por … em …", e sai da contagem "N faltas no período".
 - **Concorrência (apontamento 3):** o `registrarAusencia` do RF16 e a reclassificação travam a linha do estagiário em `usuarios` (`for no key update`) antes de contar, com a função `travarFaltasDoEstagiario`. O `no key update` não segura as inserções que só apontam para o usuário, como a auditoria. A sinalização do RF63 entra depois dessa trava, na mesma transação.
@@ -3137,6 +3157,15 @@ _Ciclo 6._
 **Dados de teste:** a exportação de agosto de 2026, conferida contra o `GET /indicadores` do mesmo intervalo; o semestre sem vagas ofertadas (aviso no PDF); o supervisor tentando exportar (403); a exportação registrada na auditoria.
 
 **Dependências e riscos:** depende do RF48 (#22), integrado no Ciclo 5. A biblioteca de PDF é uma dependência nova, que passa pela revisão de dependências do CI.
+
+**Na implementação:**
+
+- **Mesmos valores da tela, mesmo com a data final de hoje.** Quando a data final é hoje, as vagas ocupadas e a distribuição dependem do instante da consulta (RF48). Por isso, a tela manda junto o `referencia` que recebeu do `GET /indicadores`, e a API calcula o PDF naquele instante. A referência só vale se for do dia da data final e não estiver no futuro; senão, a resposta é 400, com o pedido para consultar de novo. Com a data final no passado, o cálculo usa o fim daquele dia, como no RF48, e a referência é ignorada.
+- **Texto separado do desenho.** O texto do PDF é montado por `montarRelatorio`, com as mesmas frases e o mesmo formato de número da tela, e `gerarPdf` só desenha, com o `pdfkit` 0.20. Os testes conferem o texto sem precisar ler o PDF.
+- **Página e paginação.** O PDF é A4 deitado e segue a prancha 9-1: cabeçalho da Clínica Escola, título, intervalo e referência, os quatro cartões, o aviso das vagas quando faltam e a tabela por supervisor. Quando a tabela passa de página, o cabeçalho se repete. O rodapé diz quem exportou e quando, no horário de Brasília. A paginação "Página N de M" fica no canto superior direito.
+- **Acessibilidade.** O PDF é marcado, com o idioma `pt-BR`, o título exibido na janela, os títulos e parágrafos na estrutura, e a tabela com `TH` e `TD`. Molduras, divisórias, paginação e o cabeçalho repetido são artefatos, para o leitor de tela não ler duas vezes. A fonte é a Helvetica padrão do PDF, que não fica embutida no arquivo.
+- **Botão na tela.** "Exportar PDF" usa `aria-disabled` em vez de `disabled`. Assim ele continua acessível pelo Tab e lê a explicação "Consulte um período para exportar o relatório." Ele fica indisponível sem uma consulta exibida, durante uma nova consulta e enquanto o PDF é gerado. A conclusão é anunciada em `role="status"`, e uma recusa mostra o motivo.
+- **Auditoria.** A operação é `exportar_relatorio_institucional`, com o intervalo e a referência usados, sem dado de paciente.
 
 ## Roteiro da inspeção de design
 
