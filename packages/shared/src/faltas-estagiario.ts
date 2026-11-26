@@ -157,8 +157,9 @@ export type SinalizacaoReprovacao = {
   encerradaEm: string | null;
   motivoEncerramento: MotivoEncerramentoSinalizacao | null;
   // A falta cuja reclassificação encerrou a sinalização sem decisão: o início da
-  // sessão e o momento da reclassificação.
-  faltaReclassificada: { inicio: string; em: string } | null;
+  // sessão e o momento da reclassificação. Para o supervisor, o início só vem
+  // quando a falta é de um caso dele, como nas sessões (RNF35); senão, é nulo.
+  faltaReclassificada: { inicio: string | null; em: string } | null;
   // A contagem atual do semestre, que continua mudando depois da sinalização.
   faltas: number;
   // Para o supervisor, as sessões são só as dos casos dele, e as outras faltas

@@ -263,9 +263,13 @@ function Encerrada({ s }: { s: SinalizacaoReprovacao }) {
         </p>
         <p>
           Sinalizada em {gerada} e encerrada em {encerrada}: a contagem caiu
-          para {LIMITE_FALTAS_ESTAGIARIO - 1}, abaixo do limite, porque a falta
-          {falta ? ` de ${dataBr(falta.inicio).slice(0, 5)}` : ""} foi
-          reclassificada como cancelamento administrativo.
+          para {LIMITE_FALTAS_ESTAGIARIO - 1}, abaixo do limite, porque{" "}
+          {falta?.inicio
+            ? `a falta de ${dataBr(falta.inicio).slice(0, 5)}`
+            : falta
+              ? "uma falta num caso de outro supervisor"
+              : "a falta"}{" "}
+          foi reclassificada como cancelamento administrativo.
         </p>
         {vigente && (
           <p className="ui-dica">

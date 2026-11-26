@@ -4,7 +4,7 @@ import {
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
-import { and, desc, eq, inArray, isNull } from 'drizzle-orm';
+import { and, desc, eq, inArray, isNull, sql } from 'drizzle-orm';
 import {
   atribuicoesSupervisor,
   cancelamentosSessao,
@@ -25,6 +25,7 @@ import { AuditoriaService } from '../../auditoria/auditoria.service';
 import type { UsuarioAutenticado } from '../../auth/usuario-autenticado';
 import { DB } from '../../database/database.module';
 import {
+  faltaDoSupervisor,
   FaltasEstagiarioService,
   SEM_ACESSO,
 } from './faltas-estagiario.service';
@@ -85,6 +86,12 @@ export class SinalizacoesService {
         encerradaEm: sinalizacoesReprovacao.encerradaEm,
         motivoEncerramento: sinalizacoesReprovacao.motivoEncerramento,
         faltaReclassificadaInicio: sessoesAtendimento.inicio,
+        // O mesmo recorte das sessões (RF40, RNF35): para o supervisor, a data
+        // da falta reclassificada só sai se ela é de um caso dele no momento do
+        // registro da ausência.
+        faltaReclassificadaVisivel: supervisor
+          ? sql<boolean>`${faltaDoSupervisor(this.db, usuario.id)}`
+          : sql<boolean>`true`,
         reclassificadaEm: reclassificacoesFalta.reclassificadaEm,
       })
       .from(sinalizacoesReprovacao)
@@ -136,7 +143,9 @@ export class SinalizacoesService {
         faltaReclassificada:
           l.faltaReclassificadaInicio && l.reclassificadaEm
             ? {
-                inicio: l.faltaReclassificadaInicio.toISOString(),
+                inicio: l.faltaReclassificadaVisivel
+                  ? l.faltaReclassificadaInicio.toISOString()
+                  : null,
                 em: l.reclassificadaEm.toISOString(),
               }
             : null,
