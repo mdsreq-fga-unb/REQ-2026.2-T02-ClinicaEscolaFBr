@@ -248,4 +248,132 @@ describe("Indicadores operacionais (RF48)", () => {
       expect(fetch).not.toHaveBeenCalled();
     },
   );
+
+  describe("Exportar PDF (RF49)", () => {
+    const pdf = () =>
+      new Response(new Blob(["%PDF-1.7"], { type: "application/pdf" }), {
+        status: 200,
+        headers: { "Content-Type": "application/pdf" },
+      });
+    let baixados: string[];
+    beforeEach(() => {
+      baixados = [];
+      // O jsdom não cria URLs de Blob.
+      URL.createObjectURL = vi.fn(() => "blob:relatorio");
+      URL.revokeObjectURL = vi.fn();
+      vi.spyOn(HTMLAnchorElement.prototype, "click").mockImplementation(
+        function (this: HTMLAnchorElement) {
+          baixados.push(this.download);
+        },
+      );
+    });
+    afterEach(() => {
+      vi.restoreAllMocks();
+    });
+    const rotear = (indicadores: Indicadores, relatorio = pdf) =>
+      vi.fn(async (url: string) =>
+        String(url).includes("/indicadores/relatorio.pdf")
+          ? relatorio()
+          : responder(indicadores),
+      );
+
+    it("exporta a consulta exibida e baixa o arquivo com o intervalo no nome (RF49)", async () => {
+      const fetch = rotear(agosto);
+      vi.stubGlobal("fetch", fetch);
+      montar();
+      await screen.findByText("82");
+      const botao = screen.getByRole("button", { name: "Exportar PDF" });
+      expect(botao).not.toHaveAttribute("aria-disabled", "true");
+      expect(
+        screen.getByText(
+          "O PDF traz exatamente a consulta exibida. Para outro período, consulte de novo antes de exportar.",
+        ),
+      ).toBeInTheDocument();
+      fireEvent.click(botao);
+      expect(
+        await screen.findByText(
+          "Relatório exportado: indicadores-2026-08-01-a-2026-08-31.pdf.",
+        ),
+      ).toBeInTheDocument();
+      const chamada = fetch.mock.calls.find(([url]) =>
+        String(url).includes("relatorio.pdf"),
+      )!;
+      const url = new URL(String(chamada[0]).replace(/^undefined/, "http://t"));
+      expect(url.searchParams.get("inicio")).toBe("2026-08-01");
+      expect(url.searchParams.get("fim")).toBe("2026-08-31");
+      // Com a data final no passado, a referência é o fim do dia, sem parâmetro.
+      expect(url.searchParams.has("referencia")).toBe(false);
+      expect(baixados).toEqual(["indicadores-2026-08-01-a-2026-08-31.pdf"]);
+    });
+
+    it("com a data final de hoje, manda o instante da consulta exibida (RF49)", async () => {
+      const hoje = {
+        ...agosto,
+        fim: "2026-11-20",
+        referencia: "2026-11-20T13:05:00.000Z",
+        referenciaEhAgora: true,
+      };
+      const fetch = rotear(hoje);
+      vi.stubGlobal("fetch", fetch);
+      montar();
+      await screen.findByText("82");
+      fireEvent.click(screen.getByRole("button", { name: "Exportar PDF" }));
+      await waitFor(() => expect(baixados).toHaveLength(1));
+      const chamada = fetch.mock.calls.find(([url]) =>
+        String(url).includes("relatorio.pdf"),
+      )!;
+      expect(String(chamada[0])).toContain(
+        "referencia=2026-11-20T13%3A05%3A00.000Z",
+      );
+    });
+
+    it("sem consulta exibida, o botão fica indisponível com a explicação e não exporta (RF49)", async () => {
+      const fetch = rotear(agosto);
+      vi.stubGlobal("fetch", fetch);
+      montar();
+      await screen.findByText("82");
+      fireEvent.change(screen.getByLabelText("Data inicial"), {
+        target: { value: "2026-08-31" },
+      });
+      fireEvent.change(screen.getByLabelText("Data final"), {
+        target: { value: "2026-08-01" },
+      });
+      fireEvent.click(screen.getByRole("button", { name: "Consultar" }));
+      await screen.findByText("Não foi possível consultar este período.");
+      const botao = screen.getByRole("button", { name: "Exportar PDF" });
+      expect(botao).toHaveAttribute("aria-disabled", "true");
+      expect(botao).toHaveAccessibleDescription(
+        "Consulte um período para exportar o relatório.",
+      );
+      fireEvent.click(botao);
+      expect(
+        fetch.mock.calls.some(([url]) => String(url).includes("relatorio.pdf")),
+      ).toBe(false);
+    });
+
+    it("mostra o motivo quando a exportação é recusada (RF49)", async () => {
+      vi.stubGlobal(
+        "fetch",
+        rotear(agosto, () =>
+          responder(
+            {
+              message:
+                "A referência não corresponde à consulta exibida. Consulte de novo antes de exportar.",
+            },
+            400,
+          ),
+        ),
+      );
+      montar();
+      await screen.findByText("82");
+      fireEvent.click(screen.getByRole("button", { name: "Exportar PDF" }));
+      expect(
+        await screen.findByText("Não foi possível exportar o relatório."),
+      ).toBeInTheDocument();
+      expect(
+        screen.getByText(/A referência não corresponde à consulta exibida/),
+      ).toBeInTheDocument();
+      expect(baixados).toEqual([]);
+    });
+  });
 });

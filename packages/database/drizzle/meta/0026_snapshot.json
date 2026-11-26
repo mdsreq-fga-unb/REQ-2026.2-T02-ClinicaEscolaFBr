@@ -1,6 +1,6 @@
 {
-  "id": "5b06306f-7635-41dc-b2f3-1e7bf6d57b71",
-  "prevId": "763e75af-da95-4c52-8ad2-77436a93ba36",
+  "id": "33e9144e-96d6-4ec1-b2f8-5ef09feba20b",
+  "prevId": "273a109e-a856-4ba4-8189-785dab6b39ff",
   "version": "7",
   "dialect": "postgresql",
   "tables": {
@@ -1722,6 +1722,94 @@
       },
       "isRLSEnabled": false
     },
+    "public.entregas_relatorio": {
+      "name": "entregas_relatorio",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "versao_id": {
+          "name": "versao_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "via_assinada": {
+          "name": "via_assinada",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "entregue_a": {
+          "name": "entregue_a",
+          "type": "destinatario_relatorio",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "entregue_em": {
+          "name": "entregue_em",
+          "type": "date",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "registrada_por": {
+          "name": "registrada_por",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "registrada_em": {
+          "name": "registrada_em",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "entregas_relatorio_versao_id_versoes_relatorio_id_fk": {
+          "name": "entregas_relatorio_versao_id_versoes_relatorio_id_fk",
+          "tableFrom": "entregas_relatorio",
+          "tableTo": "versoes_relatorio",
+          "columnsFrom": ["versao_id"],
+          "columnsTo": ["id"],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "entregas_relatorio_registrada_por_usuarios_id_fk": {
+          "name": "entregas_relatorio_registrada_por_usuarios_id_fk",
+          "tableFrom": "entregas_relatorio",
+          "tableTo": "usuarios",
+          "columnsFrom": ["registrada_por"],
+          "columnsTo": ["id"],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {
+        "entregas_relatorio_versao_id_unique": {
+          "name": "entregas_relatorio_versao_id_unique",
+          "nullsNotDistinct": false,
+          "columns": ["versao_id"]
+        }
+      },
+      "policies": {},
+      "checkConstraints": {
+        "entregas_relatorio_via_assinada": {
+          "name": "entregas_relatorio_via_assinada",
+          "value": "\"entregas_relatorio\".\"via_assinada\""
+        }
+      },
+      "isRLSEnabled": false
+    },
     "public.evolucoes": {
       "name": "evolucoes",
       "schema": "",
@@ -1846,6 +1934,86 @@
           "value": "(\"evolucoes\".\"queixa_cifrada\" IS NOT NULL AND \"evolucoes\".\"planejamento_cifrado\" IS NOT NULL) OR (\"evolucoes\".\"humor_aparencia_cifrado\" IS NOT NULL AND \"evolucoes\".\"conteudo_trabalhado_cifrado\" IS NOT NULL AND \"evolucoes\".\"tecnicas_utilizadas_cifrado\" IS NOT NULL AND \"evolucoes\".\"plano_proxima_sessao_cifrado\" IS NOT NULL)"
         }
       },
+      "isRLSEnabled": false
+    },
+    "public.impressoes_relatorio": {
+      "name": "impressoes_relatorio",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "versao_id": {
+          "name": "versao_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "impressa_por": {
+          "name": "impressa_por",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "impressa_em": {
+          "name": "impressa_em",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {
+        "impressoes_relatorio_versao": {
+          "name": "impressoes_relatorio_versao",
+          "columns": [
+            {
+              "expression": "versao_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "impressa_em",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {
+        "impressoes_relatorio_versao_id_versoes_relatorio_id_fk": {
+          "name": "impressoes_relatorio_versao_id_versoes_relatorio_id_fk",
+          "tableFrom": "impressoes_relatorio",
+          "tableTo": "versoes_relatorio",
+          "columnsFrom": ["versao_id"],
+          "columnsTo": ["id"],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "impressoes_relatorio_impressa_por_usuarios_id_fk": {
+          "name": "impressoes_relatorio_impressa_por_usuarios_id_fk",
+          "tableFrom": "impressoes_relatorio",
+          "tableTo": "usuarios",
+          "columnsFrom": ["impressa_por"],
+          "columnsTo": ["id"],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
       "isRLSEnabled": false
     },
     "public.prontuarios": {
@@ -2009,6 +2177,241 @@
       },
       "policies": {},
       "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.relatorios_finais": {
+      "name": "relatorios_finais",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "prontuario_id": {
+          "name": "prontuario_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "criado_em": {
+          "name": "criado_em",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "relatorios_finais_prontuario_id_prontuarios_id_fk": {
+          "name": "relatorios_finais_prontuario_id_prontuarios_id_fk",
+          "tableFrom": "relatorios_finais",
+          "tableTo": "prontuarios",
+          "columnsFrom": ["prontuario_id"],
+          "columnsTo": ["id"],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {
+        "relatorios_finais_prontuario_id_unique": {
+          "name": "relatorios_finais_prontuario_id_unique",
+          "nullsNotDistinct": false,
+          "columns": ["prontuario_id"]
+        }
+      },
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.versoes_relatorio": {
+      "name": "versoes_relatorio",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "relatorio_id": {
+          "name": "relatorio_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "versao": {
+          "name": "versao",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "estado": {
+          "name": "estado",
+          "type": "estado_relatorio",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'rascunho'"
+        },
+        "secoes_cifradas": {
+          "name": "secoes_cifradas",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "justificativa_excecao_cifrada": {
+          "name": "justificativa_excecao_cifrada",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "origem": {
+          "name": "origem",
+          "type": "jsonb",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "autor_id": {
+          "name": "autor_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "criada_em": {
+          "name": "criada_em",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "atualizada_em": {
+          "name": "atualizada_em",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "enviada_em": {
+          "name": "enviada_em",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "decidida_por": {
+          "name": "decidida_por",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "decidida_em": {
+          "name": "decidida_em",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "observacoes_cifradas": {
+          "name": "observacoes_cifradas",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        }
+      },
+      "indexes": {
+        "versoes_relatorio_uma_aberta": {
+          "name": "versoes_relatorio_uma_aberta",
+          "columns": [
+            {
+              "expression": "relatorio_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": true,
+          "where": "\"versoes_relatorio\".\"estado\" in ('rascunho', 'em_revisao')",
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "versoes_relatorio_uma_aprovada": {
+          "name": "versoes_relatorio_uma_aprovada",
+          "columns": [
+            {
+              "expression": "relatorio_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": true,
+          "where": "\"versoes_relatorio\".\"estado\" = 'aprovado'",
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {
+        "versoes_relatorio_relatorio_id_relatorios_finais_id_fk": {
+          "name": "versoes_relatorio_relatorio_id_relatorios_finais_id_fk",
+          "tableFrom": "versoes_relatorio",
+          "tableTo": "relatorios_finais",
+          "columnsFrom": ["relatorio_id"],
+          "columnsTo": ["id"],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "versoes_relatorio_autor_id_usuarios_id_fk": {
+          "name": "versoes_relatorio_autor_id_usuarios_id_fk",
+          "tableFrom": "versoes_relatorio",
+          "tableTo": "usuarios",
+          "columnsFrom": ["autor_id"],
+          "columnsTo": ["id"],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "versoes_relatorio_decidida_por_usuarios_id_fk": {
+          "name": "versoes_relatorio_decidida_por_usuarios_id_fk",
+          "tableFrom": "versoes_relatorio",
+          "tableTo": "usuarios",
+          "columnsFrom": ["decidida_por"],
+          "columnsTo": ["id"],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {
+        "versoes_relatorio_versao": {
+          "name": "versoes_relatorio_versao",
+          "nullsNotDistinct": false,
+          "columns": ["relatorio_id", "versao"]
+        }
+      },
+      "policies": {},
+      "checkConstraints": {
+        "versoes_relatorio_versao_positiva": {
+          "name": "versoes_relatorio_versao_positiva",
+          "value": "\"versoes_relatorio\".\"versao\" >= 1"
+        },
+        "versoes_relatorio_envio": {
+          "name": "versoes_relatorio_envio",
+          "value": "\"versoes_relatorio\".\"estado\" = 'rascunho' OR (\"versoes_relatorio\".\"enviada_em\" IS NOT NULL AND \"versoes_relatorio\".\"origem\" IS NOT NULL)"
+        },
+        "versoes_relatorio_decisao": {
+          "name": "versoes_relatorio_decisao",
+          "value": "(\"versoes_relatorio\".\"estado\" in ('aprovado', 'devolvido')) = (\"versoes_relatorio\".\"decidida_por\" IS NOT NULL AND \"versoes_relatorio\".\"decidida_em\" IS NOT NULL)"
+        },
+        "versoes_relatorio_observacoes": {
+          "name": "versoes_relatorio_observacoes",
+          "value": "(\"versoes_relatorio\".\"estado\" = 'devolvido') = (\"versoes_relatorio\".\"observacoes_cifradas\" IS NOT NULL)"
+        }
+      },
       "isRLSEnabled": false
     },
     "public.alteracoes_parametro": {
@@ -2352,104 +2755,6 @@
         "cancelamentos_aviso_manual_completo": {
           "name": "cancelamentos_aviso_manual_completo",
           "value": "(\"cancelamentos_sessao\".\"aviso_manual_em\" is null) = (\"cancelamentos_sessao\".\"aviso_manual_por\" is null) and (\"cancelamentos_sessao\".\"aviso_manual_em\" is null) = (\"cancelamentos_sessao\".\"aviso_manual_canal\" is null) and (\"cancelamentos_sessao\".\"aviso_manual_em\" is null or \"cancelamentos_sessao\".\"aviso_paciente\" is not null)"
-        }
-      },
-      "isRLSEnabled": false
-    },
-    "public.decisoes_reprovacao": {
-      "name": "decisoes_reprovacao",
-      "schema": "",
-      "columns": {
-        "id": {
-          "name": "id",
-          "type": "uuid",
-          "primaryKey": true,
-          "notNull": true,
-          "default": "gen_random_uuid()"
-        },
-        "sinalizacao_id": {
-          "name": "sinalizacao_id",
-          "type": "uuid",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "decisao": {
-          "name": "decisao",
-          "type": "decisao_reprovacao",
-          "typeSchema": "public",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "faltas": {
-          "name": "faltas",
-          "type": "integer",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "justificativa_cifrada": {
-          "name": "justificativa_cifrada",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "decidida_por": {
-          "name": "decidida_por",
-          "type": "uuid",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "decidida_em": {
-          "name": "decidida_em",
-          "type": "timestamp with time zone",
-          "primaryKey": false,
-          "notNull": true,
-          "default": "now()"
-        }
-      },
-      "indexes": {
-        "decisoes_reprovacao_sinalizacao": {
-          "name": "decisoes_reprovacao_sinalizacao",
-          "columns": [
-            {
-              "expression": "sinalizacao_id",
-              "isExpression": false,
-              "asc": true,
-              "nulls": "last"
-            }
-          ],
-          "isUnique": false,
-          "concurrently": false,
-          "method": "btree",
-          "with": {}
-        }
-      },
-      "foreignKeys": {
-        "decisoes_reprovacao_sinalizacao_id_sinalizacoes_reprovacao_id_fk": {
-          "name": "decisoes_reprovacao_sinalizacao_id_sinalizacoes_reprovacao_id_fk",
-          "tableFrom": "decisoes_reprovacao",
-          "tableTo": "sinalizacoes_reprovacao",
-          "columnsFrom": ["sinalizacao_id"],
-          "columnsTo": ["id"],
-          "onDelete": "no action",
-          "onUpdate": "no action"
-        },
-        "decisoes_reprovacao_decidida_por_usuarios_id_fk": {
-          "name": "decisoes_reprovacao_decidida_por_usuarios_id_fk",
-          "tableFrom": "decisoes_reprovacao",
-          "tableTo": "usuarios",
-          "columnsFrom": ["decidida_por"],
-          "columnsTo": ["id"],
-          "onDelete": "no action",
-          "onUpdate": "no action"
-        }
-      },
-      "compositePrimaryKeys": {},
-      "uniqueConstraints": {},
-      "policies": {},
-      "checkConstraints": {
-        "decisoes_reprovacao_faltas": {
-          "name": "decisoes_reprovacao_faltas",
-          "value": "\"decisoes_reprovacao\".\"faltas\" >= 0"
         }
       },
       "isRLSEnabled": false
@@ -2885,140 +3190,6 @@
       },
       "policies": {},
       "checkConstraints": {},
-      "isRLSEnabled": false
-    },
-    "public.sinalizacoes_reprovacao": {
-      "name": "sinalizacoes_reprovacao",
-      "schema": "",
-      "columns": {
-        "id": {
-          "name": "id",
-          "type": "uuid",
-          "primaryKey": true,
-          "notNull": true,
-          "default": "gen_random_uuid()"
-        },
-        "estagiario_id": {
-          "name": "estagiario_id",
-          "type": "uuid",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "semestre": {
-          "name": "semestre",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "gerada_em": {
-          "name": "gerada_em",
-          "type": "timestamp with time zone",
-          "primaryKey": false,
-          "notNull": true,
-          "default": "now()"
-        },
-        "encerrada_em": {
-          "name": "encerrada_em",
-          "type": "timestamp with time zone",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "motivo_encerramento": {
-          "name": "motivo_encerramento",
-          "type": "motivo_encerramento_sinalizacao",
-          "typeSchema": "public",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "reclassificacao_id": {
-          "name": "reclassificacao_id",
-          "type": "uuid",
-          "primaryKey": false,
-          "notNull": false
-        }
-      },
-      "indexes": {
-        "sinalizacoes_reprovacao_aberta": {
-          "name": "sinalizacoes_reprovacao_aberta",
-          "columns": [
-            {
-              "expression": "estagiario_id",
-              "isExpression": false,
-              "asc": true,
-              "nulls": "last"
-            },
-            {
-              "expression": "semestre",
-              "isExpression": false,
-              "asc": true,
-              "nulls": "last"
-            }
-          ],
-          "isUnique": true,
-          "where": "\"sinalizacoes_reprovacao\".\"encerrada_em\" is null",
-          "concurrently": false,
-          "method": "btree",
-          "with": {}
-        },
-        "sinalizacoes_reprovacao_estagiario": {
-          "name": "sinalizacoes_reprovacao_estagiario",
-          "columns": [
-            {
-              "expression": "estagiario_id",
-              "isExpression": false,
-              "asc": true,
-              "nulls": "last"
-            },
-            {
-              "expression": "semestre",
-              "isExpression": false,
-              "asc": true,
-              "nulls": "last"
-            }
-          ],
-          "isUnique": false,
-          "concurrently": false,
-          "method": "btree",
-          "with": {}
-        }
-      },
-      "foreignKeys": {
-        "sinalizacoes_reprovacao_estagiario_id_usuarios_id_fk": {
-          "name": "sinalizacoes_reprovacao_estagiario_id_usuarios_id_fk",
-          "tableFrom": "sinalizacoes_reprovacao",
-          "tableTo": "usuarios",
-          "columnsFrom": ["estagiario_id"],
-          "columnsTo": ["id"],
-          "onDelete": "no action",
-          "onUpdate": "no action"
-        },
-        "sinalizacoes_reprovacao_reclassificacao_id_reclassificacoes_falta_id_fk": {
-          "name": "sinalizacoes_reprovacao_reclassificacao_id_reclassificacoes_falta_id_fk",
-          "tableFrom": "sinalizacoes_reprovacao",
-          "tableTo": "reclassificacoes_falta",
-          "columnsFrom": ["reclassificacao_id"],
-          "columnsTo": ["id"],
-          "onDelete": "no action",
-          "onUpdate": "no action"
-        }
-      },
-      "compositePrimaryKeys": {},
-      "uniqueConstraints": {},
-      "policies": {},
-      "checkConstraints": {
-        "sinalizacoes_reprovacao_semestre": {
-          "name": "sinalizacoes_reprovacao_semestre",
-          "value": "\"sinalizacoes_reprovacao\".\"semestre\" ~ '^[0-9]{4}/[12]$'"
-        },
-        "sinalizacoes_reprovacao_encerramento": {
-          "name": "sinalizacoes_reprovacao_encerramento",
-          "value": "(\"sinalizacoes_reprovacao\".\"encerrada_em\" is null) = (\"sinalizacoes_reprovacao\".\"motivo_encerramento\" is null)"
-        },
-        "sinalizacoes_reprovacao_reclassificacao": {
-          "name": "sinalizacoes_reprovacao_reclassificacao",
-          "value": "(\"sinalizacoes_reprovacao\".\"reclassificacao_id\" is not null) = (coalesce(\"sinalizacoes_reprovacao\".\"motivo_encerramento\"::text, '') = 'contagem_abaixo_do_limite')"
-        }
-      },
       "isRLSEnabled": false
     },
     "public.vagas_liberadas": {
@@ -3811,6 +3982,16 @@
         "falta_paciente"
       ]
     },
+    "public.destinatario_relatorio": {
+      "name": "destinatario_relatorio",
+      "schema": "public",
+      "values": ["paciente", "responsavel_legal"]
+    },
+    "public.estado_relatorio": {
+      "name": "estado_relatorio",
+      "schema": "public",
+      "values": ["rascunho", "em_revisao", "devolvido", "aprovado"]
+    },
     "public.aviso_paciente": {
       "name": "aviso_paciente",
       "schema": "public",
@@ -3836,16 +4017,6 @@
         "ausencia_estagiario",
         "desligamento"
       ]
-    },
-    "public.decisao_reprovacao": {
-      "name": "decisao_reprovacao",
-      "schema": "public",
-      "values": ["confirmada", "nao_aplicada"]
-    },
-    "public.motivo_encerramento_sinalizacao": {
-      "name": "motivo_encerramento_sinalizacao",
-      "schema": "public",
-      "values": ["decisao", "contagem_abaixo_do_limite"]
     },
     "public.origem_cancelamento": {
       "name": "origem_cancelamento",
