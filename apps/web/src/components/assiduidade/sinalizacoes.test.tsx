@@ -232,6 +232,28 @@ describe("Sinalização de reprovação (RF63, prancha 7-2)", () => {
       ).toBeTruthy();
     });
 
+    it("supervisor: a falta reclassificada num caso de outro supervisor aparece sem a data (RNF35)", async () => {
+      ok([
+        {
+          ...ENCERRADA,
+          faltaReclassificada: {
+            inicio: null,
+            em: "2026-11-14T13:00:00.000Z",
+          },
+        },
+      ]);
+      render(comCliente(<SinalizacoesDeReprovacao />));
+
+      const historico = await screen.findByRole("region", {
+        name: "Histórico",
+      });
+      expect(
+        within(historico).getByText(
+          "Sinalizada em 12/11/2026 e encerrada em 14/11/2026: a contagem caiu para 2, abaixo do limite, porque uma falta num caso de outro supervisor foi reclassificada como cancelamento administrativo.",
+        ),
+      ).toBeTruthy();
+    });
+
     it("sem sinalização aberta, mostra o estado vazio", async () => {
       ok([]);
       render(comCliente(<SinalizacoesDeReprovacao />));

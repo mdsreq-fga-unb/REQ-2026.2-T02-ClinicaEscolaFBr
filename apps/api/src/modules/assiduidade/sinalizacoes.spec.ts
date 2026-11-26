@@ -326,7 +326,7 @@ describe('Sinalização de reprovação do estagiário (RF63, RNF35)', () => {
     semestre: string;
     encerradaEm: string | null;
     motivoEncerramento: string | null;
-    faltaReclassificada: { inicio: string; em: string } | null;
+    faltaReclassificada: { inicio: string | null; em: string } | null;
     faltas: number;
     faltasDeOutrosSupervisores: number;
     sessoes: string[];
@@ -572,6 +572,47 @@ describe('Sinalização de reprovação do estagiário (RF63, RNF35)', () => {
       'Carla Mendes',
       'Patrícia Nogueira',
     ]);
+  });
+
+  it('a falta reclassificada de um caso de outro supervisor aparece no histórico sem a data da sessão (RNF35)', async () => {
+    await cancelarEm(
+      casoAna,
+      'ana',
+      '2026-10-29T14:00:00',
+      '2026-10-28T09:12:00',
+    );
+    await cancelarEm(
+      casoAna,
+      'ana',
+      '2026-09-10T10:00:00',
+      '2026-09-09T18:40:00',
+    );
+    const daPatricia = await cancelarEm(
+      casoAnaPatricia,
+      'ana',
+      '2026-11-05T15:00:00',
+      '2026-11-04T09:00:00',
+    );
+    await reclassificar('coordenacao', await cancelamentoDa(daPatricia)).expect(
+      200,
+    );
+
+    const historico = async (quem: string) =>
+      (await sinalizacoes(quem, { situacao: 'todas' }).expect(200)).body
+        .sinalizacoes[0] as Sinalizacao;
+    const carla = await historico('carla');
+    const patricia = await historico('patricia');
+    const coordenacao = await historico('coordenacao');
+
+    const sessao = em('2026-11-05T15:00:00').toISOString();
+    expect(carla.motivoEncerramento).toBe('contagem_abaixo_do_limite');
+    expect(carla.faltaReclassificada).toEqual({
+      inicio: null,
+      em: expect.any(String),
+    });
+    expect(JSON.stringify(carla)).not.toContain(sessao);
+    expect(patricia.faltaReclassificada?.inicio).toBe(sessao);
+    expect(coordenacao.faltaReclassificada?.inicio).toBe(sessao);
   });
 
   it('o supervisor de outro estagiário não vê a sinalização, e o filtro por esse estagiário dá 403 (RNF35)', async () => {
