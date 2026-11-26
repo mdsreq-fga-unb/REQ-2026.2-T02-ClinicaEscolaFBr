@@ -429,7 +429,7 @@ describe('Relatório final: elaboração, envio e decisão (RF33)', () => {
       const devolvida = await decidir(1, {
         decisao: 'devolver',
         observacoes: 'Detalhar a análise.',
-      }).expect(201);
+      }).expect(200);
       expect(devolvida.body).toMatchObject({
         estado: 'devolvido',
         decisao: { por: 'Ricardo Menezes', observacoes: 'Detalhar a análise.' },
@@ -443,7 +443,7 @@ describe('Relatório final: elaboração, envio e decisão (RF33)', () => {
 
       await salvar({ ...secoes, analise: 'Análise detalhada.' }).expect(200);
       await enviar({ ...secoes, analise: 'Análise detalhada.' }).expect(201);
-      const aprovada = await decidir(2, { decisao: 'aprovar' }).expect(201);
+      const aprovada = await decidir(2, { decisao: 'aprovar' }).expect(200);
       expect(aprovada.body).toMatchObject({
         versao: 2,
         estado: 'aprovado',
@@ -511,7 +511,7 @@ describe('Relatório final: elaboração, envio e decisão (RF33)', () => {
         decidir(1, { decisao: 'devolver', observacoes: 'Ajustar.' }),
       ]);
       expect(respostas.map((r) => r.status).sort((a, b) => a - b)).toEqual([
-        201, 409,
+        200, 409,
       ]);
     });
 
@@ -521,10 +521,10 @@ describe('Relatório final: elaboração, envio e decisão (RF33)', () => {
         await decidir(1, {
           decisao: 'devolver',
           observacoes: 'Ajustar.',
-        }).expect(201);
+        }).expect(200);
         await salvar().expect(200);
         await enviar().expect(201);
-        await decidir(2, { decisao: 'aprovar' }).expect(201);
+        await decidir(2, { decisao: 'aprovar' }).expect(200);
       } finally {
         await cliente.exec('reset role');
       }
