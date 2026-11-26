@@ -455,6 +455,13 @@ describe('Relatório final: elaboração, envio e decisão (RF33)', () => {
         [1, 'devolvido'],
         [2, 'aprovado'],
       ]);
+      // Depois da aprovação, não se abre versão nova: a alta (RF68) pode contar
+      // com a versão aprovada como a última do ciclo.
+      const depois = await enviar().expect(409);
+      expect(depois.body.message).toBe(
+        'O relatório deste ciclo já foi aprovado.',
+      );
+      expect(await versoes()).toHaveLength(2);
       expect(
         JSON.parse(decifrar(linhas[0].secoesCifradas, CHAVE_TESTE)),
       ).toEqual(secoes);
