@@ -269,8 +269,13 @@ test.describe.serial("Integração do Ciclo 3", () => {
         .getByRole("status")
         .filter({ hasText: /Evolução registrada\. A evolução da sessão nº/ }),
     ).toBeVisible();
+    // Depois do registro, a página mostra a evolução da sessão (RF31, prancha
+    // 6-3): o conteúdo atual e o histórico, com o registro original.
+    await expect(
+      page.getByRole("heading", { name: "Conteúdo atual" }),
+    ).toBeVisible();
     await expect(page.getByText("Retomar o tema.")).toBeVisible();
-    await expect(page.locator("details[open]")).toHaveCount(1);
+    await expect(page.getByText("Registro original")).toBeVisible();
     await semViolacoes(page);
   });
 
