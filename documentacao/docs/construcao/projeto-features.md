@@ -1269,7 +1269,7 @@ sequenceDiagram
 **Na implementação (PR do RF22):**
 
 - **Rotas:**
-    - `GET /pacientes` devolve `{ pacientes, total, pagina, tamanhoPagina }`, em ordem alfabética, em páginas de 100 (`?pagina=`). Os filtros seguem as colunas da tabela: `busca` (nome do paciente), `estagiario`, `supervisor`, `situacao` (de distribuição) e, só para a coordenação, `numero`. As buscas usam `ILIKE` com `%` e `_` escapados. A consulta da situação da inscrição pelo número (RF8), da secretaria, fica ao lado da busca.
+    - `GET /pacientes` devolve `{ pacientes, total, pagina, tamanhoPagina }`, em ordem alfabética, em páginas de 50 (`?pagina=`). Os filtros seguem as colunas da tabela: `busca` (nome do paciente), `estagiario`, `supervisor`, `situacao` (de distribuição) e, só para a coordenação, `numero`. As buscas usam `ILIKE` com `%` e `_` escapados. A consulta da situação da inscrição pelo número (RF8), da secretaria, fica ao lado da busca.
     - `GET /casos/:id/responsaveis` não tem `@Perfis`: o serviço libera a secretaria e a coordenação, e o estagiário e o supervisor só nos casos com vínculo ou atribuição vigente. Para eles, o caso inexistente responde como o negado (`403`), sem revelar o que existe.
     - As duas rotas respondem com `Cache-Control: no-store`.
 - **Número da inscrição:** não vem para a secretaria (RNF17). Vem para a coordenação e para o estagiário e o supervisor responsáveis, que já o veem nas próprias telas.

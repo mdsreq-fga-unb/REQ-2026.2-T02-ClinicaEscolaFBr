@@ -63,7 +63,7 @@ export default function TriagemPage() {
       api<InscricaoClassificada[]>("/triagem/inscricoes/classificadas"),
     enabled: autorizado,
   });
-  // 100 por página: com o semestre andando, a lista passa de centenas.
+  // 50 por página: com o semestre andando, a lista passa de centenas.
   const registradas = usePaginacao(classificadas.data);
 
   if (negado) return <AcessoRestrito />;

@@ -2,9 +2,9 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 
-export const ITENS_POR_PAGINA = 100;
+export const ITENS_POR_PAGINA = 50;
 
-// Paginação na tela, para listas que a API devolve inteiras: mostra 100 por vez.
+// Paginação na tela, para listas que a API devolve inteiras: mostra 50 por vez.
 // Quando a lista muda de tamanho (um filtro), volta à primeira página.
 export function usePaginacao<T>(
   itens: readonly T[] | undefined,

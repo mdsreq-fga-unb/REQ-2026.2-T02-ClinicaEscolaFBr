@@ -54,7 +54,7 @@ function simularApi({
             pacientes,
             total: total ?? (pacientes as unknown[]).length,
             pagina,
-            tamanhoPagina: 100,
+            tamanhoPagina: 50,
           },
         ];
       }
@@ -153,7 +153,7 @@ describe("Lista de Pacientes com os responsáveis (RF22)", () => {
     expect(status.getAttribute("role")).toBe("status");
   });
 
-  it("pagina a lista de 100 em 100, com o total e os botões de página (RF22, RNF21)", async () => {
+  it("pagina a lista de 50 em 50, com o total e os botões de página (RF22, RNF21)", async () => {
     const chamadas = simularApi({ total: 250 });
     abrirTela();
     expect(
@@ -162,7 +162,7 @@ describe("Lista de Pacientes com os responsáveis (RF22)", () => {
     const paginas = screen.getByRole("navigation", {
       name: "Páginas da lista de pacientes",
     });
-    expect(paginas.textContent).toContain("Página 1 de 3");
+    expect(paginas.textContent).toContain("Página 1 de 5");
     expect(
       screen.getByRole("button", { name: "Anterior" }).hasAttribute("disabled"),
     ).toBe(true);
@@ -170,7 +170,7 @@ describe("Lista de Pacientes com os responsáveis (RF22)", () => {
     await vi.waitFor(() =>
       expect(chamadas.some((u) => u.includes("pagina=2"))).toBe(true),
     );
-    expect(await screen.findByText("Página 2 de 3")).toBeTruthy();
+    expect(await screen.findByText("Página 2 de 5")).toBeTruthy();
   });
 
   it("filtra pela situação de distribuição e volta à primeira página (RF22)", async () => {

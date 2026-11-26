@@ -316,7 +316,11 @@ describe('Consulta de responsáveis pelo caso (RF22)', () => {
       await criarCaso('Paulo Nunes', {});
       const r = await lista('secretaria');
       expect(r.status).toBe(200);
-      expect(r.body).toMatchObject({ total: 3, pagina: 1, tamanhoPagina: 100 });
+      expect(r.body).toMatchObject({
+        total: 3,
+        pagina: 1,
+        tamanhoPagina: TAMANHO_PAGINA_PACIENTES,
+      });
       const pacientes = r.body.pacientes;
       expect(pacientes).toHaveLength(3);
       expect(pacientes.map((p: { nome: string }) => p.nome)).toEqual([
@@ -415,7 +419,7 @@ describe('Consulta de responsáveis pelo caso (RF22)', () => {
       expect(segunda.body).toEqual({
         pacientes: [
           expect.objectContaining({
-            nome: `Paciente ${TAMANHO_PAGINA_PACIENTES}`,
+            nome: `Paciente ${String(TAMANHO_PAGINA_PACIENTES).padStart(3, '0')}`,
           }),
         ],
         total: TAMANHO_PAGINA_PACIENTES + 1,

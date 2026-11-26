@@ -97,7 +97,7 @@ export type ResultadoVinculo = {
 // a prioridade clínica nem o prontuário (RNF17).
 
 // Pacientes por página da lista (RNF21): a lista é paginada, com o total.
-export const TAMANHO_PAGINA_PACIENTES = 100;
+export const TAMANHO_PAGINA_PACIENTES = 50;
 
 const trechoDeNome = z.string().trim().max(120).optional();
 // Busca e filtros da lista de Pacientes, cada um por uma coluna da tabela. O

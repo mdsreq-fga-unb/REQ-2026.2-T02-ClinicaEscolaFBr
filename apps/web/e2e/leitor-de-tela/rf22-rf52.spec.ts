@@ -20,7 +20,7 @@ const PENDENTE = "Roberto Carvalho";
 const lista: ListaDePacientes = {
   total: 2,
   pagina: 1,
-  tamanhoPagina: 100,
+  tamanhoPagina: 50,
   pacientes: [
     {
       casoId: "5a1b2c3d-4e5f-4a6b-8c7d-9e0f1a2b3c01",

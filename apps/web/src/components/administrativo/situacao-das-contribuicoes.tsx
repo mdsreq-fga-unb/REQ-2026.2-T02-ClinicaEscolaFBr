@@ -121,7 +121,7 @@ function ListaPaginada({
   nome: (c: ContribuicaoDoPaciente) => ReactNode;
 }) {
   const pendentes = filtro === "pendente";
-  // 100 por página: a lista traz todos os pacientes em atendimento.
+  // 50 por página: a lista traz todos os pacientes em atendimento.
   const paginacao = usePaginacao(todos);
   const dados = paginacao.visiveis;
   return (
