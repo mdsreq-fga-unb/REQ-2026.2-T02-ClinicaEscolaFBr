@@ -505,6 +505,7 @@ rfs:
   depende: [RF28]
   issue: 271
   estado: Planejada
+  origem: [DF68]
 
 - id: RF67
   nome: Validar evolução pelo supervisor
@@ -1732,6 +1733,11 @@ decisoes:
   data: 12/11/2026
   fonte: respostas da FBr por WhatsApp
   decisao: Na consulta da fila (RF8), o inscrito vê "Em triagem" enquanto não foi chamado para o atendimento e "Em atendimento" depois de chamado, inclusive enquanto aguarda o contato da clínica ou a resposta dele. A posição na fila não aparece para o inscrito, para não gerar expectativa, porque a captação de pacientes é semestral. Respondido por Robson Araújo.
+
+- id: DF68
+  data: 25/11/2026
+  fonte: respostas da FBr por WhatsApp
+  decisao: Perguntado se o supervisor pode registrar o complemento da evolução e se há prazo, Robson Araújo respondeu que "os supervisores devem poder corrigir a qualquer momento". A equipe entendeu a resposta como válida para o complemento, e não para a correção (RF29), que mantém o mesmo prazo do estagiário (DF66), e adotou como padrão até a confirmação da FBr que o supervisor do caso também registra o complemento, sem prazo. A leitura é da equipe e está nas pendências de validação; a equipe perguntou de novo em 25/11, às 15h50.
 
 - id: DF56
   data: 12/11/2026

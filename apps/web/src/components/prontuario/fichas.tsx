@@ -10,9 +10,11 @@ import {
   SECOES_ANAMNESE,
   type Anamnese,
   type CampoEvolucao,
+  type ComplementoEvolucao,
   type Contrato,
   type Evolucao,
   type SecaoAnamnese,
+  type ValidacaoEvolucao,
   type VersaoEvolucao,
 } from "@clinica/shared";
 import { Aviso } from "@/components/comum/aviso";
@@ -574,6 +576,11 @@ export type EvolucaoRegistrada = Record<CampoEvolucao, string | null> & {
     prazoEncerrado: boolean;
     permitida: boolean;
   };
+  // Complementos, em ordem cronológica, e se quem consulta pode adicionar (RF30).
+  complementos?: ComplementoEvolucao[];
+  complemento?: { permitido: boolean; aviso: string | null };
+  // Situação da validação e se quem consulta pode validar (RF67).
+  validacao?: ValidacaoEvolucao & { permitida: boolean };
 };
 
 export function LeituraEvolucao({

@@ -28,12 +28,16 @@ export const OPERACOES_PRONTUARIO: Record<
   Exclude<OperacaoAcesso, 'acesso_negado'>
 > = {
   consultar_prontuario: 'visualizacao',
+  consultar_historico_evolucoes: 'visualizacao',
+  consultar_evolucao: 'visualizacao',
   registrar_dados_iniciais: 'criacao',
   registrar_anamnese: 'criacao',
   registrar_contrato: 'criacao',
   registrar_evolucao: 'criacao',
   marcar_sessao_realizada: 'alteracao',
   corrigir_evolucao: 'alteracao',
+  complementar_evolucao: 'criacao',
+  validar_evolucao: 'alteracao',
   // Relatório final (RF33): a consulta e a página de impressão são leitura; a
   // impressão e a entrega criam registros.
   consultar_relatorio_final: 'visualizacao',

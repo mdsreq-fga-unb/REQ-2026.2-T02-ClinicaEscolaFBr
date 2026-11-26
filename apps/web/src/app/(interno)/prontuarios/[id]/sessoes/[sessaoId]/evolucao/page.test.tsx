@@ -11,29 +11,47 @@ vi.mock("@/lib/api", async (importOriginal) => ({
   ...(await importOriginal<typeof import("@/lib/api")>()),
   api: vi.fn(),
 }));
+const perfil = vi.hoisted(() => ({ atual: "estagiario" }));
 vi.mock("@/lib/sessao", () => ({
-  useSessao: () => ({ data: { id: "u1", perfil: "estagiario" } }),
+  useSessao: () => ({ data: { id: "u1", perfil: perfil.atual } }),
 }));
-afterEach(cleanup);
+afterEach(() => {
+  cleanup();
+  perfil.atual = "estagiario";
+});
+
+const ROTA = "/prontuarios/p1/sessoes/s1/evolucao";
+
+// Resposta do RF31 para a sessão s1, com ou sem evolução.
+const resposta = (
+  evolucao: unknown,
+  acoes: Partial<Record<string, boolean>> = {},
+) => ({
+  prontuarioId: "p1",
+  casoId: "c1",
+  paciente: "Paciente",
+  supervisor: "Carla",
+  sessao: {
+    id: "s1",
+    inicio: "2026-11-10T11:00:00Z",
+    status: "realizada",
+    numeroNoCiclo: 4,
+    estagiarioId: "u1",
+    estagiario: "Ana",
+  },
+  evolucao,
+  acoes: {
+    registrar: evolucao === null,
+    corrigir: false,
+    complementar: false,
+    validar: false,
+    ...acoes,
+  },
+});
 
 describe("registro de evolução em tela própria (RF28, RNF25, RNF27, RNF30)", () => {
   it("mostra os seis dados de origem e o formulário para o estagiário responsável (RF28, RNF25, RNF27, RNF30)", async () => {
-    vi.mocked(api).mockResolvedValueOnce({
-      id: "p1",
-      nome: "Paciente",
-      supervisor: "Carla",
-      sessoes: [
-        {
-          id: "s1",
-          inicio: "2026-11-10T11:00:00Z",
-          status: "realizada",
-          estagiarioId: "u1",
-          estagiario: "Ana",
-          numeroNoCiclo: 4,
-          evolucao: null,
-        },
-      ],
-    } as never);
+    vi.mocked(api).mockResolvedValueOnce(resposta(null) as never);
     const client = new QueryClient({
       defaultOptions: { queries: { retry: false } },
     });
@@ -77,24 +95,9 @@ describe("registro de evolução em tela própria (RF28, RNF25, RNF27, RNF30)", 
     };
     let consultas = 0;
     vi.mocked(api).mockImplementation(async (path: string) => {
-      if (path === "/prontuarios/p1") {
+      if (path === ROTA) {
         consultas += 1;
-        return {
-          id: "p1",
-          nome: "Paciente",
-          supervisor: "Carla",
-          sessoes: [
-            {
-              id: "s1",
-              inicio: "2026-11-10T11:00:00Z",
-              status: "realizada",
-              estagiarioId: "u1",
-              estagiario: "Ana",
-              numeroNoCiclo: 4,
-              evolucao: consultas > 1 ? registro : null,
-            },
-          ],
-        } as never;
+        return resposta(consultas > 1 ? registro : null) as never;
       }
       if (path.endsWith("/evolucoes"))
         throw new ErroApi(409, "A evolução já foi registrada.");
@@ -158,5 +161,161 @@ describe("registro de evolução em tela própria (RF28, RNF25, RNF27, RNF30)", 
       "Você não tem acesso a este prontuário",
     ]);
     expect(screen.queryByRole("button", { name: /Salvar/ })).toBeNull();
+  });
+
+  const EVOLUCAO = {
+    id: "e1",
+    queixa: null,
+    planejamento: null,
+    humorAparencia: "Paciente tranquila.",
+    conteudoTrabalhado: "Organização da rotina de estudos.",
+    tecnicasUtilizadas: "Escuta qualificada e registro de pensamentos.",
+    intervencoesEncaminhamentos: null,
+    planoProximaSessao: "Retomar o registro.",
+    registradaPor: "Ana",
+    registradaEm: "2026-10-29T18:10:00Z",
+    versaoAtual: 2,
+    versoes: [
+      {
+        versao: 2,
+        humorAparencia: "Paciente tranquila.",
+        conteudoTrabalhado: "Organização da rotina de estudos.",
+        tecnicasUtilizadas: "Escuta qualificada e registro de pensamentos.",
+        intervencoesEncaminhamentos: null,
+        planoProximaSessao: "Retomar o registro.",
+        queixa: null,
+        planejamento: null,
+        motivo: "A técnica estava incompleta.",
+        autor: "Ana",
+        em: "2026-11-05T19:20:00Z",
+      },
+      {
+        versao: 1,
+        humorAparencia: "Paciente tranquila.",
+        conteudoTrabalhado: "Organização da rotina de estudos.",
+        tecnicasUtilizadas: "Escuta qualificada.",
+        intervencoesEncaminhamentos: null,
+        planoProximaSessao: "Retomar o registro.",
+        queixa: null,
+        planejamento: null,
+        motivo: null,
+        autor: "Ana",
+        em: "2026-10-29T18:10:00Z",
+      },
+    ],
+    correcao: { dataLimite: null, prazoEncerrado: false, permitida: true },
+    complementos: [
+      {
+        tipo: "complemento",
+        id: "c1",
+        texto: "Orientação da supervisão.",
+        autor: "Ana",
+        em: "2026-11-06T13:20:00Z",
+      },
+    ],
+    complemento: { permitido: true, aviso: null },
+    validacao: {
+      situacao: "validada",
+      ultima: { por: "Carla", em: "2026-11-06T21:05:00Z" },
+      mudanca: null,
+      permitida: false,
+    },
+  };
+
+  const abrir = () =>
+    render(
+      <QueryClientProvider
+        client={
+          new QueryClient({ defaultOptions: { queries: { retry: false } } })
+        }
+      >
+        <RegistrarEvolucaoPage />
+      </QueryClientProvider>,
+    );
+
+  it("com a evolução registrada, mostra o conteúdo atual validado, o histórico em ordem e as ações de quem pode (RF31)", async () => {
+    vi.mocked(api).mockResolvedValue(
+      resposta(EVOLUCAO, { corrigir: true, complementar: true }) as never,
+    );
+    abrir();
+    expect(
+      await screen.findByRole("heading", {
+        level: 1,
+        name: "Evolução da sessão 4",
+      }),
+    ).toBeTruthy();
+    expect(vi.mocked(api)).toHaveBeenCalledWith(ROTA);
+    expect(
+      screen.getByText(
+        /Paciente · .* · estagiário\(a\) Ana · supervisor\(a\) Carla/,
+      ),
+    ).toBeTruthy();
+    expect(
+      screen.getByRole("heading", { name: "Conteúdo atual" }),
+    ).toBeTruthy();
+    expect(screen.getByText("Validada")).toBeTruthy();
+    expect(
+      screen.getAllByText("Escuta qualificada e registro de pensamentos.")
+        .length,
+    ).toBeGreaterThan(0);
+    const historico = screen.getByRole("list", {
+      name: "Histórico desta evolução",
+    });
+    const itens = Array.from(historico.querySelectorAll(":scope > li")).map(
+      (li) => li.textContent,
+    );
+    expect(itens).toHaveLength(3);
+    expect(itens[0]).toContain("Registro original");
+    expect(itens[1]).toContain("Correção · revisa o conteúdo");
+    expect(itens[1]).toContain("A técnica estava incompleta.");
+    expect(itens[2]).toContain("Complemento · informação adicional");
+    expect(
+      screen
+        .getByRole("link", { name: "Corrigir evolução da sessão 4" })
+        .getAttribute("href"),
+    ).toBe("/prontuarios/p1/evolucoes/e1/corrigir");
+    expect(
+      screen.getByRole("button", {
+        name: "Adicionar complemento à evolução da sessão 4",
+      }),
+    ).toBeTruthy();
+  });
+
+  it("a coordenação vê o aviso de consulta registrada e nenhuma ação (RF31, RF56)", async () => {
+    perfil.atual = "coordenacao";
+    vi.mocked(api).mockResolvedValue(
+      resposta({
+        ...EVOLUCAO,
+        correcao: { ...EVOLUCAO.correcao, permitida: false },
+        complemento: { permitido: false, aviso: null },
+      }) as never,
+    );
+    abrir();
+    expect(
+      await screen.findByText("Você está consultando como coordenação."),
+    ).toBeTruthy();
+    expect(
+      screen.queryByRole("link", { name: /Corrigir evolução/ }),
+    ).toBeNull();
+    expect(
+      screen.queryByRole("button", { name: /Adicionar complemento/ }),
+    ).toBeNull();
+    expect(screen.queryByRole("button", { name: /Validar/ })).toBeNull();
+  });
+
+  it("a sessão realizada sem evolução, para quem não registra, mostra o aviso sem o formulário (RF31)", async () => {
+    perfil.atual = "supervisor";
+    vi.mocked(api).mockResolvedValue(
+      resposta(null, { registrar: false }) as never,
+    );
+    abrir();
+    expect(
+      await screen.findByText(
+        "Ainda não há evolução registrada para esta sessão.",
+      ),
+    ).toBeTruthy();
+    expect(
+      screen.queryByRole("button", { name: "Salvar evolução" }),
+    ).toBeNull();
   });
 });
