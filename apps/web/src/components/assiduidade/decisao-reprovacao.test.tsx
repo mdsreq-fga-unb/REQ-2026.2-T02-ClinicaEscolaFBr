@@ -71,6 +71,7 @@ const DECIDIDA: SinalizacaoReprovacao = {
     {
       id: "d1",
       decisao: "confirmada",
+      faltas: 3,
       justificativa: JUSTIFICATIVA,
       por: "Helena Duarte",
       em: "2026-11-13T14:20:00.000Z",
@@ -78,6 +79,7 @@ const DECIDIDA: SinalizacaoReprovacao = {
     {
       id: "d2",
       decisao: "nao_aplicada",
+      faltas: 2,
       justificativa:
         "A falta de 17/09 foi reclassificada: o estagiário estava em atividade da clínica, e a contagem caiu para 2.",
       por: "Helena Duarte",
@@ -95,6 +97,7 @@ function simularApi(
     corpo: {
       id: "d9",
       decisao: "confirmada",
+      faltas: 3,
       justificativa: JUSTIFICATIVA,
       por: "Helena Duarte",
       em: "2026-11-16T15:00:00.000Z",
@@ -313,7 +316,7 @@ describe("Decisão sobre a reprovação (RF64, prancha 7-3)", () => {
     ).toBeTruthy();
   });
 
-  it("coordenação: o histórico mostra a sinalização e as decisões em ordem, com as justificativas, e permite uma nova decisão", async () => {
+  it("coordenação: o histórico mostra a sinalização e as decisões em ordem, com as justificativas e a contagem de cada uma; sem mudança desde a última, não oferece nova decisão", async () => {
     simularApi([DECIDIDA]);
     abrir();
 
@@ -326,17 +329,34 @@ describe("Decisão sobre a reprovação (RF64, prancha 7-3)", () => {
     expect(within(historico).getByText(JUSTIFICATIVA)).toBeTruthy();
     expect(
       within(historico).getByText(
-        "Registrada por Helena Duarte em 13/11/2026, às 11:20.",
+        "Registrada por Helena Duarte em 13/11/2026, às 11:20, com 3 faltas.",
       ),
     ).toBeTruthy();
     expect(
       within(historico).getByText(
-        "Registrada por Helena Duarte em 14/11/2026, às 16:05. A decisão anterior continua no histórico.",
+        "Registrada por Helena Duarte em 14/11/2026, às 16:05, com 2 faltas. A decisão anterior continua no histórico.",
       ),
     ).toBeTruthy();
     expect(
       within(historico).getByText(
-        "A decisão registrada continua valendo. Se for o caso, registre uma nova decisão.",
+        "Uma nova decisão pode ser registrada se a contagem mudar.",
+      ),
+    ).toBeTruthy();
+    expect(
+      within(historico).queryByRole("button", {
+        name: /Registrar nova decisão/,
+      }),
+    ).toBeNull();
+  });
+
+  it("coordenação: com a contagem diferente da última decisão, oferece registrar nova decisão", async () => {
+    simularApi([{ ...DECIDIDA, decisoes: DECIDIDA.decisoes.slice(0, 1) }]);
+    abrir();
+
+    const historico = await screen.findByRole("region", { name: "Histórico" });
+    expect(
+      within(historico).getByText(
+        "A contagem mudou desde a última decisão. A decisão registrada continua valendo; se for o caso, registre uma nova decisão.",
       ),
     ).toBeTruthy();
     expect(
