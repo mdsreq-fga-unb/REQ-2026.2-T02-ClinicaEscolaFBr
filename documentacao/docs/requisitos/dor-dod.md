@@ -171,6 +171,51 @@ Com base nos requisitos funcionais consultados em 08/10/2026 e atualizada em 24/
 
 O DoR é revisado ao fim de cada iteração, na retrospectiva, e atualizado quando um retrabalho causado por requisito mal definido revelar um critério que faltava.
 
+### DoR aprovado depois do início do código { #919-dor-aprovado-depois-do-inicio-do-codigo }
+
+Uma avaliação feita depois do código não demonstra que a feature estava pronta antes da construção. Ela mostra só que a feature cumpria o DoR na data do registro. Por isso, os casos em que isso aconteceu ficam registrados aqui, com o tratamento dado.
+
+**Como foi conferido (26/11/2026).** Em cada issue de feature com o checklist do DoR, comparamos duas datas, com a mesma regra do acompanhamento automático: a da primeira versão da descrição com o DoR aprovado, isto é, com todos os critérios [B] marcados e o registro preenchido, e a da abertura da primeira PR de código que implementa a feature. A primeira data vem do histórico de edições da issue.
+
+| Ciclo | Feature (issue) | Primeira PR de código | DoR aprovado | O que estava aberto na abertura da PR |
+| ----- | --------------- | --------------------- | ------------ | ------------------------------------- |
+| 3 | RF1 ([#88](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/issues/88)) e RF2 ([#89](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/issues/89)) | [#139](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/pull/139), 26/10 | 27/10 | registro do DoR |
+| 3 | RF10 ([#96](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/issues/96)) | [#158](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/pull/158), 26/10 | 27/10 | R8.1 e registro do DoR |
+| 3 | RF4 ([#90](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/issues/90)), RF6 ([#91](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/issues/91)) e RF66 ([#97](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/issues/97)) | [#163](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/pull/163), 27/10 | 28/10 | R8.1 e registro do DoR |
+| 3 | RF18 ([#92](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/issues/92)), RF20 ([#94](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/issues/94)) e RF21 ([#95](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/issues/95)) | [#168](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/pull/168), 28/10 | 28/10, 32 minutos depois | R8.1 e registro do DoR |
+| 4 | RF27 ([#148](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/issues/148)), RF28 ([#149](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/issues/149)) e RF69 ([#130](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/issues/130)) | [#163](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/pull/163), 27/10, ainda no Ciclo 3 | 11/11 (RF27 e RF28) e 06/11 (RF69) | o DoR dessas features do Ciclo 4: no RF69, todos os critérios [B]; no RF27, R2.7, R3.5 e R8.1; no RF28, R8.1; e os registros. A #163 adiantou a evolução, os dados iniciais e a consulta do prontuário |
+| 4 | RF52 ([#47](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/issues/47)) | [#202](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/pull/202), 05/11 | 06/11 | registro do DoR |
+| 4 | RF11 ([#141](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/issues/141)) | [#222](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/pull/222), 07/11 | 15/11 | R8.1, com o registro de 06/11 como "Não pronta" (ver abaixo) |
+| 4 | RF22 ([#145](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/issues/145)), RF23 ([#146](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/issues/146)) e RF25 ([#147](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/issues/147)) | [#239](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/pull/239) a [#242](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/pull/242), 10 e 11/11 | 16/11 | R8.1 |
+| 5 | RF48 ([#22](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/issues/22)) | [#259](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/pull/259), 13/11 | 14/11 | R1.7, R3.2 e R5.2 |
+| 6 | RF49 ([#23](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/issues/23)) e RF45 ([#280](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/issues/280)) | [#295](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/pull/295) e [#296](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/pull/296), 20/11 | 23/11 (RF49) e 25/11 (RF45) | R8.1 e registro do DoR; no RF45, também R1.3, R4.2 e R4.4 |
+| 6 | RF33 ([#131](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/issues/131)), RF68 ([#273](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/issues/273)) e RF43 ([#279](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/issues/279)) | [#303](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/pull/303), [#301](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/pull/301) e [#307](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/pull/307), 23/11 | 25/11 (RF33 e RF43) e 26/11 (RF68) | R8.1 e registro do DoR; no RF33 e no RF43, também R1.3 |
+| 6 | RF30 ([#271](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/issues/271)), RF67 ([#272](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/issues/272)) e RF32 ([#275](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/issues/275)) | [#308](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/pull/308), [#309](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/pull/309) e [#316](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/pull/316), 24/11 | 25/11 (RF67 e RF32) e 26/11 (RF30) | registro do DoR; no RF67, também R8.1; no RF30, também R5.1, R5.5 e R8.1; no RF32, também R1.3 |
+| 6 | RF40 ([#276](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/issues/276)), RF63 ([#277](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/issues/277)), RF64 ([#278](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/issues/278)), RF31 ([#274](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/issues/274)) e RF42 ([#44](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/issues/44)) | [#319](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/pull/319) a [#321](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/pull/321), [#325](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/pull/325) e [#324](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/pull/324), 25/11 | 25/11 (RF40, RF63 e RF64) e 26/11 (RF31 e RF42) | R8.1 e registro do DoR; no RF63, no RF64 e no RF31, também R1.3 |
+| 4 e 6 | RF57 ([#52](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/issues/52)) e RF65 ([#281](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/issues/281)) | [#238](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/pull/238), 10/11, e [#315](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/pull/315), 24/11 | não aprovado | R4.4 (e R4.3 no RF65): o termo de consentimento ainda não foi aprovado pela FBr |
+
+As demais features tiveram o DoR aprovado antes da primeira PR: RF7, RF8, RF14, RF17, RF29, RF34 a RF39, RF41, RF44 e RF56.
+
+**O que os casos mostram.** No Ciclo 3, o código do RF4, do RF6 e do RF66 veio antes do DoR, e a #163 adiantou também o código de três features do Ciclo 4 (RF27, RF28 e RF69). A lição registrada no fechamento do Ciclo 3 ([cronograma](../visao-geral/cronograma.md#ciclo-3-fechado-em-27102026)) foi fixar as datas-limite do DoR e da inspeção de design para todas as features e avisar o atraso no grupo no mesmo dia. Essa medida não impediu a repetição. Nos Ciclos 4 a 6, o item que mais ficou aberto foi o R8.1, a declaração do próprio Líder de que entende a feature, e o registro do DoR. No Ciclo 6, a [pré-avaliação de 16/11](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/pull/287) corrigiu o texto dos requisitos antes do projeto, mas os registros só foram preenchidos de 23 a 26/11, com o código já em construção. Os registros feitos depois dizem isso na justificativa, como os da [#273](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/issues/273) e da [#44](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/issues/44).
+
+**Tratamento.** Desde 26/11/2026, o workflow Feature Status tem a verificação **"DoR aprovado antes do código"**. Ela falha a PR de feature que cita uma issue de feature sem o DoR aprovado, isto é, sem os critérios [B] marcados, sem o registro preenchido ou com o registro "Não pronta". O acompanhamento automático já não deixava a feature avançar de estado sem o DoR, mas nada impedia abrir a PR de código antes dele. Com a verificação, a falta do DoR aparece na própria PR, antes da revisão do código.
+
+**RF11 ([#141](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/issues/141)).** O registro de 06/11/2026 deu "Não pronta", com o R8.1 pendente. A PR [#222](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/pull/222) foi aberta em 07/11 e mesclada em 08/11. O Líder (Nicolas) marcou o R8.1 em 15/11, e os itens [R] R7.2 e R7.3 foram marcados em 14/11. Até 26/11, o registro na issue continuava "Não pronta". Em 26/11, ele foi atualizado com a nova avaliação e as datas de cada item. A feature não podia ter avançado antes de 15/11.
+
+**RF57 e RF65 ([#52](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/issues/52) e [#281](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/issues/281)).** O mecanismo do consentimento e da revogação foi construído com um modelo de termo redigido pela equipe ([DF44](decisoes-fbr.md#df44)). O R4.4 continua aberto, porque o termo define uma condição essencial das duas features e ainda não foi aprovado pela FBr. Por isso, as duas features continuam sem o DoR aprovado, e a inscrição pública fica fechada na produção até a aprovação do termo.
+
+### Ressalvas das features do Ciclo 6 { #9110-ressalvas-das-features-do-ciclo-6 }
+
+O DoR exige que uma decisão em aberto com a FBr que muda o comportamento central da feature seja resolvida antes da construção (R4.3 e R4.4). As demais ficam como ressalva, com responsável e prazo. Nas features do Ciclo 6, a situação é esta:
+
+| Feature | O que depende da FBr | Muda o comportamento central? | Responsável e prazo |
+| ------- | -------------------- | ----------------------------- | ------------------- |
+| RF30, RF31, RF32, RF33, RF40, RF42, RF43, RF45, RF49, RF63, RF64, RF67 e RF68 | Aceite dos protótipos do Ciclo 6 (R7.3), enviados com o projeto | Não: as regras dessas features já foram confirmadas pela FBr (por exemplo, DF33, DF42, DF54, DF69 e DF70 a DF72), e uma mudança pedida no protótipo entra como ajuste da tela | Gabriel, na validação final com a FBr, em 27/11/2026 |
+| RF30 | Se o "a qualquer momento" da resposta de 25/11 vale para o complemento feito pelo supervisor (padrão adotado: o supervisor complementa sem prazo) | Não: o comportamento central é o complemento do estagiário responsável | Gabriel, em 27/11/2026, com a pendência registrada em [Pendências de validação com a FBr](analise-feedback.md#pendencias-de-validacao-com-a-fbr) |
+| RF57 e RF65 | Aprovação do termo de consentimento (R4.4) | Sim: sem o termo aprovado, as features não estão prontas | Gabriel e Jônatas (Líder), na validação final com a FBr, em 27/11/2026; até lá, a inscrição pública fica fechada na produção |
+
+Os registros de cada feature, com o avaliador, o revisor e as justificativas, estão nas issues.
+
 ## Definition of Done (DoD) { #92-definition-of-done-dod }
 
 ### Regra de fluxo { #921-regra-de-fluxo }
@@ -264,6 +309,22 @@ Aceite da FBr: Aceita | Não aceita | <data> | <quem aceitou> | <link da ata ou 
 Pendências: <descrição, responsável, prazo>
 Correções solicitadas: <descrição e issue vinculada>
 ```
+
+**Onde fica cada evidência.** O bloco "Registro do DoD" da descrição da issue resume a feature e aponta, em cada linha, para a evidência do marco:
+
+- a inspeção de design, com o comentário da inspeção e o `/de-acordo` do revisor (D1.8);
+- a inspeção de código, com a aprovação da PR e o comentário da inspeção, quando houver (D3.1);
+- a integração, com a PR mesclada, os testes da versão integrada e a verificação dos RNFs (D4.3 a D4.5);
+- a demonstração, com a ata e o comentário `/demonstrada` (D5);
+- o aceite, com a ata ou a mensagem da FBr e o comentário `/aceite` (D6).
+
+Os comentários do acompanhamento automático também contam como evidência. O bloco fica completo até o aceite.
+
+**Aceite de um conjunto de features.** Quando a FBr aceita várias features na mesma reunião, o comentário do aceite de cada uma diz o que foi demonstrado e aceito para ela (D5.2). Se a entrega foi parcial ou depende de outra feature, o comentário também diz o que fica para depois. Por exemplo, o RF10 foi aceito no Ciclo 3 com o envio do link de confirmação, e a página que recebe o link entrou com o RF14, no Ciclo 4 ([seção 9.1.6](#916-situacao-conhecida-na-documentacao)).
+
+**Pendências que convivem com a conclusão.** Uma pendência só convive com o aceite quando não é impeditiva. O registro traz a justificativa, o responsável, o prazo e a issue que encaminha a pendência. Uma falha em critério de aceitação, em autorização ou na integridade dos dados nunca é pendência compatível com a conclusão: a feature volta ao marco em que a falha apareceu.
+
+**Situação em 26/11/2026.** Nas 31 features aceitas até essa data com o modelo atual da issue, o bloco ainda tinha os marcadores do modelo, como `<data>` e `<link do PR>`, embora as evidências estivessem nos comentários, nas PRs e nas atas. Em 26/11, o bloco de cada uma foi preenchido com os links para essas evidências, como na [#92](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/issues/92) (RF18) e na [#95](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/issues/95) (RF21). As features ainda não aceitas preenchem o bloco no aceite. As features de autenticação e cadastro (RF50, RF51, RF53 e RF54) têm issues criadas antes do modelo atual, sem o bloco, e as evidências delas estão nos comentários.
 
 ### DoD da entrega final (MVP) { #924-dod-da-entrega-final-mvp }
 
