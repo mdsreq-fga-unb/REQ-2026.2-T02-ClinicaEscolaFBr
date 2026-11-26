@@ -267,7 +267,9 @@ describe('Evolução de uma sessão específica (RF31)', () => {
       complementar: false,
       validar: false,
     });
+    // Um registro só por consulta, sem um `consultar_prontuario` junto.
     expect(await acessos('consultar_evolucao', true)).toHaveLength(1);
+    expect(await acessos('consultar_prontuario', true)).toHaveLength(0);
     // O supervisor do caso pode validar e corrigir.
     const doSupervisor = await consultar('supervisor', s).expect(200);
     expect(doSupervisor.body.acoes).toMatchObject({ validar: true });

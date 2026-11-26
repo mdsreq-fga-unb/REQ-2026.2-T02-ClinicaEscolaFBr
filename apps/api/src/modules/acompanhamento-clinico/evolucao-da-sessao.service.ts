@@ -1,6 +1,5 @@
 import { ForbiddenException, Injectable } from '@nestjs/common';
 import type { UsuarioAutenticado } from '../../auth/usuario-autenticado';
-import { PoliticaProntuario } from './politica-prontuario';
 import { ProntuariosService } from './prontuarios.service';
 
 // Evolução de uma sessão específica (RF31): a versão vigente, as versões anteriores
@@ -9,25 +8,20 @@ import { ProntuariosService } from './prontuarios.service';
 // regra de acesso ser a mesma do RF55 e do RF27.
 @Injectable()
 export class EvolucaoDaSessaoService {
-  constructor(
-    private readonly politica: PoliticaProntuario,
-    private readonly prontuarios: ProntuariosService,
-  ) {}
+  constructor(private readonly prontuarios: ProntuariosService) {}
 
   async consultar(
     prontuarioId: string,
     sessaoId: string,
     usuario: UsuarioAutenticado,
   ) {
-    // A consulta fica no registro de acessos como `consultar_evolucao` (RF56),
-    // permitida ou negada, antes de qualquer leitura.
-    await this.politica.exigirAcesso(
-      usuario,
+    // A consulta fica no registro de acessos uma vez só, como `consultar_evolucao`
+    // (RF56), permitida ou negada, antes de qualquer leitura.
+    const p = await this.prontuarios.consultar(
       prontuarioId,
+      usuario,
       'consultar_evolucao',
-      'leitura',
     );
-    const p = await this.prontuarios.consultar(prontuarioId, usuario);
     const sessao = p.sessoes.find((s) => s.id === sessaoId);
     // A sessão de outro prontuário recebe a mesma resposta do acesso negado (RNF25).
     if (!sessao)
