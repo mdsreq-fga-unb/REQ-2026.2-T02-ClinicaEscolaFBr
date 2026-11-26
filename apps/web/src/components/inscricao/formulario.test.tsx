@@ -86,11 +86,27 @@ describe("Formulário RF1/RF2", () => {
   it("valida em tempo real: o erro aparece ao digitar, e Continuar só libera com a etapa completa (RF1, RNF1)", () => {
     render(<FormularioInscricao />);
     const botao = screen.getByRole("button", { name: "Continuar" });
-    expect(botao).toBeDisabled();
-    expect(botao).toHaveAttribute("aria-describedby", "pendencias-etapa");
-    expect(document.getElementById("pendencias-etapa")).toHaveTextContent(
-      /Para continuar, falta preencher ou corrigir: Nome completo, Data de nascimento/,
+    // Desativado com o motivo na descrição (dica ao passar o mouse), sem
+    // texto fixo na tela.
+    expect(botao).toHaveAttribute("aria-disabled", "true");
+    expect(botao).toHaveAccessibleDescription(
+      "Preencha corretamente todos os campos obrigatórios para continuar.",
     );
+    expect(screen.queryByText(/falta preencher/)).toBeNull();
+    // O clique (ou toque) não avança e mostra o motivo num aviso passageiro.
+    fireEvent.click(botao);
+    expect(
+      screen.getByRole("heading", { name: "Seus dados" }),
+    ).toBeInTheDocument();
+    expect(
+      screen
+        .getAllByRole("status")
+        .some((s) =>
+          s.textContent?.includes(
+            "Preencha corretamente todos os campos obrigatórios para continuar.",
+          ),
+        ),
+    ).toBe(true);
     // Campo ainda não alterado não mostra erro.
     expect(document.getElementById("cpf")).toHaveAttribute(
       "aria-invalid",
@@ -120,8 +136,8 @@ describe("Formulário RF1/RF2", () => {
       "Nome preservado",
     );
     dados();
-    expect(botao).toBeEnabled();
-    expect(document.getElementById("pendencias-etapa")).toBeNull();
+    expect(botao).not.toHaveAttribute("aria-disabled");
+    expect(botao).not.toHaveAccessibleDescription();
   });
   it("aplica as máscaras ao digitar e envia só os números (RF1)", async () => {
     const fetch = vi.fn().mockResolvedValue(response());
@@ -179,9 +195,9 @@ describe("Formulário RF1/RF2", () => {
   it("exige responsável para menor, mantendo os outros campos", () => {
     render(<FormularioInscricao />);
     dados(true);
-    expect(screen.getByRole("button", { name: "Continuar" })).toBeDisabled();
-    expect(document.getElementById("pendencias-etapa")).toHaveTextContent(
-      "Nome do responsável legal, CPF do responsável",
+    expect(screen.getByRole("button", { name: "Continuar" })).toHaveAttribute(
+      "aria-disabled",
+      "true",
     );
     preencher("responsavelLegal", "Responsável Fictício");
     // O CPF do responsável também é obrigatório (DF47) e precisa ser válido.
@@ -190,7 +206,10 @@ describe("Formulário RF1/RF2", () => {
       "aria-invalid",
       "true",
     );
-    expect(screen.getByRole("button", { name: "Continuar" })).toBeDisabled();
+    expect(screen.getByRole("button", { name: "Continuar" })).toHaveAttribute(
+      "aria-disabled",
+      "true",
+    );
     preencher("cpfResponsavel", "52998224725");
     continuar();
     expect(
@@ -358,7 +377,7 @@ describe("Formulário RF1/RF2", () => {
     const botao = screen.getByRole("button", {
       name: "Confirmar e enviar inscrição",
     });
-    expect(botao).toBeDisabled();
+    expect(botao).toHaveAttribute("aria-disabled", "true");
     enviar();
     expect(fetch).not.toHaveBeenCalled();
     expect(screen.getAllByRole("checkbox")).toHaveLength(2);
@@ -366,9 +385,9 @@ describe("Formulário RF1/RF2", () => {
       expect(document.getElementById("aceiteTermo")).not.toBeDisabled(),
     );
     fireEvent.click(document.getElementById("confirmado")!);
-    expect(botao).toBeDisabled();
-    expect(document.getElementById("pendencias-etapa")).toHaveTextContent(
-      "Para enviar, falta preencher ou corrigir: a concordância com o termo.",
+    expect(botao).toHaveAttribute("aria-disabled", "true");
+    expect(botao).toHaveAccessibleDescription(
+      "Marque a confirmação dos dados e a concordância com o termo para enviar.",
     );
     // Desmarcar mostra o erro ligado à caixa.
     fireEvent.click(document.getElementById("confirmado")!);
@@ -377,7 +396,7 @@ describe("Formulário RF1/RF2", () => {
     ).toHaveAttribute("aria-describedby", "confirmado-erro");
     fireEvent.click(document.getElementById("confirmado")!);
     fireEvent.click(document.getElementById("aceiteTermo")!);
-    expect(botao).toBeEnabled();
+    expect(botao).not.toHaveAttribute("aria-disabled");
   });
   it("aguarda resposta confirmada e bloqueia envio duplo", async () => {
     let resolver!: (valor: Response) => void;

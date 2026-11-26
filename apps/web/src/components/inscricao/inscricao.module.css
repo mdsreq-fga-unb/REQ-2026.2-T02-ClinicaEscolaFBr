@@ -366,12 +366,7 @@ fieldset.campo {
 .pagina button[aria-busy="true"] {
   cursor: wait;
 }
-.pendencias {
-  margin: 0;
-  font-size: 14px;
-  color: #52616d;
-  text-align: right;
-}
+
 .revisao dl {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));

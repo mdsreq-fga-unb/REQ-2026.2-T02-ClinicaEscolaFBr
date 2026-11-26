@@ -24,6 +24,7 @@ import {
   type VersaoContribuicao,
 } from "@clinica/shared";
 import { Aviso } from "@/components/comum/aviso";
+import { BotaoComMotivo } from "@/components/comum/botao-com-motivo";
 import {
   Campo,
   classeEntrada,
@@ -670,23 +671,24 @@ function FormularioPagamento({
         <Button type="button" variant="outline" onClick={aoCancelar}>
           Cancelar
         </Button>
-        <Button
-          type="submit"
-          disabled={envio.isPending || semMudanca}
-          aria-describedby={semMudanca ? `${id}-sem-mudanca` : undefined}
+        <BotaoComMotivo
+          motivo={
+            semMudanca
+              ? "Altere o valor, a data ou a forma de pagamento para salvar a correção."
+              : null
+          }
         >
-          {envio.isPending
-            ? "Salvando…"
-            : correcao
-              ? "Salvar correção"
-              : "Confirmar pagamento"}
-        </Button>
+          {(props) => (
+            <Button {...props} type="submit" disabled={envio.isPending}>
+              {envio.isPending
+                ? "Salvando…"
+                : correcao
+                  ? "Salvar correção"
+                  : "Confirmar pagamento"}
+            </Button>
+          )}
+        </BotaoComMotivo>
       </Rodape>
-      {semMudanca && (
-        <p id={`${id}-sem-mudanca`} className="ui-dica text-right">
-          Altere o valor, a data ou a forma de pagamento para salvar a correção.
-        </p>
-      )}
     </form>
   );
 }

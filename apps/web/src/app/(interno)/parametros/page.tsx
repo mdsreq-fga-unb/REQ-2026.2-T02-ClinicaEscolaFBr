@@ -11,6 +11,7 @@ import {
   type ValorContribuicao,
 } from "@clinica/shared";
 import { Aviso } from "@/components/comum/aviso";
+import { BotaoComMotivo } from "@/components/comum/botao-com-motivo";
 import { Campo, classeEntrada } from "@/components/comum/campo";
 import { inicioDoPerfil } from "@/components/layout/menu";
 import { CartaoDataLimiteCorrecao } from "@/components/prontuario/correcao-evolucao";
@@ -198,24 +199,21 @@ export default function ParametrosPage() {
                 />
               )}
             </Campo>
-            {inalterado && (
-              <p id={`${campo}-inalterado`} className="sr-only">
-                Altere o valor para salvar.
-              </p>
-            )}
             <p className="ui-dica m-0">
               {ultima
                 ? `Última alteração: de ${reais(ultima.valorAnterior)} para ${reais(ultima.valorNovo)}, por ${ultima.por}, em ${dataHoraBr(ultima.em).replace(", ", ", às ")}.`
                 : "Valor padrão, ainda sem alterações."}
             </p>
-            <Button
-              type="submit"
+            <BotaoComMotivo
+              motivo={inalterado ? "Altere o valor para salvar." : null}
               className="w-fit max-sm:w-full"
-              disabled={salvar.isPending || inalterado}
-              aria-describedby={inalterado ? `${campo}-inalterado` : undefined}
             >
-              {salvar.isPending ? "Salvando…" : "Salvar valor"}
-            </Button>
+              {(props) => (
+                <Button {...props} type="submit" disabled={salvar.isPending}>
+                  {salvar.isPending ? "Salvando…" : "Salvar valor"}
+                </Button>
+              )}
+            </BotaoComMotivo>
           </form>
         )}
       </section>

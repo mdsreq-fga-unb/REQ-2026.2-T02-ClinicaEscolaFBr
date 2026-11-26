@@ -7,6 +7,7 @@ import {
   type VagasOfertadas,
 } from "@clinica/shared";
 import { Aviso } from "@/components/comum/aviso";
+import { BotaoComMotivo } from "@/components/comum/botao-com-motivo";
 import { Campo, classeEntrada } from "@/components/comum/campo";
 import { Dialogo } from "@/components/comum/dialogo";
 import { Button } from "@/components/ui/button";
@@ -39,6 +40,8 @@ export function VagasOfertadasDialogo({
   const [editado, setEditado] = useState<string | null>(null);
   const [erro, setErro] = useState<string>();
   const total = editado ?? atual.data?.total?.toString() ?? "";
+  const inalterado =
+    atual.data?.total != null && total.trim() === String(atual.data.total);
   const fechar = () => {
     setEditado(null);
     setErro(undefined);
@@ -59,6 +62,7 @@ export function VagasOfertadasDialogo({
 
   function enviar(evento: FormEvent) {
     evento.preventDefault();
+    if (inalterado) return;
     const r = vagasOfertadasSchema.safeParse({
       total: total.trim() === "" ? undefined : Number(total),
     });
@@ -81,19 +85,22 @@ export function VagasOfertadasDialogo({
           <Button type="button" variant="outline" onClick={fechar}>
             Cancelar
           </Button>
-          <Button
-            type="submit"
-            form={formulario}
-            data-principal
-            // Sem mudança no total, não há o que salvar.
-            disabled={
-              salvar.isPending ||
-              (atual.data?.total != null &&
-                total.trim() === String(atual.data.total))
-            }
+          {/* Sem mudança no total, não há o que salvar. */}
+          <BotaoComMotivo
+            motivo={inalterado ? "Altere o total de vagas para salvar." : null}
           >
-            {salvar.isPending ? "Salvando…" : "Salvar"}
-          </Button>
+            {(props) => (
+              <Button
+                {...props}
+                type="submit"
+                form={formulario}
+                data-principal
+                disabled={salvar.isPending}
+              >
+                {salvar.isPending ? "Salvando…" : "Salvar"}
+              </Button>
+            )}
+          </BotaoComMotivo>
         </>
       }
     >

@@ -12,6 +12,7 @@ import {
   type UsuarioListado,
 } from "@clinica/shared";
 import { Aviso } from "@/components/comum/aviso";
+import { BotaoComMotivo } from "@/components/comum/botao-com-motivo";
 import { Campo, classeEntrada } from "@/components/comum/campo";
 import { Dialogo } from "@/components/comum/dialogo";
 import { Button } from "@/components/ui/button";
@@ -488,14 +489,25 @@ export default function UsuariosPage() {
             >
               Cancelar
             </Button>
-            <Button
-              type="submit"
-              form={FORMULARIO_CADASTRO}
-              data-principal
-              disabled={cadastrando || !cadastroValido}
+            <BotaoComMotivo
+              motivo={
+                cadastroValido
+                  ? null
+                  : "Preencha o nome completo, um e-mail válido e o perfil para cadastrar."
+              }
             >
-              Salvar e enviar convite
-            </Button>
+              {(props) => (
+                <Button
+                  {...props}
+                  type="submit"
+                  form={FORMULARIO_CADASTRO}
+                  data-principal
+                  disabled={cadastrando}
+                >
+                  Salvar e enviar convite
+                </Button>
+              )}
+            </BotaoComMotivo>
           </>
         }
       >

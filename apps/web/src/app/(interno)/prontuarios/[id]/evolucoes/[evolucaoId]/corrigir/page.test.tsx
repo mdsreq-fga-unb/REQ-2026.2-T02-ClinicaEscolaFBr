@@ -130,12 +130,12 @@ describe("corrigir evolução registrada (RF29)", () => {
       name: "Salvar correção",
     });
     // Sem mudar a ficha, não há correção: o botão fica desativado.
-    expect(botao.hasAttribute("disabled")).toBe(true);
+    expect(botao.getAttribute("aria-disabled")).toBe("true");
+    expect(botao.getAttribute("aria-describedby")).toBeTruthy();
     expect(
-      screen.getByText(
-        "Altere algum campo da evolução para salvar a correção.",
-      ),
-    ).toBeTruthy();
+      document.getElementById(botao.getAttribute("aria-describedby")!)
+        ?.textContent,
+    ).toBe("Altere algum campo da evolução para salvar a correção.");
     fireEvent.change(screen.getByLabelText(/Conteúdo trabalhado/), {
       target: { value: "Conteúdo corrigido." },
     });

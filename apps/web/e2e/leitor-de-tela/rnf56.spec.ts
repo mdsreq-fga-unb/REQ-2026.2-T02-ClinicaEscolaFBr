@@ -15,7 +15,7 @@ import { anexarFala, falou, irAte, simularRotas } from "./apoio";
 const NUMERO = "2026-00042";
 
 test.describe("Leitor de tela na inscrição e no comprovante (RNF56)", () => {
-  test("com o VoiceOver, a pessoa ouve a etapa, os campos e o que falta preencher na inscrição (RF1, RNF56)", async ({
+  test("com o VoiceOver, a pessoa ouve a etapa, os campos e por que o Continuar está desativado (RF1, RNF56)", async ({
     page,
     voiceOver,
   }) => {
@@ -39,12 +39,16 @@ test.describe("Leitor de tela na inscrição e no comprovante (RNF56)", () => {
       expect(falaDoCampo).toContain("Nome completo");
 
       // Com a etapa incompleta, o botão Continuar fica desativado e descrito
-      // pelas pendências: o VoiceOver lê o botão e o que falta preencher.
+      // pelo motivo: o VoiceOver lê o botão como desativado e o motivo.
       await irAte(voiceOver, /Continuar/);
       expect(await voiceOver.lastSpokenPhrase()).toMatch(
         /dimmed|esmaecido|indisponível|unavailable/i,
       );
-      await irAte(voiceOver, /falta preencher ou corrigir: Nome completo/);
+      await expect(
+        page.getByRole("button", { name: "Continuar" }),
+      ).toHaveAccessibleDescription(
+        "Preencha corretamente todos os campos obrigatórios para continuar.",
+      );
 
       // Ao digitar um CPF inválido, o erro aparece ligado ao campo.
       await page.locator("#cpf").fill("11144477734");

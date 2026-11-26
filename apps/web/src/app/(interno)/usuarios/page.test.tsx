@@ -72,7 +72,7 @@ describe("Cadastro de usuário pela coordenação (RF53)", () => {
     const salvar = screen.getByRole("button", {
       name: "Salvar e enviar convite",
     });
-    expect(salvar.hasAttribute("disabled")).toBe(true);
+    expect(salvar.getAttribute("aria-disabled")).toBe("true");
     const nome = screen.getByLabelText("Nome completo");
     fireEvent.change(nome, { target: { value: "x" } });
     fireEvent.change(nome, { target: { value: "" } });
@@ -89,7 +89,7 @@ describe("Cadastro de usuário pela coordenação (RF53)", () => {
     fireEvent.click(screen.getByLabelText("Secretaria"));
     expect(screen.queryByText("Informe o nome completo.")).toBeNull();
     expect(screen.queryByText("Informe um e-mail válido.")).toBeNull();
-    expect(salvar.hasAttribute("disabled")).toBe(false);
+    expect(salvar.hasAttribute("aria-disabled")).toBe(false);
   });
 
   it("não pede CRP no cadastro de supervisor: ele vem no carimbo (DF71)", async () => {

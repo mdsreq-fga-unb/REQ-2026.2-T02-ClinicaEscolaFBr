@@ -23,6 +23,7 @@ import {
 } from "@clinica/shared";
 import { buscarTermoVigente, Termo } from "./termo";
 import { Aviso } from "@/components/comum/aviso";
+import { BotaoComMotivo } from "@/components/comum/botao-com-motivo";
 import styles from "./inscricao.module.css";
 
 // A ordem dos rótulos é a ordem da revisão.
@@ -132,13 +133,6 @@ function normalizar(valores: Valores): Valores {
     contatoEmergenciaTelefone: soDigitos(valores.contatoEmergenciaTelefone),
   };
 }
-// O que falta para avançar, com o nome de cada campo, abaixo do botão.
-const NOMES_CONFIRMACAO: Record<string, string> = {
-  confirmado: "a confirmação de que revisou os dados",
-  aceiteTermo: "a concordância com o termo",
-  versaoTermo: "o carregamento do termo",
-};
-
 const etapas = ["Dados e contatos", "Triagem", "Revisão e envio"];
 // Título e orientação do cartão de cada etapa, como no protótipo.
 const cartoes = [
@@ -334,9 +328,17 @@ export function FormularioInscricao({ aberta = true }: { aberta?: boolean }) {
             : erro.message;
     return mensagens;
   }, [dadosParaEnvio, etapa, confirmado, aceiteTermo, termo]);
-  const pendencias = Object.keys(errosDaEtapa).map(
-    (nome) => rotulos[nome as Campo] ?? NOMES_CONFIRMACAO[nome] ?? nome,
-  );
+  // Motivo do botão desativado, mostrado ao passar o mouse e ao tocar nele.
+  const pendentes = Object.keys(errosDaEtapa);
+  const motivoBotao = enviando
+    ? null
+    : pendentes.length === 0
+      ? null
+      : etapa < 2 || pendentes.some((n) => n in rotulos)
+        ? "Preencha corretamente todos os campos obrigatórios para continuar."
+        : pendentes.includes("versaoTermo")
+          ? "Aguarde o termo de consentimento carregar para enviar."
+          : "Marque a confirmação dos dados e a concordância com o termo para enviar.";
   const erroDoCampo = (nome: string) =>
     erros[nome] ?? (tocados.has(nome) ? errosDaEtapa[nome] : undefined);
   useEffect(() => {
@@ -975,31 +977,26 @@ export function FormularioInscricao({ aberta = true }: { aberta?: boolean }) {
                       Seus dados serão enviados somente na última etapa.
                     </span>
                   )}
-                  <button
+                  <BotaoComMotivo
+                    motivo={motivoBotao}
                     className={styles.primario}
-                    type="submit"
-                    disabled={enviando || pendencias.length > 0}
-                    aria-busy={enviando || undefined}
-                    aria-describedby={
-                      pendencias.length ? "pendencias-etapa" : undefined
-                    }
                   >
-                    {enviando
-                      ? "Enviando…"
-                      : etapa === 2
-                        ? "Confirmar e enviar inscrição"
-                        : "Continuar"}
-                  </button>
+                    {(props) => (
+                      <button
+                        {...props}
+                        type="submit"
+                        disabled={enviando}
+                        aria-busy={enviando || undefined}
+                      >
+                        {enviando
+                          ? "Enviando…"
+                          : etapa === 2
+                            ? "Confirmar e enviar inscrição"
+                            : "Continuar"}
+                      </button>
+                    )}
+                  </BotaoComMotivo>
                 </div>
-                {pendencias.length > 0 && !enviando && (
-                  <p id="pendencias-etapa" className={styles.pendencias}>
-                    {etapa === 2 ? "Para enviar" : "Para continuar"}, falta
-                    preencher ou corrigir:{" "}
-                    {pendencias.length > 6
-                      ? `${pendencias.slice(0, 6).join(", ")} e mais ${pendencias.length - 6}.`
-                      : `${pendencias.join(", ")}.`}
-                  </p>
-                )}
                 <span role="status" aria-live="polite">
                   {enviando ? "Aguarde a confirmação do registro." : ""}
                 </span>

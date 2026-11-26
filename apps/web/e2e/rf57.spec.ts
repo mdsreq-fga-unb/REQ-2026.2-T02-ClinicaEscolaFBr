@@ -34,9 +34,17 @@ for (const largura of [320, 360, 768, 1024, 1366, 1920]) {
       name: "Confirmar e enviar inscrição",
     });
     await expect(botaoEnviar).toBeDisabled();
-    await expect(page.locator("#pendencias-etapa")).toContainText(
-      "a concordância com o termo",
+    await expect(botaoEnviar).toHaveAccessibleDescription(
+      "Marque a confirmação dos dados e a concordância com o termo para enviar.",
     );
+    // O clique no botão desativado só mostra o motivo, sem enviar.
+    // force: o Playwright não clica em botão desativado; a pessoa, sim.
+    await botaoEnviar.click({ force: true });
+    await expect(
+      page.getByText(
+        "Marque a confirmação dos dados e a concordância com o termo para enviar.",
+      ),
+    ).toHaveCount(2);
     expect(envios).toHaveLength(0);
     for (const nome of [
       /1\. O que coletamos/,
@@ -95,8 +103,10 @@ for (const largura of [320, 1366]) {
     await expect(
       page.getByRole("button", { name: "Continuar" }),
     ).toBeDisabled();
-    await expect(page.locator("#pendencias-etapa")).toContainText(
-      "CPF do responsável",
+    await expect(
+      page.getByRole("button", { name: "Continuar" }),
+    ).toHaveAccessibleDescription(
+      "Preencha corretamente todos os campos obrigatórios para continuar.",
     );
     await page.locator("#cpfResponsavel").fill("52998224724");
     await expect(page.locator("#cpfResponsavel")).toHaveAttribute(

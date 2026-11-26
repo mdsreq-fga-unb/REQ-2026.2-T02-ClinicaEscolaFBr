@@ -228,14 +228,14 @@ describe("Parâmetros da coordenação: valor da contribuição social (RF41)", 
     });
     // Sem mudança, o botão fica desativado e não há o que salvar.
     const botao = screen.getByRole("button", { name: "Salvar valor" });
-    expect(botao).toBeDisabled();
+    expect(botao).toHaveAttribute("aria-disabled", "true");
     expect(botao).toHaveAccessibleDescription("Altere o valor para salvar.");
     fireEvent.click(botao);
     expect(chamadas.some((c) => c.metodo === "PUT")).toBe(false);
     fireEvent.change(screen.getByLabelText("Valor (R$)"), {
       target: { value: "40,00" },
     });
-    expect(botao).toBeEnabled();
+    expect(botao).not.toHaveAttribute("aria-disabled");
   });
 
   it.each(["secretaria", "estagiario", "supervisor"])(

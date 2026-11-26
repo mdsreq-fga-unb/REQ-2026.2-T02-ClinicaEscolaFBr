@@ -138,8 +138,10 @@ test("menor: erro, responsável, teclado e preservação dos dados", async ({
   await preencherDados(page, true);
   // Sem os dados do responsável, Continuar fica desativado e diz o que falta.
   await expect(page.getByRole("button", { name: "Continuar" })).toBeDisabled();
-  await expect(page.locator("#pendencias-etapa")).toContainText(
-    "Nome do responsável legal",
+  await expect(
+    page.getByRole("button", { name: "Continuar" }),
+  ).toHaveAccessibleDescription(
+    "Preencha corretamente todos os campos obrigatórios para continuar.",
   );
   await expect(page.locator("#nomeCompleto")).toHaveValue(
     "Pessoa Fictícia E2E",

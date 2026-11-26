@@ -123,12 +123,12 @@ describe("data-limite para correção de evoluções (RF29)", () => {
     const botao = await screen.findByRole("button", {
       name: "Salvar data-limite",
     });
-    expect(botao.hasAttribute("disabled")).toBe(true);
+    expect(botao.getAttribute("aria-disabled")).toBe("true");
     fireEvent.click(botao);
     fireEvent.change(screen.getByLabelText("Data-limite do semestre 2026/2"), {
       target: { value: "2026-12-10" },
     });
-    expect(botao.hasAttribute("disabled")).toBe(false);
+    expect(botao.hasAttribute("aria-disabled")).toBe(false);
     // Só a consulta da data-limite: nenhuma gravação foi enviada.
     expect(chamadasDaDataLimite()).toHaveLength(1);
     expect(chamadasDaDataLimite()[0][1]?.method).toBeUndefined();
