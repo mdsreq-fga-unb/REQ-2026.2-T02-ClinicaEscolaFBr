@@ -1,4 +1,4 @@
-import { Inject, Injectable } from '@nestjs/common';
+import { BadRequestException, Inject, Injectable } from '@nestjs/common';
 import {
   alteracoesParametro,
   atribuicoesSupervisor,
@@ -37,12 +37,14 @@ import {
   AuditoriaService,
   type Transacao,
 } from '../../auditoria/auditoria.service';
+import type { UsuarioAutenticado } from '../../auth/usuario-autenticado';
 import { DB } from '../../database/database.module';
 import {
   calcularIndicadores,
   fimDoDia,
   inicioDoDia,
 } from './calculo-indicadores';
+import { gerarPdf, montarRelatorio } from './relatorio-institucional';
 
 const VAGAS = 'vagas_ofertadas';
 type Leitor = Db | Transacao;
@@ -57,10 +59,13 @@ export class IndicadoresService {
     private readonly auditoria: AuditoriaService,
   ) {}
 
-  consultar(consulta: ConsultaIndicadores): Promise<Indicadores> {
+  // `agora` é o instante da consulta; a exportação (RF49) passa o da tela.
+  consultar(
+    consulta: ConsultaIndicadores,
+    agora = new Date(),
+  ): Promise<Indicadores> {
     return this.db.transaction(
       async (tx) => {
-        const agora = new Date();
         const referencia =
           consulta.fim === hojeEmBrasilia(agora)
             ? agora
@@ -185,6 +190,54 @@ export class IndicadoresService {
       },
       { isolationLevel: 'repeatable read', accessMode: 'read only' },
     );
+  }
+
+  // Exportação do relatório institucional em PDF (RF49). Quando a data final é
+  // hoje, os indicadores de posição dependem do instante: a tela manda o
+  // `referencia` que recebeu do RF48, e o PDF é calculado no mesmo instante,
+  // para ter os mesmos valores da tela, inclusive quando a exportação passa da
+  // meia-noite. Com a data final no passado e sem referência daquele dia, o
+  // cálculo usa o fim do dia. A exportação fica na auditoria.
+  async exportar(
+    consulta: ConsultaIndicadores,
+    referencia: string | undefined,
+    usuario: UsuarioAutenticado,
+  ) {
+    const agora = new Date();
+    let instante = agora;
+    if (referencia !== undefined) {
+      const tela = new Date(referencia);
+      // A referência vale quando é do dia da data final da consulta, mesmo que a
+      // exportação passe da meia-noite (consulta às 23h50, exportação às 0h05):
+      // o PDF sai com os mesmos valores da tela.
+      const daConsulta =
+        !Number.isNaN(tela.getTime()) &&
+        tela <= agora &&
+        hojeEmBrasilia(tela) === consulta.fim;
+      if (daConsulta) instante = tela;
+      else if (consulta.fim === hojeEmBrasilia(agora))
+        throw new BadRequestException(
+          'A referência não corresponde à consulta exibida. Consulte de novo antes de exportar.',
+        );
+    }
+    const indicadores = await this.consultar(consulta, instante);
+    const relatorio = montarRelatorio(indicadores, {
+      por: usuario.nome,
+      em: agora,
+    });
+    const pdf = await gerarPdf(relatorio);
+    await this.auditoria.registrar({
+      usuarioId: usuario.id,
+      operacao: 'exportar_relatorio_institucional',
+      entidade: 'indicadores',
+      entidadeId: `${consulta.inicio}:${consulta.fim}`,
+      dadosNovos: {
+        inicio: consulta.inicio,
+        fim: consulta.fim,
+        referencia: indicadores.referencia,
+      },
+    });
+    return { pdf, nomeArquivo: relatorio.nomeArquivo };
   }
 
   private async totalDeVagas(semestre: string, banco: Leitor) {
