@@ -34,6 +34,7 @@ import { cifrar, decifrar } from '../../common/criptografia';
 import { AuditoriaService } from '../../auditoria/auditoria.service';
 import type { UsuarioAutenticado } from '../../auth/usuario-autenticado';
 import {
+  avisoSemComplemento,
   correcaoNoPrazo,
   LIMITE_FALTAS_CICLO,
   semestreDaSessao,
@@ -51,11 +52,13 @@ import { DB } from '../../database/database.module';
 import { acoesDeCancelamento } from '../agendamento/acoes-cancelamento';
 import { DesligamentosService } from '../assiduidade/desligamentos.service';
 import { FaltasService } from '../assiduidade/faltas.service';
+import { complementosDasEvolucoes } from './complementos-evolucao.service';
 import {
   correcoesDasEvolucoes,
   dataLimiteDoSemestre,
 } from './correcoes-evolucao.service';
 import { PoliticaProntuario } from './politica-prontuario';
+import { validacoesDasEvolucoes } from './validacoes-evolucao.service';
 
 const estagiario = aliasedTable(usuarios, 'estagiario');
 
@@ -108,12 +111,18 @@ export class ProntuariosService {
   ) {}
 
   // Prontuário com o conteúdo clínico, para o estagiário e o supervisor do caso e,
-  // em qualquer caso, para a coordenação (RF55, DF32).
-  async consultar(id: string, usuario: UsuarioAutenticado) {
+  // em qualquer caso, para a coordenação (RF55, DF32). A `operacao` é a que fica no
+  // registro de acessos (RF56): quem lê o prontuário para mostrar só uma parte dele,
+  // como a evolução de uma sessão (RF31), registra a própria operação, uma vez só.
+  async consultar(
+    id: string,
+    usuario: UsuarioAutenticado,
+    operacao = 'consultar_prontuario',
+  ) {
     const prontuario = await this.politica.exigirAcesso(
       usuario,
       id,
-      'consultar_prontuario',
+      operacao,
       'leitura',
     );
     const caso = await this.resumoDoCaso(prontuario.casoId);
@@ -221,6 +230,26 @@ export class ProntuariosService {
       this.db,
       evolucoesRows.map((e) => e.id),
       chave,
+    );
+    const complementos = await complementosDasEvolucoes(
+      this.db,
+      evolucoesRows.map((e) => e.id),
+      chave,
+    );
+    const validacoes = await validacoesDasEvolucoes(
+      this.db,
+      evolucoesRows.map((e) => e.id),
+    );
+    // O caso encerrado não aceita complemento (RF30): o aviso traz a data do
+    // desligamento, quando há.
+    const avisoComplemento = avisoSemComplemento(
+      caso.situacao,
+      caso.situacao === 'desligado_por_faltas'
+        ? await this.dataDoDesligamento(
+            prontuario.casoId,
+            prontuario.cicloAtendimento,
+          )
+        : null,
     );
     const inicioDaSessao = new Map(sessoes.map((s) => [s.id, s.inicio]));
     const semestres = [
@@ -368,6 +397,28 @@ export class ProntuariosService {
                 permitida:
                   noPrazo && podeCorrigirPorPerfil(evolucao.registradaPor),
               },
+              // Situação da validação (RF67). Quem chega aqui com o perfil de
+              // supervisor é o do caso.
+              validacao: {
+                ...validacoes.get(evolucao.id)!,
+                permitida:
+                  usuario.perfil === 'supervisor' &&
+                  validacoes.get(evolucao.id)!.situacao === 'pendente',
+              },
+              // Informação adicional, separada das versões da correção (RF30). Quem
+              // chega aqui com o perfil de estagiário ou de supervisor é o responsável
+              // pelo caso. O supervisor complementa em qualquer situação do caso, sem
+              // prazo (DF68); o estagiário, só com o caso em atendimento.
+              complementos: complementos.get(evolucao.id) ?? [],
+              complemento:
+                usuario.perfil === 'supervisor'
+                  ? { permitido: true, aviso: null }
+                  : {
+                      permitido:
+                        usuario.perfil === 'estagiario' &&
+                        avisoComplemento === null,
+                      aviso: avisoComplemento,
+                    },
             };
           })(),
         }),
@@ -632,6 +683,17 @@ export class ProntuariosService {
       );
       return { registrado: true };
     });
+  }
+
+  private async dataDoDesligamento(casoId: string, ciclo: number) {
+    const desligamentos = await this.desligamentos.doCiclo(
+      casoId,
+      ciclo,
+      false,
+    );
+    return (
+      desligamentos.find((d) => d.revertidoEm === null)?.dataDecisao ?? null
+    );
   }
 
   private async queixaDaInscricao(casoId: string) {

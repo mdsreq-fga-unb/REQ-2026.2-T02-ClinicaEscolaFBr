@@ -17,6 +17,8 @@ import {
   AVISOS_PACIENTE,
   CANAIS_AVISO_MANUAL,
   CLASSIFICACOES_CANCELAMENTO,
+  DECISOES_REPROVACAO,
+  MOTIVOS_ENCERRAMENTO_SINALIZACAO,
   ORIGENS_CANCELAMENTO,
   ORIGENS_FALTA,
 } from "@clinica/shared";
@@ -245,5 +247,112 @@ export const cancelamentosSessao = pgTable(
       sql`(${t.avisoManualEm} is null) = (${t.avisoManualPor} is null) and (${t.avisoManualEm} is null) = (${t.avisoManualCanal} is null) and (${t.avisoManualEm} is null or ${t.avisoPaciente} is not null)`,
     ),
     index("cancelamentos_desligamento").on(t.desligamentoId),
+  ],
+);
+
+// Reclassificação de uma ausência do estagiário registrada por engano em
+// cancelamento administrativo para remarcação (RF40), pela coordenação. O
+// cancelamento continua como foi registrado: a reclassificação é uma linha nova,
+// no máximo uma por cancelamento, e a contagem do semestre deixa de contá-lo. O
+// motivo é cifrado, porque pode trazer dado pessoal do estagiário (RNF51). Só
+// inserção, com o gatilho impedir_alteracao_registro.
+export const reclassificacoesFalta = pgTable("reclassificacoes_falta", {
+  id: uuid("id").primaryKey().defaultRandom(),
+  cancelamentoId: uuid("cancelamento_id")
+    .notNull()
+    .unique("reclassificacoes_falta_cancelamento")
+    .references(() => cancelamentosSessao.id),
+  motivoCifrado: text("motivo_cifrado").notNull(),
+  reclassificadaPor: uuid("reclassificada_por")
+    .notNull()
+    .references(() => usuarios.id),
+  reclassificadaEm: timestamp("reclassificada_em", { withTimezone: true })
+    .notNull()
+    .defaultNow(),
+});
+
+export const motivoEncerramentoSinalizacaoEnum = pgEnum(
+  "motivo_encerramento_sinalizacao",
+  MOTIVOS_ENCERRAMENTO_SINALIZACAO,
+);
+
+// Sinalização de reprovação do estagiário por faltas (RF63): gerada na transação
+// da ausência (RF16) que leva a contagem do semestre a 3, no máximo uma aberta por
+// estagiário e semestre (índice único parcial). É encerrada pela decisão da
+// coordenação (RF64) ou, sem decisão, pela reclassificação (RF40) que deixa a
+// contagem abaixo do limite, que fica guardada. Os dados da geração não mudam, e
+// os do encerramento só são preenchidos uma vez, com o gatilho
+// proteger_campos_preenchidos.
+export const sinalizacoesReprovacao = pgTable(
+  "sinalizacoes_reprovacao",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    estagiarioId: uuid("estagiario_id")
+      .notNull()
+      .references(() => usuarios.id),
+    semestre: text("semestre").notNull(),
+    geradaEm: timestamp("gerada_em", { withTimezone: true })
+      .notNull()
+      .defaultNow(),
+    encerradaEm: timestamp("encerrada_em", { withTimezone: true }),
+    motivoEncerramento: motivoEncerramentoSinalizacaoEnum(
+      "motivo_encerramento",
+    ),
+    reclassificacaoId: uuid("reclassificacao_id").references(
+      () => reclassificacoesFalta.id,
+    ),
+  },
+  (t) => [
+    uniqueIndex("sinalizacoes_reprovacao_aberta")
+      .on(t.estagiarioId, t.semestre)
+      .where(sql`${t.encerradaEm} is null`),
+    index("sinalizacoes_reprovacao_estagiario").on(t.estagiarioId, t.semestre),
+    check(
+      "sinalizacoes_reprovacao_semestre",
+      sql`${t.semestre} ~ '^[0-9]{4}/[12]$'`,
+    ),
+    check(
+      "sinalizacoes_reprovacao_encerramento",
+      sql`(${t.encerradaEm} is null) = (${t.motivoEncerramento} is null)`,
+    ),
+    check(
+      "sinalizacoes_reprovacao_reclassificacao",
+      sql`(${t.reclassificacaoId} is not null) = (coalesce(${t.motivoEncerramento}::text, '') = 'contagem_abaixo_do_limite')`,
+    ),
+  ],
+);
+
+export const decisaoReprovacaoEnum = pgEnum(
+  "decisao_reprovacao",
+  DECISOES_REPROVACAO,
+);
+
+// Decisão institucional sobre a sinalização de reprovação (RF64), registrada pela
+// coordenação. A primeira encerra a sinalização aberta; uma decisão nova, depois de
+// a contagem mudar, é outra linha, e nenhuma é apagada. Cada decisão guarda a
+// contagem do semestre no momento em que foi registrada: a próxima só é aceita se
+// a contagem atual for outra. A justificativa é cifrada,
+// porque pode trazer dado pessoal do estagiário (RNF51). Só inserção, com o
+// gatilho impedir_alteracao_registro.
+export const decisoesReprovacao = pgTable(
+  "decisoes_reprovacao",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    sinalizacaoId: uuid("sinalizacao_id")
+      .notNull()
+      .references(() => sinalizacoesReprovacao.id),
+    decisao: decisaoReprovacaoEnum("decisao").notNull(),
+    faltas: integer("faltas").notNull(),
+    justificativaCifrada: text("justificativa_cifrada").notNull(),
+    decididaPor: uuid("decidida_por")
+      .notNull()
+      .references(() => usuarios.id),
+    decididaEm: timestamp("decidida_em", { withTimezone: true })
+      .notNull()
+      .defaultNow(),
+  },
+  (t) => [
+    index("decisoes_reprovacao_sinalizacao").on(t.sinalizacaoId),
+    check("decisoes_reprovacao_faltas", sql`${t.faltas} >= 0`),
   ],
 );

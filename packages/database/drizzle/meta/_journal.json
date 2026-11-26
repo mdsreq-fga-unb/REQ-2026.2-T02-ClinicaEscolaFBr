@@ -187,8 +187,43 @@
     {
       "idx": 26,
       "version": "7",
-      "when": 1795639084658,
-      "tag": "0026_alta",
+      "when": 1795663219575,
+      "tag": "0026_reclassificacao_falta",
+      "breakpoints": true
+    },
+    {
+      "idx": 27,
+      "version": "7",
+      "when": 1795663298757,
+      "tag": "0027_sinalizacao_reprovacao",
+      "breakpoints": true
+    },
+    {
+      "idx": 28,
+      "version": "7",
+      "when": 1795663385864,
+      "tag": "0028_decisao_reprovacao",
+      "breakpoints": true
+    },
+    {
+      "idx": 29,
+      "version": "7",
+      "when": 1795664297329,
+      "tag": "0029_complemento_de_evolucao",
+      "breakpoints": true
+    },
+    {
+      "idx": 30,
+      "version": "7",
+      "when": 1795664696149,
+      "tag": "0030_validacao_de_evolucao",
+      "breakpoints": true
+    },
+    {
+      "idx": 31,
+      "version": "7",
+      "when": 1795665615024,
+      "tag": "0031_alta",
       "breakpoints": true
     }
   ]

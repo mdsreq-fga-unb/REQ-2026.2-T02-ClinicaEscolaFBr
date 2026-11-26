@@ -7,6 +7,7 @@ import {
   ParseUUIDPipe,
   Post,
   Put,
+  Query,
   UseGuards,
 } from '@nestjs/common';
 import {
@@ -14,6 +15,7 @@ import {
   contratoSchema,
   dataLimiteCorrecaoSchema,
   evolucaoSchema,
+  filtroHistoricoEvolucoesSchema,
   type Anamnese,
   type Contrato,
   type DataLimiteCorrecaoEntrada,
@@ -27,8 +29,12 @@ import {
   type UsuarioAutenticado,
 } from '../../auth/usuario-autenticado';
 import { ZodValidationPipe } from '../../common/zod-validation.pipe';
+import { ComplementosEvolucaoService } from './complementos-evolucao.service';
 import { CorrecoesEvolucaoService } from './correcoes-evolucao.service';
 import { ProntuariosService } from './prontuarios.service';
+import { ValidacoesEvolucaoService } from './validacoes-evolucao.service';
+import { HistoricoEvolucoesService } from './historico-evolucoes.service';
+import { EvolucaoDaSessaoService } from './evolucao-da-sessao.service';
 
 // Restrição de acesso ao prontuário (RF55).
 @Controller()
@@ -37,6 +43,10 @@ export class ProntuariosController {
   constructor(
     private readonly prontuarios: ProntuariosService,
     private readonly correcoes: CorrecoesEvolucaoService,
+    private readonly complementos: ComplementosEvolucaoService,
+    private readonly validacoes: ValidacoesEvolucaoService,
+    private readonly historico: HistoricoEvolucoesService,
+    private readonly evolucaoDaSessao: EvolucaoDaSessaoService,
   ) {}
 
   // Qualquer perfil pode tentar: a política decide e registra a tentativa.
@@ -47,6 +57,29 @@ export class ProntuariosController {
     @UsuarioAtual() usuario: UsuarioAutenticado,
   ) {
     return this.prontuarios.consultar(id, usuario);
+  }
+
+  // Histórico por ciclo com a política de leitura do prontuário (RF32).
+  @Get('prontuarios/:id/evolucoes')
+  @Header('Cache-Control', 'no-store')
+  consultarHistorico(
+    @Param('id', ParseUUIDPipe) id: string,
+    @Query(new ZodValidationPipe(filtroHistoricoEvolucoesSchema))
+    filtro: { ciclo?: number },
+    @UsuarioAtual() usuario: UsuarioAutenticado,
+  ) {
+    return this.historico.consultar(id, filtro.ciclo, usuario);
+  }
+
+  // Evolução de uma sessão específica, com o histórico e as ações (RF31).
+  @Get('prontuarios/:id/sessoes/:sessaoId/evolucao')
+  @Header('Cache-Control', 'no-store')
+  consultarEvolucaoDaSessao(
+    @Param('id', ParseUUIDPipe) id: string,
+    @Param('sessaoId', ParseUUIDPipe) sessaoId: string,
+    @UsuarioAtual() usuario: UsuarioAutenticado,
+  ) {
+    return this.evolucaoDaSessao.consultar(id, sessaoId, usuario);
   }
 
   // Anamnese e contrato salvos separados, cada um uma vez (RF69).
@@ -102,6 +135,30 @@ export class ProntuariosController {
     @UsuarioAtual() usuario: UsuarioAutenticado,
   ) {
     return this.correcoes.corrigir(id, evolucaoId, corpo, usuario);
+  }
+
+  // Complemento da evolução (RF30). O corpo é validado no serviço, depois da política
+  // de acesso, como na correção.
+  @Post('prontuarios/:id/evolucoes/:evolucaoId/complementos')
+  @Header('Cache-Control', 'no-store')
+  complementarEvolucao(
+    @Param('id', ParseUUIDPipe) id: string,
+    @Param('evolucaoId', ParseUUIDPipe) evolucaoId: string,
+    @Body() corpo: unknown,
+    @UsuarioAtual() usuario: UsuarioAutenticado,
+  ) {
+    return this.complementos.registrar(id, evolucaoId, corpo, usuario);
+  }
+
+  // Validação da evolução pelo supervisor do caso (RF67).
+  @Post('prontuarios/:id/evolucoes/:evolucaoId/validacao')
+  @Header('Cache-Control', 'no-store')
+  validarEvolucao(
+    @Param('id', ParseUUIDPipe) id: string,
+    @Param('evolucaoId', ParseUUIDPipe) evolucaoId: string,
+    @UsuarioAtual() usuario: UsuarioAutenticado,
+  ) {
+    return this.validacoes.validar(id, evolucaoId, usuario);
   }
 
   // Data-limite para corrigir evoluções no semestre vigente (RF29): só a coordenação.
