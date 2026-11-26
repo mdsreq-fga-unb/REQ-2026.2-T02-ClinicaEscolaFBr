@@ -819,7 +819,7 @@ rfs:
   lider: Gabriel
   depende: [RF48]
   issue: 23
-  estado: Planejada
+  estado: Código concluído
 
 - id: RF50
   nome: Autenticar usuário institucional

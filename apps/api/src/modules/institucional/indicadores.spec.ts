@@ -577,6 +577,20 @@ describe('Rotas dos indicadores operacionais (RF48)', () => {
     }
   });
 
+  it('a consulta de ontem às 23h50 exportada depois da meia-noite sai com o instante da tela, e não com o fim do dia (RF49)', async () => {
+    const antes = new Date(Date.now() - 5 * 86_400_000);
+    await casoEmAtendimento(antes);
+    const inicio = hojeEmBrasilia(antes);
+    const ontem = hojeEmBrasilia(new Date(Date.now() - 86_400_000));
+    const referencia = new Date(`${ontem}T23:50:00-03:00`).toISOString();
+    await exportar({ inicio, fim: ontem, referencia }).expect(200);
+    const [registro] = await db
+      .select()
+      .from(auditoria)
+      .where(eq(auditoria.operacao, 'exportar_relatorio_institucional'));
+    expect(registro.dadosNovos).toMatchObject({ referencia });
+  });
+
   it('o PDF recusa o mesmo período inválido da consulta (RF49)', async () => {
     await exportar({ inicio: '2026-08-31', fim: '2026-08-01' }).expect(400);
   });

@@ -196,11 +196,13 @@ export default function IndicadoresPage() {
         </div>
       </div>
 
-      {exportacao.estado === "pronto" && (
-        <p role="status" className="sr-only">
-          Relatório exportado: {exportacao.arquivo}.
-        </p>
-      )}
+      {/* A região fica sempre na página e só o texto muda, para o leitor de tela
+          anunciar a exportação (RNF56). */}
+      <p role="status" className="sr-only">
+        {exportacao.estado === "pronto"
+          ? `Relatório exportado: ${exportacao.arquivo}.`
+          : ""}
+      </p>
       {exportacao.estado === "erro" && (
         <Aviso tipo="erro" titulo="Não foi possível exportar o relatório.">
           {exportacao.mensagem}

@@ -195,9 +195,9 @@ export class IndicadoresService {
   // Exportação do relatório institucional em PDF (RF49). Quando a data final é
   // hoje, os indicadores de posição dependem do instante: a tela manda o
   // `referencia` que recebeu do RF48, e o PDF é calculado no mesmo instante,
-  // para ter os mesmos valores da tela. Com a data final no passado, o cálculo
-  // usa o fim daquele dia e a referência é ignorada. A exportação fica na
-  // auditoria.
+  // para ter os mesmos valores da tela, inclusive quando a exportação passa da
+  // meia-noite. Com a data final no passado e sem referência daquele dia, o
+  // cálculo usa o fim do dia. A exportação fica na auditoria.
   async exportar(
     consulta: ConsultaIndicadores,
     referencia: string | undefined,
@@ -205,18 +205,20 @@ export class IndicadoresService {
   ) {
     const agora = new Date();
     let instante = agora;
-    if (referencia !== undefined && consulta.fim === hojeEmBrasilia(agora)) {
+    if (referencia !== undefined) {
       const tela = new Date(referencia);
-      if (
-        Number.isNaN(tela.getTime()) ||
-        tela > agora ||
-        hojeEmBrasilia(tela) !== consulta.fim
-      ) {
+      // A referência vale quando é do dia da data final da consulta, mesmo que a
+      // exportação passe da meia-noite (consulta às 23h50, exportação às 0h05):
+      // o PDF sai com os mesmos valores da tela.
+      const daConsulta =
+        !Number.isNaN(tela.getTime()) &&
+        tela <= agora &&
+        hojeEmBrasilia(tela) === consulta.fim;
+      if (daConsulta) instante = tela;
+      else if (consulta.fim === hojeEmBrasilia(agora))
         throw new BadRequestException(
           'A referência não corresponde à consulta exibida. Consulte de novo antes de exportar.',
         );
-      }
-      instante = tela;
     }
     const indicadores = await this.consultar(consulta, instante);
     const relatorio = montarRelatorio(indicadores, {
