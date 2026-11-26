@@ -178,6 +178,19 @@ describe("Elaboração do relatório final (RF33)", () => {
     ).toEqual(["Sessão 2 (09/10/2026)", "Sessão 6 (13/10/2026)"]);
   });
 
+  it("tira o aviso de lacunas depois da aprovação", async () => {
+    abrir(
+      elaboracao({
+        sessoes: sessoes(9, [6]),
+        versoes: [versao({ estado: "aprovado" })],
+      }),
+    );
+    expect(
+      await screen.findByRole("heading", { name: "Relatório final · ciclo 1" }),
+    ).toBeTruthy();
+    expect(screen.queryByText(/não tem evolução registrada/)).toBeNull();
+  });
+
   it("salva o rascunho com seções em branco", async () => {
     const gravar = vi.fn();
     abrir(elaboracao(), "estagiario", gravar);
