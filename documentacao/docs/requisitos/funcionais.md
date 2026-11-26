@@ -86,7 +86,7 @@ _Critérios de aceitação:_
 
 - O envio sem o nome ou o telefone do contato de emergência, ou sem o endereço completo (endereço, bairro, cidade e CEP), é bloqueado e o campo é indicado; o grau de parentesco pode ficar em branco ([DF51](decisoes-fbr.md#df51), [DF56](decisoes-fbr.md#df56) e [DF64](decisoes-fbr.md#df64)).
 
-_Rastreabilidade:_ Feature "Registrar solicitação de atendimento on-line" → CP1 — Inscrição on-line → OE1/OE4. Dependência: RF57 — Registrar consentimento para tratamento de dados, cujo aceite é condição para concluir a inscrição. Restrição transversal: CP12 — Segurança, sigilo e controle de acesso.
+_Rastreabilidade:_ Feature "Registrar solicitação de atendimento on-line" → CP1 — Inscrição on-line → OE1/OE4. Dependência: RF57 — Registrar consentimento para tratamento de dados, cujo aceite é condição para concluir a inscrição. Restrição transversal: CP12 — Segurança, sigilo e controle de acesso.{{ origem("RF1") }}
 
 {{ registro("RF1") }}
 

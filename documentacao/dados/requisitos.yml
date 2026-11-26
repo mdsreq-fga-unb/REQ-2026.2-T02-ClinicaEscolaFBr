@@ -157,7 +157,7 @@ rfs:
   origem: [DF16, DF33, DF57]
 
 - id: RF8
-  nome: Consultar posição individual na fila
+  nome: Consultar situação da inscrição
   cp: CP3
   valor: 4
   justificativa: 'Valor dado pela FBr: a consulta pelo site é o canal definido para o inscrito acompanhar a fila (DF40); sem ela, o retorno ao inscrito depende de contato da secretaria'
