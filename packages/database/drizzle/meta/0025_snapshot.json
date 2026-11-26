@@ -1,6 +1,6 @@
 {
-  "id": "e07d20ab-3642-433b-97ca-89241cff5097",
-  "prevId": "a720cc8d-2a55-45a9-ab3d-c017166ad028",
+  "id": "273a109e-a856-4ba4-8189-785dab6b39ff",
+  "prevId": "8fd42514-d688-454e-aef0-c979d3380e7f",
   "version": "7",
   "dialect": "postgresql",
   "tables": {
@@ -64,11 +64,11 @@
         "auditoria_usuario_id_usuarios_id_fk": {
           "name": "auditoria_usuario_id_usuarios_id_fk",
           "tableFrom": "auditoria",
-          "tableTo": "usuarios",
           "columnsFrom": ["usuario_id"],
+          "tableTo": "usuarios",
           "columnsTo": ["id"],
-          "onDelete": "no action",
-          "onUpdate": "no action"
+          "onUpdate": "no action",
+          "onDelete": "no action"
         }
       },
       "compositePrimaryKeys": {},
@@ -161,8 +161,8 @@
       "uniqueConstraints": {
         "usuarios_email_unique": {
           "name": "usuarios_email_unique",
-          "nullsNotDistinct": false,
-          "columns": ["email"]
+          "columns": ["email"],
+          "nullsNotDistinct": false
         }
       },
       "policies": {},
@@ -223,19 +223,19 @@
         "convites_ativacao_usuario_id_usuarios_id_fk": {
           "name": "convites_ativacao_usuario_id_usuarios_id_fk",
           "tableFrom": "convites_ativacao",
-          "tableTo": "usuarios",
           "columnsFrom": ["usuario_id"],
+          "tableTo": "usuarios",
           "columnsTo": ["id"],
-          "onDelete": "no action",
-          "onUpdate": "no action"
+          "onUpdate": "no action",
+          "onDelete": "no action"
         }
       },
       "compositePrimaryKeys": {},
       "uniqueConstraints": {
         "convites_ativacao_token_hash_unique": {
           "name": "convites_ativacao_token_hash_unique",
-          "nullsNotDistinct": false,
-          "columns": ["token_hash"]
+          "columns": ["token_hash"],
+          "nullsNotDistinct": false
         }
       },
       "policies": {},
@@ -290,19 +290,19 @@
         "sessoes_login_usuario_id_usuarios_id_fk": {
           "name": "sessoes_login_usuario_id_usuarios_id_fk",
           "tableFrom": "sessoes_login",
-          "tableTo": "usuarios",
           "columnsFrom": ["usuario_id"],
+          "tableTo": "usuarios",
           "columnsTo": ["id"],
-          "onDelete": "no action",
-          "onUpdate": "no action"
+          "onUpdate": "no action",
+          "onDelete": "no action"
         }
       },
       "compositePrimaryKeys": {},
       "uniqueConstraints": {
         "sessoes_login_token_hash_unique": {
           "name": "sessoes_login_token_hash_unique",
-          "nullsNotDistinct": false,
-          "columns": ["token_hash"]
+          "columns": ["token_hash"],
+          "nullsNotDistinct": false
         }
       },
       "policies": {},
@@ -508,19 +508,19 @@
         "inscricoes_versao_termo_aceita_versoes_termo_versao_fk": {
           "name": "inscricoes_versao_termo_aceita_versoes_termo_versao_fk",
           "tableFrom": "inscricoes",
-          "tableTo": "versoes_termo",
           "columnsFrom": ["versao_termo_aceita"],
+          "tableTo": "versoes_termo",
           "columnsTo": ["versao"],
-          "onDelete": "no action",
-          "onUpdate": "no action"
+          "onUpdate": "no action",
+          "onDelete": "no action"
         }
       },
       "compositePrimaryKeys": {},
       "uniqueConstraints": {
         "inscricoes_numero_unique": {
           "name": "inscricoes_numero_unique",
-          "nullsNotDistinct": false,
-          "columns": ["numero"]
+          "columns": ["numero"],
+          "nullsNotDistinct": false
         }
       },
       "policies": {},
@@ -667,39 +667,39 @@
             }
           ],
           "isUnique": true,
-          "where": "\"atribuicoes_supervisor\".\"vigente\"",
-          "concurrently": false,
+          "with": {},
           "method": "btree",
-          "with": {}
+          "where": "\"atribuicoes_supervisor\".\"vigente\"",
+          "concurrently": false
         }
       },
       "foreignKeys": {
         "atribuicoes_supervisor_caso_id_casos_id_fk": {
           "name": "atribuicoes_supervisor_caso_id_casos_id_fk",
           "tableFrom": "atribuicoes_supervisor",
-          "tableTo": "casos",
           "columnsFrom": ["caso_id"],
+          "tableTo": "casos",
           "columnsTo": ["id"],
-          "onDelete": "no action",
-          "onUpdate": "no action"
+          "onUpdate": "no action",
+          "onDelete": "no action"
         },
         "atribuicoes_supervisor_supervisor_id_usuarios_id_fk": {
           "name": "atribuicoes_supervisor_supervisor_id_usuarios_id_fk",
           "tableFrom": "atribuicoes_supervisor",
-          "tableTo": "usuarios",
           "columnsFrom": ["supervisor_id"],
+          "tableTo": "usuarios",
           "columnsTo": ["id"],
-          "onDelete": "no action",
-          "onUpdate": "no action"
+          "onUpdate": "no action",
+          "onDelete": "no action"
         },
         "atribuicoes_supervisor_atribuido_por_usuarios_id_fk": {
           "name": "atribuicoes_supervisor_atribuido_por_usuarios_id_fk",
           "tableFrom": "atribuicoes_supervisor",
-          "tableTo": "usuarios",
           "columnsFrom": ["atribuido_por"],
+          "tableTo": "usuarios",
           "columnsTo": ["id"],
-          "onDelete": "no action",
-          "onUpdate": "no action"
+          "onUpdate": "no action",
+          "onDelete": "no action"
         }
       },
       "compositePrimaryKeys": {},
@@ -764,19 +764,19 @@
         "casos_inscricao_id_inscricoes_id_fk": {
           "name": "casos_inscricao_id_inscricoes_id_fk",
           "tableFrom": "casos",
-          "tableTo": "inscricoes",
           "columnsFrom": ["inscricao_id"],
+          "tableTo": "inscricoes",
           "columnsTo": ["id"],
-          "onDelete": "no action",
-          "onUpdate": "no action"
+          "onUpdate": "no action",
+          "onDelete": "no action"
         }
       },
       "compositePrimaryKeys": {},
       "uniqueConstraints": {
         "casos_inscricao_id_unique": {
           "name": "casos_inscricao_id_unique",
-          "nullsNotDistinct": false,
-          "columns": ["inscricao_id"]
+          "columns": ["inscricao_id"],
+          "nullsNotDistinct": false
         }
       },
       "policies": {},
@@ -844,38 +844,38 @@
             }
           ],
           "isUnique": false,
-          "concurrently": false,
+          "with": {},
           "method": "btree",
-          "with": {}
+          "concurrently": false
         }
       },
       "foreignKeys": {
         "decisoes_prioridade_inscricao_id_inscricoes_id_fk": {
           "name": "decisoes_prioridade_inscricao_id_inscricoes_id_fk",
           "tableFrom": "decisoes_prioridade",
-          "tableTo": "inscricoes",
           "columnsFrom": ["inscricao_id"],
+          "tableTo": "inscricoes",
           "columnsTo": ["id"],
-          "onDelete": "no action",
-          "onUpdate": "no action"
+          "onUpdate": "no action",
+          "onDelete": "no action"
         },
         "decisoes_prioridade_decisao_anterior_id_decisoes_prioridade_id_fk": {
           "name": "decisoes_prioridade_decisao_anterior_id_decisoes_prioridade_id_fk",
           "tableFrom": "decisoes_prioridade",
-          "tableTo": "decisoes_prioridade",
           "columnsFrom": ["decisao_anterior_id"],
+          "tableTo": "decisoes_prioridade",
           "columnsTo": ["id"],
-          "onDelete": "no action",
-          "onUpdate": "no action"
+          "onUpdate": "no action",
+          "onDelete": "no action"
         },
         "decisoes_prioridade_decidida_por_usuarios_id_fk": {
           "name": "decisoes_prioridade_decidida_por_usuarios_id_fk",
           "tableFrom": "decisoes_prioridade",
-          "tableTo": "usuarios",
           "columnsFrom": ["decidida_por"],
+          "tableTo": "usuarios",
           "columnsTo": ["id"],
-          "onDelete": "no action",
-          "onUpdate": "no action"
+          "onUpdate": "no action",
+          "onDelete": "no action"
         }
       },
       "compositePrimaryKeys": {},
@@ -982,83 +982,83 @@
             }
           ],
           "isUnique": false,
-          "concurrently": false,
+          "with": {},
           "method": "btree",
-          "with": {}
+          "concurrently": false
         }
       },
       "foreignKeys": {
         "transferencias_caso_caso_id_casos_id_fk": {
           "name": "transferencias_caso_caso_id_casos_id_fk",
           "tableFrom": "transferencias_caso",
-          "tableTo": "casos",
           "columnsFrom": ["caso_id"],
+          "tableTo": "casos",
           "columnsTo": ["id"],
-          "onDelete": "no action",
-          "onUpdate": "no action"
+          "onUpdate": "no action",
+          "onDelete": "no action"
         },
         "transferencias_caso_supervisor_anterior_id_usuarios_id_fk": {
           "name": "transferencias_caso_supervisor_anterior_id_usuarios_id_fk",
           "tableFrom": "transferencias_caso",
-          "tableTo": "usuarios",
           "columnsFrom": ["supervisor_anterior_id"],
+          "tableTo": "usuarios",
           "columnsTo": ["id"],
-          "onDelete": "no action",
-          "onUpdate": "no action"
+          "onUpdate": "no action",
+          "onDelete": "no action"
         },
         "transferencias_caso_supervisor_novo_id_usuarios_id_fk": {
           "name": "transferencias_caso_supervisor_novo_id_usuarios_id_fk",
           "tableFrom": "transferencias_caso",
-          "tableTo": "usuarios",
           "columnsFrom": ["supervisor_novo_id"],
+          "tableTo": "usuarios",
           "columnsTo": ["id"],
-          "onDelete": "no action",
-          "onUpdate": "no action"
+          "onUpdate": "no action",
+          "onDelete": "no action"
         },
         "transferencias_caso_estagiario_anterior_id_usuarios_id_fk": {
           "name": "transferencias_caso_estagiario_anterior_id_usuarios_id_fk",
           "tableFrom": "transferencias_caso",
-          "tableTo": "usuarios",
           "columnsFrom": ["estagiario_anterior_id"],
+          "tableTo": "usuarios",
           "columnsTo": ["id"],
-          "onDelete": "no action",
-          "onUpdate": "no action"
+          "onUpdate": "no action",
+          "onDelete": "no action"
         },
         "transferencias_caso_estagiario_novo_id_usuarios_id_fk": {
           "name": "transferencias_caso_estagiario_novo_id_usuarios_id_fk",
           "tableFrom": "transferencias_caso",
-          "tableTo": "usuarios",
           "columnsFrom": ["estagiario_novo_id"],
+          "tableTo": "usuarios",
           "columnsTo": ["id"],
-          "onDelete": "no action",
-          "onUpdate": "no action"
+          "onUpdate": "no action",
+          "onDelete": "no action"
         },
         "transferencias_caso_atribuicao_anterior_id_atribuicoes_supervisor_id_fk": {
           "name": "transferencias_caso_atribuicao_anterior_id_atribuicoes_supervisor_id_fk",
           "tableFrom": "transferencias_caso",
-          "tableTo": "atribuicoes_supervisor",
           "columnsFrom": ["atribuicao_anterior_id"],
+          "tableTo": "atribuicoes_supervisor",
           "columnsTo": ["id"],
-          "onDelete": "no action",
-          "onUpdate": "no action"
+          "onUpdate": "no action",
+          "onDelete": "no action"
         },
         "transferencias_caso_vinculo_anterior_id_vinculos_estagiario_id_fk": {
           "name": "transferencias_caso_vinculo_anterior_id_vinculos_estagiario_id_fk",
           "tableFrom": "transferencias_caso",
-          "tableTo": "vinculos_estagiario",
           "columnsFrom": ["vinculo_anterior_id"],
+          "tableTo": "vinculos_estagiario",
           "columnsTo": ["id"],
-          "onDelete": "no action",
-          "onUpdate": "no action"
+          "onUpdate": "no action",
+          "onDelete": "no action"
         },
         "transferencias_caso_transferido_por_usuarios_id_fk": {
           "name": "transferencias_caso_transferido_por_usuarios_id_fk",
           "tableFrom": "transferencias_caso",
-          "tableTo": "usuarios",
           "columnsFrom": ["transferido_por"],
+          "tableTo": "usuarios",
           "columnsTo": ["id"],
-          "onDelete": "no action",
-          "onUpdate": "no action"
+          "onUpdate": "no action",
+          "onDelete": "no action"
         }
       },
       "compositePrimaryKeys": {},
@@ -1134,39 +1134,39 @@
             }
           ],
           "isUnique": true,
-          "where": "\"vinculos_estagiario\".\"vigente\"",
-          "concurrently": false,
+          "with": {},
           "method": "btree",
-          "with": {}
+          "where": "\"vinculos_estagiario\".\"vigente\"",
+          "concurrently": false
         }
       },
       "foreignKeys": {
         "vinculos_estagiario_caso_id_casos_id_fk": {
           "name": "vinculos_estagiario_caso_id_casos_id_fk",
           "tableFrom": "vinculos_estagiario",
-          "tableTo": "casos",
           "columnsFrom": ["caso_id"],
+          "tableTo": "casos",
           "columnsTo": ["id"],
-          "onDelete": "no action",
-          "onUpdate": "no action"
+          "onUpdate": "no action",
+          "onDelete": "no action"
         },
         "vinculos_estagiario_estagiario_id_usuarios_id_fk": {
           "name": "vinculos_estagiario_estagiario_id_usuarios_id_fk",
           "tableFrom": "vinculos_estagiario",
-          "tableTo": "usuarios",
           "columnsFrom": ["estagiario_id"],
+          "tableTo": "usuarios",
           "columnsTo": ["id"],
-          "onDelete": "no action",
-          "onUpdate": "no action"
+          "onUpdate": "no action",
+          "onDelete": "no action"
         },
         "vinculos_estagiario_vinculado_por_usuarios_id_fk": {
           "name": "vinculos_estagiario_vinculado_por_usuarios_id_fk",
           "tableFrom": "vinculos_estagiario",
-          "tableTo": "usuarios",
           "columnsFrom": ["vinculado_por"],
+          "tableTo": "usuarios",
           "columnsTo": ["id"],
-          "onDelete": "no action",
-          "onUpdate": "no action"
+          "onUpdate": "no action",
+          "onDelete": "no action"
         }
       },
       "compositePrimaryKeys": {},
@@ -1228,24 +1228,24 @@
         "links_confirmacao_sessao_id_sessoes_atendimento_id_fk": {
           "name": "links_confirmacao_sessao_id_sessoes_atendimento_id_fk",
           "tableFrom": "links_confirmacao",
-          "tableTo": "sessoes_atendimento",
           "columnsFrom": ["sessao_id"],
+          "tableTo": "sessoes_atendimento",
           "columnsTo": ["id"],
-          "onDelete": "no action",
-          "onUpdate": "no action"
+          "onUpdate": "no action",
+          "onDelete": "no action"
         }
       },
       "compositePrimaryKeys": {},
       "uniqueConstraints": {
         "links_confirmacao_sessao_id_unique": {
           "name": "links_confirmacao_sessao_id_unique",
-          "nullsNotDistinct": false,
-          "columns": ["sessao_id"]
+          "columns": ["sessao_id"],
+          "nullsNotDistinct": false
         },
         "links_confirmacao_token_hash_unique": {
           "name": "links_confirmacao_token_hash_unique",
-          "nullsNotDistinct": false,
-          "columns": ["token_hash"]
+          "columns": ["token_hash"],
+          "nullsNotDistinct": false
         }
       },
       "policies": {},
@@ -1359,9 +1359,9 @@
             }
           ],
           "isUnique": false,
-          "concurrently": false,
+          "with": {},
           "method": "btree",
-          "with": {}
+          "concurrently": false
         },
         "sessoes_caso_inicio": {
           "name": "sessoes_caso_inicio",
@@ -1380,9 +1380,9 @@
             }
           ],
           "isUnique": false,
-          "concurrently": false,
+          "with": {},
           "method": "btree",
-          "with": {}
+          "concurrently": false
         },
         "sessoes_caso_ciclo_inicio": {
           "name": "sessoes_caso_ciclo_inicio",
@@ -1407,38 +1407,38 @@
             }
           ],
           "isUnique": false,
-          "concurrently": false,
+          "with": {},
           "method": "btree",
-          "with": {}
+          "concurrently": false
         }
       },
       "foreignKeys": {
         "sessoes_atendimento_caso_id_casos_id_fk": {
           "name": "sessoes_atendimento_caso_id_casos_id_fk",
           "tableFrom": "sessoes_atendimento",
-          "tableTo": "casos",
           "columnsFrom": ["caso_id"],
+          "tableTo": "casos",
           "columnsTo": ["id"],
-          "onDelete": "no action",
-          "onUpdate": "no action"
+          "onUpdate": "no action",
+          "onDelete": "no action"
         },
         "sessoes_atendimento_estagiario_id_usuarios_id_fk": {
           "name": "sessoes_atendimento_estagiario_id_usuarios_id_fk",
           "tableFrom": "sessoes_atendimento",
-          "tableTo": "usuarios",
           "columnsFrom": ["estagiario_id"],
+          "tableTo": "usuarios",
           "columnsTo": ["id"],
-          "onDelete": "no action",
-          "onUpdate": "no action"
+          "onUpdate": "no action",
+          "onDelete": "no action"
         },
         "sessoes_atendimento_agendada_por_usuarios_id_fk": {
           "name": "sessoes_atendimento_agendada_por_usuarios_id_fk",
           "tableFrom": "sessoes_atendimento",
-          "tableTo": "usuarios",
           "columnsFrom": ["agendada_por"],
+          "tableTo": "usuarios",
           "columnsTo": ["id"],
-          "onDelete": "no action",
-          "onUpdate": "no action"
+          "onUpdate": "no action",
+          "onDelete": "no action"
         }
       },
       "compositePrimaryKeys": {},
@@ -1522,9 +1522,9 @@
             }
           ],
           "isUnique": false,
-          "concurrently": false,
+          "with": {},
           "method": "btree",
-          "with": {}
+          "concurrently": false
         },
         "acessos_prontuario_prontuario_criado_em_idx": {
           "name": "acessos_prontuario_prontuario_criado_em_idx",
@@ -1543,9 +1543,9 @@
             }
           ],
           "isUnique": false,
-          "concurrently": false,
+          "with": {},
           "method": "btree",
-          "with": {}
+          "concurrently": false
         },
         "acessos_prontuario_usuario_criado_em_idx": {
           "name": "acessos_prontuario_usuario_criado_em_idx",
@@ -1564,115 +1564,29 @@
             }
           ],
           "isUnique": false,
-          "concurrently": false,
+          "with": {},
           "method": "btree",
-          "with": {}
+          "concurrently": false
         }
       },
       "foreignKeys": {
         "acessos_prontuario_prontuario_id_prontuarios_id_fk": {
           "name": "acessos_prontuario_prontuario_id_prontuarios_id_fk",
           "tableFrom": "acessos_prontuario",
-          "tableTo": "prontuarios",
           "columnsFrom": ["prontuario_id"],
+          "tableTo": "prontuarios",
           "columnsTo": ["id"],
-          "onDelete": "no action",
-          "onUpdate": "no action"
+          "onUpdate": "no action",
+          "onDelete": "no action"
         },
         "acessos_prontuario_usuario_id_usuarios_id_fk": {
           "name": "acessos_prontuario_usuario_id_usuarios_id_fk",
           "tableFrom": "acessos_prontuario",
-          "tableTo": "usuarios",
           "columnsFrom": ["usuario_id"],
-          "columnsTo": ["id"],
-          "onDelete": "no action",
-          "onUpdate": "no action"
-        }
-      },
-      "compositePrimaryKeys": {},
-      "uniqueConstraints": {},
-      "policies": {},
-      "checkConstraints": {},
-      "isRLSEnabled": false
-    },
-    "public.complementos_evolucao": {
-      "name": "complementos_evolucao",
-      "schema": "",
-      "columns": {
-        "id": {
-          "name": "id",
-          "type": "uuid",
-          "primaryKey": true,
-          "notNull": true,
-          "default": "gen_random_uuid()"
-        },
-        "evolucao_id": {
-          "name": "evolucao_id",
-          "type": "uuid",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "texto_cifrado": {
-          "name": "texto_cifrado",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "registrado_por": {
-          "name": "registrado_por",
-          "type": "uuid",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "registrado_em": {
-          "name": "registrado_em",
-          "type": "timestamp with time zone",
-          "primaryKey": false,
-          "notNull": true,
-          "default": "now()"
-        }
-      },
-      "indexes": {
-        "complementos_evolucao_evolucao_idx": {
-          "name": "complementos_evolucao_evolucao_idx",
-          "columns": [
-            {
-              "expression": "evolucao_id",
-              "isExpression": false,
-              "asc": true,
-              "nulls": "last"
-            },
-            {
-              "expression": "registrado_em",
-              "isExpression": false,
-              "asc": true,
-              "nulls": "last"
-            }
-          ],
-          "isUnique": false,
-          "concurrently": false,
-          "method": "btree",
-          "with": {}
-        }
-      },
-      "foreignKeys": {
-        "complementos_evolucao_evolucao_id_evolucoes_id_fk": {
-          "name": "complementos_evolucao_evolucao_id_evolucoes_id_fk",
-          "tableFrom": "complementos_evolucao",
-          "tableTo": "evolucoes",
-          "columnsFrom": ["evolucao_id"],
-          "columnsTo": ["id"],
-          "onDelete": "no action",
-          "onUpdate": "no action"
-        },
-        "complementos_evolucao_registrado_por_usuarios_id_fk": {
-          "name": "complementos_evolucao_registrado_por_usuarios_id_fk",
-          "tableFrom": "complementos_evolucao",
           "tableTo": "usuarios",
-          "columnsFrom": ["registrado_por"],
           "columnsTo": ["id"],
-          "onDelete": "no action",
-          "onUpdate": "no action"
+          "onUpdate": "no action",
+          "onDelete": "no action"
         }
       },
       "compositePrimaryKeys": {},
@@ -1771,28 +1685,28 @@
         "correcoes_evolucao_evolucao_id_evolucoes_id_fk": {
           "name": "correcoes_evolucao_evolucao_id_evolucoes_id_fk",
           "tableFrom": "correcoes_evolucao",
-          "tableTo": "evolucoes",
           "columnsFrom": ["evolucao_id"],
+          "tableTo": "evolucoes",
           "columnsTo": ["id"],
-          "onDelete": "no action",
-          "onUpdate": "no action"
+          "onUpdate": "no action",
+          "onDelete": "no action"
         },
         "correcoes_evolucao_corrigida_por_usuarios_id_fk": {
           "name": "correcoes_evolucao_corrigida_por_usuarios_id_fk",
           "tableFrom": "correcoes_evolucao",
-          "tableTo": "usuarios",
           "columnsFrom": ["corrigida_por"],
+          "tableTo": "usuarios",
           "columnsTo": ["id"],
-          "onDelete": "no action",
-          "onUpdate": "no action"
+          "onUpdate": "no action",
+          "onDelete": "no action"
         }
       },
       "compositePrimaryKeys": {},
       "uniqueConstraints": {
         "correcoes_evolucao_versao": {
           "name": "correcoes_evolucao_versao",
-          "nullsNotDistinct": false,
-          "columns": ["evolucao_id", "versao"]
+          "columns": ["evolucao_id", "versao"],
+          "nullsNotDistinct": false
         }
       },
       "policies": {},
@@ -1804,6 +1718,94 @@
         "correcoes_evolucao_ficha_completa": {
           "name": "correcoes_evolucao_ficha_completa",
           "value": "(\"correcoes_evolucao\".\"queixa_cifrada\" IS NOT NULL AND \"correcoes_evolucao\".\"planejamento_cifrado\" IS NOT NULL) OR (\"correcoes_evolucao\".\"humor_aparencia_cifrado\" IS NOT NULL AND \"correcoes_evolucao\".\"conteudo_trabalhado_cifrado\" IS NOT NULL AND \"correcoes_evolucao\".\"tecnicas_utilizadas_cifrado\" IS NOT NULL AND \"correcoes_evolucao\".\"plano_proxima_sessao_cifrado\" IS NOT NULL)"
+        }
+      },
+      "isRLSEnabled": false
+    },
+    "public.entregas_relatorio": {
+      "name": "entregas_relatorio",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "versao_id": {
+          "name": "versao_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "via_assinada": {
+          "name": "via_assinada",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "entregue_a": {
+          "name": "entregue_a",
+          "type": "destinatario_relatorio",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "entregue_em": {
+          "name": "entregue_em",
+          "type": "date",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "registrada_por": {
+          "name": "registrada_por",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "registrada_em": {
+          "name": "registrada_em",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "entregas_relatorio_versao_id_versoes_relatorio_id_fk": {
+          "name": "entregas_relatorio_versao_id_versoes_relatorio_id_fk",
+          "tableFrom": "entregas_relatorio",
+          "columnsFrom": ["versao_id"],
+          "tableTo": "versoes_relatorio",
+          "columnsTo": ["id"],
+          "onUpdate": "no action",
+          "onDelete": "no action"
+        },
+        "entregas_relatorio_registrada_por_usuarios_id_fk": {
+          "name": "entregas_relatorio_registrada_por_usuarios_id_fk",
+          "tableFrom": "entregas_relatorio",
+          "columnsFrom": ["registrada_por"],
+          "tableTo": "usuarios",
+          "columnsTo": ["id"],
+          "onUpdate": "no action",
+          "onDelete": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {
+        "entregas_relatorio_versao_id_unique": {
+          "name": "entregas_relatorio_versao_id_unique",
+          "columns": ["versao_id"],
+          "nullsNotDistinct": false
+        }
+      },
+      "policies": {},
+      "checkConstraints": {
+        "entregas_relatorio_via_assinada": {
+          "name": "entregas_relatorio_via_assinada",
+          "value": "\"entregas_relatorio\".\"via_assinada\""
         }
       },
       "isRLSEnabled": false
@@ -1892,37 +1894,37 @@
         "evolucoes_prontuario_id_prontuarios_id_fk": {
           "name": "evolucoes_prontuario_id_prontuarios_id_fk",
           "tableFrom": "evolucoes",
-          "tableTo": "prontuarios",
           "columnsFrom": ["prontuario_id"],
+          "tableTo": "prontuarios",
           "columnsTo": ["id"],
-          "onDelete": "no action",
-          "onUpdate": "no action"
+          "onUpdate": "no action",
+          "onDelete": "no action"
         },
         "evolucoes_sessao_id_sessoes_atendimento_id_fk": {
           "name": "evolucoes_sessao_id_sessoes_atendimento_id_fk",
           "tableFrom": "evolucoes",
-          "tableTo": "sessoes_atendimento",
           "columnsFrom": ["sessao_id"],
+          "tableTo": "sessoes_atendimento",
           "columnsTo": ["id"],
-          "onDelete": "no action",
-          "onUpdate": "no action"
+          "onUpdate": "no action",
+          "onDelete": "no action"
         },
         "evolucoes_registrada_por_usuarios_id_fk": {
           "name": "evolucoes_registrada_por_usuarios_id_fk",
           "tableFrom": "evolucoes",
-          "tableTo": "usuarios",
           "columnsFrom": ["registrada_por"],
+          "tableTo": "usuarios",
           "columnsTo": ["id"],
-          "onDelete": "no action",
-          "onUpdate": "no action"
+          "onUpdate": "no action",
+          "onDelete": "no action"
         }
       },
       "compositePrimaryKeys": {},
       "uniqueConstraints": {
         "evolucoes_sessao_id_unique": {
           "name": "evolucoes_sessao_id_unique",
-          "nullsNotDistinct": false,
-          "columns": ["sessao_id"]
+          "columns": ["sessao_id"],
+          "nullsNotDistinct": false
         }
       },
       "policies": {},
@@ -1932,6 +1934,86 @@
           "value": "(\"evolucoes\".\"queixa_cifrada\" IS NOT NULL AND \"evolucoes\".\"planejamento_cifrado\" IS NOT NULL) OR (\"evolucoes\".\"humor_aparencia_cifrado\" IS NOT NULL AND \"evolucoes\".\"conteudo_trabalhado_cifrado\" IS NOT NULL AND \"evolucoes\".\"tecnicas_utilizadas_cifrado\" IS NOT NULL AND \"evolucoes\".\"plano_proxima_sessao_cifrado\" IS NOT NULL)"
         }
       },
+      "isRLSEnabled": false
+    },
+    "public.impressoes_relatorio": {
+      "name": "impressoes_relatorio",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "versao_id": {
+          "name": "versao_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "impressa_por": {
+          "name": "impressa_por",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "impressa_em": {
+          "name": "impressa_em",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {
+        "impressoes_relatorio_versao": {
+          "name": "impressoes_relatorio_versao",
+          "columns": [
+            {
+              "expression": "versao_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "impressa_em",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "with": {},
+          "method": "btree",
+          "concurrently": false
+        }
+      },
+      "foreignKeys": {
+        "impressoes_relatorio_versao_id_versoes_relatorio_id_fk": {
+          "name": "impressoes_relatorio_versao_id_versoes_relatorio_id_fk",
+          "tableFrom": "impressoes_relatorio",
+          "columnsFrom": ["versao_id"],
+          "tableTo": "versoes_relatorio",
+          "columnsTo": ["id"],
+          "onUpdate": "no action",
+          "onDelete": "no action"
+        },
+        "impressoes_relatorio_impressa_por_usuarios_id_fk": {
+          "name": "impressoes_relatorio_impressa_por_usuarios_id_fk",
+          "tableFrom": "impressoes_relatorio",
+          "columnsFrom": ["impressa_por"],
+          "tableTo": "usuarios",
+          "columnsTo": ["id"],
+          "onUpdate": "no action",
+          "onDelete": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
       "isRLSEnabled": false
     },
     "public.prontuarios": {
@@ -2042,63 +2124,63 @@
         "prontuarios_caso_id_casos_id_fk": {
           "name": "prontuarios_caso_id_casos_id_fk",
           "tableFrom": "prontuarios",
-          "tableTo": "casos",
           "columnsFrom": ["caso_id"],
+          "tableTo": "casos",
           "columnsTo": ["id"],
-          "onDelete": "no action",
-          "onUpdate": "no action"
+          "onUpdate": "no action",
+          "onDelete": "no action"
         },
         "prontuarios_vinculo_origem_id_vinculos_estagiario_id_fk": {
           "name": "prontuarios_vinculo_origem_id_vinculos_estagiario_id_fk",
           "tableFrom": "prontuarios",
-          "tableTo": "vinculos_estagiario",
           "columnsFrom": ["vinculo_origem_id"],
+          "tableTo": "vinculos_estagiario",
           "columnsTo": ["id"],
-          "onDelete": "no action",
-          "onUpdate": "no action"
+          "onUpdate": "no action",
+          "onDelete": "no action"
         },
         "prontuarios_dados_iniciais_por_usuarios_id_fk": {
           "name": "prontuarios_dados_iniciais_por_usuarios_id_fk",
           "tableFrom": "prontuarios",
-          "tableTo": "usuarios",
           "columnsFrom": ["dados_iniciais_por"],
+          "tableTo": "usuarios",
           "columnsTo": ["id"],
-          "onDelete": "no action",
-          "onUpdate": "no action"
+          "onUpdate": "no action",
+          "onDelete": "no action"
         },
         "prontuarios_anamnese_por_usuarios_id_fk": {
           "name": "prontuarios_anamnese_por_usuarios_id_fk",
           "tableFrom": "prontuarios",
-          "tableTo": "usuarios",
           "columnsFrom": ["anamnese_por"],
+          "tableTo": "usuarios",
           "columnsTo": ["id"],
-          "onDelete": "no action",
-          "onUpdate": "no action"
+          "onUpdate": "no action",
+          "onDelete": "no action"
         },
         "prontuarios_contrato_por_usuarios_id_fk": {
           "name": "prontuarios_contrato_por_usuarios_id_fk",
           "tableFrom": "prontuarios",
-          "tableTo": "usuarios",
           "columnsFrom": ["contrato_por"],
+          "tableTo": "usuarios",
           "columnsTo": ["id"],
-          "onDelete": "no action",
-          "onUpdate": "no action"
+          "onUpdate": "no action",
+          "onDelete": "no action"
         }
       },
       "compositePrimaryKeys": {},
       "uniqueConstraints": {
         "prontuarios_caso_ciclo": {
           "name": "prontuarios_caso_ciclo",
-          "nullsNotDistinct": false,
-          "columns": ["caso_id", "ciclo_atendimento"]
+          "columns": ["caso_id", "ciclo_atendimento"],
+          "nullsNotDistinct": false
         }
       },
       "policies": {},
       "checkConstraints": {},
       "isRLSEnabled": false
     },
-    "public.validacoes_evolucao": {
-      "name": "validacoes_evolucao",
+    "public.relatorios_finais": {
+      "name": "relatorios_finais",
       "schema": "",
       "columns": {
         "id": {
@@ -2108,73 +2190,228 @@
           "notNull": true,
           "default": "gen_random_uuid()"
         },
-        "evolucao_id": {
-          "name": "evolucao_id",
+        "prontuario_id": {
+          "name": "prontuario_id",
           "type": "uuid",
           "primaryKey": false,
           "notNull": true
         },
-        "validada_por": {
-          "name": "validada_por",
-          "type": "uuid",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "validada_em": {
-          "name": "validada_em",
+        "criado_em": {
+          "name": "criado_em",
           "type": "timestamp with time zone",
           "primaryKey": false,
           "notNull": true,
           "default": "now()"
         }
       },
+      "indexes": {},
+      "foreignKeys": {
+        "relatorios_finais_prontuario_id_prontuarios_id_fk": {
+          "name": "relatorios_finais_prontuario_id_prontuarios_id_fk",
+          "tableFrom": "relatorios_finais",
+          "columnsFrom": ["prontuario_id"],
+          "tableTo": "prontuarios",
+          "columnsTo": ["id"],
+          "onUpdate": "no action",
+          "onDelete": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {
+        "relatorios_finais_prontuario_id_unique": {
+          "name": "relatorios_finais_prontuario_id_unique",
+          "columns": ["prontuario_id"],
+          "nullsNotDistinct": false
+        }
+      },
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.versoes_relatorio": {
+      "name": "versoes_relatorio",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "relatorio_id": {
+          "name": "relatorio_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "versao": {
+          "name": "versao",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "estado": {
+          "name": "estado",
+          "type": "estado_relatorio",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'rascunho'"
+        },
+        "secoes_cifradas": {
+          "name": "secoes_cifradas",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "justificativa_excecao_cifrada": {
+          "name": "justificativa_excecao_cifrada",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "origem": {
+          "name": "origem",
+          "type": "jsonb",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "autor_id": {
+          "name": "autor_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "criada_em": {
+          "name": "criada_em",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "atualizada_em": {
+          "name": "atualizada_em",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "enviada_em": {
+          "name": "enviada_em",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "decidida_por": {
+          "name": "decidida_por",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "decidida_em": {
+          "name": "decidida_em",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "observacoes_cifradas": {
+          "name": "observacoes_cifradas",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        }
+      },
       "indexes": {
-        "validacoes_evolucao_evolucao_idx": {
-          "name": "validacoes_evolucao_evolucao_idx",
+        "versoes_relatorio_uma_aberta": {
+          "name": "versoes_relatorio_uma_aberta",
           "columns": [
             {
-              "expression": "evolucao_id",
-              "isExpression": false,
-              "asc": true,
-              "nulls": "last"
-            },
-            {
-              "expression": "validada_em",
+              "expression": "relatorio_id",
               "isExpression": false,
               "asc": true,
               "nulls": "last"
             }
           ],
-          "isUnique": false,
-          "concurrently": false,
+          "isUnique": true,
+          "with": {},
           "method": "btree",
-          "with": {}
+          "where": "\"versoes_relatorio\".\"estado\" in ('rascunho', 'em_revisao')",
+          "concurrently": false
+        },
+        "versoes_relatorio_uma_aprovada": {
+          "name": "versoes_relatorio_uma_aprovada",
+          "columns": [
+            {
+              "expression": "relatorio_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": true,
+          "with": {},
+          "method": "btree",
+          "where": "\"versoes_relatorio\".\"estado\" = 'aprovado'",
+          "concurrently": false
         }
       },
       "foreignKeys": {
-        "validacoes_evolucao_evolucao_id_evolucoes_id_fk": {
-          "name": "validacoes_evolucao_evolucao_id_evolucoes_id_fk",
-          "tableFrom": "validacoes_evolucao",
-          "tableTo": "evolucoes",
-          "columnsFrom": ["evolucao_id"],
+        "versoes_relatorio_relatorio_id_relatorios_finais_id_fk": {
+          "name": "versoes_relatorio_relatorio_id_relatorios_finais_id_fk",
+          "tableFrom": "versoes_relatorio",
+          "columnsFrom": ["relatorio_id"],
+          "tableTo": "relatorios_finais",
           "columnsTo": ["id"],
-          "onDelete": "no action",
-          "onUpdate": "no action"
+          "onUpdate": "no action",
+          "onDelete": "no action"
         },
-        "validacoes_evolucao_validada_por_usuarios_id_fk": {
-          "name": "validacoes_evolucao_validada_por_usuarios_id_fk",
-          "tableFrom": "validacoes_evolucao",
+        "versoes_relatorio_autor_id_usuarios_id_fk": {
+          "name": "versoes_relatorio_autor_id_usuarios_id_fk",
+          "tableFrom": "versoes_relatorio",
+          "columnsFrom": ["autor_id"],
           "tableTo": "usuarios",
-          "columnsFrom": ["validada_por"],
           "columnsTo": ["id"],
-          "onDelete": "no action",
-          "onUpdate": "no action"
+          "onUpdate": "no action",
+          "onDelete": "no action"
+        },
+        "versoes_relatorio_decidida_por_usuarios_id_fk": {
+          "name": "versoes_relatorio_decidida_por_usuarios_id_fk",
+          "tableFrom": "versoes_relatorio",
+          "columnsFrom": ["decidida_por"],
+          "tableTo": "usuarios",
+          "columnsTo": ["id"],
+          "onUpdate": "no action",
+          "onDelete": "no action"
         }
       },
       "compositePrimaryKeys": {},
-      "uniqueConstraints": {},
+      "uniqueConstraints": {
+        "versoes_relatorio_versao": {
+          "name": "versoes_relatorio_versao",
+          "columns": ["relatorio_id", "versao"],
+          "nullsNotDistinct": false
+        }
+      },
       "policies": {},
-      "checkConstraints": {},
+      "checkConstraints": {
+        "versoes_relatorio_versao_positiva": {
+          "name": "versoes_relatorio_versao_positiva",
+          "value": "\"versoes_relatorio\".\"versao\" >= 1"
+        },
+        "versoes_relatorio_envio": {
+          "name": "versoes_relatorio_envio",
+          "value": "\"versoes_relatorio\".\"estado\" = 'rascunho' OR (\"versoes_relatorio\".\"enviada_em\" IS NOT NULL AND \"versoes_relatorio\".\"origem\" IS NOT NULL)"
+        },
+        "versoes_relatorio_decisao": {
+          "name": "versoes_relatorio_decisao",
+          "value": "(\"versoes_relatorio\".\"estado\" in ('aprovado', 'devolvido')) = (\"versoes_relatorio\".\"decidida_por\" IS NOT NULL AND \"versoes_relatorio\".\"decidida_em\" IS NOT NULL)"
+        },
+        "versoes_relatorio_observacoes": {
+          "name": "versoes_relatorio_observacoes",
+          "value": "(\"versoes_relatorio\".\"estado\" = 'devolvido') = (\"versoes_relatorio\".\"observacoes_cifradas\" IS NOT NULL)"
+        }
+      },
       "isRLSEnabled": false
     },
     "public.alteracoes_parametro": {
@@ -2225,11 +2462,11 @@
         "alteracoes_parametro_alterado_por_usuarios_id_fk": {
           "name": "alteracoes_parametro_alterado_por_usuarios_id_fk",
           "tableFrom": "alteracoes_parametro",
-          "tableTo": "usuarios",
           "columnsFrom": ["alterado_por"],
+          "tableTo": "usuarios",
           "columnsTo": ["id"],
-          "onDelete": "no action",
-          "onUpdate": "no action"
+          "onUpdate": "no action",
+          "onDelete": "no action"
         }
       },
       "compositePrimaryKeys": {},
@@ -2273,11 +2510,11 @@
         "parametros_alterado_por_usuarios_id_fk": {
           "name": "parametros_alterado_por_usuarios_id_fk",
           "tableFrom": "parametros",
-          "tableTo": "usuarios",
           "columnsFrom": ["alterado_por"],
+          "tableTo": "usuarios",
           "columnsTo": ["id"],
-          "onDelete": "no action",
-          "onUpdate": "no action"
+          "onUpdate": "no action",
+          "onDelete": "no action"
         }
       },
       "compositePrimaryKeys": {},
@@ -2327,11 +2564,11 @@
         "parametros_semestre_alterado_por_usuarios_id_fk": {
           "name": "parametros_semestre_alterado_por_usuarios_id_fk",
           "tableFrom": "parametros_semestre",
-          "tableTo": "usuarios",
           "columnsFrom": ["alterado_por"],
+          "tableTo": "usuarios",
           "columnsTo": ["id"],
-          "onDelete": "no action",
-          "onUpdate": "no action"
+          "onUpdate": "no action",
+          "onDelete": "no action"
         }
       },
       "compositePrimaryKeys": {
@@ -2446,55 +2683,55 @@
             }
           ],
           "isUnique": false,
-          "concurrently": false,
+          "with": {},
           "method": "btree",
-          "with": {}
+          "concurrently": false
         }
       },
       "foreignKeys": {
         "cancelamentos_sessao_sessao_id_sessoes_atendimento_id_fk": {
           "name": "cancelamentos_sessao_sessao_id_sessoes_atendimento_id_fk",
           "tableFrom": "cancelamentos_sessao",
-          "tableTo": "sessoes_atendimento",
           "columnsFrom": ["sessao_id"],
+          "tableTo": "sessoes_atendimento",
           "columnsTo": ["id"],
-          "onDelete": "no action",
-          "onUpdate": "no action"
+          "onUpdate": "no action",
+          "onDelete": "no action"
         },
         "cancelamentos_sessao_registrado_por_usuarios_id_fk": {
           "name": "cancelamentos_sessao_registrado_por_usuarios_id_fk",
           "tableFrom": "cancelamentos_sessao",
-          "tableTo": "usuarios",
           "columnsFrom": ["registrado_por"],
+          "tableTo": "usuarios",
           "columnsTo": ["id"],
-          "onDelete": "no action",
-          "onUpdate": "no action"
+          "onUpdate": "no action",
+          "onDelete": "no action"
         },
         "cancelamentos_sessao_desligamento_id_desligamentos_por_faltas_id_fk": {
           "name": "cancelamentos_sessao_desligamento_id_desligamentos_por_faltas_id_fk",
           "tableFrom": "cancelamentos_sessao",
-          "tableTo": "desligamentos_por_faltas",
           "columnsFrom": ["desligamento_id"],
+          "tableTo": "desligamentos_por_faltas",
           "columnsTo": ["id"],
-          "onDelete": "no action",
-          "onUpdate": "no action"
+          "onUpdate": "no action",
+          "onDelete": "no action"
         },
         "cancelamentos_sessao_aviso_manual_por_usuarios_id_fk": {
           "name": "cancelamentos_sessao_aviso_manual_por_usuarios_id_fk",
           "tableFrom": "cancelamentos_sessao",
-          "tableTo": "usuarios",
           "columnsFrom": ["aviso_manual_por"],
+          "tableTo": "usuarios",
           "columnsTo": ["id"],
-          "onDelete": "no action",
-          "onUpdate": "no action"
+          "onUpdate": "no action",
+          "onDelete": "no action"
         }
       },
       "compositePrimaryKeys": {},
       "uniqueConstraints": {
         "cancelamentos_sessao_sessao_id_unique": {
           "name": "cancelamentos_sessao_sessao_id_unique",
-          "nullsNotDistinct": false,
-          "columns": ["sessao_id"]
+          "columns": ["sessao_id"],
+          "nullsNotDistinct": false
         }
       },
       "policies": {},
@@ -2544,20 +2781,20 @@
         "desligamento_faltas_desligamento_id_desligamentos_por_faltas_id_fk": {
           "name": "desligamento_faltas_desligamento_id_desligamentos_por_faltas_id_fk",
           "tableFrom": "desligamento_faltas",
-          "tableTo": "desligamentos_por_faltas",
           "columnsFrom": ["desligamento_id"],
+          "tableTo": "desligamentos_por_faltas",
           "columnsTo": ["id"],
-          "onDelete": "no action",
-          "onUpdate": "no action"
+          "onUpdate": "no action",
+          "onDelete": "no action"
         },
         "desligamento_faltas_falta_id_faltas_paciente_id_fk": {
           "name": "desligamento_faltas_falta_id_faltas_paciente_id_fk",
           "tableFrom": "desligamento_faltas",
-          "tableTo": "faltas_paciente",
           "columnsFrom": ["falta_id"],
+          "tableTo": "faltas_paciente",
           "columnsTo": ["id"],
-          "onDelete": "no action",
-          "onUpdate": "no action"
+          "onUpdate": "no action",
+          "onDelete": "no action"
         }
       },
       "compositePrimaryKeys": {
@@ -2650,39 +2887,39 @@
             }
           ],
           "isUnique": true,
-          "where": "\"desligamentos_por_faltas\".\"revertido_em\" is null",
-          "concurrently": false,
+          "with": {},
           "method": "btree",
-          "with": {}
+          "where": "\"desligamentos_por_faltas\".\"revertido_em\" is null",
+          "concurrently": false
         }
       },
       "foreignKeys": {
         "desligamentos_por_faltas_caso_id_casos_id_fk": {
           "name": "desligamentos_por_faltas_caso_id_casos_id_fk",
           "tableFrom": "desligamentos_por_faltas",
-          "tableTo": "casos",
           "columnsFrom": ["caso_id"],
+          "tableTo": "casos",
           "columnsTo": ["id"],
-          "onDelete": "no action",
-          "onUpdate": "no action"
+          "onUpdate": "no action",
+          "onDelete": "no action"
         },
         "desligamentos_por_faltas_decidido_por_usuarios_id_fk": {
           "name": "desligamentos_por_faltas_decidido_por_usuarios_id_fk",
           "tableFrom": "desligamentos_por_faltas",
-          "tableTo": "usuarios",
           "columnsFrom": ["decidido_por"],
+          "tableTo": "usuarios",
           "columnsTo": ["id"],
-          "onDelete": "no action",
-          "onUpdate": "no action"
+          "onUpdate": "no action",
+          "onDelete": "no action"
         },
         "desligamentos_por_faltas_revertido_por_usuarios_id_fk": {
           "name": "desligamentos_por_faltas_revertido_por_usuarios_id_fk",
           "tableFrom": "desligamentos_por_faltas",
-          "tableTo": "usuarios",
           "columnsFrom": ["revertido_por"],
+          "tableTo": "usuarios",
           "columnsTo": ["id"],
-          "onDelete": "no action",
-          "onUpdate": "no action"
+          "onUpdate": "no action",
+          "onDelete": "no action"
         }
       },
       "compositePrimaryKeys": {},
@@ -2808,64 +3045,64 @@
             }
           ],
           "isUnique": false,
-          "concurrently": false,
+          "with": {},
           "method": "btree",
-          "with": {}
+          "concurrently": false
         }
       },
       "foreignKeys": {
         "faltas_paciente_sessao_id_sessoes_atendimento_id_fk": {
           "name": "faltas_paciente_sessao_id_sessoes_atendimento_id_fk",
           "tableFrom": "faltas_paciente",
-          "tableTo": "sessoes_atendimento",
           "columnsFrom": ["sessao_id"],
+          "tableTo": "sessoes_atendimento",
           "columnsTo": ["id"],
-          "onDelete": "no action",
-          "onUpdate": "no action"
+          "onUpdate": "no action",
+          "onDelete": "no action"
         },
         "faltas_paciente_caso_id_casos_id_fk": {
           "name": "faltas_paciente_caso_id_casos_id_fk",
           "tableFrom": "faltas_paciente",
-          "tableTo": "casos",
           "columnsFrom": ["caso_id"],
+          "tableTo": "casos",
           "columnsTo": ["id"],
-          "onDelete": "no action",
-          "onUpdate": "no action"
+          "onUpdate": "no action",
+          "onDelete": "no action"
         },
         "faltas_paciente_registrada_por_usuarios_id_fk": {
           "name": "faltas_paciente_registrada_por_usuarios_id_fk",
           "tableFrom": "faltas_paciente",
-          "tableTo": "usuarios",
           "columnsFrom": ["registrada_por"],
+          "tableTo": "usuarios",
           "columnsTo": ["id"],
-          "onDelete": "no action",
-          "onUpdate": "no action"
+          "onUpdate": "no action",
+          "onDelete": "no action"
         },
         "faltas_paciente_justificada_por_usuarios_id_fk": {
           "name": "faltas_paciente_justificada_por_usuarios_id_fk",
           "tableFrom": "faltas_paciente",
-          "tableTo": "usuarios",
           "columnsFrom": ["justificada_por"],
+          "tableTo": "usuarios",
           "columnsTo": ["id"],
-          "onDelete": "no action",
-          "onUpdate": "no action"
+          "onUpdate": "no action",
+          "onDelete": "no action"
         },
         "faltas_paciente_retirada_por_usuarios_id_fk": {
           "name": "faltas_paciente_retirada_por_usuarios_id_fk",
           "tableFrom": "faltas_paciente",
-          "tableTo": "usuarios",
           "columnsFrom": ["retirada_por"],
+          "tableTo": "usuarios",
           "columnsTo": ["id"],
-          "onDelete": "no action",
-          "onUpdate": "no action"
+          "onUpdate": "no action",
+          "onDelete": "no action"
         }
       },
       "compositePrimaryKeys": {},
       "uniqueConstraints": {
         "faltas_paciente_sessao_id_unique": {
           "name": "faltas_paciente_sessao_id_unique",
-          "nullsNotDistinct": false,
-          "columns": ["sessao_id"]
+          "columns": ["sessao_id"],
+          "nullsNotDistinct": false
         }
       },
       "policies": {},
@@ -2952,55 +3189,55 @@
             }
           ],
           "isUnique": false,
-          "concurrently": false,
+          "with": {},
           "method": "btree",
-          "with": {}
+          "concurrently": false
         }
       },
       "foreignKeys": {
         "vagas_liberadas_desligamento_id_desligamentos_por_faltas_id_fk": {
           "name": "vagas_liberadas_desligamento_id_desligamentos_por_faltas_id_fk",
           "tableFrom": "vagas_liberadas",
-          "tableTo": "desligamentos_por_faltas",
           "columnsFrom": ["desligamento_id"],
+          "tableTo": "desligamentos_por_faltas",
           "columnsTo": ["id"],
-          "onDelete": "no action",
-          "onUpdate": "no action"
+          "onUpdate": "no action",
+          "onDelete": "no action"
         },
         "vagas_liberadas_estagiario_id_usuarios_id_fk": {
           "name": "vagas_liberadas_estagiario_id_usuarios_id_fk",
           "tableFrom": "vagas_liberadas",
-          "tableTo": "usuarios",
           "columnsFrom": ["estagiario_id"],
+          "tableTo": "usuarios",
           "columnsTo": ["id"],
-          "onDelete": "no action",
-          "onUpdate": "no action"
+          "onUpdate": "no action",
+          "onDelete": "no action"
         },
         "vagas_liberadas_supervisor_id_usuarios_id_fk": {
           "name": "vagas_liberadas_supervisor_id_usuarios_id_fk",
           "tableFrom": "vagas_liberadas",
-          "tableTo": "usuarios",
           "columnsFrom": ["supervisor_id"],
+          "tableTo": "usuarios",
           "columnsTo": ["id"],
-          "onDelete": "no action",
-          "onUpdate": "no action"
+          "onUpdate": "no action",
+          "onDelete": "no action"
         },
         "vagas_liberadas_ocupada_por_vinculo_id_vinculos_estagiario_id_fk": {
           "name": "vagas_liberadas_ocupada_por_vinculo_id_vinculos_estagiario_id_fk",
           "tableFrom": "vagas_liberadas",
-          "tableTo": "vinculos_estagiario",
           "columnsFrom": ["ocupada_por_vinculo_id"],
+          "tableTo": "vinculos_estagiario",
           "columnsTo": ["id"],
-          "onDelete": "no action",
-          "onUpdate": "no action"
+          "onUpdate": "no action",
+          "onDelete": "no action"
         }
       },
       "compositePrimaryKeys": {},
       "uniqueConstraints": {
         "vagas_liberadas_desligamento_id_unique": {
           "name": "vagas_liberadas_desligamento_id_unique",
-          "nullsNotDistinct": false,
-          "columns": ["desligamento_id"]
+          "columns": ["desligamento_id"],
+          "nullsNotDistinct": false
         }
       },
       "policies": {},
@@ -3086,20 +3323,20 @@
             }
           ],
           "isUnique": false,
-          "concurrently": false,
+          "with": {},
           "method": "btree",
-          "with": {}
+          "concurrently": false
         }
       },
       "foreignKeys": {
         "codigos_verificacao_inscricao_id_inscricoes_id_fk": {
           "name": "codigos_verificacao_inscricao_id_inscricoes_id_fk",
           "tableFrom": "codigos_verificacao",
-          "tableTo": "inscricoes",
           "columnsFrom": ["inscricao_id"],
+          "tableTo": "inscricoes",
           "columnsTo": ["id"],
-          "onDelete": "no action",
-          "onUpdate": "no action"
+          "onUpdate": "no action",
+          "onDelete": "no action"
         }
       },
       "compositePrimaryKeys": {},
@@ -3204,19 +3441,19 @@
         "verificacoes_identidade_inscricao_id_inscricoes_id_fk": {
           "name": "verificacoes_identidade_inscricao_id_inscricoes_id_fk",
           "tableFrom": "verificacoes_identidade",
-          "tableTo": "inscricoes",
           "columnsFrom": ["inscricao_id"],
+          "tableTo": "inscricoes",
           "columnsTo": ["id"],
-          "onDelete": "no action",
-          "onUpdate": "no action"
+          "onUpdate": "no action",
+          "onDelete": "no action"
         }
       },
       "compositePrimaryKeys": {},
       "uniqueConstraints": {
         "verificacoes_identidade_token_hash_unique": {
           "name": "verificacoes_identidade_token_hash_unique",
-          "nullsNotDistinct": false,
-          "columns": ["token_hash"]
+          "columns": ["token_hash"],
+          "nullsNotDistinct": false
         }
       },
       "policies": {},
@@ -3265,28 +3502,28 @@
         "autorizacoes_menor_inscricao_id_inscricoes_id_fk": {
           "name": "autorizacoes_menor_inscricao_id_inscricoes_id_fk",
           "tableFrom": "autorizacoes_menor",
-          "tableTo": "inscricoes",
           "columnsFrom": ["inscricao_id"],
+          "tableTo": "inscricoes",
           "columnsTo": ["id"],
-          "onDelete": "no action",
-          "onUpdate": "no action"
+          "onUpdate": "no action",
+          "onDelete": "no action"
         },
         "autorizacoes_menor_registrado_por_usuarios_id_fk": {
           "name": "autorizacoes_menor_registrado_por_usuarios_id_fk",
           "tableFrom": "autorizacoes_menor",
-          "tableTo": "usuarios",
           "columnsFrom": ["registrado_por"],
+          "tableTo": "usuarios",
           "columnsTo": ["id"],
-          "onDelete": "no action",
-          "onUpdate": "no action"
+          "onUpdate": "no action",
+          "onDelete": "no action"
         }
       },
       "compositePrimaryKeys": {},
       "uniqueConstraints": {
         "autorizacoes_menor_inscricao_id_unique": {
           "name": "autorizacoes_menor_inscricao_id_unique",
-          "nullsNotDistinct": false,
-          "columns": ["inscricao_id"]
+          "columns": ["inscricao_id"],
+          "nullsNotDistinct": false
         }
       },
       "policies": {},
@@ -3349,29 +3586,29 @@
         "emissoes_declaracao_sessao_id_sessoes_atendimento_id_fk": {
           "name": "emissoes_declaracao_sessao_id_sessoes_atendimento_id_fk",
           "tableFrom": "emissoes_declaracao",
-          "tableTo": "sessoes_atendimento",
           "columnsFrom": ["sessao_id"],
+          "tableTo": "sessoes_atendimento",
           "columnsTo": ["id"],
-          "onDelete": "no action",
-          "onUpdate": "no action"
+          "onUpdate": "no action",
+          "onDelete": "no action"
         },
         "emissoes_declaracao_inscricao_id_inscricoes_id_fk": {
           "name": "emissoes_declaracao_inscricao_id_inscricoes_id_fk",
           "tableFrom": "emissoes_declaracao",
-          "tableTo": "inscricoes",
           "columnsFrom": ["inscricao_id"],
+          "tableTo": "inscricoes",
           "columnsTo": ["id"],
-          "onDelete": "no action",
-          "onUpdate": "no action"
+          "onUpdate": "no action",
+          "onDelete": "no action"
         },
         "emissoes_declaracao_emitida_por_usuarios_id_fk": {
           "name": "emissoes_declaracao_emitida_por_usuarios_id_fk",
           "tableFrom": "emissoes_declaracao",
-          "tableTo": "usuarios",
           "columnsFrom": ["emitida_por"],
+          "tableTo": "usuarios",
           "columnsTo": ["id"],
-          "onDelete": "no action",
-          "onUpdate": "no action"
+          "onUpdate": "no action",
+          "onDelete": "no action"
         }
       },
       "compositePrimaryKeys": {},
@@ -3462,28 +3699,28 @@
         "pagamentos_contribuicao_caso_id_casos_id_fk": {
           "name": "pagamentos_contribuicao_caso_id_casos_id_fk",
           "tableFrom": "pagamentos_contribuicao",
-          "tableTo": "casos",
           "columnsFrom": ["caso_id"],
+          "tableTo": "casos",
           "columnsTo": ["id"],
-          "onDelete": "no action",
-          "onUpdate": "no action"
+          "onUpdate": "no action",
+          "onDelete": "no action"
         },
         "pagamentos_contribuicao_registrado_por_usuarios_id_fk": {
           "name": "pagamentos_contribuicao_registrado_por_usuarios_id_fk",
           "tableFrom": "pagamentos_contribuicao",
-          "tableTo": "usuarios",
           "columnsFrom": ["registrado_por"],
+          "tableTo": "usuarios",
           "columnsTo": ["id"],
-          "onDelete": "no action",
-          "onUpdate": "no action"
+          "onUpdate": "no action",
+          "onDelete": "no action"
         }
       },
       "compositePrimaryKeys": {},
       "uniqueConstraints": {
         "pagamentos_contribuicao_versao_unica": {
           "name": "pagamentos_contribuicao_versao_unica",
-          "nullsNotDistinct": false,
-          "columns": ["caso_id", "ciclo_atendimento", "versao"]
+          "columns": ["caso_id", "ciclo_atendimento", "versao"],
+          "nullsNotDistinct": false
         }
       },
       "policies": {},
@@ -3675,6 +3912,16 @@
         "falta_paciente"
       ]
     },
+    "public.destinatario_relatorio": {
+      "name": "destinatario_relatorio",
+      "schema": "public",
+      "values": ["paciente", "responsavel_legal"]
+    },
+    "public.estado_relatorio": {
+      "name": "estado_relatorio",
+      "schema": "public",
+      "values": ["rascunho", "em_revisao", "devolvido", "aprovado"]
+    },
     "public.aviso_paciente": {
       "name": "aviso_paciente",
       "schema": "public",
@@ -3729,21 +3976,21 @@
     }
   },
   "schemas": {},
+  "views": {},
   "sequences": {
     "public.inscricoes_numero_seq": {
       "name": "inscricoes_numero_seq",
-      "schema": "public",
       "increment": "1",
-      "startWith": "1",
       "minValue": "1",
       "maxValue": "9223372036854775807",
+      "startWith": "1",
       "cache": "1",
-      "cycle": false
+      "cycle": false,
+      "schema": "public"
     }
   },
   "roles": {},
   "policies": {},
-  "views": {},
   "_meta": {
     "columns": {},
     "schemas": {},

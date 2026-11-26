@@ -5,12 +5,16 @@ import {
   date,
   index,
   integer,
+  jsonb,
+  pgEnum,
   pgTable,
   text,
   timestamp,
   unique,
+  uniqueIndex,
   uuid,
 } from "drizzle-orm/pg-core";
+import { DESTINATARIOS_RELATORIO, ESTADOS_RELATORIO } from "@clinica/shared";
 import { perfilEnum, usuarios } from "./base";
 import { casos, vinculosEstagiario } from "./casos";
 import { sessoesAtendimento } from "./agendamento";
@@ -206,4 +210,128 @@ export const validacoesEvolucao = pgTable(
   (t) => [
     index("validacoes_evolucao_evolucao_idx").on(t.evolucaoId, t.validadaEm),
   ],
+);
+
+// Relatório final do ciclo (RF33): um por prontuário, isto é, por caso e ciclo.
+export const relatoriosFinais = pgTable("relatorios_finais", {
+  id: uuid("id").primaryKey().defaultRandom(),
+  prontuarioId: uuid("prontuario_id")
+    .notNull()
+    .unique()
+    .references(() => prontuarios.id),
+  criadoEm: timestamp("criado_em", { withTimezone: true })
+    .notNull()
+    .defaultNow(),
+});
+
+export const estadoRelatorioEnum = pgEnum(
+  "estado_relatorio",
+  ESTADOS_RELATORIO,
+);
+
+// Versões do relatório (RF33). Só o rascunho muda; o envio fixa o texto e as
+// sessões e evoluções de origem, e a decisão do supervisor (aprovar ou devolver,
+// com as observações) é a última alteração permitida (gatilho
+// proteger_versao_relatorio). As seções e as observações ficam cifradas (RNF51).
+// Há no máximo uma versão aberta (rascunho ou em revisão) e uma aprovada.
+export const versoesRelatorio = pgTable(
+  "versoes_relatorio",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    relatorioId: uuid("relatorio_id")
+      .notNull()
+      .references(() => relatoriosFinais.id),
+    versao: integer("versao").notNull(),
+    estado: estadoRelatorioEnum("estado").notNull().default("rascunho"),
+    // JSON com as seções de SECOES_RELATORIO.
+    secoesCifradas: text("secoes_cifradas").notNull(),
+    // Obrigatória no envio quando o ciclo teve menos de 8 ou mais de 10 sessões.
+    justificativaExcecaoCifrada: text("justificativa_excecao_cifrada"),
+    // Sessões e evoluções consideradas, fixadas no envio, para a conferência com
+    // o prontuário.
+    origem: jsonb("origem").$type<{ sessoes: string[]; evolucoes: string[] }>(),
+    autorId: uuid("autor_id")
+      .notNull()
+      .references(() => usuarios.id),
+    criadaEm: timestamp("criada_em", { withTimezone: true })
+      .notNull()
+      .defaultNow(),
+    atualizadaEm: timestamp("atualizada_em", { withTimezone: true })
+      .notNull()
+      .defaultNow(),
+    enviadaEm: timestamp("enviada_em", { withTimezone: true }),
+    decididaPor: uuid("decidida_por").references(() => usuarios.id),
+    decididaEm: timestamp("decidida_em", { withTimezone: true }),
+    observacoesCifradas: text("observacoes_cifradas"),
+  },
+  (t) => [
+    unique("versoes_relatorio_versao").on(t.relatorioId, t.versao),
+    check("versoes_relatorio_versao_positiva", sql`${t.versao} >= 1`),
+    uniqueIndex("versoes_relatorio_uma_aberta")
+      .on(t.relatorioId)
+      .where(sql`${t.estado} in ('rascunho', 'em_revisao')`),
+    uniqueIndex("versoes_relatorio_uma_aprovada")
+      .on(t.relatorioId)
+      .where(sql`${t.estado} = 'aprovado'`),
+    // Enviada: com a data do envio e a origem. Decidida: com o supervisor e a
+    // data/hora. Devolvida: com as observações.
+    check(
+      "versoes_relatorio_envio",
+      sql`${t.estado} = 'rascunho' OR (${t.enviadaEm} IS NOT NULL AND ${t.origem} IS NOT NULL)`,
+    ),
+    check(
+      "versoes_relatorio_decisao",
+      sql`(${t.estado} in ('aprovado', 'devolvido')) = (${t.decididaPor} IS NOT NULL AND ${t.decididaEm} IS NOT NULL)`,
+    ),
+    check(
+      "versoes_relatorio_observacoes",
+      sql`(${t.estado} = 'devolvido') = (${t.observacoesCifradas} IS NOT NULL)`,
+    ),
+  ],
+);
+
+// Cada impressão da versão aprovada (RF33): quem imprimiu e quando. Só inserção.
+export const impressoesRelatorio = pgTable(
+  "impressoes_relatorio",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    versaoId: uuid("versao_id")
+      .notNull()
+      .references(() => versoesRelatorio.id),
+    impressaPor: uuid("impressa_por")
+      .notNull()
+      .references(() => usuarios.id),
+    impressaEm: timestamp("impressa_em", { withTimezone: true })
+      .notNull()
+      .defaultNow(),
+  },
+  (t) => [index("impressoes_relatorio_versao").on(t.versaoId, t.impressaEm)],
+);
+
+export const destinatarioRelatorioEnum = pgEnum(
+  "destinatario_relatorio",
+  DESTINATARIOS_RELATORIO,
+);
+
+// Entrega presencial da via assinada (RF33), registrada pela secretaria. Uma por
+// versão aprovada, depois da confirmação da via assinada. Só inserção.
+export const entregasRelatorio = pgTable(
+  "entregas_relatorio",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    versaoId: uuid("versao_id")
+      .notNull()
+      .unique()
+      .references(() => versoesRelatorio.id),
+    viaAssinada: boolean("via_assinada").notNull(),
+    entregueA: destinatarioRelatorioEnum("entregue_a").notNull(),
+    entregueEm: date("entregue_em").notNull(),
+    registradaPor: uuid("registrada_por")
+      .notNull()
+      .references(() => usuarios.id),
+    registradaEm: timestamp("registrada_em", { withTimezone: true })
+      .notNull()
+      .defaultNow(),
+  },
+  (t) => [check("entregas_relatorio_via_assinada", sql`${t.viaAssinada}`)],
 );

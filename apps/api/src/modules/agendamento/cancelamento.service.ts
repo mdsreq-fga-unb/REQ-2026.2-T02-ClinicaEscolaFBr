@@ -19,6 +19,7 @@ import {
 } from '@clinica/database';
 import {
   STATUS_SESSAO_EM_ABERTO,
+  semestreDaSessao,
   type AusenciaEstagiario,
   type AvisoAoPaciente,
   type AvisoPaciente,
@@ -41,6 +42,10 @@ import { comunicarSePermitido, revogada } from '../../common/consentimento';
 import { EmailService } from '../../notificacoes/email.service';
 import { ParametrosService } from '../../parametros/parametros.service';
 import { FaltasService } from '../assiduidade/faltas.service';
+import {
+  reavaliarSinalizacao,
+  travarFaltasDoEstagiario,
+} from '../assiduidade/contagem-faltas';
 import { acoesDeCancelamento } from './acoes-cancelamento';
 import { paragrafosDoAviso, type MotivoDoAviso } from './aviso-cancelamento';
 import {
@@ -184,6 +189,10 @@ export class CancelamentoService {
       const sessao = await this.sessao(tx, id);
       const acoes = await acoesDeCancelamento(tx, sessao.casoId, usuario);
       if (!acoes.ausenciaEstagiario) throw new ForbiddenException(SEM_ACESSO);
+      // A contagem das faltas do estagiário no semestre (RF40) fica travada até o
+      // fim da transação: duas ausências dele ao mesmo tempo não contam sem ver
+      // uma à outra, e a sinalização da 3ª falta (RF63) entra aqui.
+      await travarFaltasDoEstagiario(tx, sessao.estagiarioId);
       const paciente = await this.paciente(tx, id);
       const resultado = await this.registrar(tx, sessao, new Date(), {
         origem: this.origem(usuario),
@@ -192,6 +201,13 @@ export class CancelamentoService {
         usuario,
         avisoPaciente: paciente.email ? 'envio_pendente' : 'sem_email',
       });
+      // Com a ausência contada, a sinalização de reprovação (RF63) é gerada se a
+      // contagem do semestre da sessão chegou ao limite.
+      await reavaliarSinalizacao(
+        tx,
+        sessao.estagiarioId,
+        semestreDaSessao(sessao.inicio),
+      );
       return { resultado, paciente };
     });
     if (await revogada(this.db, paciente.inscricaoId))
@@ -208,11 +224,15 @@ export class CancelamentoService {
     return { ...resultado, avisoAoPaciente: aviso };
   }
 
-  private async sessao(tx: Transacao, id: string): Promise<SessaoACancelar> {
+  private async sessao(
+    tx: Transacao,
+    id: string,
+  ): Promise<SessaoACancelar & { estagiarioId: string }> {
     const [sessao] = await tx
       .select({
         id: sessoesAtendimento.id,
         casoId: sessoesAtendimento.casoId,
+        estagiarioId: sessoesAtendimento.estagiarioId,
         inicio: sessoesAtendimento.inicio,
         status: sessoesAtendimento.status,
       })

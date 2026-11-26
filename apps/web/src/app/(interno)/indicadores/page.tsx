@@ -1,6 +1,6 @@
 "use client";
 import { useQuery } from "@tanstack/react-query";
-import { Lock } from "lucide-react";
+import { FileDown, Lock } from "lucide-react";
 import Link from "next/link";
 import { useState, type FormEvent } from "react";
 import {
@@ -33,7 +33,48 @@ const periodoInicial = (): ConsultaIndicadores => {
   return { inicio: `${hoje.slice(0, 8)}01`, fim: hoje };
 };
 
-// Indicadores operacionais da coordenação (RF48, pranchas 9-1 e 9-2).
+type Exportacao =
+  | { estado: "parado" }
+  | { estado: "gerando" }
+  | { estado: "pronto"; arquivo: string }
+  | { estado: "erro"; mensagem: string };
+
+// Baixa o PDF da consulta exibida (RF49). Com a data final de hoje, manda o
+// instante da consulta, para o PDF ter os mesmos valores da tela.
+async function baixarRelatorio(dados: Indicadores) {
+  const parametros = new URLSearchParams({
+    inicio: dados.inicio,
+    fim: dados.fim,
+  });
+  if (dados.referenciaEhAgora) parametros.set("referencia", dados.referencia);
+  const resposta = await fetch(
+    `${process.env.NEXT_PUBLIC_API_URL}/indicadores/relatorio.pdf?${parametros}`,
+    { credentials: "include" },
+  );
+  if (!resposta.ok) {
+    const corpo = (await resposta.json().catch(() => null)) as {
+      message?: unknown;
+    } | null;
+    throw new Error(
+      typeof corpo?.message === "string"
+        ? corpo.message
+        : "Tente novamente em instantes.",
+    );
+  }
+  const arquivo = `indicadores-${dados.inicio}-a-${dados.fim}.pdf`;
+  const url = URL.createObjectURL(await resposta.blob());
+  const link = document.createElement("a");
+  link.href = url;
+  link.download = arquivo;
+  document.body.append(link);
+  link.click();
+  link.remove();
+  URL.revokeObjectURL(url);
+  return arquivo;
+}
+
+// Indicadores operacionais da coordenação (RF48, pranchas 9-1 e 9-2) e a
+// exportação em PDF (RF49, prancha 9-1 do Ciclo 6).
 export default function IndicadoresPage() {
   const { data: sessao } = useSessao();
   const permitido = sessao?.perfil === "coordenacao";
@@ -43,6 +84,9 @@ export default function IndicadoresPage() {
   );
   const [erros, setErros] = useState<Erros>({});
   const [vagasAberto, setVagasAberto] = useState(false);
+  const [exportacao, setExportacao] = useState<Exportacao>({
+    estado: "parado",
+  });
 
   const indicadores = useQuery({
     queryKey: ["indicadores", consulta],
@@ -93,20 +137,77 @@ export default function IndicadoresPage() {
     }
     setErros({});
     setConsulta(r.data);
+    setExportacao({ estado: "parado" });
   }
 
   const campoComErro = (Object.keys(erros) as (keyof ConsultaIndicadores)[])[0];
   const dados = indicadores.data;
+  // Só exporta a consulta que está na tela, e não as datas ainda não consultadas.
+  const podeExportar =
+    !!consulta &&
+    !!dados &&
+    !indicadores.isFetching &&
+    exportacao.estado !== "gerando";
+
+  async function exportar() {
+    if (!podeExportar || !dados) return;
+    setExportacao({ estado: "gerando" });
+    try {
+      setExportacao({
+        estado: "pronto",
+        arquivo: await baixarRelatorio(dados),
+      });
+    } catch (erro) {
+      setExportacao({
+        estado: "erro",
+        mensagem: (erro as Error).message,
+      });
+    }
+  }
 
   return (
     <div className="flex flex-col gap-6">
-      <div>
-        <h1 className="ui-titulo">Indicadores operacionais</h1>
-        <p className="ui-subtitulo">
-          Situação das vagas, da espera, da evasão e da distribuição de casos no
-          período escolhido.
-        </p>
+      <div className="flex flex-wrap items-end justify-between gap-4">
+        <div>
+          <h1 className="ui-titulo">Indicadores operacionais</h1>
+          <p className="ui-subtitulo">
+            Situação das vagas, da espera, da evasão e da distribuição de casos
+            no período escolhido.
+          </p>
+        </div>
+        <div className="flex flex-wrap items-center gap-3 max-sm:w-full">
+          {/* aria-disabled, e não disabled: o botão continua no Tab e lê a
+              explicação ligada a ele (RNF56). */}
+          <Button
+            type="button"
+            className="max-sm:w-full"
+            aria-disabled={!podeExportar}
+            aria-describedby={podeExportar ? undefined : "exportar-dica"}
+            onClick={() => void exportar()}
+          >
+            <FileDown aria-hidden />
+            {exportacao.estado === "gerando" ? "Gerando PDF…" : "Exportar PDF"}
+          </Button>
+          {!podeExportar && exportacao.estado !== "gerando" && (
+            <p id="exportar-dica" className="ui-dica">
+              Consulte um período para exportar o relatório.
+            </p>
+          )}
+        </div>
       </div>
+
+      {/* A região fica sempre na página e só o texto muda, para o leitor de tela
+          anunciar a exportação (RNF56). */}
+      <p role="status" className="sr-only">
+        {exportacao.estado === "pronto"
+          ? `Relatório exportado: ${exportacao.arquivo}.`
+          : ""}
+      </p>
+      {exportacao.estado === "erro" && (
+        <Aviso tipo="erro" titulo="Não foi possível exportar o relatório.">
+          {exportacao.mensagem}
+        </Aviso>
+      )}
 
       <form
         onSubmit={consultar}
@@ -309,6 +410,11 @@ export default function IndicadoresPage() {
               </table>
             )}
           </div>
+
+          <p className="ui-dica">
+            O PDF traz exatamente a consulta exibida. Para outro período,
+            consulte de novo antes de exportar.
+          </p>
 
           <VagasOfertadasDialogo
             aberto={vagasAberto}
