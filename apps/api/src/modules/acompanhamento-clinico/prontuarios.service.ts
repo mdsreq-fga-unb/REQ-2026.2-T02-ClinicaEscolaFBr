@@ -58,6 +58,7 @@ import {
   dataLimiteDoSemestre,
 } from './correcoes-evolucao.service';
 import { PoliticaProntuario } from './politica-prontuario';
+import { validacoesDasEvolucoes } from './validacoes-evolucao.service';
 
 const estagiario = aliasedTable(usuarios, 'estagiario');
 
@@ -229,6 +230,10 @@ export class ProntuariosService {
       evolucoesRows.map((e) => e.id),
       chave,
     );
+    const validacoes = await validacoesDasEvolucoes(
+      this.db,
+      evolucoesRows.map((e) => e.id),
+    );
     // O caso encerrado não aceita complemento (RF30): o aviso traz a data do
     // desligamento, quando há.
     const avisoComplemento = avisoSemComplemento(
@@ -385,6 +390,14 @@ export class ProntuariosService {
                 prazoEncerrado: !noPrazo,
                 permitida:
                   noPrazo && podeCorrigirPorPerfil(evolucao.registradaPor),
+              },
+              // Situação da validação (RF67). Quem chega aqui com o perfil de
+              // supervisor é o do caso.
+              validacao: {
+                ...validacoes.get(evolucao.id)!,
+                permitida:
+                  usuario.perfil === 'supervisor' &&
+                  validacoes.get(evolucao.id)!.situacao === 'pendente',
               },
               // Informação adicional, separada das versões da correção (RF30). Quem
               // chega aqui com o perfil de estagiário ou de supervisor é o responsável

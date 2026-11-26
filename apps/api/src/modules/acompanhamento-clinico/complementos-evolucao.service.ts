@@ -29,6 +29,7 @@ import type { UsuarioAutenticado } from '../../auth/usuario-autenticado';
 import { cifrar, decifrar } from '../../common/criptografia';
 import { DB } from '../../database/database.module';
 import { PoliticaProntuario } from './politica-prontuario';
+import { travarEvolucao } from './trava-evolucao';
 
 type Complemento = {
   tipo: 'complemento';
@@ -157,6 +158,7 @@ export class ComplementosEvolucaoService {
             );
       if (!responsavel)
         throw new ForbiddenException('Você não tem acesso a este prontuário.');
+      await travarEvolucao(tx, evolucaoId);
       const [registro] = await tx
         .insert(complementosEvolucao)
         .values({
@@ -164,7 +166,8 @@ export class ComplementosEvolucaoService {
           textoCifrado: cifrar(texto, chave),
           registradoPor: usuario.id,
           // O instante da gravação, e não o do início da transação, que pode ter
-          // esperado a trava do caso: a ordem dos complementos é a real.
+          // esperado as travas: a ordem dos complementos é a real, e a validação
+          // (RF67) compara as datas.
           registradoEm: sql`clock_timestamp()`,
         })
         .returning({

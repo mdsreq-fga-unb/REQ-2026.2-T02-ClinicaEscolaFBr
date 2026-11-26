@@ -1,5 +1,6 @@
 "use client";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { HistoricoEvolucoesDoPaciente } from "@/components/prontuario/historico-evolucoes";
 import { Eye, Lock, PencilLine, TriangleAlert } from "lucide-react";
 import Link from "next/link";
 import { useParams } from "next/navigation";
@@ -39,6 +40,10 @@ import {
   LeituraEvolucao,
   type EvolucaoRegistrada,
 } from "@/components/prontuario/fichas";
+import {
+  SeloValidacao,
+  ValidacaoDaEvolucao,
+} from "@/components/prontuario/validacao-evolucao";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { api, ErroApi } from "@/lib/api";
 import { dataBr, dataHoraBr, idade, NOMES_SITUACAO_CASO } from "@/lib/formato";
@@ -196,6 +201,7 @@ export default function ProntuarioPage() {
           ["historico-responsaveis", "Responsáveis"],
           ["sessoes-ciclo", "Sessões do ciclo"],
           ["evolucoes", "Evoluções"],
+          ["historico-evolucoes", "Histórico de evoluções"],
           ["alta", "Encerramento por alta"],
           ["relatorio", "Relatório final"],
         ].map(([alvo, rotulo]) => (
@@ -463,6 +469,11 @@ export default function ProntuarioPage() {
                           {(atendimento.evolucao!.versaoAtual ?? 1) > 1 &&
                             ` · versão ${atendimento.evolucao!.versaoAtual} · atual`}
                         </span>
+                        {atendimento.evolucao!.validacao && (
+                          <SeloValidacao
+                            situacao={atendimento.evolucao!.validacao.situacao}
+                          />
+                        )}
                         <span className="text-marca underline underline-offset-4">
                           Ver evolução
                         </span>
@@ -487,6 +498,12 @@ export default function ProntuarioPage() {
                       evolucao={atendimento.evolucao!}
                       numeroNoCiclo={atendimento.numeroNoCiclo}
                     />
+                    <ValidacaoDaEvolucao
+                      prontuarioId={p.id}
+                      evolucao={atendimento.evolucao!}
+                      numeroNoCiclo={atendimento.numeroNoCiclo}
+                      supervisor={p.supervisor}
+                    />
                   </details>
                   <AcaoCorrecao
                     prontuarioId={p.id}
@@ -500,6 +517,7 @@ export default function ProntuarioPage() {
           <p className="ui-dica">Sem registro neste ciclo.</p>
         )}
       </section>
+      <HistoricoEvolucoesDoPaciente prontuarioId={p.id} />
       <HistoricoFaltas
         id="historico-faltas"
         contagem={p.faltasNoCiclo}
