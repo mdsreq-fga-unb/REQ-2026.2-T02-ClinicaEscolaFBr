@@ -127,9 +127,16 @@ export class RelatoriosFinaisService {
     const alvo = await this.doCiclo(casoId, ciclo);
     const administrativo =
       usuario.perfil === 'secretaria' || usuario.perfil === 'coordenacao';
-    // Caso sem prontuário no ciclo: sem relatório. Só os perfis que já veem o
-    // caso na ficha recebem a resposta vazia.
-    if (alvo && !alvo.prontuarioId && administrativo) return null;
+    // Sem prontuário no ciclo, sem relatório: a secretaria e a coordenação recebem a
+    // resposta vazia, e o caso inexistente tem a mesma resposta, para não revelar
+    // quais casos existem (RNF25). A consulta fica no registro de acessos (RNF52).
+    if (!alvo?.prontuarioId && administrativo) {
+      await this.politica.registrarSemProntuario(
+        usuario,
+        'consultar_relatorio_final',
+      );
+      return null;
+    }
     const prontuarioId = alvo?.prontuarioId ?? PRONTUARIO_INEXISTENTE;
     await this.politica.exigirAcesso(
       usuario,

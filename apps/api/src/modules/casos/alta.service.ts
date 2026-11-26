@@ -55,6 +55,7 @@ import type { UsuarioAutenticado } from '../../auth/usuario-autenticado';
 import { cifrar, decifrar } from '../../common/criptografia';
 import { DB } from '../../database/database.module';
 import { fecharPedidoDeAlta } from './pedido-alta';
+import { aprovadaEmDia } from '../acompanhamento-clinico/relatorio-atual';
 
 const pedinte = aliasedTable(usuarios, 'pedinte');
 const confirmador = aliasedTable(usuarios, 'confirmador');
@@ -64,7 +65,7 @@ const cancelador = aliasedTable(usuarios, 'cancelador');
 const estagiarioDaAlta = aliasedTable(usuarios, 'estagiario_da_alta');
 
 const relatorioPendente = (ciclo: number) =>
-  `Aprove o relatório final do ciclo ${ciclo} antes de confirmar a alta. Depois da confirmação, o estagiário perde o acesso ao caso e não consegue mais corrigir o relatório.`;
+  `Aprove o relatório final do ciclo ${ciclo}, com todas as evoluções registradas, antes de confirmar a alta. Depois da confirmação, o estagiário perde o acesso ao caso e não consegue mais corrigir o relatório.`;
 
 // AAAA-MM-DD para DD/MM/AAAA, nas mensagens.
 const dataBr = (data: string) => data.split('-').reverse().join('/');
@@ -606,14 +607,16 @@ export class AltaService {
     });
   }
 
-  // O ciclo tem alguma evolução e nenhuma versão aprovada do relatório final
-  // (RF33). Sem evoluções, o relatório não pode ser gerado, e a alta segue.
+  // O ciclo tem evoluções e nenhuma versão aprovada do relatório final que cubra
+  // todas elas (RF33). Depois de uma reabertura, as evoluções novas exigem uma
+  // versão nova aprovada. Sem evoluções, o relatório não pode ser gerado, e a alta
+  // segue.
   private async relatorioPendente(
     banco: Db | Transacao,
     casoId: string,
     ciclo: number,
   ) {
-    const [comEvolucao] = await banco
+    const doCiclo = await banco
       .select({ id: evolucoes.id })
       .from(evolucoes)
       .innerJoin(
@@ -625,11 +628,13 @@ export class AltaService {
           eq(sessoesAtendimento.casoId, casoId),
           eq(sessoesAtendimento.cicloAtendimento, ciclo),
         ),
-      )
-      .limit(1);
-    if (!comEvolucao) return false;
-    const [aprovada] = await banco
-      .select({ id: versoesRelatorio.id })
+      );
+    if (doCiclo.length === 0) return false;
+    const aprovadas = await banco
+      .select({
+        estado: versoesRelatorio.estado,
+        origem: versoesRelatorio.origem,
+      })
       .from(versoesRelatorio)
       .innerJoin(
         relatoriosFinais,
@@ -642,9 +647,11 @@ export class AltaService {
           eq(prontuarios.cicloAtendimento, ciclo),
           eq(versoesRelatorio.estado, 'aprovado'),
         ),
-      )
-      .limit(1);
-    return !aprovada;
+      );
+    return !aprovadaEmDia(
+      aprovadas,
+      doCiclo.map((e) => e.id),
+    );
   }
 
   // Pedido aberto do caso (nem confirmado nem cancelado), travado.

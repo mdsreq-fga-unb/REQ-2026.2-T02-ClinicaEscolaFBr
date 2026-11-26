@@ -429,7 +429,7 @@ describe('Relatório final: elaboração, envio e decisão (RF33)', () => {
       const devolvida = await decidir(1, {
         decisao: 'devolver',
         observacoes: 'Detalhar a análise.',
-      }).expect(201);
+      }).expect(200);
       expect(devolvida.body).toMatchObject({
         estado: 'devolvido',
         decisao: { por: 'Ricardo Menezes', observacoes: 'Detalhar a análise.' },
@@ -443,7 +443,7 @@ describe('Relatório final: elaboração, envio e decisão (RF33)', () => {
 
       await salvar({ ...secoes, analise: 'Análise detalhada.' }).expect(200);
       await enviar({ ...secoes, analise: 'Análise detalhada.' }).expect(201);
-      const aprovada = await decidir(2, { decisao: 'aprovar' }).expect(201);
+      const aprovada = await decidir(2, { decisao: 'aprovar' }).expect(200);
       expect(aprovada.body).toMatchObject({
         versao: 2,
         estado: 'aprovado',
@@ -455,6 +455,23 @@ describe('Relatório final: elaboração, envio e decisão (RF33)', () => {
         [1, 'devolvido'],
         [2, 'aprovado'],
       ]);
+      // Depois da aprovação, não se abre versão nova enquanto ela cobrir todas
+      // as evoluções do ciclo.
+      const depois = await enviar().expect(409);
+      expect(depois.body.message).toBe(
+        'O relatório deste ciclo já foi aprovado.',
+      );
+      expect(await versoes()).toHaveLength(2);
+      // Com uma evolução nova (o caso reaberto pela coordenação, RF68), a aprovada
+      // fica desatualizada: o estagiário elabora a versão 3, que cobre a nova.
+      await criarSessao('2026-11-20T18:00:00Z', true);
+      expect((await ler()).acoes.elaborar).toBe(true);
+      const nova = await enviar().expect(201);
+      expect(nova.body).toMatchObject({ versao: 3, estado: 'em_revisao' });
+      const [, , terceira] = await versoes();
+      expect(
+        (terceira.origem as { evolucoes: string[] }).evolucoes,
+      ).toHaveLength(10);
       expect(
         JSON.parse(decifrar(linhas[0].secoesCifradas, CHAVE_TESTE)),
       ).toEqual(secoes);
@@ -511,7 +528,7 @@ describe('Relatório final: elaboração, envio e decisão (RF33)', () => {
         decidir(1, { decisao: 'devolver', observacoes: 'Ajustar.' }),
       ]);
       expect(respostas.map((r) => r.status).sort((a, b) => a - b)).toEqual([
-        201, 409,
+        200, 409,
       ]);
     });
 
@@ -521,10 +538,10 @@ describe('Relatório final: elaboração, envio e decisão (RF33)', () => {
         await decidir(1, {
           decisao: 'devolver',
           observacoes: 'Ajustar.',
-        }).expect(201);
+        }).expect(200);
         await salvar().expect(200);
         await enviar().expect(201);
-        await decidir(2, { decisao: 'aprovar' }).expect(201);
+        await decidir(2, { decisao: 'aprovar' }).expect(200);
       } finally {
         await cliente.exec('reset role');
       }

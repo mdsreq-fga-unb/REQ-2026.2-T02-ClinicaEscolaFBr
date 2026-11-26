@@ -485,6 +485,11 @@ describe('Rotas dos indicadores operacionais (RF48)', () => {
     '%s não consulta os indicadores nem as vagas (RF48)',
     async (quem) => {
       await consultar(quem, hoje, hoje).expect(403);
+      await http()
+        .get('/indicadores/relatorio.pdf')
+        .query({ inicio: hoje, fim: hoje })
+        .set(como(quem))
+        .expect(403);
       await http().get('/vagas-ofertadas/2026-2').set(como(quem)).expect(403);
       await http()
         .put('/vagas-ofertadas/2026-2')
@@ -493,6 +498,102 @@ describe('Rotas dos indicadores operacionais (RF48)', () => {
         .expect(403);
     },
   );
+
+  // O supertest não junta o corpo de um PDF sozinho.
+  const binario = (
+    res: request.Response,
+    pronto: (erro: Error | null, corpo: Buffer) => void,
+  ) => {
+    const fluxo = res as unknown as NodeJS.ReadableStream;
+    const partes: Buffer[] = [];
+    fluxo.on('data', (parte: Buffer) => partes.push(parte));
+    fluxo.on('end', () => pronto(null, Buffer.concat(partes)));
+  };
+  const exportar = (query: Record<string, string>, quem = 'coordenacao') =>
+    http()
+      .get('/indicadores/relatorio.pdf')
+      .query(query)
+      .set(como(quem))
+      .buffer(true)
+      .parse(binario);
+
+  it('a coordenação exporta o PDF da consulta, para download, e a exportação fica na auditoria (RF49)', async () => {
+    const resposta = await exportar({
+      inicio: '2026-08-01',
+      fim: '2026-08-31',
+    }).expect(200);
+    expect(resposta.headers['content-type']).toBe('application/pdf');
+    expect(resposta.headers['content-disposition']).toBe(
+      'attachment; filename="indicadores-2026-08-01-a-2026-08-31.pdf"',
+    );
+    expect(resposta.headers['cache-control']).toBe('no-store');
+    const pdf = resposta.body as Buffer;
+    expect(pdf.subarray(0, 5).toString()).toBe('%PDF-');
+
+    const registros = await db
+      .select()
+      .from(auditoria)
+      .where(eq(auditoria.operacao, 'exportar_relatorio_institucional'));
+    expect(registros).toHaveLength(1);
+    expect(registros[0]).toMatchObject({
+      usuarioId: pessoas.coordenacao.id,
+      entidade: 'indicadores',
+      entidadeId: '2026-08-01:2026-08-31',
+      dadosNovos: {
+        inicio: '2026-08-01',
+        fim: '2026-08-31',
+        referencia: '2026-09-01T02:59:59.999Z',
+      },
+    });
+  });
+
+  it('com a data final de hoje, o PDF usa o instante da consulta exibida, e recusa referência de outro dia ou futura (RF49)', async () => {
+    const antes = new Date(Date.now() - 5 * 86_400_000);
+    await casoEmAtendimento(antes);
+    const inicio = hojeEmBrasilia(antes);
+    const tela = (await consultar('coordenacao', inicio, hoje).expect(200))
+      .body as Indicadores;
+    // Um caso vinculado depois da consulta não entra no PDF da consulta exibida.
+    await casoEmAtendimento(new Date());
+
+    await exportar({ inicio, fim: hoje, referencia: tela.referencia }).expect(
+      200,
+    );
+    const [registro] = await db
+      .select()
+      .from(auditoria)
+      .where(eq(auditoria.operacao, 'exportar_relatorio_institucional'));
+    expect(registro.dadosNovos).toMatchObject({ referencia: tela.referencia });
+
+    const futura = new Date(Date.now() + 60 * 60_000).toISOString();
+    const ontem = new Date(Date.now() - 86_400_000).toISOString();
+    for (const referencia of [futura, ontem, 'qualquer']) {
+      const recusa = await exportar({ inicio, fim: hoje, referencia }).expect(
+        400,
+      );
+      expect((recusa.body as Buffer).toString()).toContain(
+        'A referência não corresponde à consulta exibida',
+      );
+    }
+  });
+
+  it('a consulta de ontem às 23h50 exportada depois da meia-noite sai com o instante da tela, e não com o fim do dia (RF49)', async () => {
+    const antes = new Date(Date.now() - 5 * 86_400_000);
+    await casoEmAtendimento(antes);
+    const inicio = hojeEmBrasilia(antes);
+    const ontem = hojeEmBrasilia(new Date(Date.now() - 86_400_000));
+    const referencia = new Date(`${ontem}T23:50:00-03:00`).toISOString();
+    await exportar({ inicio, fim: ontem, referencia }).expect(200);
+    const [registro] = await db
+      .select()
+      .from(auditoria)
+      .where(eq(auditoria.operacao, 'exportar_relatorio_institucional'));
+    expect(registro.dadosNovos).toMatchObject({ referencia });
+  });
+
+  it('o PDF recusa o mesmo período inválido da consulta (RF49)', async () => {
+    await exportar({ inicio: '2026-08-31', fim: '2026-08-01' }).expect(400);
+  });
 
   it('recusa a data final depois do dia da consulta e a inicial depois da final, com o motivo, sem calcular nada (RF48)', async () => {
     const amanha = hojeEmBrasilia(new Date(Date.now() + 86_400_000));

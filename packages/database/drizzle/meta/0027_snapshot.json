@@ -2605,22 +2605,6 @@
           "concurrently": false,
           "method": "btree",
           "with": {}
-        },
-        "versoes_relatorio_uma_aprovada": {
-          "name": "versoes_relatorio_uma_aprovada",
-          "columns": [
-            {
-              "expression": "relatorio_id",
-              "isExpression": false,
-              "asc": true,
-              "nulls": "last"
-            }
-          ],
-          "isUnique": true,
-          "where": "\"versoes_relatorio\".\"estado\" = 'aprovado'",
-          "concurrently": false,
-          "method": "btree",
-          "with": {}
         }
       },
       "foreignKeys": {

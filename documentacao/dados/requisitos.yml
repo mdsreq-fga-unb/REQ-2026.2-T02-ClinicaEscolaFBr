@@ -831,7 +831,7 @@ rfs:
   lider: Gabriel
   depende: [RF48]
   issue: 23
-  estado: Planejada
+  estado: Código concluído
 
 - id: RF50
   nome: Autenticar usuário institucional
@@ -1206,8 +1206,8 @@ rnfs:
   nome: Integridade e proveniência dos registros de evolução
   cp: CP7
   classificacao: Obrigatório para o MVP
-  relacionado: RF28, RF31, RF32, RF67, RF68
-  justificativa: Registros clínicos precisam preservar autor, sessão, paciente e histórico, inclusive a validação do supervisor (RF67) e o encerramento por alta (RF68).
+  relacionado: RF28, RF30, RF31, RF32, RF67, RF68
+  justificativa: Registros clínicos precisam preservar autor, sessão, paciente e histórico, inclusive os complementos (RF30), a validação do supervisor (RF67) e o encerramento por alta (RF68).
 
 - id: RNF28
   nome: Auditoria das correções de evolução
