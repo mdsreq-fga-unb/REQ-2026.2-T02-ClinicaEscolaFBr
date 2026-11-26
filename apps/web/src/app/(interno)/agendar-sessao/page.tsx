@@ -375,11 +375,9 @@ const emDezMinutos = (horario: string) =>
 // Agendamento de sessão pela secretaria ou pelo estagiário responsável (RF10).
 function AgendarSessao() {
   const { data: sessao } = useSessao();
-  const [paciente, setPaciente] = useState<PacienteAgendavel | null>(null);
   // Vindo da ficha do paciente (?caso=), o paciente já chega escolhido. O caso
   // passa pela mesma busca da API, que só devolve quem a pessoa pode agendar.
   const casoDaFicha = useSearchParams()?.get("caso") ?? null;
-  const [usouCasoDaFicha, setUsouCasoDaFicha] = useState(false);
   const daFicha = useQuery({
     queryKey: ["sessoes", "pacientes", "caso", casoDaFicha],
     queryFn: () =>
@@ -388,11 +386,12 @@ function AgendarSessao() {
       ),
     enabled: !!casoDaFicha && /^[0-9a-f-]{36}$/i.test(casoDaFicha),
   });
-  // Só na primeira resposta: depois, "Trocar paciente" funciona normalmente.
-  if (!usouCasoDaFicha && daFicha.data) {
-    setUsouCasoDaFicha(true);
-    if (daFicha.data[0]) setPaciente(daFicha.data[0]);
-  }
+  // O paciente da ficha é derivado da resposta, sem atualizar estado durante a
+  // renderização nem num efeito: vale até a pessoa escolher outro (ou "Trocar
+  // paciente"), e daí em diante vale a escolha dela.
+  const [escolhido, setPaciente] = useState<PacienteAgendavel | null>();
+  const paciente =
+    escolhido !== undefined ? escolhido : (daFicha.data?.[0] ?? null);
   const [data, setData] = useState("");
   const [inicio, setInicio] = useState("");
   const [termino, setTermino] = useState("");

@@ -446,6 +446,12 @@ describe("Agendar sessão (RF10)", () => {
           c.url.endsWith(`/sessoes/pacientes?casoId=${parametros.caso}`),
         ),
       ).toBe(true);
+      // Depois de "Trocar paciente", vale a escolha da pessoa: a ficha não volta.
+      fireEvent.click(screen.getByRole("button", { name: "Trocar paciente" }));
+      expect(screen.queryByRole("button", { name: "Trocar paciente" })).toBe(
+        null,
+      );
+      expect(await screen.findByRole("searchbox")).toBeTruthy();
     } finally {
       PACIENTES.pop();
       parametros.caso = null;
