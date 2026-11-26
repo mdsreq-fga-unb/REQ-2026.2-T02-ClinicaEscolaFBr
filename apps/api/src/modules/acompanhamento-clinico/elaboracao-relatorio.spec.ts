@@ -455,13 +455,23 @@ describe('Relatório final: elaboração, envio e decisão (RF33)', () => {
         [1, 'devolvido'],
         [2, 'aprovado'],
       ]);
-      // Depois da aprovação, não se abre versão nova: a alta (RF68) pode contar
-      // com a versão aprovada como a última do ciclo.
+      // Depois da aprovação, não se abre versão nova enquanto ela cobrir todas
+      // as evoluções do ciclo.
       const depois = await enviar().expect(409);
       expect(depois.body.message).toBe(
         'O relatório deste ciclo já foi aprovado.',
       );
       expect(await versoes()).toHaveLength(2);
+      // Com uma evolução nova (o caso reaberto pela coordenação, RF68), a aprovada
+      // fica desatualizada: o estagiário elabora a versão 3, que cobre a nova.
+      await criarSessao('2026-11-20T18:00:00Z', true);
+      expect((await ler()).acoes.elaborar).toBe(true);
+      const nova = await enviar().expect(201);
+      expect(nova.body).toMatchObject({ versao: 3, estado: 'em_revisao' });
+      const [, , terceira] = await versoes();
+      expect(
+        (terceira.origem as { evolucoes: string[] }).evolucoes,
+      ).toHaveLength(10);
       expect(
         JSON.parse(decifrar(linhas[0].secoesCifradas, CHAVE_TESTE)),
       ).toEqual(secoes);

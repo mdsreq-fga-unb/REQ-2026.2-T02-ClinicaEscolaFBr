@@ -681,13 +681,16 @@ describe('Encerrar caso por alta (RF68)', () => {
   it('com evoluções no ciclo, a alta só é confirmada depois de o supervisor aprovar o relatório final (RF68, RF33)', async () => {
     const { caso, prontuarioId } = await casoAtivo();
     const sessaoId = await sessao(caso, -48);
-    await db.insert(evolucoes).values({
-      prontuarioId,
-      sessaoId,
-      queixaCifrada: cifrar('queixa da sessão', CHAVE_TESTE),
-      planejamentoCifrado: cifrar('planejamento', CHAVE_TESTE),
-      registradaPor: pessoas.ana.id,
-    });
+    const [evolucao] = await db
+      .insert(evolucoes)
+      .values({
+        prontuarioId,
+        sessaoId,
+        queixaCifrada: cifrar('queixa da sessão', CHAVE_TESTE),
+        planejamentoCifrado: cifrar('planejamento', CHAVE_TESTE),
+        registradaPor: pessoas.ana.id,
+      })
+      .returning();
     expect((await situacao(caso, 'ana')).relatorioPendente).toBe(true);
     await pedir(caso).expect(201);
     expect((await situacao(caso, 'ricardo')).relatorioPendente).toBe(true);
@@ -704,7 +707,7 @@ describe('Encerrar caso por alta (RF68)', () => {
         secoesCifradas: cifrar('{}', CHAVE_TESTE),
         autorId: pessoas.ana.id,
         enviadaEm: new Date(),
-        origem: { sessoes: [sessaoId], evolucoes: [] },
+        origem: { sessoes: [sessaoId], evolucoes: [evolucao.id] },
         decididaPor: pessoas.ricardo.id,
         decididaEm: new Date(),
         observacoesCifradas:
@@ -726,6 +729,71 @@ describe('Encerrar caso por alta (RF68)', () => {
     expect((await situacao(caso, 'ricardo')).pedidoAberto).not.toBeNull();
 
     await versao(relatorio.id, 2, 'aprovado');
+    expect((await situacao(caso, 'ricardo')).relatorioPendente).toBe(false);
+    await confirmar(caso).expect(200);
+    expect(await situacaoDoCaso(caso)).toBe('encerrado_por_alta');
+  });
+
+  it('depois da reabertura, a evolução nova exige uma versão nova aprovada do relatório antes de outra alta (RF68, RF33)', async () => {
+    const { caso, prontuarioId } = await casoAtivo();
+    const evoluir = async (horas: number) => {
+      const sessaoId = await sessao(caso, horas);
+      const [e] = await db
+        .insert(evolucoes)
+        .values({
+          prontuarioId,
+          sessaoId,
+          queixaCifrada: cifrar('queixa da sessão', CHAVE_TESTE),
+          planejamentoCifrado: cifrar('planejamento', CHAVE_TESTE),
+          registradaPor: pessoas.ana.id,
+        })
+        .returning();
+      return { sessaoId, evolucaoId: e.id };
+    };
+    const primeira = await evoluir(-72);
+    const [relatorio] = await db
+      .insert(relatoriosFinais)
+      .values({ prontuarioId })
+      .returning();
+    const aprovar = (
+      numero: number,
+      origem: { sessoes: string[]; evolucoes: string[] },
+    ) =>
+      db.insert(versoesRelatorio).values({
+        relatorioId: relatorio.id,
+        versao: numero,
+        estado: 'aprovado',
+        secoesCifradas: cifrar('{}', CHAVE_TESTE),
+        autorId: pessoas.ana.id,
+        enviadaEm: new Date(),
+        origem,
+        decididaPor: pessoas.ricardo.id,
+        decididaEm: new Date(),
+      });
+    await aprovar(1, {
+      sessoes: [primeira.sessaoId],
+      evolucoes: [primeira.evolucaoId],
+    });
+    await pedir(caso).expect(201);
+    await confirmar(caso).expect(200);
+
+    // A coordenação reabre, e o atendimento continua com uma evolução nova.
+    await reabrir(caso, {
+      pedidaPor: pessoas.ana.id,
+      motivo: 'A paciente pediu para retomar o atendimento.',
+    }).expect(200);
+    const segunda = await evoluir(-24);
+    expect((await situacao(caso, 'ana')).relatorioPendente).toBe(true);
+    await pedir(caso).expect(201);
+    const recusa = await confirmar(caso).expect(422);
+    expect(recusa.body.message).toContain('com todas as evoluções registradas');
+    expect(await situacaoDoCaso(caso)).toBe('em_atendimento');
+
+    // A versão nova, que cobre a evolução depois da reabertura, libera a alta.
+    await aprovar(2, {
+      sessoes: [primeira.sessaoId, segunda.sessaoId],
+      evolucoes: [primeira.evolucaoId, segunda.evolucaoId],
+    });
     expect((await situacao(caso, 'ricardo')).relatorioPendente).toBe(false);
     await confirmar(caso).expect(200);
     expect(await situacaoDoCaso(caso)).toBe('encerrado_por_alta');

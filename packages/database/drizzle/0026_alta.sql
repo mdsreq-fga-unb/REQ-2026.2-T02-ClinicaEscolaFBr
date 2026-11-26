@@ -59,3 +59,8 @@ CREATE TRIGGER "vagas_liberadas_campos_preenchidos" BEFORE UPDATE OR DELETE ON "
     'id,desligamento_id,alta_id,estagiario_id,supervisor_id,liberada_em',
     'ocupada_em,ocupada_por_vinculo_id,encerrada_em'
   );
+--> statement-breakpoint
+-- Depois de uma reabertura (RF68), o relatório final do ciclo pode ganhar uma
+-- versão nova aprovada, que cobre as evoluções novas; a anterior fica preservada
+-- (RF33, DF36). Continua valendo uma versão aberta por vez.
+DROP INDEX "versoes_relatorio_uma_aprovada";

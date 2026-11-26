@@ -43,6 +43,7 @@ import {
   PRONTUARIO_INEXISTENTE,
   RelatoriosFinaisService,
 } from './relatorios-finais.service';
+import { aprovadaEmDia } from './relatorio-atual';
 
 type SessaoComEvolucao = SessaoDoRelatorio & { evolucaoId: string | null };
 
@@ -123,7 +124,11 @@ export class ElaboracaoRelatorioService {
     const estagiario = usuario.perfil === 'estagiario';
     const semEvolucoes = !sessoes.some((s) => s.temEvolucao);
     const emRevisao = linhas.some((v) => v.estado === 'em_revisao');
-    const aprovado = linhas.some((v) => v.estado === 'aprovado');
+    // Aprovado e em dia: cobre todas as evoluções do ciclo (ver relatorio-atual).
+    const aprovado = aprovadaEmDia(
+      linhas,
+      sessoes.flatMap((s) => s.evolucaoId ?? []),
+    );
     return {
       casoId,
       prontuarioId: prontuario.id,
@@ -297,6 +302,7 @@ export class ElaboracaoRelatorioService {
           id: versoesRelatorio.id,
           versao: versoesRelatorio.versao,
           estado: versoesRelatorio.estado,
+          origem: versoesRelatorio.origem,
         })
         .from(versoesRelatorio)
         .where(eq(versoesRelatorio.relatorioId, relatorio.id))
@@ -305,7 +311,14 @@ export class ElaboracaoRelatorioService {
         throw new ConflictException(
           'O relatório está em revisão pelo supervisor.',
         );
-      if (versoes.some((v) => v.estado === 'aprovado'))
+      // Depois da aprovação, só há versão nova se o ciclo ganhou evoluções que a
+      // aprovada não cobre (reabertura do caso pela coordenação, RF68).
+      if (
+        aprovadaEmDia(
+          versoes,
+          sessoes.flatMap((s) => s.evolucaoId ?? []),
+        )
+      )
         throw new ConflictException('O relatório deste ciclo já foi aprovado.');
 
       const agora = new Date();
