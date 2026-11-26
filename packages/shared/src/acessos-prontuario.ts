@@ -20,6 +20,11 @@ export const filtroAcessosSchema = z
     usuario: nome,
     inicio: z.iso.date("Informe uma data inicial válida.").optional(),
     fim: z.iso.date("Informe uma data final válida.").optional(),
+    operacao: z
+      .enum(["visualizacao", "criacao", "alteracao", "acesso_negado"], {
+        error: "Escolha uma operação da lista.",
+      })
+      .optional(),
     pagina: z.coerce.number().int().min(1).max(100000).default(1),
   })
   .refine((f) => !f.inicio || !f.fim || f.inicio <= f.fim, {

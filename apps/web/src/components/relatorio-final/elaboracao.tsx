@@ -15,6 +15,7 @@ import {
   type VersaoComTexto,
 } from "@clinica/shared";
 import { Aviso } from "@/components/comum/aviso";
+import { BotaoComMotivo } from "@/components/comum/botao-com-motivo";
 import { Campo, classeTextoLongo } from "@/components/comum/campo";
 import { Dados } from "@/components/comum/dados";
 import { Dialogo } from "@/components/comum/dialogo";
@@ -352,14 +353,26 @@ export function FormularioRelatorio({ r }: { r: ElaboracaoDoRelatorio }) {
           feitas à mão, na via impressa.
         </p>
         <div className="flex flex-col-reverse gap-3 sm:flex-row sm:justify-end">
-          <Button
-            type="button"
-            variant="outline"
-            disabled={enviando !== null}
+          {/* Sem texto novo desde a última gravação, não há o que salvar. */}
+          <BotaoComMotivo
+            motivo={
+              alterado
+                ? null
+                : "Altere o texto do relatório para salvar o rascunho."
+            }
             onClick={() => void gravar("rascunho")}
           >
-            {enviando === "rascunho" ? "Salvando…" : "Salvar rascunho"}
-          </Button>
+            {(props) => (
+              <Button
+                {...props}
+                type="button"
+                variant="outline"
+                disabled={enviando !== null}
+              >
+                {enviando === "rascunho" ? "Salvando…" : "Salvar rascunho"}
+              </Button>
+            )}
+          </BotaoComMotivo>
           <Button type="submit" disabled={enviando !== null}>
             {enviando === "envio" ? "Enviando…" : "Enviar para revisão"}
           </Button>

@@ -3,6 +3,13 @@ import { cleanup, fireEvent, render, screen } from "@testing-library/react";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import AgendarSessaoPage from "./page";
 
+// O ?caso= vem da ficha do paciente; cada teste escolhe o valor.
+const parametros = vi.hoisted(() => ({ caso: null as string | null }));
+vi.mock("next/navigation", () => ({
+  useSearchParams: () =>
+    new URLSearchParams(parametros.caso ? `caso=${parametros.caso}` : ""),
+}));
+
 const PACIENTES = [
   {
     casoId: "c1",
@@ -67,6 +74,12 @@ function simularApi({
         resposta = {
           status: 200,
           corpo: { id: "u1", nome: "Juliana Rocha", perfil },
+        };
+      } else if (url.includes("/sessoes/pacientes?casoId=")) {
+        const id = url.split("casoId=")[1];
+        resposta = {
+          status: 200,
+          corpo: PACIENTES.filter((p) => p.casoId === id),
         };
       } else if (url.includes("/sessoes/pacientes")) {
         resposta = { status: 200, corpo: PACIENTES };
@@ -412,5 +425,36 @@ describe("Agendar sessão (RF10)", () => {
         ),
       ).toBeTruthy();
     });
+  });
+  it("vindo da ficha do paciente (?caso=), o paciente já chega escolhido (RF10)", async () => {
+    parametros.caso = "0b5cb1e6-a9ef-4327-842b-a1bb346561ea";
+    PACIENTES.push({
+      casoId: parametros.caso,
+      nome: "Fernanda Lopes Carvalho",
+      estagiario: { id: "e1", nome: "Pedro Henrique Lima" },
+      contribuicao: { situacao: "pendente", bloqueia: false, pagoEm: null },
+    });
+    try {
+      const chamadas = simularApi();
+      abrirTela();
+      expect(
+        await screen.findByRole("button", { name: "Trocar paciente" }),
+      ).toBeTruthy();
+      expect(screen.getByText("Fernanda Lopes Carvalho")).toBeTruthy();
+      expect(
+        chamadas.some((c) =>
+          c.url.endsWith(`/sessoes/pacientes?casoId=${parametros.caso}`),
+        ),
+      ).toBe(true);
+      // Depois de "Trocar paciente", vale a escolha da pessoa: a ficha não volta.
+      fireEvent.click(screen.getByRole("button", { name: "Trocar paciente" }));
+      expect(screen.queryByRole("button", { name: "Trocar paciente" })).toBe(
+        null,
+      );
+      expect(await screen.findByRole("searchbox")).toBeTruthy();
+    } finally {
+      PACIENTES.pop();
+      parametros.caso = null;
+    }
   });
 });

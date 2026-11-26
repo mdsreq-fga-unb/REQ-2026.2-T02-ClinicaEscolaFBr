@@ -105,7 +105,7 @@ export class SessoesService {
 
   // Pacientes para a busca da tela (RF10). O estagiário vê só os próprios pacientes.
   async buscarPacientes(
-    { busca }: BuscaPacientes,
+    { busca, casoId }: BuscaPacientes,
     usuario: UsuarioAutenticado,
   ): Promise<PacienteAgendavel[]> {
     const linhas = await this.db
@@ -133,6 +133,7 @@ export class SessoesService {
           busca
             ? ilike(inscricoes.nomeCompleto, `%${escaparLike(busca)}%`)
             : undefined,
+          casoId ? eq(casos.id, casoId) : undefined,
           usuario.perfil === 'estagiario'
             ? eq(vinculosEstagiario.estagiarioId, usuario.id)
             : undefined,

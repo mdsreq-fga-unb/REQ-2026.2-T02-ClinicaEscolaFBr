@@ -33,7 +33,7 @@ const PACIENTES = [
 function simularApi({
   perfil = "secretaria",
   pacientes = PACIENTES as unknown,
-  cortada = false,
+  total = undefined as number | undefined,
 } = {}) {
   const chamadas: string[] = [];
   vi.stubGlobal(
@@ -45,7 +45,18 @@ function simularApi({
       if (url.endsWith("/auth/sessao")) {
         [status, corpo] = [200, { id: "u1", nome: "Juliana", perfil }];
       } else if (url.includes("/pacientes")) {
-        [status, corpo] = [200, { pacientes, cortada }];
+        const pagina = Number(
+          new URL(url, "http://x").searchParams.get("pagina") ?? 1,
+        );
+        [status, corpo] = [
+          200,
+          {
+            pacientes,
+            total: total ?? (pacientes as unknown[]).length,
+            pagina,
+            tamanhoPagina: 50,
+          },
+        ];
       }
       return new Response(JSON.stringify(corpo), {
         status,
@@ -111,7 +122,7 @@ describe("Lista de Pacientes com os responsáveis (RF22)", () => {
     ]);
   });
 
-  it("mostra a busca dentro do painel, com o placeholder e a dica, e a contagem abaixo da tabela (RF22, RNF24)", async () => {
+  it("mostra a busca e os filtros acima da tabela, com o placeholder e a dica, e a contagem abaixo dela (RF22, RNF24)", async () => {
     simularApi();
     abrirTela();
     expect(
@@ -119,26 +130,81 @@ describe("Lista de Pacientes com os responsáveis (RF22)", () => {
         "Consulte quem é o estagiário e o supervisor responsáveis por cada caso.",
       ),
     ).toBeTruthy();
-    const campo = screen.getByLabelText("Buscar paciente");
+    const campo = screen.getByLabelText("Paciente");
     expect(campo.getAttribute("placeholder")).toBe("Digite o nome do paciente");
     expect(campo.getAttribute("aria-describedby")).toBeTruthy();
     expect(screen.getByText("Busca pelo nome do paciente.")).toBeTruthy();
+    for (const filtro of [
+      "Estagiário responsável",
+      "Supervisor responsável",
+      "Situação de distribuição",
+    ])
+      expect(
+        screen.getByRole("region", { name: "Buscar e filtrar" }).textContent,
+      ).toContain(filtro);
     const tabela = await screen.findByRole("table", {
       name: "Pacientes e responsáveis",
     });
-    // Busca e tabela no mesmo painel, como na prancha.
-    expect(campo.closest(".ui-painel")).toBe(tabela.closest(".ui-painel"));
+    // Os filtros vêm antes da tabela.
+    expect(
+      campo.compareDocumentPosition(tabela) & Node.DOCUMENT_POSITION_FOLLOWING,
+    ).toBeTruthy();
     const status = await screen.findByText("Mostrando 3 pacientes.");
     expect(status.getAttribute("role")).toBe("status");
   });
 
-  it("avisa quando a lista foi cortada no limite, e pede para buscar pelo nome (RF22, RNF21)", async () => {
-    simularApi({ cortada: true });
+  it("pagina a lista de 50 em 50, com o total e os botões de página (RF22, RNF21)", async () => {
+    const chamadas = simularApi({ total: 250 });
     abrirTela();
     expect(
-      await screen.findByText(
-        "Mostrando os 200 primeiros. Busque pelo nome para encontrar os demais.",
-      ),
+      await screen.findByText("Mostrando 1 a 3 de 250 pacientes."),
+    ).toBeTruthy();
+    const paginas = screen.getByRole("navigation", {
+      name: "Páginas da lista de pacientes",
+    });
+    expect(paginas.textContent).toContain("Página 1 de 5");
+    expect(
+      screen.getByRole("button", { name: "Anterior" }).hasAttribute("disabled"),
+    ).toBe(true);
+    fireEvent.click(screen.getByRole("button", { name: "Próxima" }));
+    await vi.waitFor(() =>
+      expect(chamadas.some((u) => u.includes("pagina=2"))).toBe(true),
+    );
+    expect(await screen.findByText("Página 2 de 5")).toBeTruthy();
+  });
+
+  it("filtra pela situação de distribuição e volta à primeira página (RF22)", async () => {
+    const chamadas = simularApi({ total: 250 });
+    abrirTela();
+    await screen.findByText("Mostrando 1 a 3 de 250 pacientes.");
+    fireEvent.click(screen.getByRole("button", { name: "Próxima" }));
+    fireEvent.change(screen.getByLabelText("Situação de distribuição"), {
+      target: { value: "pendente" },
+    });
+    await vi.waitFor(() =>
+      expect(
+        chamadas.some((u) => u.endsWith("/pacientes?situacao=pendente")),
+      ).toBe(true),
+    );
+    fireEvent.click(screen.getByRole("button", { name: "Limpar filtros" }));
+    expect(
+      (screen.getByLabelText("Situação de distribuição") as HTMLSelectElement)
+        .value,
+    ).toBe("");
+  });
+
+  it("a secretaria consulta a situação da inscrição pelo número junto da busca (RF8, RF22)", async () => {
+    simularApi();
+    abrirTela();
+    const consulta = await screen.findByRole("region", {
+      name: "Consultar situação da inscrição",
+    });
+    const tabela = await screen.findByRole("table", {
+      name: "Pacientes e responsáveis",
+    });
+    expect(
+      consulta.compareDocumentPosition(tabela) &
+        Node.DOCUMENT_POSITION_FOLLOWING,
     ).toBeTruthy();
   });
 
@@ -158,8 +224,9 @@ describe("Lista de Pacientes com os responsáveis (RF22)", () => {
 
     simularApi({ perfil: "coordenacao" });
     abrirTela();
-    expect(await screen.findByText("Nº da inscrição")).toBeTruthy();
-    expect(screen.getAllByText("2026-00398").length).toBeGreaterThan(0);
+    expect(await screen.findAllByText("2026-00398")).not.toHaveLength(0);
+    // A coordenação também filtra pelo número.
+    expect(screen.getByLabelText("Nº da inscrição")).toBeTruthy();
   });
 
   it("não mostra dado clínico: nem prioridade, nem queixa (RF22, RNF17)", async () => {
@@ -183,7 +250,7 @@ describe("Lista de Pacientes com os responsáveis (RF22)", () => {
     const chamadas = simularApi();
     abrirTela();
     await screen.findByRole("table", { name: "Pacientes e responsáveis" });
-    const campo = screen.getByLabelText("Buscar paciente");
+    const campo = screen.getByLabelText("Paciente");
     for (const valor of ["m", "ma", "mar"]) {
       fireEvent.change(campo, { target: { value: valor } });
     }
@@ -200,7 +267,7 @@ describe("Lista de Pacientes com os responsáveis (RF22)", () => {
     simularApi({ pacientes: [] });
     abrirTela();
     expect(await screen.findByText("Ainda não há pacientes.")).toBeTruthy();
-    fireEvent.change(screen.getByLabelText("Buscar paciente"), {
+    fireEvent.change(screen.getByLabelText("Paciente"), {
       target: { value: "zzz" },
     });
     const titulo = await screen.findByRole("heading", {
