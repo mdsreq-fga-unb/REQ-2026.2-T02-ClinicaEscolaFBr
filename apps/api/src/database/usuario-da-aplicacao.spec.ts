@@ -22,6 +22,8 @@ const SO_INSERCAO_CONHECIDAS = [
   'validacoes_evolucao',
   'alteracoes_parametro',
   'pagamentos_contribuicao',
+  'reclassificacoes_falta',
+  'decisoes_reprovacao',
 ];
 
 describe('Usuário da aplicação no banco (RF55 e RF66)', () => {

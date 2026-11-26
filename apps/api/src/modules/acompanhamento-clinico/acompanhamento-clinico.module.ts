@@ -5,14 +5,21 @@ import { AcessosProntuarioService } from './acessos-prontuario.service';
 import { AssiduidadeModule } from '../assiduidade/assiduidade.module';
 import { ComplementosEvolucaoService } from './complementos-evolucao.service';
 import { CorrecoesEvolucaoService } from './correcoes-evolucao.service';
+import { ElaboracaoRelatorioService } from './elaboracao-relatorio.service';
 import { PoliticaProntuario } from './politica-prontuario';
 import { ProntuariosController } from './prontuarios.controller';
 import { ProntuariosService } from './prontuarios.service';
 import { ValidacoesEvolucaoService } from './validacoes-evolucao.service';
+import { RelatoriosFinaisController } from './relatorios-finais.controller';
+import { RelatoriosFinaisService } from './relatorios-finais.service';
 
 @Module({
   imports: [AssiduidadeModule],
-  controllers: [ProntuariosController, AcessosProntuarioController],
+  controllers: [
+    ProntuariosController,
+    AcessosProntuarioController,
+    RelatoriosFinaisController,
+  ],
   providers: [
     HistoricoEvolucoesService,
     PoliticaProntuario,
@@ -21,6 +28,8 @@ import { ValidacoesEvolucaoService } from './validacoes-evolucao.service';
     CorrecoesEvolucaoService,
     ComplementosEvolucaoService,
     ValidacoesEvolucaoService,
+    RelatoriosFinaisService,
+    ElaboracaoRelatorioService,
   ],
   exports: [PoliticaProntuario],
 })

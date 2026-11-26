@@ -22,3 +22,4 @@ export * from "./faltas-estagiario";
 export * from "./contribuicao";
 export * from "./declaracoes";
 export * from "./historico-evolucoes";
+export * from "./relatorio-final";
