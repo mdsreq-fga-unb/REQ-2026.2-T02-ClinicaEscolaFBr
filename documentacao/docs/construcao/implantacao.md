@@ -27,6 +27,8 @@ O workflow `.github/workflows/implantacao.yml` roda a cada push na `main` ou na 
     - **api** e **web:** atrás do proxy do Coolify, com HTTPS. A API escuta na porta 3333 e a web na 3000, e o domínio de cada uma no Coolify leva essa porta (`https://api.clinica.fbr.edu.br:3333`), que o proxy usa e que não aparece no endereço.
 3. Espera a API publicada responder no `/health` com o commit da execução.
 
+**O compose no Coolify é uma cópia.** Cada ambiente é um *Service* do Coolify, com o compose colado no painel (Edit Compose File), e não lido do repositório. Ele difere do arquivo do repositório em dois pontos: as imagens ficam escritas por extenso (`clinica-api:development` na validação e `clinica-api:main` na produção), e o `migrador` leva `exclude_from_hc: true`. **Toda mudança no `implantacao/docker-compose.yml` precisa ser repetida no compose dos dois ambientes no Coolify**, e só vale depois de salvar e reiniciar o serviço. Em 26/11/2026, os dois foram atualizados com a prioridade de CPU, o limite de memória da API e as variáveis `LIMITE_*`, que não estavam lá; a cópia da produção não mudava desde 29/10.
+
 O Coolify recria todos os contêineres do ambiente a cada deploy (`docker compose up --force-recreate`), então o sistema fica fora do ar por alguns segundos. Se o migrador falhar, a API nova não sobe e a anterior já foi parada: o ambiente fica fora do ar, e o workflow falha. Para voltar, corrija o erro ou reverta a PR na branch do ambiente, e o merge implanta de novo.
 
 O resumo da execução, na aba Actions, mostra o commit que entrou no ar.
