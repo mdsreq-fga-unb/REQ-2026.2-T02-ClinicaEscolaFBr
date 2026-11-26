@@ -711,7 +711,7 @@ rfs:
   lider: Nicolas
   depende: [RF63]
   issue: 278
-  estado: Planejada
+  estado: Código concluído
   origem: [DF12, DF54]
 
 - id: RF41

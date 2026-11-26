@@ -169,6 +169,41 @@ export type SinalizacaoReprovacao = {
   sessoes: string[];
   // Os supervisores com o estagiário hoje (CP4), que recebem a sinalização.
   supervisores: string[];
+  // As decisões da coordenação (RF64), da mais antiga para a mais recente. Uma
+  // decisão nova não apaga a anterior.
+  decisoes: DecisaoDaSinalizacao[];
 };
 
 export type Sinalizacoes = { sinalizacoes: SinalizacaoReprovacao[] };
+
+// Decisão institucional sobre a sinalização de reprovação (RF64), só da
+// coordenação. Ela encerra a sinalização aberta e não muda a contagem do RF40.
+export const DECISOES_REPROVACAO = ["confirmada", "nao_aplicada"] as const;
+export type DecisaoReprovacao = (typeof DECISOES_REPROVACAO)[number];
+export const NOMES_DECISAO_REPROVACAO: Record<DecisaoReprovacao, string> = {
+  confirmada: "Reprovação confirmada",
+  nao_aplicada: "Reprovação não aplicada",
+};
+
+export const registroDecisaoSchema = z.object({
+  decisao: z.enum(DECISOES_REPROVACAO, "Escolha a decisão."),
+  justificativa: z
+    .string("Informe a justificativa da decisão.")
+    .trim()
+    .min(1, "Informe a justificativa da decisão.")
+    .max(1000, "Use até 1.000 caracteres."),
+});
+export type RegistroDecisao = z.infer<typeof registroDecisaoSchema>;
+
+export type DecisaoDaSinalizacao = {
+  id: string;
+  decisao: DecisaoReprovacao;
+  // A contagem do semestre quando a decisão foi registrada. Uma nova decisão só é
+  // aceita depois de a contagem mudar (RF64).
+  faltas: number;
+  // Só a coordenação lê a justificativa, que pode trazer dado pessoal do
+  // estagiário; o supervisor vê a decisão, o autor e a data (apontamento 2).
+  justificativa: string | null;
+  por: string;
+  em: string;
+};
