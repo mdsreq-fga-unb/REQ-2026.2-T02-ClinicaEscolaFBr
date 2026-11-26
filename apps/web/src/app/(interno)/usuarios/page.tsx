@@ -1,13 +1,12 @@
 "use client";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
-import { useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import {
   cadastroUsuarioSchema,
   PERFIS,
   SITUACOES_USUARIO,
   type CadastroUsuario,
-  type Perfil,
   type ResultadoCadastroUsuario,
   type SituacaoUsuario,
   type UsuarioListado,
@@ -63,9 +62,12 @@ const FORMULARIO_CADASTRO = "cadastro-usuario";
 function FormularioCadastro({
   aoConcluir,
   aoEnviar,
+  aoValidar,
 }: {
   aoConcluir: (email: string, conviteEnviado: boolean) => void;
   aoEnviar: (enviando: boolean) => void;
+  // Avisa se o cadastro está completo: o botão do rodapé só libera assim.
+  aoValidar: (valido: boolean) => void;
 }) {
   // Os campos de texto começam vazios, e não indefinidos: senão, o nome em branco
   // recebe a mensagem padrão do Zod, em inglês, no lugar de "Informe o nome".
@@ -76,6 +78,28 @@ function FormularioCadastro({
   const [erros, setErros] = useState<
     Partial<Record<keyof CadastroUsuario, string>>
   >({});
+  // Campos já alterados: só eles mostram o erro enquanto a pessoa digita.
+  const [tocados, setTocados] = useState<Set<string>>(new Set());
+  const aoVivo = useMemo(() => {
+    const r = cadastroUsuarioSchema.safeParse(dados);
+    const mensagens: Partial<Record<keyof CadastroUsuario, string>> = {};
+    if (!r.success)
+      for (const problema of r.error.issues) {
+        const campo = problema.path[0] as keyof CadastroUsuario;
+        mensagens[campo] ??=
+          campo === "perfil" ? "Escolha um perfil." : problema.message;
+      }
+    return mensagens;
+  }, [dados]);
+  const valido = Object.keys(aoVivo).length === 0;
+  useEffect(() => aoValidar(valido), [valido, aoValidar]);
+  const erroDe = (campo: keyof CadastroUsuario) =>
+    erros[campo] ?? (tocados.has(campo) ? aoVivo[campo] : undefined);
+  const mudar = (campo: keyof CadastroUsuario, valor: string) => {
+    setDados((antes) => ({ ...antes, [campo]: valor }));
+    setTocados((antes) => new Set(antes).add(campo));
+    setErros((antes) => ({ ...antes, [campo]: undefined }));
+  };
   const cliente = useQueryClient();
   const cadastro = useMutation({
     mutationFn: (valores: CadastroUsuario) =>
@@ -123,18 +147,18 @@ function FormularioCadastro({
       onSubmit={enviar}
       className="flex flex-col gap-[18px]"
     >
-      <Campo rotulo="Nome completo" erro={erros.nome}>
+      <Campo rotulo="Nome completo" erro={erroDe("nome")}>
         {(props) => (
           <input
             {...props}
             className={classeEntrada}
             autoComplete="off"
             value={dados.nome ?? ""}
-            onChange={(e) => setDados({ ...dados, nome: e.target.value })}
+            onChange={(e) => mudar("nome", e.target.value)}
           />
         )}
       </Campo>
-      <Campo rotulo="E-mail" erro={erros.email}>
+      <Campo rotulo="E-mail" erro={erroDe("email")}>
         {(props) => (
           <input
             {...props}
@@ -142,7 +166,7 @@ function FormularioCadastro({
             className={classeEntrada}
             autoComplete="off"
             value={dados.email ?? ""}
-            onChange={(e) => setDados({ ...dados, email: e.target.value })}
+            onChange={(e) => mudar("email", e.target.value.trim())}
           />
         )}
       </Campo>
@@ -167,9 +191,7 @@ function FormularioCadastro({
                 className="size-[18px] accent-primary"
                 value={perfil}
                 checked={dados.perfil === perfil}
-                onChange={() =>
-                  setDados({ ...dados, perfil: perfil as Perfil })
-                }
+                onChange={() => mudar("perfil", perfil)}
               />
               {NOMES_PERFIL[perfil]}
             </label>
@@ -212,6 +234,7 @@ export default function UsuariosPage() {
   });
   const [cadastroAberto, setCadastroAberto] = useState(false);
   const [cadastrando, setCadastrando] = useState(false);
+  const [cadastroValido, setCadastroValido] = useState(false);
   const [paraDesativar, setParaDesativar] = useState<UsuarioListado | null>(
     null,
   );
@@ -469,7 +492,7 @@ export default function UsuariosPage() {
               type="submit"
               form={FORMULARIO_CADASTRO}
               data-principal
-              disabled={cadastrando}
+              disabled={cadastrando || !cadastroValido}
             >
               Salvar e enviar convite
             </Button>
@@ -479,6 +502,7 @@ export default function UsuariosPage() {
         {cadastroAberto && (
           <FormularioCadastro
             aoEnviar={setCadastrando}
+            aoValidar={setCadastroValido}
             aoConcluir={(email, conviteEnviado) => {
               setCadastroAberto(false);
               setMensagem(

@@ -99,6 +99,13 @@ export function FormularioCorrecaoEvolucao({
     }
   }
 
+  // A correção precisa mudar o conteúdo da ficha; sem mudança, o botão fica
+  // desativado (o motivo sozinho não é correção).
+  const semMudanca = campos.every(
+    ([campo]) =>
+      dados[campo].trim() ===
+      ((evolucao as Record<string, string | null>)[campo] ?? "").trim(),
+  );
   const primeiroErro = Object.keys(erros)[0];
   const rotuloDoErro =
     primeiroErro === "motivo"
@@ -150,10 +157,19 @@ export function FormularioCorrecaoEvolucao({
         <Button type="button" variant="outline" onClick={aoCancelar}>
           Cancelar
         </Button>
-        <Button type="submit" disabled={salvando}>
+        <Button
+          type="submit"
+          disabled={salvando || semMudanca}
+          aria-describedby={semMudanca ? "correcao-sem-mudanca" : undefined}
+        >
           {salvando ? "Salvando…" : "Salvar correção"}
         </Button>
       </div>
+      {semMudanca && (
+        <p id="correcao-sem-mudanca" className="ui-dica text-right">
+          Altere algum campo da evolução para salvar a correção.
+        </p>
+      )}
     </form>
   );
 }
@@ -317,7 +333,11 @@ export function CartaoDataLimiteCorrecao() {
           </p>
         )}
         <div>
-          <Button type="submit" disabled={salvando}>
+          {/* Sem mudança na data, não há o que salvar. */}
+          <Button
+            type="submit"
+            disabled={salvando || campo === (atual.dataLimite ?? "")}
+          >
             {salvando ? "Salvando…" : "Salvar data-limite"}
           </Button>
         </div>

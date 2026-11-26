@@ -6,6 +6,7 @@ import { Check } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
 import { Aviso } from "@/components/comum/aviso";
+import { Paginacao, usePaginacao } from "@/components/comum/paginacao";
 import { Prioridade } from "@/components/casos/prioridade";
 import {
   AcessoRestrito,
@@ -62,6 +63,8 @@ export default function TriagemPage() {
       api<InscricaoClassificada[]>("/triagem/inscricoes/classificadas"),
     enabled: autorizado,
   });
+  // 100 por página: com o semestre andando, a lista passa de centenas.
+  const registradas = usePaginacao(classificadas.data);
 
   if (negado) return <AcessoRestrito />;
 
@@ -207,7 +210,7 @@ export default function TriagemPage() {
                 </tr>
               </thead>
               <tbody>
-                {classificadas.data.map((item) => (
+                {registradas.visiveis.map((item) => (
                   <tr key={item.id}>
                     <td className="ui-numero">{item.numero}</td>
                     <td>
@@ -222,7 +225,7 @@ export default function TriagemPage() {
               </tbody>
             </table>
             <ul className="ui-lista-celular p-4 md:hidden">
-              {classificadas.data.map((item) => (
+              {registradas.visiveis.map((item) => (
                 <li key={item.id} className="ui-item-celular">
                   <div className="flex items-center justify-between gap-2">
                     <span className="ui-numero">{item.numero}</span>
@@ -237,6 +240,12 @@ export default function TriagemPage() {
             </ul>
           </div>
         )}
+        <Paginacao
+          rotulo="Páginas das prioridades registradas"
+          pagina={registradas.pagina}
+          paginas={registradas.paginas}
+          irPara={registradas.irPara}
+        />
       </section>
     </div>
   );

@@ -85,7 +85,12 @@ export function VagasOfertadasDialogo({
             type="submit"
             form={formulario}
             data-principal
-            disabled={salvar.isPending}
+            // Sem mudança no total, não há o que salvar.
+            disabled={
+              salvar.isPending ||
+              (atual.data?.total != null &&
+                total.trim() === String(atual.data.total))
+            }
           >
             {salvar.isPending ? "Salvando…" : "Salvar"}
           </Button>

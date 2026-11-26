@@ -2,7 +2,8 @@
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { MessageCircle, UserRound } from "lucide-react";
 import Link from "next/link";
-import { useDeferredValue, useState } from "react";
+import { useSearchParams } from "next/navigation";
+import { Suspense, useDeferredValue, useState } from "react";
 import {
   PARAMETROS_PADRAO,
   type BlocoAgenda,
@@ -372,9 +373,26 @@ const emDezMinutos = (horario: string) =>
   Number(horario.slice(3, 5)) % 10 === 0;
 
 // Agendamento de sessão pela secretaria ou pelo estagiário responsável (RF10).
-export default function AgendarSessaoPage() {
+function AgendarSessao() {
   const { data: sessao } = useSessao();
   const [paciente, setPaciente] = useState<PacienteAgendavel | null>(null);
+  // Vindo da ficha do paciente (?caso=), o paciente já chega escolhido. O caso
+  // passa pela mesma busca da API, que só devolve quem a pessoa pode agendar.
+  const casoDaFicha = useSearchParams()?.get("caso") ?? null;
+  const [usouCasoDaFicha, setUsouCasoDaFicha] = useState(false);
+  const daFicha = useQuery({
+    queryKey: ["sessoes", "pacientes", "caso", casoDaFicha],
+    queryFn: () =>
+      api<PacienteAgendavel[]>(
+        `/sessoes/pacientes?casoId=${encodeURIComponent(casoDaFicha!)}`,
+      ),
+    enabled: !!casoDaFicha && /^[0-9a-f-]{36}$/i.test(casoDaFicha),
+  });
+  // Só na primeira resposta: depois, "Trocar paciente" funciona normalmente.
+  if (!usouCasoDaFicha && daFicha.data) {
+    setUsouCasoDaFicha(true);
+    if (daFicha.data[0]) setPaciente(daFicha.data[0]);
+  }
   const [data, setData] = useState("");
   const [inicio, setInicio] = useState("");
   const [termino, setTermino] = useState("");
@@ -664,5 +682,14 @@ export default function AgendarSessaoPage() {
         )}
       </div>
     </div>
+  );
+}
+
+// A página lê o ?caso= da ficha do paciente; useSearchParams pede o Suspense.
+export default function AgendarSessaoPage() {
+  return (
+    <Suspense fallback={<p role="status">Carregando…</p>}>
+      <AgendarSessao />
+    </Suspense>
   );
 }

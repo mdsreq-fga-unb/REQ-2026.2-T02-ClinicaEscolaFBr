@@ -11,7 +11,7 @@ import {
   vinculosEstagiario,
   type Db,
 } from '@clinica/database';
-import { LIMITE_LISTA_PACIENTES, type SituacaoCaso } from '@clinica/shared';
+import { TAMANHO_PAGINA_PACIENTES, type SituacaoCaso } from '@clinica/shared';
 import { AuditoriaModule } from '../../auditoria/auditoria.module';
 import type { UsuarioAutenticado } from '../../auth/usuario-autenticado';
 import { cifrar } from '../../common/criptografia';
@@ -316,7 +316,7 @@ describe('Consulta de responsáveis pelo caso (RF22)', () => {
       await criarCaso('Paulo Nunes', {});
       const r = await lista('secretaria');
       expect(r.status).toBe(200);
-      expect(r.body.cortada).toBe(false);
+      expect(r.body).toMatchObject({ total: 3, pagina: 1, tamanhoPagina: 100 });
       const pacientes = r.body.pacientes;
       expect(pacientes).toHaveLength(3);
       expect(pacientes.map((p: { nome: string }) => p.nome)).toEqual([
@@ -390,36 +390,89 @@ describe('Consulta de responsáveis pelo caso (RF22)', () => {
     it('sem pacientes, a lista vem vazia (RF22, RNF17)', async () => {
       const r = await lista('secretaria');
       expect(r.status).toBe(200);
-      expect(r.body).toEqual({ pacientes: [], cortada: false });
+      expect(r.body).toEqual({
+        pacientes: [],
+        total: 0,
+        pagina: 1,
+        tamanhoPagina: TAMANHO_PAGINA_PACIENTES,
+      });
     });
 
-    it(`com mais de ${LIMITE_LISTA_PACIENTES} pacientes, a lista traz só os primeiros e avisa que foi cortada (RF22, RNF21)`, async () => {
-      for (let i = 0; i <= LIMITE_LISTA_PACIENTES; i += 1) {
+    it(`com mais de ${TAMANHO_PAGINA_PACIENTES} pacientes, a lista vem em páginas, com o total (RF22, RNF21)`, async () => {
+      for (let i = 0; i <= TAMANHO_PAGINA_PACIENTES; i += 1) {
         await criarCaso(`Paciente ${String(i).padStart(3, '0')}`, {});
       }
       const inicio = performance.now();
       const r = await lista('secretaria');
       const duracao = performance.now() - inicio;
       expect(r.status).toBe(200);
-      expect(r.body.cortada).toBe(true);
-      expect(r.body.pacientes).toHaveLength(LIMITE_LISTA_PACIENTES);
-      // A busca pelo nome encontra quem ficou de fora.
-      const fora = await lista(
-        'secretaria',
-        `Paciente ${LIMITE_LISTA_PACIENTES}`,
-      );
-      expect(fora.body).toEqual({
+      expect(r.body.total).toBe(TAMANHO_PAGINA_PACIENTES + 1);
+      expect(r.body.pacientes).toHaveLength(TAMANHO_PAGINA_PACIENTES);
+      // A segunda página traz quem ficou de fora da primeira.
+      const segunda = await http()
+        .get('/pacientes?pagina=2')
+        .set(como('secretaria'));
+      expect(segunda.body).toEqual({
         pacientes: [
           expect.objectContaining({
-            nome: `Paciente ${LIMITE_LISTA_PACIENTES}`,
+            nome: `Paciente ${TAMANHO_PAGINA_PACIENTES}`,
           }),
         ],
-        cortada: false,
+        total: TAMANHO_PAGINA_PACIENTES + 1,
+        pagina: 2,
+        tamanhoPagina: TAMANHO_PAGINA_PACIENTES,
+      });
+      // Página além da última: vazia, com o total.
+      const alem = await http()
+        .get('/pacientes?pagina=9')
+        .set(como('secretaria'));
+      expect(alem.body).toMatchObject({
+        pacientes: [],
+        total: TAMANHO_PAGINA_PACIENTES + 1,
       });
       // RNF21: a lista cheia responde dentro dos 3 s (aqui, uma requisição só; a
       // carga de 30 usuários fica no teste de carga).
       expect(duracao).toBeLessThan(3000);
     }, 60_000);
+
+    it('filtra por situação de distribuição, estagiário e supervisor; o número só para a coordenação (RF22, RNF17)', async () => {
+      await criarCaso('Mariana Alves Toledo', {
+        supervisor: 'carla',
+        estagiario: 'ana',
+        situacao: 'em_atendimento',
+      });
+      await criarCaso('Rafael Gomes', {
+        supervisor: 'carla',
+        situacao: 'aguardando_vinculo',
+      });
+      await criarCaso('Paulo Nunes', {});
+      const nomes = async (consulta: string, quem = 'secretaria') =>
+        (
+          await http().get(`/pacientes?${consulta}`).set(como(quem))
+        ).body.pacientes.map((p: { nome: string }) => p.nome);
+      expect(await nomes('situacao=distribuido')).toEqual([
+        'Mariana Alves Toledo',
+      ]);
+      expect(await nomes('situacao=aguardando_estagiario')).toEqual([
+        'Rafael Gomes',
+      ]);
+      expect(await nomes('situacao=pendente')).toEqual(['Paulo Nunes']);
+      expect(await nomes('situacao=encerrado')).toEqual([]);
+      expect(await nomes('estagiario=ana%20bea')).toEqual([
+        'Mariana Alves Toledo',
+      ]);
+      expect(await nomes('supervisor=carla')).toEqual([
+        'Mariana Alves Toledo',
+        'Rafael Gomes',
+      ]);
+      // O número da inscrição não filtra para a secretaria, que não o vê.
+      expect(await nomes('numero=zzz')).toHaveLength(3);
+      expect(await nomes('numero=zzz', 'coordenacao')).toEqual([]);
+      expect(
+        (await http().get('/pacientes?situacao=outra').set(como('secretaria')))
+          .status,
+      ).toBe(400);
+    });
 
     it('estagiário e supervisor não acessam a lista de Pacientes (RF22, RNF16, RNF17)', async () => {
       await criarCaso('Mariana Alves Toledo', {

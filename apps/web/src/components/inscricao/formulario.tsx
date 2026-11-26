@@ -1,13 +1,22 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useRef, useState, type FormEvent } from "react";
+import { useEffect, useMemo, useRef, useState, type FormEvent } from "react";
 import {
   comprovanteSchema,
   dadosInscricaoSchema,
+  ESCOLARIDADES,
   ESTADOS_CIVIS,
+  hojeEmBrasilia,
   inscricaoSchema,
+  mascaraCep,
+  mascaraCpf,
+  mascaraRg,
+  mascaraTelefone,
   menorDeIdade,
+  rgParaEnvio,
+  SEXOS,
+  soDigitos,
   triagemInscricaoSchema,
   type ComprovanteInscricao,
   type TermoVigente,
@@ -68,12 +77,12 @@ const responsavel: string[] = [
 ];
 const tamanhos: Partial<Record<Campo, number>> = {
   endereco: 500,
-  cpf: 11,
-  cpfResponsavel: 11,
+  cpf: 14,
+  cpfResponsavel: 14,
   rg: 30,
-  celular: 22,
-  whatsapp: 22,
-  contatoEmergenciaTelefone: 22,
+  celular: 15,
+  whatsapp: 15,
+  contatoEmergenciaTelefone: 15,
   email: 254,
   cep: 9,
   sexo: 50,
@@ -94,6 +103,42 @@ const preenchimento: Partial<Record<Campo, string>> = {
   bairro: "address-level3",
   cidadeUf: "address-level2",
 };
+// Máscaras aplicadas enquanto a pessoa digita. O que vai para a API é o valor sem
+// pontuação (normalizar), como a clínica guarda.
+const mascaras: Partial<Record<Campo, (valor: string) => string>> = {
+  cpf: mascaraCpf,
+  cpfResponsavel: mascaraCpf,
+  rg: mascaraRg,
+  cep: mascaraCep,
+  celular: mascaraTelefone,
+  whatsapp: mascaraTelefone,
+  contatoEmergenciaTelefone: mascaraTelefone,
+};
+const numericos: Campo[] = ["cpf", "cpfResponsavel", "cep"];
+const listas: Partial<Record<Campo, readonly string[]>> = {
+  estadoCivil: ESTADOS_CIVIS,
+  sexo: SEXOS,
+  escolaridade: ESCOLARIDADES,
+};
+function normalizar(valores: Valores): Valores {
+  return {
+    ...valores,
+    cpf: soDigitos(valores.cpf),
+    cpfResponsavel: soDigitos(valores.cpfResponsavel),
+    rg: rgParaEnvio(valores.rg),
+    cep: soDigitos(valores.cep),
+    celular: soDigitos(valores.celular),
+    whatsapp: soDigitos(valores.whatsapp),
+    contatoEmergenciaTelefone: soDigitos(valores.contatoEmergenciaTelefone),
+  };
+}
+// O que falta para avançar, com o nome de cada campo, abaixo do botão.
+const NOMES_CONFIRMACAO: Record<string, string> = {
+  confirmado: "a confirmação de que revisou os dados",
+  aceiteTermo: "a concordância com o termo",
+  versaoTermo: "o carregamento do termo",
+};
+
 const etapas = ["Dados e contatos", "Triagem", "Revisão e envio"];
 // Título e orientação do cartão de cada etapa, como no protótipo.
 const cartoes = [
@@ -127,6 +172,7 @@ function CampoFormulario({
   dica?: string;
   longo?: boolean;
 }) {
+  const lista = listas[campo];
   const props = {
     id: campo,
     name: campo,
@@ -141,7 +187,13 @@ function CampoFormulario({
       event: React.ChangeEvent<
         HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
       >,
-    ) => alterar(campo, event.target.value),
+    ) => {
+      const mascara = mascaras[campo];
+      alterar(
+        campo,
+        mascara ? mascara(event.target.value) : event.target.value,
+      );
+    },
   };
   const dicaEErro = erro && (
     <p className={styles.erroCampo} id={`${campo}-erro`}>
@@ -161,11 +213,13 @@ function CampoFormulario({
           {dica}
         </p>
       )}
-      {campo === "estadoCivil" ? (
+      {lista ? (
         <select {...props}>
-          <option value="">Selecione</option>
-          {ESTADOS_CIVIS.map((estado) => (
-            <option key={estado}>{estado}</option>
+          <option value="">
+            {props.required ? "Selecione" : "Não informar"}
+          </option>
+          {lista.map((opcao) => (
+            <option key={opcao}>{opcao}</option>
           ))}
         </select>
       ) : ["queixa", "percepcaoUrgencia", "historicoRelevante"].includes(
@@ -180,11 +234,8 @@ function CampoFormulario({
         <input
           {...props}
           type={tipo}
-          inputMode={
-            ["cpf", "cpfResponsavel", "cep"].includes(campo)
-              ? "numeric"
-              : undefined
-          }
+          inputMode={numericos.includes(campo) ? "numeric" : undefined}
+          max={campo === "dataNascimento" ? hojeEmBrasilia() : undefined}
           autoComplete={preenchimento[campo] ?? "off"}
           maxLength={tamanhos[campo] ?? 200}
         />
@@ -199,7 +250,10 @@ function CampoFormulario({
 export function FormularioInscricao({ aberta = true }: { aberta?: boolean }) {
   const [etapa, setEtapa] = useState(0);
   const [valores, setValores] = useState<Valores>(vazio);
+  // Erros devolvidos pela API (400); os da tela são calculados a cada mudança.
   const [erros, setErros] = useState<Record<string, string>>({});
+  // Campos que a pessoa já alterou: só eles mostram o erro enquanto ela digita.
+  const [tocados, setTocados] = useState<Set<string>>(new Set());
   const [confirmado, setConfirmado] = useState(false);
   const [aceiteTermo, setAceiteTermo] = useState(false);
   const [termo, setTermo] = useState<TermoVigente | null>(null);
@@ -243,6 +297,48 @@ export function FormularioInscricao({ aberta = true }: { aberta?: boolean }) {
   const focoPendente = useRef<string | null>(null);
   const menor =
     !!valores.dataNascimento && menorDeIdade(valores.dataNascimento);
+  // Os campos do responsável somem da tela quando a data deixa de ser de menor; o
+  // que foi digitado neles não é validado nem enviado.
+  const dadosParaEnvio = useMemo(() => {
+    const normalizados = normalizar(valores);
+    return menor
+      ? normalizados
+      : {
+          ...normalizados,
+          responsavelLegal: "",
+          cpfResponsavel: "",
+          documentoResponsavel: "",
+        };
+  }, [valores, menor]);
+  // Validação em tempo real da etapa atual, com o mesmo contrato da API.
+  const errosDaEtapa = useMemo(() => {
+    const schema =
+      etapa === 0
+        ? dadosInscricaoSchema
+        : etapa === 1
+          ? triagemInscricaoSchema
+          : inscricaoSchema;
+    const validacao = schema.safeParse({
+      ...dadosParaEnvio,
+      confirmado,
+      aceiteTermo,
+      versaoTermo: termo?.versao ?? "",
+      chaveEnvio: crypto.randomUUID(),
+    });
+    const mensagens: Record<string, string> = {};
+    if (!validacao.success)
+      for (const erro of validacao.error.issues)
+        mensagens[String(erro.path[0])] ??=
+          etapa === 2 && erro.path[0] === "cpfResponsavel"
+            ? "Informe o CPF do responsável legal na etapa 1."
+            : erro.message;
+    return mensagens;
+  }, [dadosParaEnvio, etapa, confirmado, aceiteTermo, termo]);
+  const pendencias = Object.keys(errosDaEtapa).map(
+    (nome) => rotulos[nome as Campo] ?? NOMES_CONFIRMACAO[nome] ?? nome,
+  );
+  const erroDoCampo = (nome: string) =>
+    erros[nome] ?? (tocados.has(nome) ? errosDaEtapa[nome] : undefined);
   useEffect(() => {
     const alvo = focoPendente.current;
     focoPendente.current = null;
@@ -255,12 +351,22 @@ export function FormularioInscricao({ aberta = true }: { aberta?: boolean }) {
 
   function alterar(campo: Campo, valor: string) {
     setValores((antes) => ({ ...antes, [campo]: valor }));
+    setTocados((antes) =>
+      antes.has(campo) ? antes : new Set(antes).add(campo),
+    );
+    setErros((antes) => {
+      if (!(campo in antes)) return antes;
+      const resto = { ...antes };
+      delete resto[campo];
+      return resto;
+    });
     setConfirmado(false);
     setAceiteTermo(false);
     setFalha("");
   }
   function mudarEtapa(proxima: number) {
     setErros({});
+    setTocados(new Set());
     setFalha("");
     setEtapa(proxima);
   }
@@ -271,14 +377,7 @@ export function FormularioInscricao({ aberta = true }: { aberta?: boolean }) {
     setFalha("");
     // Os campos do responsável somem da tela quando a data deixa de ser de
     // menor; o que foi digitado neles não é validado nem enviado.
-    const dados = menor
-      ? valores
-      : {
-          ...valores,
-          responsavelLegal: "",
-          cpfResponsavel: "",
-          documentoResponsavel: "",
-        };
+    const dados = dadosParaEnvio;
     const conteudo = JSON.stringify(dados);
     if (!envio.current || envio.current.conteudo !== conteudo)
       envio.current = { chave: crypto.randomUUID(), conteudo };
@@ -289,21 +388,10 @@ export function FormularioInscricao({ aberta = true }: { aberta?: boolean }) {
       versaoTermo: termo?.versao ?? "",
       chaveEnvio: envio.current.chave,
     };
-    const schema =
-      etapa === 0
-        ? dadosInscricaoSchema
-        : etapa === 1
-          ? triagemInscricaoSchema
-          : inscricaoSchema;
-    const validacao = schema.safeParse(payload);
-    if (!validacao.success) {
-      const mensagens: Record<string, string> = {};
-      for (const erro of validacao.error.issues)
-        mensagens[String(erro.path[0])] ??=
-          etapa === 2 && erro.path[0] === "cpfResponsavel"
-            ? "Informe o CPF do responsável legal na etapa 1."
-            : erro.message;
-      setErros(mensagens);
+    // O botão só fica ativo com a etapa válida; a conferência repete a da tela
+    // para um envio pelo teclado (Enter) no meio da digitação.
+    if (Object.keys(errosDaEtapa).length) {
+      setTocados(new Set(Object.keys(errosDaEtapa)));
       return;
     }
     setErros({});
@@ -376,7 +464,7 @@ export function FormularioInscricao({ aberta = true }: { aberta?: boolean }) {
       key={nome}
       campo={nome}
       valor={valores[nome]}
-      erro={erros[nome]}
+      erro={erroDoCampo(nome)}
       alterar={alterar}
       {...opcoes}
     />
@@ -549,11 +637,9 @@ export function FormularioInscricao({ aberta = true }: { aberta?: boolean }) {
                     {campo("estadoCivil")}
                     {campo("sexo")}
                     {campo("profissao")}
-                    {campo("escolaridade", {
-                      dica: "Exemplo: ensino médio completo.",
-                    })}
+                    {campo("escolaridade")}
                     {campo("cpf", {
-                      dica: "Digite os 11 números, sem pontos nem traço.",
+                      dica: "Digite só os números; os pontos e o traço entram sozinhos.",
                     })}
                     {campo("rg", {
                       dica: "Não é necessário enviar foto ou cópia do documento.",
@@ -580,7 +666,7 @@ export function FormularioInscricao({ aberta = true }: { aberta?: boolean }) {
                           dica: "Obrigatório para pessoas menores de 18 anos.",
                         })}
                         {campo("cpfResponsavel", {
-                          dica: "Obrigatório para pessoas menores de 18 anos. Digite os 11 números, sem pontos nem traço.",
+                          dica: "Obrigatório para pessoas menores de 18 anos. Digite só os números.",
                         })}
                         {campo("documentoResponsavel", {
                           dica: "Exemplo: certidão de nascimento ou termo de guarda. Não é necessário enviar cópia.",
@@ -690,10 +776,15 @@ export function FormularioInscricao({ aberta = true }: { aberta?: boolean }) {
                         type="checkbox"
                         checked={confirmado}
                         disabled={enviando}
-                        onChange={(e) => setConfirmado(e.target.checked)}
-                        aria-invalid={!!erros.confirmado}
+                        onChange={(e) => {
+                          setConfirmado(e.target.checked);
+                          setTocados((a) => new Set(a).add("confirmado"));
+                        }}
+                        aria-invalid={!!erroDoCampo("confirmado")}
                         aria-describedby={
-                          erros.confirmado ? "confirmado-erro" : undefined
+                          erroDoCampo("confirmado")
+                            ? "confirmado-erro"
+                            : undefined
                         }
                       />
                       <span>
@@ -701,9 +792,9 @@ export function FormularioInscricao({ aberta = true }: { aberta?: boolean }) {
                         solicitação. *
                       </span>
                     </label>
-                    {erros.confirmado && (
+                    {erroDoCampo("confirmado") && (
                       <p id="confirmado-erro" className={styles.erroCampo}>
-                        {erros.confirmado}
+                        {erroDoCampo("confirmado")}
                       </p>
                     )}
                     {termoAtualizado && (
@@ -807,10 +898,15 @@ export function FormularioInscricao({ aberta = true }: { aberta?: boolean }) {
                           type="checkbox"
                           checked={aceiteTermo}
                           disabled={enviando || !termo}
-                          onChange={(e) => setAceiteTermo(e.target.checked)}
-                          aria-invalid={!!erros.aceiteTermo}
+                          onChange={(e) => {
+                            setAceiteTermo(e.target.checked);
+                            setTocados((a) => new Set(a).add("aceiteTermo"));
+                          }}
+                          aria-invalid={!!erroDoCampo("aceiteTermo")}
                           aria-describedby={
-                            erros.aceiteTermo ? "aceiteTermo-erro" : undefined
+                            erroDoCampo("aceiteTermo")
+                              ? "aceiteTermo-erro"
+                              : undefined
                           }
                         />
                         <span>
@@ -819,9 +915,9 @@ export function FormularioInscricao({ aberta = true }: { aberta?: boolean }) {
                             : "Li este termo e concordo com o tratamento dos meus dados pessoais e de saúde pela Clínica Escola da FBr, para as finalidades descritas."}
                         </span>
                       </label>
-                      {erros.aceiteTermo && (
+                      {erroDoCampo("aceiteTermo") && (
                         <p id="aceiteTermo-erro" className={styles.erroCampo}>
-                          {erros.aceiteTermo}
+                          {erroDoCampo("aceiteTermo")}
                         </p>
                       )}
                       <p className="ui-dica">
@@ -882,7 +978,11 @@ export function FormularioInscricao({ aberta = true }: { aberta?: boolean }) {
                   <button
                     className={styles.primario}
                     type="submit"
-                    disabled={enviando}
+                    disabled={enviando || pendencias.length > 0}
+                    aria-busy={enviando || undefined}
+                    aria-describedby={
+                      pendencias.length ? "pendencias-etapa" : undefined
+                    }
                   >
                     {enviando
                       ? "Enviando…"
@@ -891,6 +991,15 @@ export function FormularioInscricao({ aberta = true }: { aberta?: boolean }) {
                         : "Continuar"}
                   </button>
                 </div>
+                {pendencias.length > 0 && !enviando && (
+                  <p id="pendencias-etapa" className={styles.pendencias}>
+                    {etapa === 2 ? "Para enviar" : "Para continuar"}, falta
+                    preencher ou corrigir:{" "}
+                    {pendencias.length > 6
+                      ? `${pendencias.slice(0, 6).join(", ")} e mais ${pendencias.length - 6}.`
+                      : `${pendencias.join(", ")}.`}
+                  </p>
+                )}
                 <span role="status" aria-live="polite">
                   {enviando ? "Aguarde a confirmação do registro." : ""}
                 </span>

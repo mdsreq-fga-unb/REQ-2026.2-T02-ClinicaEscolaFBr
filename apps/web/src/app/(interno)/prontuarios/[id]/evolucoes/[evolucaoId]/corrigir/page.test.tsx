@@ -126,9 +126,20 @@ describe("corrigir evolução registrada (RF29)", () => {
       ) as never,
     );
     renderizar();
-    fireEvent.click(
-      await screen.findByRole("button", { name: "Salvar correção" }),
-    );
+    const botao = await screen.findByRole("button", {
+      name: "Salvar correção",
+    });
+    // Sem mudar a ficha, não há correção: o botão fica desativado.
+    expect(botao.hasAttribute("disabled")).toBe(true);
+    expect(
+      screen.getByText(
+        "Altere algum campo da evolução para salvar a correção.",
+      ),
+    ).toBeTruthy();
+    fireEvent.change(screen.getByLabelText(/Conteúdo trabalhado/), {
+      target: { value: "Conteúdo corrigido." },
+    });
+    fireEvent.click(botao);
     const aviso = await screen.findByRole("alert");
     expect(aviso.textContent).toContain("A correção não foi salva.");
     const link = screen.getByRole("link", { name: "motivo da correção" });
@@ -244,6 +255,9 @@ describe("corrigir evolução registrada (RF29)", () => {
     renderizar();
     fireEvent.change(await screen.findByLabelText("Motivo da correção"), {
       target: { value: "Ajuste." },
+    });
+    fireEvent.change(screen.getByLabelText(/Conteúdo trabalhado/), {
+      target: { value: "Conteúdo corrigido." },
     });
     fireEvent.click(screen.getByRole("button", { name: "Salvar correção" }));
     expect(

@@ -26,7 +26,7 @@ import {
 import { Dados } from "@/components/comum/dados";
 import { Button } from "@/components/ui/button";
 import { api, ErroApi } from "@/lib/api";
-import { dataBr, dataHoraBr } from "@/lib/formato";
+import { dataBr, dataHoraBr, hojeBr } from "@/lib/formato";
 
 export type ErrosDe<T> = Partial<Record<keyof T, string>>;
 
@@ -311,6 +311,8 @@ export function FormularioContrato({ prontuarioId }: { prontuarioId: string }) {
           <input
             {...props}
             type="date"
+            // O contrato não pode ter data futura.
+            max={hojeBr()}
             value={dados.dataAssinaturaContrato}
             onChange={(e) =>
               setDados({ ...dados, dataAssinaturaContrato: e.target.value })

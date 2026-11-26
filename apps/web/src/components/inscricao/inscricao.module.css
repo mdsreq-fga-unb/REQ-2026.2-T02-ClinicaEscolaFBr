@@ -360,8 +360,17 @@ fieldset.campo {
   color: #00658a;
 }
 .pagina button:disabled {
+  cursor: not-allowed;
+  opacity: 0.55;
+}
+.pagina button[aria-busy="true"] {
   cursor: wait;
-  opacity: 0.65;
+}
+.pendencias {
+  margin: 0;
+  font-size: 14px;
+  color: #52616d;
+  text-align: right;
 }
 .revisao dl {
   display: grid;

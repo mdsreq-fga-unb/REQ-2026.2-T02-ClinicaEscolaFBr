@@ -6,7 +6,7 @@ import {
   preencherDados,
   preencherTriagem,
 } from "../apoio-inscricao";
-import { anexarFala, falou, irAte, ouvirFoco, simularRotas } from "./apoio";
+import { anexarFala, falou, irAte, simularRotas } from "./apoio";
 
 // Parte do RNF56 que pede o leitor de tela: a inscrição pública (RF1) e o
 // comprovante (RF2) com o VoiceOver de verdade. A parte automática da WCAG (axe)
@@ -15,7 +15,7 @@ import { anexarFala, falou, irAte, ouvirFoco, simularRotas } from "./apoio";
 const NUMERO = "2026-00042";
 
 test.describe("Leitor de tela na inscrição e no comprovante (RNF56)", () => {
-  test("com o VoiceOver, a pessoa ouve a etapa, os campos e o resumo dos erros da inscrição (RF1, RNF56)", async ({
+  test("com o VoiceOver, a pessoa ouve a etapa, os campos e o que falta preencher na inscrição (RF1, RNF56)", async ({
     page,
     voiceOver,
   }) => {
@@ -38,18 +38,23 @@ test.describe("Leitor de tela na inscrição e no comprovante (RNF56)", () => {
       expect(falaDoCampo).toMatch(campo);
       expect(falaDoCampo).toContain("Nome completo");
 
-      // Continuar sem preencher: o resumo dos erros recebe o foco e é lido.
-      await irAte(voiceOver, "Continuar");
-      await voiceOver.act();
-      await ouvirFoco(
-        voiceOver,
-        page
-          .getByRole("alert")
-          .filter({ hasText: "Confira os campos antes de continuar" }),
-        "Confira os campos antes de continuar",
+      // Com a etapa incompleta, o botão Continuar fica desativado e descrito
+      // pelas pendências: o VoiceOver lê o botão e o que falta preencher.
+      await irAte(voiceOver, /Continuar/);
+      expect(await voiceOver.lastSpokenPhrase()).toMatch(
+        /dimmed|esmaecido|indisponível|unavailable/i,
       );
-      // Cada erro do resumo é um link para o campo ("link CPF : Preencha...").
-      await irAte(voiceOver, /link CPF\s*:/);
+      await irAte(voiceOver, /falta preencher ou corrigir: Nome completo/);
+
+      // Ao digitar um CPF inválido, o erro aparece ligado ao campo.
+      await page.locator("#cpf").fill("11144477734");
+      await expect(page.locator("#cpf-erro")).toHaveText(
+        "Este CPF não é válido. Confira os números.",
+      );
+      await expect(page.locator("#cpf")).toHaveAttribute(
+        "aria-describedby",
+        /cpf-erro/,
+      );
     } finally {
       await anexarFala(test.info(), voiceOver, "fala-inscricao.json");
     }

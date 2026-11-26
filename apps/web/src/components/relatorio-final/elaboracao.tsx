@@ -355,7 +355,8 @@ export function FormularioRelatorio({ r }: { r: ElaboracaoDoRelatorio }) {
           <Button
             type="button"
             variant="outline"
-            disabled={enviando !== null}
+            // Sem texto novo desde a última gravação, não há o que salvar.
+            disabled={enviando !== null || !alterado}
             onClick={() => void gravar("rascunho")}
           >
             {enviando === "rascunho" ? "Salvando…" : "Salvar rascunho"}

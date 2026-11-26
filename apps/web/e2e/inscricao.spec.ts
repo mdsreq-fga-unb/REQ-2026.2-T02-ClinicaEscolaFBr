@@ -136,17 +136,22 @@ test("menor: erro, responsável, teclado e preservação dos dados", async ({
   await page.setViewportSize({ width: 320, height: 900 });
   await page.goto("/inscricao");
   await preencherDados(page, true);
-  await continuar(page);
-  await expect(page.getByRole("main").getByRole("alert")).toBeFocused();
-  await expect(page.locator("#responsavelLegal")).toHaveAttribute(
-    "aria-invalid",
-    "true",
+  // Sem os dados do responsável, Continuar fica desativado e diz o que falta.
+  await expect(page.getByRole("button", { name: "Continuar" })).toBeDisabled();
+  await expect(page.locator("#pendencias-etapa")).toContainText(
+    "Nome do responsável legal",
   );
   await expect(page.locator("#nomeCompleto")).toHaveValue(
     "Pessoa Fictícia E2E",
   );
-  await page.getByRole("link", { name: /Nome do responsável legal:/ }).click();
-  await expect(page.locator("#responsavelLegal")).toBeFocused();
+  await page.locator("#responsavelLegal").focus();
+  await page.keyboard.type("R");
+  await page.keyboard.press("Backspace");
+  // O erro aparece enquanto a pessoa digita.
+  await expect(page.locator("#responsavelLegal")).toHaveAttribute(
+    "aria-invalid",
+    "true",
+  );
   await page.keyboard.type("Responsável Fictício");
   await page.keyboard.press("Tab");
   const foco = await page.locator(":focus").evaluate((el) => ({
@@ -246,6 +251,8 @@ test("teclado percorre campos, links e botões com foco visível em 320px (RF1, 
     .evaluateAll((els) =>
       els
         .slice(1)
+        // Botão desativado (Continuar com a etapa incompleta) não recebe o Tab.
+        .filter((el) => !(el as HTMLButtonElement).disabled)
         // O Tab entra uma vez em cada grupo de opções, pela primeira opção.
         .filter(
           (el) =>

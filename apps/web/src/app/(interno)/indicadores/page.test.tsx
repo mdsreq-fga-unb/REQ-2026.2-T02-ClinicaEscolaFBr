@@ -191,6 +191,66 @@ describe("Indicadores operacionais (RF48)", () => {
     expect(fetch).not.toHaveBeenCalled();
   });
 
+  it("cada consulta dá um retorno visual: atualizado, mesmo período, sem dados ou erro (RF48)", async () => {
+    const vazio: Indicadores = {
+      ...agosto,
+      inicio: "2026-07-01",
+      fim: "2026-07-31",
+      vagas: { ...agosto.vagas, ocupadas: 0, percentual: 0 },
+      espera: { mediaDias: 0, pacientes: 0 },
+      evasao: { percentual: 0, desligamentos: 0, ativos: 0 },
+      supervisores: [{ id: "s", nome: "Silvia Prado", casos: 0 }],
+    };
+    const fetch = vi
+      .fn()
+      .mockResolvedValueOnce(responder(agosto))
+      .mockResolvedValueOnce(responder(agosto))
+      .mockResolvedValueOnce(responder(vazio))
+      .mockResolvedValueOnce(responder({ message: "falha" }, 500));
+    vi.stubGlobal("fetch", fetch);
+    montar();
+    await screen.findByText("82");
+    // A abertura da página não mostra aviso.
+    expect(screen.queryByText("Indicadores atualizados.")).toBeNull();
+    const consultar = (inicio: string, fim: string) => {
+      fireEvent.change(screen.getByLabelText("Data inicial"), {
+        target: { value: inicio },
+      });
+      fireEvent.change(screen.getByLabelText("Data final"), {
+        target: { value: fim },
+      });
+      fireEvent.click(screen.getByRole("button", { name: "Consultar" }));
+    };
+    consultar("2026-08-01", "2026-08-31");
+    expect(
+      await screen.findByText("Indicadores atualizados."),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByText("Mostrando o período de 01/08/2026 a 31/08/2026."),
+    ).toBeInTheDocument();
+    // O mesmo período não vai à API de novo.
+    consultar("2026-08-01", "2026-08-31");
+    expect(
+      await screen.findByText("Você já está vendo este período."),
+    ).toBeInTheDocument();
+    expect(fetch).toHaveBeenCalledTimes(2);
+    consultar("2026-07-01", "2026-07-31");
+    expect(
+      await screen.findByText("Não há dados neste período."),
+    ).toBeInTheDocument();
+    consultar("2026-06-01", "2026-06-30");
+    expect(
+      await screen.findByText("Não foi possível consultar os indicadores."),
+    ).toBeInTheDocument();
+    expect(
+      screen
+        .getAllByRole("alert")
+        .some((a) =>
+          a.textContent?.includes("Não foi possível consultar os indicadores."),
+        ),
+    ).toBe(true);
+  });
+
   it("registra as vagas ofertadas pelo diálogo, mostrando a última alteração (RF48)", async () => {
     const vagas: VagasOfertadas = {
       semestre: "2026/2",

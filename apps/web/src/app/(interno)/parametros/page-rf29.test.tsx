@@ -1,11 +1,5 @@
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import {
-  cleanup,
-  fireEvent,
-  render,
-  screen,
-  waitFor,
-} from "@testing-library/react";
+import { cleanup, fireEvent, render, screen } from "@testing-library/react";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import ParametrosPage from "./page";
 import { api } from "@/lib/api";
@@ -123,20 +117,18 @@ describe("data-limite para correção de evoluções (RF29)", () => {
     ).toBeTruthy();
   });
 
-  it("sem data, não envia e indica o campo (RF29)", async () => {
+  it("sem data, não envia: o botão fica desativado até escolher uma (RF29)", async () => {
     simularApi(() => DATA_PENDENTE);
     renderizar();
-    fireEvent.click(
-      await screen.findByRole("button", { name: "Salvar data-limite" }),
-    );
-    expect(await screen.findByText("Informe a data-limite.")).toBeTruthy();
-    await waitFor(() =>
-      expect(
-        screen
-          .getByLabelText("Data-limite do semestre 2026/2")
-          .getAttribute("aria-invalid"),
-      ).toBe("true"),
-    );
+    const botao = await screen.findByRole("button", {
+      name: "Salvar data-limite",
+    });
+    expect(botao.hasAttribute("disabled")).toBe(true);
+    fireEvent.click(botao);
+    fireEvent.change(screen.getByLabelText("Data-limite do semestre 2026/2"), {
+      target: { value: "2026-12-10" },
+    });
+    expect(botao.hasAttribute("disabled")).toBe(false);
     // Só a consulta da data-limite: nenhuma gravação foi enviada.
     expect(chamadasDaDataLimite()).toHaveLength(1);
     expect(chamadasDaDataLimite()[0][1]?.method).toBeUndefined();

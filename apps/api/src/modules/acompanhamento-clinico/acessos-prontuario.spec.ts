@@ -296,6 +296,33 @@ describe('Consultar registro de acessos (RF56)', () => {
       expect(body.total).toBe(0);
     }
   });
+  it('filtra pela operação mostrada: visualização, criação, alteração ou acesso negado (RF56)', async () => {
+    const ver = await evento({ operacao: 'consultar_prontuario' });
+    const criar = await evento({ operacao: 'registrar_evolucao' });
+    const alterar = await evento({ operacao: 'corrigir_evolucao' });
+    const negado = await evento({
+      operacao: 'consultar_prontuario',
+      permitido: false,
+    });
+    const ids = async (operacao: string) =>
+      (
+        await http()
+          .get('/acessos-prontuario')
+          .query({ operacao })
+          .set(como())
+          .expect(200)
+      ).body.acessos.map((r: { id: string }) => r.id);
+    expect(await ids('visualizacao')).toEqual([ver.id]);
+    expect(await ids('criacao')).toEqual([criar.id]);
+    expect(await ids('alteracao')).toEqual([alterar.id]);
+    expect(await ids('acesso_negado')).toEqual([negado.id]);
+    await http()
+      .get('/acessos-prontuario')
+      .query({ operacao: 'apagar' })
+      .set(como())
+      .expect(400);
+  });
+
   it('inclui tentativas sem paciente somente sem filtro de paciente, mantendo total e demais filtros', async () => {
     const identificado = await evento({ permitido: false });
     const semPaciente = await evento({ prontuarioId: null, permitido: false });

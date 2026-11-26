@@ -434,6 +434,12 @@ function FormularioPagamento({
     situacao.valorAtualCentavos,
   );
   const [versaoEsperada] = useState(vigente?.versao ?? 1);
+  // Na correção, sem mudar valor, data ou forma não há o que salvar.
+  const semMudanca =
+    !!vigente &&
+    centavosDoCampo(valor) === vigente.valorCentavos &&
+    pagoEm === vigente.pagoEm &&
+    forma === vigente.forma;
   const [erros, setErros] = useState<Erros>({});
   const [erroGeral, setErroGeral] = useState<string | null>(null);
 
@@ -564,8 +570,13 @@ function FormularioPagamento({
               className={classeEntrada}
               value={valor}
               onChange={(e) => {
-                setValor(e.target.value);
+                setValor(e.target.value.replace(/[^\d.,]/g, ""));
                 setErros({ ...erros, valorCentavos: undefined });
+              }}
+              // Ao sair do campo, o valor fica no formato do real: 35 → 35,00.
+              onBlur={() => {
+                const centavos = centavosDoCampo(valor);
+                if (centavos !== null) setValor(centavosParaCampo(centavos));
               }}
             />
           )}
@@ -659,7 +670,11 @@ function FormularioPagamento({
         <Button type="button" variant="outline" onClick={aoCancelar}>
           Cancelar
         </Button>
-        <Button type="submit" disabled={envio.isPending}>
+        <Button
+          type="submit"
+          disabled={envio.isPending || semMudanca}
+          aria-describedby={semMudanca ? `${id}-sem-mudanca` : undefined}
+        >
           {envio.isPending
             ? "Salvando…"
             : correcao
@@ -667,6 +682,11 @@ function FormularioPagamento({
               : "Confirmar pagamento"}
         </Button>
       </Rodape>
+      {semMudanca && (
+        <p id={`${id}-sem-mudanca`} className="ui-dica text-right">
+          Altere o valor, a data ou a forma de pagamento para salvar a correção.
+        </p>
+      )}
     </form>
   );
 }
