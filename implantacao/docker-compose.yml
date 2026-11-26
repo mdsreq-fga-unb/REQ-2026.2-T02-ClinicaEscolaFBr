@@ -45,6 +45,10 @@ services:
     cpu_shares: 2048
     environment:
       NODE_ENV: production
+      # Sem limite, o Node deixa o lixo acumular até perto de 2 GB antes de limpar.
+      # Na VPS compartilhada, isso empurra memória para o swap e trava a API por
+      # vários segundos (RNF47). Em repouso, a API usa uns 135 MB.
+      NODE_OPTIONS: --max-old-space-size=512
       # A validação deve definir validacao explicitamente; o padrão protege a produção.
       AMBIENTE_APLICACAO: ${AMBIENTE_APLICACAO:-producao}
       DATABASE_URL: ${DATABASE_URL_API:?}
