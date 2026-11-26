@@ -65,17 +65,31 @@ describe("Cadastro de usuário pela coordenação (RF53)", () => {
     vi.unstubAllGlobals();
   });
 
-  it("com o formulário vazio, mostra todos os erros em português de uma vez", async () => {
+  it("valida em tempo real, em português, e só libera o cadastro completo", async () => {
     abrir();
     await screen.findByRole("table");
     fireEvent.click(screen.getByRole("button", { name: "Cadastrar usuário" }));
-    fireEvent.click(
-      screen.getByRole("button", { name: "Salvar e enviar convite" }),
-    );
+    const salvar = screen.getByRole("button", {
+      name: "Salvar e enviar convite",
+    });
+    expect(salvar.getAttribute("aria-disabled")).toBe("true");
+    const nome = screen.getByLabelText("Nome completo");
+    fireEvent.change(nome, { target: { value: "x" } });
+    fireEvent.change(nome, { target: { value: "" } });
     expect(await screen.findByText("Informe o nome completo.")).toBeTruthy();
+    fireEvent.change(screen.getByLabelText("E-mail"), {
+      target: { value: "pessoa@" },
+    });
     expect(screen.getByText("Informe um e-mail válido.")).toBeTruthy();
-    expect(screen.getByText("Escolha um perfil.")).toBeTruthy();
     expect(screen.queryByText(/Invalid input/)).toBeNull();
+    fireEvent.change(nome, { target: { value: "Pessoa de Teste" } });
+    fireEvent.change(screen.getByLabelText("E-mail"), {
+      target: { value: "pessoa@exemplo.com" },
+    });
+    fireEvent.click(screen.getByLabelText("Secretaria"));
+    expect(screen.queryByText("Informe o nome completo.")).toBeNull();
+    expect(screen.queryByText("Informe um e-mail válido.")).toBeNull();
+    expect(salvar.hasAttribute("aria-disabled")).toBe(false);
   });
 
   it("não pede CRP no cadastro de supervisor: ele vem no carimbo (DF71)", async () => {

@@ -18,7 +18,9 @@ const DISTRIBUIDO = "Mariana Alves Toledo";
 const PENDENTE = "Roberto Carvalho";
 
 const lista: ListaDePacientes = {
-  cortada: false,
+  total: 2,
+  pagina: 1,
+  tamanhoPagina: 50,
   pacientes: [
     {
       casoId: "5a1b2c3d-4e5f-4a6b-8c7d-9e0f1a2b3c01",
@@ -66,8 +68,10 @@ test.describe("Leitor de tela na lista de Pacientes e na verificação de identi
     await voiceOver.navigateToWebContent();
 
     try {
-      // O campo de busca é anunciado como campo de busca, com o rótulo.
-      await irAte(voiceOver, "Buscar paciente");
+      // O campo de busca pelo nome, no quadro "Buscar e filtrar", é anunciado
+      // como campo de busca (a dica vem logo antes dele).
+      await irAte(voiceOver, "Buscar e filtrar");
+      await irAte(voiceOver, "Busca pelo nome do paciente");
       const campo = /search|edit text|text field|campo/i;
       for (let i = 0; i < 3; i++) {
         if (campo.test(await voiceOver.lastSpokenPhrase())) break;

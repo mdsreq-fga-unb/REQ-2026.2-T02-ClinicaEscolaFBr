@@ -569,7 +569,10 @@ describe("Contribuição social na ficha do paciente (RF41)", () => {
       await screen.findByRole("button", { name: "Corrigir pagamento" }),
     );
     const valor = screen.getByLabelText("Valor (R$)");
+    // Letras nem entram no campo; o formato errado com números é recusado.
     fireEvent.change(valor, { target: { value: "trinta" } });
+    expect(valor).toHaveValue("");
+    fireEvent.change(valor, { target: { value: "35,,0" } });
     fireEvent.change(screen.getByLabelText("Motivo da correção"), {
       target: { value: "Valor errado." },
     });
