@@ -208,7 +208,7 @@ describe("Parâmetros da coordenação: valor da contribuição social (RF41)", 
     for (const [texto, erro] of [
       ["", "Informe o valor."],
       ["0", "Informe um valor maior que zero."],
-      ["trinta", "Informe o valor em reais, como 35,00."],
+      ["35,,0", "Informe o valor em reais, como 35,00."],
       ["2000,00", "Informe no máximo R$ 1.000,00."],
     ]) {
       fireEvent.change(campo, { target: { value: texto } });
@@ -220,17 +220,22 @@ describe("Parâmetros da coordenação: valor da contribuição social (RF41)", 
     expect(chamadas.some((c) => c.metodo === "PUT")).toBe(false);
   });
 
-  it("o mesmo valor não gera alteração (RF41)", async () => {
+  it("o mesmo valor não gera alteração: o botão fica desativado (RF41)", async () => {
     const chamadas = simularApi(ATUAL);
     montar();
     fireEvent.change(await screen.findByLabelText("Valor (R$)"), {
       target: { value: "35" },
     });
-    fireEvent.click(screen.getByRole("button", { name: "Salvar valor" }));
-    expect(
-      await screen.findByText("O valor informado é igual ao atual."),
-    ).toBeInTheDocument();
+    // Sem mudança, o botão fica desativado e não há o que salvar.
+    const botao = screen.getByRole("button", { name: "Salvar valor" });
+    expect(botao).toHaveAttribute("aria-disabled", "true");
+    expect(botao).toHaveAccessibleDescription("Altere o valor para salvar.");
+    fireEvent.click(botao);
     expect(chamadas.some((c) => c.metodo === "PUT")).toBe(false);
+    fireEvent.change(screen.getByLabelText("Valor (R$)"), {
+      target: { value: "40,00" },
+    });
+    expect(botao).not.toHaveAttribute("aria-disabled");
   });
 
   it.each(["secretaria", "estagiario", "supervisor"])(

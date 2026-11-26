@@ -16,9 +16,12 @@ import {
   eq,
   ilike,
   inArray,
+  isNotNull,
   isNull,
   ne,
   notInArray,
+  sql,
+  type SQL,
 } from 'drizzle-orm';
 import {
   atribuicoesSupervisor,
@@ -33,7 +36,8 @@ import {
   type Db,
 } from '@clinica/database';
 import {
-  LIMITE_LISTA_PACIENTES,
+  TAMANHO_PAGINA_PACIENTES,
+  type BuscaListaPacientes,
   type CasoAguardando,
   type CasoDoSupervisor,
   type CasoJaDistribuido,
@@ -643,9 +647,12 @@ export class CasosService {
 
   // Responsáveis vigentes de cada caso: o supervisor da atribuição vigente e o
   // estagiário do vínculo vigente (RF22). Sem dado clínico (RNF17).
-  private consultaDeResponsaveis() {
+  private consultaDeResponsaveis<
+    Extra extends Record<string, SQL.Aliased | SQL> = Record<never, never>,
+  >(extra?: Extra) {
     return this.db
       .select({
+        ...(extra ?? ({} as Extra)),
         casoId: casos.id,
         situacao: casos.situacao,
         numero: inscricoes.numero,
@@ -701,26 +708,77 @@ export class CasosService {
   }
 
   // RF22: lista de Pacientes da secretaria e da coordenação, com os responsáveis
-  // de cada caso. O número da inscrição vem só para a coordenação (RNF17). Busca um
-  // a mais que o limite para saber se a lista foi cortada, sem contar a tabela
-  // inteira (RNF21).
+  // de cada caso, em páginas de TAMANHO_PAGINA_PACIENTES (RNF21). Cada filtro é
+  // uma coluna da tabela. O número da inscrição vem e filtra só para a
+  // coordenação (RNF17).
   async listaDePacientes(
-    busca: string | undefined,
+    filtro: BuscaListaPacientes,
     usuario: UsuarioAutenticado,
   ): Promise<ListaDePacientes> {
-    const linhas = await this.consultaDeResponsaveis()
-      .where(
-        busca
-          ? ilike(inscricoes.nomeCompleto, `%${escaparLike(busca)}%`)
-          : undefined,
-      )
+    const trecho = (texto: string) => `%${escaparLike(texto)}%`;
+    const encerrado = inArray(casos.situacao, [
+      'encerrado',
+      'encerrado_por_alta',
+      'desligado_por_faltas',
+    ]);
+    const naoEncerrado = notInArray(casos.situacao, [
+      'encerrado',
+      'encerrado_por_alta',
+      'desligado_por_faltas',
+    ]);
+    const porSituacao: Record<string, SQL | undefined> = {
+      encerrado,
+      pendente: and(naoEncerrado, isNull(atribuicoesSupervisor.supervisorId)),
+      distribuido: and(
+        naoEncerrado,
+        isNotNull(atribuicoesSupervisor.supervisorId),
+        isNotNull(vinculosEstagiario.estagiarioId),
+      ),
+      aguardando_estagiario: and(
+        naoEncerrado,
+        isNotNull(atribuicoesSupervisor.supervisorId),
+        isNull(vinculosEstagiario.estagiarioId),
+      ),
+    };
+    const condicao = and(
+      filtro.busca
+        ? ilike(inscricoes.nomeCompleto, trecho(filtro.busca))
+        : undefined,
+      filtro.estagiario
+        ? ilike(estagiario.nome, trecho(filtro.estagiario))
+        : undefined,
+      filtro.supervisor
+        ? ilike(supervisor.nome, trecho(filtro.supervisor))
+        : undefined,
+      filtro.numero && usuario.perfil === 'coordenacao'
+        ? ilike(inscricoes.numero, trecho(filtro.numero))
+        : undefined,
+      filtro.situacao ? porSituacao[filtro.situacao] : undefined,
+    );
+    const linhas = await this.consultaDeResponsaveis({
+      total: sql<number>`count(*) over ()`.mapWith(Number),
+    })
+      .where(condicao)
       .orderBy(asc(inscricoes.nomeCompleto), asc(casos.id))
-      .limit(LIMITE_LISTA_PACIENTES + 1);
+      .limit(TAMANHO_PAGINA_PACIENTES)
+      .offset((filtro.pagina - 1) * TAMANHO_PAGINA_PACIENTES);
+    // Página além da última: o total vem de uma contagem à parte.
+    const total =
+      linhas[0]?.total ??
+      (filtro.pagina > 1
+        ? ((
+            await this.consultaDeResponsaveis({
+              total: sql<number>`count(*) over ()`.mapWith(Number),
+            })
+              .where(condicao)
+              .limit(1)
+          )[0]?.total ?? 0)
+        : 0);
     return {
-      pacientes: linhas
-        .slice(0, LIMITE_LISTA_PACIENTES)
-        .map((l) => this.paraResposta(l, usuario)),
-      cortada: linhas.length > LIMITE_LISTA_PACIENTES,
+      pacientes: linhas.map((l) => this.paraResposta(l, usuario)),
+      total,
+      pagina: filtro.pagina,
+      tamanhoPagina: TAMANHO_PAGINA_PACIENTES,
     };
   }
 

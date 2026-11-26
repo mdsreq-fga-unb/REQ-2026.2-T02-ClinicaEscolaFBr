@@ -1,5 +1,6 @@
 import { z } from "zod";
 import { hojeEmBrasilia } from "./datas";
+import { cpfValido, ESCOLARIDADES, SEXOS } from "./documentos";
 
 export const ESTADOS_CIVIS = [
   "Solteiro(a)",
@@ -57,10 +58,9 @@ const dadosBase = z.object({
       (data) => data <= hojeEmBrasilia(),
       "A data não pode estar no futuro.",
     ),
-  cpf: obrigatorio(11).regex(
-    /^\d{11}$/,
-    "Digite os 11 números do CPF, sem pontuação.",
-  ),
+  cpf: obrigatorio(11)
+    .regex(/^\d{11}$/, "Digite os 11 números do CPF.")
+    .refine(cpfValido, "Este CPF não é válido. Confira os números."),
   // O RG é opcional, sem o órgão emissor e o estado: a nova Carteira de
   // Identidade Nacional usa o CPF como número único (DF60).
   rg: z
@@ -79,9 +79,18 @@ const dadosBase = z.object({
     .regex(/^\d{5}-?\d{3}$/, "Digite os 8 números do CEP.")
     .transform((valor) => valor.replace(/\D/g, "")),
   estadoCivil: z.enum(ESTADOS_CIVIS, { error: "Selecione o estado civil." }),
-  sexo: opcional(50),
+  // Listas fechadas (SEXOS, ESCOLARIDADES); vazio quando a pessoa não informa.
+  sexo: z
+    .union([z.literal(""), z.enum(SEXOS)], {
+      error: "Escolha uma opção da lista.",
+    })
+    .default(""),
   profissao: opcional(100),
-  escolaridade: opcional(100),
+  escolaridade: z
+    .union([z.literal(""), z.enum(ESCOLARIDADES)], {
+      error: "Escolha uma opção da lista.",
+    })
+    .default(""),
   responsavelLegal: z.string().trim().max(200).default(""),
   // O formato só é conferido para menor de idade, em validarResponsavel.
   cpfResponsavel: z.string().trim().max(200).default(""),
@@ -152,7 +161,13 @@ const validarResponsavel = (
     ctx.addIssue({
       code: "custom",
       path: ["cpfResponsavel"],
-      message: "Digite os 11 números do CPF, sem pontuação.",
+      message: "Digite os 11 números do CPF.",
+    });
+  } else if (!cpfValido(dados.cpfResponsavel)) {
+    ctx.addIssue({
+      code: "custom",
+      path: ["cpfResponsavel"],
+      message: "Este CPF não é válido. Confira os números.",
     });
   }
 };

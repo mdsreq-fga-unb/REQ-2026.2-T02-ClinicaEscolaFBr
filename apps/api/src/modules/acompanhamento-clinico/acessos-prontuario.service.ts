@@ -17,7 +17,7 @@ import {
   type ListaAcessosProntuario,
   type OperacaoAcesso,
 } from '@clinica/shared';
-import { and, count, desc, eq, gte, ilike, lt } from 'drizzle-orm';
+import { and, count, desc, eq, gte, ilike, inArray, lt } from 'drizzle-orm';
 import { AuditoriaService } from '../../auditoria/auditoria.service';
 import { DB } from '../../database/database.module';
 
@@ -100,6 +100,21 @@ export class AcessosProntuarioService {
           )
         : undefined,
       fimExclusivo ? lt(acessosProntuario.criadoEm, fimExclusivo) : undefined,
+      // A operação mostrada é derivada do nome gravado (tipoDeAcesso): a negada
+      // é a não permitida; as outras, as permitidas com nomes daquele tipo.
+      filtro.operacao === 'acesso_negado'
+        ? eq(acessosProntuario.permitido, false)
+        : filtro.operacao
+          ? and(
+              eq(acessosProntuario.permitido, true),
+              inArray(
+                acessosProntuario.operacao,
+                Object.keys(OPERACOES_PRONTUARIO).filter(
+                  (nome) => OPERACOES_PRONTUARIO[nome] === filtro.operacao,
+                ),
+              ),
+            )
+          : undefined,
     );
     return this.db.transaction(
       async (tx) => {

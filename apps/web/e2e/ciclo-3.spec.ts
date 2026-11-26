@@ -1,7 +1,13 @@
 import { randomUUID } from "node:crypto";
 import { expect, test } from "@playwright/test";
 import { createDb } from "@clinica/database";
-import { API, entrar, fecharContextos, semViolacoes } from "./apoio";
+import {
+  API,
+  cpfAleatorio,
+  entrar,
+  fecharContextos,
+  semViolacoes,
+} from "./apoio";
 import { EQUIPE } from "./equipe";
 
 // Integração das features do Ciclo 3, de ponta a ponta, com a API e o banco reais:
@@ -47,7 +53,7 @@ test.describe.serial("Integração do Ciclo 3", () => {
       data: {
         nomeCompleto: paciente,
         dataNascimento: "1990-05-10",
-        cpf: String(Date.now()).slice(-11).padStart(11, "1"),
+        cpf: cpfAleatorio(),
         rg: "1234567",
         endereco: "Rua Fictícia, 100, Santa Maria",
         bairro: "Gama",
@@ -310,6 +316,13 @@ test.describe.serial("Integração do Ciclo 3", () => {
     ).toBeVisible();
     await semViolacoes(page);
 
+    // Sem mudar a ficha, não há correção: o botão fica desativado.
+    await expect(
+      page.getByRole("button", { name: "Salvar correção" }),
+    ).toBeDisabled();
+    await page
+      .getByLabel(/Plano para a próxima sessão/)
+      .fill("Retomar o tema e revisar o registro da semana.");
     // Sem motivo: nada é salvo, e o aviso do topo leva ao campo.
     await page.getByRole("button", { name: "Salvar correção" }).click();
     await expect(
@@ -320,9 +333,6 @@ test.describe.serial("Integração do Ciclo 3", () => {
     await page
       .getByLabel("Motivo da correção", { exact: true })
       .fill("Complemento do plano.");
-    await page
-      .getByLabel(/Plano para a próxima sessão/)
-      .fill("Retomar o tema e revisar o registro da semana.");
     for (const largura of [320, 360, 375, 768, 1024, 1366, 1920]) {
       await page.setViewportSize({ width: largura, height: 1000 });
       expect(

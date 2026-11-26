@@ -29,11 +29,22 @@ for (const largura of [320, 360, 768, 1024, 1366, 1920]) {
         envios.push(req.postDataJSON());
     });
     await page.locator("#confirmado").check();
-    await enviar(page);
-    await expect(page.locator("#aceiteTermo")).toHaveAttribute(
-      "aria-invalid",
-      "true",
+    // Sem a concordância, o envio fica desativado e diz o que falta.
+    const botaoEnviar = page.getByRole("button", {
+      name: "Confirmar e enviar inscrição",
+    });
+    await expect(botaoEnviar).toBeDisabled();
+    await expect(botaoEnviar).toHaveAccessibleDescription(
+      "Marque a confirmação dos dados e a concordância com o termo para enviar.",
     );
+    // O clique no botão desativado só mostra o motivo, sem enviar.
+    // force: o Playwright não clica em botão desativado; a pessoa, sim.
+    await botaoEnviar.click({ force: true });
+    await expect(
+      page.getByText(
+        "Marque a confirmação dos dados e a concordância com o termo para enviar.",
+      ),
+    ).toHaveCount(2);
     expect(envios).toHaveLength(0);
     for (const nome of [
       /1\. O que coletamos/,
@@ -88,7 +99,16 @@ for (const largura of [320, 1366]) {
     await page.goto("/inscricao");
     await preencherDados(page, true);
     await page.locator("#responsavelLegal").fill("Responsável Fictício E2E");
-    await continuar(page);
+    // Sem o CPF do responsável, Continuar fica desativado e diz o que falta.
+    await expect(
+      page.getByRole("button", { name: "Continuar" }),
+    ).toBeDisabled();
+    await expect(
+      page.getByRole("button", { name: "Continuar" }),
+    ).toHaveAccessibleDescription(
+      "Preencha corretamente todos os campos obrigatórios para continuar.",
+    );
+    await page.locator("#cpfResponsavel").fill("52998224724");
     await expect(page.locator("#cpfResponsavel")).toHaveAttribute(
       "aria-invalid",
       "true",
@@ -104,7 +124,7 @@ for (const largura of [320, 1366]) {
       identificacao.getByText("Responsável Fictício E2E", { exact: true }),
     ).toBeVisible();
     await expect(
-      identificacao.getByText("52998224725", { exact: true }),
+      identificacao.getByText("529.982.247-25", { exact: true }),
     ).toBeVisible();
     await expect(identificacao.getByRole("textbox")).toHaveCount(0);
     const termo = page.getByRole("region", {

@@ -24,6 +24,7 @@ import {
   type VersaoContribuicao,
 } from "@clinica/shared";
 import { Aviso } from "@/components/comum/aviso";
+import { BotaoComMotivo } from "@/components/comum/botao-com-motivo";
 import {
   Campo,
   classeEntrada,
@@ -434,6 +435,12 @@ function FormularioPagamento({
     situacao.valorAtualCentavos,
   );
   const [versaoEsperada] = useState(vigente?.versao ?? 1);
+  // Na correção, sem mudar valor, data ou forma não há o que salvar.
+  const semMudanca =
+    !!vigente &&
+    centavosDoCampo(valor) === vigente.valorCentavos &&
+    pagoEm === vigente.pagoEm &&
+    forma === vigente.forma;
   const [erros, setErros] = useState<Erros>({});
   const [erroGeral, setErroGeral] = useState<string | null>(null);
 
@@ -564,8 +571,13 @@ function FormularioPagamento({
               className={classeEntrada}
               value={valor}
               onChange={(e) => {
-                setValor(e.target.value);
+                setValor(e.target.value.replace(/[^\d.,]/g, ""));
                 setErros({ ...erros, valorCentavos: undefined });
+              }}
+              // Ao sair do campo, o valor fica no formato do real: 35 → 35,00.
+              onBlur={() => {
+                const centavos = centavosDoCampo(valor);
+                if (centavos !== null) setValor(centavosParaCampo(centavos));
               }}
             />
           )}
@@ -659,13 +671,23 @@ function FormularioPagamento({
         <Button type="button" variant="outline" onClick={aoCancelar}>
           Cancelar
         </Button>
-        <Button type="submit" disabled={envio.isPending}>
-          {envio.isPending
-            ? "Salvando…"
-            : correcao
-              ? "Salvar correção"
-              : "Confirmar pagamento"}
-        </Button>
+        <BotaoComMotivo
+          motivo={
+            semMudanca
+              ? "Altere o valor, a data ou a forma de pagamento para salvar a correção."
+              : null
+          }
+        >
+          {(props) => (
+            <Button {...props} type="submit" disabled={envio.isPending}>
+              {envio.isPending
+                ? "Salvando…"
+                : correcao
+                  ? "Salvar correção"
+                  : "Confirmar pagamento"}
+            </Button>
+          )}
+        </BotaoComMotivo>
       </Rodape>
     </form>
   );

@@ -96,13 +96,21 @@ export type ResultadoVinculo = {
 // Consulta de responsáveis (RF22). Só nomes e a situação do caso: nunca a queixa,
 // a prioridade clínica nem o prontuário (RNF17).
 
-// Quantos pacientes a lista devolve de uma vez (RNF21). Com mais que isso, a lista
-// vem cortada, e a tela pede para buscar pelo nome.
-export const LIMITE_LISTA_PACIENTES = 200;
+// Pacientes por página da lista (RNF21): a lista é paginada, com o total.
+export const TAMANHO_PAGINA_PACIENTES = 50;
 
-// Busca da lista de Pacientes pelo nome.
+const trechoDeNome = z.string().trim().max(120).optional();
+// Busca e filtros da lista de Pacientes, cada um por uma coluna da tabela. O
+// número da inscrição só filtra para a coordenação, que é quem o vê (RNF17).
 export const buscaListaPacientesSchema = z.object({
-  busca: z.string().trim().max(120).optional(),
+  busca: trechoDeNome,
+  estagiario: trechoDeNome,
+  supervisor: trechoDeNome,
+  numero: z.string().trim().max(20).optional(),
+  situacao: z
+    .enum(["distribuido", "aguardando_estagiario", "pendente", "encerrado"])
+    .optional(),
+  pagina: z.coerce.number().int().min(1).max(100000).default(1),
 });
 export type BuscaListaPacientes = z.infer<typeof buscaListaPacientesSchema>;
 
@@ -126,8 +134,10 @@ export type PacienteDaLista = ResponsaveisDoCaso;
 
 export type ListaDePacientes = {
   pacientes: PacienteDaLista[];
-  // Há mais pacientes do que o limite: a lista mostra só os primeiros.
-  cortada: boolean;
+  // Total com a busca e os filtros, para a paginação.
+  total: number;
+  pagina: number;
+  tamanhoPagina: number;
 };
 
 // Situação de distribuição (prancha 2-3): o caso tem os dois responsáveis, só o
