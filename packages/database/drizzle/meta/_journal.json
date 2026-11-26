@@ -183,6 +183,13 @@
       "when": 1795639024658,
       "tag": "0025_autor_do_rascunho",
       "breakpoints": true
+    },
+    {
+      "idx": 26,
+      "version": "7",
+      "when": 1795663219575,
+      "tag": "0026_reclassificacao_falta",
+      "breakpoints": true
     }
   ]
 }

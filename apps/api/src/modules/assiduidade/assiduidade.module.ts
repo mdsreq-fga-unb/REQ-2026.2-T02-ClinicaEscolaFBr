@@ -4,6 +4,7 @@ import { DesligamentosController } from './desligamentos.controller';
 import { DesligamentosService } from './desligamentos.service';
 import { FaltasEstagiarioController } from './faltas-estagiario.controller';
 import { FaltasEstagiarioService } from './faltas-estagiario.service';
+import { FaltasSemestreService } from './faltas-semestre.service';
 import { FaltasController } from './faltas.controller';
 import { FaltasService } from './faltas.service';
 
@@ -15,7 +16,12 @@ import { FaltasService } from './faltas.service';
     DesligamentosController,
     FaltasEstagiarioController,
   ],
-  providers: [FaltasService, DesligamentosService, FaltasEstagiarioService],
+  providers: [
+    FaltasService,
+    DesligamentosService,
+    FaltasEstagiarioService,
+    FaltasSemestreService,
+  ],
   exports: [FaltasService, DesligamentosService],
 })
 export class AssiduidadeModule {}

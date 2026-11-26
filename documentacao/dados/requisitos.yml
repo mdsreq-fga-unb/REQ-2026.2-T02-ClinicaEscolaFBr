@@ -681,7 +681,7 @@ rfs:
   lider: Nicolas
   depende: [RF16, RF39]
   issue: 276
-  estado: Planejada
+  estado: Código concluído
   origem: [DF69]
 
 - id: RF63

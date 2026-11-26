@@ -240,3 +240,24 @@ export const cancelamentosSessao = pgTable(
     index("cancelamentos_desligamento").on(t.desligamentoId),
   ],
 );
+
+// Reclassificação de uma ausência do estagiário registrada por engano em
+// cancelamento administrativo para remarcação (RF40), pela coordenação. O
+// cancelamento continua como foi registrado: a reclassificação é uma linha nova,
+// no máximo uma por cancelamento, e a contagem do semestre deixa de contá-lo. O
+// motivo é cifrado, porque pode trazer dado pessoal do estagiário (RNF51). Só
+// inserção, com o gatilho impedir_alteracao_registro.
+export const reclassificacoesFalta = pgTable("reclassificacoes_falta", {
+  id: uuid("id").primaryKey().defaultRandom(),
+  cancelamentoId: uuid("cancelamento_id")
+    .notNull()
+    .unique("reclassificacoes_falta_cancelamento")
+    .references(() => cancelamentosSessao.id),
+  motivoCifrado: text("motivo_cifrado").notNull(),
+  reclassificadaPor: uuid("reclassificada_por")
+    .notNull()
+    .references(() => usuarios.id),
+  reclassificadaEm: timestamp("reclassificada_em", { withTimezone: true })
+    .notNull()
+    .defaultNow(),
+});
