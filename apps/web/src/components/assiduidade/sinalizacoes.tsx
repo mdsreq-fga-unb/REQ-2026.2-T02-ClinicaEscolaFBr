@@ -293,7 +293,10 @@ function Decidida({
   coordenacao: boolean;
   aoDecidir: (s: SinalizacaoReprovacao) => void;
 }) {
-  const abaixo = s.faltas < LIMITE_FALTAS_ESTAGIARIO;
+  // Uma nova decisão só é aceita depois de a contagem mudar desde a última
+  // decisão (RF64); a API recusa com 409 do mesmo jeito.
+  const ultima = s.decisoes[s.decisoes.length - 1];
+  const mudou = !ultima || ultima.faltas !== s.faltas;
   return (
     <li className="ui-painel flex flex-col gap-3 p-4 sm:px-5">
       <h3 className="ui-h2">
@@ -320,7 +323,8 @@ function Decidida({
             )}
             <span className="ui-meta">
               Registrada por {d.por} em{" "}
-              {dataHoraBr(d.em).replace(", ", ", às ")}.
+              {dataHoraBr(d.em).replace(", ", ", às ")}, com{" "}
+              {plural(d.faltas, "falta", "faltas")}.
               {i > 0 && " A decisão anterior continua no histórico."}
             </span>
           </li>
@@ -330,22 +334,26 @@ function Decidida({
         Contagem atual: {plural(s.faltas, "falta", "faltas")} em {s.semestre}.
       </p>
       {coordenacao ? (
-        <>
-          {abaixo && (
+        mudou ? (
+          <>
             <p className="ui-dica">
-              A decisão registrada continua valendo. Se for o caso, registre uma
-              nova decisão.
+              A contagem mudou desde a última decisão. A decisão registrada
+              continua valendo; se for o caso, registre uma nova decisão.
             </p>
-          )}
-          <Button
-            variant="outline"
-            className="self-start"
-            aria-label={`Registrar nova decisão sobre a reprovação de ${s.estagiario.nome}`}
-            onClick={() => aoDecidir(s)}
-          >
-            Registrar nova decisão
-          </Button>
-        </>
+            <Button
+              variant="outline"
+              className="self-start"
+              aria-label={`Registrar nova decisão sobre a reprovação de ${s.estagiario.nome}`}
+              onClick={() => aoDecidir(s)}
+            >
+              Registrar nova decisão
+            </Button>
+          </>
+        ) : (
+          <p className="ui-dica">
+            Uma nova decisão pode ser registrada se a contagem mudar.
+          </p>
+        )
       ) : (
         <p className="ui-dica">
           O registro da decisão é exclusivo da coordenação.
