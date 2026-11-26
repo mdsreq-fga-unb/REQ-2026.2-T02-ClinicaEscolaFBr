@@ -9,6 +9,7 @@ Esta página registra quais ferramentas de inteligência artificial (IA) a equip
 | Claude Code (Anthropic) | Claude Opus 5.5 | Gabriel | Implementação das features e das tarefas, organização do site (GitHub Pages) e integração com o GitHub: commits, envio das branches e revisão de PRs |
 | Claude Code (Anthropic) | Claude Opus 5.5 | Nicolas | Implementação de features e correção de bugs, apoio nas revisões de PRs (comentários de aprovação e de mudanças) e integração com o GitHub |
 | Claude Code (Anthropic) | Claude Opus 5.5 | Joaquim | Implementação de features, apoio nas revisões de PRs e integração com o GitHub |
+| Claude Code (Anthropic) | Claude Opus 5.5 | Luís Henrique | Implementação das features e das tarefas, organização do site (GitHub Pages) e integração com o GitHub: push, commits e revisão de PRs |
 | Claude (Anthropic) | Claude Sonnet 5.5 | Maria Clara | Implementação de features, apoio nas revisões de PRs e execução dos testes e2e |
 | ChatGPT (OpenAI) | GPT-6 Astra | Jônatas | Implementação e apoio nas revisões de PRs |
 | Claude Design (Anthropic) | Claude Opus 5.5 | Gabriel | Protótipos de alta fidelidade, a partir dos requisitos e do projeto de cada feature |
