@@ -310,18 +310,21 @@ describe('Relação de faltas do estagiário (RF39, RNF35)', () => {
           estagiario: { id: pessoas.ana.id, nome: 'Ana Beatriz Costa' },
           inicio: em('2026-10-29T14:00:00').toISOString(),
           registradaEm: em('2026-10-28T09:12:00').toISOString(),
+          reclassificada: null,
         },
         {
           id: expect.any(String),
           estagiario: { id: pessoas.ana.id, nome: 'Ana Beatriz Costa' },
           inicio: em('2026-09-10T10:00:00').toISOString(),
           registradaEm: em('2026-09-09T18:40:00').toISOString(),
+          reclassificada: null,
         },
         {
           id: expect.any(String),
           estagiario: { id: pessoas.lucas.id, nome: 'Lucas Ferreira' },
           inicio: em('2026-08-21T16:00:00').toISOString(),
           registradaEm: em('2026-08-21T08:05:00').toISOString(),
+          reclassificada: null,
         },
       ],
     });
@@ -340,6 +343,7 @@ describe('Relação de faltas do estagiário (RF39, RNF35)', () => {
       'estagiario',
       'id',
       'inicio',
+      'reclassificada',
       'registradaEm',
     ]);
   });

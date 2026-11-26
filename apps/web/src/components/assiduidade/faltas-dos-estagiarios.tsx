@@ -8,15 +8,18 @@ import {
   inicioDoSemestre,
   type ConsultaFaltasEstagiario,
   type EstagiarioComFaltas,
+  type FaltaDoEstagiario,
   type FaltasDoEstagiario,
 } from "@clinica/shared";
 import { Aviso } from "@/components/comum/aviso";
+import { FaltasNoSemestre } from "@/components/assiduidade/faltas-no-semestre";
 import { Campo, classeEntrada } from "@/components/comum/campo";
 import { inicioDoPerfil } from "@/components/layout/menu";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { api, ErroApi } from "@/lib/api";
 import { dataBr, dataHoraBr, hojeBr, horaBr } from "@/lib/formato";
 import { useSessao } from "@/lib/sessao";
+import { cn } from "@/lib/utils";
 
 type Filtro = { estagiarioId: string; inicio: string; fim: string };
 type Erros = Partial<Record<keyof Filtro, string>>;
@@ -72,10 +75,17 @@ function SemAcesso({
   );
 }
 
+// A falta reclassificada pela coordenação (RF40) continua na lista, riscada e
+// com o texto, e sai da contagem.
+const reclassificada = (f: FaltaDoEstagiario) =>
+  f.reclassificada
+    ? `Reclassificada como cancelamento administrativo por ${f.reclassificada.por} em ${dataBr(f.reclassificada.em)}.`
+    : null;
+
 function Resultado({ dados }: { dados: FaltasDoEstagiario }) {
   const { faltas } = dados;
-  const total = faltas.length;
-  if (total === 0) {
+  const total = faltas.filter((f) => !f.reclassificada).length;
+  if (faltas.length === 0) {
     return (
       <section aria-labelledby="titulo-faltas" className="ui-painel p-5">
         <div role="status">
@@ -114,10 +124,26 @@ function Resultado({ dados }: { dados: FaltasDoEstagiario }) {
           {faltas.map((f) => (
             <tr key={f.id}>
               <td className="[overflow-wrap:anywhere]">{f.estagiario.nome}</td>
-              <td className="whitespace-nowrap">{dataBr(f.inicio)}</td>
-              <td className="whitespace-nowrap">{hora(f.inicio)}</td>
-              <td className="whitespace-nowrap">
-                {dataHoraBr(f.registradaEm)}
+              <td
+                className={cn(
+                  "whitespace-nowrap",
+                  f.reclassificada && "text-muted-foreground line-through",
+                )}
+              >
+                {dataBr(f.inicio)}
+              </td>
+              <td
+                className={cn(
+                  "whitespace-nowrap",
+                  f.reclassificada && "text-muted-foreground line-through",
+                )}
+              >
+                {hora(f.inicio)}
+              </td>
+              <td
+                className={f.reclassificada ? "ui-meta" : "whitespace-nowrap"}
+              >
+                {reclassificada(f) ?? dataHoraBr(f.registradaEm)}
               </td>
             </tr>
           ))}
@@ -129,11 +155,16 @@ function Resultado({ dados }: { dados: FaltasDoEstagiario }) {
             <span className="font-bold [overflow-wrap:anywhere]">
               {f.estagiario.nome}
             </span>
-            <span>
+            <span
+              className={cn(
+                f.reclassificada && "text-muted-foreground line-through",
+              )}
+            >
               {dataBr(f.inicio)}, {hora(f.inicio)}
             </span>
             <span className="ui-meta">
-              Registrado em {dataHoraBr(f.registradaEm)}
+              {reclassificada(f) ??
+                `Registrado em ${dataHoraBr(f.registradaEm)}`}
             </span>
           </li>
         ))}
@@ -145,7 +176,13 @@ function Resultado({ dados }: { dados: FaltasDoEstagiario }) {
 // Faltas dos estagiários (RF39, prancha 7-1): as sessões canceladas por ausência
 // real do estagiário (RF16), para o supervisor, dos estagiários dele, e para a
 // coordenação, de todos (RNF35). Sem o nome do paciente nem o motivo da ausência.
-export function FaltasDosEstagiarios() {
+// A página põe acima da relação do período a contagem do semestre (RF40), que só
+// aparece para quem tem acesso.
+export function FaltasDosEstagiarios({
+  comSemestre = false,
+}: {
+  comSemestre?: boolean;
+} = {}) {
   const { data: sessao } = useSessao();
   const supervisor = sessao?.perfil === "supervisor";
   const permitido = supervisor || sessao?.perfil === "coordenacao";
@@ -204,9 +241,18 @@ export function FaltasDosEstagiarios() {
       <div>
         <h1 className="ui-titulo">Faltas dos estagiários</h1>
         <p className="ui-subtitulo">
-          Sessões canceladas por ausência real do estagiário.
+          Sessões canceladas por ausência real do estagiário. O cancelamento
+          administrativo para remarcar não conta.
         </p>
       </div>
+
+      {comSemestre && <FaltasNoSemestre coordenacao={!supervisor} />}
+
+      {comSemestre && (
+        <h2 id="titulo-periodo" className="ui-h2 -mb-2">
+          Faltas por período
+        </h2>
+      )}
 
       <form
         onSubmit={consultar}

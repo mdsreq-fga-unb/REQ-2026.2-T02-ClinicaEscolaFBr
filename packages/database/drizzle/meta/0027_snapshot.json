@@ -1,6 +1,6 @@
 {
-  "id": "1999be40-512e-4f6a-9b6b-50e77b5eab21",
-  "prevId": "5bcf5545-53ca-4134-bfe5-e6c701b167e2",
+  "id": "7a40f26e-af05-4a4b-9a4c-5f2254f8ec87",
+  "prevId": "33e9144e-96d6-4ec1-b2f8-5ef09feba20b",
   "version": "7",
   "dialect": "postgresql",
   "tables": {
@@ -880,273 +880,6 @@
       },
       "compositePrimaryKeys": {},
       "uniqueConstraints": {},
-      "policies": {},
-      "checkConstraints": {},
-      "isRLSEnabled": false
-    },
-    "public.encerramentos_alta": {
-      "name": "encerramentos_alta",
-      "schema": "",
-      "columns": {
-        "id": {
-          "name": "id",
-          "type": "uuid",
-          "primaryKey": true,
-          "notNull": true,
-          "default": "gen_random_uuid()"
-        },
-        "caso_id": {
-          "name": "caso_id",
-          "type": "uuid",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "ciclo_atendimento": {
-          "name": "ciclo_atendimento",
-          "type": "integer",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "data_alta": {
-          "name": "data_alta",
-          "type": "date",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "motivo_cifrado": {
-          "name": "motivo_cifrado",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "pedida_por": {
-          "name": "pedida_por",
-          "type": "uuid",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "pedida_em": {
-          "name": "pedida_em",
-          "type": "timestamp with time zone",
-          "primaryKey": false,
-          "notNull": true,
-          "default": "now()"
-        },
-        "confirmada_por": {
-          "name": "confirmada_por",
-          "type": "uuid",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "confirmada_em": {
-          "name": "confirmada_em",
-          "type": "timestamp with time zone",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "cancelado_por": {
-          "name": "cancelado_por",
-          "type": "uuid",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "cancelado_em": {
-          "name": "cancelado_em",
-          "type": "timestamp with time zone",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "forma_cancelamento": {
-          "name": "forma_cancelamento",
-          "type": "forma_cancelamento_alta",
-          "typeSchema": "public",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "motivo_cancelamento_cifrado": {
-          "name": "motivo_cancelamento_cifrado",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false
-        }
-      },
-      "indexes": {
-        "encerramentos_alta_caso": {
-          "name": "encerramentos_alta_caso",
-          "columns": [
-            {
-              "expression": "caso_id",
-              "isExpression": false,
-              "asc": true,
-              "nulls": "last"
-            },
-            {
-              "expression": "pedida_em",
-              "isExpression": false,
-              "asc": true,
-              "nulls": "last"
-            }
-          ],
-          "isUnique": false,
-          "concurrently": false,
-          "method": "btree",
-          "with": {}
-        },
-        "encerramentos_alta_pedido_aberto": {
-          "name": "encerramentos_alta_pedido_aberto",
-          "columns": [
-            {
-              "expression": "caso_id",
-              "isExpression": false,
-              "asc": true,
-              "nulls": "last"
-            }
-          ],
-          "isUnique": true,
-          "where": "\"encerramentos_alta\".\"confirmada_em\" is null and \"encerramentos_alta\".\"cancelado_em\" is null",
-          "concurrently": false,
-          "method": "btree",
-          "with": {}
-        }
-      },
-      "foreignKeys": {
-        "encerramentos_alta_caso_id_casos_id_fk": {
-          "name": "encerramentos_alta_caso_id_casos_id_fk",
-          "tableFrom": "encerramentos_alta",
-          "tableTo": "casos",
-          "columnsFrom": ["caso_id"],
-          "columnsTo": ["id"],
-          "onDelete": "no action",
-          "onUpdate": "no action"
-        },
-        "encerramentos_alta_pedida_por_usuarios_id_fk": {
-          "name": "encerramentos_alta_pedida_por_usuarios_id_fk",
-          "tableFrom": "encerramentos_alta",
-          "tableTo": "usuarios",
-          "columnsFrom": ["pedida_por"],
-          "columnsTo": ["id"],
-          "onDelete": "no action",
-          "onUpdate": "no action"
-        },
-        "encerramentos_alta_confirmada_por_usuarios_id_fk": {
-          "name": "encerramentos_alta_confirmada_por_usuarios_id_fk",
-          "tableFrom": "encerramentos_alta",
-          "tableTo": "usuarios",
-          "columnsFrom": ["confirmada_por"],
-          "columnsTo": ["id"],
-          "onDelete": "no action",
-          "onUpdate": "no action"
-        },
-        "encerramentos_alta_cancelado_por_usuarios_id_fk": {
-          "name": "encerramentos_alta_cancelado_por_usuarios_id_fk",
-          "tableFrom": "encerramentos_alta",
-          "tableTo": "usuarios",
-          "columnsFrom": ["cancelado_por"],
-          "columnsTo": ["id"],
-          "onDelete": "no action",
-          "onUpdate": "no action"
-        }
-      },
-      "compositePrimaryKeys": {},
-      "uniqueConstraints": {},
-      "policies": {},
-      "checkConstraints": {
-        "encerramentos_alta_confirmacao_completa": {
-          "name": "encerramentos_alta_confirmacao_completa",
-          "value": "(\"encerramentos_alta\".\"confirmada_por\" is null) = (\"encerramentos_alta\".\"confirmada_em\" is null)"
-        },
-        "encerramentos_alta_cancelamento_completo": {
-          "name": "encerramentos_alta_cancelamento_completo",
-          "value": "(\"encerramentos_alta\".\"cancelado_por\" is null) = (\"encerramentos_alta\".\"cancelado_em\" is null) and (\"encerramentos_alta\".\"cancelado_em\" is null) = (\"encerramentos_alta\".\"forma_cancelamento\" is null) and (\"encerramentos_alta\".\"forma_cancelamento\" is null) = (\"encerramentos_alta\".\"motivo_cancelamento_cifrado\" is null)"
-        },
-        "encerramentos_alta_confirmado_ou_cancelado": {
-          "name": "encerramentos_alta_confirmado_ou_cancelado",
-          "value": "\"encerramentos_alta\".\"confirmada_em\" is null or \"encerramentos_alta\".\"cancelado_em\" is null"
-        }
-      },
-      "isRLSEnabled": false
-    },
-    "public.reaberturas_caso": {
-      "name": "reaberturas_caso",
-      "schema": "",
-      "columns": {
-        "id": {
-          "name": "id",
-          "type": "uuid",
-          "primaryKey": true,
-          "notNull": true,
-          "default": "gen_random_uuid()"
-        },
-        "encerramento_id": {
-          "name": "encerramento_id",
-          "type": "uuid",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "pedida_por": {
-          "name": "pedida_por",
-          "type": "uuid",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "reaberta_por": {
-          "name": "reaberta_por",
-          "type": "uuid",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "reaberta_em": {
-          "name": "reaberta_em",
-          "type": "timestamp with time zone",
-          "primaryKey": false,
-          "notNull": true,
-          "default": "now()"
-        },
-        "motivo_cifrado": {
-          "name": "motivo_cifrado",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true
-        }
-      },
-      "indexes": {},
-      "foreignKeys": {
-        "reaberturas_caso_encerramento_id_encerramentos_alta_id_fk": {
-          "name": "reaberturas_caso_encerramento_id_encerramentos_alta_id_fk",
-          "tableFrom": "reaberturas_caso",
-          "tableTo": "encerramentos_alta",
-          "columnsFrom": ["encerramento_id"],
-          "columnsTo": ["id"],
-          "onDelete": "no action",
-          "onUpdate": "no action"
-        },
-        "reaberturas_caso_pedida_por_usuarios_id_fk": {
-          "name": "reaberturas_caso_pedida_por_usuarios_id_fk",
-          "tableFrom": "reaberturas_caso",
-          "tableTo": "usuarios",
-          "columnsFrom": ["pedida_por"],
-          "columnsTo": ["id"],
-          "onDelete": "no action",
-          "onUpdate": "no action"
-        },
-        "reaberturas_caso_reaberta_por_usuarios_id_fk": {
-          "name": "reaberturas_caso_reaberta_por_usuarios_id_fk",
-          "tableFrom": "reaberturas_caso",
-          "tableTo": "usuarios",
-          "columnsFrom": ["reaberta_por"],
-          "columnsTo": ["id"],
-          "onDelete": "no action",
-          "onUpdate": "no action"
-        }
-      },
-      "compositePrimaryKeys": {},
-      "uniqueConstraints": {
-        "reaberturas_caso_encerramento_id_unique": {
-          "name": "reaberturas_caso_encerramento_id_unique",
-          "nullsNotDistinct": false,
-          "columns": ["encerramento_id"]
-        }
-      },
       "policies": {},
       "checkConstraints": {},
       "isRLSEnabled": false
@@ -2605,6 +2338,22 @@
           "concurrently": false,
           "method": "btree",
           "with": {}
+        },
+        "versoes_relatorio_uma_aprovada": {
+          "name": "versoes_relatorio_uma_aprovada",
+          "columns": [
+            {
+              "expression": "relatorio_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": true,
+          "where": "\"versoes_relatorio\".\"estado\" = 'aprovado'",
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
         }
       },
       "foreignKeys": {
@@ -3373,6 +3122,210 @@
       },
       "isRLSEnabled": false
     },
+    "public.reclassificacoes_falta": {
+      "name": "reclassificacoes_falta",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "cancelamento_id": {
+          "name": "cancelamento_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "motivo_cifrado": {
+          "name": "motivo_cifrado",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "reclassificada_por": {
+          "name": "reclassificada_por",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "reclassificada_em": {
+          "name": "reclassificada_em",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "reclassificacoes_falta_cancelamento_id_cancelamentos_sessao_id_fk": {
+          "name": "reclassificacoes_falta_cancelamento_id_cancelamentos_sessao_id_fk",
+          "tableFrom": "reclassificacoes_falta",
+          "tableTo": "cancelamentos_sessao",
+          "columnsFrom": ["cancelamento_id"],
+          "columnsTo": ["id"],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "reclassificacoes_falta_reclassificada_por_usuarios_id_fk": {
+          "name": "reclassificacoes_falta_reclassificada_por_usuarios_id_fk",
+          "tableFrom": "reclassificacoes_falta",
+          "tableTo": "usuarios",
+          "columnsFrom": ["reclassificada_por"],
+          "columnsTo": ["id"],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {
+        "reclassificacoes_falta_cancelamento": {
+          "name": "reclassificacoes_falta_cancelamento",
+          "nullsNotDistinct": false,
+          "columns": ["cancelamento_id"]
+        }
+      },
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.sinalizacoes_reprovacao": {
+      "name": "sinalizacoes_reprovacao",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "estagiario_id": {
+          "name": "estagiario_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "semestre": {
+          "name": "semestre",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "gerada_em": {
+          "name": "gerada_em",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "encerrada_em": {
+          "name": "encerrada_em",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "motivo_encerramento": {
+          "name": "motivo_encerramento",
+          "type": "motivo_encerramento_sinalizacao",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "reclassificacao_id": {
+          "name": "reclassificacao_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": false
+        }
+      },
+      "indexes": {
+        "sinalizacoes_reprovacao_aberta": {
+          "name": "sinalizacoes_reprovacao_aberta",
+          "columns": [
+            {
+              "expression": "estagiario_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "semestre",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": true,
+          "where": "\"sinalizacoes_reprovacao\".\"encerrada_em\" is null",
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "sinalizacoes_reprovacao_estagiario": {
+          "name": "sinalizacoes_reprovacao_estagiario",
+          "columns": [
+            {
+              "expression": "estagiario_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "semestre",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {
+        "sinalizacoes_reprovacao_estagiario_id_usuarios_id_fk": {
+          "name": "sinalizacoes_reprovacao_estagiario_id_usuarios_id_fk",
+          "tableFrom": "sinalizacoes_reprovacao",
+          "tableTo": "usuarios",
+          "columnsFrom": ["estagiario_id"],
+          "columnsTo": ["id"],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "sinalizacoes_reprovacao_reclassificacao_id_reclassificacoes_falta_id_fk": {
+          "name": "sinalizacoes_reprovacao_reclassificacao_id_reclassificacoes_falta_id_fk",
+          "tableFrom": "sinalizacoes_reprovacao",
+          "tableTo": "reclassificacoes_falta",
+          "columnsFrom": ["reclassificacao_id"],
+          "columnsTo": ["id"],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {
+        "sinalizacoes_reprovacao_semestre": {
+          "name": "sinalizacoes_reprovacao_semestre",
+          "value": "\"sinalizacoes_reprovacao\".\"semestre\" ~ '^[0-9]{4}/[12]$'"
+        },
+        "sinalizacoes_reprovacao_encerramento": {
+          "name": "sinalizacoes_reprovacao_encerramento",
+          "value": "(\"sinalizacoes_reprovacao\".\"encerrada_em\" is null) = (\"sinalizacoes_reprovacao\".\"motivo_encerramento\" is null)"
+        },
+        "sinalizacoes_reprovacao_reclassificacao": {
+          "name": "sinalizacoes_reprovacao_reclassificacao",
+          "value": "(\"sinalizacoes_reprovacao\".\"reclassificacao_id\" is not null) = (coalesce(\"sinalizacoes_reprovacao\".\"motivo_encerramento\"::text, '') = 'contagem_abaixo_do_limite')"
+        }
+      },
+      "isRLSEnabled": false
+    },
     "public.vagas_liberadas": {
       "name": "vagas_liberadas",
       "schema": "",
@@ -3388,19 +3341,7 @@
           "name": "desligamento_id",
           "type": "uuid",
           "primaryKey": false,
-          "notNull": false
-        },
-        "alta_id": {
-          "name": "alta_id",
-          "type": "uuid",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "perda_vaga_id": {
-          "name": "perda_vaga_id",
-          "type": "uuid",
-          "primaryKey": false,
-          "notNull": false
+          "notNull": true
         },
         "estagiario_id": {
           "name": "estagiario_id",
@@ -3467,24 +3408,6 @@
           "onDelete": "no action",
           "onUpdate": "no action"
         },
-        "vagas_liberadas_alta_id_encerramentos_alta_id_fk": {
-          "name": "vagas_liberadas_alta_id_encerramentos_alta_id_fk",
-          "tableFrom": "vagas_liberadas",
-          "tableTo": "encerramentos_alta",
-          "columnsFrom": ["alta_id"],
-          "columnsTo": ["id"],
-          "onDelete": "no action",
-          "onUpdate": "no action"
-        },
-        "vagas_liberadas_perda_vaga_id_perdas_vaga_id_fk": {
-          "name": "vagas_liberadas_perda_vaga_id_perdas_vaga_id_fk",
-          "tableFrom": "vagas_liberadas",
-          "tableTo": "perdas_vaga",
-          "columnsFrom": ["perda_vaga_id"],
-          "columnsTo": ["id"],
-          "onDelete": "no action",
-          "onUpdate": "no action"
-        },
         "vagas_liberadas_estagiario_id_usuarios_id_fk": {
           "name": "vagas_liberadas_estagiario_id_usuarios_id_fk",
           "tableFrom": "vagas_liberadas",
@@ -3519,24 +3442,10 @@
           "name": "vagas_liberadas_desligamento_id_unique",
           "nullsNotDistinct": false,
           "columns": ["desligamento_id"]
-        },
-        "vagas_liberadas_alta_id_unique": {
-          "name": "vagas_liberadas_alta_id_unique",
-          "nullsNotDistinct": false,
-          "columns": ["alta_id"]
-        },
-        "vagas_liberadas_perda_vaga_id_unique": {
-          "name": "vagas_liberadas_perda_vaga_id_unique",
-          "nullsNotDistinct": false,
-          "columns": ["perda_vaga_id"]
         }
       },
       "policies": {},
       "checkConstraints": {
-        "vagas_origem_unica": {
-          "name": "vagas_origem_unica",
-          "value": "num_nonnulls(\"vagas_liberadas\".\"desligamento_id\", \"vagas_liberadas\".\"alta_id\", \"vagas_liberadas\".\"perda_vaga_id\") = 1"
-        },
         "vagas_ocupacao_completa": {
           "name": "vagas_ocupacao_completa",
           "value": "(\"vagas_liberadas\".\"ocupada_em\" is null) = (\"vagas_liberadas\".\"ocupada_por_vinculo_id\" is null)"
@@ -4035,144 +3944,6 @@
       },
       "isRLSEnabled": false
     },
-    "public.perdas_vaga": {
-      "name": "perdas_vaga",
-      "schema": "",
-      "columns": {
-        "id": {
-          "name": "id",
-          "type": "uuid",
-          "primaryKey": true,
-          "notNull": true,
-          "default": "gen_random_uuid()"
-        },
-        "caso_id": {
-          "name": "caso_id",
-          "type": "uuid",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "ciclo_atendimento": {
-          "name": "ciclo_atendimento",
-          "type": "integer",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "vinculo_id": {
-          "name": "vinculo_id",
-          "type": "uuid",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "estagiario_id": {
-          "name": "estagiario_id",
-          "type": "uuid",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "supervisor_id": {
-          "name": "supervisor_id",
-          "type": "uuid",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "vinculado_em": {
-          "name": "vinculado_em",
-          "type": "timestamp with time zone",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "prazo_ate": {
-          "name": "prazo_ate",
-          "type": "date",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "sessoes_canceladas": {
-          "name": "sessoes_canceladas",
-          "type": "integer",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "confirmada_por": {
-          "name": "confirmada_por",
-          "type": "uuid",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "confirmada_em": {
-          "name": "confirmada_em",
-          "type": "timestamp with time zone",
-          "primaryKey": false,
-          "notNull": true,
-          "default": "now()"
-        }
-      },
-      "indexes": {},
-      "foreignKeys": {
-        "perdas_vaga_caso_id_casos_id_fk": {
-          "name": "perdas_vaga_caso_id_casos_id_fk",
-          "tableFrom": "perdas_vaga",
-          "tableTo": "casos",
-          "columnsFrom": ["caso_id"],
-          "columnsTo": ["id"],
-          "onDelete": "no action",
-          "onUpdate": "no action"
-        },
-        "perdas_vaga_vinculo_id_vinculos_estagiario_id_fk": {
-          "name": "perdas_vaga_vinculo_id_vinculos_estagiario_id_fk",
-          "tableFrom": "perdas_vaga",
-          "tableTo": "vinculos_estagiario",
-          "columnsFrom": ["vinculo_id"],
-          "columnsTo": ["id"],
-          "onDelete": "no action",
-          "onUpdate": "no action"
-        },
-        "perdas_vaga_estagiario_id_usuarios_id_fk": {
-          "name": "perdas_vaga_estagiario_id_usuarios_id_fk",
-          "tableFrom": "perdas_vaga",
-          "tableTo": "usuarios",
-          "columnsFrom": ["estagiario_id"],
-          "columnsTo": ["id"],
-          "onDelete": "no action",
-          "onUpdate": "no action"
-        },
-        "perdas_vaga_supervisor_id_usuarios_id_fk": {
-          "name": "perdas_vaga_supervisor_id_usuarios_id_fk",
-          "tableFrom": "perdas_vaga",
-          "tableTo": "usuarios",
-          "columnsFrom": ["supervisor_id"],
-          "columnsTo": ["id"],
-          "onDelete": "no action",
-          "onUpdate": "no action"
-        },
-        "perdas_vaga_confirmada_por_usuarios_id_fk": {
-          "name": "perdas_vaga_confirmada_por_usuarios_id_fk",
-          "tableFrom": "perdas_vaga",
-          "tableTo": "usuarios",
-          "columnsFrom": ["confirmada_por"],
-          "columnsTo": ["id"],
-          "onDelete": "no action",
-          "onUpdate": "no action"
-        }
-      },
-      "compositePrimaryKeys": {},
-      "uniqueConstraints": {
-        "perdas_vaga_vinculo_id_unique": {
-          "name": "perdas_vaga_vinculo_id_unique",
-          "nullsNotDistinct": false,
-          "columns": ["vinculo_id"]
-        }
-      },
-      "policies": {},
-      "checkConstraints": {
-        "perdas_vaga_sessoes_canceladas": {
-          "name": "perdas_vaga_sessoes_canceladas",
-          "value": "\"perdas_vaga\".\"sessoes_canceladas\" >= 0"
-        }
-      },
-      "isRLSEnabled": false
-    },
     "public.revogacoes_consentimento": {
       "name": "revogacoes_consentimento",
       "schema": "",
@@ -4311,16 +4082,6 @@
       "schema": "public",
       "values": ["email", "whatsapp", "ligacao"]
     },
-    "public.forma_cancelamento_alta": {
-      "name": "forma_cancelamento_alta",
-      "schema": "public",
-      "values": [
-        "cancelado_pelo_estagiario",
-        "recusado_pelo_supervisor",
-        "encerrado_pela_transferencia",
-        "encerrado_pelo_desligamento"
-      ]
-    },
     "public.situacao_caso": {
       "name": "situacao_caso",
       "schema": "public",
@@ -4331,8 +4092,7 @@
         "encerrado",
         "desligado_por_faltas",
         "aguardando_vaga",
-        "cancelado_por_revogacao",
-        "encerrado_por_alta"
+        "cancelado_por_revogacao"
       ]
     },
     "public.tipo_transferencia_caso": {
@@ -4391,6 +4151,11 @@
         "ausencia_estagiario",
         "desligamento"
       ]
+    },
+    "public.motivo_encerramento_sinalizacao": {
+      "name": "motivo_encerramento_sinalizacao",
+      "schema": "public",
+      "values": ["decisao", "contagem_abaixo_do_limite"]
     },
     "public.origem_cancelamento": {
       "name": "origem_cancelamento",

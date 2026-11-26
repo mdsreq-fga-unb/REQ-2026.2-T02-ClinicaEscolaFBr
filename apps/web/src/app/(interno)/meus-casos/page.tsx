@@ -13,6 +13,7 @@ import {
   CartaoVagaLiberada,
   SeloSituacaoCaso,
 } from "@/components/assiduidade/desligamento";
+import { FaixaSinalizacoes } from "@/components/assiduidade/sinalizacoes";
 import { Aviso } from "@/components/comum/aviso";
 import { Prioridade } from "@/components/casos/prioridade";
 import {
@@ -197,6 +198,9 @@ export default function MeusCasosPage() {
           Casos sob a sua responsabilidade e os dos seus estagiários.
         </p>
       </div>
+
+      {/* Sinalização de reprovação dos estagiários dele (RF63). */}
+      {supervisor && <FaixaSinalizacoes />}
 
       {mensagem && (
         <Aviso
