@@ -131,7 +131,13 @@ type Prontuario = {
     numeroNoCiclo: number | null;
     evolucao: EvolucaoRegistrada | null;
   }[];
-  alta: null | { data: string; motivo: string };
+  // Alta confirmada neste ciclo e não reaberta (RF68).
+  alta: null | {
+    data: string;
+    motivo: string;
+    confirmadaPor: string;
+    confirmadaEm: string;
+  };
   relatorioFinal: null | { estado: string };
   sessoesRealizadas: number;
   fechamentoAvaliativoPendente: boolean;
@@ -582,11 +588,28 @@ export default function ProntuarioPage() {
           <h2 id="titulo-alta" className="ui-h2">
             Alta
           </h2>
-          <p className="ui-dica">
-            {p.alta
-              ? `${p.alta.data} · ${p.alta.motivo}`
-              : "Sem registro neste ciclo."}
-          </p>
+          {p.alta ? (
+            <dl className="mt-2 grid gap-3">
+              <div>
+                <dt className="ui-rotulo">Data da alta</dt>
+                <dd className="mt-1 text-[15px]">{dataBr(p.alta.data)}</dd>
+              </div>
+              <div>
+                <dt className="ui-rotulo">Motivo</dt>
+                <dd className="mt-1 text-[15px] whitespace-pre-wrap [overflow-wrap:anywhere]">
+                  {p.alta.motivo}
+                </dd>
+              </div>
+              <div>
+                <dt className="ui-rotulo">Confirmada por</dt>
+                <dd className="mt-1 text-[15px]">
+                  {p.alta.confirmadaPor} em {dataHoraBr(p.alta.confirmadaEm)}
+                </dd>
+              </div>
+            </dl>
+          ) : (
+            <p className="ui-dica">Sem registro neste ciclo.</p>
+          )}
         </section>
         <section
           id="relatorio"

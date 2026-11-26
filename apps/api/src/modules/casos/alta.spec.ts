@@ -433,6 +433,36 @@ describe('Encerrar caso por alta (RF68)', () => {
     expect((await situacao(caso, 'ana')).acoes.pedir).toBe(true);
   });
 
+  it('o prontuário mostra a alta confirmada do ciclo, com a data, o motivo e quem confirmou, e deixa de mostrar depois da reabertura (RF68, RF27)', async () => {
+    const { caso, prontuarioId } = await casoAtivo();
+    const altaNoProntuario = async () =>
+      (
+        await http()
+          .get(`/prontuarios/${prontuarioId}`)
+          .set(como('ricardo'))
+          .expect(200)
+      ).body.alta;
+
+    await pedir(caso).expect(201);
+    // O pedido ainda não é alta: o caso continua em atendimento.
+    expect(await altaNoProntuario()).toBeNull();
+
+    await confirmar(caso).expect(200);
+    const alta = await altaNoProntuario();
+    expect(alta).toMatchObject({
+      data: hoje,
+      motivo: 'Objetivos terapêuticos do ciclo alcançados.',
+      confirmadaPor: 'Ricardo Menezes',
+    });
+    expect(Date.parse(alta.confirmadaEm)).not.toBeNaN();
+
+    await reabrir(caso, {
+      pedidaPor: pessoas.ana.id,
+      motivo: 'A paciente pediu para retomar o atendimento.',
+    }).expect(200);
+    expect(await altaNoProntuario()).toBeNull();
+  });
+
   it('com o estagiário desativado, o caso reaberto aguarda vínculo, com o supervisor mantido (RF68, RF21)', async () => {
     const { caso } = await casoAtivo();
     await pedir(caso).expect(201);
