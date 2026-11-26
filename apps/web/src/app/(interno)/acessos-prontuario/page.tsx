@@ -35,10 +35,12 @@ export default function AcessosProntuarioPage() {
   const [campos, setCampos] = useState(() => ({
     paciente: "",
     usuario: "",
+    operacao: "",
     ...periodoInicialAcessos(),
   }));
   const [filtro, setFiltro] = useState<FiltroAcessos>(() => ({
     ...campos,
+    operacao: undefined,
     pagina: 1,
   }));
   const [erros, setErros] = useState<Record<string, string>>({});
@@ -102,13 +104,14 @@ export default function AcessosProntuarioPage() {
       </div>
       <form
         noValidate
-        className="ui-painel grid gap-4 p-4 sm:grid-cols-2 lg:grid-cols-[1.3fr_1.1fr_1fr_1fr_auto] lg:items-end"
+        className="ui-painel grid gap-4 p-4 sm:grid-cols-2 lg:grid-cols-[1.3fr_1.1fr_1fr_1fr_1fr_auto] lg:items-end"
         onSubmit={(event) => {
           event.preventDefault();
           const validacao = filtroAcessosSchema.safeParse({
             ...campos,
             inicio: campos.inicio || undefined,
             fim: campos.fim || undefined,
+            operacao: campos.operacao || undefined,
             pagina: 1,
           });
           if (!validacao.success) {
@@ -156,6 +159,31 @@ export default function AcessosProntuarioPage() {
             )}
           </Campo>
         ))}
+        <Campo rotulo="Operação" erro={erros.operacao}>
+          {(props) => (
+            <select
+              {...props}
+              name="operacao"
+              className={classeEntrada}
+              value={campos.operacao}
+              onChange={(event) =>
+                setCampos({ ...campos, operacao: event.target.value })
+              }
+            >
+              <option value="">Todas</option>
+              {(
+                Object.entries(NOMES_OPERACAO_ACESSO) as [
+                  OperacaoAcesso,
+                  string,
+                ][]
+              ).map(([valor, nome]) => (
+                <option key={valor} value={valor}>
+                  {nome}
+                </option>
+              ))}
+            </select>
+          )}
+        </Campo>
         <Button type="submit" disabled={lista.isFetching}>
           Filtrar
         </Button>

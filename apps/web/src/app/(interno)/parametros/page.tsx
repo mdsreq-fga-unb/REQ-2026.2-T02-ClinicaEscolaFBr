@@ -11,6 +11,7 @@ import {
   type ValorContribuicao,
 } from "@clinica/shared";
 import { Aviso } from "@/components/comum/aviso";
+import { BotaoComMotivo } from "@/components/comum/botao-com-motivo";
 import { Campo, classeEntrada } from "@/components/comum/campo";
 import { inicioDoPerfil } from "@/components/layout/menu";
 import { CartaoDataLimiteCorrecao } from "@/components/prontuario/correcao-evolucao";
@@ -115,6 +116,8 @@ export default function ParametrosPage() {
   }
 
   const ultima = dados?.ultimaAlteracao;
+  // Sem mudança no valor, não há o que salvar: o botão fica desativado.
+  const inalterado = !!dados && centavosDoCampo(texto) === dados.valorCentavos;
   return (
     <div className="flex flex-col gap-6">
       <div>
@@ -183,8 +186,13 @@ export default function ParametrosPage() {
                   autoComplete="off"
                   className={classeEntrada}
                   value={texto}
+                  onBlur={() => {
+                    const centavos = centavosDoCampo(texto);
+                    if (centavos !== null)
+                      setEditado(centavosParaCampo(centavos));
+                  }}
                   onChange={(e) => {
-                    setEditado(e.target.value);
+                    setEditado(e.target.value.replace(/[^\d.,]/g, ""));
                     setErro(undefined);
                     setSemMudanca(false);
                   }}
@@ -196,13 +204,16 @@ export default function ParametrosPage() {
                 ? `Última alteração: de ${reais(ultima.valorAnterior)} para ${reais(ultima.valorNovo)}, por ${ultima.por}, em ${dataHoraBr(ultima.em).replace(", ", ", às ")}.`
                 : "Valor padrão, ainda sem alterações."}
             </p>
-            <Button
-              type="submit"
+            <BotaoComMotivo
+              motivo={inalterado ? "Altere o valor para salvar." : null}
               className="w-fit max-sm:w-full"
-              disabled={salvar.isPending}
             >
-              {salvar.isPending ? "Salvando…" : "Salvar valor"}
-            </Button>
+              {(props) => (
+                <Button {...props} type="submit" disabled={salvar.isPending}>
+                  {salvar.isPending ? "Salvando…" : "Salvar valor"}
+                </Button>
+              )}
+            </BotaoComMotivo>
           </form>
         )}
       </section>

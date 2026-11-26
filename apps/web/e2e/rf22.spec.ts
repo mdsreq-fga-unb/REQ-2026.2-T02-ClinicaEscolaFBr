@@ -85,7 +85,7 @@ const semRolagemLateral = (page: Page) =>
 
 async function buscar(page: Page) {
   await page.goto("/pacientes");
-  await page.getByLabel("Buscar paciente").fill(`RF22 ${marca}`);
+  await page.getByLabel("Paciente", { exact: true }).fill(`RF22 ${marca}`);
   await expect(page.getByText("Mostrando 3 pacientes.")).toBeVisible();
 }
 

@@ -133,12 +133,25 @@ jobs:
           elif [ "$EVIDENCIA" != "true" ]; then
             echo "Execução no runner: alerta antecipado, sem contar como evidência do D4.5." >> "$GITHUB_STEP_SUMMARY"
           fi
-      # Só a execução contra a homologação vira evidência do D4.5.
+      # Só a execução contra a homologação vira evidência do D4.5. O Feature Status usa
+      # o artefato rnfs-carga mais novo da development: por isso, ele só é publicado
+      # quando o cenário de referência passou (RNF12 e RNF21 verificados). Uma carga
+      # que falha não substitui a evidência anterior; o RNF47 entra junto quando passa.
       - name: Relatório de RNFs da homologação
+        id: relatorio
         if: (success() || failure()) && env.EVIDENCIA == 'true'
-        run: node .github/scripts/feature-status/coletar-rnfs.cjs relatorio-testes rnfs-verificados.json
+        run: |
+          node .github/scripts/feature-status/coletar-rnfs.cjs relatorio-testes rnfs-verificados.json
+          node -e '
+            const { testes } = require("./rnfs-verificados.json");
+            const ok = ["RNF12", "RNF21"].every((r) => testes.some((t) => t.rnfs.includes(r)));
+            console.log(`publicar=${ok}`);
+          ' >> "$GITHUB_OUTPUT"
+          if ! grep -q "publicar=true" "$GITHUB_OUTPUT"; then
+            echo "O cenário de referência não passou: o rnfs-carga não é publicado, e a evidência anterior continua valendo." >> "$GITHUB_STEP_SUMMARY"
+          fi
       - uses: actions/upload-artifact@v7
-        if: (success() || failure()) && env.EVIDENCIA == 'true'
+        if: (success() || failure()) && env.EVIDENCIA == 'true' && steps.relatorio.outputs.publicar == 'true'
         with:
           name: rnfs-carga
           path: rnfs-verificados.json

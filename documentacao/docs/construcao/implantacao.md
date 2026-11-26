@@ -27,6 +27,8 @@ O workflow `.github/workflows/implantacao.yml` roda a cada push na `main` ou na 
     - **api** e **web:** atrás do proxy do Coolify, com HTTPS. A API escuta na porta 3333 e a web na 3000, e o domínio de cada uma no Coolify leva essa porta (`https://api.clinica.fbr.edu.br:3333`), que o proxy usa e que não aparece no endereço.
 3. Espera a API publicada responder no `/health` com o commit da execução.
 
+**O compose no Coolify é uma cópia.** Cada ambiente é um *Service* do Coolify, com o compose colado no painel (Edit Compose File), e não lido do repositório. Ele difere do arquivo do repositório em dois pontos: as imagens ficam escritas por extenso (`clinica-api:development` na validação e `clinica-api:main` na produção), e o `migrador` leva `exclude_from_hc: true`. **Toda mudança no `implantacao/docker-compose.yml` precisa ser repetida no compose dos dois ambientes no Coolify**, e só vale depois de salvar e reiniciar o serviço. Em 26/11/2026, os dois foram atualizados com a prioridade de CPU, o limite de memória da API e as variáveis `LIMITE_*`, que não estavam lá; a cópia da produção não mudava desde 29/10.
+
 O Coolify recria todos os contêineres do ambiente a cada deploy (`docker compose up --force-recreate`), então o sistema fica fora do ar por alguns segundos. Se o migrador falhar, a API nova não sobe e a anterior já foi parada: o ambiente fica fora do ar, e o workflow falha. Para voltar, corrija o erro ou reverta a PR na branch do ambiente, e o merge implanta de novo.
 
 O resumo da execução, na aba Actions, mostra o commit que entrou no ar.
@@ -47,6 +49,10 @@ Nenhum segredo fica no repositório. Os valores ficam no GitHub e no Coolify:
 Cada ambiente tem a sua `CHAVE_DADOS` ([RNF51](../requisitos/nao-funcionais.md#rnf51)). Sem ela, os dados de saúde ficam ilegíveis, inclusive nas cópias de segurança. Por isso, guarde uma cópia de cada uma fora da VPS, no cofre de senhas da coordenação.
 
 **E-mail.** Os convites (RF53) e os códigos de verificação (RF52) saem pelo relay SMTP do Google Workspace da FBr (`smtp-relay.gmail.com`), o mesmo do sistema da FBr. Ele aceita o envio pelo IP da VPS, sem usuário e senha, e pede que a conexão se apresente com o domínio (`SMTP_EHLO`). O remetente é um endereço `@fbr.edu.br`.
+
+**Prioridade de CPU.** A VPS da FBr tem 2 vCPUs e roda também o site, o Moodle, o OJS e o próprio Coolify. Na carga dos indicadores (RNF47) contra a validação em 26/11/2026, a consulta mais lenta passou de 19,8 s, com uma implantação e os outros sistemas disputando a CPU, para 3,8 s com o servidor sem disputa. Por isso, o banco e a API têm `cpu_shares: 2048` no compose, o dobro do padrão: quando a CPU está disputada, eles recebem o dobro da fatia dos outros contêineres. Sem disputa, nada muda. Os testes de carga que contam como evidência devem rodar sem implantação em andamento.
+
+**Memória da API.** Sem limite, o Node da API deixava o lixo acumular até perto de 2 GB (o limite padrão para a memória da VPS) antes de limpar: na carga do RNF47, a API passou de 1,7 GB, com a VPS já usando 2 GB de swap, e algumas consultas ficaram paradas por mais de 20 s. O compose limita o heap a 512 MB (`NODE_OPTIONS=--max-old-space-size=512`), com folga sobre os cerca de 135 MB da API em repouso, para a limpeza acontecer cedo, em pausas curtas.
 
 **Proxy.** Na frente da API fica só o proxy do Coolify, por isso `SALTOS_DE_PROXY=1`. Assim, o limite de inscrições por origem (RF1) vale para cada visitante, e não para todos juntos, e ninguém consegue se passar por outra origem mandando o próprio `X-Forwarded-For`. Se a API passar a ficar atrás do Cloudflare, o valor vira 2.
 

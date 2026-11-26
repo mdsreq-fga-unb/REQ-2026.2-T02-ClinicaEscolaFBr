@@ -46,9 +46,14 @@ Depois do cenário de referência, o mesmo workflow roda o RNF47 sobre a mesma m
     - marque "homologacao".
 4. **Confira o resultado.** O resumo da execução mostra, para cada operação, a quantidade de requisições e o percentil 95. Quando a execução conta como evidência, a duração é sempre 10 minutos, seja qual for a escolhida. Se os dois limites e as verificações das respostas passarem, o Feature Status marca o RNF12 no RF10 (#96) e o RNF21 no RF18 (#92), com o link da execução.
 
+O artefato `rnfs-carga`, que o Feature Status lê, só é publicado quando o cenário de referência passa, com o RNF12 e o RNF21 verificados. Assim, uma execução que falha não apaga a evidência anterior. As gravações do cenário consomem os casos pendentes da massa: antes de repetir a evidência na mesma homologação, confira se ainda há casos aguardando distribuição.
+
 Uma execução no runner, sem endereço, nunca conta como evidência, porque o runner não é igual ao servidor de produção. Ela serve para avisar cedo se uma mudança deixou alguma operação lenta.
 
 ## Resultado local de referência
+
+!!! note "Resultado local não é evidência"
+    Os números abaixo são de um computador de desenvolvimento. A evidência do patamar de lançamento é a execução na homologação, registrada com o ambiente, a massa, o resultado de cada operação e as verificações das respostas em [Verificação dos RNFs](verificacao-rnfs.md#desempenho-na-homologacao).
 
 Na massa de dois semestres, com 30 pessoas por 10 minutos num computador de desenvolvimento, todas as verificações foram aprovadas, e a fila de pendentes durou até o fim (14 casos ainda aguardavam distribuição):
 
