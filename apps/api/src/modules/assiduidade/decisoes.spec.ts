@@ -336,6 +336,7 @@ describe('Decisão sobre a reprovação do estagiário (RF64, RNF35)', () => {
     expect(body).toEqual({
       id: expect.any(String),
       decisao: 'confirmada',
+      faltas: 3,
       justificativa: JUSTIFICATIVA,
       por: 'Helena Duarte',
       em: expect.any(String),
@@ -449,8 +450,14 @@ describe('Decisão sobre a reprovação do estagiário (RF64, RNF35)', () => {
       .sinalizacoes;
     expect(sinalizacao.faltas).toBe(2);
     expect(
-      sinalizacao.decisoes.map((d: { decisao: string }) => d.decisao),
-    ).toEqual(['confirmada', 'nao_aplicada']);
+      sinalizacao.decisoes.map((d: { decisao: string; faltas: number }) => [
+        d.decisao,
+        d.faltas,
+      ]),
+    ).toEqual([
+      ['confirmada', 3],
+      ['nao_aplicada', 2],
+    ]);
     expect(await db.select().from(sinalizacoesReprovacao)).toHaveLength(1);
     const eventos = await db
       .select()
@@ -459,7 +466,7 @@ describe('Decisão sobre a reprovação do estagiário (RF64, RNF35)', () => {
     expect(eventos.map((e) => e.dadosAnteriores)).toEqual(
       expect.arrayContaining([
         { situacao: 'aberta' },
-        { situacao: 'decidida' },
+        { situacao: 'decidida', faltas: 3 },
       ]),
     );
   });
@@ -475,6 +482,7 @@ describe('Decisão sobre a reprovação do estagiário (RF64, RNF35)', () => {
       {
         id: expect.any(String),
         decisao: 'confirmada',
+        faltas: 3,
         justificativa: null,
         por: 'Helena Duarte',
         em: expect.any(String),
@@ -493,7 +501,46 @@ describe('Decisão sobre a reprovação do estagiário (RF64, RNF35)', () => {
     await expect(db.delete(decisoesReprovacao)).rejects.toThrow();
   });
 
-  it('duas decisões ao mesmo tempo na sinalização aberta: as duas ficam no histórico, e a sinalização é encerrada uma vez', async () => {
+  it('sem mudança na contagem desde a última decisão, uma nova decisão recebe 409, e a anterior continua sozinha', async () => {
+    const { id } = await sinalizacaoDoLucas();
+    await decidir('coordenacao', id).expect(201);
+
+    const recusa = await decidir('coordenacao', id, {
+      decisao: 'nao_aplicada',
+      justificativa: 'Nova avaliação sem mudança nas faltas.',
+    }).expect(409);
+
+    expect(recusa.body.message).toBe(
+      'A contagem continua em 3 faltas, a mesma da última decisão. Uma nova decisão só pode ser registrada depois de a contagem mudar.',
+    );
+    const gravadas = await db.select().from(decisoesReprovacao);
+    expect(gravadas.map((d) => [d.decisao, d.faltas])).toEqual([
+      ['confirmada', 3],
+    ]);
+  });
+
+  it('uma falta registrada depois da decisão muda a contagem, e a nova decisão é aceita ao lado da anterior', async () => {
+    const { id } = await sinalizacaoDoLucas();
+    await decidir('coordenacao', id).expect(201);
+    await cancelarEm(
+      casoLucas,
+      'lucas',
+      '2026-11-19T16:00:00',
+      '2026-11-19T08:00:00',
+    );
+
+    await decidir('coordenacao', id).expect(201);
+
+    // A quarta falta não gerou outra sinalização (RF63).
+    expect(await db.select().from(sinalizacoesReprovacao)).toHaveLength(1);
+    const [sinalizacao] = (await sinalizacoes('coordenacao').expect(200)).body
+      .sinalizacoes;
+    expect(
+      sinalizacao.decisoes.map((d: { faltas: number }) => d.faltas),
+    ).toEqual([3, 4]);
+  });
+
+  it('duas decisões ao mesmo tempo na sinalização aberta, com a mesma contagem: só uma é aceita, e a outra recebe 409', async () => {
     const { id } = await sinalizacaoDoLucas();
 
     const respostas = await Promise.all([
@@ -504,17 +551,35 @@ describe('Decisão sobre a reprovação do estagiário (RF64, RNF35)', () => {
       }),
     ]);
 
-    expect(respostas.map((r) => r.status)).toEqual([201, 201]);
-    expect(await db.select().from(decisoesReprovacao)).toHaveLength(2);
-    const eventos = await db
-      .select()
-      .from(auditoria)
-      .where(eq(auditoria.operacao, 'registrar_decisao_reprovacao'));
-    expect(
-      eventos
-        .map((e) => (e.dadosAnteriores as { situacao: string }).situacao)
-        .sort(),
-    ).toEqual(['aberta', 'decidida']);
+    expect(respostas.map((r) => r.status).sort((a, b) => a - b)).toEqual([
+      201, 409,
+    ]);
+    expect(await db.select().from(decisoesReprovacao)).toHaveLength(1);
+    const [sinalizacao] = await db.select().from(sinalizacoesReprovacao);
+    expect(sinalizacao.motivoEncerramento).toBe('decisao');
+  });
+
+  it('duas decisões ao mesmo tempo numa sinalização já decidida, depois de a contagem mudar: só uma é aceita', async () => {
+    const { id, sessoes } = await sinalizacaoDoLucas();
+    await decidir('coordenacao', id).expect(201);
+    await reclassificar(await cancelamentoDa(sessoes[1]));
+
+    const respostas = await Promise.all([
+      decidir('coordenacao', id, {
+        decisao: 'nao_aplicada',
+        justificativa: 'A contagem caiu para 2.',
+      }),
+      decidir('coordenacao', id, {
+        decisao: 'nao_aplicada',
+        justificativa: 'A contagem caiu para 2, registrada ao mesmo tempo.',
+      }),
+    ]);
+
+    expect(respostas.map((r) => r.status).sort((a, b) => a - b)).toEqual([
+      201, 409,
+    ]);
+    const gravadas = await db.select().from(decisoesReprovacao);
+    expect(gravadas.map((d) => d.faltas).sort((a, b) => a - b)).toEqual([2, 3]);
   });
 
   it('a decisão e uma reclassificação ao mesmo tempo nunca deixam a sinalização encerrada pelos dois motivos', async () => {
