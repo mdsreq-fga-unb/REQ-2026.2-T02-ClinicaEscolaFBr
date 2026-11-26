@@ -106,6 +106,21 @@ function estadoDoChecklist(corpo) {
 const dorAprovado = (corpo) =>
   ESTADOS.indexOf(estadoDoChecklist(corpo)) >= ESTADOS.indexOf("Em design");
 
+// Issues de feature citadas por uma PR de código cujo DoR ainda não foi aprovado
+// (checklist [B] completo e registro preenchido). A construção só começa depois
+// da decisão de prontidão (seção 9.1.5): a PR de feature que cita uma delas falha.
+// O registro com o resultado "Não pronta" também conta como DoR não aprovado,
+// mesmo com o checklist marcado depois: falta registrar a nova avaliação.
+const featuresSemDoR = (issues) =>
+  issues
+    .filter(
+      (issue) =>
+        ehFeature(issue) &&
+        (!dorAprovado(issue.body) ||
+          /^Resultado:\s*Não pronta\b/m.test(issue.body ?? "")),
+    )
+    .map((issue) => issue.number);
+
 const SECAO_ESTADO = new RegExp(
   `(^${SECAO}Estado da feature \\(FDD\\)\\s*\\n+)([^\\n]+)`,
   "m",
@@ -223,6 +238,7 @@ module.exports = {
   ehLider,
   ITENS_DO_LIDER,
   dorAprovado,
+  featuresSemDoR,
   mexeNoCodigo,
   ehInspecao,
   ESTADOS,
