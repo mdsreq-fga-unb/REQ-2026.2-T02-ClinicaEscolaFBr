@@ -31,6 +31,11 @@ const OUTRO_SITE = 'https://outro-sistema.fbr.edu.br';
 
 // Requisição forjada por outra página (CSRF) e limite de entradas com erro por
 // origem (RNF49), com a API montada como no main.ts.
+// Cada entrada confere a senha com bcrypt: com a suíte inteira rodando em paralelo,
+// as entradas em série destes testes passam dos 5 s padrão do Jest. Um teste
+// interrompido no meio deixaria tentativas contando na origem do teste seguinte.
+const ENTRADAS_EM_SERIE = 30_000;
+
 describe('Proteção da sessão contra outras páginas e tentativas em massa (RNF49, RNF16)', () => {
   let app: INestApplication;
   let db: Db;
@@ -196,37 +201,47 @@ describe('Proteção da sessão contra outras páginas e tentativas em massa (RN
       .expect(200);
   });
 
-  it('a origem com muitas entradas erradas recebe 429, sem contar as entradas certas (RNF49, RF50)', async () => {
-    // Entradas certas não gastam o limite.
-    for (let i = 0; i < 5; i += 1)
-      await entrar('juliana@fbr.edu.br').expect(200);
-    // Uma senha errada em cada conta, para não chegar ao bloqueio de nenhuma.
-    await entrar('helena@fbr.edu.br', 'errada111').expect(401);
-    await entrar('juliana@fbr.edu.br', 'errada111').expect(401);
-    await entrar('ninguem@fbr.edu.br', 'errada111').expect(401);
-    // A 4ª tentativa da mesma origem é recusada antes de conferir a senha,
-    // mesmo certa, e não conta para o bloqueio da conta.
-    const recusada = await entrar('juliana@fbr.edu.br').expect(429);
-    expect(recusada.body.message).toMatch(/Muitas tentativas de entrada/);
-    expect((await contasCom('juliana@fbr.edu.br'))[0].tentativasFalhas).toBe(1);
-  });
+  it(
+    'a origem com muitas entradas erradas recebe 429, sem contar as entradas certas (RNF49, RF50)',
+    async () => {
+      // Entradas certas não gastam o limite.
+      for (let i = 0; i < 5; i += 1)
+        await entrar('juliana@fbr.edu.br').expect(200);
+      // Uma senha errada em cada conta, para não chegar ao bloqueio de nenhuma.
+      await entrar('helena@fbr.edu.br', 'errada111').expect(401);
+      await entrar('juliana@fbr.edu.br', 'errada111').expect(401);
+      await entrar('ninguem@fbr.edu.br', 'errada111').expect(401);
+      // A 4ª tentativa da mesma origem é recusada antes de conferir a senha,
+      // mesmo certa, e não conta para o bloqueio da conta.
+      const recusada = await entrar('juliana@fbr.edu.br').expect(429);
+      expect(recusada.body.message).toMatch(/Muitas tentativas de entrada/);
+      expect((await contasCom('juliana@fbr.edu.br'))[0].tentativasFalhas).toBe(
+        1,
+      );
+    },
+    ENTRADAS_EM_SERIE,
+  );
 
-  it('as tentativas numa conta já bloqueada não gastam o limite da origem (RNF49, DF25)', async () => {
-    await db
-      .update(usuarios)
-      .set({ bloqueadoAte: new Date(Date.now() + 15 * 60_000) })
-      .where(eq(usuarios.email, 'juliana@fbr.edu.br'));
-    // Alguém da mesma rede clica em "Entrar" várias vezes na conta bloqueada.
-    for (let i = 0; i < 5; i += 1)
-      await entrar('juliana@fbr.edu.br').expect(423);
-    // O resto da equipe, que sai pelo mesmo endereço, continua entrando.
-    await entrar('helena@fbr.edu.br').expect(200);
-    // A senha errada que bloqueia a conta conta: 401, 401 e o 423 do bloqueio.
-    await entrar('helena@fbr.edu.br', 'errada111').expect(401);
-    await entrar('helena@fbr.edu.br', 'errada222').expect(401);
-    await entrar('helena@fbr.edu.br', 'errada333').expect(423);
-    await entrar('ninguem@fbr.edu.br', 'errada111').expect(429);
-  });
+  it(
+    'as tentativas numa conta já bloqueada não gastam o limite da origem (RNF49, DF25)',
+    async () => {
+      await db
+        .update(usuarios)
+        .set({ bloqueadoAte: new Date(Date.now() + 15 * 60_000) })
+        .where(eq(usuarios.email, 'juliana@fbr.edu.br'));
+      // Alguém da mesma rede clica em "Entrar" várias vezes na conta bloqueada.
+      for (let i = 0; i < 5; i += 1)
+        await entrar('juliana@fbr.edu.br').expect(423);
+      // O resto da equipe, que sai pelo mesmo endereço, continua entrando.
+      await entrar('helena@fbr.edu.br').expect(200);
+      // A senha errada que bloqueia a conta conta: 401, 401 e o 423 do bloqueio.
+      await entrar('helena@fbr.edu.br', 'errada111').expect(401);
+      await entrar('helena@fbr.edu.br', 'errada222').expect(401);
+      await entrar('helena@fbr.edu.br', 'errada333').expect(423);
+      await entrar('ninguem@fbr.edu.br', 'errada111').expect(429);
+    },
+    ENTRADAS_EM_SERIE,
+  );
 });
 
 describe('Contagem das entradas com erro por origem (RNF49)', () => {
