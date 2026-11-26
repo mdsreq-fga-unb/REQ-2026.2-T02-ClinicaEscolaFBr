@@ -78,4 +78,17 @@ export class PoliticaProntuario {
     }
     return linha.prontuario;
   }
+
+  // Consulta sem prontuário para abrir (caso inexistente ou ciclo sem prontuário),
+  // feita por um perfil que recebe a resposta vazia: fica no registro de acessos
+  // (RNF52), sem prontuário, como as tentativas negadas de prontuário inexistente.
+  async registrarSemProntuario(usuario: UsuarioAutenticado, operacao: string) {
+    await this.db.insert(acessosProntuario).values({
+      prontuarioId: null,
+      usuarioId: usuario.id,
+      perfil: usuario.perfil,
+      operacao,
+      permitido: true,
+    });
+  }
 }

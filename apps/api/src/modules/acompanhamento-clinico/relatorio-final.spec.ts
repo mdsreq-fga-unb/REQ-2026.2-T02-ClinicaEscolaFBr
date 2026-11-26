@@ -316,6 +316,21 @@ describe('Relatório final: consulta, impressão e entrega (RF33)', () => {
         .set(como(pessoas.secretaria))
         .expect(200)
         .expect((r) => expect(r.body).toEqual({}));
+      // O caso inexistente tem a mesma resposta, e as duas consultas ficam no
+      // registro de acessos, sem prontuário (RNF25, RNF52).
+      await http()
+        .get('/casos/00000000-0000-4000-8000-000000000000/relatorio-final')
+        .set(como(pessoas.secretaria))
+        .expect(200)
+        .expect((r) => expect(r.body).toEqual({}));
+      const registros = await db
+        .select()
+        .from(acessosProntuario)
+        .where(eq(acessosProntuario.operacao, 'consultar_relatorio_final'));
+      expect(registros).toHaveLength(2);
+      expect(
+        registros.every((r) => r.prontuarioId === null && r.permitido),
+      ).toBe(true);
       await http()
         .get(`${base()}?ciclo=2`)
         .set(como(pessoas.estagiario))
