@@ -72,6 +72,7 @@ rfs:
   ciclo: 3
   ordem: 1
   lider: Jônatas
+  depende: [RF57]
   issue: 88
   estado: Código inspecionado
   origem: [DF02, DF07, DF24, DF35, DF43, DF47, DF48, DF51, DF56, DF60, DF64]
@@ -782,7 +783,7 @@ rfs:
   ciclo: 6
   ordem: 52
   lider: Maria Clara
-  depende: [RF52]
+  depende: [RF52, RF44]
   issue: 280
   estado: Planejada
   origem: [DF70, DF71, DF72]
@@ -944,7 +945,6 @@ rfs:
   ciclo: 4
   ordem: 33
   lider: Jônatas
-  depende: [RF1]
   issue: 52
   estado: Código concluído
   origem: [DF44, DF47, DF63]
