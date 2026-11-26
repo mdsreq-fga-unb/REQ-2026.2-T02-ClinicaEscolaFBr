@@ -3,6 +3,7 @@ import {
   Controller,
   Get,
   Header,
+  HttpCode,
   Param,
   ParseIntPipe,
   ParseUUIDPipe,
@@ -79,6 +80,8 @@ export class RelatoriosFinaisController {
   }
 
   @Post('versoes/:versao/decisao')
+  // A decisão muda a versão que já existe: 200, como nas outras decisões.
+  @HttpCode(200)
   @Header('Cache-Control', 'no-store')
   decidir(
     @Param('id', ParseUUIDPipe) casoId: string,

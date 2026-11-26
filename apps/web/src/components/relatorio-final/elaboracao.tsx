@@ -68,10 +68,11 @@ function errosDaApi(falha: unknown): Record<string, string> {
 }
 
 // Sessões realizadas sem evolução, para revisão humana: o sistema não completa o
-// prontuário (RF33).
+// prontuário (RF33). Depois da aprovação não há mais o que revisar, e o aviso sai.
 export function AvisoLacunas({ r }: { r: ElaboracaoDoRelatorio }) {
   const lacunas = r.sessoes.filter((s) => !s.temEvolucao);
-  if (lacunas.length === 0 || r.semEvolucoes) return null;
+  const aprovado = r.versoes.some((v) => v.estado === "aprovado");
+  if (lacunas.length === 0 || r.semEvolucoes || aprovado) return null;
   const fim =
     "Revise antes de seguir: o sistema não completa lacunas do prontuário.";
   return lacunas.length === 1 ? (
