@@ -225,6 +225,13 @@
       "when": 1795665615024,
       "tag": "0031_alta",
       "breakpoints": true
+    },
+    {
+      "idx": 32,
+      "version": "7",
+      "when": 1795665732805,
+      "tag": "0032_perda_vaga_contribuicao",
+      "breakpoints": true
     }
   ]
 }

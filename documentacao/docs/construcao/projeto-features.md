@@ -3071,6 +3071,26 @@ sequenceDiagram
 
 **Dependências e riscos:** depende do RF41 e do RF42, e muda o RF10 e o RF7, que já estão integrados; os testes do RF7 e do RF10 entram na mesma PR.
 
+**Na implementação (PR do RF43):**
+
+- **Banco:**
+    - a tabela `perdas_vaga` (só inserção), uma por vínculo, guarda o vínculo, o estagiário, o supervisor, o início e o fim do prazo vencido, as sessões canceladas e quem confirmou;
+    - a `vagas_liberadas` passa a aceitar a perda da vaga (`perda_vaga_id`) como terceira origem, junto com o desligamento (RF37) e a alta (RF68). O `check` `vagas_origem_unica` passa a exigir exatamente uma das três (`num_nonnulls(...) = 1`), e o gatilho que protege os campos da vaga inclui a nova coluna;
+    - tudo isso está na migration `0032_perda_vaga_contribuicao`, gerada depois da `0031` da alta. Por isso, a PR do RF43 entra depois da do RF68 (inspeção de design de 24/11).
+- **Rotas além das previstas:**
+    - `GET /casos/:id/perda-vaga` (secretaria e coordenação) traz para a ficha a prévia da perda, com o estagiário, o prazo e as sessões futuras que serão canceladas, ou a perda já confirmada, enquanto o caso está na fila por causa dela;
+    - `GET /sessoes/pacientes` traz a `contribuicao` de cada paciente com estagiário (situação, se bloqueia e a data do pagamento, essa só para a secretaria), para o "Agendar sessão" avisar antes de enviar;
+    - `GET /casos/:id/responsaveis` traz o `prazoContribuicaoVencido`, para o aviso sem ação ao estagiário e ao supervisor.
+- **Decisões:**
+    - **Quando o prazo vence:** o prazo vence no dia seguinte ao último dia para pagar, em Brasília. Vinculado em 17/11, paga até 27/11, e o aviso aparece em 28/11. Com isso, 11 dias geram o aviso e 9 não.
+    - **Supervisor:** a confirmação também encerra a atribuição do supervisor. O caso volta como `aguardando_distribuicao`, sem supervisor, e é distribuído de novo pelo RF18.
+    - **Sessões futuras:** são canceladas como `administrativo`, sem falta do paciente nem ausência do estagiário.
+    - **Confirmação recusada (409):** fora do atendimento, com o pagamento registrado (`ja_pago`) ou com o prazo em aberto (`prazo_em_aberto`).
+    - **Prazo depois da volta:** o prazo recomeça no vínculo seguinte, porque a entrada na fila passa a ser o instante da confirmação.
+- **Verificação:**
+    - **API:** os testes cobrem o aviso com 11 e com 9 dias, o pago, o 403 do estagiário e do supervisor, a confirmação completa (vínculo, atribuição, vaga, sessão futura, auditoria e o 409 na repetição), a volta atrás de quem entrou antes na fila, a transferência que não reinicia o prazo, o prazo que recomeça depois da volta, a ficha e os responsáveis. Os testes do RF10 cobrem a 1ª sessão, o 422 com a sessão realizada, o pagamento lido a cada agendamento e o ciclo anterior que não libera o atual.
+    - **Web:** os testes cobrem o bloqueio com o link do pagamento, a 1ª sessão, o pagamento efetivado, o diálogo com as consequências, a recusa e a vaga perdida na ficha.
+
 ---
 
 ### RF45 — Emitir declaração de comparecimento do paciente ([#280](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/issues/280))

@@ -1,4 +1,5 @@
 import { z } from "zod";
+import type { ContribuicaoNoAgendamento } from "./contribuicao";
 import type { Canal } from "./dominio-ciclo-3";
 
 // Agendamento de sessão (RF10). Início e término chegam como data/hora ISO com o
@@ -31,6 +32,8 @@ export type PacienteAgendavel = {
   casoId: string;
   nome: string;
   estagiario: { id: string; nome: string } | null;
+  // Contribuição social do ciclo (RF43), só para quem tem estagiário vinculado.
+  contribuicao: ContribuicaoNoAgendamento | null;
 };
 
 // Bloco ocupado na agenda do estagiário: sessão mais o intervalo para anotações.

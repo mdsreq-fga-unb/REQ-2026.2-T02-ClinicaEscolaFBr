@@ -8,13 +8,30 @@ const PACIENTES = [
     casoId: "c1",
     nome: "Sérgio Antunes Freitas",
     estagiario: { id: "e1", nome: "Pedro Henrique Lima" },
+    contribuicao: { situacao: "pendente", bloqueia: false, pagoEm: null },
   },
   {
     casoId: "c2",
     nome: "Mariana Alves Toledo",
     estagiario: { id: "e2", nome: "Ana Beatriz Costa" },
+    contribuicao: {
+      situacao: "efetivada",
+      bloqueia: false,
+      pagoEm: "2026-11-19",
+    },
   },
-  { casoId: "c3", nome: "Rafael Gomes Ribeiro", estagiario: null },
+  {
+    casoId: "c3",
+    nome: "Rafael Gomes Ribeiro",
+    estagiario: null,
+    contribuicao: null,
+  },
+  {
+    casoId: "c4",
+    nome: "João Pedro Lima",
+    estagiario: { id: "e2", nome: "Ana Beatriz Costa" },
+    contribuicao: { situacao: "pendente", bloqueia: true, pagoEm: null },
+  },
 ];
 
 const RESULTADO = {
@@ -318,5 +335,82 @@ describe("Agendar sessão (RF10)", () => {
         "Acesso restrito à secretaria e aos estagiários.",
       ),
     ).toBeTruthy();
+  });
+
+  describe("contribuição social pendente (RF43)", () => {
+    it("da 2ª sessão em diante, com a contribuição pendente: avisa com o link do pagamento e deixa o Agendar indisponível", async () => {
+      const chamadas = simularApi();
+      abrirTela();
+      await escolherPaciente("João Pedro");
+      expect(screen.getByText("Não é possível agendar a sessão.")).toBeTruthy();
+      expect(
+        screen.getByText(/A partir da 2ª sessão, o agendamento exige/),
+      ).toBeTruthy();
+      expect(
+        screen
+          .getByRole("link", { name: "Registrar pagamento" })
+          .getAttribute("href"),
+      ).toBe("/pacientes/c4#contribuicao");
+      preencherHorario("10:00");
+      expect((botaoAgendar() as HTMLButtonElement).disabled).toBe(true);
+      expect(chamadas.some((c) => c.metodo === "POST")).toBe(false);
+    });
+
+    it("o estagiário vê o bloqueio sem o link do pagamento, que é da secretaria", async () => {
+      simularApi({ perfil: "estagiario" });
+      abrirTela();
+      await escolherPaciente("João Pedro");
+      expect(screen.getByText("Não é possível agendar a sessão.")).toBeTruthy();
+      expect(
+        screen.queryByRole("link", { name: "Registrar pagamento" }),
+      ).toBeNull();
+    });
+
+    it("a 1ª sessão com a contribuição pendente só informa, sem bloquear", async () => {
+      simularApi();
+      abrirTela();
+      await escolherPaciente("Sérgio");
+      expect(
+        screen.getByText(
+          "Primeira sessão de Sérgio Antunes Freitas: a contribuição é cobrada nela, mas não impede o agendamento.",
+        ),
+      ).toBeTruthy();
+      expect((botaoAgendar() as HTMLButtonElement).disabled).toBe(false);
+    });
+
+    it("depois do pagamento, mostra a data e libera o agendamento", async () => {
+      simularApi();
+      abrirTela();
+      await escolherPaciente("Mariana");
+      expect(
+        screen.getByText(
+          "Contribuição de Mariana Alves Toledo efetivada em 19/11/2026. O agendamento está liberado.",
+        ),
+      ).toBeTruthy();
+      expect((botaoAgendar() as HTMLButtonElement).disabled).toBe(false);
+    });
+
+    it("se a API recusar por contribuição pendente, mostra o motivo", async () => {
+      simularApi({
+        agendamento: {
+          status: 422,
+          corpo: {
+            statusCode: 422,
+            codigo: "contribuicao_pendente",
+            message:
+              "A contribuição social de Sérgio Antunes Freitas está pendente. A partir da 2ª sessão, o agendamento exige o pagamento registrado.",
+          },
+        },
+      });
+      abrirTela();
+      await escolherPaciente("Sérgio");
+      preencherHorario("10:00");
+      fireEvent.click(botaoAgendar());
+      expect(
+        await screen.findByText(
+          /A contribuição social de Sérgio Antunes Freitas está pendente/,
+        ),
+      ).toBeTruthy();
+    });
   });
 });

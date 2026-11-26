@@ -13,7 +13,7 @@ import {
 import { CANAIS_DECLARACAO, FORMAS_PAGAMENTO } from "@clinica/shared";
 import { usuarios } from "./base";
 import { sessoesAtendimento } from "./agendamento";
-import { casos } from "./casos";
+import { casos, vinculosEstagiario } from "./casos";
 import { inscricoes } from "./inscricao";
 
 export const formaPagamentoEnum = pgEnum("forma_pagamento", FORMAS_PAGAMENTO);
@@ -121,3 +121,42 @@ export const autorizacoesMenor = pgTable("autorizacoes_menor", {
     .notNull()
     .defaultNow(),
 });
+
+// Perda da vaga pela contribuição pendente (RF43, DF33), confirmada pela
+// secretaria ou pela coordenação depois do prazo de 10 dias corridos. Encerra o
+// vínculo e a atribuição do supervisor, libera a vaga do estagiário, cancela as
+// sessões futuras e devolve o caso à fila. Só inserção. Uma por vínculo: duas
+// confirmações ao mesmo tempo não geram duas perdas nem duas vagas.
+export const perdasVaga = pgTable(
+  "perdas_vaga",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    casoId: uuid("caso_id")
+      .notNull()
+      .references(() => casos.id),
+    cicloAtendimento: integer("ciclo_atendimento").notNull(),
+    vinculoId: uuid("vinculo_id")
+      .notNull()
+      .unique()
+      .references(() => vinculosEstagiario.id),
+    estagiarioId: uuid("estagiario_id")
+      .notNull()
+      .references(() => usuarios.id),
+    supervisorId: uuid("supervisor_id")
+      .notNull()
+      .references(() => usuarios.id),
+    // Início e fim do prazo vencido, como estavam na confirmação.
+    vinculadoEm: timestamp("vinculado_em", { withTimezone: true }).notNull(),
+    prazoAte: date("prazo_ate").notNull(),
+    sessoesCanceladas: integer("sessoes_canceladas").notNull(),
+    confirmadaPor: uuid("confirmada_por")
+      .notNull()
+      .references(() => usuarios.id),
+    confirmadaEm: timestamp("confirmada_em", { withTimezone: true })
+      .notNull()
+      .defaultNow(),
+  },
+  (t) => [
+    check("perdas_vaga_sessoes_canceladas", sql`${t.sessoesCanceladas} >= 0`),
+  ],
+);

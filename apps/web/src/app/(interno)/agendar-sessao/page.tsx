@@ -27,6 +27,48 @@ const ANOTACOES = PARAMETROS_PADRAO.intervalo_anotacoes_minutos;
 const SEM_VINCULO =
   "Não é possível agendar sessão para ele agora. O vínculo é feito pelo supervisor do caso.";
 
+// Contribuição social do paciente escolhido (RF43, prancha 8-2): da 2ª sessão em
+// diante, o agendamento exige o pagamento registrado. A 1ª sessão nunca é
+// bloqueada. Só a secretaria registra o pagamento, na ficha do paciente.
+function AvisoContribuicao({
+  paciente,
+  podeRegistrar,
+}: {
+  paciente: PacienteAgendavel;
+  podeRegistrar: boolean;
+}) {
+  const c = paciente.contribuicao;
+  if (!c) return null;
+  const linkPagamento = podeRegistrar && (
+    <Link
+      href={`/pacientes/${paciente.casoId}#contribuicao`}
+      className="font-semibold text-primary underline underline-offset-2"
+    >
+      Registrar pagamento
+    </Link>
+  );
+  if (c.bloqueia)
+    return (
+      <Aviso tipo="erro" focar titulo="Não é possível agendar a sessão.">
+        A contribuição social de {paciente.nome} está pendente. A partir da 2ª
+        sessão, o agendamento exige o pagamento registrado. {linkPagamento}
+      </Aviso>
+    );
+  if (c.situacao === "pendente")
+    return (
+      <Aviso
+        tipo="info"
+        titulo={`Primeira sessão de ${paciente.nome}: a contribuição é cobrada nela, mas não impede o agendamento.`}
+      />
+    );
+  return c.pagoEm ? (
+    <Aviso
+      tipo="sucesso"
+      titulo={`Contribuição de ${paciente.nome} efetivada em ${dataBr(c.pagoEm)}. O agendamento está liberado.`}
+    />
+  ) : null;
+}
+
 // "15:00" + 50 → "15:50", sem passar da meia-noite.
 function somarMinutos(hora: string, minutos: number) {
   const [h, m] = hora.split(":").map(Number);
@@ -449,7 +491,12 @@ export default function AgendarSessaoPage() {
     }
     setErros(novos);
     setConflito(null);
-    if (Object.keys(novos).length > 0 || !paciente?.estagiario) return;
+    if (
+      Object.keys(novos).length > 0 ||
+      !paciente?.estagiario ||
+      paciente.contribuicao?.bloqueia
+    )
+      return;
     agendamento.mutate({
       casoId: paciente.casoId,
       inicio: emBrasilia(data, inicio),
@@ -458,6 +505,9 @@ export default function AgendarSessaoPage() {
   };
 
   const semVinculo = paciente !== null && !paciente.estagiario;
+  // Com a contribuição pendente da 2ª sessão em diante, "Agendar" fica
+  // indisponível (RF43); a API recusa do mesmo jeito.
+  const bloqueado = Boolean(paciente?.contribuicao?.bloqueia);
   // Conflito e término inválido já aparecem junto dos campos.
   const erroNosCampos =
     agendamento.error instanceof ErroApi &&
@@ -494,6 +544,13 @@ export default function AgendarSessaoPage() {
             >
               {SEM_VINCULO}
             </Aviso>
+          )}
+
+          {paciente?.estagiario && (
+            <AvisoContribuicao
+              paciente={paciente}
+              podeRegistrar={sessao?.perfil === "secretaria"}
+            />
           )}
 
           {paciente?.estagiario && (
@@ -587,7 +644,7 @@ export default function AgendarSessaoPage() {
             </Button>
             <Button
               type="submit"
-              disabled={agendamento.isPending || semVinculo}
+              disabled={agendamento.isPending || semVinculo || bloqueado}
             >
               {agendamento.isPending ? "Agendando…" : "Agendar sessão"}
             </Button>

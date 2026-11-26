@@ -116,6 +116,9 @@ export type ResponsaveisDoCaso = {
   situacao: SituacaoCaso;
   supervisor: string | null;
   estagiario: string | null;
+  // Prazo da contribuição vencido sem pagamento, com o caso em atendimento
+  // (RF43): o estagiário e o supervisor veem o aviso, sem a confirmação.
+  prazoContribuicaoVencido?: { vinculadoEm: string; ate: string } | null;
 };
 
 // Linha da lista de Pacientes (secretaria e coordenação).
