@@ -35,8 +35,14 @@ import {
   FaltasEstagiarioService,
   SEM_ACESSO,
 } from './faltas-estagiario.service';
+import {
+  contarFaltasNoSemestre,
+  travarFaltasDoEstagiario,
+} from './contagem-faltas';
 import { FaltasSemestreService } from './faltas-semestre.service';
 
+const CONTAGEM_SEM_MUDANCA = (faltas: number) =>
+  `A contagem continua em ${faltas} ${faltas === 1 ? 'falta' : 'faltas'}, a mesma da última decisão. Uma nova decisão só pode ser registrada depois de a contagem mudar.`;
 const ENCERRADA_SEM_DECISAO =
   'Esta sinalização foi encerrada sem decisão, porque a contagem ficou abaixo do limite. Se a contagem voltar a 3 no semestre, uma nova sinalização é gerada.';
 
@@ -182,21 +188,33 @@ export class SinalizacoesService {
     return { sinalizacoes };
   }
 
-  // Os supervisores com cada estagiário hoje: atribuição vigente num caso em que o
-  // estagiário tem o vínculo vigente (CP4). Um estagiário pode ter mais de um.
   // A coordenação registra a decisão institucional sobre a sinalização (RF64). A
-  // primeira decisão encerra a sinalização aberta; numa sinalização já decidida, a
-  // decisão nova fica ao lado da anterior. A sinalização encerrada porque a
+  // primeira decisão encerra a sinalização aberta. Numa sinalização já decidida,
+  // uma decisão nova só é aceita se a contagem do semestre mudou desde a última
+  // decisão (último critério do RF64), e fica ao lado da anterior; cada decisão
+  // guarda a contagem em que foi registrada. A sinalização encerrada porque a
   // contagem ficou abaixo do limite não recebe decisão (apontamento 1 da
-  // inspeção). A linha da sinalização fica travada até o fim da transação (D1.3):
-  // duas decisões ao mesmo tempo não a encerram duas vezes, e uma reclassificação
-  // que a encerraria espera a decisão terminar.
+  // inspeção).
+  // Travas, na mesma ordem do registro da ausência e da reclassificação, para não
+  // haver impasse: primeiro o estagiário, que segura a contagem, e depois a linha
+  // da sinalização (D1.3). Assim, duas decisões ao mesmo tempo com a mesma
+  // contagem deixam entrar só uma, e uma reclassificação ao mesmo tempo ou espera
+  // a decisão ou a encerra antes.
   async registrarDecisao(
     sinalizacaoId: string,
     { decisao, justificativa }: RegistroDecisao,
     usuario: UsuarioAutenticado,
   ): Promise<DecisaoDaSinalizacao> {
     return this.db.transaction(async (tx) => {
+      const [alvo] = await tx
+        .select({
+          estagiarioId: sinalizacoesReprovacao.estagiarioId,
+          semestre: sinalizacoesReprovacao.semestre,
+        })
+        .from(sinalizacoesReprovacao)
+        .where(eq(sinalizacoesReprovacao.id, sinalizacaoId));
+      if (!alvo) throw new NotFoundException('Sinalização não encontrada.');
+      await travarFaltasDoEstagiario(tx, alvo.estagiarioId);
       const [sinalizacao] = await tx
         .select({
           encerradaEm: sinalizacoesReprovacao.encerradaEm,
@@ -205,17 +223,35 @@ export class SinalizacoesService {
         .from(sinalizacoesReprovacao)
         .where(eq(sinalizacoesReprovacao.id, sinalizacaoId))
         .for('update');
-      if (!sinalizacao) {
-        throw new NotFoundException('Sinalização não encontrada.');
-      }
       if (sinalizacao.motivo === 'contagem_abaixo_do_limite') {
         throw new ConflictException(ENCERRADA_SEM_DECISAO);
+      }
+      const faltas = await contarFaltasNoSemestre(
+        tx,
+        alvo.estagiarioId,
+        alvo.semestre,
+      );
+      const aberta = sinalizacao.encerradaEm === null;
+      const [ultima] = aberta
+        ? []
+        : await tx
+            .select({ faltas: decisoesReprovacao.faltas })
+            .from(decisoesReprovacao)
+            .where(eq(decisoesReprovacao.sinalizacaoId, sinalizacaoId))
+            .orderBy(
+              desc(decisoesReprovacao.decididaEm),
+              desc(decisoesReprovacao.id),
+            )
+            .limit(1);
+      if (ultima && ultima.faltas === faltas) {
+        throw new ConflictException(CONTAGEM_SEM_MUDANCA(faltas));
       }
       const [gravada] = await tx
         .insert(decisoesReprovacao)
         .values({
           sinalizacaoId,
           decisao,
+          faltas,
           justificativaCifrada: cifrar(justificativa, this.chave()),
           decididaPor: usuario.id,
         })
@@ -223,25 +259,27 @@ export class SinalizacoesService {
           id: decisoesReprovacao.id,
           em: decisoesReprovacao.decididaEm,
         });
-      const aberta = sinalizacao.encerradaEm === null;
       if (aberta) {
         await tx
           .update(sinalizacoesReprovacao)
           .set({ encerradaEm: sql`now()`, motivoEncerramento: 'decisao' })
           .where(eq(sinalizacoesReprovacao.id, sinalizacaoId));
       }
-      // A auditoria guarda a decisão e só que a justificativa foi informada, como
-      // os outros motivos da CP9 (apontamento 3).
+      // A auditoria guarda a decisão, as contagens e só que a justificativa foi
+      // informada, como os outros motivos da CP9 (apontamento 3).
       await this.auditoria.registrar(
         {
           usuarioId: usuario.id,
           operacao: 'registrar_decisao_reprovacao',
           entidade: 'sinalizacoes_reprovacao',
           entidadeId: sinalizacaoId,
-          dadosAnteriores: { situacao: aberta ? 'aberta' : 'decidida' },
+          dadosAnteriores: aberta
+            ? { situacao: 'aberta' }
+            : { situacao: 'decidida', faltas: ultima!.faltas },
           dadosNovos: {
             situacao: 'decidida',
             decisao,
+            faltas,
             decisaoId: gravada.id,
             justificativaInformada: true,
           },
@@ -251,6 +289,7 @@ export class SinalizacoesService {
       return {
         id: gravada.id,
         decisao,
+        faltas,
         justificativa,
         por: usuario.nome,
         em: gravada.em.toISOString(),
@@ -268,6 +307,7 @@ export class SinalizacoesService {
         id: decisoesReprovacao.id,
         sinalizacaoId: decisoesReprovacao.sinalizacaoId,
         decisao: decisoesReprovacao.decisao,
+        faltas: decisoesReprovacao.faltas,
         justificativaCifrada: decisoesReprovacao.justificativaCifrada,
         por: usuarios.nome,
         em: decisoesReprovacao.decididaEm,
@@ -282,6 +322,7 @@ export class SinalizacoesService {
         {
           id: l.id,
           decisao: l.decisao,
+          faltas: l.faltas,
           justificativa: comJustificativa
             ? decifrar(l.justificativaCifrada, this.chave())
             : null,
@@ -297,6 +338,8 @@ export class SinalizacoesService {
     return this.config.getOrThrow<string>('CHAVE_DADOS');
   }
 
+  // Os supervisores com cada estagiário hoje: atribuição vigente num caso em que o
+  // estagiário tem o vínculo vigente (CP4). Um estagiário pode ter mais de um.
   private async supervisoresDeHoje(estagiarioIds: string[]) {
     const porEstagiario = new Map<string, string[]>();
     if (estagiarioIds.length === 0) return porEstagiario;

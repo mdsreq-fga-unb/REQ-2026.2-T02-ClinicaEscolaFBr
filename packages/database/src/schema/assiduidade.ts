@@ -322,7 +322,9 @@ export const decisaoReprovacaoEnum = pgEnum(
 
 // Decisão institucional sobre a sinalização de reprovação (RF64), registrada pela
 // coordenação. A primeira encerra a sinalização aberta; uma decisão nova, depois de
-// a contagem mudar, é outra linha, e nenhuma é apagada. A justificativa é cifrada,
+// a contagem mudar, é outra linha, e nenhuma é apagada. Cada decisão guarda a
+// contagem do semestre no momento em que foi registrada: a próxima só é aceita se
+// a contagem atual for outra. A justificativa é cifrada,
 // porque pode trazer dado pessoal do estagiário (RNF51). Só inserção, com o
 // gatilho impedir_alteracao_registro.
 export const decisoesReprovacao = pgTable(
@@ -333,6 +335,7 @@ export const decisoesReprovacao = pgTable(
       .notNull()
       .references(() => sinalizacoesReprovacao.id),
     decisao: decisaoReprovacaoEnum("decisao").notNull(),
+    faltas: integer("faltas").notNull(),
     justificativaCifrada: text("justificativa_cifrada").notNull(),
     decididaPor: uuid("decidida_por")
       .notNull()
@@ -341,5 +344,8 @@ export const decisoesReprovacao = pgTable(
       .notNull()
       .defaultNow(),
   },
-  (t) => [index("decisoes_reprovacao_sinalizacao").on(t.sinalizacaoId)],
+  (t) => [
+    index("decisoes_reprovacao_sinalizacao").on(t.sinalizacaoId),
+    check("decisoes_reprovacao_faltas", sql`${t.faltas} >= 0`),
+  ],
 );

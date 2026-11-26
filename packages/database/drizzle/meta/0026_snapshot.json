@@ -1,5 +1,5 @@
 {
-  "id": "e22f353b-9ede-47ac-b093-de4b6285eea4",
+  "id": "5b06306f-7635-41dc-b2f3-1e7bf6d57b71",
   "prevId": "763e75af-da95-4c52-8ad2-77436a93ba36",
   "version": "7",
   "dialect": "postgresql",
@@ -2380,6 +2380,12 @@
           "primaryKey": false,
           "notNull": true
         },
+        "faltas": {
+          "name": "faltas",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
         "justificativa_cifrada": {
           "name": "justificativa_cifrada",
           "type": "text",
@@ -2440,7 +2446,12 @@
       "compositePrimaryKeys": {},
       "uniqueConstraints": {},
       "policies": {},
-      "checkConstraints": {},
+      "checkConstraints": {
+        "decisoes_reprovacao_faltas": {
+          "name": "decisoes_reprovacao_faltas",
+          "value": "\"decisoes_reprovacao\".\"faltas\" >= 0"
+        }
+      },
       "isRLSEnabled": false
     },
     "public.desligamento_faltas": {

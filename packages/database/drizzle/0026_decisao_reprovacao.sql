@@ -3,9 +3,11 @@ CREATE TABLE "decisoes_reprovacao" (
 	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
 	"sinalizacao_id" uuid NOT NULL,
 	"decisao" "decisao_reprovacao" NOT NULL,
+	"faltas" integer NOT NULL,
 	"justificativa_cifrada" text NOT NULL,
 	"decidida_por" uuid NOT NULL,
-	"decidida_em" timestamp with time zone DEFAULT now() NOT NULL
+	"decidida_em" timestamp with time zone DEFAULT now() NOT NULL,
+	CONSTRAINT "decisoes_reprovacao_faltas" CHECK ("decisoes_reprovacao"."faltas" >= 0)
 );
 --> statement-breakpoint
 ALTER TABLE "decisoes_reprovacao" ADD CONSTRAINT "decisoes_reprovacao_sinalizacao_id_sinalizacoes_reprovacao_id_fk" FOREIGN KEY ("sinalizacao_id") REFERENCES "public"."sinalizacoes_reprovacao"("id") ON DELETE no action ON UPDATE no action;--> statement-breakpoint

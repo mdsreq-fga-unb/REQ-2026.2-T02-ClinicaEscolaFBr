@@ -198,6 +198,9 @@ export type RegistroDecisao = z.infer<typeof registroDecisaoSchema>;
 export type DecisaoDaSinalizacao = {
   id: string;
   decisao: DecisaoReprovacao;
+  // A contagem do semestre quando a decisão foi registrada. Uma nova decisão só é
+  // aceita depois de a contagem mudar (RF64).
+  faltas: number;
   // Só a coordenação lê a justificativa, que pode trazer dado pessoal do
   // estagiário; o supervisor vê a decisão, o autor e a data (apontamento 2).
   justificativa: string | null;
