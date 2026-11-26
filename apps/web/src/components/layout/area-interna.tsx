@@ -214,8 +214,8 @@ export function AreaInterna({ children }: { children: ReactNode }) {
   };
 
   return (
-    <div className="min-h-[calc(100dvh-var(--altura-faixa,0px))] md:flex">
-      <header className="flex min-h-14 items-center gap-1 bg-marca px-1.5 text-white md:hidden">
+    <div className="min-h-[calc(100dvh-var(--altura-faixa,0px))] md:flex print:block! print:min-h-0">
+      <header className="flex min-h-14 items-center gap-1 bg-marca px-1.5 text-white md:hidden print:hidden!">
         <button
           type="button"
           aria-label="Abrir menu"
@@ -272,7 +272,7 @@ export function AreaInterna({ children }: { children: ReactNode }) {
       </dialog>
       <aside
         aria-label="Menu lateral"
-        className="hidden w-[264px] shrink-0 flex-col gap-7 overflow-y-auto bg-sidebar px-3.5 py-5 text-sidebar-foreground md:sticky md:top-[var(--altura-faixa,0px)] md:flex md:h-[calc(100dvh-var(--altura-faixa,0px))]"
+        className="hidden w-[264px] shrink-0 flex-col gap-7 overflow-y-auto bg-sidebar px-3.5 py-5 text-sidebar-foreground md:sticky md:top-[var(--altura-faixa,0px)] md:flex md:h-[calc(100dvh-var(--altura-faixa,0px))] print:hidden!"
       >
         <div className="px-1.5">
           <Marca />
@@ -284,7 +284,7 @@ export function AreaInterna({ children }: { children: ReactNode }) {
         <FaixaAlertas perfil={usuario.perfil} />
         <main
           id="conteudo"
-          className="min-w-0 flex-1 px-4 pt-5 pb-8 md:px-10 md:py-8"
+          className="min-w-0 flex-1 px-4 pt-5 pb-8 md:px-10 md:py-8 print:p-0"
         >
           {children}
         </main>

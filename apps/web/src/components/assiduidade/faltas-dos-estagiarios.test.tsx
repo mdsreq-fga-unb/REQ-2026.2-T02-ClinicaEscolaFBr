@@ -49,18 +49,21 @@ const TRES: FaltasDoEstagiario = {
       estagiario: ESTAGIARIOS[0],
       inicio: "2026-10-29T17:00:00.000Z",
       registradaEm: "2026-10-28T12:12:00.000Z",
+      reclassificada: null,
     },
     {
       id: "f2",
       estagiario: ESTAGIARIOS[0],
       inicio: "2026-09-10T13:00:00.000Z",
       registradaEm: "2026-09-09T21:40:00.000Z",
+      reclassificada: null,
     },
     {
       id: "f3",
       estagiario: ESTAGIARIOS[1],
       inicio: "2026-08-21T19:00:00.000Z",
       registradaEm: "2026-08-21T11:05:00.000Z",
+      reclassificada: null,
     },
   ],
 };
@@ -219,6 +222,7 @@ describe("Faltas dos estagiários (RF39, prancha 7-1)", () => {
           estagiario: ESTAGIARIOS[1],
           inicio: "2026-11-13T17:00:00.000Z",
           registradaEm: "2026-11-12T12:00:00.000Z",
+          reclassificada: null,
         },
         ...TRES.faltas,
       ],
@@ -314,6 +318,39 @@ describe("Faltas dos estagiários (RF39, prancha 7-1)", () => {
       expect(fetch).not.toHaveBeenCalled();
     },
   );
+
+  it("a falta reclassificada pela coordenação (RF40) aparece riscada, com o texto, e sai da contagem", async () => {
+    simularApi([
+      ok({
+        ...TRES,
+        faltas: [
+          {
+            ...TRES.faltas[0],
+            reclassificada: {
+              por: "Helena Duarte",
+              em: "2026-10-30T13:00:00.000Z",
+              motivo: null,
+            },
+          },
+          ...TRES.faltas.slice(1),
+        ],
+      }),
+    ]);
+    abrir();
+
+    const resultado = await screen.findByRole("region", {
+      name: "2 faltas no período",
+    });
+    const tabela = within(resultado).getByRole("table", { hidden: true });
+    expect(
+      within(tabela).getByText(
+        "Reclassificada como cancelamento administrativo por Helena Duarte em 30/10/2026.",
+      ),
+    ).toBeTruthy();
+    expect(within(tabela).getByText("29/10/2026").className).toContain(
+      "line-through",
+    );
+  });
 
   it("o menu leva às faltas só o supervisor e a coordenação", () => {
     const comFaltas = (perfil: Perfil) =>

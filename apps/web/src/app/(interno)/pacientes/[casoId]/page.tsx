@@ -43,6 +43,7 @@ import { CartaoContribuicao } from "@/components/administrativo/contribuicao";
 import { AcessoNegado } from "@/components/comum/acesso-negado";
 import { AutorizacaoMenorDaFicha } from "@/components/declaracoes/autorizacao-menor";
 import { SessoesComPresencaDaFicha } from "@/components/declaracoes/sessoes-com-presenca";
+import { ImpressaoEEntregaDoRelatorio } from "@/components/relatorio-final/relatorio-final";
 import { Aviso } from "@/components/comum/aviso";
 import { Dados } from "@/components/comum/dados";
 import { Button, buttonVariants } from "@/components/ui/button";
@@ -491,6 +492,9 @@ export default function PacientePage() {
       {/* Sessões com presença registrada (RF44): de todos os ciclos do caso,
           só para a secretaria (RNF38); nos outros perfis, a seção não aparece. */}
       {secretaria && <SessoesComPresencaDaFicha casoId={d.casoId} />}
+      {/* Impressão e entrega do relatório final aprovado (RF33): só a
+          secretaria, que não vê as outras versões nem o prontuário. */}
+      {secretaria && <ImpressaoEEntregaDoRelatorio casoId={d.casoId} />}
       <HistoricoFaltas
         id="historico-faltas"
         contagem={d.faltasNoCiclo}

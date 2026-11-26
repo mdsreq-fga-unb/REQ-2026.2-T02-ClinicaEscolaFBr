@@ -682,7 +682,7 @@ rfs:
   lider: Nicolas
   depende: [RF16, RF39]
   issue: 276
-  estado: Planejada
+  estado: Código concluído
   origem: [DF69]
 
 - id: RF63
@@ -697,7 +697,7 @@ rfs:
   lider: Nicolas
   depende: [RF40]
   issue: 277
-  estado: Planejada
+  estado: Código concluído
   origem: [DF12, DF54, DF69]
 
 - id: RF64
@@ -712,7 +712,7 @@ rfs:
   lider: Nicolas
   depende: [RF63]
   issue: 278
-  estado: Planejada
+  estado: Código concluído
   origem: [DF12, DF54]
 
 - id: RF41
@@ -832,7 +832,7 @@ rfs:
   lider: Gabriel
   depende: [RF48]
   issue: 23
-  estado: Planejada
+  estado: Código concluído
 
 - id: RF50
   nome: Autenticar usuário institucional
@@ -1207,8 +1207,8 @@ rnfs:
   nome: Integridade e proveniência dos registros de evolução
   cp: CP7
   classificacao: Obrigatório para o MVP
-  relacionado: RF28, RF31, RF32, RF67, RF68
-  justificativa: Registros clínicos precisam preservar autor, sessão, paciente e histórico, inclusive a validação do supervisor (RF67) e o encerramento por alta (RF68).
+  relacionado: RF28, RF30, RF31, RF32, RF67, RF68
+  justificativa: Registros clínicos precisam preservar autor, sessão, paciente e histórico, inclusive os complementos (RF30), a validação do supervisor (RF67) e o encerramento por alta (RF68).
 
 - id: RNF28
   nome: Auditoria das correções de evolução
@@ -1737,7 +1737,7 @@ decisoes:
 - id: DF68
   data: 25/11/2026
   fonte: respostas da FBr por WhatsApp
-  decisao: O supervisor do caso também registra o complemento da evolução, a qualquer momento, sem prazo. Perguntado se o supervisor pode registrar o complemento e se há prazo, Robson Araújo respondeu que "os supervisores devem poder corrigir a qualquer momento". A equipe entendeu a resposta como válida para o complemento, e não para a correção (RF29), que mantém o mesmo prazo do estagiário (DF66).
+  decisao: Perguntado se o supervisor pode registrar o complemento da evolução e se há prazo, Robson Araújo respondeu que "os supervisores devem poder corrigir a qualquer momento". A equipe entendeu a resposta como válida para o complemento, e não para a correção (RF29), que mantém o mesmo prazo do estagiário (DF66), e adotou como padrão até a confirmação da FBr que o supervisor do caso também registra o complemento, sem prazo. A leitura é da equipe e está nas pendências de validação; a equipe perguntou de novo em 25/11, às 15h50.
 
 - id: DF56
   data: 12/11/2026

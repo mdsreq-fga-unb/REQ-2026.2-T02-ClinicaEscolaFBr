@@ -2064,7 +2064,7 @@ sequenceDiagram
 
 **Dados de teste:** o estagiário responsável adicionando dois complementos (ordem preservada, original intacto); complemento vazio e com 1.001 caracteres (400); o supervisor do caso registrando, também com o caso desligado; o supervisor de outro caso, a coordenação, a secretaria e o estagiário de outro caso (403); o caso encerrado por alta e o desligado para o estagiário (422); uma evolução validada que recebe complemento (volta a pendente); o `clinica_app` tentando alterar um complemento (recusado pelo banco).
 
-**Dependências e riscos:** depende do RF28 (#149) e lê as versões do RF29 (#224). Com a DF68, o supervisor passou a registrar, e a mudança ficou na política e no serviço.
+**Dependências e riscos:** depende do RF28 (#149) e lê as versões do RF29 (#224). Com a DF68, o supervisor passou a registrar, e a mudança ficou na política e no serviço. A DF68 é a leitura da equipe da resposta da FBr, adotada até a confirmação: se a FBr disser que o "a qualquer momento" não é sobre o complemento, basta tirar o supervisor da política.
 
 **Na implementação:**
 
@@ -2288,6 +2288,26 @@ sequenceDiagram
 **Dados de teste:** um ciclo de 9 sessões com 8 evoluções (a lacuna aparece); o envio, a devolução sem observações (400), a devolução com observações e a versão 2 aprovada, com a versão 1 guardada; a tentativa de alterar a versão aprovada (recusada pelo banco); um ciclo de 6 sessões sem justificativa (400) e com justificativa; o ciclo sem evoluções (422); a secretaria tentando imprimir uma versão em revisão (403) e registrando a entrega sem marcar a via assinada (400); a coordenação lendo; o estagiário de outro caso (403).
 
 **Dependências e riscos:** depende do RF28 e do RF32. É a maior feature do ciclo; se apertar, a impressão e a entrega podem ser integradas numa segunda PR, depois do fluxo de revisão.
+
+**Na implementação (modelo, impressão e entrega):** a primeira PR do RF33 traz o modelo inteiro e a parte da secretaria; a elaboração do rascunho, o envio e a decisão do supervisor entram depois, sobre as mesmas tabelas.
+
+- **Banco (migration 0024):** `relatorios_finais` (um por prontuário), `versoes_relatorio`, `impressoes_relatorio` e `entregas_relatorio`. O gatilho `proteger_versao_relatorio` deixa o rascunho mudar e passar só para "em revisão"; a versão em revisão só recebe a decisão, sem mudar o texto nem a origem; a aprovada e a devolvida ficam fixas, e nenhuma versão é apagada. Índices únicos garantem uma versão aberta e uma aprovada por relatório. A impressão e a entrega só aceitam a versão aprovada (gatilho `exigir_versao_relatorio_aprovada`) e são só inserção; a entrega tem o `check` da via assinada.
+- **Rotas:** `GET /casos/:id/relatorio-final`, a lista de versões; a secretaria recebe só a aprovada, sem as observações. `GET .../versoes/:versao/impressao` devolve a versão aprovada para a página de impressão, e `POST .../versoes/:versao/impressoes` registra quem imprimiu e quando: a impressão foi separada da abertura da página, para o registro ser feito quando a pessoa manda imprimir, não quando só olha a página. `POST .../entrega` é só da secretaria, depois de imprimir, uma vez por versão, com a data entre a aprovação e hoje e o responsável legal só quando a inscrição tem um. A coordenação consulta as versões, mas não imprime. Toda consulta, permitida ou negada, entra no registro de acessos (RNF52), com a política do prontuário no modo `relatorio_final`, a única exceção da secretaria (RF55).
+- **Telas:** na ficha do paciente, o cartão "Relatório final de {nome}" da secretaria, com o selo "Aprovado em", "Imprimir", a última impressão e "Registrar a entrega" (a confirmação da via assinada com os nomes do estagiário e do supervisor, a quem foi entregue e a data), ou o aviso "Relatório ainda não aprovado". No prontuário, a seção "Relatório final" lista as versões com a situação e, na aprovada, "Finalizar em PDF" para o estagiário e o supervisor. A página de impressão segue a prancha 6-6 e esconde o menu e os botões na impressão (folha A4, uma página no exemplo da prancha).
+- **Testes:** 18 testes da API, com as negações por perfil e as regras do banco, e 9 da tela; a tela foi conferida no navegador contra a prancha 6-6, em 1366 e 390 px, e o PDF gerado pela impressão.
+
+**Na implementação (elaboração, envio e decisão):** a segunda PR do RF33, sobre as mesmas tabelas.
+
+- **Consulta separada.** O texto das versões, as sessões, as lacunas e a identificação vêm em `GET /casos/:id/relatorio-final/elaboracao` (estagiário responsável, supervisor do caso e coordenação, pela política no modo `leitura`), e não no `GET /casos/:id/relatorio-final`, que a secretaria também usa. Assim, a resposta da secretaria continua sem conteúdo clínico. O rascunho só vai para o estagiário.
+- **Escrita.** `PUT .../rascunho` aceita seções em branco; `POST .../envio` recebe o texto e o fixa na mesma transação, com as sessões e as evoluções de origem, e exige todas as seções. A política usa o modo `registro_estagiario`. O corpo é validado depois dela, e o vínculo é conferido de novo com o caso travado. Com a versão em revisão ou aprovada, a resposta é `409`.
+- **Justificativa.** Conta as sessões `realizada` do ciclo. Fora de 8 a 10, o envio sem a justificativa recebe `400` com o campo; dentro da faixa, ela não é guardada.
+- **Decisão.** Só o supervisor do caso, na versão em revisão. A aprovação com observações escritas é recusada, para o texto não se perder sem aviso, e a tela pede a confirmação antes de aprovar.
+- **Autoria (migration 0025).** O gatilho da 0024 fixava o autor também no rascunho. Depois de uma transferência (RF25), o novo responsável continua o rascunho, que passa a ser dele; enviada, a autoria não muda.
+- **Lacunas.** São as sessões realizadas sem evolução. A evolução incompleta não existe no banco, pelo `check` da ficha completa.
+- **Limites.** 5.000 caracteres por seção e 1.000 na justificativa e nas observações, propostas da equipe para validar com a FBr.
+- **Telas.** Página "Relatório final · ciclo N" (`/relatorio-final/:casoId`), aberta pela seção do prontuário, com o formulário, a revisão e as versões enviadas para leitura, cada uma com os registros de origem e o aviso do que veio depois do envio. Sair com texto não salvo pede a confirmação do navegador.
+- **Alta (RF68).** A alta encerra o vínculo, e o estagiário perde o acesso à elaboração: o relatório precisa ser enviado antes da confirmação da alta, ou o caso precisa ser reaberto.
+
 
 ---
 
@@ -2694,6 +2714,16 @@ sequenceDiagram
 
 **Dependências e riscos:** depende do RF16 (#144) e do RF39 (#225).
 
+**Na implementação (ajustes da inspeção de design de 24/11):**
+
+- **Migration:** a `0026_reclassificacao_falta`, depois da `0025` do relatório final (RF33), cria a `reclassificacoes_falta`, com o `unique` em `cancelamento_id`, e o gatilho `reclassificacoes_falta_somente_insercao`, que usa o `impedir_alteracao_registro`. O script do usuário da aplicação tira dele o `UPDATE` e o `DELETE`. O `cancelamentos_sessao` não muda, e a restrição `cancelamentos_aviso_paciente` da `0020` continua valendo.
+- **Supervisor com o estagiário em casos de outros supervisores (apontamento 1):** a contagem e a situação são sempre as do estagiário no semestre inteiro, em todos os casos, porque o limite do RF63 vale para todas as faltas dele. As linhas com a data e o horário são só as dos casos do supervisor, pela mesma regra do RF39 (a atribuição no momento do registro da ausência), e as outras aparecem só como "N faltas em casos de outros supervisores", sem a data (RNF35). A coordenação vê todas as linhas. A regra fica na função `faltaDoSupervisor`, compartilhada com o RF39, para o RF63 usá-la também na faixa (apontamento 2 da inspeção do RF63).
+- **Reclassificação na relação do RF39 (apontamento 2):** a ausência reclassificada continua na relação do período, com a data e o horário riscados e o texto "Reclassificada como cancelamento administrativo por … em …", e sai da contagem "N faltas no período".
+- **Concorrência (apontamento 3):** o `registrarAusencia` do RF16 e a reclassificação travam a linha do estagiário em `usuarios` (`for no key update`) antes de contar, com a função `travarFaltasDoEstagiario`. O `no key update` não segura as inserções que só apontam para o usuário, como a auditoria. A sinalização do RF63 entra depois dessa trava, na mesma transação.
+- **Motivo da reclassificação (apontamento 4):** o motivo é obrigatório, com até 1.000 caracteres, e fica cifrado (`motivo_cifrado`, RNF51), porque pode trazer dado pessoal do estagiário, como um atestado. A auditoria (`reclassificar_falta_estagiario`) guarda a classificação anterior e a nova e só `motivoInformado: true`. **Só a coordenação lê o motivo**, como na prancha 7-1: o supervisor vê a falta riscada, com quem reclassificou e quando, sem o motivo, e a relação do RF39 também não mostra o motivo para nenhum perfil.
+- **Detalhes (apontamento 5):** a falta inexistente dá `404`; o cancelamento que não é `ausencia_estagiario` e a falta já reclassificada dão `409`; o `cancelamentoId` fora do formato de UUID dá `400`. As opções do seletor "Semestre" são o semestre vigente e os semestres com alguma ausência dos estagiários que o perfil vê. Os dados de teste incluem a ausência registrada em dezembro para uma sessão de janeiro, que conta em `AAAA/1`, e a sessão de 30/06 às 22h em Brasília, que já é 01/07 em UTC e conta em `AAAA/1`.
+- **Tela:** a seção "Faltas no semestre" fica acima da relação do período do RF39, na mesma página. O resumo vem com quem tem mais faltas primeiro, e o nome do estagiário abre as faltas dele. A situação é "N de 3", "Limite atingido" ou um traço, sempre em texto. O diálogo "Reclassificar" leva o foco ao campo do motivo quando ele falta, e a nova contagem aparece num aviso depois da reclassificação.
+
 ---
 
 ### RF63 — Sinalizar reprovação do estagiário por faltas ([#277](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/issues/277))
@@ -2720,6 +2750,15 @@ _Ciclo 6._
 **Dados de teste:** a terceira ausência gerando a sinalização; a quarta, sem nova sinalização; a reclassificação levando a 2 antes da decisão (encerra) e uma nova ausência voltando a 3 (nova sinalização); a reclassificação depois da decisão (decisão mantida); o estagiário e a secretaria consultando (403).
 
 **Dependências e riscos:** depende do RF40, no mesmo ciclo. O RF40 e o RF63 têm o mesmo Líder, e a sinalização entra na mesma transação da contagem.
+
+**Na implementação (ajustes da inspeção de design de 24/11):**
+
+- **Migration:** a `0027_sinalizacao_reprovacao`, depois da `0026` do RF40, cria a `sinalizacoes_reprovacao`, com o enum `motivo_encerramento_sinalizacao` (`decisao`, `contagem_abaixo_do_limite`, nit 5) e o índice único parcial `sinalizacoes_reprovacao_aberta` (estagiário e semestre, com `encerrada_em is null`). O encerramento por contagem guarda a reclassificação que o causou (`reclassificacao_id`), para o histórico dizer qual falta foi reclassificada. O gatilho `proteger_campos_preenchidos` impede mudar o estagiário, o semestre e a geração, deixa preencher o encerramento uma vez e impede apagar a linha; o script do usuário da aplicação tira dela o `DELETE`.
+- **Regra (`reavaliarSinalizacao`, em `contagem-faltas.ts`):** roda na transação do registro da ausência (RF16) e da reclassificação (RF40), depois da trava do estagiário. Gera a sinalização quando a contagem chega a 3 e, no semestre, não há uma aberta nem uma encerrada pela decisão (apontamento 1): depois da decisão, voltar a 3 não gera outra. Encerra a aberta, sem decisão, quando uma reclassificação deixa a contagem abaixo de 3; com a decisão registrada, não mexe em nada. A inserção usa `on conflict do nothing` (apontamento 3), para uma corrida nunca derrubar o registro da ausência.
+- **Quem vê (apontamento 2):** a faixa em "Meus casos" e as abertas vão para todos os supervisores que têm o estagiário hoje (definição única da CP4). O histórico segue a lista do RF39, que inclui os estagiários com falta registrada num caso do supervisor. As datas seguem o recorte do RF40: o supervisor vê as sessões dos casos dele e as outras faltas só como número. O mesmo recorte vale para a falta cuja reclassificação encerrou a sinalização: se ela é de um caso de outro supervisor, o histórico diz "uma falta num caso de outro supervisor foi reclassificada", sem a data (revisão da PR #320). A coluna "Supervisor" da coordenação lista todos os supervisores do estagiário.
+- **Página "Sinalizações de reprovação":** para o supervisor e a coordenação, com as abertas ("Aguardando a decisão") e o histórico das encerradas. O botão "Registrar decisão" e as decisões no histórico entram com o RF64; o encerramento por `decisao` e a regra de não gerar outra sinalização depois dela já estão no RF63 e testados com uma sinalização encerrada direto no banco.
+- **Faixa (nit 4):** mostra a data e o horário de cada sessão ("21/08, às 16:00; 17/09, às 10:00 e 12/11/2026, às 16:00"). O `role="alert"` vale só na primeira vez da sessão do navegador, guardada no `sessionStorage` pelo id da sinalização; depois, a faixa é uma região comum. Com mais de 3 faltas, aparece "tem agora N faltas… a sinalização continua a mesma".
+- **Testes:** a 3ª falta gerando e a 4ª sem nova sinalização; a contagem que cai para 2 antes da decisão (encerra) e volta a 3 (gera outra); a reclassificação de 4 para 3 (continua aberta); a decisão seguida da reclassificação e de uma nova falta (nada muda); o estagiário com casos de dois supervisores; o 403; e a 3ª e a 4ª falta ao mesmo tempo, que geram uma sinalização só, também no PostgreSQL real.
 
 ---
 
@@ -2762,6 +2801,15 @@ sequenceDiagram
 **Dados de teste:** a decisão "confirmada" com justificativa; sem justificativa (400); uma segunda decisão depois de uma reclassificação, com a primeira preservada; o supervisor tentando registrar (403); o histórico lido pelo supervisor.
 
 **Dependências e riscos:** depende do RF63.
+
+**Na implementação (ajustes da inspeção de design de 24/11):**
+
+- **Migration:** a `0028_decisao_reprovacao`, depois da `0027` do RF63, cria a `decisoes_reprovacao`, com o enum `decisao_reprovacao` (`confirmada`, `nao_aplicada`), a contagem do semestre no momento da decisão (`faltas`) e o gatilho `decisoes_reprovacao_somente_insercao`, que usa o `impedir_alteracao_registro`. O script do usuário da aplicação tira dela o `UPDATE` e o `DELETE`.
+- **Rota:** `POST /sinalizacoes-reprovacao/:id/decisoes` (coordenação) responde `201` com a decisão, a contagem, o autor e a data/hora. A primeira decisão encerra a sinalização com o motivo `decisao`. Numa sinalização já decidida, uma decisão nova só é aceita se a contagem atual for diferente da registrada na última decisão (último critério do RF64, revisão da PR #321); ela fica ao lado da anterior. A transação trava primeiro o estagiário, como o registro da ausência e a reclassificação, e depois a linha da sinalização (`for update`, D1.3): duas decisões ao mesmo tempo com a mesma contagem deixam entrar só uma, e uma reclassificação ao mesmo tempo ou espera a decisão (e não encerra mais nada) ou a encerra antes (e a decisão recebe `409`).
+- **Erros (apontamento 1):** `400` sem justificativa, sem a escolha ou com mais de 1.000 caracteres; `403` para quem não é da coordenação; `404` para a sinalização inexistente; `409` para a sinalização encerrada por `contagem_abaixo_do_limite`, que não chegou a uma decisão, e para a nova decisão sem mudança na contagem desde a última. O supervisor não registra decisão e só consulta as sinalizações dos estagiários dele, pela regra do RF63.
+- **O que o supervisor vê (apontamento 2):** a decisão, quem registrou e quando, **sem a justificativa**, como no recorte "Supervisor · Só consulta" da prancha 7-3; o recorte "Histórico do estagiário" com as justificativas vale para a coordenação. É a mesma regra do motivo da reclassificação no RF40.
+- **Justificativa (apontamento 3):** obrigatória, com até 1.000 caracteres, cifrada (`justificativa_cifrada`, RNF51). A auditoria (`registrar_decisao_reprovacao`) guarda a situação anterior (`aberta` ou `decidida`, com a contagem da última decisão), a decisão, a contagem e só `justificativaInformada: true`.
+- **Tela:** na página "Sinalizações de reprovação", a coordenação tem "Registrar decisão" nas abertas e, no histórico de cada sinalização decidida, "Registrar nova decisão" só quando a contagem mudou desde a última decisão; sem mudança, aparece "Uma nova decisão pode ser registrada se a contagem mudar". O histórico é uma lista ordenada com a sinalização e as decisões, da mais antiga para a mais recente, cada uma com a contagem em que foi registrada, e a contagem atual. O diálogo tem as opções num `fieldset` com `legend`, nenhuma marcada de início, o resumo do erro com link para o campo e, também no celular, o resumo das faltas e o aviso de que a decisão não muda a contagem (nit 4).
 
 ---
 
@@ -3137,6 +3185,15 @@ _Ciclo 6._
 **Dados de teste:** a exportação de agosto de 2026, conferida contra o `GET /indicadores` do mesmo intervalo; o semestre sem vagas ofertadas (aviso no PDF); o supervisor tentando exportar (403); a exportação registrada na auditoria.
 
 **Dependências e riscos:** depende do RF48 (#22), integrado no Ciclo 5. A biblioteca de PDF é uma dependência nova, que passa pela revisão de dependências do CI.
+
+**Na implementação:**
+
+- **Mesmos valores da tela, mesmo com a data final de hoje.** Quando a data final é hoje, as vagas ocupadas e a distribuição dependem do instante da consulta (RF48). Por isso, a tela manda junto o `referencia` que recebeu do `GET /indicadores`, e a API calcula o PDF naquele instante. A referência só vale se for do dia da data final e não estiver no futuro; senão, a resposta é 400, com o pedido para consultar de novo. Com a data final no passado, o cálculo usa o fim daquele dia, como no RF48, e a referência é ignorada.
+- **Texto separado do desenho.** O texto do PDF é montado por `montarRelatorio`, com as mesmas frases e o mesmo formato de número da tela, e `gerarPdf` só desenha, com o `pdfkit` 0.20. Os testes conferem o texto sem precisar ler o PDF.
+- **Página e paginação.** O PDF é A4 deitado e segue a prancha 9-1: cabeçalho da Clínica Escola, título, intervalo e referência, os quatro cartões, o aviso das vagas quando faltam e a tabela por supervisor. Quando a tabela passa de página, o cabeçalho se repete. O rodapé diz quem exportou e quando, no horário de Brasília. A paginação "Página N de M" fica no canto superior direito.
+- **Acessibilidade.** O PDF é marcado, com o idioma `pt-BR`, o título exibido na janela, os títulos e parágrafos na estrutura, e a tabela com `TH` e `TD`. Molduras, divisórias, paginação e o cabeçalho repetido são artefatos, para o leitor de tela não ler duas vezes. A fonte é a Helvetica padrão do PDF, que não fica embutida no arquivo.
+- **Botão na tela.** "Exportar PDF" usa `aria-disabled` em vez de `disabled`. Assim ele continua acessível pelo Tab e lê a explicação "Consulte um período para exportar o relatório." Ele fica indisponível sem uma consulta exibida, durante uma nova consulta e enquanto o PDF é gerado. A conclusão é anunciada em `role="status"`, e uma recusa mostra o motivo.
+- **Auditoria.** A operação é `exportar_relatorio_institucional`, com o intervalo e a referência usados, sem dado de paciente.
 
 ## Roteiro da inspeção de design
 
