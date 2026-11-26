@@ -191,7 +191,9 @@ export default function EvolucaoDaSessaoPage() {
             <LinhaDoTempoEvolucao evolucao={evolucao} />
           </section>
           {(acoes.corrigir || acoes.complementar) && (
-            <div className="flex flex-col gap-3">
+            // Lado a lado, como na prancha 6-3; o formulário do complemento, quando
+            // aberto, ocupa a linha inteira.
+            <div className="flex flex-wrap items-start gap-3">
               {acoes.corrigir && (
                 <Link
                   href={`/prontuarios/${id}/evolucoes/${evolucao.id}/corrigir`}

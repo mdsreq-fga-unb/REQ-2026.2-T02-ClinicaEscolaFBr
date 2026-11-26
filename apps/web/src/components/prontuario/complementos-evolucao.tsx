@@ -294,7 +294,7 @@ export function ComplementosEvolucao({
       aria-label={soAcao ? "Adicionar complemento" : undefined}
       className={
         soAcao
-          ? "flex flex-col gap-3"
+          ? "flex flex-col gap-3 max-sm:w-full has-[form]:w-full"
           : "mt-4 flex flex-col gap-3 rounded-[12px] border border-border p-4"
       }
     >
@@ -345,6 +345,7 @@ export function ComplementosEvolucao({
               id={idBotao}
               type="button"
               variant="outline"
+              className={soAcao ? "max-sm:w-full" : undefined}
               onClick={() => {
                 setSalvo(false);
                 setAberto(true);
