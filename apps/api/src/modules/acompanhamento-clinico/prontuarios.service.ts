@@ -111,12 +111,18 @@ export class ProntuariosService {
   ) {}
 
   // Prontuário com o conteúdo clínico, para o estagiário e o supervisor do caso e,
-  // em qualquer caso, para a coordenação (RF55, DF32).
-  async consultar(id: string, usuario: UsuarioAutenticado) {
+  // em qualquer caso, para a coordenação (RF55, DF32). A `operacao` é a que fica no
+  // registro de acessos (RF56): quem lê o prontuário para mostrar só uma parte dele,
+  // como a evolução de uma sessão (RF31), registra a própria operação, uma vez só.
+  async consultar(
+    id: string,
+    usuario: UsuarioAutenticado,
+    operacao = 'consultar_prontuario',
+  ) {
     const prontuario = await this.politica.exigirAcesso(
       usuario,
       id,
-      'consultar_prontuario',
+      operacao,
       'leitura',
     );
     const caso = await this.resumoDoCaso(prontuario.casoId);

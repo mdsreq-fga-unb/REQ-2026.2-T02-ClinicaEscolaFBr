@@ -200,7 +200,12 @@ describe("elementos mínimos do prontuário (RF27, RNF25, RNF51, RNF52)", () => 
         .getByRole("link", { name: "Ver dados iniciais completos" })
         .getAttribute("href"),
     ).toBe("/prontuarios/p1/dados-iniciais");
-    expect(screen.getByText("Sessão nº 3 · registrada")).toBeTruthy();
+    // A linha da sessão leva à evolução da sessão (RF31).
+    expect(
+      screen
+        .getByRole("link", { name: "Abrir evolução da sessão nº 3" })
+        .getAttribute("href"),
+    ).toMatch(/\/sessoes\/[^/]+\/evolucao$/);
     const summary = screen.getByText(/Ver evolução/);
     expect(summary.closest("details")?.open).toBe(false);
     expect(screen.getByText("Ver histórico de responsáveis (1)")).toBeTruthy();

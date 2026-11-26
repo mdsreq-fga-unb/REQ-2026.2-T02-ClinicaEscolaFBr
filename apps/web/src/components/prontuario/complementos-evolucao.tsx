@@ -269,10 +269,14 @@ export function ComplementosEvolucao({
   prontuarioId,
   evolucao,
   numeroNoCiclo,
+  soAcao = false,
 }: {
   prontuarioId: string;
   evolucao: EvolucaoRegistrada;
   numeroNoCiclo: number | null;
+  // Só o aviso e o "Adicionar complemento", sem a linha do tempo, para a página
+  // da evolução da sessão (RF31), que já mostra o histórico inteiro.
+  soAcao?: boolean;
 }) {
   const [aberto, setAberto] = useState(false);
   const [salvo, setSalvo] = useState(false);
@@ -286,23 +290,31 @@ export function ComplementosEvolucao({
   const idBotao = `adicionar-complemento-${evolucao.id}`;
   return (
     <section
-      aria-labelledby={idTitulo}
-      className="mt-4 flex flex-col gap-3 rounded-[12px] border border-border p-4"
+      aria-labelledby={soAcao ? undefined : idTitulo}
+      aria-label={soAcao ? "Adicionar complemento" : undefined}
+      className={
+        soAcao
+          ? "flex flex-col gap-3 max-sm:w-full has-[form]:w-full"
+          : "mt-4 flex flex-col gap-3 rounded-[12px] border border-border p-4"
+      }
     >
-      <h3 id={idTitulo} className="text-[15px] font-bold text-marca">
-        Complementos
-      </h3>
+      {!soAcao && (
+        <h3 id={idTitulo} className="text-[15px] font-bold text-marca">
+          Complementos
+        </h3>
+      )}
       {salvo && (
         <Aviso tipo="sucesso" titulo="Complemento salvo." focar>
           {voltouAPendente &&
             "A evolução volta a ficar pendente de validação pelo supervisor."}
         </Aviso>
       )}
-      {complementos.length > 0 ? (
-        <LinhaDoTempoEvolucao evolucao={evolucao} />
-      ) : (
-        <p className="ui-dica">Nenhum complemento registrado.</p>
-      )}
+      {!soAcao &&
+        (complementos.length > 0 ? (
+          <LinhaDoTempoEvolucao evolucao={evolucao} />
+        ) : (
+          <p className="ui-dica">Nenhum complemento registrado.</p>
+        ))}
       {aviso && (
         <p className="flex items-start gap-2 rounded-lg bg-alerta-fundo px-3 py-2 text-sm">
           <TriangleAlert
@@ -333,6 +345,7 @@ export function ComplementosEvolucao({
               id={idBotao}
               type="button"
               variant="outline"
+              className={soAcao ? "max-sm:w-full" : undefined}
               onClick={() => {
                 setSalvo(false);
                 setAberto(true);

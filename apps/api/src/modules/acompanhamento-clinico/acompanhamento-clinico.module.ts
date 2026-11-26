@@ -6,6 +6,7 @@ import { AssiduidadeModule } from '../assiduidade/assiduidade.module';
 import { ComplementosEvolucaoService } from './complementos-evolucao.service';
 import { CorrecoesEvolucaoService } from './correcoes-evolucao.service';
 import { ElaboracaoRelatorioService } from './elaboracao-relatorio.service';
+import { EvolucaoDaSessaoService } from './evolucao-da-sessao.service';
 import { PoliticaProntuario } from './politica-prontuario';
 import { ProntuariosController } from './prontuarios.controller';
 import { ProntuariosService } from './prontuarios.service';
@@ -22,6 +23,7 @@ import { RelatoriosFinaisService } from './relatorios-finais.service';
   ],
   providers: [
     HistoricoEvolucoesService,
+    EvolucaoDaSessaoService,
     PoliticaProntuario,
     ProntuariosService,
     AcessosProntuarioService,

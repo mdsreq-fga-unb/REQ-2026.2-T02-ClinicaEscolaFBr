@@ -29,6 +29,7 @@ export const OPERACOES_PRONTUARIO: Record<
 > = {
   consultar_prontuario: 'visualizacao',
   consultar_historico_evolucoes: 'visualizacao',
+  consultar_evolucao: 'visualizacao',
   registrar_dados_iniciais: 'criacao',
   registrar_anamnese: 'criacao',
   registrar_contrato: 'criacao',
