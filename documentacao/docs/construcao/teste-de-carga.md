@@ -40,6 +40,12 @@ Depois do cenário de referência, o mesmo workflow roda o RNF47 sobre a mesma m
     AMBIENTE_DE_TESTE=sim DATABASE_URL=<banco da homologação> CHAVE_DADOS=<a da homologação> SENHA_CARGA=<senha> node dist/scripts/semear-carga.js
     ```
 
+    As gravações da carga (distribuir e vincular) consomem os 160 casos que aguardam distribuição, e o `semear-carga` não repete a massa que já existe. Para repetir a evidência na mesma homologação, reponha os pendentes antes, com `REPOR_PENDENTES=sim`: ele cria só inscrições novas, com a prioridade e o caso aguardando distribuição, até voltar aos 160, sem mexer no que já existe e sem precisar da `SENHA_CARGA`. Na VPS, dentro do contêiner da API, que já tem o `DATABASE_URL` e a `CHAVE_DADOS` do ambiente:
+
+    ```bash
+    docker exec -e AMBIENTE_DE_TESTE=sim -e REPOR_PENDENTES=sim -e NODE_ENV=test api-<uuid> node dist/scripts/semear-carga.js
+    ```
+
 2. **Configure o segredo `SENHA_CARGA`** no repositório (Settings → Secrets → Actions), com a mesma senha.
 3. **Rode o workflow "Carga"** na `development` (aba Actions, "Run workflow"):
     - em "api", o endereço da API da homologação;

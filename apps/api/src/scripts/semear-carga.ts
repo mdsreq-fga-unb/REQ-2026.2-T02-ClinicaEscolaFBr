@@ -12,6 +12,14 @@ import {
 import { inArray, like, sql } from 'drizzle-orm';
 import { cifrar } from '../common/criptografia';
 import { gerarHashSenha } from '../modules/acesso/credenciais';
+import {
+  AGUARDANDO_DISTRIBUICAO,
+  CONTAS_DA_CARGA,
+  CORES,
+  DOMINIO,
+  inscricaoDaCarga,
+  reporPendentes,
+} from './massa-carga';
 
 // Massa de dados fictícia do cenário de referência do RNF12 e do RNF21: dois
 // semestres de operação, com 360 inscrições, 200 pacientes em atendimento e
@@ -22,25 +30,20 @@ import { gerarHashSenha } from '../modules/acesso/credenciais';
 // Uso (de apps/api, depois do build):
 //   AMBIENTE_DE_TESTE=sim DATABASE_URL=... CHAVE_DADOS=... SENHA_CARGA=... \
 //   node dist/scripts/semear-carga.js
+//
+// As gravações da carga (distribuir e vincular) consomem os casos que aguardam
+// distribuição. Com a massa já criada, REPOR_PENDENTES=sim cria só inscrições
+// novas, com prioridade e caso aguardando distribuição, até voltar aos 160, sem
+// mexer no que já existe. Nesse modo, a SENHA_CARGA não é usada:
+//   AMBIENTE_DE_TESTE=sim REPOR_PENDENTES=sim DATABASE_URL=... CHAVE_DADOS=... \
+//   node dist/scripts/semear-carga.js
 
-const DOMINIO = 'carga.fbr.edu.br';
 const COORDENACOES = 10;
 const SECRETARIAS = 10;
 const SUPERVISORES = 10;
 const ESTAGIARIOS = 20;
 const PACIENTES_EM_ATENDIMENTO = 200;
-const AGUARDANDO_DISTRIBUICAO = 160;
 const SESSOES = 4000;
-const CORES = ['vermelha', 'amarela', 'verde'] as const;
-
-// Contas usadas pelo teste de carga, com a senha de SENHA_CARGA.
-// Uma conta por pessoa simulada: 30 pessoas da equipe, cada uma com a sua.
-const CONTAS_DA_CARGA = {
-  coordenacao: (n: number) => `coordenacao${n}@${DOMINIO}`,
-  secretaria: (n: number) => `secretaria${n}@${DOMINIO}`,
-  supervisor: (n: number) => `supervisor${n}@${DOMINIO}`,
-  estagiario: (n: number) => `estagiario${n}@${DOMINIO}`,
-};
 
 async function principal() {
   if (process.env.NODE_ENV === 'production') {
@@ -51,9 +54,12 @@ async function principal() {
       'Confirme que o banco é de homologação ou de teste com AMBIENTE_DE_TESTE=sim.',
     );
   }
-  const faltando = ['DATABASE_URL', 'CHAVE_DADOS', 'SENHA_CARGA'].filter(
-    (nome) => !process.env[nome],
-  );
+  const repor = process.env.REPOR_PENDENTES === 'sim';
+  const faltando = [
+    'DATABASE_URL',
+    'CHAVE_DADOS',
+    ...(repor ? [] : ['SENHA_CARGA']),
+  ].filter((nome) => !process.env[nome]);
   if (faltando.length) throw new Error(`Informe ${faltando.join(', ')}.`);
   const chave = process.env.CHAVE_DADOS!;
   const db = createDb(process.env.DATABASE_URL!);
@@ -64,7 +70,17 @@ async function principal() {
       .from(usuarios)
       .where(like(usuarios.email, `%@${DOMINIO}`));
     if (existentes.length) {
-      console.log('A massa de carga já existe neste banco.');
+      if (repor) await reporPendentes(db, chave);
+      else
+        console.log(
+          'A massa de carga já existe neste banco. Para repor os casos aguardando distribuição, use REPOR_PENDENTES=sim.',
+        );
+      return;
+    }
+    if (repor) {
+      console.log(
+        'Ainda não há massa de carga neste banco: rode sem REPOR_PENDENTES para criá-la.',
+      );
       return;
     }
 
@@ -119,21 +135,9 @@ async function principal() {
       const novas = await tx
         .insert(inscricoes)
         .values(
-          Array.from({ length: total }, (_, i) => ({
-            numero: sql`'2026-' || lpad(nextval('inscricoes_numero_seq')::text, 5, '0')`,
-            nomeCompleto: `Paciente Carga ${i + 1}`,
-            dataNascimento: '1990-01-01',
-            cpf: String(90_000_000_000 + i),
-            rg: String(1_000_000 + i),
-            endereco: 'Rua Fictícia, 1, Brasília DF',
-            estadoCivil: 'Solteiro(a)',
-            canalPreferencial: 'email' as const,
-            email: `paciente${i + 1}@${DOMINIO}`,
-            queixaCifrada: cifrar(`Queixa fictícia ${i + 1}`, chave),
-            percepcaoUrgenciaCifrada: cifrar('Urgência fictícia', chave),
-            historicoRelevanteCifrado: cifrar('Histórico fictício', chave),
-            criadaEm: new Date(inicio + i * 12 * 3_600_000),
-          })),
+          Array.from({ length: total }, (_, i) =>
+            inscricaoDaCarga(i, chave, new Date(inicio + i * 12 * 3_600_000)),
+          ),
         )
         .returning({ id: inscricoes.id, criadaEm: inscricoes.criadaEm });
       await tx.insert(decisoesPrioridade).values(
