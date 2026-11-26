@@ -55,6 +55,35 @@ Os RNFs também têm um patamar para o MVP: os obrigatórios desde a primeira en
 
 Na Unidade 1, antes da priorização formal, o MVP foi definido por característica (CP1, CP2, CP3, CP4, CP5, CP9, CP12 e CP14). Esse recorte foi substituído pela priorização por requisito da Unidade 2 e está preservado na [versão entregue da Unidade 1](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/blob/c4601b23320d9dd120a6f7982d863ff75291743d/docs/unidade-1/solucao-proposta.md#escopo-do-mvp).
 
+### Limites do MVP e como a clínica opera sem eles { #limites-do-mvp }
+
+Três RFs que ficaram fora do MVP mudam a rotina de quem usa a primeira versão: a inscrição assistida ([RF3](../requisitos/funcionais.md#rf3)), a sinalização automática de pontos de atenção ([RF5](../requisitos/funcionais.md#rf5)) e a remarcação em uma única operação ([RF12](../requisitos/funcionais.md#rf12)). Para cada um, esta seção diz o que a clínica faz no lugar, o que fica diferente e o que já foi confirmado pela FBr. O que ainda é proposta da equipe está marcado como tal e aparece também nas [pendências de validação com a FBr](../requisitos/analise-feedback.md#pendencias-de-validacao-com-a-fbr).
+
+#### Inscrição de quem precisa de ajuda (RF3)
+
+- **Como funciona:** quem precisa de ajuda procura a recepção. A secretaria abre o próprio formulário de inscrição on-line ([RF1](../requisitos/funcionais.md#rf1)) e o preenche com a pessoa, que responde às perguntas e confere os dados antes do envio. A inscrição entra na mesma triagem e na mesma fila das demais, sem prioridade diferente. _Confirmado pela FBr na validação do MVP, em 07/10/2026 ([DF13](../requisitos/decisoes-fbr.md#df13))._
+- **O que fica diferente da inscrição feita pela própria pessoa:**
+    - O sistema não sabe que a inscrição teve ajuda. Ela fica registrada como se a pessoa a tivesse feito sozinha, sem o nome de quem digitou. Separar as duas modalidades é justamente o que o RF3 faria, e por isso os indicadores ([RF48](../requisitos/funcionais.md#rf48)) não mostram quantas inscrições foram assistidas.
+    - O e-mail e o celular continuam obrigatórios ([DF48](../requisitos/decisoes-fbr.md#df48)). A pessoa precisa informar um e-mail que consiga abrir, porque o código da consulta da situação ([RF52](../requisitos/funcionais.md#rf52)) e o link de confirmação das sessões ([RF14](../requisitos/funcionais.md#rf14)) vão para ele. Quem não consegue usar o código pode pedir a consulta à secretaria, que confere a identidade no balcão e consulta pelo número da inscrição ([RF8](../requisitos/funcionais.md#rf8)).
+    - O termo de consentimento ([RF57](../requisitos/funcionais.md#rf57)) aparece na tela como para qualquer pessoa. O aceite é da pessoa, e não da secretaria.
+- **Ainda é proposta da equipe:** a secretaria ler o termo de consentimento com a pessoa antes do aceite, e o que fazer com quem não tem nenhum e-mail, que hoje não consegue concluir a inscrição. Os dois pontos estão nas pendências com a FBr.
+
+#### Pontos de atenção na inscrição (RF5)
+
+- **Como funciona:** a triagem é feita por pessoas. Supervisores e coordenação leem a queixa, a percepção de urgência e o histórico de cada inscrição ([RF4](../requisitos/funcionais.md#rf4)) e decidem a prioridade clínica ([RF6](../requisitos/funcionais.md#rf6)). A percepção de urgência aparece como declaração do interessado, e não como classificação. Como a clínica não tem prazo de triagem ([DF19](../requisitos/decisoes-fbr.md#df19)), a lista mostra há quantos dias cada inscrição aguarda e pode ser ordenada por esse tempo. _O adiamento do RF5 foi aceito pela FBr em 02/10/2026 ([DF06](../requisitos/decisoes-fbr.md#df06))._
+- **O aviso do CVV e do SAMU tem outra função:** o formulário mostra, sempre visível, os contatos do CVV (188) e do SAMU (192) ([RF1](../requisitos/funcionais.md#rf1), [DF07](../requisitos/decisoes-fbr.md#df07)). O aviso orienta quem está em crise a buscar ajuda na hora. Ele não lê as respostas, não avisa a equipe e não muda a prioridade. **O aviso não substitui a avaliação clínica da inscrição:** uma resposta preocupante só é percebida quando alguém da equipe lê a inscrição.
+- **O que fica diferente:** sem o RF5, nada destaca uma inscrição com uma resposta preocupante. Com que frequência a equipe lê as inscrições novas é uma decisão da clínica, e o sistema não a impõe.
+
+#### Remarcação de sessão (RF12)
+
+- **Como funciona:** para mudar a data ou o horário de uma sessão, a secretaria ou o estagiário cancela a sessão com o motivo "Cancelamento para remarcar a sessão" e a justificativa obrigatória ([RF15](../requisitos/funcionais.md#rf15), [RF16](../requisitos/funcionais.md#rf16)) e agenda uma nova sessão ([RF10](../requisitos/funcionais.md#rf10)).
+- **Efeito nas faltas:** esse cancelamento fica numa categoria própria, o cancelamento administrativo para remarcação, e não conta falta nem do paciente ([RF35](../requisitos/funcionais.md#rf35)) nem do estagiário ([RF39](../requisitos/funcionais.md#rf39), [RF40](../requisitos/funcionais.md#rf40)), qualquer que seja a antecedência. _Confirmado pela FBr na validação do MVP, em 07/10/2026 ([DF10](../requisitos/decisoes-fbr.md#df10))._ Os outros motivos contam: o cancelamento do paciente com menos de 1 hora de antecedência conta falta dele ([DF20](../requisitos/decisoes-fbr.md#df20)), e a ausência real do estagiário conta falta do estagiário. Por isso quem cancela precisa escolher o motivo certo, porque o motivo muda a contagem. A falta do estagiário registrada por engano é corrigida pela coordenação, que a reclassifica como cancelamento para remarcação ([DF69](../requisitos/decisoes-fbr.md#df69)).
+- **O que fica diferente de uma remarcação em uma única operação:**
+    - São duas operações. A sessão nova não fica ligada à cancelada: a data original fica no histórico como sessão cancelada, com a justificativa, e a auditoria ([RNF10](../requisitos/nao-funcionais.md#rnf10)) guarda quem cancelou e quando.
+    - O paciente não remarca pelo link da confirmação de presença. Pelo link ele só confirma ou cancela, e o cancelamento é classificado pela antecedência ([RF15](../requisitos/funcionais.md#rf15)). Para remarcar, ele procura a secretaria.
+    - O sistema não controla o limite de uma remarcação a pedido do paciente por ciclo, nem a aprovação da exceção pela coordenação, que o RF12 prevê.
+- **Ainda é proposta da equipe:** a secretaria acompanhar esse limite enquanto o RF12 não existir. O ponto está nas pendências com a FBr.
+
 ## Tecnologias a Serem Utilizadas { #24-tecnologias-a-serem-utilizadas }
 
 Conforme foi definido pela equipe, a stack tecnológica optada para o desenvolvimento da solução é definida por:
