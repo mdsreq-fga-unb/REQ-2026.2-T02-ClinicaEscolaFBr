@@ -5,9 +5,14 @@
 # A API escuta na 3333 e a web na 3000, as portas das imagens; no Coolify, o
 # domínio de cada uma leva a porta (https://api.clinica.fbr.edu.br:3333), que
 # vira a porta do proxy e não aparece no endereço.
+# A VPS é compartilhada com outros sistemas da FBr (site, Moodle, OJS e o próprio
+# Coolify), em 2 vCPUs. O banco e a API pesam o dobro do padrão (1024) na
+# divisão da CPU quando ela está disputada, para a carga dos outros sistemas não
+# atrasar as consultas da clínica (RNF12, RNF21 e RNF47). Sem disputa, nada muda.
 services:
   banco:
     image: postgres:17-alpine
+    cpu_shares: 2048
     environment:
       POSTGRES_USER: clinica
       POSTGRES_PASSWORD: ${SENHA_BANCO:?}
@@ -37,8 +42,13 @@ services:
   api:
     image: ${IMAGEM_API:?}
     pull_policy: always
+    cpu_shares: 2048
     environment:
       NODE_ENV: production
+      # Sem limite, o Node deixa o lixo acumular até perto de 2 GB antes de limpar.
+      # Na VPS compartilhada, isso empurra memória para o swap e trava a API por
+      # vários segundos (RNF47). Em repouso, a API usa uns 135 MB.
+      NODE_OPTIONS: --max-old-space-size=512
       # A validação deve definir validacao explicitamente; o padrão protege a produção.
       AMBIENTE_APLICACAO: ${AMBIENTE_APLICACAO:-producao}
       DATABASE_URL: ${DATABASE_URL_API:?}
