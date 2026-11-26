@@ -6,7 +6,7 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { and, asc, eq, gte, inArray, isNull, lt, sql } from 'drizzle-orm';
+import { and, asc, eq, inArray, sql } from 'drizzle-orm';
 import { alias } from 'drizzle-orm/pg-core';
 import {
   cancelamentosSessao,
@@ -17,7 +17,6 @@ import {
 } from '@clinica/database';
 import {
   hojeEmBrasilia,
-  limitesDoSemestre,
   semestreDaData,
   semestreDaSessao,
   type ConsultaFaltasSemestre,
@@ -26,14 +25,14 @@ import {
   type ReclassificacaoFalta,
   type ResultadoReclassificacao,
 } from '@clinica/shared';
-import {
-  AuditoriaService,
-  type Transacao,
-} from '../../auditoria/auditoria.service';
+import { AuditoriaService } from '../../auditoria/auditoria.service';
 import type { UsuarioAutenticado } from '../../auth/usuario-autenticado';
 import { cifrar, decifrar } from '../../common/criptografia';
 import { DB } from '../../database/database.module';
-import { inicioDoDia } from '../agendamento/horario';
+import {
+  travarFaltasDoEstagiario,
+  reavaliarSinalizacao,
+} from './contagem-faltas';
 import {
   FaltasEstagiarioService,
   faltaDoSupervisor,
@@ -42,54 +41,6 @@ import {
 
 const NAO_RECLASSIFICAVEL =
   'Só uma ausência do estagiário ainda não reclassificada pode ser reclassificada.';
-
-// Trava a contagem de faltas do estagiário até o fim da transação (apontamento 3
-// da inspeção do RF40). Duas ausências do mesmo estagiário registradas ao mesmo
-// tempo, em sessões diferentes, travam sessões diferentes; sem esta trava, cada
-// transação contaria sem ver a outra, e a 3ª falta passaria sem a sinalização de
-// reprovação (RF63). O `no key update` não segura as inserções que só apontam
-// para o usuário, como a auditoria.
-export async function travarFaltasDoEstagiario(
-  tx: Transacao,
-  estagiarioId: string,
-) {
-  await tx
-    .select({ id: usuarios.id })
-    .from(usuarios)
-    .where(eq(usuarios.id, estagiarioId))
-    .for('no key update');
-}
-
-// Faltas do estagiário que contam: ausências reais (RF16) sem reclassificação,
-// numa sessão do semestre, pela data da sessão em Brasília.
-export async function contarFaltasNoSemestre(
-  banco: Db | Transacao,
-  estagiarioId: string,
-  semestre: string,
-) {
-  const { inicio, fimExclusivo } = limitesDoSemestre(semestre);
-  const [{ total }] = await banco
-    .select({ total: sql<number>`count(*)::int` })
-    .from(cancelamentosSessao)
-    .innerJoin(
-      sessoesAtendimento,
-      eq(sessoesAtendimento.id, cancelamentosSessao.sessaoId),
-    )
-    .leftJoin(
-      reclassificacoesFalta,
-      eq(reclassificacoesFalta.cancelamentoId, cancelamentosSessao.id),
-    )
-    .where(
-      and(
-        eq(cancelamentosSessao.classificacao, 'ausencia_estagiario'),
-        isNull(reclassificacoesFalta.id),
-        eq(sessoesAtendimento.estagiarioId, estagiarioId),
-        gte(sessoesAtendimento.inicio, inicioDoDia(inicio)),
-        lt(sessoesAtendimento.inicio, inicioDoDia(fimExclusivo)),
-      ),
-    );
-  return total;
-}
 
 // Contagem das faltas do estagiário no semestre (RF40), para o supervisor e a
 // coordenação, pela mesma autorização do RF39 (RNF35). A contagem é calculada na
@@ -239,11 +190,18 @@ export class FaltasSemestreService {
         },
         tx,
       );
+      // A contagem cai, e a sinalização de reprovação (RF63) é reavaliada: abaixo
+      // do limite e sem decisão, ela é encerrada.
       const semestre = semestreDaSessao(falta.inicio);
       return {
         estagiarioId: falta.estagiarioId,
         semestre,
-        faltas: await contarFaltasNoSemestre(tx, falta.estagiarioId, semestre),
+        faltas: await reavaliarSinalizacao(
+          tx,
+          falta.estagiarioId,
+          semestre,
+          reclassificacao.id,
+        ),
       };
     });
   }
