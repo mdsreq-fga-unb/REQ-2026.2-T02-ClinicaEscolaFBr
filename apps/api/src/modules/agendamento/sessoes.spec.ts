@@ -441,6 +441,29 @@ describe('Agendamento de sessão (RF10)', () => {
     await agendar('secretaria', { inicio: as('15:00') }).expect(400);
   });
 
+  it('a busca pelo caso (vinda da ficha) traz só ele, e o estagiário não recebe caso de outro (RF10)', async () => {
+    const { body: daSecretaria } = await request(app.getHttpServer())
+      .get('/sessoes/pacientes')
+      .query({ casoId: pacientes.lucia })
+      .set(como('secretaria'))
+      .expect(200);
+    expect(daSecretaria.map((p: { nome: string }) => p.nome)).toEqual([
+      'Lúcia Prado',
+    ]);
+    // Lúcia é da estagiária Pedro: para a Ana, a busca vem vazia.
+    const { body: daAna } = await request(app.getHttpServer())
+      .get('/sessoes/pacientes')
+      .query({ casoId: pacientes.lucia })
+      .set(como('ana'))
+      .expect(200);
+    expect(daAna).toEqual([]);
+    await request(app.getHttpServer())
+      .get('/sessoes/pacientes')
+      .query({ casoId: 'nao-e-uuid' })
+      .set(como('secretaria'))
+      .expect(400);
+  });
+
   it('a busca mostra à secretaria todos os pacientes, com e sem vínculo, e ao estagiário só os próprios', async () => {
     const { body: daSecretaria } = await request(app.getHttpServer())
       .get('/sessoes/pacientes')

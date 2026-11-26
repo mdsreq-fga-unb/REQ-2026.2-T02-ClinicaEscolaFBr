@@ -2,7 +2,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { FileDown, Lock } from "lucide-react";
 import Link from "next/link";
-import { useState, type FormEvent } from "react";
+import { useEffect, useRef, useState, type FormEvent } from "react";
 import {
   consultaIndicadoresSchema,
   type ConsultaIndicadores,
@@ -10,6 +10,7 @@ import {
 } from "@clinica/shared";
 import { VagasOfertadasDialogo } from "@/components/indicadores/vagas-ofertadas";
 import { Aviso } from "@/components/comum/aviso";
+import { useNotificacao } from "@/components/comum/notificacao";
 import { Campo, classeEntrada } from "@/components/comum/campo";
 import { inicioDoPerfil } from "@/components/layout/menu";
 import { Button, buttonVariants } from "@/components/ui/button";
@@ -73,6 +74,14 @@ async function baixarRelatorio(dados: Indicadores) {
   return arquivo;
 }
 
+// Período sem nenhum dado: sem vagas ocupadas, primeiras sessões, atendimentos
+// ativos nem casos com supervisor.
+const semDados = (d: Indicadores) =>
+  d.vagas.ocupadas === 0 &&
+  d.espera.pacientes === 0 &&
+  d.evasao.ativos === 0 &&
+  d.supervisores.every((s) => s.casos === 0);
+
 // Indicadores operacionais da coordenação (RF48, pranchas 9-1 e 9-2) e a
 // exportação em PDF (RF49, prancha 9-1 do Ciclo 6).
 export default function IndicadoresPage() {
@@ -97,6 +106,41 @@ export default function IndicadoresPage() {
     enabled: permitido && consulta !== null,
     staleTime: 0,
   });
+  // Retorno visual de cada "Consultar" (toast): calculado, sem dados, erro.
+  const { notificar, elemento: notificacao } = useNotificacao();
+  const aguardando = useRef(false);
+  useEffect(() => {
+    if (!aguardando.current || indicadores.isFetching) return;
+    aguardando.current = false;
+    const d = indicadores.data;
+    if (indicadores.isError || !d) {
+      notificar({
+        tipo: "erro",
+        titulo: "Não foi possível consultar os indicadores.",
+        texto: "Tente novamente em instantes.",
+      });
+      return;
+    }
+    const periodo = `de ${dataBr(d.inicio)} a ${dataBr(d.fim)}`;
+    notificar(
+      semDados(d)
+        ? {
+            tipo: "alerta",
+            titulo: "Não há dados neste período.",
+            texto: `Nenhuma vaga ocupada, primeira sessão ou atendimento ativo ${periodo}. Escolha outro período.`,
+          }
+        : {
+            tipo: "sucesso",
+            titulo: "Indicadores atualizados.",
+            texto: `Mostrando o período ${periodo}.`,
+          },
+    );
+  }, [
+    indicadores.isFetching,
+    indicadores.isError,
+    indicadores.data,
+    notificar,
+  ]);
 
   if (!sessao) return <p role="status">Carregando…</p>;
   if (!permitido) {
@@ -132,10 +176,26 @@ export default function IndicadoresPage() {
         novos[campo] ??= issue.message;
       }
       setErros(novos);
+      // O erro já aparece no campo e no aviso do topo, sem toast repetido.
       setConsulta(null);
       return;
     }
     setErros({});
+    // O mesmo período que já está na tela não é consultado de novo.
+    if (
+      consulta &&
+      indicadores.data &&
+      consulta.inicio === r.data.inicio &&
+      consulta.fim === r.data.fim
+    ) {
+      notificar({
+        tipo: "info",
+        titulo: "Você já está vendo este período.",
+        texto: `Os indicadores de ${dataBr(r.data.inicio)} a ${dataBr(r.data.fim)} já estão na tela. Mude as datas para consultar outro período.`,
+      });
+      return;
+    }
+    aguardando.current = true;
     setConsulta(r.data);
     setExportacao({ estado: "parado" });
   }
@@ -167,6 +227,7 @@ export default function IndicadoresPage() {
 
   return (
     <div className="flex flex-col gap-6">
+      {notificacao}
       <div className="flex flex-wrap items-end justify-between gap-4">
         <div>
           <h1 className="ui-titulo">Indicadores operacionais</h1>

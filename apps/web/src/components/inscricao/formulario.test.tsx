@@ -83,11 +83,37 @@ describe("Formulário RF1/RF2", () => {
     vi.unstubAllGlobals();
     vi.unstubAllEnvs();
   });
-  it("associa erros aos campos, foca resumo e preserva valores válidos (RF1, RNF1)", () => {
+  it("valida em tempo real: o erro aparece ao digitar, e Continuar só libera com a etapa completa (RF1, RNF1)", () => {
     render(<FormularioInscricao />);
+    const botao = screen.getByRole("button", { name: "Continuar" });
+    // Desativado com o motivo na descrição (dica ao passar o mouse), sem
+    // texto fixo na tela.
+    expect(botao).toHaveAttribute("aria-disabled", "true");
+    expect(botao).toHaveAccessibleDescription(
+      "Preencha corretamente todos os campos obrigatórios para continuar.",
+    );
+    expect(screen.queryByText(/falta preencher/)).toBeNull();
+    // O clique (ou toque) não avança e mostra o motivo num aviso passageiro.
+    fireEvent.click(botao);
+    expect(
+      screen.getByRole("heading", { name: "Seus dados" }),
+    ).toBeInTheDocument();
+    expect(
+      screen
+        .getAllByRole("status")
+        .some((s) =>
+          s.textContent?.includes(
+            "Preencha corretamente todos os campos obrigatórios para continuar.",
+          ),
+        ),
+    ).toBe(true);
+    // Campo ainda não alterado não mostra erro.
+    expect(document.getElementById("cpf")).toHaveAttribute(
+      "aria-invalid",
+      "false",
+    );
     preencher("nomeCompleto", "Nome preservado");
-    continuar();
-    expect(screen.getByRole("alert")).toHaveFocus();
+    preencher("cpf", "111");
     expect(document.getElementById("cpf")).toHaveAttribute(
       "aria-invalid",
       "true",
@@ -96,27 +122,92 @@ describe("Formulário RF1/RF2", () => {
       "aria-describedby",
       expect.stringContaining("cpf-erro"),
     );
+    expect(document.getElementById("cpf-erro")).toHaveTextContent(
+      "Digite os 11 números do CPF.",
+    );
+    preencher("cpf", "11144477734");
+    expect(document.getElementById("cpf-erro")).toHaveTextContent(
+      "Este CPF não é válido. Confira os números.",
+    );
+    preencher("cpf", "11144477735");
+    expect(document.getElementById("cpf")).toHaveValue("111.444.777-35");
+    expect(document.getElementById("cpf-erro")).toBeNull();
     expect(document.getElementById("nomeCompleto")).toHaveValue(
       "Nome preservado",
     );
-    expect(screen.getByRole("link", { name: /CPF:/ })).toHaveAttribute(
-      "href",
-      "#cpf",
+    dados();
+    expect(botao).not.toHaveAttribute("aria-disabled");
+    expect(botao).not.toHaveAccessibleDescription();
+  });
+  it("aplica as máscaras ao digitar e envia só os números (RF1)", async () => {
+    const fetch = vi.fn().mockResolvedValue(response());
+    vi.stubGlobal("fetch", fetch);
+    render(<FormularioInscricao />);
+    dados();
+    preencher("rg", "123456789");
+    preencher("celular", "61988887777");
+    preencher("whatsapp", "6133334444");
+    preencher("contatoEmergenciaTelefone", "61999990000123");
+    preencher("cep", "72500000");
+    expect(document.getElementById("cpf")).toHaveValue("111.444.777-35");
+    expect(document.getElementById("rg")).toHaveValue("12.345.678-9");
+    // Com letras, o RG fica como está no documento (RF1).
+    preencher("rg", "MG-12.345.678");
+    expect(document.getElementById("rg")).toHaveValue("MG-12.345.678");
+    preencher("rg", "123456789");
+    expect(document.getElementById("celular")).toHaveValue("(61) 98888-7777");
+    expect(document.getElementById("whatsapp")).toHaveValue("(61) 3333-4444");
+    // O excesso de números é descartado: o telefone tem no máximo 11.
+    expect(document.getElementById("contatoEmergenciaTelefone")).toHaveValue(
+      "(61) 99999-0000",
     );
+    expect(document.getElementById("cep")).toHaveValue("72500-000");
+    continuar();
+    triagem();
+    continuar();
+    await confirmar();
+    enviar();
+    await waitFor(() => expect(fetch).toHaveBeenCalledTimes(1));
+    expect(JSON.parse(fetch.mock.calls[0][1].body)).toMatchObject({
+      cpf: "11144477735",
+      rg: "123456789",
+      cep: "72500000",
+      celular: "61988887777",
+      whatsapp: "6133334444",
+      contatoEmergenciaTelefone: "61999990000",
+    });
+  });
+  it("oferece sexo e escolaridade em listas, opcionais (RF1, DF43)", () => {
+    render(<FormularioInscricao />);
+    const sexo = screen.getByLabelText("Sexo (opcional)");
+    expect(
+      within(sexo)
+        .getAllByRole("option")
+        .map((o) => o.textContent),
+    ).toEqual(["Não informar", "Feminino", "Masculino"]);
+    const escolaridade = screen.getByLabelText("Escolaridade (opcional)");
+    expect(within(escolaridade).getAllByRole("option")).toHaveLength(10);
+    expect(
+      within(escolaridade).getByRole("option", { name: "Pós-graduação" }),
+    ).toBeInTheDocument();
+    expect(document.getElementById("dataNascimento")).toHaveAttribute("max");
   });
   it("exige responsável para menor, mantendo os outros campos", () => {
     render(<FormularioInscricao />);
     dados(true);
-    continuar();
-    expect(document.getElementById("responsavelLegal")).toHaveAttribute(
-      "aria-invalid",
+    expect(screen.getByRole("button", { name: "Continuar" })).toHaveAttribute(
+      "aria-disabled",
       "true",
     );
     preencher("responsavelLegal", "Responsável Fictício");
-    continuar();
-    // O CPF do responsável também é obrigatório (DF47).
+    // O CPF do responsável também é obrigatório (DF47) e precisa ser válido.
+    preencher("cpfResponsavel", "52998224724");
     expect(document.getElementById("cpfResponsavel")).toHaveAttribute(
       "aria-invalid",
+      "true",
+    );
+    expect(screen.getByRole("button", { name: "Continuar" })).toHaveAttribute(
+      "aria-disabled",
       "true",
     );
     preencher("cpfResponsavel", "52998224725");
@@ -179,7 +270,7 @@ describe("Formulário RF1/RF2", () => {
     continuar();
     triagem();
     continuar();
-    expect(screen.getAllByText("52998224725")).toHaveLength(2);
+    expect(screen.getAllByText("529.982.247-25")).toHaveLength(2);
     expect(screen.getByText("Certidão de nascimento")).toBeInTheDocument();
     expect(screen.getByText("Estudante")).toBeInTheDocument();
     expect(screen.getByText("72500-000")).toBeInTheDocument();
@@ -279,16 +370,33 @@ describe("Formulário RF1/RF2", () => {
     continuar();
     expect(screen.getByText("Declaração corrigida")).toBeInTheDocument();
   });
-  it("não envia sem confirmação e consentimento independentes", () => {
+  it("não envia sem confirmação e consentimento independentes", async () => {
     const fetch = vi.fn();
     vi.stubGlobal("fetch", fetch);
     revisao();
+    const botao = screen.getByRole("button", {
+      name: "Confirmar e enviar inscrição",
+    });
+    expect(botao).toHaveAttribute("aria-disabled", "true");
     enviar();
     expect(fetch).not.toHaveBeenCalled();
     expect(screen.getAllByRole("checkbox")).toHaveLength(2);
+    await waitFor(() =>
+      expect(document.getElementById("aceiteTermo")).not.toBeDisabled(),
+    );
+    fireEvent.click(document.getElementById("confirmado")!);
+    expect(botao).toHaveAttribute("aria-disabled", "true");
+    expect(botao).toHaveAccessibleDescription(
+      "Marque a confirmação dos dados e a concordância com o termo para enviar.",
+    );
+    // Desmarcar mostra o erro ligado à caixa.
+    fireEvent.click(document.getElementById("confirmado")!);
     expect(
       screen.getByRole("checkbox", { name: /Revisei os dados/ }),
     ).toHaveAttribute("aria-describedby", "confirmado-erro");
+    fireEvent.click(document.getElementById("confirmado")!);
+    fireEvent.click(document.getElementById("aceiteTermo")!);
+    expect(botao).not.toHaveAttribute("aria-disabled");
   });
   it("aguarda resposta confirmada e bloqueia envio duplo", async () => {
     let resolver!: (valor: Response) => void;
@@ -426,7 +534,9 @@ describe("Formulário RF1/RF2", () => {
     expect(
       within(identificacao).getByText("Responsável Fictício"),
     ).toBeInTheDocument();
-    expect(within(identificacao).getByText("52998224725")).toBeInTheDocument();
+    expect(
+      within(identificacao).getByText("529.982.247-25"),
+    ).toBeInTheDocument();
     expect(
       within(identificacao).queryByRole("textbox"),
     ).not.toBeInTheDocument();

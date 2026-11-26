@@ -16,6 +16,8 @@ export type Agendamento = z.infer<typeof agendamentoSchema>;
 // Busca de pacientes na tela de agendamento (RF10).
 export const buscaPacientesSchema = z.object({
   busca: z.string().trim().optional(),
+  // Caso já escolhido em outra tela (o "Agendar sessão" da ficha do paciente).
+  casoId: z.uuid().optional(),
 });
 export type BuscaPacientes = z.infer<typeof buscaPacientesSchema>;
 

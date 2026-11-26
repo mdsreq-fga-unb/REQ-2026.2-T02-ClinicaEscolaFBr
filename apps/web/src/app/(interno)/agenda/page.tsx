@@ -48,12 +48,25 @@ function AgendaDaSecretaria() {
     <>
       <Cabecalho
         titulo="Agenda"
-        subtitulo="Sessões de todos os estagiários. Os contatos dos pacientes ficam em Pacientes."
+        subtitulo="Sessões que pedem contato com o paciente: cancelamentos por ausência do estagiário e sessões sem confirmação."
       >
         {botaoAgendar}
       </Cabecalho>
       <AvisosDeCancelamento />
       <SessoesSemConfirmacao />
+      {/* A agenda completa de cada estagiário é do próprio estagiário e do
+          supervisor dele (RF11); a secretaria vê as sessões na ficha. */}
+      <p className="ui-dica">
+        As sessões de cada paciente, com a data, o estagiário e a situação,
+        ficam na ficha dele, em{" "}
+        <Link
+          href="/pacientes"
+          className="font-semibold text-primary underline"
+        >
+          Pacientes
+        </Link>
+        .
+      </p>
     </>
   );
 }
