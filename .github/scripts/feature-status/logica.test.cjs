@@ -232,3 +232,32 @@ test("featuresSemDoR recusa o registro com o resultado Não pronta", () => {
     [141],
   );
 });
+
+test("featuresSemDoR usa só o último resultado da seção do registro do DoR", () => {
+  const pronta = dorPronto(ISSUE);
+  const comHistorico = pronta.replace(
+    "Resultado: Pronta",
+    "Resultado: Não pronta\nResultado: Pronta",
+  );
+  const naoProntaEmNegrito = pronta.replace(
+    "Resultado: Pronta",
+    "**Resultado:** não pronta",
+  );
+  const foraDoRegistro = `${pronta}\n\n### Notas\n\nResultado: Não pronta\n`;
+  const anterior = pronta.replace(
+    "Resultado: Pronta",
+    "Resultado: Pronta\nResultado anterior: Não pronta",
+  );
+  const feature = (number, body) => ({ number, title: "CP1 — Feature", body });
+  assert.deepEqual(
+    L.featuresSemDoR([
+      feature(1, comHistorico),
+      feature(2, naoProntaEmNegrito),
+      feature(3, foraDoRegistro),
+      feature(4, anterior),
+    ]),
+    [2],
+  );
+  assert.equal(L.resultadoDoRegistroDoR(comHistorico), "Pronta");
+  assert.equal(L.resultadoDoRegistroDoR("sem a seção"), null);
+});
