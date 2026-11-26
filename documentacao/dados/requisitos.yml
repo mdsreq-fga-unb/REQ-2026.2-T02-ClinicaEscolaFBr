@@ -25,7 +25,7 @@
 #   entrega: observação sobre a entrega (por exemplo, entrega parcial)
 #   origem: decisões com a FBr (DF) que fundamentam o requisito
 
-atualizado_em: 23/11/2026
+atualizado_em: 25/11/2026
 
 cps:
   CP1: Inscrição on-line
@@ -74,7 +74,7 @@ rfs:
   lider: Jônatas
   issue: 88
   estado: Código inspecionado
-  origem: [DF02, DF07, DF24, DF35, DF43, DF47, DF48, DF51, DF56, DF60]
+  origem: [DF02, DF07, DF24, DF35, DF43, DF47, DF48, DF51, DF56, DF60, DF64]
 
 - id: RF2
   nome: Emitir comprovante de inscrição
@@ -449,7 +449,18 @@ rfs:
   depende: [RF66]
   issue: 130
   estado: Aceita
-  origem: [DF20, DF37, DF41, DF61]
+  origem: [DF20, DF37, DF41, DF61, DF67]
+
+- id: RF70
+  nome: Corrigir anamnese e contrato terapêutico do paciente
+  cp: CP6
+  valor: 3
+  justificativa: Sugestão da FBr em 25/11/2026 (DF67) para corrigir erros de digitação ou datas depois de salvos; proposta da equipe, fica para depois da entrega final
+  esforco: [2, 2, 1]
+  mvp: false
+  lider: Luís Henrique
+  depende: [RF69]
+  origem: [DF67]
 
 - id: RF28
   nome: Registrar evolução da sessão realizada
@@ -479,7 +490,7 @@ rfs:
   depende: [RF28]
   issue: 224
   estado: Promovida para a versão integrada
-  origem: [DF11]
+  origem: [DF11, DF66]
 
 - id: RF30
   nome: Registrar complemento de evolução da sessão
@@ -671,6 +682,7 @@ rfs:
   depende: [RF16, RF39]
   issue: 276
   estado: Planejada
+  origem: [DF69]
 
 - id: RF63
   nome: Sinalizar reprovação do estagiário por faltas
@@ -685,7 +697,7 @@ rfs:
   depende: [RF40]
   issue: 277
   estado: Planejada
-  origem: [DF12, DF54]
+  origem: [DF12, DF54, DF69]
 
 - id: RF64
   nome: Registrar decisão institucional sobre a reprovação do estagiário
@@ -819,7 +831,7 @@ rfs:
   lider: Gabriel
   depende: [RF48]
   issue: 23
-  estado: Planejada
+  estado: Código concluído
 
 - id: RF50
   nome: Autenticar usuário institucional
@@ -934,7 +946,7 @@ rfs:
   depende: [RF1]
   issue: 52
   estado: Código concluído
-  origem: [DF44, DF47]
+  origem: [DF44, DF47, DF63]
 
 - id: RF65
   nome: Registrar revogação do consentimento
@@ -1194,8 +1206,8 @@ rnfs:
   nome: Integridade e proveniência dos registros de evolução
   cp: CP7
   classificacao: Obrigatório para o MVP
-  relacionado: RF28, RF31, RF32, RF67, RF68
-  justificativa: Registros clínicos precisam preservar autor, sessão, paciente e histórico, inclusive a validação do supervisor (RF67) e o encerramento por alta (RF68).
+  relacionado: RF28, RF30, RF31, RF32, RF67, RF68
+  justificativa: Registros clínicos precisam preservar autor, sessão, paciente e histórico, inclusive os complementos (RF30), a validação do supervisor (RF67) e o encerramento por alta (RF68).
 
 - id: RNF28
   nome: Auditoria das correções de evolução
@@ -1726,11 +1738,6 @@ decisoes:
   fonte: respostas da FBr por WhatsApp
   decisao: Os dados mínimos para o reconhecimento do paciente na inscrição incluem o endereço completo (rua, bairro, cidade e CEP), além do contato de emergência (DF51), para eventual fiscalização. Respondido por Robson Araújo.
 
-- id: DF65
-  data: 25/11/2026
-  fonte: respostas da FBr por WhatsApp
-  decisao: Na consulta da fila (RF8), o inscrito com o caso encerrado ou desligado vê "Desligado" e a orientação de procurar a secretaria. Respondido por Robson Araújo.
-
 - id: DF57
   data: 12/11/2026
   fonte: respostas da FBr por WhatsApp
@@ -1740,6 +1747,56 @@ decisoes:
   data: 12/11/2026
   fonte: respostas da FBr por WhatsApp
   decisao: Na reversão de um desligamento por faltas feito por engano (RF38), a coordenação escolhe quais faltas deixam de contar. Respondido por Robson Araújo.
+
+- id: DF59
+  data: 16/11/2026
+  fonte: validação da FBr por WhatsApp
+  decisao: O protótipo do Ciclo 5 (RF17, RF29, RF39, RF41, RF44, RF48 e RF56) e o que já está no ambiente de validação foram validados por Robson Araújo, que os analisou com os supervisores Alexandre e Ana. Ele pediu que, no cancelamento da sessão pelo estagiário, a próxima data de atendimento já seja apontada; o detalhe desse pedido está nas pendências de validação.
+
+- id: DF60
+  data: 06/11/2026
+  fonte: reunião de validação do Ciclo 3 com a FBr
+  decisao: O RG deixa de ser obrigatório na inscrição (RF1), porque a nova Carteira de Identidade Nacional usa o CPF como número único; o órgão emissor e o estado do RG não são pedidos. Substitui em parte a DF02, só quanto ao RG; os demais campos obrigatórios da DF02 continuam valendo. Decidido por Thiago Viana, e registrado em 16/11/2026, a partir do relato da equipe.
+
+- id: DF61
+  data: 06/11/2026
+  fonte: reunião de validação do Ciclo 3 com a FBr
+  decisao: Na anamnese (RF69), só a queixa principal é obrigatória, e as demais seções podem ficar em branco, como o sistema já faz. Confirmado pela Clínica Escola, e registrado em 16/11/2026, a partir do relato da equipe.
+
+- id: DF62
+  data: 24/11/2026
+  fonte: validação da FBr por WhatsApp
+  decisao: As seis features do Ciclo 5 que entraram no ambiente de validação depois de 16/11 (RF17, RF29, RF39, RF41, RF44 e RF56) foram validadas por Robson Araújo, que analisou o sistema com os professores Alexandre e Lauana e com a supervisora de estágio Elaine. Ele disse que está "tudo ok, a contento", e que o sistema gera todas as informações de que a clínica precisa para os documentos exigidos pelo Conselho Regional de Psicologia que ela já usa.
+
+- id: DF63
+  data: 25/11/2026
+  fonte: respostas da FBr por WhatsApp
+  decisao: Perguntado sobre a revisão do termo de consentimento pelo Jurídico, a base legal dos dados de saúde e o canal dos direitos do titular, Robson Araújo respondeu que o termo está no link dos documentos enviados. Na pasta, a equipe identificou o Termo de Consentimento Livre e Esclarecido do contrato terapêutico, que trata do uso dos dados das sessões em pesquisa (Resolução CNS nº 466/2012). O termo do uso dos dados na inscrição (RF57) continua com o texto da equipe (DF44), e a base legal e o canal dos direitos seguem nas pendências.
+
+- id: DF64
+  data: 25/11/2026
+  fonte: respostas da FBr por WhatsApp
+  decisao: No contato de emergência da inscrição (DF51), bastam o nome e o telefone, obrigatórios; o grau de parentesco fica opcional. Respondido por Robson Araújo.
+
+- id: DF65
+  data: 25/11/2026
+  fonte: respostas da FBr por WhatsApp
+  decisao: Na consulta da fila (RF8), o inscrito com o caso encerrado ou desligado vê "Desligado" e a orientação de procurar a secretaria. Respondido por Robson Araújo.
+
+- id: DF66
+  data: 25/11/2026
+  fonte: respostas da FBr por WhatsApp
+  decisao: Na correção da evolução (RF29), o supervisor do caso tem a mesma data-limite do estagiário. Respondido por Robson Araújo.
+
+- id: DF67
+  data: 25/11/2026
+  fonte: respostas da FBr por WhatsApp
+  decisao: Perguntado se a anamnese e o contrato terapêutico precisam poder ser corrigidos depois de salvos, Robson Araújo respondeu que "seria bom deixar a possibilidade de corrigir". A equipe propõe a correção como um requisito novo (RF70), fora do MVP, para depois da entrega final; a correção também pelo supervisor do caso é proposta da equipe, a confirmar.
+
+- id: DF69
+  data: 25/11/2026
+  fonte: respostas da FBr por WhatsApp
+  decisao: A falta do estagiário registrada por engano é corrigida pela coordenação, que a reclassifica como cancelamento administrativo para remarcação, com motivo, e a contagem do semestre é refeita. Respondido por Robson Araújo.
 
 - id: DF70
   data: 25/11/2026
@@ -1755,21 +1812,6 @@ decisoes:
   data: 25/11/2026
   fonte: respostas da FBr por WhatsApp
   decisao: A secretaria registra no sistema que recebeu a autorização assinada para o acompanhamento de criança ou adolescente, com a data, e a declaração de comparecimento para o responsável legal só é emitida depois desse registro. Respondido por Robson Araújo.
-
-- id: DF60
-  data: 06/11/2026
-  fonte: reunião de validação do Ciclo 3 com a FBr
-  decisao: O RG deixa de ser obrigatório na inscrição (RF1), porque a nova Carteira de Identidade Nacional usa o CPF como número único; o órgão emissor e o estado do RG não são pedidos. Substitui em parte a DF02, só quanto ao RG; os demais campos obrigatórios da DF02 continuam valendo. Decidido por Thiago Viana, e registrado em 16/11/2026, a partir do relato da equipe.
-
-- id: DF61
-  data: 06/11/2026
-  fonte: reunião de validação do Ciclo 3 com a FBr
-  decisao: Na anamnese (RF69), só a queixa principal é obrigatória, e as demais seções podem ficar em branco, como o sistema já faz. Confirmado pela Clínica Escola, e registrado em 16/11/2026, a partir do relato da equipe.
-
-- id: DF59
-  data: 16/11/2026
-  fonte: validação da FBr por WhatsApp
-  decisao: O protótipo do Ciclo 5 (RF17, RF29, RF39, RF41, RF44, RF48 e RF56) e o que já está no ambiente de validação foram validados por Robson Araújo, que os analisou com os supervisores Alexandre e Ana. Ele pediu que, no cancelamento da sessão pelo estagiário, a próxima data de atendimento já seja apontada; o detalhe desse pedido está nas pendências de validação.
 
 conjuntos:
 - area: Inscrição no atendimento
@@ -1819,7 +1861,7 @@ conjuntos:
   conclusao: Ciclo 4
 - area: Acompanhamento clínico
   conjunto: Prontuário
-  rfs: [RF66, RF69, RF27]
+  rfs: [RF66, RF69, RF27, RF70]
   lider: Luís Henrique
   conclusao: Ciclo 4
 - area: Acompanhamento clínico

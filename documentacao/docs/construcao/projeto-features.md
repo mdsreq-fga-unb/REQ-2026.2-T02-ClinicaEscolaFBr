@@ -2717,7 +2717,7 @@ sequenceDiagram
 | A reclassificação exige `motivo` e grava o autor e a data/hora; a contagem cai | A reclassificação pela coordenação exige motivo, fica registrada e diminui a contagem |
 | Mesma autorização do RF39: o supervisor do estagiário e a coordenação | Só o supervisor do estagiário e a coordenação consultam |
 
-**Decisões de projeto:** a contagem é calculada na consulta, e não guardada, porque é a soma de registros que nunca mudam (o cancelamento e a reclassificação). Assim, não há contador para ficar fora de sincronia. A reclassificação é uma **proposta da equipe**, pendente de validação com a FBr, como a escolha das faltas na reversão do RF38; o ponto está nas pendências de validação. O semestre segue a mesma função do RF29 e do RF48.
+**Decisões de projeto:** a contagem é calculada na consulta, e não guardada, porque é a soma de registros que nunca mudam (o cancelamento e a reclassificação). Assim, não há contador para ficar fora de sincronia. A reclassificação foi confirmada pela FBr em 25/11/2026 ([DF69](../requisitos/decisoes-fbr.md#df69)). O semestre segue a mesma função do RF29 e do RF48.
 
 **Telas:** a página "Faltas dos estagiários" do RF39 ganha o seletor "Semestre" e o resumo por estagiário ("Faltas em 2026/2" e a situação "N de 3" ou "Limite atingido"); ao abrir um estagiário, a tabela das faltas, com "Reclassificar" para a coordenação e as reclassificadas riscadas, com o motivo. Protótipo: [prancha 7-1](prototipos.md#rf40).
 
@@ -2725,7 +2725,7 @@ sequenceDiagram
 
 **Dados de teste:** duas ausências e um cancelamento administrativo no mesmo semestre (contagem 2); uma ausência em junho e outra em julho (uma em cada semestre); a reclassificação com e sem motivo; a reclassificação repetida (409); o supervisor de outro estagiário e o estagiário (403).
 
-**Dependências e riscos:** depende do RF16 (#144) e do RF39 (#225). Se a FBr recusar a reclassificação, a rota sai e a contagem continua igual.
+**Dependências e riscos:** depende do RF16 (#144) e do RF39 (#225).
 
 ---
 
@@ -2946,6 +2946,14 @@ _Ciclo 6._
 
 **Dependências e riscos:** depende do RF41 (#43), integrado no Ciclo 5, e do agendamento da CP4.
 
+**Na implementação:**
+
+- **Lista.** `GET /contribuicoes?situacao=`, sem cache, com `@Perfis('secretaria', 'coordenacao')`; o supervisor e o estagiário recebem `403`, e a situação desconhecida, `400`. Cada linha traz o paciente, a situação no ciclo atual, a 1ª sessão do ciclo que não foi cancelada nem teve falta do paciente (como no RF43, a contribuição só bloqueia depois de uma sessão realizada), a data do pagamento da versão vigente (só na efetivada) e o último dia do prazo (só na pendente com vínculo), calculado pela mesma `prazoDaContribuicao` da ficha (RF41). A forma e o valor ficam só na ficha.
+- **Cálculo único.** `casosComContribuicaoPendente` e `primeirasSessoesComContribuicaoPendente` (`common/contribuicao-pendente.ts`) leem os pagamentos do ciclo atual na hora, para a lista, a agenda e "Meus pacientes" não divergirem e a indicação sumir assim que o pagamento é registrado.
+- **Agenda.** A indicação "Contribuição pendente · 1ª sessão" (`contribuicaoPendente`) vai na agenda do estagiário e do supervisor (RF11). A secretaria não tem agenda do dia com os pacientes, só as sessões sem confirmação; ela acompanha pela página "Contribuição social", aberta pelo menu.
+- **Meus pacientes.** O `GET /casos/meus` traz `contribuicao` (`pendente` ou `efetivada`) só para o estagiário e só nos casos em atendimento; a lista do supervisor não recebe o campo.
+- **Tela.** Página "Contribuição social" (`/contribuicoes`), no menu da secretaria e da coordenação, com o filtro "Situação" (Todas, Pendente, Efetivada), a contagem anunciada em `role="status"`, a tabela com `caption` (com "Prazo para pagar" no filtro pendente) e os cartões no celular. O nome do paciente leva à ficha, onde o pagamento é registrado.
+
 ---
 
 ### RF43 — Bloquear agendamento por contribuição social pendente ([#279](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/issues/279))
@@ -3162,6 +3170,15 @@ _Ciclo 6._
 **Dados de teste:** a exportação de agosto de 2026, conferida contra o `GET /indicadores` do mesmo intervalo; o semestre sem vagas ofertadas (aviso no PDF); o supervisor tentando exportar (403); a exportação registrada na auditoria.
 
 **Dependências e riscos:** depende do RF48 (#22), integrado no Ciclo 5. A biblioteca de PDF é uma dependência nova, que passa pela revisão de dependências do CI.
+
+**Na implementação:**
+
+- **Mesmos valores da tela, mesmo com a data final de hoje.** Quando a data final é hoje, as vagas ocupadas e a distribuição dependem do instante da consulta (RF48). Por isso, a tela manda junto o `referencia` que recebeu do `GET /indicadores`, e a API calcula o PDF naquele instante. A referência só vale se for do dia da data final e não estiver no futuro; senão, a resposta é 400, com o pedido para consultar de novo. Com a data final no passado, o cálculo usa o fim daquele dia, como no RF48, e a referência é ignorada.
+- **Texto separado do desenho.** O texto do PDF é montado por `montarRelatorio`, com as mesmas frases e o mesmo formato de número da tela, e `gerarPdf` só desenha, com o `pdfkit` 0.20. Os testes conferem o texto sem precisar ler o PDF.
+- **Página e paginação.** O PDF é A4 deitado e segue a prancha 9-1: cabeçalho da Clínica Escola, título, intervalo e referência, os quatro cartões, o aviso das vagas quando faltam e a tabela por supervisor. Quando a tabela passa de página, o cabeçalho se repete. O rodapé diz quem exportou e quando, no horário de Brasília. A paginação "Página N de M" fica no canto superior direito.
+- **Acessibilidade.** O PDF é marcado, com o idioma `pt-BR`, o título exibido na janela, os títulos e parágrafos na estrutura, e a tabela com `TH` e `TD`. Molduras, divisórias, paginação e o cabeçalho repetido são artefatos, para o leitor de tela não ler duas vezes. A fonte é a Helvetica padrão do PDF, que não fica embutida no arquivo.
+- **Botão na tela.** "Exportar PDF" usa `aria-disabled` em vez de `disabled`. Assim ele continua acessível pelo Tab e lê a explicação "Consulte um período para exportar o relatório." Ele fica indisponível sem uma consulta exibida, durante uma nova consulta e enquanto o PDF é gerado. A conclusão é anunciada em `role="status"`, e uma recusa mostra o motivo.
+- **Auditoria.** A operação é `exportar_relatorio_institucional`, com o intervalo e a referência usados, sem dado de paciente.
 
 ## Roteiro da inspeção de design
 

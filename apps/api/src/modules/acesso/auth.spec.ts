@@ -51,6 +51,9 @@ describe('Autenticação: login, sessão e logout', () => {
             () => ({
               WEB_URL: 'http://localhost:3000',
               CHAVE_DADOS: CHAVE_TESTE,
+              // Os testes do bloqueio mandam muitas senhas erradas da mesma
+              // origem; o limite por origem tem o próprio teste.
+              LIMITE_ENTRADAS_POR_ORIGEM: 1000,
             }),
           ],
         }),
