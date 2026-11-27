@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { DOCUMENTOS_COM_FOTO } from "./documentos";
 import type { SituacaoCaso } from "./dominio-ciclo-3";
 
 export const revogacaoSchema = z
@@ -12,11 +13,21 @@ export const revogacaoSchema = z
     documento: z.string().trim().max(120, "Use até 120 caracteres.").optional(),
   })
   .superRefine((dados, ctx) => {
-    if (dados.formaVerificacao === "documento" && !dados.documento)
+    // Na verificação pelo RF52, o documento não é usado nem gravado.
+    if (dados.formaVerificacao !== "documento") return;
+    if (!dados.documento)
       ctx.addIssue({
         code: "custom",
         path: ["documento"],
-        message: "Informe o documento apresentado.",
+        message: "Escolha o documento apresentado.",
+      });
+    else if (
+      !(DOCUMENTOS_COM_FOTO as readonly string[]).includes(dados.documento)
+    )
+      ctx.addIssue({
+        code: "custom",
+        path: ["documento"],
+        message: "Escolha um documento da lista.",
       });
   });
 export type Revogacao = z.infer<typeof revogacaoSchema>;

@@ -17,7 +17,7 @@ export async function preencherDados(page: Page, menor = false) {
   await page.locator("#email").fill("ficticio@example.com");
   // Contato de emergência obrigatório (DF51).
   await page.locator("#contatoEmergenciaNome").fill("Contato Fictício E2E");
-  await page.locator("#contatoEmergenciaParentesco").fill("Irmã");
+  await page.locator("#contatoEmergenciaParentesco").selectOption("Irmão(ã)");
   await page.locator("#contatoEmergenciaTelefone").fill("6133334444");
 }
 export async function preencherTriagem(page: Page) {

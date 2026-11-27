@@ -90,9 +90,9 @@ describe("RF65 — formulário de revogação", () => {
     fireEvent.click(
       screen.getByRole("button", { name: "Registrar revogação" }),
     );
-    await screen.findByText("Informe o documento apresentado.");
+    await screen.findByText("Escolha o documento apresentado.");
     fireEvent.change(screen.getByLabelText("Documento apresentado"), {
-      target: { value: "Carteira de identidade" },
+      target: { value: "Carteira de identidade (RG)" },
     });
     fireEvent.click(
       screen.getByRole("button", { name: "Registrar revogação" }),
@@ -110,7 +110,7 @@ describe("RF65 — formulário de revogação", () => {
         body: JSON.stringify({
           solicitante: "titular",
           formaVerificacao: "documento",
-          documento: "Carteira de identidade",
+          documento: "Carteira de identidade (RG)",
         }),
       }),
     );

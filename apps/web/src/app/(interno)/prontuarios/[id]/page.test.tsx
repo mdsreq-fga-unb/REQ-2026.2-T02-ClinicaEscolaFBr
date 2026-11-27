@@ -211,6 +211,71 @@ describe("elementos mínimos do prontuário (RF27, RNF25, RNF51, RNF52)", () => 
     expect(screen.getByText("Ver histórico de responsáveis (1)")).toBeTruthy();
   });
 
+  it("caso encerrado por alta: a seção Alta mostra a data, o motivo e quem confirmou (RF68, RF27)", async () => {
+    vi.mocked(api).mockImplementation(async (path: string) => {
+      if (path === "/auth/sessao")
+        return {
+          id: "u2",
+          nome: "Carla Mendes",
+          perfil: "supervisor",
+        } as never;
+      if (path === "/prontuarios/p1")
+        return {
+          casoId: "c1",
+          id: "p1",
+          cicloAtendimento: 2,
+          criadoEm: "2026-10-01T12:00:00Z",
+          numeroInscricao: "2026-00431",
+          nome: "Paciente de teste",
+          dataNascimento: "1990-05-10",
+          situacao: "encerrado_por_alta",
+          estagiario: null,
+          supervisor: "Carla Mendes",
+          vinculadoEm: null,
+          dadosIniciais: {
+            anamnese: null,
+            contrato: null,
+            queixaDaInscricao: null,
+          },
+          historicoResponsaveis: { estagiarios: [], supervisores: [] },
+          sessoes: [],
+          alta: {
+            data: "2026-11-27",
+            motivo: "Objetivos terapêuticos do ciclo atingidos.",
+            confirmadaPor: "Carla Mendes",
+            confirmadaEm: "2026-11-27T17:30:00Z",
+          },
+          relatorioFinal: null,
+          sessoesRealizadas: 0,
+          fechamentoAvaliativoPendente: false,
+          faltasNoCiclo: { faltas: 0, limite: 2, aviso: null },
+          sessoesAReagendar: [],
+          acoesFalta: { registrar: false, justificar: false },
+          acoesCancelamento: { cancelar: false, reverter: false },
+        } as never;
+      if (path === "/casos/c1/relatorio-final?ciclo=2") return "" as never;
+      throw new Error(`Rota inesperada: ${path}`);
+    });
+    const client = new QueryClient({
+      defaultOptions: { queries: { retry: false } },
+    });
+    render(
+      <QueryClientProvider client={client}>
+        <ProntuarioPage />
+      </QueryClientProvider>,
+    );
+
+    const secao = await screen.findByRole("region", { name: "Alta" });
+    expect(secao.textContent).toContain("Data da alta27/11/2026");
+    expect(secao.textContent).toContain(
+      "MotivoObjetivos terapêuticos do ciclo atingidos.",
+    );
+    expect(secao.textContent).toContain(
+      "Confirmada porCarla Mendes em 27/11/2026",
+    );
+    expect(secao.textContent).not.toContain("Sem registro neste ciclo.");
+  });
+
   it("quem não tem acesso vê a tela de acesso negado da prancha, sem o nome do paciente nem as seções do prontuário (RF27, RNF25)", async () => {
     vi.mocked(api).mockImplementation(async (path: string) => {
       if (path === "/auth/sessao")
