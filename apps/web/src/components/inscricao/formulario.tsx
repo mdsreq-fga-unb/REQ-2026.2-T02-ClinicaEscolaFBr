@@ -5,7 +5,9 @@ import { useEffect, useMemo, useRef, useState, type FormEvent } from "react";
 import {
   comprovanteSchema,
   dadosInscricaoSchema,
+  DOCUMENTOS_RESPONSABILIDADE,
   ESCOLARIDADES,
+  GRAUS_PARENTESCO,
   ESTADOS_CIVIS,
   hojeEmBrasilia,
   inscricaoSchema,
@@ -120,6 +122,8 @@ const listas: Partial<Record<Campo, readonly string[]>> = {
   estadoCivil: ESTADOS_CIVIS,
   sexo: SEXOS,
   escolaridade: ESCOLARIDADES,
+  contatoEmergenciaParentesco: GRAUS_PARENTESCO,
+  documentoResponsavel: DOCUMENTOS_RESPONSABILIDADE,
 };
 function normalizar(valores: Valores): Valores {
   return {
@@ -671,7 +675,7 @@ export function FormularioInscricao({ aberta = true }: { aberta?: boolean }) {
                           dica: "Obrigatório para pessoas menores de 18 anos. Digite só os números.",
                         })}
                         {campo("documentoResponsavel", {
-                          dica: "Exemplo: certidão de nascimento ou termo de guarda. Não é necessário enviar cópia.",
+                          dica: "Não é necessário enviar cópia.",
                         })}
                       </fieldset>
                     )}

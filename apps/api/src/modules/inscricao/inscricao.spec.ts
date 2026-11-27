@@ -39,7 +39,7 @@ const valido = () => ({
   celular: '(61) 99999-9999',
   email: 'teste@example.com',
   contatoEmergenciaNome: 'Contato Fictício',
-  contatoEmergenciaParentesco: 'Irmã',
+  contatoEmergenciaParentesco: 'Irmão(ã)',
   contatoEmergenciaTelefone: '(61) 3333-4444',
   queixa: 'Queixa fictícia privada',
   percepcaoUrgencia: 'Urgência fictícia privada',
@@ -153,6 +153,20 @@ describe('RF1/RF2: contrato compartilhado', () => {
         // Padrão até a resposta da FBr: só o nome e o telefone do contato de
         // emergência são obrigatórios (pendência de validação).
         contatoEmergenciaParentesco: '',
+      }).success,
+    ).toBe(true);
+  });
+  it('grau de parentesco e documento do responsável só aceitam as opções da lista (RF1)', () => {
+    expect(
+      inscricaoSchema.safeParse({
+        ...valido(),
+        contatoEmergenciaParentesco: 'Irmã mais velha',
+      }).success,
+    ).toBe(false);
+    expect(
+      inscricaoSchema.safeParse({
+        ...valido(),
+        contatoEmergenciaParentesco: 'Avô ou avó',
       }).success,
     ).toBe(true);
   });
@@ -282,7 +296,7 @@ describe('RF1/RF2: HTTP, transações e migrations oficiais', () => {
       cep: '72500-000',
       whatsapp: '(61) 98888-7777',
       contatoEmergenciaNome: 'Contato Fictício',
-      contatoEmergenciaParentesco: 'Irmã',
+      contatoEmergenciaParentesco: 'Irmão(ã)',
       contatoEmergenciaTelefone: '(61) 3333-4444',
     }).expect(201);
     const [registro] = await db.select().from(inscricoes);
@@ -295,7 +309,7 @@ describe('RF1/RF2: HTTP, transações e migrations oficiais', () => {
       cep: '72500000',
       whatsapp: '61988887777',
       contatoEmergenciaNome: 'Contato Fictício',
-      contatoEmergenciaParentesco: 'Irmã',
+      contatoEmergenciaParentesco: 'Irmão(ã)',
       contatoEmergenciaTelefone: '6133334444',
       cpfResponsavel: null,
       documentoResponsavel: null,

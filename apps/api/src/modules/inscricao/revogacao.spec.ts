@@ -147,7 +147,7 @@ describe('RF65 — revogação e integrações', () => {
   const corpo = {
     solicitante: 'titular',
     formaVerificacao: 'documento',
-    documento: 'Carteira de identidade',
+    documento: 'Carteira de identidade (RG)',
   };
   it('RF7 recalcula posições sem a inscrição revogada', async () => {
     const primeira = await criar();
@@ -244,6 +244,10 @@ describe('RF65 — revogação e integrações', () => {
     const { i } = await criar();
     await post(i.id)
       .send({ ...corpo, documento: ' ' })
+      .expect(400);
+    // O documento vem da lista de documentos com foto (RF65), e não de texto livre.
+    await post(i.id)
+      .send({ ...corpo, documento: 'RG 3.456.789 SSP/DF' })
       .expect(400);
     await post(i.id).send(corpo).expect(201);
     await post(i.id).send(corpo).expect(409);

@@ -6,6 +6,7 @@ import { useState, type FormEvent } from "react";
 import {
   revogacaoSchema,
   type ConsentimentoDaInscricao,
+  DOCUMENTOS_COM_FOTO,
 } from "@clinica/shared";
 import { AcessoNegado } from "@/components/comum/acesso-negado";
 import { Aviso } from "@/components/comum/aviso";
@@ -251,18 +252,22 @@ function Formulario({
               <Campo
                 id="documento"
                 rotulo="Documento apresentado"
-                dica="Informe o tipo do documento conferido, sem anexar foto ou cópia."
+                dica="O documento com foto que foi conferido. Não anexe foto nem cópia."
                 erro={erros.documento}
               >
                 {(props) => (
-                  <input
+                  <select
                     {...props}
                     value={documento}
                     onChange={(e) => setDocumento(e.target.value)}
-                    maxLength={120}
                     disabled={enviando}
                     className={classeEntrada}
-                  />
+                  >
+                    <option value="">Selecione</option>
+                    {DOCUMENTOS_COM_FOTO.map((d) => (
+                      <option key={d}>{d}</option>
+                    ))}
+                  </select>
                 )}
               </Campo>
             )}

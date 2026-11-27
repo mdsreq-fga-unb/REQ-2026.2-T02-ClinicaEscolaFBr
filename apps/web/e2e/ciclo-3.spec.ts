@@ -60,7 +60,7 @@ test.describe.serial("Integração do Ciclo 3", () => {
         cidadeUf: "Brasília/DF",
         cep: "72400-000",
         contatoEmergenciaNome: "Contato Fictício",
-        contatoEmergenciaParentesco: "Irmã",
+        contatoEmergenciaParentesco: "Irmão(ã)",
         contatoEmergenciaTelefone: "6133334444",
         estadoCivil: "Solteiro(a)",
         responsavelLegal: "",
