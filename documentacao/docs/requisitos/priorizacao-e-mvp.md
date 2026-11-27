@@ -63,6 +63,8 @@ Foram mantidas as três escalas propostas pela disciplina, todas orientadas no m
 
 O esforço considera o desenvolvimento completo do requisito — persistência, regra de negócio, serviço de aplicação, interface e testes —, conforme o fluxo de construção por feature adotado pela equipe.
 
+A pontuação 4 não tem limite superior. Para somar a carga de cada ciclo, a equipe a conta como 12 a 18 horas ([Carga por Líder de Feature e ciclo](../visao-geral/cronograma.md#carga-por-lider-de-feature-e-ciclo)), mas essa faixa é uma suposição de planejamento, que pode subestimar as features mais complexas. Por isso, as horas realizadas das features de esforço 4 são registradas no fechamento do ciclo e usadas para rever a faixa.
+
 **Complexidade técnica**
 
 | Pontuação | Interpretação |
