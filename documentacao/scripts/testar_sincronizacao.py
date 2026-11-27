@@ -14,9 +14,9 @@ sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "macros"))
 import catalogo  # noqa: E402
 
 
-def issue(numero, estado, nivel="###"):
+def issue(numero, estado, nivel="###", atualizada="2026-11-20T12:00:00Z"):
     corpo = f"### Objetivo\n\nTexto.\n\n{nivel} Estado da feature (FDD)\n\n{estado}\n\n### DoR\n"
-    return {"number": numero, "body": corpo}
+    return {"number": numero, "body": corpo, "updated_at": atualizada}
 
 
 class EstadoDaIssue(unittest.TestCase):
@@ -75,8 +75,48 @@ class AplicarGithub(unittest.TestCase):
         self.assertIn("RF1: Código concluído -> Aceita", mudancas)
         self.assertIn("Ciclo 5: Aguardando -> Em andamento", mudancas)
 
+    def test_issue_atras_do_catalogo_sem_regressao_gera_aviso(self):
+        dados = copy.deepcopy(self.dados)
+        mudancas = catalogo.aplicar_github(dados, [issue(2, "Planejada")], [])
+        self.assertEqual(dados["rfs"][1]["estado"], "Código concluído")
+        self.assertTrue(any(m.startswith("aviso: RF2: a issue está em Planejada") for m in mudancas))
+
+    def test_regressao_registrada_nao_e_desfeita_pela_issue_antiga(self):
+        dados = copy.deepcopy(self.dados)
+        dados["rfs"][2].update(estado="Código inspecionado",
+                               regressao={"de": "Aceita", "em": "28/11/2026", "motivo": "aceite revisto pela FBr"})
+        mudancas = catalogo.aplicar_github(dados, [issue(3, "Aceita", atualizada="2026-11-27T18:00:00Z")], [])
+        self.assertEqual(dados["rfs"][2]["estado"], "Código inspecionado")
+        self.assertTrue(any("mantida a regressão de 28/11/2026" in m for m in mudancas))
+
+    def test_issue_atualizada_depois_da_regressao_volta_a_valer(self):
+        dados = copy.deepcopy(self.dados)
+        dados["rfs"][2].update(estado="Código inspecionado",
+                               regressao={"de": "Aceita", "em": "28/11/2026", "motivo": "aceite revisto pela FBr"})
+        catalogo.aplicar_github(dados, [issue(3, "Demonstrada", atualizada="2026-11-29T10:00:00Z")], [])
+        self.assertEqual(dados["rfs"][2]["estado"], "Demonstrada")
+
+    def test_issue_que_regrediu_junto_com_o_catalogo_nao_gera_aviso(self):
+        dados = copy.deepcopy(self.dados)
+        dados["rfs"][2].update(estado="Demonstrada",
+                               regressao={"de": "Aceita", "em": "28/11/2026", "motivo": "aceite revisto pela FBr"})
+        mudancas = catalogo.aplicar_github(dados, [issue(3, "Código inspecionado")], [])
+        self.assertEqual(dados["rfs"][2]["estado"], "Demonstrada")
+        self.assertEqual(mudancas, [])
+
+
     def test_sem_token_nao_sincroniza(self):
         self.assertFalse(catalogo.sincronizar_com_github(copy.deepcopy(self.dados)))
+
+
+class NotaDaRegressao(unittest.TestCase):
+    def test_nota_so_enquanto_a_feature_esta_antes_do_marco_anterior(self):
+        cat = catalogo.Catalogo.__new__(catalogo.Catalogo)
+        g = {"de": "Aceita", "em": "28/11/2026", "motivo": "aceite revisto pela FBr"}
+        self.assertEqual(cat._regressao({"estado": "Código inspecionado", "regressao": g}),
+                         ' (voltou de "Aceita" em 28/11/2026: aceite revisto pela FBr)')
+        self.assertEqual(cat._regressao({"estado": "Aceita", "regressao": g}), "")
+        self.assertEqual(cat._regressao({"estado": "Aceita"}), "")
 
 
 if __name__ == "__main__":

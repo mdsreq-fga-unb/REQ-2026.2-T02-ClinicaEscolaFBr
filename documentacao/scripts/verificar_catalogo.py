@@ -117,6 +117,12 @@ def main():
                 erro(f"{c}: ciclo {r.get('ciclo')} desconhecido")
             if r.get("estado") not in ESTADOS:
                 erro(f"{c}: estado {r.get('estado')!r} não é um estado da feature (FDD)")
+            g = r.get("regressao")
+            if g is not None:
+                if not isinstance(g, dict) or set(g) != {"de", "em", "motivo"}:
+                    erro(f"{c}: regressao precisa de de, em e motivo")
+                elif g["de"] not in ESTADOS or not re.fullmatch(r"\d{2}/\d{2}/\d{4}", str(g["em"])) or not str(g["motivo"]).strip():
+                    erro(f"{c}: regressao com estado, data (dd/mm/aaaa) ou motivo inválido")
             if r.get("ordem") in ordens:
                 erro(f"{c}: ordem {r['ordem']} repetida ({ordens[r['ordem']]})")
             ordens[r.get("ordem")] = c

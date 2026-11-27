@@ -26,7 +26,7 @@ O calendário da equipe até a apresentação está em [Entrega final](../../con
 | --- | --- | --- |
 | Ciclo 6 | {{ ciclos[6].periodo }} | Conclusão da construção do MVP: evolução e relatório final, assiduidade do estagiário, contribuição social, declaração de comparecimento, revogação do consentimento e relatório institucional em PDF |
 
-Estado de cada feature do Ciclo 6, copiado das issues para o [catálogo de requisitos](../../requisitos/priorizacao-e-mvp.md#catalogo-de-requisitos) (atualizado em {{ catalogo_atualizado_em }}):
+Estado de cada feature do Ciclo 6, copiado das issues para o [catálogo de requisitos](../../requisitos/priorizacao-e-mvp.md#catalogo-de-requisitos) (atualizado em {{ catalogo_atualizado_em }}{% if estados_conferidos_em %}; estados conferidos nas issues em {{ estados_conferidos_em }}{% endif %}):
 
 {{ tabela_andamento(6) }}
 
