@@ -1456,7 +1456,7 @@ _Rastreabilidade:_ Feature "Restringir acesso ao prontuário do paciente" → CP
 
 **RF56 — Consultar registro de acessos ao prontuário**{ #rf56 }
 
-O sistema deve permitir que um usuário com perfil de coordenação consulte o registro de acessos ao prontuário de um paciente, informando, para cada acesso, o usuário, o perfil, a data/hora e a operação realizada (visualização, criação ou alteração), com filtro por paciente, por usuário e por período. As tentativas negadas pelo RF55 também aparecem no registro, identificadas como "acesso negado" ([DF29](decisoes-fbr.md#df29)). A consulta mostra quem acessou, mas não o conteúdo clínico acessado.
+O sistema deve permitir que um usuário com perfil de coordenação consulte o registro de acessos ao prontuário de um paciente, informando, para cada acesso, o usuário, o perfil, a data/hora e a operação realizada (visualização, criação ou alteração), com filtro por paciente, por usuário e por período. As tentativas negadas pelo RF55 também aparecem no registro, identificadas como "acesso negado" ([DF29](decisoes-fbr.md#df29)). A consulta mostra quem acessou, mas não o conteúdo clínico acessado. O registro é o dos acessos ao prontuário ([RNF52](nao-funcionais.md#rnf52)). As ações administrativas sobre o caso, como o registro do pagamento da contribuição social, ficam na auditoria geral ([RNF10](nao-funcionais.md#rnf10)), e o pagamento tem o próprio histórico, com quem registrou ou corrigiu e quando, que a coordenação consulta no [RF41](#rf41).
 
 _Critérios de aceitação:_
 
