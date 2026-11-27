@@ -59,7 +59,7 @@ for (const [dispositivo, tamanho] of [
   ["celular", { width: 360, height: 800 }],
   ["computador", { width: 1366, height: 900 }],
 ] as const) {
-  test(`no ${dispositivo}, o paciente emite e imprime a declaração em até 3 interações a partir das sessões (RF45, RNF41)`, async ({
+  test(`no ${dispositivo}, o paciente emite e imprime a declaração em até 3 interações a partir das sessões (RF44, RF45, RNF41)`, async ({
     page,
     request,
     playwright,
@@ -78,7 +78,7 @@ for (const [dispositivo, tamanho] of [
     await emitir(page, page, caso.inicios.realizada[0]);
   });
 
-  test(`no ${dispositivo}, a secretaria emite e imprime a declaração em até 3 interações a partir da ficha do paciente (RF45, RNF41)`, async ({
+  test(`no ${dispositivo}, a secretaria emite e imprime a declaração em até 3 interações a partir da ficha do paciente (RF44, RF45, RNF41)`, async ({
     browser,
     playwright,
   }) => {
