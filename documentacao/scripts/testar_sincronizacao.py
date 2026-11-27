@@ -59,21 +59,37 @@ class AplicarGithub(unittest.TestCase):
             "ciclos": [{"numero": 4, "status": "Em andamento"}, {"numero": 5, "status": "Aguardando"}],
         }
 
-    def test_vale_o_marco_mais_adiantado(self):
+    def test_vale_o_estado_da_issue(self):
         dados = copy.deepcopy(self.dados)
         issues = [
             issue(1, "Aceita"),
-            issue(2, "Planejada"),  # a issue atrasada não faz o catálogo voltar
+            issue(2, "Em design"),  # o código entrou, mas o DoD da issue ainda não chegou lá
             issue(3, "Aceita", nivel="##"),
             {"number": 9, "body": "", "pull_request": {}},
         ]
         milestones = [{"title": "Ciclo 4", "state": "closed"}, {"title": "Ciclo 5", "state": "open"}]
         mudancas = catalogo.aplicar_github(dados, issues, milestones)
         estados = {r["id"]: r["estado"] for r in dados["rfs"]}
-        self.assertEqual(estados, {"RF1": "Aceita", "RF2": "Código concluído", "RF3": "Aceita", "RF4": "Planejada"})
+        self.assertEqual(estados, {"RF1": "Aceita", "RF2": "Em design", "RF3": "Aceita", "RF4": "Planejada"})
+        fontes = {r["id"]: r.get("estado_fonte") for r in dados["rfs"]}
+        self.assertEqual(fontes, {"RF1": "issue", "RF2": "issue", "RF3": "issue", "RF4": None})
+        self.assertIn("RF2: Código concluído -> Em design", mudancas)
         self.assertEqual([c["status"] for c in dados["ciclos"]], ["Encerrado", "Em andamento"])
         self.assertIn("RF1: Código concluído -> Aceita", mudancas)
         self.assertIn("Ciclo 5: Aguardando -> Em andamento", mudancas)
+
+    def test_issue_sem_estado_valido_mantem_o_catalogo(self):
+        dados = copy.deepcopy(self.dados)
+        catalogo.aplicar_github(dados, [issue(1, "_No response_")], [])
+        self.assertEqual(dados["rfs"][0]["estado"], "Código concluído")
+        self.assertNotIn("estado_fonte", dados["rfs"][0])
+
+    def test_fonte_do_estado_com_a_data(self):
+        dados = {"rfs": [], "rnfs": [], "decisoes": [], "ciclos": [], "atualizado_em": "25/11/2026",
+                 "estado_lido_em": "27/11/2026"}
+        cat = catalogo.Catalogo(dados)
+        self.assertEqual(cat.fonte_do_estado({"estado_fonte": "issue"}), "estado lido da issue em 27/11/2026")
+        self.assertEqual(cat.fonte_do_estado({}), "estado do catálogo de 25/11/2026")
 
     def test_sem_token_nao_sincroniza(self):
         self.assertFalse(catalogo.sincronizar_com_github(copy.deepcopy(self.dados)))

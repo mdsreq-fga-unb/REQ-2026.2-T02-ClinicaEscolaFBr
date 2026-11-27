@@ -287,9 +287,16 @@ class Catalogo:
         texto = f"Ciclo {r['ciclo']} · {r['estado']}"
         if r.get("issue"):
             texto += f" ({self.issue(r)})"
+        texto += f", {self.fonte_do_estado(r)}"
         if r.get("entrega"):
             texto += f". Entrega {r['entrega']}"
         return texto
+
+    def fonte_do_estado(self, r):
+        """De onde veio o estado exibido e de quando é (issue #340)."""
+        if r.get("estado_fonte") == "issue":
+            return f"estado lido da issue em {self.dados['estado_lido_em']}"
+        return f"estado do catálogo de {self.dados['atualizado_em']}"
 
     def registro(self, codigo):
         r = self.por_codigo[codigo]
@@ -386,10 +393,12 @@ class Catalogo:
             (r for r in self.rfs if r.get("mvp") and r.get("ciclo") in numeros),
             key=lambda r: (r["ciclo"], r["ordem"]),
         )
-        linhas = ["| Ciclo | Feature (RF) | Líder de Feature | Estado da feature | Issue |", "| --- | --- | --- | --- | --- |"]
+        linhas = ["| Ciclo | Feature (RF) | Líder de Feature | Estado da feature | Fonte do estado | Issue |",
+                  "| --- | --- | --- | --- | --- | --- |"]
         for r in itens:
+            fonte = self.fonte_do_estado(r).replace("estado lido da ", "").replace("estado do ", "")
             linhas.append(
-                f"| {r['ciclo']} | {self.link(r['id'])} — {r['nome']} | {r['lider']} | {r.get('estado', 'Planejada')} | {self.issue(r)} |"
+                f"| {r['ciclo']} | {self.link(r['id'])} — {r['nome']} | {r['lider']} | {r.get('estado', 'Planejada')} | {fonte} | {self.issue(r)} |"
             )
         contagem = {}
         for r in itens:
@@ -531,11 +540,15 @@ def aplicar_github(dados, issues, milestones):
             continue
         estado = estado_da_issue(corpos[int(r["issue"])])
         atual = r.get("estado", "Planejada")
-        # O yml é atualizado na PR que conclui o código, antes de o checklist da issue
-        # chegar lá; por isso vale o marco mais adiantado dos dois.
-        if estado and ORDEM_ESTADOS.index(estado) > ORDEM_ESTADOS.index(atual):
-            mudancas.append(f"{r['id']}: {atual} -> {estado}")
-            r["estado"] = estado
+        # O estado efetivo é o da issue, onde o checklist do DoD guarda as evidências:
+        # o marco só conta quando a evidência foi registrada, mesmo que o código já
+        # tenha entrado e o catálogo esteja adiantado (issues #337 e #340). Sem um
+        # estado válido na issue, vale o catálogo.
+        if estado:
+            r["estado_fonte"] = "issue"
+            if estado != atual:
+                mudancas.append(f"{r['id']}: {atual} -> {estado}")
+                r["estado"] = estado
     situacoes = situacao_dos_ciclos(milestones)
     for c in dados["ciclos"]:
         status = situacoes.get(c["numero"])
@@ -559,6 +572,7 @@ def sincronizar_com_github(dados):
         return False
     for mudanca in aplicar_github(dados, issues, milestones):
         print(f"catalogo: {mudanca}")
+    dados["estado_lido_em"] = datetime.datetime.now(BRASILIA).strftime("%d/%m/%Y")
     return True
 
 

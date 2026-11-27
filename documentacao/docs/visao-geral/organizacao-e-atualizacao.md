@@ -33,6 +33,14 @@ Os assuntos que apareciam em mais de uma página têm agora uma fonte só; as ou
 | Critérios de validação de cada marco | [DoD](../requisitos/dor-dod.md#92-definition-of-done-dod) | O [processo de validação](../processo/equipe-e-cliente.md#73-processo-de-validacao) só diz onde cada marco acontece; a Engenharia de Requisitos aponta para o D4.5 |
 | Planejamento e revisão dos ciclos | [Cronograma geral](cronograma.md) | A Estratégia de ESW aponta para ele; o cronograma da Unidade 1 guarda o planejamento original |
 
+### Issues e registros históricos
+
+Issues antigas, atas e pull requests não são reescritas quando um requisito muda. Por isso, as issues de decomposição e de avaliação das Unidades 1 e 2 ainda citam numerações e caminhos antigos de RFs (por exemplo, `unidade-2/requisitos-funcionais.md` ou um RF que depois foi renumerado, consolidado ou removido). Essas issues continuam valendo como registro do que foi feito na época, mas não como referência do requisito vigente:
+
+- quem lê uma issue histórica confere o requisito pelo número no [catálogo de requisitos](../requisitos/priorizacao-e-mvp.md#catalogo-de-requisitos) e pela [lista de requisitos funcionais](../requisitos/funcionais.md), que dizem se ele foi removido ou consolidado;
+- as issues históricas de decomposição recebem o rótulo `histórico` e um comentário fixo que aponta para o catálogo vigente, sem mudar o texto original;
+- os endereços antigos das páginas levam ao endereço novo, no mesmo trecho, e por isso os links das issues históricas não quebram.
+
 ### Numeração do documento de visão
 
 Nas Unidades 1 e 2, as seções tinham a numeração do documento de visão (1 a 10). Os títulos vigentes não usam mais esses números, mas os links antigos para cada seção continuam funcionando, e as issues de avaliação e as atas que citam um número podem ser lidas por esta correspondência:
@@ -140,6 +148,12 @@ Todos os atributos ficam pendurados no RF. Os que são compartilhados por vário
 
 As visões que juntam muitos RFs, como a priorização, o recorte do MVP, o backlog por ciclo, a situação por ciclo e a coluna "Requisitos" das decisões, **não são escritas à mão**: são geradas do catálogo quando o site é publicado. Assim, cada informação tem uma fonte só, e as listas não divergem.
 
+Essas visões têm limites, que valem para quem as lê:
+
+- **Data.** Elas mostram o catálogo na data da publicação do site, que aparece no rodapé de cada página. Uma mudança feita numa issue depois disso só aparece na próxima publicação.
+- **Estado da feature.** No site publicado, o estado vem da issue de cada feature e diz a data da leitura; no build local e no docs-check das pull requests, vem do catálogo, com a data do `atualizado_em`. A divergência entre os dois some na publicação seguinte.
+- **O que não é gerado.** A descrição, os critérios de aceitação e a rastreabilidade de cada RF ficam só na [lista de requisitos funcionais](../requisitos/funcionais.md). Nenhuma outra página nem issue copia essas listas inteiras, com os status ou os critérios: elas apontam para o RF pelo número. Uma tabela nova com vários RFs vira uma macro do catálogo, e não uma lista escrita à mão.
+
 ### Recorte do MVP
 
 O MVP é a lista de RFs com `mvp: true` no catálogo, decidida pelas [regras de priorização](../requisitos/priorizacao-e-mvp.md#102-priorizacao-e-recorte-do-mvp) e conferida pela [regra de limite de capacidade](../requisitos/priorizacao-e-mvp.md#limite-de-capacidade). Hoje, **{{ n.rfs_mvp }} dos {{ n.rfs_vigentes }} RFs vigentes** estão no MVP. A priorização, a tabela do MVP, o backlog e a situação por ciclo saem da mesma lista; o `verificar_catalogo.py`, que roda no CI das pull requests que mexem na documentação, recusa um RF sem Líder, com ciclo ou estado desconhecido, com dependência inexistente ou com o nome diferente do registro na página 8.1.
@@ -189,7 +203,7 @@ flowchart LR
 | Priorização, MVP, backlog, situação por ciclo, índice das decisões e contagens da página inicial | Automático, geradas do catálogo pelas macros do MkDocs a cada publicação | Build estrito no CI |
 | Estado da feature na issue e Status no Project | Automático, pelo [acompanhamento das features](../processo/boas-praticas-github.md#acompanhamento-automatico-das-features), a partir do checklist, das pull requests e dos comandos `/de-acordo`, `/demonstrada` e `/aceite` | A equipe, pelos comentários do robô na issue |
 | Verificação dos RNFs (D4.5) | Automático, pelos relatórios dos testes da `development`; os RNFs sem teste usam o comando `/rnf` | A equipe, pelo comentário do robô na issue |
-| Estado da feature e situação do ciclo no site | Automático na publicação: o site lê o "Estado da feature" de cada issue e a situação do milestone de cada ciclo (fechado é "Encerrado"; dos abertos, o de menor número está "Em andamento"). Do estado, vale o marco mais adiantado entre a issue e o catálogo, porque o catálogo muda na pull request que conclui o código. Se o GitHub não responder, vale o catálogo. Se o milestone de um ciclo fechar antes de o do ciclo seguinte ser aberto, nenhum ciclo aparece "Em andamento" até a abertura. Com a leitura do GitHub, o "Catálogo atualizado em" das páginas passa a ser a data da publicação, e não a da última mudança no texto dos requisitos, que fica no histórico de versões | Log do workflow de publicação, que lista o que mudou |
+| Estado da feature e situação do ciclo no site | Automático na publicação: o site lê o "Estado da feature" de cada issue e a situação do milestone de cada ciclo (fechado é "Encerrado"; dos abertos, o de menor número está "Em andamento"). Do estado, vale o da issue, que é o estado efetivo: o marco só conta quando a evidência dele está registrada no checklist do DoD, mesmo que o código já tenha entrado e o catálogo esteja adiantado. Sem um estado válido na issue, ou se o GitHub não responder, vale o catálogo. Cada estado exibido diz de onde veio e de quando é: "estado lido da issue em dd/mm/aaaa" ou "estado do catálogo de dd/mm/aaaa" (a data do campo `atualizado_em` do catálogo). Se o milestone de um ciclo fechar antes de o do ciclo seguinte ser aberto, nenhum ciclo aparece "Em andamento" até a abertura. Com a leitura do GitHub, o "Catálogo atualizado em" das páginas passa a ser a data da publicação, e não a da última mudança no texto dos requisitos, que fica no histórico de versões | Log do workflow de publicação, que lista o que mudou |
 | Estado da feature e situação do ciclo no catálogo | Manual, na pull request da feature e no fechamento do ciclo, para o build local e o docs-check | Revisor da pull request |
 | Publicação do site | Automática, a cada merge na `development` | Workflow de publicação |
 
