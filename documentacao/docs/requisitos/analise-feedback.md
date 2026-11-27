@@ -16,6 +16,8 @@ As decisões seguem as categorias abaixo:
 | **Não aceito**          | O apontamento não procede; o requisito foi mantido, com a justificativa registrada.                           |
 | **Não aplicável**       | A verificação não identificou problema no requisito ("OK"); nenhuma alteração foi necessária.                |
 
+**Do apontamento à conferência.** Esta página é a fonte única da verificação cruzada: as outras páginas apontam para cá, sem repetir a avaliação. Cada apontamento aceito virou uma alteração no requisito, feita na Unidade 2 e entregue na [release `unidade-2`](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/releases/tag/unidade-2). A conferência posterior foi feita na avaliação do DoR de cada feature, nos Ciclos 3 a 6: os critérios de clareza e de critérios de aceitação (R2 e R3 do [DoR](dor-dod.md)) foram conferidos contra a declaração vigente do requisito, e o que ainda estava errado foi corrigido numa PR própria, com a versão no [histórico](../index.md#historico-de-revisao) e o registro na issue da feature. Os apontamentos aceitos em parte, que dependiam da FBr, estão nas [pendências de validação](#pendencias-de-validacao-com-a-fbr) até a resposta.
+
 ## Requisitos funcionais
 
 ### Inscrição on-line (CP1)

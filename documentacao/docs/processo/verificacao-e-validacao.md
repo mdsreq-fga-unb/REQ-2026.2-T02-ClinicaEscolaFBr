@@ -55,6 +55,39 @@ Toda evidência fica num lugar público do projeto, ligada ao requisito ou à fe
 | Apontamentos externos | [Análise do Feedback](../requisitos/analise-feedback.md) e issues do professor | Cada apontamento cita o requisito |
 | Situação de cada feature no ciclo | [Fechamento dos ciclos](../visao-geral/cronograma.md#fechamento-dos-ciclos) e o "Estado da feature" da issue | O estado é o marco do FDD alcançado |
 
+## Registro das validações com a FBr { #registro-das-validacoes }
+
+Cada validação com a FBr avaliou um objeto diferente: um **protótipo** (as telas, antes da construção), uma **regra de negócio** (uma resposta que vira decisão), a **funcionalidade integrada** (o sistema no ambiente de validação) ou o **conjunto demonstrado** (as jornadas do sistema percorridas de ponta a ponta). As quatro avaliações se completam, mas não são equivalentes: o aceite de um protótipo não é o aceite da funcionalidade construída.
+
+| Data | Objeto avaliado | Versão ou material | O que foi percorrido | Quem avaliou | Resultado e decisões | O que gerou de correção |
+| --- | --- | --- | --- | --- | --- | --- |
+| 02 e 07/10 | Regra de negócio e recorte do MVP | Requisitos e MVP da Unidade 2 | Lista de requisitos e prioridades | Robson Araújo e Thiago Viana | MVP validado; [DF06](../requisitos/decisoes-fbr.md#df06) a [DF14](../requisitos/decisoes-fbr.md#df14) | Ajustes nos RFs, registrados na [validação do MVP](../requisitos/priorizacao-e-mvp.md#1024-validacao-do-mvp-com-o-cliente) |
+| 23/10 | Protótipo do Ciclo 3 | [Protótipos](../construcao/prototipos.md) do Ciclo 3 | Telas da inscrição, da triagem, da distribuição, do vínculo, do agendamento e do prontuário | Robson Araújo e Thiago Viana | Aprovado; [DF15](../requisitos/decisoes-fbr.md#df15) a [DF33](../requisitos/decisoes-fbr.md#df33) | RFs e protótipos ajustados, e o RF19 removido ([ata](../historico/unidade-3/reunioes.md#reuniao-de-validacao-do-prototipo-do-ciclo-3-com-a-fbr)) |
+| 30 e 31/10 | Regras de negócio | Perguntas da equipe | — | Robson Araújo | [DF34](../requisitos/decisoes-fbr.md#df34) a [DF46](../requisitos/decisoes-fbr.md#df46) | Regras incorporadas aos RFs do Ciclo 4 |
+| 06/11 | Funcionalidade integrada do Ciclo 3, ao vivo | Ambiente de validação | Inscrição, triagem, distribuição, vínculo e agendamento, do ponto de vista do paciente e da equipe | Thiago Viana; os protótipos do Ciclo 4 seguiram por e-mail, por falta de tempo | Aceite das features do Ciclo 3; [DF47](../requisitos/decisoes-fbr.md#df47) a [DF49](../requisitos/decisoes-fbr.md#df49), [DF60](../requisitos/decisoes-fbr.md#df60) e [DF61](../requisitos/decisoes-fbr.md#df61) | CPF do responsável (DF47), contato sem canal preferencial (DF48), horários de 10 em 10 minutos (DF49) e RG opcional (DF60) ([ata](../historico/unidade-3/reunioes.md#reuniao-de-validacao-do-ciclo-3-com-a-fbr)) |
+| 10 a 12/11 | Funcionalidade integrada do Ciclo 4, por e-mail, os protótipos do Ciclo 4 e teste de usabilidade | Ambiente de validação, com o roteiro por e-mail, e os protótipos enviados em 06/11 | Features do Ciclo 4 e as propostas dos protótipos; no teste, a distribuição e o vínculo ([RNF22](../requisitos/nao-funcionais.md#rnf22)) | Robson Araújo, com estagiários, um supervisor e a secretária | Aceite em 11/11; [DF50](../requisitos/decisoes-fbr.md#df50) a [DF58](../requisitos/decisoes-fbr.md#df58) | A dificuldade do supervisor virou pendência ([registro do teste](../historico/unidade-3/reunioes.md#registro-do-teste-de-usabilidade-rnf22)) |
+| 16/11 | Protótipo do Ciclo 5 e o que estava no ambiente de validação | PDF do Ciclo 5 e ambiente de validação | As telas das sete features e o RF48 já integrado | Robson Araújo, com os supervisores Alexandre e Ana | Validado; [DF59](../requisitos/decisoes-fbr.md#df59) | O pedido da próxima data no RF17 virou pendência ([registro](../historico/unidade-3/reunioes.md#validacao-do-ciclo-5-pela-fbr)) |
+| 24/11 | Funcionalidade integrada: seis features do Ciclo 5 | Ambiente de validação, com um roteiro passo a passo | RF41, RF29, RF39, RF56, RF17 e RF44 | Robson Araújo, com os professores Alexandre e Lauana e a supervisora Elaine | "Tá tudo ok"; [DF62](../requisitos/decisoes-fbr.md#df62) | Nenhuma ([registro](../historico/unidade-3/reunioes.md#validacao-das-funcionalidades-do-ciclo-5-pela-fbr)) |
+| 25/11 | Regras de negócio do Ciclo 6 | Dúvidas pendentes no grupo | — | Robson Araújo | [DF63](../requisitos/decisoes-fbr.md#df63) a [DF72](../requisitos/decisoes-fbr.md#df72) | O supervisor também complementa a evolução (DF68) e outras regras do Ciclo 6 ([registro](../historico/unidade-3/reunioes.md#respostas-da-fbr-as-duvidas-pendentes-2511)) |
+| 27/11 | Conjunto demonstrado: o sistema completo, e os protótipos do Ciclo 6 | Ambiente de validação, gravado | As duas jornadas, da inscrição de uma paciente nova à alta, ao relatório final, à declaração e à revogação | Robson Araújo e Thiago Viana | Aceite do sistema, com ressalva; [DF73](../requisitos/decisoes-fbr.md#df73) a [DF78](../requisitos/decisoes-fbr.md#df78) | Registro de acessos detalhado (RF56), endereço pelo CEP (RF1) e comprovante por e-mail (RF2), em PRs próprias; declaração digital (RF45) depois da entrega ([ata](https://mdsreq-fga-unb.github.io/REQ-2026.2-T02-ClinicaEscolaFBr/historico/unidade-4/reunioes/#validacao-final-com-a-fbr-2711)) |
+
+### O que cada aceite cobre { #o-que-cada-aceite-cobre }
+
+O aceite de uma feature (D6.1) é registrado com `/aceite` na issue, com a evidência. Ele se refere a objetos diferentes conforme o ciclo:
+
+| Features | Protótipo (R7.3) | Funcionalidade integrada (D5 e D6) |
+| --- | --- | --- |
+| Ciclo 3 | Aprovado em 23/10, antes da construção | Demonstrada ao vivo no ambiente de validação em 06/11, para o Thiago Viana, e aceita em 06 e 11/11 |
+| Ciclo 4 | Enviado em 06/11 e validado na resposta de 11/11, quando a construção já tinha começado | Demonstrada por e-mail em 10/11 e aceita na resposta de 11/11, sem demonstração ao vivo |
+| Ciclo 5 | Validado em 16/11 | RF48 aceito em 16/11; as outras seis conferidas pela FBr no ambiente de validação, com roteiro, e aceitas em 24/11 |
+| Ciclo 6 | Validado em 27/11, junto com o sistema, depois da construção | Demonstradas no conjunto do sistema em 27/11 e aceitas com o aceite do sistema (DF73) |
+
+No Ciclo 6, o protótipo não foi validado antes da construção: a FBr respondeu às dúvidas das regras em 25/11 e avaliou as telas já construídas em 27/11. O aceite dessas features é o do conjunto demonstrado, e não o de cada feature isolada.
+
+### Regras ainda propostas pela equipe { #regras-propostas-pela-equipe }
+
+Uma regra que a FBr ainda não decidiu fica nas [pendências de validação](../requisitos/analise-feedback.md#pendencias-de-validacao-com-a-fbr) com o **padrão adotado até a resposta**, que é o resultado provisório da verificação interna. No requisito, ela aparece como "proposta da equipe", e não ganha uma DF. Quando a FBr responde, a regra vira uma DF, sai das pendências e o requisito passa a citar a decisão. Se a resposta muda o padrão adotado, a correção entra numa PR própria, como as do RF56, do RF1 e do RF2 depois da validação final.
+
 ## Limites conhecidos { #limites-conhecidos }
 
 - **Pacientes e responsáveis:** não houve validação direta com esse público. O contato com os pacientes passa pela clínica, por causa do sigilo e da LGPD. A área pública (inscrição, consulta da fila e confirmação de presença) foi validada com a coordenação e verificada pelos RNFs de usabilidade e acessibilidade. A pergunta está nas [pendências de validação](../requisitos/analise-feedback.md#pendencias-de-validacao-com-a-fbr).
