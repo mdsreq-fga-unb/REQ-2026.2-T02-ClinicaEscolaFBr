@@ -13,15 +13,16 @@ export const revogacaoSchema = z
     documento: z.string().trim().max(120, "Use até 120 caracteres.").optional(),
   })
   .superRefine((dados, ctx) => {
-    if (dados.formaVerificacao === "documento" && !dados.documento)
+    // Na verificação pelo RF52, o documento não é usado nem gravado.
+    if (dados.formaVerificacao !== "documento") return;
+    if (!dados.documento)
       ctx.addIssue({
         code: "custom",
         path: ["documento"],
         message: "Escolha o documento apresentado.",
       });
     else if (
-      dados.formaVerificacao === "documento" &&
-      !(DOCUMENTOS_COM_FOTO as readonly string[]).includes(dados.documento!)
+      !(DOCUMENTOS_COM_FOTO as readonly string[]).includes(dados.documento)
     )
       ctx.addIssue({
         code: "custom",

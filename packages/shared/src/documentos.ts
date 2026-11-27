@@ -91,6 +91,9 @@ export const GRAUS_PARENTESCO = [
   "Filho(a)",
   "Irmão(ã)",
   "Avô ou avó",
+  "Neto(a)",
+  "Padrasto ou madrasta",
+  "Enteado(a)",
   "Tio(a)",
   "Primo(a)",
   "Outro parente",
@@ -105,7 +108,6 @@ export const DOCUMENTOS_RESPONSABILIDADE = [
   "Certidão de nascimento",
   "Termo de guarda",
   "Termo de tutela",
-  "Termo de curatela",
   "Decisão judicial",
   "Outro documento",
 ] as const;
@@ -119,5 +121,8 @@ export const DOCUMENTOS_COM_FOTO = [
   "Passaporte",
   "Carteira de trabalho (CTPS)",
   "Carteira de conselho profissional",
-  "RNM ou RNE (estrangeiro)",
+  "Carteira de Registro Nacional Migratório (CRNM) ou RNE",
+  "Identidade militar",
+  "Carteira de identificação funcional",
+  "Outro documento oficial com foto",
 ] as const;

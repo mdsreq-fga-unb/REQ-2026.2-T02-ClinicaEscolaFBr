@@ -169,6 +169,22 @@ describe('RF1/RF2: contrato compartilhado', () => {
         contatoEmergenciaParentesco: 'Avô ou avó',
       }).success,
     ).toBe(true);
+    const menor = {
+      ...valido(),
+      dataNascimento: '2020-01-01',
+      responsavelLegal: 'Responsável Fictício',
+      cpfResponsavel: '52998224725',
+    };
+    expect(
+      inscricaoSchema.safeParse({ ...menor, documentoResponsavel: 'RG da mãe' })
+        .success,
+    ).toBe(false);
+    expect(
+      inscricaoSchema.safeParse({
+        ...menor,
+        documentoResponsavel: 'Termo de guarda',
+      }).success,
+    ).toBe(true);
   });
   it('descarta os dados do responsável de adulto, sem conferir o formato (DF43, LGPD)', () => {
     const resultado = inscricaoSchema.safeParse({

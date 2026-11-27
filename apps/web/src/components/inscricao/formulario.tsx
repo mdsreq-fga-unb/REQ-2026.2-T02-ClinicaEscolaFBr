@@ -88,10 +88,7 @@ const tamanhos: Partial<Record<Campo, number>> = {
   contatoEmergenciaTelefone: 15,
   email: 254,
   cep: 9,
-  sexo: 50,
-  contatoEmergenciaParentesco: 50,
   profissao: 100,
-  escolaridade: 100,
   bairro: 100,
   cidadeUf: 100,
 };
