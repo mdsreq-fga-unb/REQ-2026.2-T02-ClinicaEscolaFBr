@@ -85,6 +85,7 @@ _Critérios de aceitação:_
 - Para interessado menor de idade, calculado pela data de nascimento, o envio sem o nome ou sem o CPF do responsável legal é bloqueado e o campo é indicado.
 
 - O envio sem o nome ou o telefone do contato de emergência, ou sem o endereço completo (endereço, bairro, cidade e CEP), é bloqueado e o campo é indicado; o grau de parentesco pode ficar em branco ([DF51](decisoes-fbr.md#df51), [DF56](decisoes-fbr.md#df56) e [DF64](decisoes-fbr.md#df64)).
+- O CEP vem antes do endereço. Ao completar os 8 números, o formulário consulta o CEP em um serviço público gratuito (ViaCEP) e preenche o bairro e a cidade como estão no CEP, e a rua quando ainda está em branco; com o CEP não encontrado ou o serviço fora do ar, o formulário avisa e a pessoa preenche o endereço (pedido da FBr na validação final de 27/11/2026). Só o CEP é enviado ao serviço.
 
 _Rastreabilidade:_ Feature "Registrar solicitação de atendimento on-line" → CP1 — Inscrição on-line → OE1/OE4. Restrição transversal: CP12 — Segurança, sigilo e controle de acesso.{{ origem("RF1") }}
 

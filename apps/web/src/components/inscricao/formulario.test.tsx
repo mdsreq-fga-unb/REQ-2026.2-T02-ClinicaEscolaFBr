@@ -8,7 +8,13 @@ import {
   within,
 } from "@testing-library/react";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+import { consultarCep } from "./consulta-cep";
 import { buscarTermoVigente } from "./termo";
+// A consulta do CEP (DF75) vai a um serviço externo: nos testes, ela é simulada,
+// e por padrão não encontra o CEP, para o formulário seguir como antes.
+vi.mock("./consulta-cep", () => ({
+  consultarCep: vi.fn(async () => ({ tipo: "nao_encontrado" })),
+}));
 vi.mock("./termo", async (importOriginal) => ({
   ...(await importOriginal<typeof import("./termo")>()),
   buscarTermoVigente: vi.fn(),
@@ -176,6 +182,49 @@ describe("Formulário RF1/RF2", () => {
       whatsapp: "6133334444",
       contatoEmergenciaTelefone: "61999990000",
     });
+  });
+  it("preenche o bairro e a cidade como estão no CEP, e a rua só se estiver em branco (DF75)", async () => {
+    vi.mocked(consultarCep).mockResolvedValueOnce({
+      tipo: "encontrado",
+      logradouro: "QR 203",
+      bairro: "Santa Maria Norte",
+      cidadeUf: "Brasília/DF",
+    });
+    render(<FormularioInscricao />);
+    preencher("bairro", "Santa Maria");
+    preencher("cep", "72503305");
+    await waitFor(() =>
+      expect(document.getElementById("bairro")).toHaveValue(
+        "Santa Maria Norte",
+      ),
+    );
+    expect(consultarCep).toHaveBeenCalledWith("72503305");
+    expect(document.getElementById("cidadeUf")).toHaveValue("Brasília/DF");
+    expect(document.getElementById("endereco")).toHaveValue("QR 203");
+    expect(
+      screen.getByText(/Bairro e cidade preenchidos pelo CEP/),
+    ).toBeInTheDocument();
+  });
+  it("sem consulta possível, avisa e deixa o endereço como a pessoa digitou (DF75)", async () => {
+    vi.mocked(consultarCep).mockResolvedValueOnce({ tipo: "falha" });
+    render(<FormularioInscricao />);
+    preencher("endereco", "Rua Fictícia, 10");
+    preencher("cep", "72503305");
+    expect(
+      await screen.findByText(/Não foi possível consultar o CEP agora/),
+    ).toBeInTheDocument();
+    expect(document.getElementById("endereco")).toHaveValue("Rua Fictícia, 10");
+  });
+  it("o CEP vem antes do endereço (DF75)", () => {
+    render(<FormularioInscricao />);
+    const ordem = ["cep", "endereco", "bairro", "cidadeUf"].map((id) =>
+      document.getElementById(id),
+    );
+    for (let i = 1; i < ordem.length; i++)
+      expect(
+        ordem[i - 1]!.compareDocumentPosition(ordem[i]!) &
+          Node.DOCUMENT_POSITION_FOLLOWING,
+      ).toBeTruthy();
   });
   it("oferece sexo e escolaridade em listas, opcionais (RF1, DF43)", () => {
     render(<FormularioInscricao />);

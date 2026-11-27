@@ -2,6 +2,9 @@ import type { Page } from "@playwright/test";
 
 // Preenchimento do formulário público de inscrição (RF1) com dados fictícios.
 export async function preencherDados(page: Page, menor = false) {
+  // A consulta do CEP (DF75) vai ao ViaCEP; no e2e, ela é bloqueada para o teste
+  // não depender da rede: o formulário avisa e segue com o endereço digitado.
+  await page.route("https://viacep.com.br/**", (rota) => rota.abort());
   await page.locator("#nomeCompleto").fill("Pessoa Fictícia E2E");
   await page
     .locator("#dataNascimento")
