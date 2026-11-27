@@ -295,6 +295,31 @@ describe('RF1/RF2: HTTP, transações e migrations oficiais', () => {
     expect(registro.email).toBe('teste@example.com');
     expect(registro.canalPreferencial).toBe('email');
   });
+  it('manda o comprovante ao e-mail uma vez, só com o número e a data, e a repetição do envio não manda outro (RF2, DF76)', async () => {
+    const email = app.get(EmailService);
+    jest.mocked(email.enviar).mockClear();
+    const dados = valido();
+    const res = await enviar(dados).expect(201);
+    await new Promise((r) => setImmediate(r));
+    expect(email.enviar).toHaveBeenCalledTimes(1);
+    const [para, assunto, html] = jest.mocked(email.enviar).mock.calls[0];
+    expect(para).toBe('teste@example.com');
+    expect(assunto).toContain(res.body.numero);
+    expect(html).toContain(res.body.numero);
+    expect(html).toContain('não garante vaga');
+    expect(html).not.toMatch(/fictícia|privada|Rua de Teste|11144477735/);
+    await enviar(dados).expect(201);
+    await new Promise((r) => setImmediate(r));
+    expect(email.enviar).toHaveBeenCalledTimes(1);
+  });
+  it('a falha no envio do comprovante não desfaz a inscrição (RF2, DF76)', async () => {
+    jest
+      .mocked(app.get(EmailService).enviar)
+      .mockRejectedValueOnce(new Error('SMTP fora do ar'));
+    await enviar().expect(201);
+    await new Promise((r) => setImmediate(r));
+    expect(await db.select().from(inscricoes)).toHaveLength(1);
+  });
   it('registra a inscrição sem RG, com o RG nulo no banco (RF1, DF60)', async () => {
     await enviar({ ...valido(), rg: '' }).expect(201);
     const [registro] = await db.select().from(inscricoes);

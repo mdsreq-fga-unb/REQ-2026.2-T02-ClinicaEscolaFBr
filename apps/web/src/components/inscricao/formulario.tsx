@@ -555,6 +555,7 @@ export function FormularioInscricao({ aberta = true }: { aberta?: boolean }) {
               </p>
             </div>
             <p className={styles.naoImprimir}>
+              Uma cópia deste comprovante também vai para o e-mail informado.
               Salve ou imprima o comprovante antes de fechar esta página.
             </p>
             <div className={`${styles.acoes} ${styles.naoImprimir}`}>

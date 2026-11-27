@@ -112,6 +112,8 @@ _Critérios de aceitação:_
 
 - O comprovante não contém a queixa nem dados clínicos desnecessários à confirmação do registro.
 
+- O comprovante também é enviado, uma vez, ao e-mail informado na inscrição, com o número, a data e a hora do registro e o mesmo aviso sobre a triagem e as vagas, sem dados clínicos; a falha no envio não desfaz a inscrição, e a repetição do mesmo envio não manda outro e-mail (pedido da FBr na validação final de 27/11/2026).
+
 _Rastreabilidade:_ Feature "Emitir comprovante de inscrição" → CP1 — Inscrição on-line → OE1/OE4. Dependência: RF1.{{ origem("RF2") }}
 
 {{ registro("RF2") }}

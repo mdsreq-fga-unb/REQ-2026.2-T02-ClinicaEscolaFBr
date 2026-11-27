@@ -3,6 +3,7 @@ import {
   ForbiddenException,
   Inject,
   Injectable,
+  Logger,
   ServiceUnavailableException,
 } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
@@ -17,14 +18,18 @@ import { AuditoriaService } from '../../auditoria/auditoria.service';
 import { cifrar, decifrar } from '../../common/criptografia';
 import { TermoService } from './termo.service';
 import { DB } from '../../database/database.module';
+import { EmailService } from '../../notificacoes/email.service';
+import { dataBrasilia, horaBrasilia } from '../agendamento/horario';
 
 @Injectable()
 export class InscricaoService {
+  private readonly logger = new Logger(InscricaoService.name);
   constructor(
     @Inject(DB) private readonly db: Db,
     private readonly config: ConfigService,
     private readonly auditoria: AuditoriaService,
     private readonly termo: TermoService,
+    private readonly email: EmailService,
   ) {}
 
   async registrar(dados: Inscricao): Promise<ComprovanteInscricao> {
@@ -61,7 +66,7 @@ export class InscricaoService {
     };
     try {
       const chave = this.config.getOrThrow<string>('CHAVE_DADOS');
-      return await this.db.transaction(async (tx) => {
+      const { comprovante, nova } = await this.db.transaction(async (tx) => {
         // Serializa a chave antes de conferir o termo: resposta perdida após troca
         // de versão continua devolvendo o comprovante já registrado.
         await tx.execute(
@@ -94,8 +99,11 @@ export class InscricaoService {
             );
           }
           return {
-            numero: anterior.numero,
-            criadaEm: anterior.criadaEm.toISOString(),
+            comprovante: {
+              numero: anterior.numero,
+              criadaEm: anterior.criadaEm.toISOString(),
+            },
+            nova: false,
           };
         }
         // A versão vigente é lida na transação, antes de gravar o aceite.
@@ -145,8 +153,20 @@ export class InscricaoService {
           },
           tx,
         );
-        return { numero: nova.numero, criadaEm: nova.criadaEm.toISOString() };
+        return {
+          comprovante: {
+            numero: nova.numero,
+            criadaEm: nova.criadaEm.toISOString(),
+          },
+          nova: true,
+        };
       });
+      // O comprovante também vai para o e-mail (DF76), depois do commit e fora da
+      // resposta: a falha no envio não desfaz a inscrição, e a repetição do mesmo
+      // envio (a mesma chave) não manda outro e-mail.
+      if (nova && pessoais.email)
+        void this.enviarComprovante(pessoais.email, comprovante);
+      return comprovante;
     } catch (erro) {
       if (
         erro instanceof ConflictException ||
@@ -156,6 +176,34 @@ export class InscricaoService {
       // O erro do driver pode conter dados de saúde nos parâmetros. Não logar.
       throw new ServiceUnavailableException(
         'Não foi possível confirmar o registro. Tente novamente com os mesmos dados.',
+      );
+    }
+  }
+
+  // Só o número, a data e a hora do registro: nenhum dado de saúde vai no e-mail.
+  private async enviarComprovante(
+    email: string,
+    comprovante: ComprovanteInscricao,
+  ) {
+    const criadaEm = new Date(comprovante.criadaEm);
+    const web = this.config.get<string>('WEB_URL')?.replace(/\/$/, '');
+    try {
+      await this.email.enviar(
+        email,
+        `Inscrição ${comprovante.numero} recebida na Clínica Escola FBr`,
+        `<p>Olá.</p>
+<p>Recebemos a sua inscrição para atendimento psicológico na Clínica Escola de Psicologia da FBr. Guarde este e-mail como comprovante.</p>
+<p><strong>Número da inscrição:</strong> ${comprovante.numero}<br>
+<strong>Data e hora do registro:</strong> ${dataBrasilia(criadaEm)}, às ${horaBrasilia(criadaEm)} (horário de Brasília)</p>
+<p>A inscrição não garante vaga nem agendamento. O atendimento depende da triagem feita pela equipe e da disponibilidade de vagas. Se houver vaga, a clínica entrará em contato por este e-mail.</p>
+${web ? `<p>Para acompanhar a situação da inscrição, acesse <a href="${web}/consultar">${web}/consultar</a> e informe o número da inscrição ou o CPF.</p>` : ''}
+<p>Se você não fez esta inscrição, procure a secretaria da clínica.</p>`,
+      );
+    } catch (erro) {
+      // Só o número: o erro do envio não leva dado da inscrição para o log.
+      this.logger.error(
+        `Comprovante da inscrição ${comprovante.numero} não enviado`,
+        erro,
       );
     }
   }
