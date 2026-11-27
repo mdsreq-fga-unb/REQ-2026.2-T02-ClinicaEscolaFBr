@@ -238,6 +238,7 @@ export default function AcessosProntuarioPage() {
                   "Perfil",
                   "Paciente",
                   "Operação",
+                  "O que foi acessado ou feito",
                 ].map((titulo) => (
                   <th key={titulo} scope="col">
                     {titulo}
@@ -259,6 +260,7 @@ export default function AcessosProntuarioPage() {
                   <td>
                     <Operacao tipo={acesso.operacao} />
                   </td>
+                  <td className="break-words">{acesso.descricao}</td>
                 </tr>
               ))}
             </tbody>
@@ -283,6 +285,7 @@ export default function AcessosProntuarioPage() {
                   Paciente: {acesso.paciente ?? "—"}
                 </p>
                 <Operacao tipo={acesso.operacao} />
+                <p className="break-words">{acesso.descricao}</p>
               </li>
             ))}
           </ul>

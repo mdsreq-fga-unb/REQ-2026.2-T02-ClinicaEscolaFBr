@@ -1465,6 +1465,7 @@ _Critérios de aceitação:_
 - Os filtros por paciente, por usuário, por período e por operação mostram somente as entradas que atendem a eles.
 - A consulta não mostra o conteúdo clínico acessado.
 - Tentativas negadas pelo RF55 aparecem no registro identificadas como "acesso negado".
+- Cada entrada mostra também o que foi acessado ou feito, por exemplo "Abertura do prontuário", "Correção da evolução de uma sessão" ou "Impressão do relatório final", sem o conteúdo clínico; na tentativa negada, mostra o que se tentou fazer (pedido da FBr na validação final de 27/11/2026).
 - Usuário sem perfil de coordenação não consulta o registro de acessos.
 
 _Rastreabilidade:_ Feature "Consultar registro de acessos ao prontuário" → CP12 — Segurança, sigilo e controle de acesso → OE7.{{ origem("RF56") }}
