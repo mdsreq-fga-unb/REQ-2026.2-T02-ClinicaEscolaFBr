@@ -43,7 +43,7 @@ function dados(menor = false) {
   preencher("celular", "(61) 99999-9999");
   preencher("email", "teste@example.com");
   preencher("contatoEmergenciaNome", "Contato Fictício");
-  preencher("contatoEmergenciaParentesco", "Irmã");
+  preencher("contatoEmergenciaParentesco", "Irmão(ã)");
   preencher("contatoEmergenciaTelefone", "(61) 3333-4444");
 }
 function triagem() {

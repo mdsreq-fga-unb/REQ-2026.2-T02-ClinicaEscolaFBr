@@ -82,3 +82,47 @@ export const ESCOLARIDADES = [
   "Ensino superior completo",
   "Pós-graduação",
 ] as const;
+
+// Grau de parentesco do contato de emergência (opcional na inscrição).
+export const GRAUS_PARENTESCO = [
+  "Mãe",
+  "Pai",
+  "Cônjuge ou companheiro(a)",
+  "Filho(a)",
+  "Irmão(ã)",
+  "Avô ou avó",
+  "Neto(a)",
+  "Padrasto ou madrasta",
+  "Enteado(a)",
+  "Tio(a)",
+  "Primo(a)",
+  "Outro parente",
+  "Amigo(a)",
+  "Vizinho(a)",
+  "Outro",
+] as const;
+
+// Documento que comprova a responsabilidade legal por menor de idade. Só o tipo,
+// sem cópia (RF1).
+export const DOCUMENTOS_RESPONSABILIDADE = [
+  "Certidão de nascimento",
+  "Termo de guarda",
+  "Termo de tutela",
+  "Decisão judicial",
+  "Outro documento",
+] as const;
+
+// Documento com foto conferido no balcão, na revogação do consentimento (RF65).
+// Só o tipo, sem número, foto ou cópia.
+export const DOCUMENTOS_COM_FOTO = [
+  "Carteira de identidade (RG)",
+  "Carteira de Identidade Nacional (CIN)",
+  "Carteira de habilitação (CNH)",
+  "Passaporte",
+  "Carteira de trabalho (CTPS)",
+  "Carteira de conselho profissional",
+  "Carteira de Registro Nacional Migratório (CRNM) ou RNE",
+  "Identidade militar",
+  "Carteira de identificação funcional",
+  "Outro documento oficial com foto",
+] as const;

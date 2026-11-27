@@ -62,7 +62,7 @@ for (const largura of [1280, 390]) {
     await page.getByLabel("Documento com foto, apresentado na clínica").check();
     await page
       .getByLabel("Documento apresentado")
-      .fill("Carteira de identidade");
+      .selectOption("Carteira de identidade (RG)");
     await semViolacoes(page);
     expect(
       await page.evaluate(

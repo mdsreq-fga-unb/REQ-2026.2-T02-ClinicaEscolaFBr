@@ -1,6 +1,12 @@
 import { z } from "zod";
 import { hojeEmBrasilia } from "./datas";
-import { cpfValido, ESCOLARIDADES, SEXOS } from "./documentos";
+import {
+  cpfValido,
+  DOCUMENTOS_RESPONSABILIDADE,
+  ESCOLARIDADES,
+  GRAUS_PARENTESCO,
+  SEXOS,
+} from "./documentos";
 
 export const ESTADOS_CIVIS = [
   "Solteiro(a)",
@@ -94,7 +100,11 @@ const dadosBase = z.object({
   responsavelLegal: z.string().trim().max(200).default(""),
   // O formato só é conferido para menor de idade, em validarResponsavel.
   cpfResponsavel: z.string().trim().max(200).default(""),
-  documentoResponsavel: opcional(200),
+  documentoResponsavel: z
+    .union([z.literal(""), z.enum(DOCUMENTOS_RESPONSABILIDADE)], {
+      error: "Escolha uma opção da lista.",
+    })
+    .default(""),
   celular: z
     .string()
     .trim()
@@ -110,7 +120,11 @@ const dadosBase = z.object({
     .union([z.literal(""), z.email("Informe um e-mail válido.").max(254)])
     .default(""),
   contatoEmergenciaNome: obrigatorio(200),
-  contatoEmergenciaParentesco: opcional(50),
+  contatoEmergenciaParentesco: z
+    .union([z.literal(""), z.enum(GRAUS_PARENTESCO)], {
+      error: "Escolha uma opção da lista.",
+    })
+    .default(""),
   contatoEmergenciaTelefone: z
     .string()
     .trim()
