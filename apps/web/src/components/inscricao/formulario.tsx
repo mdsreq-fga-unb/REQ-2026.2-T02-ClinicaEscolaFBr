@@ -23,6 +23,7 @@ import {
   type ComprovanteInscricao,
   type TermoVigente,
 } from "@clinica/shared";
+import { consultarCep } from "./consulta-cep";
 import { buscarTermoVigente, Termo } from "./termo";
 import { Aviso } from "@/components/comum/aviso";
 import { BotaoComMotivo } from "@/components/comum/botao-com-motivo";
@@ -158,6 +159,7 @@ function CampoFormulario({
   tipo = "text",
   dica,
   longo = false,
+  situacao,
 }: {
   campo: Campo;
   valor: string;
@@ -166,6 +168,9 @@ function CampoFormulario({
   tipo?: string;
   dica?: string;
   longo?: boolean;
+  // Aviso que muda enquanto a pessoa preenche (a consulta do CEP), lido pelo
+  // leitor de tela sem tirar o foco do campo.
+  situacao?: string;
 }) {
   const lista = listas[campo];
   const props = {
@@ -234,6 +239,11 @@ function CampoFormulario({
           autoComplete={preenchimento[campo] ?? "off"}
           maxLength={tamanhos[campo] ?? 200}
         />
+      )}
+      {situacao !== undefined && (
+        <p role="status" aria-live="polite" className={styles.dica}>
+          {situacao}
+        </p>
       )}
       {dicaEErro}
     </div>
@@ -352,8 +362,50 @@ export function FormularioInscricao({ aberta = true }: { aberta?: boolean }) {
     if (Object.keys(erros).length) resumo.current?.focus();
   }, [erros]);
 
+  // Consulta do CEP (DF75): ao completar os 8 números, preenche o bairro e a
+  // cidade como estão no CEP, e a rua só se ainda estiver em branco. Uma resposta
+  // atrasada de um CEP que já mudou é descartada.
+  const cepConsultado = useRef("");
+  const [avisoCep, setAvisoCep] = useState("");
+  async function buscarEndereco(cep: string) {
+    const digitos = soDigitos(cep);
+    if (digitos.length !== 8 || digitos === cepConsultado.current) return;
+    cepConsultado.current = digitos;
+    setAvisoCep("Consultando o CEP…");
+    const resultado = await consultarCep(digitos);
+    if (cepConsultado.current !== digitos) return;
+    if (resultado.tipo === "encontrado") {
+      setValores((antes) => ({
+        ...antes,
+        endereco: antes.endereco || resultado.logradouro,
+        bairro: resultado.bairro || antes.bairro,
+        cidadeUf: resultado.cidadeUf,
+      }));
+      setAvisoCep(
+        resultado.bairro
+          ? "Bairro e cidade preenchidos pelo CEP. Complete a rua com o número e o complemento."
+          : "Cidade preenchida pelo CEP. Informe o bairro e a rua com o número.",
+      );
+    } else if (resultado.tipo === "nao_encontrado") {
+      setAvisoCep(
+        "CEP não encontrado. Confira o número ou preencha o endereço.",
+      );
+    } else {
+      setAvisoCep(
+        "Não foi possível consultar o CEP agora. Preencha o endereço.",
+      );
+    }
+  }
+
   function alterar(campo: Campo, valor: string) {
     setValores((antes) => ({ ...antes, [campo]: valor }));
+    if (campo === "cep") {
+      if (soDigitos(valor).length === 8) void buscarEndereco(valor);
+      else {
+        cepConsultado.current = "";
+        setAvisoCep("");
+      }
+    }
     setTocados((antes) =>
       antes.has(campo) ? antes : new Set(antes).add(campo),
     );
@@ -461,7 +513,12 @@ export function FormularioInscricao({ aberta = true }: { aberta?: boolean }) {
 
   const campo = (
     nome: Campo,
-    opcoes: { tipo?: string; dica?: string; longo?: boolean } = {},
+    opcoes: {
+      tipo?: string;
+      dica?: string;
+      longo?: boolean;
+      situacao?: string;
+    } = {},
   ) => (
     <CampoFormulario
       key={nome}
@@ -651,13 +708,16 @@ export function FormularioInscricao({ aberta = true }: { aberta?: boolean }) {
                       <legend className={styles.secao}>
                         <h3>Endereço</h3>
                       </legend>
+                      {campo("cep", {
+                        dica: "Digite o CEP primeiro: o bairro e a cidade são preenchidos como estão no CEP.",
+                        situacao: avisoCep,
+                      })}
                       {campo("endereco", {
                         longo: true,
                         dica: "Rua, número e complemento.",
                       })}
                       {campo("bairro")}
                       {campo("cidadeUf", { dica: "Exemplo: Brasília/DF." })}
-                      {campo("cep", { dica: "Exemplo: 72500-000." })}
                     </fieldset>
                     {menor && (
                       <fieldset className={styles.grupo}>
