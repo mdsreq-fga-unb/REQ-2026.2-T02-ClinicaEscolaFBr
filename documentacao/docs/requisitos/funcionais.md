@@ -1202,7 +1202,7 @@ Este conjunto reúne quatro features que permitem que a secretaria ou o próprio
 
 **RF44 — Listar sessões com comparecimento registrado do paciente**{ #rf44 }
 
-O sistema deve listar, para um usuário com perfil autorizado (secretaria) ou para o próprio paciente/responsável, após verificação de identidade (RF52, CP12) — já que esse público não possui conta nem senha —, as sessões do paciente nas quais a presença foi registrada, para que o usuário escolha a sessão a declarar. Sessão com presença registrada é a sessão com o status "realizada", marcada pelo estagiário responsável no prontuário. Até a emissão da declaração (RF45, Ciclo 6), a lista é só de consulta, sem a ação de escolher a sessão. Quando não houver sessão elegível, o sistema deve informar isso de forma clara, sem exibir erro técnico.
+O sistema deve listar, para um usuário com perfil autorizado (secretaria) ou para o próprio paciente/responsável, após verificação de identidade (RF52, CP12) — já que esse público não possui conta nem senha —, as sessões do paciente nas quais a presença foi registrada, para que o usuário escolha a sessão a declarar. Sessão com presença registrada é a sessão com o status "realizada". Quem marca é o estagiário responsável, no prontuário ("Marcar sessão como realizada"), depois do término da sessão; é a mesma marcação que libera o registro da evolução (RF28). A secretaria e o supervisor não marcam a presença, e os outros desfechos da sessão são a falta (RF34) e o cancelamento (RF15, RF16), que não entram na lista. Até a emissão da declaração (RF45, Ciclo 6), a lista é só de consulta, sem a ação de escolher a sessão. Quando não houver sessão elegível, o sistema deve informar isso de forma clara, sem exibir erro técnico.
 
 _Critérios de aceitação:_
 
@@ -1211,7 +1211,7 @@ _Critérios de aceitação:_
 - Paciente sem sessão com presença registrada recebe o aviso de que não há sessões disponíveis para declaração.
 - Usuário interno sem perfil de secretaria não acessa a lista, e paciente ou responsável sem identidade verificada (RF52) não vê nenhuma sessão (RNF38).
 
-_Rastreabilidade:_ Feature "Listar sessões com comparecimento registrado do paciente" → CP10 — Registros administrativos do atendimento → OE6/OE4. Dependência: RF52 (CP12).{{ origem("RF44") }}
+_Rastreabilidade:_ Feature "Listar sessões com comparecimento registrado do paciente" → CP10 — Registros administrativos do atendimento → OE6/OE4. Dependência: RF52 (CP12) e RF28 (CP7, sessão marcada como realizada).{{ origem("RF44") }}
 
 {{ registro("RF44") }}
 
@@ -1226,6 +1226,14 @@ _Rastreabilidade:_ Feature "Listar sessões com comparecimento registrado do pac
 - Toda emissão é auditada conforme o RNF39.
 - O documento segue o modelo da Clínica Escola: "Declaro para os devidos fins que <nome do paciente> compareceu à Clínica-Escola de Psicologia da Faculdade Brasília – FBr no dia <data> das <início> às <término>.", seguido do espaço para a assinatura e o carimbo do psicólogo responsável e para o número de CRP. A assinatura e o carimbo são feitos à mão na via impressa, e o carimbo já traz o CRP, que por isso não é guardado no sistema.
 - A entrega da Autorização para Acompanhamento Psicoterapêutico de Crianças e Adolescentes, assinada presencialmente, é registrada pela secretaria na ficha do paciente, com a data e quem registrou; é esse registro que libera a emissão para o responsável legal.
+- Jornada da declaração, do registro da presença à entrega:
+    1. Depois do término da sessão, o estagiário responsável a marca como realizada no prontuário (RF44, RF28).
+    2. A secretaria, na ficha do paciente, ou o paciente/responsável, na página de declarações e depois da verificação de identidade (RF52), escolhe a sessão na lista do RF44 e emite a declaração.
+    3. O sistema mostra a pré-visualização da folha, com "Imprimir" e "Voltar", sem download nem e-mail.
+    4. A via impressa só vale depois da assinatura e do carimbo do psicólogo responsável, feitos à mão na clínica ([DF71](decisoes-fbr.md#df71)).
+    5. A entrega ao paciente ou ao responsável legal é presencial, na secretaria. Quando o pedido parte do paciente ou do responsável pela página, a via que ele imprime é levada à secretaria para a assinatura e o carimbo, ou a secretaria emite e imprime a via no atendimento presencial.
+
+    O passo 5 e o uso da via impressa pelo próprio paciente são propostas da equipe, pendentes de validação com a FBr ([Pendências de validação com a FBr](analise-feedback.md#pendencias-de-validacao-com-a-fbr)).
 
 _Critérios de aceitação:_
 

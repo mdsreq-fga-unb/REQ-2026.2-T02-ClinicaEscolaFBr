@@ -767,7 +767,7 @@ rfs:
   ciclo: 5
   ordem: 38
   lider: Maria Clara
-  depende: [RF52]
+  depende: [RF52, RF28]
   issue: 226
   estado: Código inspecionado
   entrega: 'parcial no Ciclo 5: a lista é só de consulta; a escolha da sessão para a declaração chega com o RF45, no Ciclo 6'
@@ -782,7 +782,7 @@ rfs:
   ciclo: 6
   ordem: 52
   lider: Maria Clara
-  depende: [RF52]
+  depende: [RF52, RF44]
   issue: 280
   estado: Planejada
   origem: [DF70, DF71, DF72]
