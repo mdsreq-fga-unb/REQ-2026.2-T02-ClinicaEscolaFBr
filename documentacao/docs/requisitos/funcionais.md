@@ -86,7 +86,7 @@ _Critérios de aceitação:_
 
 - O envio sem o nome ou o telefone do contato de emergência, ou sem o endereço completo (endereço, bairro, cidade e CEP), é bloqueado e o campo é indicado; o grau de parentesco pode ficar em branco ([DF51](decisoes-fbr.md#df51), [DF56](decisoes-fbr.md#df56) e [DF64](decisoes-fbr.md#df64)).
 
-_Rastreabilidade:_ Feature "Registrar solicitação de atendimento on-line" → CP1 — Inscrição on-line → OE1/OE4. Restrição transversal: CP12 — Segurança, sigilo e controle de acesso.{{ origem("RF1") }}
+_Rastreabilidade:_ Feature "Registrar solicitação de atendimento on-line" → CP1 — Inscrição on-line → OE1/OE4. Dependência: RF57 — Registrar consentimento para tratamento de dados, cujo aceite é condição para concluir a inscrição. Restrição transversal: CP12 — Segurança, sigilo e controle de acesso.{{ origem("RF1") }}
 
 {{ registro("RF1") }}
 
@@ -255,17 +255,17 @@ _Critérios de aceitação:_
 
 - Mudança na situação de um inscrito que afete a fila recalcula as posições dos demais afetados e preserva o histórico da decisão.
 
-- Entre inscritos com a mesma prioridade confirmada, fica à frente quem registrou a inscrição (RF1/RF3) primeiro.
+- Entre inscritos com a mesma prioridade confirmada, fica à frente quem entrou primeiro na fila; na entrada inicial, vale a data da inscrição (RF1/RF3), e, para quem retorna após perda da vaga pelo RF43, vale a nova data de entrada na fila, conforme a DF33.
 
 _Rastreabilidade:_ Feature "Ordenar inscritos na fila de espera" → CP3 — Fila de espera e consulta de posição → OE4/OE7. Dependência: RF6 (CP2), que fornece a prioridade clínica confirmada.{{ origem("RF7") }}
 
 {{ registro("RF7") }}
 
-#### Feature — Consultar posição individual na fila [#155](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/issues/155)
+#### Feature — Consultar situação da inscrição [#155](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/issues/155)
 
-**RF8 — Consultar posição individual na fila**{ #rf8 }
+**RF8 — Consultar situação da inscrição**{ #rf8 }
 
-O sistema deve permitir que o inscrito consulte a situação atual da sua inscrição na fila de espera da Clínica Escola FBr, localizando a solicitação por CPF ou número de inscrição. Antes de apresentar o resultado, o fluxo deve executar a verificação de identidade definida no RF52. A consulta mostra **"Em triagem"** enquanto o inscrito ainda não foi chamado para o atendimento, e **"Em atendimento"** depois de chamado, inclusive enquanto ele aguarda o contato da clínica ou responde a ele ([DF55](decisoes-fbr.md#df55)). Depois que o caso é encerrado ou desligado, a consulta mostra **"Desligado"** e orienta o inscrito a procurar a secretaria ([DF65](decisoes-fbr.md#df65)). O inscrito é chamado quando o caso é vinculado a um estagiário (RF21). A posição na fila **não aparece** para o inscrito, para não gerar expectativa, porque a captação de pacientes é semestral; a ordem da fila (RF7) continua sendo vista só pela equipe. O nome da feature foi mantido para preservar a rastreabilidade. As condições de privacidade e de comunicação do resultado são estabelecidas, respectivamente, pelos RNF6 e RNF7.
+O sistema deve permitir que o inscrito consulte a situação atual da sua inscrição na fila de espera da Clínica Escola FBr, localizando a solicitação por CPF ou número de inscrição. Antes de apresentar o resultado, o fluxo deve executar a verificação de identidade definida no RF52. A consulta mostra **"Em triagem"** enquanto o inscrito ainda não foi chamado para o atendimento, e **"Em atendimento"** depois de chamado, inclusive enquanto ele aguarda o contato da clínica ou responde a ele ([DF55](decisoes-fbr.md#df55)). Depois que o caso é encerrado ou desligado, a consulta mostra **"Desligado"** e orienta o inscrito a procurar a secretaria ([DF65](decisoes-fbr.md#df65)). O inscrito é chamado quando o caso é vinculado a um estagiário (RF21). A posição na fila **não aparece** para o inscrito, para não gerar expectativa, porque a captação de pacientes é semestral; a ordem da fila (RF7) continua sendo vista somente pela equipe. As condições de privacidade e de comunicação do resultado são estabelecidas, respectivamente, pelos RNF6 e RNF7.
 
 _Critérios de aceitação:_
 
@@ -277,7 +277,7 @@ _Critérios de aceitação:_
 
 - Com o caso encerrado ou desligado, a consulta autorizada mostra "Desligado" e a orientação de procurar a secretaria.
 
-_Rastreabilidade:_ Feature "Consultar posição individual na fila" → CP3 — Fila de espera e consulta de posição → OE4/OE7 → IS03 — Expectativa sobre a fila. Dependência: RF52 — Verificar identidade do paciente ou responsável (CP12).{{ origem("RF8") }}
+_Rastreabilidade:_ Feature "Consultar situação da inscrição" → CP3 — Fila de espera e consulta de posição → OE4/OE7 → IS03 — Expectativa sobre a fila. Dependência: RF52 — Verificar identidade do paciente ou responsável (CP12).{{ origem("RF8") }}
 
 {{ registro("RF8") }}
 
@@ -1142,6 +1142,7 @@ O controle da taxa é feito hoje à mão ([ata de 26/08/2026](../historico/unida
 - O paciente tem 10 dias corridos, contados do primeiro vínculo com o estagiário (RF21) depois da última entrada do caso na fila (a transferência para outro estagiário não reinicia o prazo, e a volta à fila reinicia), para pagar a contribuição e efetivar a vaga. O bloqueio pela falta de pagamento depois desse prazo está no RF43.
 - Um pagamento registrado com valor, data ou forma incorretos não pode ser apagado nem sobrescrito: a secretaria registra uma correção, informando o motivo, que gera uma nova versão do registro com autor e data/hora e preserva a versão anterior (auditoria no RNF36).
 - Para este requisito, **ciclo de atendimento** é o período de acompanhamento de um paciente que vai da primeira sessão até o encerramento do atendimento (conclusão das sessões com o relatório final, desligamento por faltas ou desistência) dentro do mesmo semestre.
+- Para fins de registro e unicidade da contribuição, o ciclo é identificado pelo ciclo de atendimento vigente do caso, que já existe administrativamente antes da primeira sessão. A primeira sessão marca o início do acompanhamento clínico, mas o vínculo anterior a ela já pertence a esse mesmo ciclo e pode iniciar o prazo de 10 dias para pagamento.
 
 _Critérios de aceitação:_
 
@@ -1178,7 +1179,7 @@ _Rastreabilidade:_ Feature "Consultar situação da contribuição social dos pa
 
 **RF43 — Bloquear agendamento por contribuição social pendente**{ #rf43 }
 
-O paciente tem 10 dias corridos, contados do primeiro vínculo com o estagiário (RF21) depois da última entrada do caso na fila (a transferência para outro estagiário não reinicia o prazo, e a volta à fila reinicia), para pagar a contribuição social e efetivar a vaga, como decidido com a Clínica Escola. Se o pagamento não for registrado (RF41) nesse prazo, o sistema avisa a secretaria, e a secretaria ou a coordenação confirma a perda da vaga: o vínculo é encerrado, a vaga é liberada, as sessões futuras são canceladas e o paciente volta à fila de espera (CP3), com a mesma prioridade clínica e, para o desempate, a data em que voltou para a fila, e não a da inscrição original ([DF33](decisoes-fbr.md#df33)). Enquanto o prazo corre, o sistema também deve impedir o agendamento (RF10) da 2ª sessão em diante de um paciente cuja contribuição social do ciclo de atendimento atual (RF41) ainda esteja pendente. A 1ª sessão do paciente não deve ser bloqueada por essa razão — a taxa é exigida a partir dela, mas o bloqueio só passa a valer da 2ª sessão em diante, conforme confirmado pela Clínica Escola. Como não existe isenção da taxa, o bloqueio se aplica a todos os pacientes sem exceção.
+O paciente tem 10 dias corridos, contados do primeiro vínculo com o estagiário (RF21) depois da última entrada do caso na fila (a transferência para outro estagiário não reinicia o prazo, e a volta à fila reinicia), para pagar a contribuição social e efetivar a vaga, como decidido com a Clínica Escola. Se o pagamento não for registrado (RF41) nesse prazo, o sistema avisa a secretaria, e a secretaria ou a coordenação confirma a perda da vaga: o vínculo é encerrado, a vaga é liberada, as sessões futuras são canceladas e o paciente volta à fila de espera (CP3), com a mesma prioridade clínica e, para o desempate, a data em que voltou para a fila, e não a da inscrição original ([DF33](decisoes-fbr.md#df33)). Enquanto o prazo corre, o sistema também deve impedir o agendamento (RF10) da 2ª sessão em diante de um paciente cuja contribuição social do ciclo de atendimento atual (RF41) ainda esteja pendente. Para este requisito, o bloqueio "da 2ª sessão em diante" começa quando já existe pelo menos uma sessão com status `realizada` no ciclo atual. Ter outra sessão futura já agendada antes de a primeira ocorrer não aciona, por si só, o bloqueio. A 1ª sessão do paciente não deve ser bloqueada por essa razão — a taxa é exigida a partir dela, mas o bloqueio só passa a valer depois que existe uma sessão realizada no ciclo, conforme confirmado pela Clínica Escola. Como não existe isenção da taxa, o bloqueio se aplica a todos os pacientes sem exceção.
 
 _Critérios de aceitação:_
 
@@ -1488,7 +1489,7 @@ _Critérios de aceitação:_
 
 O aceite on-line não substitui a autorização e o termo de responsabilidade assinados presencialmente pelo responsável legal, que continuam exigidos pela clínica para o atendimento de crianças e adolescentes ([ata de 26/08/2026](../historico/unidade-1/reunioes.md)).
 
-_Rastreabilidade:_ Feature "Registrar consentimento para tratamento de dados" → CP12 — Segurança, sigilo e controle de acesso → OE7. Dependência: RF1 (o termo é aceito antes de concluir a inscrição).{{ origem("RF57") }}
+_Rastreabilidade:_ Feature "Registrar consentimento para tratamento de dados" → CP12 — Segurança, sigilo e controle de acesso → OE7. Integração: RF1 — o consentimento é apresentado e registrado dentro do fluxo da inscrição, e seu aceite é condição para a conclusão do RF1.{{ origem("RF57") }}
 
 {{ registro("RF57") }}
 
