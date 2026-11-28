@@ -188,6 +188,51 @@ Adiar o refinamento de uma meta não significa lançar sem ela. A tabela define,
 | [RNF41](nao-funcionais.md#rnf41) | Teste de tarefa com pelo menos 3 participantes por público (secretaria e pacientes ou responsáveis), sem ajuda, todos emitindo a declaração em até 3 interações. | Ampliar a amostra para 5 participantes por público e a taxa de 90% do RNF. |
 | [RNF57](nao-funcionais.md#rnf57) | Indicador de foco visível em todos os elementos interativos das páginas externas, com contorno de pelo menos 2 pixels (RNF56, nível AA). | Contraste de 3:1 entre os estados com e sem foco e a verificação no alto contraste (RF61) e nos tamanhos de texto (RF62), quando essas features forem construídas. |
 
+### Incrementos do MVP pelas jornadas { #incrementos-do-mvp-pelas-jornadas }
+
+O MVP foi construído em parcelas, nos Ciclos 3 a 6. Esta seção mostra o que cada parcela permitia executar de ponta a ponta, pelas duas jornadas do sistema, e com quais limitações. A parcela da Unidade 3 é a [release `unidade-3`](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/releases/tag/unidade-3) (`aa41b9b`, 17/11/2026), integrada à `development` e publicada no ambiente de validação, com o aviso de que só valem dados fictícios. A produção só é publicada com o aceite da FBr, em 30/11/2026 ([Entrega final](../construcao/entrega-final.md#datas)).
+
+#### Jornada 1: inscrição, triagem e distribuição { #jornada-1-inscricao-triagem-e-distribuicao }
+
+| Passo | Features | Perfil | Integrada em | Verificação de ponta a ponta |
+| --- | --- | --- | --- | --- |
+| Inscrição on-line e comprovante | [RF1](funcionais.md#rf1), [RF2](funcionais.md#rf2) | Paciente ou responsável | Ciclo 3 (27/10) | e2e `ciclo-3.spec.ts` ("a inscrição pública entra na API com número e data") e `inscricao.spec.ts` |
+| Consentimento do termo | [RF57](funcionais.md#rf57) | Paciente ou responsável | Ciclo 4 (14/11) | e2e `rf57.spec.ts`; termo provisório até a aprovação da FBr |
+| Triagem e prioridade clínica | [RF4](funcionais.md#rf4), [RF6](funcionais.md#rf6) | Coordenação | Ciclo 3 (28/10) | e2e `ciclo-3.spec.ts` ("a coordenação registra a prioridade clínica na triagem") |
+| Fila de espera | [RF7](funcionais.md#rf7) | Coordenação | Ciclo 4 (09/11) | e2e `rf7.spec.ts` |
+| Consulta da situação pelo paciente | [RF8](funcionais.md#rf8), [RF52](funcionais.md#rf52) | Paciente ou responsável | Ciclo 4 (13/11) | e2e `rf8.spec.ts` e `verificacao.spec.ts` |
+| Distribuição ao supervisor | [RF18](funcionais.md#rf18), [RF20](funcionais.md#rf20) | Coordenação | Ciclo 3 (28/10) | e2e `ciclo-3.spec.ts` ("a coordenação distribui o caso ao supervisor") |
+| Vínculo com o estagiário e criação do prontuário | [RF21](funcionais.md#rf21), [RF66](funcionais.md#rf66) | Supervisor | Ciclo 3 (28/10) | e2e `ciclo-3.spec.ts` ("o supervisor vincula o estagiário e o prontuário é criado") |
+
+Na entrega da Unidade 3, a jornada 1 rodava inteira na validação, com os perfis de paciente, coordenação e supervisor. As pendências de cada feature (revisão de código, inspeção e verificação dos RNFs) estão no fechamento de cada ciclo, no [Cronograma geral](../visao-geral/cronograma.md#fechamento-dos-ciclos), e na issue da feature.
+
+#### Jornada 2: sessões e prontuário { #jornada-2-sessoes-e-prontuario }
+
+| Na entrega da Unidade 3 (17/11) | Ciclo | Verificação de ponta a ponta |
+| --- | --- | --- |
+| A secretaria agenda a sessão ([RF10](funcionais.md#rf10)), e o paciente confirma a presença pelo link do e-mail ([RF14](funcionais.md#rf14)) | 3 e 4 | e2e `ciclo-3.spec.ts` ("a secretaria agenda a sessão") e `rf14.spec.ts` |
+| Cancelamento pelo paciente e pelo estagiário ([RF15](funcionais.md#rf15), [RF16](funcionais.md#rf16)), falta do paciente, alerta e desligamento por faltas ([RF34](funcionais.md#rf34) a [RF38](funcionais.md#rf38)) e aviso de ausência do estagiário ([RF17](funcionais.md#rf17)) | 4 e 5 | e2e `rf15-rf16.spec.ts`; testes da API de cada RF |
+| O estagiário abre o prontuário ([RF27](funcionais.md#rf27)) e registra anamnese, contrato ([RF69](funcionais.md#rf69)) e evolução ([RF28](funcionais.md#rf28)); corrige a evolução com motivo ([RF29](funcionais.md#rf29)) | 4 e 5 | e2e `ciclo-3.spec.ts` ("o estagiário registra anamnese, contrato e evolução" e "a coordenação registra a data-limite e o estagiário corrige a evolução") |
+| A coordenação consulta o prontuário só para leitura ([RF55](funcionais.md#rf55)) e o registro de acessos ([RF56](funcionais.md#rf56)) | 3 e 5 | e2e `ciclo-3.spec.ts` e `rf56.spec.ts` |
+| A secretaria registra o pagamento da contribuição ([RF41](funcionais.md#rf41)) e consulta as sessões com presença do paciente ([RF44](funcionais.md#rf44)) | 5 | e2e `rf44.spec.ts`; testes da API do RF41 |
+
+**O que dependia do Ciclo 6 na entrega da Unidade 3:** o complemento ([RF30](funcionais.md#rf30)), a validação pelo supervisor ([RF67](funcionais.md#rf67)), a consulta da evolução de uma sessão ([RF31](funcionais.md#rf31)) e o histórico de evolução ([RF32](funcionais.md#rf32)); o encerramento por alta ([RF68](funcionais.md#rf68)) e o relatório final ([RF33](funcionais.md#rf33)); a declaração de comparecimento ([RF45](funcionais.md#rf45)); a situação e o bloqueio pela contribuição ([RF42](funcionais.md#rf42), [RF43](funcionais.md#rf43)); as faltas do estagiário no semestre e a reprovação ([RF40](funcionais.md#rf40), [RF63](funcionais.md#rf63), [RF64](funcionais.md#rf64)); o relatório institucional em PDF ([RF49](funcionais.md#rf49)); e a revogação do consentimento ([RF65](funcionais.md#rf65)).
+
+**Limitações da parcela da Unidade 3 na jornada 2:**
+
+- O caso só se encerrava por desligamento por faltas: sem a alta (RF68), os indicadores (RF48) contavam como atendimento ativo todo caso não desligado.
+- A evolução registrada podia ser corrigida, mas não complementada nem validada, e o prontuário não tinha o histórico por ciclo nem o relatório final.
+- O cancelamento pelo estagiário (RF16) já era registrado, mas a contagem nas faltas do estagiário só se completa com o RF39 (Ciclo 5) e o RF40 (Ciclo 6).
+- A lista de sessões com presença (RF44) era só de consulta; a escolha da sessão para a declaração chegou com o RF45.
+
+#### Entrega parcial do RF10 { #entrega-parcial-do-rf10 }
+
+No Ciclo 3, o agendamento (RF10, integrado em 27/10) já gerava e enviava o link de confirmação de presença, mas a página que recebe o link só chegou com o RF14, integrado em 08/11. Nesse intervalo, o agendamento só foi usado no ambiente de validação, com pacientes fictícios inscritos pela equipe e pela FBr. A clínica não usava o sistema com pacientes reais: até 27/11, o endereço da produção (`clinica.fbr.edu.br`) não tinha o sistema no ar, e a produção só abre para a clínica em 30/11. Assim, nenhum paciente real recebeu um link que ainda não funcionava.
+
+#### Na entrega final { #incrementos-na-entrega-final }
+
+O código das features do Ciclo 6 entrou na `development` em 25 e 26/11. Em 27/11, as duas jornadas foram percorridas de ponta a ponta no ambiente de validação, na reunião gravada de [validação final com a FBr](../historico/unidade-4/reunioes.md#validacao-final-com-a-fbr-2711): a jornada 1, da inscrição de uma paciente nova até a primeira sessão agendada e confirmada; a jornada 2, com um caso já em atendimento, do prontuário à alta, ao relatório final, à declaração e à revogação do consentimento. A FBr deu o aceite do sistema (DF73). A apresentação da Unidade 3 não mostrou o sistema em funcionamento; o vídeo dessa reunião mostra a implementação, e a apresentação final, em 01/12, mostra o sistema em produção.
+
 ### Validação do MVP com o Cliente { #1024-validacao-do-mvp-com-o-cliente }
 
 A validação do MVP com a Clínica Escola FBr foi feita por mensagens no grupo de WhatsApp "Sistema Clínica Escola FBr - Alunos UnB", canal de contato com o cliente previsto na [Comunicação com o Cliente](../processo/equipe-e-cliente.md#comunicacao-com-o-cliente), entre 24/09/2026 e 08/10/2026, em duas rodadas. As respostas da FBr foram incorporadas aos requisitos e à priorização apresentados nas [avaliação de valor e esforço](#1021-avaliacao-de-valor-de-negocio-e-de-esforco-tecnico) a [definição do MVP](#1023-definicao-do-mvp).
