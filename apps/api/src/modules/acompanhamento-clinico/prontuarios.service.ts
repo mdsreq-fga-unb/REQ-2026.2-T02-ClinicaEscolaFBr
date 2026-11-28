@@ -15,15 +15,19 @@ import {
   asc,
   desc,
   inArray,
+  isNotNull,
   isNull,
   lte,
+  notExists,
 } from 'drizzle-orm';
 import {
   atribuicoesSupervisor,
   cancelamentosSessao,
   casos,
+  encerramentosAlta,
   inscricoes,
   prontuarios,
+  reaberturasCaso,
   sessoesAtendimento,
   evolucoes,
   usuarios,
@@ -425,8 +429,53 @@ export class ProntuariosService {
       ),
       sessoesRealizadas,
       fechamentoAvaliativoPendente: fechamentoAvaliativo(sessoesRealizadas),
-      alta: null,
+      alta: await this.altaDoCiclo(
+        prontuario.casoId,
+        prontuario.cicloAtendimento,
+        chave,
+      ),
       relatorioFinal: null,
+    };
+  }
+
+  // Encerramento por alta confirmado neste ciclo e não reaberto (RF68). Quem chega
+  // aqui passou pela política do prontuário (RF55), que não deixa a secretaria
+  // ler o prontuário: o motivo vai decifrado.
+  private async altaDoCiclo(casoId: string, ciclo: number, chave: string) {
+    const confirmador = aliasedTable(usuarios, 'confirmador_alta');
+    const [alta] = await this.db
+      .select({
+        data: encerramentosAlta.dataAlta,
+        motivoCifrado: encerramentosAlta.motivoCifrado,
+        confirmadaPor: confirmador.nome,
+        confirmadaEm: encerramentosAlta.confirmadaEm,
+      })
+      .from(encerramentosAlta)
+      .leftJoin(
+        confirmador,
+        eq(confirmador.id, encerramentosAlta.confirmadaPor),
+      )
+      .where(
+        and(
+          eq(encerramentosAlta.casoId, casoId),
+          eq(encerramentosAlta.cicloAtendimento, ciclo),
+          isNotNull(encerramentosAlta.confirmadaEm),
+          notExists(
+            this.db
+              .select({ id: reaberturasCaso.id })
+              .from(reaberturasCaso)
+              .where(eq(reaberturasCaso.encerramentoId, encerramentosAlta.id)),
+          ),
+        ),
+      )
+      .orderBy(desc(encerramentosAlta.confirmadaEm))
+      .limit(1);
+    if (!alta) return null;
+    return {
+      data: alta.data,
+      motivo: decifrar(alta.motivoCifrado, chave),
+      confirmadaPor: alta.confirmadaPor ?? '',
+      confirmadaEm: alta.confirmadaEm!.toISOString(),
     };
   }
 

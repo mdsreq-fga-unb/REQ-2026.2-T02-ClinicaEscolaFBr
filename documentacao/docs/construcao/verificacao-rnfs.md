@@ -50,7 +50,7 @@ Execuções do [teste de carga](teste-de-carga.md) contra a validação (`api.va
 | [RNF29](../requisitos/nao-funcionais.md#rnf29) | 2 s no percentil 95, no cenário de referência | ⏳ Não verificado: sem cenário de carga e não declarado nas issues da evolução |
 | [RNF30](../requisitos/nao-funcionais.md#rnf30) | Teste de tarefa com pelo menos 3 estagiários | ⏳ Aguarda o resultado do teste com os estagiários |
 | [RNF40](../requisitos/nao-funcionais.md#rnf40) | 5 s no percentil 95, no cenário de referência | ⏳ Aguarda o cenário de carga da declaração (RF45) |
-| [RNF41](../requisitos/nao-funcionais.md#rnf41) | Teste de tarefa com pelo menos 3 participantes por público | ⏳ O e2e da emissão passa; falta o teste com pessoas |
+| [RNF41](../requisitos/nao-funcionais.md#rnf41) | Teste de tarefa com pelo menos 3 participantes por público | ⚠️ Uso pelos usuários da clínica (12/11 e 24/11) e e2e das 3 interações, abaixo do patamar escrito (3 **por público**); ver o [registro do RNF41](entrega-final.md#registro-do-rnf41) |
 | [RNF57](../requisitos/nao-funcionais.md#rnf57) | Foco visível com contorno de pelo menos 2 px nas páginas externas | ✅ Pelos testes e2e (local, no runner) |
 
 ## Situação por feature { #situacao-por-feature }
@@ -75,8 +75,8 @@ Execuções do [teste de carga](teste-de-carga.md) contra a validação (`api.va
 | RF34 a RF39 | #150 a #154, #225 | ☑ | RNF32, RNF34, RNF35 L; **RNF33 L** | O RNF33 inclui leitor de tela e escala de cinza; o RNF34 pede 20 medições de até 5 s, e o teste confere a transação, sem medir tempo |
 | RF40, RF63, RF64 | #276, #277, #278 | ☑ | RNF35 L | — |
 | RF41 | #43 | ☑ | RNF36 L | — |
-| RF44 | #226 | ☐ | RNF38, RNF43, RNF56, RNF57, RNF58 L; **RNF41 P** | — |
-| RF45 | #280 | ☐ | RNF38, RNF39 L; **RNF40, RNF41 P** | — |
+| RF44 | #226 | ☑ | RNF38, RNF43, RNF56, RNF57, RNF58 L; RNF41 H (com a ressalva acima) | — |
+| RF45 | #280 | ☐ | RNF38, RNF39 L; RNF41 H (com a ressalva acima); **RNF40 P** | — |
 | RF48 | [#22](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/issues/22) | ☐ | RNF46 L; **RNF47 na validação** (ver [desempenho](#desempenho-na-homologacao)) | — |
 | RF49 | #23 | ☐ | **RNF47 (exportação), RNF48 P** | A exportação em PDF ainda não está na carga |
 | RF50, RF51, RF53, RF54 | #45, #46, #48, #49 | ☑ | RNF53 H; RNF38, RNF49, RNF50 L | — |

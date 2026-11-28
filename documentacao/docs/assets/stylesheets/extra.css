@@ -1124,6 +1124,15 @@ body {
   border: 0;
 }
 
+/* Vídeo hospedado no próprio site: mantém a proporção da gravação dentro da moldura. */
+.video-container video {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  background: #000;
+}
+
 /* ==========================================================================
    7. Requisitos, features e rastreabilidade
    ========================================================================== */
@@ -2320,6 +2329,43 @@ html .md-footer-meta.md-typeset a:hover {
 }
 
 .md-typeset details.revision-history > p {
+  color: var(--fbr-ink-muted);
+}
+
+/* Versões de cada unidade já entregue, recolhidas dentro do histórico de revisão */
+.md-typeset details.revision-history > details.revision-unit {
+  margin-block: 0.7rem;
+  border: 1px solid var(--fbr-line);
+  border-radius: var(--fbr-radius);
+  background: var(--fbr-surface);
+  box-shadow: none;
+  font-size: inherit;
+}
+
+.md-typeset details.revision-unit > summary {
+  padding: 0.6rem 2.4rem 0.6rem 0.9rem;
+  background: transparent;
+  color: var(--fbr-ink-strong);
+  font-weight: 600;
+}
+
+.md-typeset details.revision-unit > summary::before {
+  display: none;
+}
+
+.md-typeset details.revision-unit > summary:hover {
+  color: var(--fbr-link-hover);
+}
+
+.md-typeset details.revision-unit[open] > summary {
+  border-bottom: 1px solid var(--fbr-line);
+}
+
+.md-typeset details.revision-unit > :not(summary) {
+  margin-inline: 0.9rem;
+}
+
+.md-typeset details.revision-unit > p {
   color: var(--fbr-ink-muted);
 }
 

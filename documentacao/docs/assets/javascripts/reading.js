@@ -400,7 +400,8 @@
     // Todas as reuniões começam recolhidas; um link direto (#...) abre a de destino.
     heads.forEach(function (h) {
       var meta = h.nextElementSibling;
-      var date = (text(meta).match(/Data:\s*([^\s]+)/) || [])[1] || "";
+      // Só a data (dd/mm/aaaa), sem a vírgula ou o horário que vierem depois dela.
+      var date = (text(meta).match(/Data:\s*(\d{2}\/\d{2}\/\d{4}|[^\s,;]+)/) || [])[1] || "";
       var card = el("details", "meeting");
       var summary = el("summary", "meeting__summary");
       h.before(card);
