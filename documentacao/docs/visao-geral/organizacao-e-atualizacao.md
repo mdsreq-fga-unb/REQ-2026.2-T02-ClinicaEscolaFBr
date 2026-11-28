@@ -142,7 +142,7 @@ As visões que juntam muitos RFs, como a priorização, o recorte do MVP, o back
 
 ### Recorte do MVP
 
-O MVP é a lista de RFs com `mvp: true` no catálogo, decidida pelas [regras de priorização](../requisitos/priorizacao-e-mvp.md#102-priorizacao-e-recorte-do-mvp) e conferida pela [regra de limite de capacidade](../requisitos/priorizacao-e-mvp.md#limite-de-capacidade). Hoje, **{{ n.rfs_mvp }} dos {{ n.rfs_vigentes }} RFs vigentes** estão no MVP. A priorização, a tabela do MVP, o backlog e a situação por ciclo saem da mesma lista; o `verificar_catalogo.py`, que roda no CI das pull requests que mexem na documentação, recusa um RF sem Líder, com ciclo ou estado desconhecido, com dependência inexistente ou com o nome diferente do registro na página 8.1.
+O MVP é a lista de RFs com `mvp: true` no catálogo, decidida pelas [regras de priorização](../requisitos/priorizacao-e-mvp.md#102-priorizacao-e-recorte-do-mvp) e conferida pela [regra de limite de capacidade](../requisitos/priorizacao-e-mvp.md#limite-de-capacidade). Hoje, **{{ n.rfs_mvp }} dos {{ n.rfs_vigentes }} RFs vigentes** estão no MVP. A priorização, a tabela do MVP, o backlog e a situação por ciclo saem da mesma lista; o `verificar_catalogo.py`, que roda no CI das pull requests que mexem na documentação, recusa um RF sem Líder, com ciclo ou estado desconhecido, com dependência inexistente, fora do MVP ou posterior a ele no backlog, ou com o nome diferente do registro na página 8.1.
 
 ## Estratégia de atualização { #3-estrategia-de-atualizacao }
 

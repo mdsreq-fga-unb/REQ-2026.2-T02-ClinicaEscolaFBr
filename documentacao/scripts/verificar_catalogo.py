@@ -7,6 +7,7 @@ Falha (código 1) quando:
 - o nome no catálogo é diferente do título do registro;
 - um registro não usa as macros de Origem e de Prioridade/Entrega;
 - um campo do catálogo está fora do formato (CP, escalas, ciclo, estado, dependências);
+- um RF do MVP depende de um RF fora do MVP ou que vem depois dele no backlog;
 - uma decisão (DF) citada não existe, ou o texto de um requisito cita uma DF que
   não está na Origem dele (o vínculo requisito-decisão tem um sentido só, AUD-32);
 - um link para uma decisão não leva a âncora da linha (decisoes-fbr.md#dfnn).
@@ -124,6 +125,19 @@ def main():
             for d in r.get(campo, []):
                 if d not in rfs or rfs[d].get("removido"):
                     erro(f"{c}: {campo} cita {d}, que não existe ou foi removido")
+    # Dependências na ordem do backlog: uma feature do MVP só é demonstrável quando as
+    # features de que depende já foram construídas antes dela (issue #337).
+    for r in dados["rfs"]:
+        if r.get("removido") or not r.get("mvp"):
+            continue
+        for d in r.get("depende", []):
+            dep = rfs.get(d)
+            if not dep or dep.get("removido"):
+                continue
+            if not dep.get("mvp"):
+                erro(f"{r['id']}: depende de {d}, que está fora do MVP")
+            elif (dep.get("ciclo"), dep.get("ordem")) > (r.get("ciclo"), r.get("ordem")):
+                erro(f"{r['id']}: depende de {d}, que vem depois no backlog (ciclo {dep.get('ciclo')}, ordem {dep.get('ordem')})")
     esperado = list(range(1, len(ordens) + 1))
     if sorted(o for o in ordens if o is not None) != esperado:
         erro("backlog: a ordem dos RFs do MVP deve ir de 1 a N, sem lacunas")
