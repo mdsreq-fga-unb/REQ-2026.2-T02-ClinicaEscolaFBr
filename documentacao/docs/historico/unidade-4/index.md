@@ -35,9 +35,24 @@ Estado de cada feature do Ciclo 6, copiado das issues para o [catálogo de requi
 <div class="unit-cards" markdown>
 
 - [:material-calendar-month-outline: **Cronograma e Entregas** Atividades do Ciclo 6 e os entregáveis da unidade, com onde está cada um.](cronograma.md)
+- [:material-forum-outline: **Reuniões** Registros e atas das reuniões da unidade, com a validação final com a FBr.](reunioes.md)
 - [:material-rocket-launch-outline: **Entrega final** Datas, ordem de integração, roteiro de homologação e publicação em produção.](../../construcao/entrega-final.md)
 - [:material-vector-polyline: **Representação de requisitos** As técnicas aplicadas ao projeto, com o diagrama de atividades, o mapa das features pela jornada e um caso de uso.](../../requisitos/representacao.md)
 - [:material-sitemap-outline: **Projeto das features** Modelo detalhado e diagramas das features, incluindo as do Ciclo 6.](../../construcao/projeto-features.md)
 - [:material-cellphone-link: **Protótipos** Telas das features, incluindo as do Ciclo 6.](../../construcao/prototipos.md)
 
 </div>
+
+## Feedback final do cliente { #feedback-final-do-cliente }
+
+<div class="video-container">
+  <video controls preload="metadata" title="Validação final com a FBr — Clínica Escola FBr (27/11/2026)">
+    <source src="../../assets/videos/validacao-final-fbr-27-11-2026.mp4" type="video/mp4">
+    Seu navegador não reproduz vídeo. <a href="../../assets/videos/validacao-final-fbr-27-11-2026.mp4">Abra o arquivo do vídeo</a>.
+  </video>
+</div>
+
+Reunião gravada de validação final com a Clínica Escola FBr, em 27/11/2026, com Robson Araújo e Thiago Viana: demonstração do sistema completo, avaliação e aceite da FBr ([DF73](../../requisitos/decisoes-fbr.md#df73)). A ata, com os pedidos da FBr e os encaminhamentos, está em [Validação final com a FBr (27/11)](reunioes.md#validacao-final-com-a-fbr-2711).
+
+▶ **[Abrir o vídeo em outra aba](../../assets/videos/validacao-final-fbr-27-11-2026.mp4)**
+
