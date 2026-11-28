@@ -22,6 +22,7 @@ const acesso = {
   perfil: "estagiario",
   dataHora: "2026-11-14T13:42:00Z",
   operacao: "visualizacao",
+  descricao: "Abertura do prontuário",
 };
 const resposta = (
   acessos: unknown[] = [acesso],
@@ -86,7 +87,14 @@ describe("Registro de acessos (RF56)", () => {
         within(tabela)
           .getAllByRole("columnheader")
           .map((c) => c.textContent),
-      ).toEqual(["Data e hora", "Usuário", "Perfil", "Paciente", "Operação"]);
+      ).toEqual([
+        "Data e hora",
+        "Usuário",
+        "Perfil",
+        "Paciente",
+        "Operação",
+        "O que foi acessado ou feito",
+      ]);
       expect(
         screen.queryByRole("button", { name: /excluir|editar|apagar/i }),
       ).toBeNull();
@@ -108,6 +116,16 @@ describe("Registro de acessos (RF56)", () => {
       ).toBe(false);
     },
   );
+  it("mostra o que foi acessado ou feito em cada linha, na tabela e na lista do celular (DF77)", async () => {
+    simular();
+    abrir();
+    expect(
+      await screen.findByRole("columnheader", {
+        name: "O que foi acessado ou feito",
+      }),
+    ).toBeTruthy();
+    expect(screen.getAllByText("Abertura do prontuário")).toHaveLength(2);
+  });
   it("abre com os últimos 30 dias e permite acesso pelo menu da coordenação", async () => {
     const chamadas = simular();
     abrir();
