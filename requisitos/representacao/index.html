@@ -1,0 +1,3237 @@
+
+<!doctype html>
+<html lang="pt" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Documentação do projeto Clínica Escola FBr para as entregas das Unidades 1 a 4.">
+      
+      
+      
+        <link rel="canonical" href="https://mdsreq-fga-unb.github.io/REQ-2026.2-T02-ClinicaEscolaFBr/requisitos/representacao/">
+      
+      
+        <link rel="prev" href="../nao-funcionais/">
+      
+      
+        <link rel="next" href="../analise-feedback/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../assets/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.8.2">
+    
+    
+      
+        <title>Representação de requisitos - Clínica Escola FBr - Documentação</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.57a0d79d.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.fb2fffe2.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,300..800;1,14..32,300..800&family=JetBrains+Mono:wght@400;500;600&display=swap">
+  <style>:root{--md-text-font:"Inter";--md-code-font:"JetBrains Mono"}</style>
+
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/extra.css">
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/reading.css">
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/melhorias.css">
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="custom" data-md-color-accent="custom">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#representacao-de-requisitos" class="md-skip">
+          Pular para conteúdo
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow md-header--lifted" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Cabeçalho">
+    <a href="../.." title="Clínica Escola FBr - Documentação" class="md-header__button md-logo" aria-label="Clínica Escola FBr - Documentação" data-md-component="logo">
+      <img class="fbr-logo fbr-logo--light" src="../../assets/images/logo-fbr.png" alt="" width="131" height="144">
+<img class="fbr-logo fbr-logo--dark" src="../../assets/images/logo-fbr-dark.png" alt="" width="131" height="144">
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Clínica Escola FBr - Documentação
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Representação de requisitos
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="custom" data-md-color-accent="custom"  aria-label="Alternar para modo escuro"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Alternar para modo escuro" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m17.75 4.09-2.53 1.94.91 3.06-2.63-1.81-2.63 1.81.91-3.06-2.53-1.94L12.44 4l1.06-3 1.06 3zm3.5 6.91-1.64 1.25.59 1.98-1.7-1.17-1.7 1.17.59-1.98L15.75 11l2.06-.05L18.5 9l.69 1.95zm-2.28 4.95c.83-.08 1.72 1.1 1.19 1.85-.32.45-.66.87-1.08 1.27C15.17 23 8.84 23 4.94 19.07c-3.91-3.9-3.91-10.24 0-14.14.4-.4.82-.76 1.27-1.08.75-.53 1.93.36 1.85 1.19-.27 2.86.69 5.83 2.89 8.02a9.96 9.96 0 0 0 8.02 2.89m-1.64 2.02a12.08 12.08 0 0 1-7.8-3.47c-2.17-2.19-3.33-5-3.49-7.82-2.81 3.14-2.7 7.96.31 10.98 3.02 3.01 7.84 3.12 10.98.31"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="custom" data-md-color-accent="custom"  aria-label="Alternar para modo claro"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Alternar para modo claro" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 7a5 5 0 0 1 5 5 5 5 0 0 1-5 5 5 5 0 0 1-5-5 5 5 0 0 1 5-5m0 2a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3m0-7 2.39 3.42C13.65 5.15 12.84 5 12 5s-1.65.15-2.39.42zM3.34 7l4.16-.35A7.2 7.2 0 0 0 5.94 8.5c-.44.74-.69 1.5-.83 2.29zm.02 10 1.76-3.77a7.131 7.131 0 0 0 2.38 4.14zM20.65 7l-1.77 3.79a7.02 7.02 0 0 0-2.38-4.15zm-.01 10-4.14.36c.59-.51 1.12-1.14 1.54-1.86.42-.73.69-1.5.83-2.29zM12 22l-2.41-3.44c.74.27 1.55.44 2.41.44.82 0 1.63-.17 2.37-.44z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Buscar" placeholder="Buscar" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Pesquisar">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Limpar" aria-label="Limpar" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Inicializando busca
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr" title="Ir para repositório" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 2A10 10 0 0 0 2 12c0 4.42 2.87 8.17 6.84 9.5.5.08.66-.23.66-.5v-1.69c-2.77.6-3.36-1.34-3.36-1.34-.46-1.16-1.11-1.47-1.11-1.47-.91-.62.07-.6.07-.6 1 .07 1.53 1.03 1.53 1.03.87 1.52 2.34 1.07 2.91.83.09-.65.35-1.09.63-1.34-2.22-.25-4.55-1.11-4.55-4.92 0-1.11.38-2 1.03-2.71-.1-.25-.45-1.29.1-2.64 0 0 .84-.27 2.75 1.02.79-.22 1.65-.33 2.5-.33s1.71.11 2.5.33c1.91-1.29 2.75-1.02 2.75-1.02.55 1.35.2 2.39.1 2.64.65.71 1.03 1.6 1.03 2.71 0 3.82-2.34 4.66-4.57 4.91.36.31.69.92.69 1.85V21c0 .27.16.59.67.5C19.14 20.16 22 16.42 22 12A10 10 0 0 0 12 2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    REQ-2026.2-T02-ClinicaEscolaFBr
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+    
+      
+<nav class="md-tabs" aria-label="Abas" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../.." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Início
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../visao-geral/organizacao-e-atualizacao/" class="md-tabs__link">
+          
+  
+  
+  Visão geral
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    
+    
+      
+  
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../../produto/cenario-atual/" class="md-tabs__link">
+          
+  
+  
+  Produto e requisitos
+
+        </a>
+      </li>
+    
+  
+
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../processo/estrategia-esw/" class="md-tabs__link">
+          
+  
+  
+  Processo e equipe
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../construcao/arquitetura/" class="md-tabs__link">
+          
+  
+  
+  Construção do MVP
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../historico/unidade-4/" class="md-tabs__link">
+          
+  
+  
+  Histórico das unidades
+
+        </a>
+      </li>
+    
+  
+
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+    
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navegação" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="Clínica Escola FBr - Documentação" class="md-nav__button md-logo" aria-label="Clínica Escola FBr - Documentação" data-md-component="logo">
+      <img class="fbr-logo fbr-logo--light" src="../../assets/images/logo-fbr.png" alt="" width="131" height="144">
+<img class="fbr-logo fbr-logo--dark" src="../../assets/images/logo-fbr-dark.png" alt="" width="131" height="144">
+    </a>
+    Clínica Escola FBr - Documentação
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr" title="Ir para repositório" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 2A10 10 0 0 0 2 12c0 4.42 2.87 8.17 6.84 9.5.5.08.66-.23.66-.5v-1.69c-2.77.6-3.36-1.34-3.36-1.34-.46-1.16-1.11-1.47-1.11-1.47-.91-.62.07-.6.07-.6 1 .07 1.53 1.03 1.53 1.03.87 1.52 2.34 1.07 2.91.83.09-.65.35-1.09.63-1.34-2.22-.25-4.55-1.11-4.55-4.92 0-1.11.38-2 1.03-2.71-.1-.25-.45-1.29.1-2.64 0 0 .84-.27 2.75 1.02.79-.22 1.65-.33 2.5-.33s1.71.11 2.5.33c1.91-1.29 2.75-1.02 2.75-1.02.55 1.35.2 2.39.1 2.64.65.71 1.03 1.6 1.03 2.71 0 3.82-2.34 4.66-4.57 4.91.36.31.69.92.69 1.85V21c0 .27.16.59.67.5C19.14 20.16 22 16.42 22 12A10 10 0 0 0 12 2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    REQ-2026.2-T02-ClinicaEscolaFBr
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Início
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Visão geral
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Visão geral
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../visao-geral/organizacao-e-atualizacao/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Organização e atualização
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../visao-geral/cronograma/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Cronograma geral
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../visao-geral/backlog/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Features e backlog
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../visao-geral/execucao-do-processo/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Execução do processo
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Produto e requisitos
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Produto e requisitos
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+          
+          
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_1" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_1" id="__nav_3_1_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Produto
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_1_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_1">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Produto
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../produto/cenario-atual/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Cenário atual
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../produto/solucao-proposta/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Solução proposta
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../produto/intervencao-social/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Intervenção social
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+          
+          
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_2" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_3_2" id="__nav_3_2_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Requisitos
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_2_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_3_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Requisitos
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../funcionais/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Requisitos funcionais
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../nao-funcionais/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Requisitos não funcionais
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Representação de requisitos
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Representação de requisitos
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Índice">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Índice
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#tecnicas-e-onde-estao-aplicadas" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Técnicas e onde estão aplicadas
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#diagrama-de-atividades-jornada-do-paciente" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Diagrama de atividades: jornada do paciente
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#mapa-de-historias" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Mapa das features pela jornada (inspirado no USM)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#especificacao-de-caso-de-uso-encerrar-caso-por-alta" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Especificação de caso de uso: encerrar caso por alta
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../analise-feedback/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Análise do feedback
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../decisoes-fbr/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Decisões com a FBr
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dor-dod/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    DoR e DoD
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../priorizacao-e-mvp/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Priorização e MVP
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Processo e equipe
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Processo e equipe
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../processo/estrategia-esw/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Estratégia de ESW
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../processo/engenharia-requisitos/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Engenharia de requisitos
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../processo/verificacao-e-validacao/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Verificação e validação
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../processo/equipe-e-cliente/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Equipe e cliente
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../processo/boas-praticas-github/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Boas práticas no GitHub
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../processo/estudo-fdd/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Estudo de FDD
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../processo/uso-de-ia/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Utilização de IA e ferramentas de apoio
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Construção do MVP
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Construção do MVP
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../construcao/arquitetura/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Arquitetura técnica
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../construcao/projeto-features/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Projeto das features
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../construcao/prototipos/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Protótipos
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../construcao/termo-consentimento/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Termo de consentimento (versão 0.1)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5_5" id="__nav_5_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Implantação e operação
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_5_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Implantação e operação
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../construcao/implantacao/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Implantação e segurança
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../construcao/copia-de-seguranca/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Cópia de segurança e restauração
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../construcao/teste-de-carga/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Teste de carga
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../construcao/verificacao-rnfs/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Verificação dos RNFs
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../construcao/entrega-final/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Entrega final: integração, homologação e produção
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Histórico das unidades
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Histórico das unidades
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6_1" >
+        
+          
+          <label class="md-nav__link" for="__nav_6_1" id="__nav_6_1_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Unidade 4 (em andamento)
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_6_1_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6_1">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Unidade 4 (em andamento)
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../historico/unidade-4/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Início da unidade
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../historico/unidade-4/cronograma/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Cronograma e Entregas
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../historico/unidade-4/reunioes/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Reuniões
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_6_2" id="__nav_6_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Unidade 3 (entregue em 17/11)
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_6_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Unidade 3 (entregue em 17/11)
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../historico/unidade-3/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Início da unidade
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../historico/unidade-3/cronograma/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Cronograma e Entregas
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../historico/unidade-3/reunioes/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Reuniões
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../historico/unidade-3/licoes-aprendidas/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Lições Aprendidas
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_6_3" id="__nav_6_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Unidade 2 (entregue em 13/10)
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_6_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Unidade 2 (entregue em 13/10)
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../historico/unidade-2/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Início da unidade
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../historico/unidade-2/cronograma/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Cronograma e Entregas
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../historico/unidade-2/reunioes/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Reuniões
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../historico/unidade-2/licoes-aprendidas/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Lições Aprendidas
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../historico/unidade-2/analise-ux/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Análise de UX do site
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_6_4" id="__nav_6_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Unidade 1 (entregue em 07/09)
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_6_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Unidade 1 (entregue em 07/09)
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../historico/unidade-1/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Início da unidade
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../historico/unidade-1/cronograma/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Cronograma e Entregas
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../historico/unidade-1/reunioes/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Reuniões
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../historico/unidade-1/licoes-aprendidas/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Lições Aprendidas
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../historico/unidade-1/referencias/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Referências
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Índice">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Índice
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#tecnicas-e-onde-estao-aplicadas" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Técnicas e onde estão aplicadas
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#diagrama-de-atividades-jornada-do-paciente" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Diagrama de atividades: jornada do paciente
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#mapa-de-historias" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Mapa das features pela jornada (inspirado no USM)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#especificacao-de-caso-de-uso-encerrar-caso-por-alta" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Especificação de caso de uso: encerrar caso por alta
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+                
+
+
+
+  
+
+
+  <nav class="md-path" aria-label="Navegação" >
+    <ol class="md-path__list">
+      
+        
+  
+  
+    <li class="md-path__item">
+      <a href="../.." class="md-path__link">
+        
+  <span class="md-ellipsis">
+    Início
+  </span>
+
+      </a>
+    </li>
+  
+
+      
+      
+        
+  
+  
+    
+    
+      
+  
+  
+    
+    
+      <li class="md-path__item">
+        <a href="../../produto/cenario-atual/" class="md-path__link">
+          
+  <span class="md-ellipsis">
+    Produto e requisitos
+  </span>
+
+        </a>
+      </li>
+    
+  
+
+    
+  
+
+      
+        
+  
+  
+    
+    
+      <li class="md-path__item">
+        <a href="../funcionais/" class="md-path__link">
+          
+  <span class="md-ellipsis">
+    Requisitos
+  </span>
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ol>
+  </nav>
+
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="representacao-de-requisitos">Representação de requisitos<a class="headerlink" href="#representacao-de-requisitos" title="Link para esta seção">#</a></h1>
+<p>Esta página reúne as técnicas de representação usadas no projeto e mostra cada uma aplicada à Clínica Escola. As técnicas foram escolhidas no <a href="../../processo/engenharia-requisitos/#representacao-de-requisitos">processo de engenharia de requisitos</a>, e cada uma responde a uma pergunta diferente:</p>
+<ul>
+<li><strong>o contexto:</strong> quem participa e onde está o problema;</li>
+<li><strong>o domínio:</strong> quais conceitos existem e como se relacionam;</li>
+<li><strong>o comportamento:</strong> o que o sistema faz, em que ordem e para quem.</li>
+</ul>
+<h2 id="tecnicas-e-onde-estao-aplicadas">Técnicas e onde estão aplicadas<a class="headerlink" href="#tecnicas-e-onde-estao-aplicadas" title="Link para esta seção">#</a></h2>
+<table>
+<thead>
+<tr>
+<th>Técnica</th>
+<th>O que representa</th>
+<th>Onde está aplicada</th>
+<th>Quando é atualizada</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Rich Picture</td>
+<td>O cenário atual da clínica: atores, relações, problemas e ambiente</td>
+<td><a href="../../produto/cenario-atual/#13-rich-picture">Cenário atual</a></td>
+<td>Unidade 1, na elicitação</td>
+</tr>
+<tr>
+<td>Estrutura dos requisitos</td>
+<td>A ligação do problema aos objetivos, às características de produto (CPs), aos requisitos funcionais e aos não funcionais</td>
+<td><a href="../../visao-geral/organizacao-e-atualizacao/#2-estrutura-de-requisitos">Organização e atualização</a></td>
+<td>A cada mudança de requisito</td>
+</tr>
+<tr>
+<td>Lista de features (FDD)</td>
+<td>Cada funcionalidade no formato <code>&lt;ação&gt; &lt;resultado&gt; &lt;objeto&gt;</code>, agrupada por área e conjunto</td>
+<td><a href="../funcionais/">Requisitos funcionais</a> e <a href="../../visao-geral/backlog/">Features e backlog</a></td>
+<td>A cada ciclo</td>
+</tr>
+<tr>
+<td>Declaração do requisito com critérios de aceitação</td>
+<td>A regra de cada feature e os critérios verificáveis, em lista</td>
+<td><a href="../funcionais/">Requisitos funcionais</a> e <a href="../nao-funcionais/">não funcionais</a></td>
+<td>No DoR de cada feature</td>
+</tr>
+<tr>
+<td>Modelo de domínio (diagrama de classes)</td>
+<td>Os conceitos da clínica e suas relações, integrando as CPs</td>
+<td><a href="../../visao-geral/execucao-do-processo/#1-modelo-abrangente-do-dominio">Execução do processo</a></td>
+<td>No "Desenvolver um modelo abrangente" e a cada ciclo</td>
+</tr>
+<tr>
+<td>Diagrama de sequência</td>
+<td>O caminho de cada operação entre o usuário, a API e o banco, com os desvios de acesso e de erro</td>
+<td><a href="../../construcao/projeto-features/">Projeto das features</a></td>
+<td>No "Projetar por feature"</td>
+</tr>
+<tr>
+<td>Protótipo de alta fidelidade</td>
+<td>As telas de cada feature, com os estados de erro, vazio e acesso negado</td>
+<td><a href="../../construcao/prototipos/">Protótipos</a></td>
+<td>No "Projetar por feature", validado com a FBr</td>
+</tr>
+<tr>
+<td>Diagrama de atividades</td>
+<td>A jornada do paciente na clínica, de ponta a ponta</td>
+<td><a href="#diagrama-de-atividades-jornada-do-paciente">Abaixo</a></td>
+<td>Unidade 4</td>
+</tr>
+<tr>
+<td>Mapa das features pela jornada (inspirado no USM)</td>
+<td>A lista de features do FDD e o ciclo de cada uma, na ordem da jornada</td>
+<td><a href="#mapa-de-historias">Abaixo</a></td>
+<td>Gerado do catálogo a cada publicação</td>
+</tr>
+<tr>
+<td>Especificação de caso de uso</td>
+<td>O diálogo entre o ator e o sistema numa feature, com os fluxos alternativos e de exceção</td>
+<td><a href="#especificacao-de-caso-de-uso-encerrar-caso-por-alta">Abaixo</a></td>
+<td>Unidade 4</td>
+</tr>
+</tbody>
+</table>
+<h2 id="diagrama-de-atividades-jornada-do-paciente">Diagrama de atividades: jornada do paciente<a class="headerlink" href="#diagrama-de-atividades-jornada-do-paciente" title="Link para esta seção">#</a></h2>
+<p>O diagrama mostra o caminho de um paciente no MVP, da inscrição ao encerramento. Cada atividade diz quem a faz, com uma cor por perfil, e o requisito que a implementa. As decisões em losango são as que mudam o caminho do paciente. Os caminhos de exceção mais longos, como a reversão do desligamento (<a href="../funcionais/#rf38">RF38</a>) e a transferência de caso (<a href="../funcionais/#rf25">RF25</a>), ficam no projeto de cada feature.</p>
+<div class="diagrama-largo">
+<pre class="mermaid"><code>flowchart TD
+    A([Início]) --&gt; B["Paciente ou responsável&lt;br&gt;inscreve-se e aceita o termo&lt;br&gt;RF1, RF57"]
+    B --&gt; C["Coordenação&lt;br&gt;tria e registra a prioridade&lt;br&gt;RF4, RF6"]
+    C --&gt; D["Coordenação&lt;br&gt;ordena a fila de espera&lt;br&gt;RF7"]
+    D -.-&gt;|"a qualquer momento"| D2["Paciente ou responsável&lt;br&gt;vê a situação na fila&lt;br&gt;RF52, RF8"]
+    D --&gt; E["Coordenação&lt;br&gt;distribui o caso ao supervisor&lt;br&gt;RF18, RF20"]
+    E --&gt; F["Supervisor&lt;br&gt;vincula o estagiário&lt;br&gt;RF21, RF66"]
+    F --&gt; G["Estagiário&lt;br&gt;registra anamnese e contrato&lt;br&gt;RF69"]
+    G --&gt; H["Secretaria&lt;br&gt;agenda a sessão&lt;br&gt;RF10"]
+    H --&gt; I{"O paciente&lt;br&gt;compareceu?"}
+    I --&gt;|"não"| K["Secretaria&lt;br&gt;registra a falta&lt;br&gt;RF34, RF35"]
+    I --&gt;|"sim"| J["Estagiário&lt;br&gt;registra a evolução&lt;br&gt;RF28"]
+    K --&gt; L{"Atingiu o limite&lt;br&gt;de faltas? RF36"}
+    J --&gt; N{"Objetivos do ciclo&lt;br&gt;alcançados?"}
+    L --&gt;|"sim"| M["Secretaria ou coordenação&lt;br&gt;desliga por faltas&lt;br&gt;RF37"]
+    L --&gt;|"não"| R["Próxima sessão"]
+    N --&gt;|"não"| R
+    N --&gt;|"sim"| P["Estagiário escreve e&lt;br&gt;o supervisor aprova&lt;br&gt;o relatório final&lt;br&gt;RF33"]
+    R --&gt; H
+    P --&gt; O["Estagiário pede a alta&lt;br&gt;e o supervisor confirma&lt;br&gt;RF68"]
+    O --&gt; Q["Secretaria imprime e&lt;br&gt;entrega o relatório&lt;br&gt;RF33"]
+    Q --&gt; Z([Fim: vaga liberada])
+    M --&gt; Z
+    classDef paciente fill:#e8f1fb,stroke:#3a6ea5,color:#1b2a3a;
+    classDef coordenacao fill:#eef7ee,stroke:#3f7d3f,color:#1b2a3a;
+    classDef supervisor fill:#fbf3e4,stroke:#9a6a12,color:#1b2a3a;
+    classDef secretaria fill:#f4ecf7,stroke:#7a4b8c,color:#1b2a3a;
+    classDef estagiario fill:#fdecec,stroke:#a33f3f,color:#1b2a3a;
+    classDef varios fill:#eef1f4,stroke:#5b6875,color:#1b2a3a;
+    class B,D2 paciente;
+    class C,D,E coordenacao;
+    class F supervisor;
+    class H,K,Q secretaria;
+    class G,J,P estagiario;
+    class M,O,R varios;</code></pre>
+</div>
+<p><strong>Legenda:</strong> cada cor é um perfil. <span style="background:#e8f1fb;border:1px solid #3a6ea5;padding:0 .4em;color:#1b2a3a">paciente ou responsável</span> <span style="background:#eef7ee;border:1px solid #3f7d3f;padding:0 .4em;color:#1b2a3a">coordenação</span> <span style="background:#fbf3e4;border:1px solid #9a6a12;padding:0 .4em;color:#1b2a3a">supervisor</span> <span style="background:#fdecec;border:1px solid #a33f3f;padding:0 .4em;color:#1b2a3a">estagiário</span> <span style="background:#f4ecf7;border:1px solid #7a4b8c;padding:0 .4em;color:#1b2a3a">secretaria</span> <span style="background:#eef1f4;border:1px solid #5b6875;padding:0 .4em;color:#1b2a3a">mais de um perfil</span>. O relatório final vem antes da alta: depois da confirmação, o vínculo do estagiário termina e ele não edita mais o relatório. Os losangos são decisões, e a linha tracejada é uma consulta que o paciente pode fazer a qualquer momento, sem mudar o caminho. No celular, deslize o diagrama para os lados.</p>
+<h2 id="mapa-de-historias">Mapa das features pela jornada (inspirado no USM)<a class="headerlink" href="#mapa-de-historias" title="Link para esta seção">#</a></h2>
+<p>No FDD, o produto é organizado na <strong>lista de features</strong>, em três níveis: área, conjunto de features e feature, no formato <code>&lt;ação&gt; &lt;resultado&gt; &lt;objeto&gt;</code>. No "Planejar por feature", cada feature recebe o ciclo em que é construída, a partir da <a href="../priorizacao-e-mvp/">priorização por valor e esforço</a> e das dependências.</p>
+<p>O mapa abaixo mostra essa mesma lista e esse mesmo plano, dispostos como num mapa de histórias (User Story Mapping):</p>
+<ul>
+<li><strong>linhas:</strong> as áreas e os conjuntos de features do FDD, na ordem em que acontecem na jornada do paciente na clínica;</li>
+<li><strong>colunas:</strong> as entregas, com os ciclos de construção do MVP e as versões posteriores;</li>
+<li><strong>células:</strong> as features de cada conjunto naquela entrega.</li>
+</ul>
+<p>Ele não é uma técnica de planejamento do processo: foi montado depois do plano por feature, para enxergar o produto pela jornada de quem usa. Por isso, as células são features do FDD, e não histórias de usuário no formato "como…, quero…, para…". O que o mapa mostra e a lista não deixa ver é que o primeiro ciclo de construção (Ciclo 3) atravessou a jornada inteira, da inscrição ao prontuário, para que o primeiro incremento já fosse utilizável de ponta a ponta. Os ciclos seguintes aprofundaram cada área. O mapa é gerado do <a href="../priorizacao-e-mvp/#catalogo-de-requisitos">catálogo de requisitos</a>, a mesma fonte da lista de features e do backlog.</p>
+<table>
+<thead>
+<tr>
+<th>Área e conjunto de features (FDD)</th>
+<th>Ciclo 3</th>
+<th>Ciclo 4</th>
+<th>Ciclo 5</th>
+<th>Ciclo 6</th>
+<th>Versões posteriores</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Inscrição no atendimento</strong><br>Inscrição on-line</td>
+<td><span><a href="../funcionais/#rf1">RF1</a> Registrar solicitação de atendimento on-line<br><a href="../funcionais/#rf2">RF2</a> Emitir comprovante de inscrição</span></td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td><span><a href="../funcionais/#rf3">RF3</a> Registrar inscrição assistida</span></td>
+</tr>
+<tr>
+<td><strong>Triagem clínica</strong><br>Triagem e sinalização de casos</td>
+<td><span><a href="../funcionais/#rf4">RF4</a> Organizar informações da inscrição para triagem<br><a href="../funcionais/#rf6">RF6</a> Registrar prioridade clínica do inscrito</span></td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td><span><a href="../funcionais/#rf5">RF5</a> Sinalizar pontos de atenção da inscrição</span></td>
+</tr>
+<tr>
+<td><strong>Gestão da fila de espera</strong><br>Fila de espera e consulta de posição</td>
+<td>—</td>
+<td><span><a href="../funcionais/#rf7">RF7</a> Ordenar inscritos na fila de espera<br><a href="../funcionais/#rf8">RF8</a> Consultar situação da inscrição</span></td>
+<td>—</td>
+<td>—</td>
+<td><span><a href="../funcionais/#rf9">RF9</a> Manter e informar condições gerais da fila</span></td>
+</tr>
+<tr>
+<td><strong>Gestão de casos</strong><br>Distribuição entre supervisores</td>
+<td><span><a href="../funcionais/#rf18">RF18</a> Listar casos aguardando distribuição<br><a href="../funcionais/#rf20">RF20</a> Distribuir caso a supervisor</span></td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+</tr>
+<tr>
+<td><strong>Gestão de casos</strong><br>Vinculação a estagiário</td>
+<td><span><a href="../funcionais/#rf21">RF21</a> Vincular paciente a estagiário responsável</span></td>
+<td><span><a href="../funcionais/#rf22">RF22</a> Consultar responsáveis pelo caso<br><a href="../funcionais/#rf23">RF23</a> Consultar casos sob responsabilidade do estagiário ou supervisor</span></td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+</tr>
+<tr>
+<td><strong>Gestão de casos</strong><br>Acompanhamento e reorganização</td>
+<td>—</td>
+<td><span><a href="../funcionais/#rf25">RF25</a> Transferir caso para outro estagiário ou supervisor</span></td>
+<td>—</td>
+<td>—</td>
+<td><span><a href="../funcionais/#rf24">RF24</a> Visualizar distribuição de casos por supervisor<br><a href="../funcionais/#rf26">RF26</a> Consultar histórico de responsáveis do caso</span></td>
+</tr>
+<tr>
+<td><strong>Agendamento e acompanhamento de sessões</strong><br>Agendamento</td>
+<td><span><a href="../funcionais/#rf10">RF10</a> Agendar sessão do paciente</span></td>
+<td><span><a href="../funcionais/#rf11">RF11</a> Consultar agenda de sessões do estagiário</span></td>
+<td>—</td>
+<td>—</td>
+<td><span><a href="../funcionais/#rf12">RF12</a> Reagendar sessão do paciente</span></td>
+</tr>
+<tr>
+<td><strong>Agendamento e acompanhamento de sessões</strong><br>Confirmação e lembrete</td>
+<td>—</td>
+<td><span><a href="../funcionais/#rf14">RF14</a> Confirmar presença em sessão agendada</span></td>
+<td>—</td>
+<td>—</td>
+<td><span><a href="../funcionais/#rf13">RF13</a> Enviar lembrete de sessão agendada</span></td>
+</tr>
+<tr>
+<td><strong>Agendamento e acompanhamento de sessões</strong><br>Cancelamento</td>
+<td>—</td>
+<td><span><a href="../funcionais/#rf15">RF15</a> Registrar cancelamento de sessão pelo paciente<br><a href="../funcionais/#rf16">RF16</a> Registrar cancelamento de sessão pelo estagiário</span></td>
+<td><span><a href="../funcionais/#rf17">RF17</a> Notificar paciente sobre ausência do estagiário</span></td>
+<td>—</td>
+<td>—</td>
+</tr>
+<tr>
+<td><strong>Acompanhamento clínico</strong><br>Prontuário</td>
+<td><span><a href="../funcionais/#rf66">RF66</a> Criar e inicializar o prontuário do paciente</span></td>
+<td><span><a href="../funcionais/#rf27">RF27</a> Consultar prontuário do paciente<br><a href="../funcionais/#rf69">RF69</a> Registrar anamnese e contrato terapêutico do paciente</span></td>
+<td>—</td>
+<td>—</td>
+<td><span><a href="../funcionais/#rf70">RF70</a> Corrigir anamnese e contrato terapêutico do paciente</span></td>
+</tr>
+<tr>
+<td><strong>Acompanhamento clínico</strong><br>Registro de evolução por sessão</td>
+<td>—</td>
+<td><span><a href="../funcionais/#rf28">RF28</a> Registrar evolução da sessão realizada</span></td>
+<td><span><a href="../funcionais/#rf29">RF29</a> Corrigir evolução registrada</span></td>
+<td><span><a href="../funcionais/#rf30">RF30</a> Registrar complemento de evolução da sessão<br><a href="../funcionais/#rf31">RF31</a> Consultar evolução de uma sessão específica<br><a href="../funcionais/#rf32">RF32</a> Consultar histórico de evolução do paciente<br><a href="../funcionais/#rf67">RF67</a> Validar evolução pelo supervisor</span></td>
+<td>—</td>
+</tr>
+<tr>
+<td><strong>Acompanhamento clínico</strong><br>Encerramento do ciclo</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td><span><a href="../funcionais/#rf33">RF33</a> Gerar relatório final de evolução<br><a href="../funcionais/#rf68">RF68</a> Encerrar caso por alta</span></td>
+<td>—</td>
+</tr>
+<tr>
+<td><strong>Assiduidade e alertas</strong><br>Controle de faltas do paciente</td>
+<td>—</td>
+<td><span><a href="../funcionais/#rf34">RF34</a> Registrar falta do paciente na sessão<br><a href="../funcionais/#rf35">RF35</a> Contabilizar faltas do paciente no ciclo<br><a href="../funcionais/#rf36">RF36</a> Emitir alerta de limite de faltas atingido<br><a href="../funcionais/#rf37">RF37</a> Desligar paciente por faltas e liberar vaga<br><a href="../funcionais/#rf38">RF38</a> Reverter desligamento de paciente por faltas</span></td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+</tr>
+<tr>
+<td><strong>Assiduidade e alertas</strong><br>Controle de faltas do estagiário</td>
+<td>—</td>
+<td>—</td>
+<td><span><a href="../funcionais/#rf39">RF39</a> Consolidar faltas do estagiário para a supervisão</span></td>
+<td><span><a href="../funcionais/#rf40">RF40</a> Contabilizar faltas do estagiário no semestre<br><a href="../funcionais/#rf63">RF63</a> Sinalizar reprovação do estagiário por faltas<br><a href="../funcionais/#rf64">RF64</a> Registrar decisão institucional sobre a reprovação do estagiário</span></td>
+<td>—</td>
+</tr>
+<tr>
+<td><strong>Registros administrativos do atendimento</strong><br>Contribuição social</td>
+<td>—</td>
+<td>—</td>
+<td><span><a href="../funcionais/#rf41">RF41</a> Registrar pagamento da contribuição social do paciente</span></td>
+<td><span><a href="../funcionais/#rf42">RF42</a> Consultar situação da contribuição social dos pacientes<br><a href="../funcionais/#rf43">RF43</a> Bloquear agendamento por contribuição social pendente</span></td>
+<td>—</td>
+</tr>
+<tr>
+<td><strong>Registros administrativos do atendimento</strong><br>Declaração de comparecimento</td>
+<td>—</td>
+<td>—</td>
+<td><span><a href="../funcionais/#rf44">RF44</a> Listar sessões com comparecimento registrado do paciente</span></td>
+<td><span><a href="../funcionais/#rf45">RF45</a> Emitir declaração de comparecimento do paciente</span></td>
+<td><span><a href="../funcionais/#rf46">RF46</a> Reemitir declaração de comparecimento<br><a href="../funcionais/#rf47">RF47</a> Validar autenticidade da declaração</span></td>
+</tr>
+<tr>
+<td><strong>Continuidade do atendimento</strong><br>Continuidade de casos entre semestres</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td><span><a href="../funcionais/#rf58">RF58</a> Listar casos elegíveis para continuidade entre semestres<br><a href="../funcionais/#rf59">RF59</a> Registrar decisão de continuidade do caso<br><a href="../funcionais/#rf60">RF60</a> Vincular caso a novo estagiário na continuidade</span></td>
+</tr>
+<tr>
+<td><strong>Gestão institucional</strong><br>Indicadores e relatórios institucionais</td>
+<td>—</td>
+<td>—</td>
+<td><span><a href="../funcionais/#rf48">RF48</a> Consultar indicadores operacionais</span></td>
+<td><span><a href="../funcionais/#rf49">RF49</a> Exportar relatório institucional em PDF</span></td>
+<td>—</td>
+</tr>
+<tr>
+<td><strong>Acesso e segurança</strong><br>Autenticação</td>
+<td><span><a href="../funcionais/#rf50">RF50</a> Autenticar usuário institucional</span></td>
+<td><span><a href="../funcionais/#rf51">RF51</a> Encerrar sessão do usuário<br><a href="../funcionais/#rf52">RF52</a> Verificar identidade do paciente ou responsável</span></td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+</tr>
+<tr>
+<td><strong>Acesso e segurança</strong><br>Controle de acesso por perfil</td>
+<td><span><a href="../funcionais/#rf53">RF53</a> Cadastrar usuário institucional com perfil de acesso<br><a href="../funcionais/#rf54">RF54</a> Desativar usuário institucional<br><a href="../funcionais/#rf55">RF55</a> Restringir acesso ao prontuário do paciente</span></td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+</tr>
+<tr>
+<td><strong>Acesso e segurança</strong><br>Proteção de dados</td>
+<td>—</td>
+<td><span><a href="../funcionais/#rf57">RF57</a> Registrar consentimento para tratamento de dados</span></td>
+<td><span><a href="../funcionais/#rf56">RF56</a> Consultar registro de acessos ao prontuário</span></td>
+<td><span><a href="../funcionais/#rf65">RF65</a> Registrar revogação do consentimento</span></td>
+<td>—</td>
+</tr>
+<tr>
+<td><strong>Acessibilidade e usabilidade</strong><br>Personalização de exibição</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td><span><a href="../funcionais/#rf61">RF61</a> Ativar modo de alto contraste<br><a href="../funcionais/#rf62">RF62</a> Ajustar tamanho do texto</span></td>
+</tr>
+</tbody>
+</table>
+<h2 id="especificacao-de-caso-de-uso-encerrar-caso-por-alta">Especificação de caso de uso: encerrar caso por alta<a class="headerlink" href="#especificacao-de-caso-de-uso-encerrar-caso-por-alta" title="Link para esta seção">#</a></h2>
+<p>A especificação segue o modelo de caso de uso da disciplina e detalha o <a href="../funcionais/#rf68">RF68</a>. Foi escolhida por ter três atores, um fluxo que só termina com a confirmação de outra pessoa e várias regras de exceção. O projeto técnico da feature, com as rotas e o diagrama de sequência, está no <a href="../../construcao/projeto-features/">projeto das features</a>.</p>
+<p><strong>UC-RF68 — Encerrar caso por alta</strong></p>
+<p><strong>1. Breve descrição.</strong> O estagiário responsável pede o encerramento do acompanhamento por alta, com a data e o motivo. O supervisor do caso confirma ou recusa. Com a confirmação, o caso é encerrado, o histórico é preservado e a vaga é liberada. A coordenação pode reabrir o caso no mesmo semestre e ciclo.</p>
+<p><strong>2. Atores.</strong></p>
+<ul>
+<li><strong>Estagiário responsável</strong> (ator principal): pede a alta e pode cancelar o próprio pedido.</li>
+<li><strong>Supervisor do caso:</strong> confirma ou recusa a alta.</li>
+<li><strong>Coordenação:</strong> reabre o caso encerrado por alta.</li>
+</ul>
+<p><strong>3. Pré-condições.</strong></p>
+<ul>
+<li>O caso está "em atendimento", com estagiário vinculado (<a href="../funcionais/#rf21">RF21</a>) e supervisor atribuído (<a href="../funcionais/#rf20">RF20</a>).</li>
+<li>O ator entrou no sistema com a conta institucional (<a href="../funcionais/#rf50">RF50</a>).</li>
+<li>Não há outro pedido de alta aberto no caso.</li>
+</ul>
+<p><strong>4. Fluxo básico.</strong></p>
+<ol>
+<li>O estagiário abre a ficha do paciente e escolhe "Registrar alta".</li>
+<li>O sistema mostra o formulário com a data da alta, o motivo, o supervisor que vai confirmar e, se houver, as sessões realizadas ainda sem evolução no ciclo.</li>
+<li>O estagiário informa a data e o motivo e envia.</li>
+<li>O sistema registra o pedido, com o autor e a data/hora, e mostra o caso como "Alta aguardando confirmação do supervisor". O caso continua em atendimento.</li>
+<li>O supervisor abre o pedido, com a data, o motivo e quem pediu, e escolhe "Confirmar alta".</li>
+<li>O sistema, numa transação só:<ul>
+<li>encerra o caso por alta;</li>
+<li>encerra o vínculo do estagiário;</li>
+<li>cancela as sessões futuras sem contar falta;</li>
+<li>libera a vaga.</li>
+</ul>
+</li>
+<li>O sistema mostra o caso "Encerrado por alta", com a confirmação, a vaga liberada e o agendamento indisponível. O caso termina.</li>
+</ol>
+<p><strong>5. Fluxos alternativos.</strong></p>
+<ul>
+<li><strong>A1. Cancelamento do pedido (passo 4).</strong> O estagiário que pediu escolhe "Cancelar pedido de alta" e informa o motivo. O sistema registra o cancelamento, com o autor e a data/hora, e o caso continua em atendimento. Um novo pedido pode ser feito.</li>
+<li><strong>A2. Recusa pelo supervisor (passo 5).</strong> O supervisor escolhe "Recusar alta" e informa o motivo. O sistema registra a recusa, e o caso continua em atendimento.</li>
+<li><strong>A3. Reabertura pela coordenação (depois do passo 7).</strong> A coordenação escolhe "Reabrir caso", indica quem pediu (o estagiário cujo atendimento a alta encerrou ou o supervisor do caso) e o motivo. O sistema registra a reabertura e devolve o caso a "em atendimento", com o mesmo prontuário e ocupando uma vaga. Se o estagiário não estiver mais ativo, o caso volta a aguardar vínculo, com o supervisor mantido.</li>
+<li><strong>A4. Transferência ou desligamento com pedido aberto.</strong> Se o caso for transferido (<a href="../funcionais/#rf25">RF25</a>) ou desligado por faltas (<a href="../funcionais/#rf37">RF37</a>) antes da confirmação, o pedido é encerrado com essa forma e não pode mais ser confirmado.</li>
+</ul>
+<p><strong>6. Fluxos de exceção.</strong></p>
+<ul>
+<li><strong>E1. Data inválida (passo 3).</strong> A data é futura, ou anterior ao início do atendimento pelo estagiário no caso ou ao início do semestre. O sistema recusa e indica o campo.</li>
+<li><strong>E2. Motivo vazio ou longo demais (passo 3).</strong> O sistema recusa e indica o campo.</li>
+<li><strong>E3. Perfil sem permissão.</strong> Só o estagiário responsável pede, só o supervisor do caso confirma ou recusa e só a coordenação reabre. Qualquer outro perfil recebe a negação, e a tentativa fica na auditoria.</li>
+<li><strong>E4. Reabertura fora do prazo (A3).</strong> A alta é de um semestre ou ciclo anterior. O sistema não oferece a reabertura e informa que o retorno exige uma nova inscrição (<a href="../funcionais/#rf1">RF1</a>).</li>
+</ul>
+<p><strong>7. Pós-condições.</strong></p>
+<ul>
+<li><strong>Com a confirmação:</strong> o caso está "encerrado por alta" e não aceita agendamento (<a href="../funcionais/#rf10">RF10</a>) nem evolução (<a href="../funcionais/#rf28">RF28</a>). A vaga está liberada, e o caso deixa de contar como atendimento ativo nos indicadores (<a href="../funcionais/#rf48">RF48</a>).</li>
+<li><strong>Em qualquer desfecho:</strong> o pedido, a confirmação, o cancelamento, a recusa e a reabertura ficam registrados e não podem ser alterados nem apagados.</li>
+</ul>
+<p>Os fluxos A1, A2 e A4 e a exceção E1 não estão no texto do RF68. Eles vêm da revisão do código da feature (<a href="https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/pull/301">#301</a>), que mostrou que um pedido errado não tinha saída e que uma data antiga impedia a reabertura. Essas decisões estão em "Na implementação", no projeto da feature.</p>
+<p><strong>8. Regras de negócio.</strong> A alta é distinta do desligamento por faltas e aparece como "Alta" no histórico. A reabertura só vale no mesmo semestre e ciclo, porque cada semestre exige uma nova inscrição. As regras foram confirmadas pela Clínica Escola em 30/10/2026.</p>
+<p><strong>9. Requisitos especiais.</strong></p>
+<ul>
+<li><a href="../nao-funcionais/#rnf27">RNF27</a>: integridade e proveniência dos registros.</li>
+<li><a href="../nao-funcionais/#rnf51">RNF51</a>: os motivos ficam cifrados.</li>
+<li><a href="../nao-funcionais/#rnf17">RNF17</a>: a secretaria vê a alta sem o motivo.</li>
+</ul>
+<p><strong>10. Rastreabilidade.</strong> Feature "Encerrar caso por alta" → CP7 — Registro de evolução por sessão → OE5/OE2. Issue <a href="https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/issues/273">#273</a>.</p>
+
+
+
+
+
+
+
+  
+  
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Voltar para o topo
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    
+      
+      <nav class="md-footer__inner md-grid" aria-label="Rodapé" >
+        
+          
+          <a href="../nao-funcionais/" class="md-footer__link md-footer__link--prev" aria-label="Anterior: Requisitos não funcionais">
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+            </div>
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Anterior
+              </span>
+              <div class="md-ellipsis">
+                Requisitos não funcionais
+              </div>
+            </div>
+          </a>
+        
+        
+          
+          <a href="../analise-feedback/" class="md-footer__link md-footer__link--next" aria-label="Próximo: Análise do feedback">
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Próximo
+              </span>
+              <div class="md-ellipsis">
+                Análise do feedback
+              </div>
+            </div>
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11z"/></svg>
+            </div>
+          </a>
+        
+      </nav>
+    
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      Clínica Escola FBr · Documentação acadêmica do projeto · 2026
+    </div>
+  
+  
+    Última publicação: 28/11/2026 ·
+    <a href="../../processo/boas-praticas-github/#publicacao-da-documentacao">como o site é publicado</a> ·
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.tabs", "navigation.tabs.sticky", "navigation.sections", "navigation.path", "navigation.top", "navigation.footer", "navigation.tracking", "toc.follow", "search.suggest", "search.highlight", "content.code.copy"], "search": "../../assets/javascripts/workers/search.a7633da7.min.js", "tags": null, "translations": {"clipboard.copied": "Copiado para \u00e1rea de transfer\u00eancia", "clipboard.copy": "Copiar para \u00e1rea de transfer\u00eancia", "search.result.more.one": "mais 1 nesta p\u00e1gina", "search.result.more.other": "# mais nesta p\u00e1gina", "search.result.none": "Nenhum documento encontrado", "search.result.one": "1 documento encontrado", "search.result.other": "# documentos encontrados", "search.result.placeholder": "Digite para iniciar a busca", "search.result.term.missing": "Ausente", "select.version": "Selecione a vers\u00e3o"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.a5f9d56c.min.js"></script>
+      
+        <script src="../../assets/javascripts/extra.js"></script>
+      
+        <script src="../../assets/javascripts/reading.js"></script>
+      
+        <script src="../../assets/javascripts/matriz.js"></script>
+      
+        <script src="../../assets/javascripts/melhorias.js"></script>
+      
+    
+  </body>
+</html>
