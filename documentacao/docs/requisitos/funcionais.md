@@ -567,7 +567,7 @@ _Rastreabilidade:_ Feature "Distribuir caso a supervisor" → CP5 — Distribui�
 
 **RF21 — Vincular paciente a estagiário responsável**{ #rf21 }
 
-O sistema deve permitir que o supervisor vincule cada paciente sob sua responsabilidade a um estagiário com conta institucional ativa (RF53 e RF54), responsável pelo atendimento. A gestão de semestres letivos e do vínculo acadêmico do estagiário com a instituição de ensino não faz parte do escopo deste sistema: a condição de "estagiário ativo" equivale à conta institucional mantida ativa pela coordenação, que a desativa (RF54) ao término do estágio, retirando-o das opções de vinculação. Após o vínculo, o caso passa a ter estagiário e supervisor identificados, e o estagiário vinculado passa a ter acesso ao prontuário do caso, respeitando os perfis e restrições definidos na CP12. O supervisor só pode vincular estagiários a casos sob sua própria responsabilidade, e o vínculo deve ficar registrado com data e autor. Cada caso tem um único estagiário responsável vigente, sem limite fixo de casos por estagiário; os estagiários de apoio do semestre básico só observam as sessões e não são vinculados ao caso, como confirmado pela Clínica Escola.
+O sistema deve permitir que o supervisor vincule cada paciente sob sua responsabilidade a um estagiário com conta institucional ativa (RF53 e RF54), responsável pelo atendimento. A gestão de semestres letivos e do vínculo acadêmico do estagiário com a instituição de ensino não faz parte do escopo deste sistema: a condição de "estagiário ativo" equivale à conta institucional mantida ativa pela coordenação, que a desativa (RF54) ao término do estágio, retirando-o das opções de vinculação. Após o vínculo, o caso passa a ter estagiário e supervisor identificados, e o estagiário vinculado passa a ter acesso ao prontuário do caso, respeitando os perfis e restrições definidos na CP12. O supervisor só pode vincular estagiários a casos sob sua própria responsabilidade, e o vínculo deve ficar registrado com data e autor. O vínculo e a criação do prontuário do ciclo (RF66) formam uma única operação, concluída por inteiro ou desfeita por inteiro: se o prontuário não puder ser criado, o vínculo também não é registrado, o caso permanece na situação anterior, sem estagiário responsável e sem prontuário, e o estagiário não ganha acesso a ele. Como nada fica gravado, não há estado pendente a recuperar: o supervisor vê a mensagem "Não foi possível vincular o estagiário. Tente novamente em instantes." e refaz o vínculo pelo mesmo caminho. Só o vínculo concluído entra na trilha de auditoria, com o prontuário criado ou reaproveitado. Cada caso tem um único estagiário responsável vigente, sem limite fixo de casos por estagiário; os estagiários de apoio do semestre básico só observam as sessões e não são vinculados ao caso, como confirmado pela Clínica Escola.
 
 _Critérios de aceitação:_
 
@@ -575,6 +575,9 @@ _Critérios de aceitação:_
 - Sem estagiário com conta ativa disponível, o sistema informa que não há estagiários disponíveis para vínculo.
 - Supervisor que não é responsável pelo caso não consegue vincular estagiário a ele.
 - Estagiário com conta desativada (RF54) não aparece entre as opções de vínculo.
+- Se a criação do prontuário (RF66) falhar, o vínculo não é registrado: o caso continua sem estagiário responsável, na situação anterior, e o estagiário não ganha acesso a ele.
+- Nessa falha, o supervisor vê a mensagem "Não foi possível vincular o estagiário. Tente novamente em instantes." e consegue vincular o mesmo caso de novo, sem gerar vínculo nem prontuário duplicado.
+- O vínculo concluído fica registrado na auditoria, com o autor, a data/hora e o prontuário criado ou reaproveitado; a tentativa desfeita não deixa vínculo nem prontuário gravados.
 
 _Rastreabilidade:_ Feature "Vincular paciente a estagiário responsável" → CP5 — Distribuição de casos entre supervisores e estagiários → OE5. Dependência: RF20, RF53 e RF54 (CP12). Integração: RF66 (CP6 — criação do prontuário a partir do vínculo).{{ origem("RF21") }}
 
@@ -668,7 +671,7 @@ O acesso ao prontuário depende do vínculo de responsabilidade definido na CP5 
 
 **RF66 — Criar e inicializar o prontuário do paciente**{ #rf66 }
 
-O sistema deve criar o prontuário eletrônico do paciente automaticamente no momento em que o caso for vinculado a um estagiário responsável (RF21), inicializando-o com a identificação do paciente, do caso, do ciclo de atendimento, do estagiário responsável e do supervisor do caso. Um prontuário não pode ser criado para um caso ainda sem estagiário responsável vinculado, e cada caso deve ter exatamente um prontuário por ciclo de atendimento. O registro dos dados iniciais (anamnese e contrato terapêutico) é tratado pelo RF69, que tem gatilho e ator próprios. O sigilo do prontuário segue o RNF25 e o acesso, a restrição do RF55.
+O sistema deve criar o prontuário eletrônico do paciente automaticamente no momento em que o caso for vinculado a um estagiário responsável (RF21), inicializando-o com a identificação do paciente, do caso, do ciclo de atendimento, do estagiário responsável e do supervisor do caso. Um prontuário não pode ser criado para um caso ainda sem estagiário responsável vinculado, e cada caso deve ter exatamente um prontuário por ciclo de atendimento. A criação faz parte da mesma operação do vínculo (RF21): se ela falhar, o vínculo também é desfeito, e nenhum caso fica com estagiário responsável sem prontuário. O registro dos dados iniciais (anamnese e contrato terapêutico) é tratado pelo RF69, que tem gatilho e ator próprios. O sigilo do prontuário segue o RNF25 e o acesso, a restrição do RF55.
 
 _Critérios de aceitação:_
 
@@ -676,6 +679,7 @@ _Critérios de aceitação:_
 - Caso sem estagiário responsável vinculado não pode ter prontuário criado.
 - Caso que já tem prontuário no ciclo vigente não recebe um segundo prontuário.
 - A criação do prontuário registra a data/hora e o vínculo que a originou.
+- A falha na criação do prontuário desfaz o vínculo (RF21): nenhum caso fica com estagiário responsável vigente sem prontuário no ciclo.
 
 _Rastreabilidade:_ Feature "Criar e inicializar o prontuário do paciente" → CP6 — Prontuário eletrônico → OE5/OE6. Dependência: RF21 (CP5). Integração: RF69 (registro dos dados iniciais). Restrição transversal: CP12 — Segurança, sigilo e controle de acesso.{{ origem("RF66") }}
 
@@ -1408,6 +1412,7 @@ O sistema deve permitir que um usuário com perfil de coordenação cadastre usu
 1. **Convite:** ao concluir o cadastro, o sistema cria o usuário com a situação "pendente de ativação" e envia ao e-mail informado um link de ativação, de uso único e válido por 72 horas.
 2. **Ativação e senha inicial:** ao abrir o link, o próprio usuário define sua senha, que deve atender às regras do RNF49; a conta passa a "ativa" e o link deixa de valer.
 3. **Reenvio:** enquanto o usuário estiver pendente, a coordenação pode reenviar o convite, o que gera um novo link e invalida o anterior.
+4. **Falha no envio:** o cadastro é gravado antes do envio do e-mail. Se o convite não puder ser enviado, a conta continua criada como "pendente de ativação", o cadastro continua na trilha de auditoria, e a coordenação vê, ao concluir o cadastro, o alerta "Usuário cadastrado, mas o convite não foi enviado para <e-mail>.", com a orientação de usar "Reenviar convite" na linha da pessoa, na lista de usuários. O reenvio segue o item 3 e fica na auditoria; se o e-mail falhar de novo, a coordenação vê "O e-mail do convite não pôde ser enviado agora. Tente reenviar em instantes." e pode repetir o reenvio enquanto a conta estiver pendente. O link anterior deixa de valer mesmo quando o reenvio falha. A falha no envio não fica guardada no sistema: a coordenação é informada no momento do cadastro ou do reenvio, e a lista de usuários mostra a data do último convite gerado.
 
 Um usuário pendente de ativação não consegue se autenticar (RF50). O cadastro, o reenvio do convite e a ativação ficam registrados na trilha de auditoria, com o autor, o usuário afetado e a data/hora.
 
@@ -1417,6 +1422,9 @@ _Critérios de aceitação:_
 - Ao abrir o convite válido e definir senha conforme o RNF49, a conta passa a "ativa" e o usuário consegue entrar pelo RF50.
 - Link de ativação já usado ou com mais de 72 horas é recusado, com orientação para pedir novo convite à coordenação.
 - O reenvio do convite a usuário pendente invalida o link anterior.
+- Se o envio do convite falhar no cadastro, a conta permanece "pendente de ativação", o cadastro fica na auditoria, e a coordenação vê o alerta "Usuário cadastrado, mas o convite não foi enviado para <e-mail>.", com a orientação de reenviar o convite.
+- Depois de uma falha no envio, a coordenação reenvia o convite pela lista de usuários, e a pessoa recebe um novo link válido por 72 horas.
+- Se o reenvio também falhar, a coordenação vê "O e-mail do convite não pôde ser enviado agora. Tente reenviar em instantes.", o reenvio fica na auditoria, e o convite pode ser reenviado de novo enquanto a conta estiver pendente.
 - E-mail já cadastrado não pode ser cadastrado de novo.
 - Usuário sem perfil de coordenação não consegue cadastrar usuários.
 - O cadastro, o reenvio do convite e a ativação ficam registrados na auditoria, com o autor, o usuário afetado e a data/hora.
