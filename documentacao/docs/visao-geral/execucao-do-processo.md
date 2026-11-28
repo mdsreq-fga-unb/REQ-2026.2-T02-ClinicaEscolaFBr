@@ -69,12 +69,13 @@ classDiagram
     Caso "1" -- "0..*" VinculoEstagiario : vínculo (RF21)
     AtribuicaoSupervisor "0..*" -- "1" Usuario : supervisor
     VinculoEstagiario "0..*" -- "1" Usuario : estagiário
-    Caso "1" -- "1..*" Prontuario : um por ciclo (RF66)
+    Caso "1" -- "0..*" Prontuario : um por ciclo, criado no vínculo (RF66)
+    VinculoEstagiario "1" -- "0..1" Prontuario : origem (RF66)
     Caso "1" -- "0..*" SessaoAtendimento : agenda (RF10)
     Prontuario "1" -- "0..*" Evolucao : registra (RF28)
     SessaoAtendimento "1" -- "0..1" Evolucao : origem
-    SessaoAtendimento "1" -- "0..1" CancelamentoSessao : cancelada por
-    SessaoAtendimento "1" -- "0..1" FaltaPaciente : gera (RF34)
+    SessaoAtendimento "1" -- "0..1" CancelamentoSessao : cancelada por (RF15, RF16)
+    SessaoAtendimento "1" -- "0..1" FaltaPaciente : falta ou cancelamento fora do prazo (RF34, RF15)
     Caso "1" -- "0..*" DesligamentoPorFaltas : sofre (RF37)
     DesligamentoPorFaltas "1" -- "2..*" FaltaPaciente : fundamentado por
     DesligamentoPorFaltas "1" -- "1" VagaLiberada : libera
@@ -82,6 +83,21 @@ classDiagram
 ```
 
 **Como ler o modelo.** O ciclo de atendimento não é uma classe: é o número `cicloAtendimento`, que o caso guarda e que o prontuário, as sessões, as faltas e o desligamento repetem para saber a que ciclo pertencem. Os responsáveis nunca são apagados: a atribuição do supervisor e o vínculo do estagiário têm o campo `vigente`, e a troca de responsável encerra o registro anterior e cria outro, o que preserva o histórico de responsáveis (RF27). A auditoria (RNF10) e os acessos ao prontuário (RNF52) registram as operações de todas as classes e não aparecem no diagrama.
+
+**Caso e prontuário.** O caso existe antes do prontuário: ele nasce da inscrição e passa pelas situações "aguardando distribuição" e "aguardando vínculo" sem prontuário, porque o RF66 só cria o prontuário quando o caso é vinculado a um estagiário (RF21). Por isso a multiplicidade é `0..*`: nenhum prontuário enquanto o caso não tem estagiário vinculado, e no máximo um por ciclo de atendimento depois disso. A relação com o vínculo mostra essa origem: cada prontuário nasce de um vínculo, e um vínculo seguinte no mesmo ciclo, como o da transferência (RF25), reaproveita o prontuário que já existe, por isso o vínculo tem `0..1` prontuário de origem. O vínculo e a criação do prontuário são uma operação única (RF21): não existe caso com estagiário responsável vigente e sem prontuário no ciclo.
+
+**Ausências e cancelamentos.** O modelo separa a ausência do paciente, a ausência do estagiário e o cancelamento administrativo para remarcação pela classe e pela classificação do cancelamento (`CancelamentoSessao.classificacao`):
+
+| Situação | Como fica no modelo | Conta como falta |
+| --- | --- | --- |
+| O paciente não comparece, sem cancelar (RF34) | Sessão com o status "falta do paciente" e uma `FaltaPaciente` com a origem `falta` | Do paciente (RF35), mesmo quando justificada |
+| O paciente cancela fora do prazo (RF15) | `CancelamentoSessao` com a classificação `fora_do_prazo` e uma `FaltaPaciente` com a origem `cancelamento_fora_do_prazo` | Do paciente (RF35) |
+| O paciente cancela no prazo (RF15) | `CancelamentoSessao` com a classificação `no_prazo`, sem `FaltaPaciente` | Não |
+| O estagiário não pode realizar a sessão (RF16) | `CancelamentoSessao` com a classificação `ausencia_estagiario`, sem `FaltaPaciente` | Do estagiário (RF39 e RF40), nunca do paciente |
+| A secretaria ou o estagiário cancela para remarcar (RF15 e RF16) | `CancelamentoSessao` com a classificação `administrativo`, sem `FaltaPaciente` | Não, nem do paciente nem do estagiário |
+| O caso é desligado por faltas (RF37) | `CancelamentoSessao` com a classificação `desligamento`, ligado ao `DesligamentoPorFaltas` | Não |
+
+A ausência do estagiário registrada por engano é reclassificada pela coordenação como cancelamento administrativo, numa `ReclassificacaoFalta` (RF40, nas [classes do Ciclo 6](../construcao/projeto-features.md#modelo-detalhado-do-ciclo-6)), sem alterar o cancelamento original.
 
 ### Revisões do modelo
 
@@ -92,6 +108,7 @@ classDiagram
 | 24/10/2026 | Avaliação da Unidade 2 pelo professor | Gabriel | O RF66 passa a criar só o prontuário, e a anamnese e o contrato vão para o RF69 | Versão 3.3 do [histórico](../index.md#historico-de-revisao) |
 | 05/11/2026 | Modelo das 18 features do Ciclo 4 | Gabriel, revisado por Nicolas e Joaquim | Classes da confirmação, do cancelamento, da assiduidade (falta, desligamento e vaga) e da verificação de identidade; situações novas do caso e da sessão | [PR #203](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/pull/203) e [Classes do Ciclo 4](../construcao/projeto-features.md#modelo-detalhado-do-ciclo-4), no Projeto das features |
 | 28/10 a 06/11/2026 | Inspeções de design do Ciclo 4 (DoD 1) | Joaquim (RF52 em 28/10; RF7, RF8 e RF57 em 06/11), Nicolas (RF34 a RF38) e Jônatas (RF11 e RF14 a RF16), em 06/11 | Permissões do banco para os registros da assiduidade (RNF32); a comparação do status da sessão numa função imutável; a página do termo de consentimento | Comentário "Inspeção de design (DoD 1)" nas issues de cada feature, como a [#150](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/issues/150) e a [#140](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/issues/140) |
+| 28/11/2026 | Avaliação da Unidade 3 pelo professor ([issue #332](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/issues/332)) | Nicolas | A relação entre o caso e o prontuário passa de `1..*` para `0..*`, com a origem do prontuário no vínculo (RF66), porque o caso existe antes do vínculo; a tabela das ausências e dos cancelamentos mostra como o modelo separa a ausência do paciente, a do estagiário e o cancelamento administrativo (RF15, RF16 e RF34) | Versão 4.43 do [histórico](../index.md#historico-de-revisao) |
 | 07/11/2026 | Construção do RF36 ao RF38 | Gabriel, com revisão de Nicolas na PR | O cancelamento da sessão entra com o desligamento, o primeiro a cancelar sessões, e é reaproveitado pelo RF15 | [PR #216](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/pull/216) |
 
 As inspeções de design do RF22, RF23, RF25, RF27, RF28 e RF69 ainda não foram registradas; elas entram nesta tabela quando forem feitas.
