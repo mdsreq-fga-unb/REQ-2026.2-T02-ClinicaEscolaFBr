@@ -25,7 +25,7 @@
 #   entrega: observação sobre a entrega (por exemplo, entrega parcial)
 #   origem: decisões com a FBr (DF) que fundamentam o requisito
 
-atualizado_em: 25/11/2026
+atualizado_em: 27/11/2026
 
 cps:
   CP1: Inscrição on-line
@@ -58,7 +58,7 @@ ciclos:
   status: Encerrado
 - numero: 6
   periodo: 18/11 a 01/12/2026
-  status: Aguardando
+  status: Em andamento
 
 rfs:
 
@@ -72,9 +72,10 @@ rfs:
   ciclo: 3
   ordem: 1
   lider: Jônatas
+  depende: [RF57]
   issue: 88
-  estado: Código inspecionado
-  origem: [DF02, DF07, DF24, DF35, DF43, DF47, DF48, DF51, DF56, DF60, DF64]
+  estado: Aceita
+  origem: [DF02, DF07, DF24, DF35, DF43, DF47, DF48, DF51, DF56, DF60, DF64, DF75]
 
 - id: RF2
   nome: Emitir comprovante de inscrição
@@ -89,6 +90,7 @@ rfs:
   depende: [RF1]
   issue: 89
   estado: Aceita
+  origem: [DF76]
 
 - id: RF3
   nome: Registrar inscrição assistida
@@ -156,7 +158,7 @@ rfs:
   origem: [DF16, DF33, DF57]
 
 - id: RF8
-  nome: Consultar posição individual na fila
+  nome: Consultar situação da inscrição
   cp: CP3
   valor: 4
   justificativa: 'Valor dado pela FBr: a consulta pelo site é o canal definido para o inscrito acompanhar a fila (DF40); sem ela, o retorno ao inscrito depende de contato da secretaria'
@@ -192,7 +194,7 @@ rfs:
   lider: Nicolas
   depende: [RF21]
   issue: 96
-  estado: Código inspecionado
+  estado: Aceita
   origem: [DF01, DF18, DF24, DF48, DF49]
   entrega: 'parcial no Ciclo 3: o link de confirmação de presença já é gerado e enviado no agendamento, mas a página que o recebe só chega com o RF14, no Ciclo 4'
 
@@ -272,7 +274,7 @@ rfs:
   lider: Nicolas
   depende: [RF10, RF21]
   issue: 144
-  estado: Design inspecionado
+  estado: Aceita
   entrega: 'parcial no Ciclo 4: o registro do cancelamento já está integrado, mas a contagem da ausência nas faltas do estagiário só se completa com o RF39, no Ciclo 5, e o RF40, no Ciclo 6'
   origem: [DF10]
 
@@ -288,7 +290,7 @@ rfs:
   lider: Nicolas
   depende: [RF16]
   issue: 223
-  estado: Código concluído
+  estado: Aceita
   origem: [DF24, DF48]
 
 - id: RF18
@@ -489,7 +491,7 @@ rfs:
   lider: Luís Henrique
   depende: [RF28]
   issue: 224
-  estado: Promovida para a versão integrada
+  estado: Aceita
   origem: [DF11, DF66]
 
 - id: RF30
@@ -504,7 +506,7 @@ rfs:
   lider: Luís Henrique
   depende: [RF28]
   issue: 271
-  estado: Planejada
+  estado: Em design
   origem: [DF68]
 
 - id: RF67
@@ -519,7 +521,7 @@ rfs:
   lider: Luís Henrique
   depende: [RF28]
   issue: 272
-  estado: Planejada
+  estado: Em design
 
 - id: RF68
   nome: Encerrar caso por alta
@@ -533,7 +535,7 @@ rfs:
   lider: Luís Henrique
   depende: [RF28]
   issue: 273
-  estado: Planejada
+  estado: Em design
   origem: [DF34, DF35]
 
 - id: RF31
@@ -548,7 +550,7 @@ rfs:
   lider: Maria Clara
   depende: [RF28, RF29, RF30]
   issue: 274
-  estado: Planejada
+  estado: Em design
   origem: [DF32]
 
 - id: RF32
@@ -563,7 +565,7 @@ rfs:
   lider: Jônatas
   depende: [RF27, RF28, RF29, RF30]
   issue: 275
-  estado: Planejada
+  estado: Design inspecionado
   origem: [DF32]
 
 - id: RF33
@@ -579,7 +581,7 @@ rfs:
   lider: Luís Henrique
   depende: [RF28, RF32]
   issue: 131
-  estado: Planejada
+  estado: Em design
   origem: [DF04, DF12, DF23, DF36, DF42, DF54, DF71]
 
 - id: RF34
@@ -668,7 +670,7 @@ rfs:
   lider: Nicolas
   depende: [RF16]
   issue: 225
-  estado: Promovida para a versão integrada
+  estado: Aceita
 
 - id: RF40
   nome: Contabilizar faltas do estagiário no semestre
@@ -726,7 +728,7 @@ rfs:
   ordem: 37
   lider: Joaquim
   issue: 43
-  estado: Promovida para a versão integrada
+  estado: Aceita
   origem: [DF05, DF15]
 
 - id: RF42
@@ -740,7 +742,7 @@ rfs:
   ordem: 50
   lider: Joaquim
   issue: 44
-  estado: Planejada
+  estado: Em design
 
 - id: RF43
   nome: Bloquear agendamento por contribuição social pendente
@@ -754,7 +756,7 @@ rfs:
   lider: Joaquim
   depende: [RF41, RF42]
   issue: 279
-  estado: Planejada
+  estado: Código concluído
   origem: [DF15, DF33]
 
 - id: RF44
@@ -767,7 +769,7 @@ rfs:
   ciclo: 5
   ordem: 38
   lider: Maria Clara
-  depende: [RF52]
+  depende: [RF52, RF28]
   issue: 226
   estado: Código inspecionado
   entrega: 'parcial no Ciclo 5: a lista é só de consulta; a escolha da sessão para a declaração chega com o RF45, no Ciclo 6'
@@ -782,10 +784,10 @@ rfs:
   ciclo: 6
   ordem: 52
   lider: Maria Clara
-  depende: [RF52]
+  depende: [RF52, RF44]
   issue: 280
-  estado: Planejada
-  origem: [DF70, DF71, DF72]
+  estado: Em design
+  origem: [DF70, DF71, DF72, DF78]
 
 - id: RF46
   nome: Reemitir declaração de comparecimento
@@ -845,7 +847,7 @@ rfs:
   ordem: 7
   lider: Joaquim
   issue: 45
-  estado: Código inspecionado
+  estado: Aceita
   origem: [DF25]
 
 - id: RF51
@@ -861,7 +863,7 @@ rfs:
   depende: [RF50]
   nota_backlog: antecipada e integrada no Ciclo 3
   issue: 46
-  estado: Código inspecionado
+  estado: Aceita
 
 - id: RF52
   nome: Verificar identidade do paciente ou responsável
@@ -875,7 +877,7 @@ rfs:
   lider: Joaquim
   depende: [RF1]
   issue: 47
-  estado: Código inspecionado
+  estado: Aceita
   origem: [DF24, DF40, DF48]
 
 - id: RF53
@@ -889,7 +891,7 @@ rfs:
   ordem: 8
   lider: Gabriel
   issue: 48
-  estado: Código inspecionado
+  estado: Aceita
   origem: [DF30, DF71]
 
 - id: RF54
@@ -903,7 +905,7 @@ rfs:
   ordem: 9
   lider: Gabriel
   issue: 49
-  estado: Código inspecionado
+  estado: Aceita
 
 - id: RF55
   nome: Restringir acesso ao prontuário do paciente
@@ -917,7 +919,7 @@ rfs:
   lider: Gabriel
   depende: [RF21, RF66]
   issue: 50
-  estado: Design inspecionado
+  estado: Aceita
   origem: [DF32]
 
 - id: RF56
@@ -931,8 +933,8 @@ rfs:
   ordem: 40
   lider: Jônatas
   issue: 51
-  estado: Promovida para a versão integrada
-  origem: [DF29]
+  estado: Aceita
+  origem: [DF29, DF77]
 
 - id: RF57
   nome: Registrar consentimento para tratamento de dados
@@ -944,10 +946,9 @@ rfs:
   ciclo: 4
   ordem: 33
   lider: Jônatas
-  depende: [RF1]
   issue: 52
   estado: Código concluído
-  origem: [DF44, DF47, DF63]
+  origem: [DF44, DF47, DF63, DF74]
 
 - id: RF65
   nome: Registrar revogação do consentimento
@@ -962,6 +963,7 @@ rfs:
   depende: [RF57, RF52]
   issue: 281
   estado: Planejada
+  origem: [DF74]
 
 - id: RF58
   nome: Listar casos elegíveis para continuidade entre semestres
@@ -1818,6 +1820,36 @@ decisoes:
   data: 25/11/2026
   fonte: respostas da FBr por WhatsApp
   decisao: A secretaria registra no sistema que recebeu a autorização assinada para o acompanhamento de criança ou adolescente, com a data, e a declaração de comparecimento para o responsável legal só é emitida depois desse registro. Respondido por Robson Araújo.
+
+- id: DF73
+  data: 27/11/2026
+  fonte: reunião de validação final com a FBr
+  decisao: A FBr deu o aceite ao sistema entregue (o MVP), pelo serviço da Clínica Escola e pela coordenação do curso (Robson Araújo) e pela instituição (Thiago Viana). A ressalva é a entrega, até 01/12/2026, dos ajustes pedidos na reunião que a equipe confirmou como possíveis até essa data. As funcionalidades novas do Ciclo 6 foram consideradas "tudo ótimo", dentro do documento da clínica e das exigências do conselho.
+
+- id: DF74
+  data: 27/11/2026
+  fonte: reunião de validação final com a FBr
+  decisao: A base legal do tratamento dos dados é o consentimento do paciente e a tutela da saúde, as duas respeitadas em todo o processo. Respondido por Robson Araújo. A aprovação do texto do termo continua com o Jurídico da FBr, pedida até 30/11/2026.
+
+- id: DF75
+  data: 27/11/2026
+  fonte: reunião de validação final com a FBr
+  decisao: Na inscrição, o bairro e a cidade precisam estar exatamente como no CEP, porque a diferença causa problema na emissão da nota fiscal. Thiago Viana pediu que o endereço seja preenchido a partir do CEP, por um serviço de consulta gratuito, e que o CEP venha antes do endereço. A equipe ficou de entregar até 01/12/2026, se for viável, ou depois.
+
+- id: DF76
+  data: 27/11/2026
+  fonte: reunião de validação final com a FBr
+  decisao: O comprovante da inscrição (número, data e hora do registro) também é enviado ao e-mail informado na inscrição, como mais uma prova de que a pessoa se inscreveu. Pedido por Thiago Viana; a equipe ficou de entregar até 01/12/2026, se for viável, ou depois.
+
+- id: DF77
+  data: 27/11/2026
+  fonte: reunião de validação final com a FBr
+  decisao: O registro de acessos mostra o que foi acessado ou feito em cada linha, por exemplo o prontuário, as sessões ou o registro do pagamento, e não só uma ação genérica como "visualização". Pedido por Thiago Viana; a equipe confirmou a entrega até 01/12/2026.
+
+- id: DF78
+  data: 27/11/2026
+  fonte: reunião de validação final com a FBr
+  decisao: A declaração de comparecimento pode ser entregue em formato digital, com os dados do supervisor e um QR Code que leve a uma página do sistema que confirma que o documento foi gerado pela FBr, para economizar papel; o conselho permite. O relatório final continua impresso e assinado presencialmente, porque vai para perícia e judiciário. Pedido por Thiago Viana, que vai confirmar com Robson Araújo; fica para depois da entrega de 01/12/2026.
 
 conjuntos:
 - area: Inscrição no atendimento

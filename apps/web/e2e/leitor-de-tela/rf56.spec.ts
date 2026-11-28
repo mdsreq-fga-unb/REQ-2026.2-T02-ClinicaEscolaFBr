@@ -17,6 +17,7 @@ test("VoiceOver lê filtros, contagem e tentativa negada (RF56, RNF56)", async (
         perfil: "secretaria",
         paciente: "Paciente Fictício",
         operacao: "acesso_negado",
+        descricao: "Abertura do prontuário (tentativa negada)",
       },
     ],
     total: 1,
