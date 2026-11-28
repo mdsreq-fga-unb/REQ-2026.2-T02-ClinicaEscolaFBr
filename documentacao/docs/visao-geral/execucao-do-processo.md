@@ -4,7 +4,7 @@ Esta página mostra como o processo definido na [Estratégia de Engenharia de So
 
 ## Modelo abrangente do domínio { #1-modelo-abrangente-do-dominio }
 
-O FDD começa pelo modelo abrangente do domínio. O [projeto das features](../construcao/projeto-features.md), com as dos Ciclos 3, 4 e 5, detalha as classes de cada característica de produto; o diagrama abaixo integra essas partes num modelo só, com as relações entre inscrição, caso, ciclo de atendimento, sessão, prontuário e responsáveis.
+O FDD começa pelo modelo abrangente do domínio. O [projeto das features](../construcao/projeto-features.md), com as dos Ciclos 3 a 6, detalha as classes de cada característica de produto; o diagrama abaixo integra essas partes num modelo só, com as relações entre inscrição, caso, ciclo de atendimento, sessão, prontuário e responsáveis.
 
 ```mermaid
 classDiagram
@@ -62,6 +62,60 @@ classDiagram
     class VagaLiberada {
       +ocupadaEm
       +encerradaEm
+      +origem única
+    }
+    class TransferenciaCaso {
+      +tipo
+      +motivo cifrado
+    }
+    class CorrecaoEvolucao {
+      +int versao
+      +motivo cifrado
+    }
+    class ComplementoEvolucao {
+      +texto cifrado
+    }
+    class ValidacaoEvolucao {
+      +versão validada
+      +validadaEm
+    }
+    class EncerramentoAlta {
+      +motivo cifrado
+      +confirmadaPor
+    }
+    class RelatorioFinal {
+      +situacao
+    }
+    class VersaoRelatorio {
+      +int versao
+    }
+    class PagamentoContribuicao {
+      +int versao
+      +dataPagamento
+    }
+    class PerdaVaga {
+      +confirmadaEm
+    }
+    class EmissaoDeclaracao {
+      +emitidaEm
+    }
+    class VersaoTermo {
+      +versao
+    }
+    class RevogacaoConsentimento {
+      +solicitante
+      +formaVerificacao
+    }
+    class ReclassificacaoFalta {
+      +motivo cifrado
+    }
+    class SinalizacaoReprovacao {
+      +semestre
+      +int contagem
+    }
+    class DecisaoReprovacao {
+      +decisao
+      +justificativa cifrada
     }
     Inscricao "1" -- "0..*" DecisaoPrioridade : triagem (RF6)
     Inscricao "1" -- "0..1" Caso : torna-se
@@ -80,9 +134,26 @@ classDiagram
     DesligamentoPorFaltas "1" -- "2..*" FaltaPaciente : fundamentado por
     DesligamentoPorFaltas "1" -- "1" VagaLiberada : libera
     VagaLiberada "0..1" -- "0..1" VinculoEstagiario : ocupada por
+    Caso "1" -- "0..*" TransferenciaCaso : transfere (RF25)
+    Evolucao "1" -- "0..*" CorrecaoEvolucao : versões (RF29)
+    Evolucao "1" -- "0..*" ComplementoEvolucao : complementa (RF30)
+    Evolucao "1" -- "0..*" ValidacaoEvolucao : valida (RF67)
+    Caso "1" -- "0..*" EncerramentoAlta : encerra (RF68)
+    EncerramentoAlta "1" -- "1" VagaLiberada : libera
+    Prontuario "1" -- "0..1" RelatorioFinal : ao fim do ciclo (RF33)
+    RelatorioFinal "1" -- "1..*" VersaoRelatorio : versões
+    Caso "1" -- "0..*" PagamentoContribuicao : paga (RF41)
+    Caso "1" -- "0..*" PerdaVaga : perde (RF43)
+    PerdaVaga "1" -- "1" VagaLiberada : libera
+    SessaoAtendimento "1" -- "0..*" EmissaoDeclaracao : declara (RF45)
+    Inscricao "0..*" -- "1" VersaoTermo : aceite (RF57)
+    Inscricao "1" -- "0..1" RevogacaoConsentimento : revoga (RF65)
+    CancelamentoSessao "1" -- "0..1" ReclassificacaoFalta : reclassifica (RF40)
+    Usuario "1" -- "0..*" SinalizacaoReprovacao : estagiário (RF63)
+    SinalizacaoReprovacao "1" -- "0..*" DecisaoReprovacao : decide (RF64)
 ```
 
-**Como ler o modelo.** O ciclo de atendimento não é uma classe: é o número `cicloAtendimento`, que o caso guarda e que o prontuário, as sessões, as faltas e o desligamento repetem para saber a que ciclo pertencem. Os responsáveis nunca são apagados: a atribuição do supervisor e o vínculo do estagiário têm o campo `vigente`, e a troca de responsável encerra o registro anterior e cria outro, o que preserva o histórico de responsáveis (RF27). A auditoria (RNF10) e os acessos ao prontuário (RNF52) registram as operações de todas as classes e não aparecem no diagrama.
+**Como ler o modelo.** O ciclo de atendimento não é uma classe: é o número `cicloAtendimento`, que o caso guarda e que o prontuário, as sessões, as faltas e o desligamento repetem para saber a que ciclo pertencem. Os responsáveis nunca são apagados: a atribuição do supervisor e o vínculo do estagiário têm o campo `vigente`, e a troca de responsável encerra o registro anterior e cria outro, o que preserva o histórico de responsáveis (RF27). Cada vaga liberada tem uma origem só: o desligamento por faltas, a alta ou a perda da vaga pela contribuição. Correções, complementos, validações, versões do relatório e decisões são só inserção, sem apagar o registro anterior (RNF27). A auditoria (RNF10) e os acessos ao prontuário (RNF52) registram as operações de todas as classes e não aparecem no diagrama. As classes dos Ciclos 4 a 6 entraram no diagrama em 28/11/2026; até então ele cobria só as do Ciclo 3 e a assiduidade do Ciclo 4.
 
 **Caso e prontuário.** O caso existe antes do prontuário: ele nasce da inscrição e passa pelas situações "aguardando distribuição" e "aguardando vínculo" sem prontuário, porque o RF66 só cria o prontuário quando o caso é vinculado a um estagiário (RF21). Por isso a multiplicidade é `0..*`: nenhum prontuário enquanto o caso não tem estagiário vinculado, e no máximo um por ciclo de atendimento depois disso. A relação com o vínculo mostra essa origem: cada prontuário nasce de um vínculo, e um vínculo seguinte no mesmo ciclo, como o da transferência (RF25), reaproveita o prontuário que já existe, por isso o vínculo tem `0..1` prontuário de origem. O vínculo e a criação do prontuário são uma operação única (RF21): não existe caso com estagiário responsável vigente e sem prontuário no ciclo.
 
@@ -108,10 +179,13 @@ A ausência do estagiário registrada por engano é reclassificada pela coordena
 | 24/10/2026 | Avaliação da Unidade 2 pelo professor | Gabriel | O RF66 passa a criar só o prontuário, e a anamnese e o contrato vão para o RF69 | Versão 3.3 do [histórico](../index.md#historico-de-revisao) |
 | 05/11/2026 | Modelo das 18 features do Ciclo 4 | Gabriel, revisado por Nicolas e Joaquim | Classes da confirmação, do cancelamento, da assiduidade (falta, desligamento e vaga) e da verificação de identidade; situações novas do caso e da sessão | [PR #203](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/pull/203) e [Classes do Ciclo 4](../construcao/projeto-features.md#modelo-detalhado-do-ciclo-4), no Projeto das features |
 | 28/10 a 06/11/2026 | Inspeções de design do Ciclo 4 (DoD 1) | Joaquim (RF52 em 28/10; RF7, RF8 e RF57 em 06/11), Nicolas (RF34 a RF38) e Jônatas (RF11 e RF14 a RF16), em 06/11 | Permissões do banco para os registros da assiduidade (RNF32); a comparação do status da sessão numa função imutável; a página do termo de consentimento | Comentário "Inspeção de design (DoD 1)" nas issues de cada feature, como a [#150](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/issues/150) e a [#140](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/issues/140) |
-| 28/11/2026 | Avaliação da Unidade 3 pelo professor ([issue #332](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/issues/332)) | Nicolas | A relação entre o caso e o prontuário passa de `1..*` para `0..*`, com a origem do prontuário no vínculo (RF66), porque o caso existe antes do vínculo; a tabela das ausências e dos cancelamentos mostra como o modelo separa a ausência do paciente, a do estagiário e o cancelamento administrativo (RF15, RF16 e RF34) | Versão 4.43 do [histórico](../index.md#historico-de-revisao) |
 | 07/11/2026 | Construção do RF36 ao RF38 | Gabriel, com revisão de Nicolas na PR | O cancelamento da sessão entra com o desligamento, o primeiro a cancelar sessões, e é reaproveitado pelo RF15 | [PR #216](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/pull/216) |
+| 16/11/2026 | Modelo e protótipos das 14 features do Ciclo 6 | Gabriel, revisado por Joaquim na PR | Classes da evolução (complemento e validação), da alta, do relatório final, da contribuição, da declaração, da revogação e da reprovação do estagiário | [PR #291](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/pull/291) e [Projeto das features](../construcao/projeto-features.md) |
+| 23 a 26/11/2026 | Inspeções de design do Ciclo 6 (DoD 1) | O Líder e o revisor de cada feature, sem o Gabriel, que fez o projeto | Os apontamentos de cada feature, registrados na issue; seis têm o resultado registrado (D1.8); as do RF30, RF67, RF68, RF31 e RF33 esperam o `/de-acordo` do revisor, e as do RF42, RF45 e RF49 ainda não foram registradas | Comentário "Inspeção de design (DoD 1)" nas issues do Ciclo 6 |
+| 28/11/2026 | Avaliação da Unidade 3 pelo professor ([issue #332](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/issues/332)) | Nicolas | A relação entre o caso e o prontuário passa de `1..*` para `0..*`, com a origem do prontuário no vínculo (RF66), porque o caso existe antes do vínculo; a tabela das ausências e dos cancelamentos mostra como o modelo separa a ausência do paciente, a do estagiário e o cancelamento administrativo (RF15, RF16 e RF34) | Versão 4.43 do [histórico](../index.md#historico-de-revisao) |
+| 28/11/2026 | Diagrama integrado com as classes dos Ciclos 4 a 6 | Gabriel | Transferência, correção, complemento e validação da evolução, alta, relatório final, contribuição, perda da vaga, declaração, termo, revogação e reprovação do estagiário | Este diagrama, a partir das classes do Projeto das features |
 
-As inspeções de design do RF22, RF23, RF25, RF27, RF28 e RF69 ainda não foram registradas; elas entram nesta tabela quando forem feitas.
+As inspeções de design do RF22, RF23, RF25, RF27, RF28 e RF69, que faltavam em 10/11, foram registradas depois, nas issues de cada feature, antes do aceite.
 
 ## Revisão da lista de features { #2-revisao-da-lista-de-features }
 
@@ -134,9 +208,64 @@ Cada feature tem Líder, revisor e ciclo em [Features e backlog](backlog.md). A 
 
 O estado de cada feature segue os marcos do FDD e do [DoD](../requisitos/dor-dod.md): Planejada, Em design, Design inspecionado, Código concluído, Código inspecionado, Promovida para a versão integrada, Demonstrada e Aceita. Ele é atualizado na issue da feature pelo acompanhamento automático (que lê o checklist do DoR e do DoD, as pull requests e os comandos `/de-acordo`, `/demonstrada` e `/aceite`), refletido no [Project do repositório](https://github.com/orgs/mdsreq-fga-unb/projects/124) e copiado para o catálogo, de onde sai a [situação por ciclo](backlog.md#situacao-por-ciclo). Cada passagem de marco fica registrada na issue, com a data e o link da evidência: a inspeção, a aprovação da pull request, o merge, a ata da demonstração e o aceite.
 
+### Integrada não é promovida { #integrada-nao-e-promovida }
+
+O merge na `development` é só um dos itens do marco "Promovida para a versão integrada" (D4.3). A feature só chega a esse marco com o D4 inteiro: aprovada nas inspeções de design e de código (D4.1), com os testes da versão integrada passando (D4.2), o resultado registrado (D4.4) e os RNFs verificados (D4.5). Por isso, os fechamentos do [Cronograma geral](cronograma.md#fechamento-dos-ciclos) escrevem "código integrado" separado do marco alcançado. No fechamento do Ciclo 3, por exemplo, as 13 features estavam integradas, mas nenhuma chegou a "Promovida": o marco de cada uma ficou entre "Em design" e "Código inspecionado", com a revisão e os RNFs como pendências.
+
+Em 27/11/2026, as 12 features abertas do MVP têm o código na `development` e ainda não são "Promovidas": o RF48 e o RF44 estão em "Código inspecionado", porque falta um RNF verificado (D4.5); o RF30, o RF67, o RF68, o RF31, o RF33, o RF42, o RF45 e o RF49 estão em "Em design", porque falta o resultado da inspeção de design (D1.8); e o RF57 e o RF65 estão em "Planejada", porque o termo de consentimento ainda não foi aprovado pela FBr (R4.4 do DoR).
+
+### Ocorrência: DoR registrado depois do código { #ocorrencia-dor-depois-do-codigo }
+
+O DoR deve ser aprovado antes da construção. Quando isso não acontece, a ocorrência fica registrada na issue e no cronograma, com o tratamento, e a feature não é dada como pronta antes do tempo.
+
+| Ciclo | O que aconteceu | Tratamento | A preparação foi antecipada? |
+| --- | --- | --- | --- |
+| 3 | No RF4, no RF6 e no RF66, o código ([#163](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/pull/163)) veio antes do registro do DoR e da inspeção de design (24 e 25/10) | O Líder confirmou o registro com o `/de-acordo` nas três issues, e o DoR ficou registrado como feito depois do código ([fechamento do Ciclo 3](cronograma.md#fechamento-dos-ciclos)) | — |
+| 4 | O DoR foi avaliado em 26/10 ([#157](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/pull/157)), antes do código, que entrou de 07 a 11/11 | O R8.1, a declaração do Líder, foi marcado entre 06 e 10/11 | Sim |
+| 5 | Pré-avaliação em 09/11; registros do DoR de 09 a 16/11, junto com o código, que entrou de 14 a 16/11 | Registrados como "Pronta com ressalvas", com a validação dos protótipos pela FBr (R7.3) em 16/11 | Em parte |
+| 6 | Pré-avaliação em 16/11, antes do código; registros do DoR de 23 a 26/11, depois do início do código, em 20/11 | Registrados como "Pronta com ressalvas"; a regra para o DoR aprovado depois do início do código está em [DoR e DoD](../requisitos/dor-dod.md) | Não: a ocorrência se repetiu |
+
+A lição está nos fechamentos: o DoR e a inspeção de design ficaram para o fim do ciclo quando a construção começou cedo. No Ciclo 4, o DoR antes do código funcionou porque foi avaliado no fechamento do ciclo anterior. No Ciclo 6, a pressa da entrega final repetiu a ocorrência.
+
+### Amostra: revisão por outra pessoa e impeditivos resolvidos { #amostra-revisao-e-impeditivos }
+
+Conferência feita em 27/11/2026 nas pull requests de código das features aceitas: quem é o autor, quem revisou e se os apontamentos impeditivos foram resolvidos antes do merge.
+
+| Features | PR | Autor | Revisão | Impeditivos |
+| --- | --- | --- | --- | --- |
+| RF10 | [#158](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/pull/158) | Nicolas | Maria Clara aprovou | Nenhum |
+| RF4, RF6, RF66 | [#163](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/pull/163) | Luís Henrique | Gabriel pediu mudanças e aprovou depois da correção | Resolvidos na PR |
+| RF7 | [#233](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/pull/233) | Jônatas | Joaquim aprovou | Nenhum |
+| RF14 | [#217](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/pull/217) | Nicolas | Jônatas comentou e aprovou | Nenhum |
+| RF34, RF35 | [#212](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/pull/212) | Gabriel | Nicolas pediu mudanças e aprovou | Resolvidos na PR |
+| RF15, RF16, RF36 a RF38 | [#216](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/pull/216) | Gabriel | Nicolas pediu mudanças e aprovou | Resolvidos na PR |
+| RF8, RF52 | [#202](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/pull/202) | Joaquim | Jônatas pediu mudanças duas vezes e aprovou | Resolvidos na PR |
+| RF27, RF28, RF69 | [#241](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/pull/241) | Luís Henrique | Gabriel pediu mudanças e aprovou | Resolvidos na PR |
+| RF29 | [#267](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/pull/267) | Luís Henrique | Gabriel pediu mudanças e aprovou | Resolvidos na PR |
+| RF39 | [#288](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/pull/288) | Nicolas | Jônatas pediu mudanças e aprovou | Resolvidos na PR |
+| RF41 | [#263](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/pull/263) | Joaquim | Jônatas pediu mudanças duas vezes e aprovou | Resolvidos na PR |
+| RF56 | [#269](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/pull/269) | Jônatas | Joaquim pediu mudanças e aprovou | Resolvidos na PR |
+| RF40, RF63, RF64 | [#319](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/pull/319) a [#321](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/pull/321) | Nicolas | Jônatas apontou impeditivos (o recorte de privacidade do supervisor e a nova decisão só com a contagem alterada); Gabriel conferiu as correções e aprovou | Resolvidos na PR, com testes de regressão |
+| RF43 | [#307](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/pull/307) | Joaquim | Jônatas apontou a migration e a origem única da vaga; Gabriel conferiu a correção e aprovou | Resolvido na PR |
+| RF32 | [#316](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/pull/316) | Jônatas | Gabriel aprovou | Nenhum |
+
+Em todas as PRs da amostra, quem revisou não foi o autor, e os pedidos de mudança foram atendidos antes do merge. Há uma exceção fora da amostra: o RF31 ([#325](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/pull/325)), do Gabriel, entrou numa branch empilhada sobre a do RF30, onde a aprovação não era exigida. A Maria Clara revisou o código e escreveu "Aprovo o código", mas não marcou a aprovação, porque o CI completo ainda não tinha rodado. O registro está na issue do RF31, e a revisão passou a valer para o D3.1 em 27/11.
+
+### Pendências da avaliação da Unidade 2 { #pendencias-da-avaliacao-da-unidade-2 }
+
+A [issue #100](https://github.com/mdsreq-fga-unb/REQ-2026.2-T02-ClinicaEscolaFBr/issues/100) pediu cinco evidências do processo. Cada uma tem um artefato publicado, mas nem todas estão encerradas:
+
+| Pedido | Evidência atual | O que ainda falta |
+| --- | --- | --- |
+| Visão integrada do domínio, com quem revisou | O [diagrama do modelo](#1-modelo-abrangente-do-dominio), agora com as classes dos Ciclos 4 a 6, e a tabela de revisões | O resultado da inspeção de design (D1.8) de oito features do Ciclo 6 |
+| Inspeção da lista de features | A [revisão da lista](#2-revisao-da-lista-de-features) | A lista não foi inspecionada de novo depois da validação final, cujas decisões (DF75 a DF78) mudam o RF1, o RF2, o RF56 e o RF45; isso entra na revisão do escopo no fechamento |
+| Capacidade demonstrada | A [carga por Líder de Feature e ciclo](cronograma.md#carga-por-lider-de-feature-e-ciclo) | No Ciclo 6, o Gabriel fez o projeto das 14 features e parte do código; a comparação entre a carga prevista e a realizada entra no fechamento do Ciclo 6 |
+| Acompanhamento pelos marcos | O estado de cada feature, copiado das issues para as páginas de cada unidade | As 12 features [ainda não promovidas](#integrada-nao-e-promovida) |
+| Planejado e realizado por ciclo | Os fechamentos dos Ciclos 3, 4 e 5 no [Cronograma geral](cronograma.md#fechamento-dos-ciclos) | O fechamento do Ciclo 6, na entrega final |
+
 ## Fechamento dos ciclos { #5-fechamento-dos-ciclos }
 
-No fim de cada ciclo, o [Cronograma geral](cronograma.md) compara o planejado com o realizado, feature a feature: o marco alcançado, o que passou para o ciclo seguinte e o motivo. Os fechamentos do Ciclo 3 e do Ciclo 4 estão registrados lá, e o do Ciclo 5 entra com a entrega da Unidade 3, em 17/11/2026.
+No fim de cada ciclo, o [Cronograma geral](cronograma.md) compara o planejado com o realizado, feature a feature: o marco alcançado, o que passou para o ciclo seguinte e o motivo. Os fechamentos dos Ciclos 3, 4 e 5 estão registrados lá; o do Ciclo 6 entra na entrega final, em 01/12/2026.
 
 ## Engenharia de requisitos na prática { #6-engenharia-de-requisitos-na-pratica }
 
