@@ -69,19 +69,38 @@ const SECAO = "#{2,3} ";
 
 // O registro do DoR só vale preenchido (seção 9.1.5). Issues antigas, sem a
 // seção, dependem só do checklist.
-function registroDoRPreenchido(corpo) {
+// Texto da seção "Registro da avaliação do DoR", até a próxima seção, ou null se a
+// issue não tiver a seção.
+function trechoDoRegistroDoR(corpo) {
   const texto = corpo ?? "";
   const m = new RegExp(`^${SECAO}Registro da avaliação do DoR`, "m").exec(
     texto,
   );
-  if (!m) return true;
+  if (!m) return null;
   const resto = texto.slice(m.index + m[0].length);
   const proxima = new RegExp(`^${SECAO}`, "m").exec(resto);
-  const trecho = proxima ? resto.slice(0, proxima.index) : resto;
+  return proxima ? resto.slice(0, proxima.index) : resto;
+}
+
+function registroDoRPreenchido(corpo) {
+  const trecho = trechoDoRegistroDoR(corpo);
+  if (trecho === null) return true;
   return (
     !trecho.includes("Avaliador: <nome>") &&
     !trecho.includes("Pronta | Pronta com ressalvas | Não pronta")
   );
+}
+
+// Resultado da avaliação mais recente do registro do DoR: o último "Resultado:"
+// da seção, com ou sem negrito. Uma avaliação antiga mantida acima da nova não
+// conta; "Resultado anterior:" também não.
+function resultadoDoRegistroDoR(corpo) {
+  const trecho = trechoDoRegistroDoR(corpo);
+  if (trecho === null) return null;
+  const linhas = [
+    ...trecho.matchAll(/^\s*\**\s*Resultado\s*:\s*\**\s*(.+?)\s*$/gim),
+  ];
+  return linhas.length ? linhas[linhas.length - 1][1] : null;
 }
 
 // Estado mais avançado que o checklist comprova. Cada marco exige o anterior.
@@ -105,6 +124,22 @@ function estadoDoChecklist(corpo) {
 // O DoR está aprovado: sem ele, a feature não é avaliada pelo DoD (seção 9.2).
 const dorAprovado = (corpo) =>
   ESTADOS.indexOf(estadoDoChecklist(corpo)) >= ESTADOS.indexOf("Em design");
+
+// Issues de feature citadas por uma PR de código cujo DoR ainda não foi aprovado
+// (checklist [B] completo e registro preenchido). A construção só começa depois
+// da decisão de prontidão (seção 9.1.5): a PR de feature que cita uma delas falha.
+// O registro cuja avaliação mais recente deu "Não pronta" também conta como DoR
+// não aprovado, mesmo com o checklist marcado depois: falta registrar a nova
+// avaliação.
+const featuresSemDoR = (issues) =>
+  issues
+    .filter(
+      (issue) =>
+        ehFeature(issue) &&
+        (!dorAprovado(issue.body) ||
+          /^não pronta\b/i.test(resultadoDoRegistroDoR(issue.body) ?? "")),
+    )
+    .map((issue) => issue.number);
 
 const SECAO_ESTADO = new RegExp(
   `(^${SECAO}Estado da feature \\(FDD\\)\\s*\\n+)([^\\n]+)`,
@@ -223,6 +258,7 @@ module.exports = {
   ehLider,
   ITENS_DO_LIDER,
   dorAprovado,
+  featuresSemDoR,
   mexeNoCodigo,
   ehInspecao,
   ESTADOS,
@@ -240,4 +276,5 @@ module.exports = {
   cicloDoMilestone,
   cpDoTitulo,
   registroDoRPreenchido,
+  resultadoDoRegistroDoR,
 };

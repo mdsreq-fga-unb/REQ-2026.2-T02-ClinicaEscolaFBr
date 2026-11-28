@@ -195,3 +195,69 @@ test("só o comentário com o cabeçalho da inspeção, fora do robô, é inspe�
   assert.ok(!L.ehInspecao("Fiz a inspeção de design ontem."));
   assert.ok(!L.ehInspecao(`## Inspeção de design (DoD 1)\n\n${L.MARCA_ROBO}`));
 });
+
+test("featuresSemDoR aponta só as issues de feature sem o DoR aprovado", () => {
+  const feature = (number, body) => ({ number, title: "CP1 — Feature", body });
+  assert.deepEqual(
+    L.featuresSemDoR([
+      feature(88, ISSUE),
+      feature(89, dorPronto(ISSUE)),
+      { number: 12, title: "Corrigir build", body: ISSUE },
+      { number: 13, title: "CP1 — PR", body: ISSUE, pull_request: {} },
+    ]),
+    [88],
+  );
+});
+
+test("featuresSemDoR recusa o checklist completo sem o registro preenchido", () => {
+  const marcado = L.marcarItens(
+    ISSUE,
+    codigos(ISSUE, (i) => i.codigo.startsWith("R")),
+  );
+  assert.deepEqual(
+    L.featuresSemDoR([{ number: 88, title: "CP1 — Feature", body: marcado }]),
+    [88],
+  );
+});
+
+test("featuresSemDoR recusa o registro com o resultado Não pronta", () => {
+  const naoPronta = dorPronto(ISSUE).replace(
+    "Resultado: Pronta",
+    "Resultado: Não pronta",
+  );
+  assert.deepEqual(
+    L.featuresSemDoR([
+      { number: 141, title: "CP4 — Feature", body: naoPronta },
+    ]),
+    [141],
+  );
+});
+
+test("featuresSemDoR usa só o último resultado da seção do registro do DoR", () => {
+  const pronta = dorPronto(ISSUE);
+  const comHistorico = pronta.replace(
+    "Resultado: Pronta",
+    "Resultado: Não pronta\nResultado: Pronta",
+  );
+  const naoProntaEmNegrito = pronta.replace(
+    "Resultado: Pronta",
+    "**Resultado:** não pronta",
+  );
+  const foraDoRegistro = `${pronta}\n\n### Notas\n\nResultado: Não pronta\n`;
+  const anterior = pronta.replace(
+    "Resultado: Pronta",
+    "Resultado: Pronta\nResultado anterior: Não pronta",
+  );
+  const feature = (number, body) => ({ number, title: "CP1 — Feature", body });
+  assert.deepEqual(
+    L.featuresSemDoR([
+      feature(1, comHistorico),
+      feature(2, naoProntaEmNegrito),
+      feature(3, foraDoRegistro),
+      feature(4, anterior),
+    ]),
+    [2],
+  );
+  assert.equal(L.resultadoDoRegistroDoR(comHistorico), "Pronta");
+  assert.equal(L.resultadoDoRegistroDoR("sem a seção"), null);
+});

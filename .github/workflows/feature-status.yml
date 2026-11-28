@@ -139,6 +139,36 @@ jobs:
               core.setFailed('A PR de feature precisa declarar a issue da feature na descrição, com "Refs", "Closes", "Fixes" ou "Resolves", por exemplo "Refs #48".');
             }
 
+  dor-da-feature:
+    name: DoR aprovado antes do código
+    # A construção só começa com o DoR aprovado (seção 9.1.5 do DoR): a PR de
+    # feature que cita uma issue de feature ainda sem o checklist [B] completo e o
+    # registro preenchido falha. As issues que não são de feature não contam.
+    if: github.event_name == 'pull_request' && github.event.action != 'closed' && (startsWith(github.event.pull_request.title, 'feat:') || startsWith(github.event.pull_request.title, 'feat(') || contains(github.event.pull_request.title, '| feat:') || contains(github.event.pull_request.title, '| feat('))
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          sparse-checkout: .github/scripts
+      - uses: actions/github-script@v9
+        with:
+          script: |
+            const { issuesCitadas, featuresSemDoR } = require('./.github/scripts/feature-status/logica.cjs');
+            const pr = context.payload.pull_request;
+            const issues = [];
+            for (const numero of issuesCitadas(pr.title, pr.body)) {
+              try {
+                const { data } = await github.rest.issues.get({ ...context.repo, issue_number: numero });
+                issues.push(data);
+              } catch (erro) {
+                core.warning(`Não consegui ler a issue #${numero}: ${erro.message}`);
+              }
+            }
+            const semDoR = featuresSemDoR(issues);
+            if (semDoR.length > 0) {
+              core.setFailed(`A feature ainda não tem o DoR aprovado: ${semDoR.map((n) => `#${n}`).join(', ')}. Complete os critérios [B] e o registro da avaliação do DoR na issue antes do código (seção 9.1.5).`);
+            }
+
   testes:
     name: Testes das regras
     if: github.event_name == 'pull_request' && github.event.action != 'closed'
