@@ -47,6 +47,8 @@ export type AcessoAoProntuario = {
   perfil: Perfil;
   paciente: string | null;
   operacao: OperacaoAcesso;
+  // O que foi acessado ou feito, por exemplo "Abertura do prontuário" (DF77).
+  descricao: string;
 };
 export type ListaAcessosProntuario = {
   acessos: AcessoAoProntuario[];
