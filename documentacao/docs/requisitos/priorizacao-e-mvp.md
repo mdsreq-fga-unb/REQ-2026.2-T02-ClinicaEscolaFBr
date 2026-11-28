@@ -231,7 +231,7 @@ No Ciclo 3, o agendamento (RF10, integrado em 27/10) já gerava e enviava o link
 
 #### Na entrega final { #incrementos-na-entrega-final }
 
-O código das features do Ciclo 6 entrou na `development` em 25 e 26/11. Em 27/11, as duas jornadas foram percorridas de ponta a ponta no ambiente de validação, na reunião gravada de [validação final com a FBr](https://mdsreq-fga-unb.github.io/REQ-2026.2-T02-ClinicaEscolaFBr/historico/unidade-4/reunioes/#validacao-final-com-a-fbr-2711): a jornada 1, da inscrição de uma paciente nova até a primeira sessão agendada e confirmada; a jornada 2, com um caso já em atendimento, do prontuário à alta, ao relatório final, à declaração e à revogação do consentimento. A FBr deu o aceite do sistema (DF73). A apresentação da Unidade 3 não mostrou o sistema em funcionamento; o vídeo dessa reunião mostra a implementação, e a apresentação final, em 01/12, mostra o sistema em produção.
+O código das features do Ciclo 6 entrou na `development` em 25 e 26/11. Em 27/11, as duas jornadas foram percorridas de ponta a ponta no ambiente de validação, na reunião gravada de [validação final com a FBr](../historico/unidade-4/reunioes.md#validacao-final-com-a-fbr-2711): a jornada 1, da inscrição de uma paciente nova até a primeira sessão agendada e confirmada; a jornada 2, com um caso já em atendimento, do prontuário à alta, ao relatório final, à declaração e à revogação do consentimento. A FBr deu o aceite do sistema (DF73). A apresentação da Unidade 3 não mostrou o sistema em funcionamento; o vídeo dessa reunião mostra a implementação, e a apresentação final, em 01/12, mostra o sistema em produção.
 
 ### Validação do MVP com o Cliente { #1024-validacao-do-mvp-com-o-cliente }
 

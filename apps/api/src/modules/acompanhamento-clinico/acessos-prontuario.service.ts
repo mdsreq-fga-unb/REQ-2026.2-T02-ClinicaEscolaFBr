@@ -66,6 +66,43 @@ export function tipoDeAcesso(
   return tipo;
 }
 
+// O que foi acessado ou feito em cada operação, para a coordenação saber exatamente
+// o que aconteceu, e não só o tipo do acesso (DF77). Sem conteúdo clínico (RNF17).
+// Cada nome de OPERACOES_PRONTUARIO tem a sua descrição (o teste confere).
+export const DESCRICOES_PRONTUARIO: Record<string, string> = {
+  consultar_prontuario: 'Abertura do prontuário',
+  consultar_historico_evolucoes: 'Consulta do histórico de evoluções',
+  consultar_evolucao: 'Abertura da evolução de uma sessão',
+  registrar_dados_iniciais: 'Registro dos dados iniciais (anamnese e contrato)',
+  registrar_anamnese: 'Registro da anamnese',
+  registrar_contrato: 'Registro do contrato terapêutico',
+  registrar_evolucao: 'Registro da evolução de uma sessão',
+  marcar_sessao_realizada: 'Sessão marcada como realizada',
+  corrigir_evolucao: 'Correção da evolução de uma sessão',
+  complementar_evolucao: 'Complemento da evolução de uma sessão',
+  validar_evolucao: 'Validação da evolução de uma sessão',
+  consultar_relatorio_final: 'Consulta do relatório final',
+  abrir_impressao_relatorio_final: 'Abertura do relatório final para impressão',
+  imprimir_relatorio_final: 'Impressão do relatório final',
+  registrar_entrega_relatorio_final: 'Registro da entrega do relatório final',
+  consultar_elaboracao_relatorio_final:
+    'Abertura da elaboração do relatório final',
+  salvar_rascunho_relatorio_final: 'Rascunho do relatório final salvo',
+  enviar_relatorio_final: 'Envio do relatório final para revisão',
+  decidir_relatorio_final: 'Decisão do supervisor sobre o relatório final',
+};
+
+// Descrição mostrada na linha. Na tentativa negada, diz o que se tentou fazer.
+export function descricaoDoAcesso(operacao: string, permitido: boolean) {
+  const descricao = Object.hasOwn(DESCRICOES_PRONTUARIO, operacao)
+    ? DESCRICOES_PRONTUARIO[operacao]
+    : null;
+  if (permitido) return descricao ?? 'Acesso ao prontuário';
+  return descricao
+    ? `${descricao} (tentativa negada)`
+    : 'Tentativa de acesso ao prontuário (negada)';
+}
+
 // % e _ digitados são caracteres do nome, não curingas da pesquisa SQL.
 const trecho = (nome: string) => `%${nome.replace(/[\\%_]/g, '\\$&')}%`;
 
@@ -157,6 +194,7 @@ export class AcessosProntuarioService {
             ...linha,
             dataHora: dataHora.toISOString(),
             operacao: tipoDeAcesso(operacao, permitido),
+            descricao: descricaoDoAcesso(operacao, permitido),
           }),
         );
         await this.auditoria.registrar(
