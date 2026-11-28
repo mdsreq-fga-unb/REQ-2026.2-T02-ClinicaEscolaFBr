@@ -421,7 +421,7 @@ rfs:
   lider: Luís Henrique
   depende: [RF66, RF21]
   issue: 148
-  estado: Código concluído
+  estado: Design inspecionado
   origem: [DF32]
 
 - id: RF66
@@ -834,7 +834,7 @@ rfs:
   lider: Gabriel
   depende: [RF48]
   issue: 23
-  estado: Código concluído
+  estado: Em design
 
 - id: RF50
   nome: Autenticar usuário institucional
@@ -947,7 +947,7 @@ rfs:
   ordem: 33
   lider: Jônatas
   issue: 52
-  estado: Código concluído
+  estado: Planejada
   origem: [DF44, DF47, DF63, DF74]
 
 - id: RF65
