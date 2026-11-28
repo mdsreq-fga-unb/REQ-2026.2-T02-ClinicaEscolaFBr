@@ -1457,7 +1457,7 @@ _Rastreabilidade:_ Feature "Restringir acesso ao prontuário do paciente" → CP
 
 **RF56 — Consultar registro de acessos ao prontuário**{ #rf56 }
 
-O sistema deve permitir que um usuário com perfil de coordenação consulte o registro de acessos ao prontuário de um paciente, informando, para cada acesso, o usuário, o perfil, a data/hora e a operação realizada (visualização, criação ou alteração), com filtro por paciente, por usuário e por período. As tentativas negadas pelo RF55 também aparecem no registro, identificadas como "acesso negado" ([DF29](decisoes-fbr.md#df29)). A consulta mostra quem acessou, mas não o conteúdo clínico acessado.
+O sistema deve permitir que um usuário com perfil de coordenação consulte o registro de acessos ao prontuário de um paciente, informando, para cada acesso, o usuário, o perfil, a data/hora e a operação realizada (visualização, criação ou alteração), com filtro por paciente, por usuário e por período. As tentativas negadas pelo RF55 também aparecem no registro, identificadas como "acesso negado" ([DF29](decisoes-fbr.md#df29)). A consulta mostra quem acessou, mas não o conteúdo clínico acessado. O registro é o dos acessos ao prontuário ([RNF52](nao-funcionais.md#rnf52)). As ações administrativas sobre o caso, como o registro do pagamento da contribuição social, ficam na auditoria geral ([RNF10](nao-funcionais.md#rnf10)), e o pagamento tem o próprio histórico, com quem registrou ou corrigiu e quando, que a coordenação consulta no [RF41](#rf41).
 
 _Critérios de aceitação:_
 
@@ -1466,6 +1466,7 @@ _Critérios de aceitação:_
 - Os filtros por paciente, por usuário, por período e por operação mostram somente as entradas que atendem a eles.
 - A consulta não mostra o conteúdo clínico acessado.
 - Tentativas negadas pelo RF55 aparecem no registro identificadas como "acesso negado".
+- Cada entrada mostra também o que foi acessado ou feito, por exemplo "Abertura do prontuário", "Correção da evolução de uma sessão" ou "Impressão do relatório final", sem o conteúdo clínico; na tentativa negada, mostra o que se tentou fazer (pedido da FBr na validação final de 27/11/2026).
 - Usuário sem perfil de coordenação não consulta o registro de acessos.
 
 _Rastreabilidade:_ Feature "Consultar registro de acessos ao prontuário" → CP12 — Segurança, sigilo e controle de acesso → OE7.{{ origem("RF56") }}

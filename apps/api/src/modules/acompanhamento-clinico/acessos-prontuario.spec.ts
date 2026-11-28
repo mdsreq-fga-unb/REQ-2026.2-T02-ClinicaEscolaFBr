@@ -24,6 +24,8 @@ import { criarBancoDeTeste } from '../../test-utils/banco-de-teste';
 import { AcessosProntuarioController } from './acessos-prontuario.controller';
 import {
   AcessosProntuarioService,
+  DESCRICOES_PRONTUARIO,
+  descricaoDoAcesso,
   OPERACOES_PRONTUARIO,
   tipoDeAcesso,
 } from './acessos-prontuario.service';
@@ -219,8 +221,23 @@ describe('Consultar registro de acessos (RF56)', () => {
         .set(como())
         .expect(200);
       expect(body.acessos[0].operacao).toBe(tipo);
+      expect(body.acessos[0].descricao).toBe(DESCRICOES_PRONTUARIO[operacao]);
     },
   );
+  it('cada operação classificada tem a descrição do que foi feito, e a tentativa negada diz o que se tentou (DF77, RF56)', () => {
+    expect(Object.keys(DESCRICOES_PRONTUARIO).sort()).toEqual(
+      Object.keys(OPERACOES_PRONTUARIO).sort(),
+    );
+    expect(descricaoDoAcesso('consultar_prontuario', true)).toBe(
+      'Abertura do prontuário',
+    );
+    expect(descricaoDoAcesso('consultar_prontuario', false)).toBe(
+      'Abertura do prontuário (tentativa negada)',
+    );
+    expect(descricaoDoAcesso('operacao_nova', false)).toBe(
+      'Tentativa de acesso ao prontuário (negada)',
+    );
+  });
   it('exige classificação para cada nome usado pela política, sem confundir com a auditoria geral', () => {
     const fontes: string[] = [];
     const visitar = (pasta: string) => {
@@ -249,7 +266,15 @@ describe('Consultar registro de acessos (RF56)', () => {
       .set(como())
       .expect(200);
     expect(Object.keys(body.acessos[0]).sort()).toEqual(
-      ['id', 'dataHora', 'usuario', 'perfil', 'paciente', 'operacao'].sort(),
+      [
+        'id',
+        'dataHora',
+        'usuario',
+        'perfil',
+        'paciente',
+        'operacao',
+        'descricao',
+      ].sort(),
     );
     expect(JSON.stringify(body)).not.toMatch(
       /SECRETA|52998224725|example.com|anamnese|queixa/,
