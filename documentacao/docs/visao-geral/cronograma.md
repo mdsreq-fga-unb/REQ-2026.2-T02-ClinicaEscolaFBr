@@ -10,7 +10,7 @@ O trabalho é organizado em **ciclos de 1 a 2 semanas**, e as unidades são marc
 
 **Status:** **Encerrado** (etapa concluída), **Em andamento** (etapa atual) ou **Aguardando** (etapa ainda não iniciada). O período, o status e o número de features dos Ciclos 3 a 7 vêm do [catálogo de requisitos](../requisitos/priorizacao-e-mvp.md#catalogo-de-requisitos), a mesma fonte de [Features e backlog](backlog.md), e são revistos no fechamento de cada ciclo, como previsto nos [marcos de atualização](organizacao-e-atualizacao.md#marcos-de-atualizacao).
 
-_Catálogo atualizado em {{ catalogo_atualizado_em }}._
+_Catálogo atualizado em {{ catalogo_atualizado_em }}{% if estados_conferidos_em %}; estados conferidos nas issues em {{ estados_conferidos_em }}{% endif %}._
 
 ## Entregas
 

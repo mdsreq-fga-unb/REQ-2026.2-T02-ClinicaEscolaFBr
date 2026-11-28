@@ -189,11 +189,25 @@ flowchart LR
 | Priorização, MVP, backlog, situação por ciclo, índice das decisões e contagens da página inicial | Automático, geradas do catálogo pelas macros do MkDocs a cada publicação | Build estrito no CI |
 | Estado da feature na issue e Status no Project | Automático, pelo [acompanhamento das features](../processo/boas-praticas-github.md#acompanhamento-automatico-das-features), a partir do checklist, das pull requests e dos comandos `/de-acordo`, `/demonstrada` e `/aceite` | A equipe, pelos comentários do robô na issue |
 | Verificação dos RNFs (D4.5) | Automático, pelos relatórios dos testes da `development`; os RNFs sem teste usam o comando `/rnf` | A equipe, pelo comentário do robô na issue |
-| Estado da feature e situação do ciclo no site | Automático na publicação: o site lê o "Estado da feature" de cada issue e a situação do milestone de cada ciclo (fechado é "Encerrado"; dos abertos, o de menor número está "Em andamento"). Do estado, vale o marco mais adiantado entre a issue e o catálogo, porque o catálogo muda na pull request que conclui o código. Se o GitHub não responder, vale o catálogo. Se o milestone de um ciclo fechar antes de o do ciclo seguinte ser aberto, nenhum ciclo aparece "Em andamento" até a abertura. Com a leitura do GitHub, o "Catálogo atualizado em" das páginas passa a ser a data da publicação, e não a da última mudança no texto dos requisitos, que fica no histórico de versões | Log do workflow de publicação, que lista o que mudou |
+| Estado da feature e situação do ciclo no site | Automático na publicação: o site lê o "Estado da feature" de cada issue e a situação do milestone de cada ciclo (fechado é "Encerrado"; dos abertos, o de menor número está "Em andamento"). Do estado, vale o marco mais adiantado entre a issue e o catálogo, porque o catálogo muda na pull request que conclui o código. Uma feature que volta de marco segue a [regressão de estado](#regressao-de-estado). Se o GitHub não responder, vale o catálogo. Se o milestone de um ciclo fechar antes de o do ciclo seguinte ser aberto, nenhum ciclo aparece "Em andamento" até a abertura. As páginas mostram duas datas: "Catálogo atualizado em", a da última mudança no `requisitos.yml`, e "estados conferidos nas issues em", a da publicação que leu o GitHub | Log do workflow de publicação, que lista o que mudou |
 | Estado da feature e situação do ciclo no catálogo | Manual, na pull request da feature e no fechamento do ciclo, para o build local e o docs-check | Revisor da pull request |
 | Publicação do site | Automática, a cada merge na `development` | Workflow de publicação |
 
 As issues de feature não copiam o texto dos requisitos: elas apontam para o RF e guardam só as decisões e as evidências da construção, para não criar versões paralelas.
+
+### Regressão de estado { #regressao-de-estado }
+
+Uma feature pode voltar a um marco anterior: um aceite revisto pela FBr, uma inspeção refeita ou uma correção que desfaz a integração. A publicação não faz o estado voltar sozinha, porque uma issue atrás do catálogo também pode ser só um checklist ainda não marcado. Por isso, a regressão é registrada assim:
+
+1. **Na issue:** quem constata a regressão desmarca os itens do DoD que deixaram de valer e comenta o motivo. O acompanhamento automático recalcula o "Estado da feature".
+2. **No catálogo:** uma pull request baixa o `estado` do RF e acrescenta o campo `regressao`, com o estado anterior (`de`), a data (`em`) e o `motivo`. O `verificar_catalogo.py` confere o formato, e a linha do histórico de versões registra a mudança.
+3. **No site:** enquanto a feature estiver antes do marco anterior, o estado aparece com a nota "voltou de … em …: motivo". A issue que não mudou depois da data da regressão não desfaz o registro; quando ela volta a avançar, a publicação aplica o novo estado e a nota sai do site. O registro continua no catálogo e no histórico.
+
+Na publicação, toda issue atrás do catálogo sem regressão registrada aparece como aviso no log do workflow, para a equipe decidir se é regressão ou checklist atrasado.
+
+### Registros históricos e informação vigente { #registros-historicos-e-informacao-vigente }
+
+As páginas do histórico (atas, cronogramas e entregas de cada unidade) registram o que valia naquela data e não são reescritas com o entendimento atual. Quando uma informação vigente muda, a página vigente traz a nova regra com a origem: a decisão da FBr que a substituiu (por exemplo, a DF60 substitui em parte a DF02, e o campo `substituida_em_parte_por` do catálogo mostra isso no registro de decisões), a issue de avaliação ou a pull request, e a versão no histórico de versões. A página histórica, quando cita a regra antiga, ganha no máximo uma nota que aponta para a vigente, sem trocar o texto do registro. As datas de cada decisão (campo `data`), de cada regressão (campo `em`) e da última mudança no catálogo (`atualizado_em`) ficam no próprio catálogo, separadas da data da publicação, que aparece no rodapé ("Última publicação").
 
 ## Como a estrutura evoluiu { #4-como-a-estrutura-evoluiu }
 

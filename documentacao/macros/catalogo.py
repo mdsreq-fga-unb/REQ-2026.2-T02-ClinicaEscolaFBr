@@ -284,7 +284,7 @@ class Catalogo:
             return f"removido em {r['removido']}; não entra nas contagens"
         if not r["mvp"]:
             return "versão posterior, reavaliada ao fim da Unidade 4"
-        texto = f"Ciclo {r['ciclo']} · {r['estado']}"
+        texto = f"Ciclo {r['ciclo']} · {r['estado']}{self._regressao(r)}"
         if r.get("issue"):
             texto += f" ({self.issue(r)})"
         if r.get("entrega"):
@@ -379,6 +379,15 @@ class Catalogo:
             linhas.append(f"| {r['ordem']} | {nome} | {r['cp']} | {dep} | {r['lider']} | {self.issue(r)} |")
         return "\n".join(linhas)
 
+    def _regressao(self, r):
+        """Nota da regressão registrada no catálogo, ao lado do estado."""
+        g = r.get("regressao")
+        # Depois que a feature volta a avançar até o marco de antes, a nota sai do site;
+        # o registro continua no catálogo e no histórico de versões.
+        if not g or ORDEM_ESTADOS.index(r.get("estado", "Planejada")) >= ORDEM_ESTADOS.index(g["de"]):
+            return ""
+        return f" (voltou de \"{g['de']}\" em {g['em']}: {g['motivo']})"
+
     def tabela_andamento(self, *numeros):
         """Features dos ciclos indicados com o estado do FDD (copiado da issue) e a
         issue, para mostrar o que foi realizado na unidade."""
@@ -389,7 +398,7 @@ class Catalogo:
         linhas = ["| Ciclo | Feature (RF) | Líder de Feature | Estado da feature | Issue |", "| --- | --- | --- | --- | --- |"]
         for r in itens:
             linhas.append(
-                f"| {r['ciclo']} | {self.link(r['id'])} — {r['nome']} | {r['lider']} | {r.get('estado', 'Planejada')} | {self.issue(r)} |"
+                f"| {r['ciclo']} | {self.link(r['id'])} — {r['nome']} | {r['lider']} | {r.get('estado', 'Planejada')}{self._regressao(r)} | {self.issue(r)} |"
             )
         contagem = {}
         for r in itens:
@@ -521,21 +530,48 @@ def situacao_dos_ciclos(milestones):
             for n, estado in ciclos.items()}
 
 
+def data_br(texto):
+    """dd/mm/aaaa -> date."""
+    dia, mes, ano = map(int, texto.split("/"))
+    return datetime.date(ano, mes, dia)
+
+
 def aplicar_github(dados, issues, milestones):
     """Aplica ao catálogo o estado das issues e a situação dos milestones. Devolve as
-    mudanças feitas, para o log da publicação."""
+    mudanças feitas, para o log da publicação.
+
+    O yml é atualizado na PR que conclui o código, antes de o checklist da issue chegar
+    lá; por isso vale o marco mais adiantado dos dois. Uma regressão (a feature volta a
+    um marco anterior, por exemplo um aceite revisto) não vem da issue: ela é registrada
+    no campo "regressao" do catálogo, numa PR, com o estado anterior, a data e o motivo.
+    Enquanto a issue não for atualizada depois dessa data, ela não desfaz a regressão.
+    Quando a issue fica atrás do catálogo sem regressão registrada, o log avisa."""
     mudancas = []
-    corpos = {i["number"]: i.get("body") for i in issues if "pull_request" not in i}
+    issues = {i["number"]: i for i in issues if "pull_request" not in i}
     for r in dados["rfs"]:
-        if not r.get("issue") or int(r["issue"]) not in corpos:
+        if not r.get("issue") or int(r["issue"]) not in issues:
             continue
-        estado = estado_da_issue(corpos[int(r["issue"])])
+        issue = issues[int(r["issue"])]
+        estado = estado_da_issue(issue.get("body"))
         atual = r.get("estado", "Planejada")
-        # O yml é atualizado na PR que conclui o código, antes de o checklist da issue
-        # chegar lá; por isso vale o marco mais adiantado dos dois.
-        if estado and ORDEM_ESTADOS.index(estado) > ORDEM_ESTADOS.index(atual):
+        if not estado or estado == atual:
+            continue
+        if ORDEM_ESTADOS.index(estado) > ORDEM_ESTADOS.index(atual):
+            regressao = r.get("regressao")
+            atualizada = (issue.get("updated_at") or "")[:10]
+            if regressao and atualizada <= data_br(regressao["em"]).isoformat():
+                mudancas.append(
+                    f"{r['id']}: mantida a regressão de {regressao['em']} ({atual}); a issue, em {estado}, "
+                    "não mudou depois dela"
+                )
+                continue
             mudancas.append(f"{r['id']}: {atual} -> {estado}")
             r["estado"] = estado
+        elif not r.get("regressao"):
+            mudancas.append(
+                f"aviso: {r['id']}: a issue está em {estado}, atrás do catálogo ({atual}); se a feature "
+                "voltou de marco, registre a regressão no catálogo"
+            )
     situacoes = situacao_dos_ciclos(milestones)
     for c in dados["ciclos"]:
         status = situacoes.get(c["numero"])
@@ -607,9 +643,14 @@ def define_env(env):
     env.variables["n"] = cat.n
     env.variables["versao_atual"] = versao_atual()
     env.variables["ciclos"] = cat.ciclos
-    # Sincronizado com o GitHub, o catálogo está atualizado no dia da publicação.
-    env.variables["catalogo_atualizado_em"] = (
-        datetime.datetime.now(BRASILIA).strftime("%d/%m/%Y") if sincronizado else cat.dados["atualizado_em"]
+    # Duas datas diferentes: a da última mudança no catálogo (requisitos.yml), feita por
+    # pull request, e a da publicação em que os estados foram conferidos nas issues.
+    env.variables["catalogo_atualizado_em"] = cat.dados["atualizado_em"]
+    env.variables["estados_conferidos_em"] = (
+        datetime.datetime.now(BRASILIA).strftime("%d/%m/%Y") if sincronizado else None
+    )
+    env.variables["datas_do_catalogo"] = f"catálogo atualizado em {cat.dados['atualizado_em']}" + (
+        f"; estados conferidos nas issues em {env.variables['estados_conferidos_em']}" if sincronizado else ""
     )
 
     # Números da página inicial (overrides/home.html), calculados do catálogo.

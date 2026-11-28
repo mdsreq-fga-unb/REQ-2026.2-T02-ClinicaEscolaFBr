@@ -21,7 +21,7 @@ Os itens de cada ciclo, com o Líder de Feature e as dependências, estão em [F
 
 ## O que foi realizado
 
-Estado de cada feature dos Ciclos 3, 4 e 5 no marco do FDD que ela alcançou, copiado das issues para o [catálogo de requisitos](../../requisitos/priorizacao-e-mvp.md#catalogo-de-requisitos) (atualizado em {{ catalogo_atualizado_em }}). A partir de "Promovida para a versão integrada", a feature está na `development`, publicada no ambiente de validação da FBr.
+Estado de cada feature dos Ciclos 3, 4 e 5 no marco do FDD que ela alcançou, copiado das issues para o [catálogo de requisitos](../../requisitos/priorizacao-e-mvp.md#catalogo-de-requisitos) (atualizado em {{ catalogo_atualizado_em }}{% if estados_conferidos_em %}; estados conferidos nas issues em {{ estados_conferidos_em }}{% endif %}). A partir de "Promovida para a versão integrada", a feature está na `development`, publicada no ambiente de validação da FBr.
 
 {{ tabela_andamento(3, 4, 5) }}
 

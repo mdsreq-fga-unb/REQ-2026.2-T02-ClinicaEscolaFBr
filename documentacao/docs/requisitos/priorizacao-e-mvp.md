@@ -29,7 +29,7 @@ As visões abaixo são geradas do catálogo a cada publicação do site, e não 
 
 Uma mudança de nome, valor, esforço, ciclo ou estado é feita uma vez, no catálogo, na mesma PR que muda o requisito. O estado da feature é copiado da issue para o catálogo na PR que o muda. O docs-check confere, a cada PR, se o catálogo e as páginas de requisitos funcionais e não funcionais têm os mesmos requisitos com os mesmos nomes e se as decisões citadas existem.
 
-_Catálogo atualizado em {{ catalogo_atualizado_em }}: {{ n.rfs }} RFs registrados ({{ n.rfs_vigentes }} vigentes), {{ n.rnfs }} RNFs registrados ({{ n.rnfs_vigentes }} vigentes) e {{ n.decisoes }} decisões com a FBr._
+_Catálogo atualizado em {{ catalogo_atualizado_em }}{% if estados_conferidos_em %}; estados conferidos nas issues em {{ estados_conferidos_em }}{% endif %}: {{ n.rfs }} RFs registrados ({{ n.rfs_vigentes }} vigentes), {{ n.rnfs }} RNFs registrados ({{ n.rnfs_vigentes }} vigentes) e {{ n.decisoes }} decisões com a FBr._
 
 ## Priorização e Recorte do MVP { #102-priorizacao-e-recorte-do-mvp }
 
