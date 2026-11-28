@@ -69,6 +69,11 @@ export async function reporPendentes(db: Db, chave: string) {
       .select({ id: usuarios.id })
       .from(usuarios)
       .where(eq(usuarios.email, CONTAS_DA_CARGA.coordenacao(1)));
+    if (!coordenacao) {
+      throw new Error(
+        `A conta ${CONTAS_DA_CARGA.coordenacao(1)} da massa não existe: rode o semear-carga sem REPOR_PENDENTES para criar a massa.`,
+      );
+    }
     const agora = Date.now();
     const novas = await tx
       .insert(inscricoes)

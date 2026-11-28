@@ -37,14 +37,18 @@ Depois do cenário de referência, o mesmo workflow roda o RNF47 sobre a mesma m
 1. **Prepare a homologação.** No servidor de homologação, de `apps/api`, depois do build:
 
     ```bash
-    AMBIENTE_DE_TESTE=sim DATABASE_URL=<banco da homologação> CHAVE_DADOS=<a da homologação> SENHA_CARGA=<senha> node dist/scripts/semear-carga.js
+    AMBIENTE_DE_TESTE=sim AMBIENTE_APLICACAO=validacao DATABASE_URL=<banco da homologação> CHAVE_DADOS=<a da homologação> SENHA_CARGA=<senha> node dist/scripts/semear-carga.js
     ```
 
     As gravações da carga (distribuir e vincular) consomem os 160 casos que aguardam distribuição, e o `semear-carga` não repete a massa que já existe. Para repetir a evidência na mesma homologação, reponha os pendentes antes, com `REPOR_PENDENTES=sim`: ele cria só inscrições novas, com a prioridade e o caso aguardando distribuição, até voltar aos 160, sem mexer no que já existe e sem precisar da `SENHA_CARGA`. Na VPS, dentro do contêiner da API, que já tem o `DATABASE_URL` e a `CHAVE_DADOS` do ambiente:
 
     ```bash
+    # Confira antes que o contêiner é o da validação: tem de responder "validacao".
+    docker exec api-<uuid> printenv AMBIENTE_APLICACAO
     docker exec -e AMBIENTE_DE_TESTE=sim -e REPOR_PENDENTES=sim -e NODE_ENV=test api-<uuid> node dist/scripts/semear-carga.js
     ```
+
+    O script recusa o contêiner da produção pelo `AMBIENTE_APLICACAO` (`producao` ou ausente), mesmo com o `NODE_ENV` sobrescrito. Fora do contêiner, contra um banco de teste, passe `AMBIENTE_APLICACAO=validacao` ou `desenvolvimento` junto do `AMBIENTE_DE_TESTE=sim`.
 
 2. **Configure o segredo `SENHA_CARGA`** no repositório (Settings → Secrets → Actions), com a mesma senha.
 3. **Rode o workflow "Carga"** na `development` (aba Actions, "Run workflow"):
@@ -52,9 +56,14 @@ Depois do cenário de referência, o mesmo workflow roda o RNF47 sobre a mesma m
     - marque "homologacao".
 4. **Confira o resultado.** O resumo da execução mostra, para cada operação, a quantidade de requisições e o percentil 95. Quando a execução conta como evidência, a duração é sempre 10 minutos, seja qual for a escolhida. Se os dois limites e as verificações das respostas passarem, o Feature Status marca o RNF12 no RF10 (#96) e o RNF21 no RF18 (#92), com o link da execução.
 
+O artefato `rnfs-carga`, que o Feature Status lê, só é publicado quando o cenário de referência passa, com o RNF12 e o RNF21 verificados. Assim, uma execução que falha não apaga a evidência anterior. As gravações do cenário consomem os casos pendentes da massa: antes de repetir a evidência na mesma homologação, confira se ainda há casos aguardando distribuição.
+
 Uma execução no runner, sem endereço, nunca conta como evidência, porque o runner não é igual ao servidor de produção. Ela serve para avisar cedo se uma mudança deixou alguma operação lenta.
 
 ## Resultado local de referência
+
+!!! note "Resultado local não é evidência"
+    Os números abaixo são de um computador de desenvolvimento. A evidência do patamar de lançamento é a execução na homologação, registrada com o ambiente, a massa, o resultado de cada operação e as verificações das respostas em [Verificação dos RNFs](verificacao-rnfs.md#desempenho-na-homologacao).
 
 Na massa de dois semestres, com 30 pessoas por 10 minutos num computador de desenvolvimento, todas as verificações foram aprovadas, e a fila de pendentes durou até o fim (14 casos ainda aguardavam distribuição):
 

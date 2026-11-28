@@ -103,7 +103,7 @@ export class CasosController {
     filtro: BuscaListaPacientes,
     @UsuarioAtual() usuario: UsuarioAutenticado,
   ) {
-    return this.casos.listaDePacientes(filtro.busca || undefined, usuario);
+    return this.casos.listaDePacientes(filtro, usuario);
   }
 
   // RF22: responsáveis pelo caso. Sem @Perfis: o serviço decide, porque o

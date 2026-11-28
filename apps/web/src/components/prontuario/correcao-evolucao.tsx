@@ -9,6 +9,7 @@ import {
   type VersaoEvolucao,
 } from "@clinica/shared";
 import { Aviso } from "@/components/comum/aviso";
+import { BotaoComMotivo } from "@/components/comum/botao-com-motivo";
 import { Campo, classeEntrada } from "@/components/comum/campo";
 import { Button } from "@/components/ui/button";
 import { api, ErroApi } from "@/lib/api";
@@ -64,6 +65,8 @@ export function FormularioCorrecaoEvolucao({
 
   async function salvar(evento: FormEvent<HTMLFormElement>) {
     evento.preventDefault();
+    // O Enter num campo envia o formulário mesmo com o botão desativado.
+    if (semMudanca) return;
     setErro(null);
     const resultado = esquemaDaCorrecao(fichaAntiga).safeParse(dados);
     if (!resultado.success) {
@@ -99,6 +102,13 @@ export function FormularioCorrecaoEvolucao({
     }
   }
 
+  // A correção precisa mudar o conteúdo da ficha; sem mudança, o botão fica
+  // desativado (o motivo sozinho não é correção).
+  const semMudanca = campos.every(
+    ([campo]) =>
+      dados[campo].trim() ===
+      ((evolucao as Record<string, string | null>)[campo] ?? "").trim(),
+  );
   const primeiroErro = Object.keys(erros)[0];
   const rotuloDoErro =
     primeiroErro === "motivo"
@@ -150,9 +160,19 @@ export function FormularioCorrecaoEvolucao({
         <Button type="button" variant="outline" onClick={aoCancelar}>
           Cancelar
         </Button>
-        <Button type="submit" disabled={salvando}>
-          {salvando ? "Salvando…" : "Salvar correção"}
-        </Button>
+        <BotaoComMotivo
+          motivo={
+            semMudanca
+              ? "Altere algum campo da evolução para salvar a correção."
+              : null
+          }
+        >
+          {(props) => (
+            <Button {...props} type="submit" disabled={salvando}>
+              {salvando ? "Salvando…" : "Salvar correção"}
+            </Button>
+          )}
+        </BotaoComMotivo>
       </div>
     </form>
   );
@@ -244,6 +264,7 @@ export function CartaoDataLimiteCorrecao() {
 
   async function salvar(evento: FormEvent<HTMLFormElement>) {
     evento.preventDefault();
+    if (campo === (atual.dataLimite ?? "")) return;
     setErro(null);
     setSalva(false);
     if (!campo) {
@@ -317,9 +338,20 @@ export function CartaoDataLimiteCorrecao() {
           </p>
         )}
         <div>
-          <Button type="submit" disabled={salvando}>
-            {salvando ? "Salvando…" : "Salvar data-limite"}
-          </Button>
+          {/* Sem mudança na data, não há o que salvar. */}
+          <BotaoComMotivo
+            motivo={
+              campo === (atual.dataLimite ?? "")
+                ? "Escolha uma data diferente da atual para salvar."
+                : null
+            }
+          >
+            {(props) => (
+              <Button {...props} type="submit" disabled={salvando}>
+                {salvando ? "Salvando…" : "Salvar data-limite"}
+              </Button>
+            )}
+          </BotaoComMotivo>
         </div>
       </form>
     </section>

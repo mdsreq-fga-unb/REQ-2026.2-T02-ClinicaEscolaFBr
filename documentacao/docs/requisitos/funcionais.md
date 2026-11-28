@@ -72,9 +72,9 @@ _Critérios de aceitação:_
 
 - Nenhuma confirmação de inscrição é exibida se a solicitação não tiver sido efetivamente registrada.
 
-- O CPF e o RG são informados por digitação, sem envio de cópia digitalizada ou foto dos documentos: o CPF com os 11 números e o RG como está no documento, aceitando números, letras e pontuação, sem exigir o órgão emissor.
+- O CPF e o RG são informados por digitação, sem envio de cópia digitalizada ou foto dos documentos: o CPF com os 11 números, mostrados na digitação como 000.000.000-00 e recusados quando os dígitos verificadores não conferem, e o RG como está no documento, aceitando números, letras e pontuação, sem exigir o órgão emissor. O sexo e a escolaridade, opcionais, são escolhidos em lista.
 
-- O formato do e-mail e do celular é validado, e o envio sem um dos dois é bloqueado, com o campo indicado; a inscrição mostra o aviso de que os contatos da clínica são feitos por e-mail.
+- O formato do e-mail e do celular é validado, e o envio sem um dos dois é bloqueado, com o campo indicado; a inscrição mostra o aviso de que os contatos da clínica são feitos por e-mail. O CEP e os telefones ganham a máscara na digitação, e cada campo mostra o erro enquanto a pessoa digita; o botão de avançar de cada etapa só fica ativo com a etapa completa, e mostra o que falta.
 
 - Queixa, percepção de urgência e histórico relevante são obrigatórios e ficam identificados como declarações do interessado.
 
@@ -1462,7 +1462,7 @@ _Critérios de aceitação:_
 
 - Cada visualização do prontuário gera uma entrada no registro de acessos com nome, perfil, data/hora e a operação "visualização", consultável pela coordenação.
 - Cada criação ou alteração no prontuário gera uma entrada com a operação correspondente.
-- Os filtros por paciente, por usuário e por período mostram somente as entradas que atendem a eles.
+- Os filtros por paciente, por usuário, por período e por operação mostram somente as entradas que atendem a eles.
 - A consulta não mostra o conteúdo clínico acessado.
 - Tentativas negadas pelo RF55 aparecem no registro identificadas como "acesso negado".
 - Usuário sem perfil de coordenação não consulta o registro de acessos.

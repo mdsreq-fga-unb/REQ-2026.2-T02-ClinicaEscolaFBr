@@ -10,6 +10,19 @@ import {
 } from "@playwright/test";
 import { EQUIPE, SENHA_EQUIPE, type PerfilEquipe } from "./equipe";
 
+// CPF fictício com os dígitos verificadores certos: a inscrição recusa CPF
+// inválido (RF1).
+export function cpfAleatorio(): string {
+  const base = Array.from({ length: 9 }, () => Math.floor(Math.random() * 10));
+  if (base.every((d) => d === base[0])) base[0] = (base[0] + 1) % 10;
+  for (const tamanho of [9, 10]) {
+    const soma = base.reduce((s, d, i) => s + d * (tamanho + 1 - i), 0);
+    const resto = (soma * 10) % 11;
+    base.push(resto === 10 ? 0 : resto);
+  }
+  return base.join("");
+}
+
 export const API = `http://localhost:${process.env.E2E_API_PORT || "3333"}`;
 
 // Verificação automática de WCAG 2.2 AA com o axe (RNF56).
@@ -74,16 +87,14 @@ export async function criarCasoTriado(
     data: {
       nomeCompleto: paciente,
       dataNascimento: "1988-03-15",
-      cpf: String(Date.now() + Math.floor(Math.random() * 1000))
-        .slice(-11)
-        .padStart(11, "2"),
+      cpf: cpfAleatorio(),
       rg: "7654321",
       endereco: "Rua Fictícia, 200, Gama",
       bairro: "Gama",
       cidadeUf: "Brasília/DF",
       cep: "72400-000",
       contatoEmergenciaNome: "Contato Fictício",
-      contatoEmergenciaParentesco: "Irmã",
+      contatoEmergenciaParentesco: "Irmão(ã)",
       contatoEmergenciaTelefone: "6133334444",
       estadoCivil: "Solteiro(a)",
       responsavelLegal: "",

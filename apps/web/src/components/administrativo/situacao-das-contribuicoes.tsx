@@ -2,7 +2,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { Lock } from "lucide-react";
 import Link from "next/link";
-import { useState, type FormEvent } from "react";
+import { useState, type FormEvent, type ReactNode } from "react";
 import type {
   ContribuicaoDoPaciente,
   SituacaoDaContribuicao,
@@ -10,6 +10,7 @@ import type {
 import { Selo } from "@/components/administrativo/contribuicao";
 import { Aviso } from "@/components/comum/aviso";
 import { Campo, classeEntrada } from "@/components/comum/campo";
+import { Paginacao, usePaginacao } from "@/components/comum/paginacao";
 import { inicioDoPerfil } from "@/components/layout/menu";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { api } from "@/lib/api";
@@ -86,7 +87,6 @@ function Lista({
   filtro: Filtro;
   dados: ContribuicaoDoPaciente[];
 }) {
-  const pendentes = filtro === "pendente";
   if (dados.length === 0) {
     const { titulo: t, texto } = VAZIO[filtro];
     return (
@@ -108,63 +108,94 @@ function Lista({
       {c.paciente}
     </Link>
   );
+  return <ListaPaginada filtro={filtro} dados={dados} nome={nome} />;
+}
+
+function ListaPaginada({
+  filtro,
+  dados: todos,
+  nome,
+}: {
+  filtro: Filtro;
+  dados: ContribuicaoDoPaciente[];
+  nome: (c: ContribuicaoDoPaciente) => ReactNode;
+}) {
+  const pendentes = filtro === "pendente";
+  // 50 por página: a lista traz todos os pacientes em atendimento.
+  const paginacao = usePaginacao(todos);
+  const dados = paginacao.visiveis;
   return (
-    <section aria-labelledby="titulo-contribuicoes" className="ui-painel">
-      <div role="status" className="border-b border-border p-4 sm:px-5">
-        <h2 id="titulo-contribuicoes" className="ui-h2">
-          {titulo(filtro, dados.length)}
-        </h2>
-      </div>
-      <table className="ui-tabela max-md:hidden [&_td]:px-5 [&_th]:px-5">
-        <caption className="sr-only">
-          Situação da contribuição social no ciclo atual
-          {filtro ? ` · ${ROTULO_FILTRO[filtro].toLowerCase()}` : ""}
-        </caption>
-        <thead>
-          <tr>
-            <th scope="col">Paciente</th>
-            {!pendentes && <th scope="col">Situação</th>}
-            <th scope="col">Primeira sessão</th>
-            <th scope="col">{pendentes ? "Prazo para pagar" : "Pagamento"}</th>
-          </tr>
-        </thead>
-        <tbody>
-          {dados.map((c) => (
-            <tr key={c.casoId}>
-              <td>{nome(c)}</td>
-              {!pendentes && (
-                <td>
-                  <Selo tipo={c.situacao} />
-                </td>
-              )}
-              <td className="whitespace-nowrap">{primeiraSessao(c)}</td>
-              <td className="whitespace-nowrap">
-                {pendentes ? prazo(c) : c.pagoEm ? dataBr(c.pagoEm) : "—"}
-              </td>
+    <>
+      <section aria-labelledby="titulo-contribuicoes" className="ui-painel">
+        <div role="status" className="border-b border-border p-4 sm:px-5">
+          <h2 id="titulo-contribuicoes" className="ui-h2">
+            {titulo(filtro, todos.length)}
+          </h2>
+        </div>
+        <table className="ui-tabela max-md:hidden [&_td]:px-5 [&_th]:px-5">
+          <caption className="sr-only">
+            Situação da contribuição social no ciclo atual
+            {filtro ? ` · ${ROTULO_FILTRO[filtro].toLowerCase()}` : ""}
+          </caption>
+          <thead>
+            <tr>
+              <th scope="col">Paciente</th>
+              {!pendentes && <th scope="col">Situação</th>}
+              <th scope="col">Primeira sessão</th>
+              <th scope="col">
+                {pendentes ? "Prazo para pagar" : "Pagamento"}
+              </th>
             </tr>
+          </thead>
+          <tbody>
+            {dados.map((c) => (
+              <tr key={c.casoId}>
+                <td>{nome(c)}</td>
+                {!pendentes && (
+                  <td>
+                    <Selo tipo={c.situacao} />
+                  </td>
+                )}
+                <td className="whitespace-nowrap">{primeiraSessao(c)}</td>
+                <td className="whitespace-nowrap">
+                  {pendentes ? prazo(c) : c.pagoEm ? dataBr(c.pagoEm) : "—"}
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+        <ul className="flex flex-col divide-y divide-border px-4 md:hidden">
+          {dados.map((c) => (
+            <li key={c.casoId} className="flex flex-col items-start gap-1 py-3">
+              {nome(c)}
+              <Selo tipo={c.situacao} />
+              <span className="text-[15px]">
+                {c.primeiraSessao
+                  ? `1ª sessão em ${dataBr(c.primeiraSessao)}`
+                  : "1ª sessão ainda não agendada"}
+              </span>
+              {c.situacao === "efetivada" && c.pagoEm && (
+                <span className="ui-meta">Pago em {dataBr(c.pagoEm)}</span>
+              )}
+              {c.situacao === "pendente" && c.prazoAte && (
+                <span className="ui-meta">Prazo para pagar: {prazo(c)}</span>
+              )}
+            </li>
           ))}
-        </tbody>
-      </table>
-      <ul className="flex flex-col divide-y divide-border px-4 md:hidden">
-        {dados.map((c) => (
-          <li key={c.casoId} className="flex flex-col items-start gap-1 py-3">
-            {nome(c)}
-            <Selo tipo={c.situacao} />
-            <span className="text-[15px]">
-              {c.primeiraSessao
-                ? `1ª sessão em ${dataBr(c.primeiraSessao)}`
-                : "1ª sessão ainda não agendada"}
-            </span>
-            {c.situacao === "efetivada" && c.pagoEm && (
-              <span className="ui-meta">Pago em {dataBr(c.pagoEm)}</span>
-            )}
-            {c.situacao === "pendente" && c.prazoAte && (
-              <span className="ui-meta">Prazo para pagar: {prazo(c)}</span>
-            )}
-          </li>
-        ))}
-      </ul>
-    </section>
+        </ul>
+      </section>
+      {paginacao.paginas > 1 && (
+        <p className="ui-dica">
+          Mostrando {paginacao.inicio} a {paginacao.fim} de {paginacao.total}.
+        </p>
+      )}
+      <Paginacao
+        rotulo="Páginas da contribuição social"
+        pagina={paginacao.pagina}
+        paginas={paginacao.paginas}
+        irPara={paginacao.irPara}
+      />
+    </>
   );
 }
 
@@ -177,6 +208,14 @@ export function SituacaoDasContribuicoes() {
     sessao?.perfil === "secretaria" || sessao?.perfil === "coordenacao";
   const [escolha, setEscolha] = useState<Filtro>("");
   const [filtro, setFiltro] = useState<Filtro>("");
+  // Busca pelo nome na lista já carregada, sem acento e sem diferenciar
+  // maiúsculas.
+  const [busca, setBusca] = useState("");
+  const normalizar = (texto: string) =>
+    texto
+      .normalize("NFD")
+      .replace(/[\u0300-\u036f]/g, "")
+      .toLowerCase();
   const lista = useQuery({
     queryKey: ["contribuicoes", filtro],
     queryFn: () =>
@@ -232,6 +271,20 @@ export function SituacaoDasContribuicoes() {
         <Button type="submit" className="max-md:w-full md:mt-[30px]">
           Filtrar
         </Button>
+        <Campo rotulo="Paciente" className="w-full md:max-w-[360px]">
+          {(props) => (
+            <input
+              {...props}
+              type="search"
+              autoComplete="off"
+              placeholder="Buscar pelo nome"
+              maxLength={120}
+              value={busca}
+              onChange={(e) => setBusca(e.target.value)}
+              className={classeEntrada}
+            />
+          )}
+        </Campo>
       </form>
 
       {lista.isPending && (
@@ -249,7 +302,18 @@ export function SituacaoDasContribuicoes() {
           </Button>
         </Aviso>
       )}
-      {lista.data && <Lista filtro={filtro} dados={lista.data} />}
+      {lista.data && (
+        <Lista
+          filtro={filtro}
+          dados={
+            busca.trim()
+              ? lista.data.filter((c) =>
+                  normalizar(c.paciente).includes(normalizar(busca.trim())),
+                )
+              : lista.data
+          }
+        />
+      )}
 
       <p className="ui-dica">
         Na agenda, a 1ª sessão de quem ainda não pagou aparece com a indicação

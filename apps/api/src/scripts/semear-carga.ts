@@ -28,8 +28,10 @@ import {
 // exige AMBIENTE_DE_TESTE=sim.
 //
 // Uso (de apps/api, depois do build):
-//   AMBIENTE_DE_TESTE=sim DATABASE_URL=... CHAVE_DADOS=... SENHA_CARGA=... \
-//   node dist/scripts/semear-carga.js
+//   AMBIENTE_DE_TESTE=sim AMBIENTE_APLICACAO=validacao DATABASE_URL=... \
+//   CHAVE_DADOS=... SENHA_CARGA=... node dist/scripts/semear-carga.js
+//
+// Recusa AMBIENTE_APLICACAO=producao ou ausente, como no contêiner da produção.
 //
 // As gravações da carga (distribuir e vincular) consomem os casos que aguardam
 // distribuição. Com a massa já criada, REPOR_PENDENTES=sim cria só inscrições
@@ -48,6 +50,14 @@ const SESSOES = 4000;
 async function principal() {
   if (process.env.NODE_ENV === 'production') {
     throw new Error('A massa de carga não pode ser criada em produção.');
+  }
+  // Dentro do contêiner da API, o NODE_ENV é sobrescrito para rodar o script; quem
+  // diz o ambiente é o AMBIENTE_APLICACAO do compose, que vale produção quando
+  // ausente. Assim, errar o contêiner não põe a massa na fila real.
+  if ((process.env.AMBIENTE_APLICACAO ?? 'producao') === 'producao') {
+    throw new Error(
+      'A massa de carga não pode ser criada na produção (AMBIENTE_APLICACAO=producao ou ausente).',
+    );
   }
   if (process.env.AMBIENTE_DE_TESTE !== 'sim') {
     throw new Error(

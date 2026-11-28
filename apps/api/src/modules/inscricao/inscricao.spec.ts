@@ -39,7 +39,7 @@ const valido = () => ({
   celular: '(61) 99999-9999',
   email: 'teste@example.com',
   contatoEmergenciaNome: 'Contato Fictício',
-  contatoEmergenciaParentesco: 'Irmã',
+  contatoEmergenciaParentesco: 'Irmão(ã)',
   contatoEmergenciaTelefone: '(61) 3333-4444',
   queixa: 'Queixa fictícia privada',
   percepcaoUrgencia: 'Urgência fictícia privada',
@@ -74,6 +74,34 @@ describe('RF1/RF2: contrato compartilhado', () => {
   );
   it.each(['123', '111.444.777-35', 'abcdefghijk'])('recusa CPF %s', (cpf) => {
     expect(inscricaoSchema.safeParse({ ...valido(), cpf }).success).toBe(false);
+  });
+  it.each(['11144477734', '12345678901', '00000000000', '99999999999'])(
+    'recusa CPF com dígito verificador errado ou repetido: %s (RF1)',
+    (cpf) => {
+      const r = inscricaoSchema.safeParse({ ...valido(), cpf });
+      expect(r.success).toBe(false);
+      expect(r.error?.issues[0].message).toBe(
+        'Este CPF não é válido. Confira os números.',
+      );
+    },
+  );
+  it('recusa o CPF do responsável com dígito verificador errado (RF1)', () => {
+    const r = inscricaoSchema.safeParse({
+      ...valido(),
+      dataNascimento: '2015-01-01',
+      responsavelLegal: 'Responsável Fictício',
+      cpfResponsavel: '52998224724',
+    });
+    expect(r.success).toBe(false);
+    expect(r.error?.issues.map((i) => i.path[0])).toEqual(['cpfResponsavel']);
+  });
+  it('aceita sexo e escolaridade só da lista, ou vazios (RF1, DF43)', () => {
+    const com = (alteracao: object) =>
+      inscricaoSchema.safeParse({ ...valido(), ...alteracao }).success;
+    expect(com({ sexo: 'Feminino', escolaridade: 'Pós-graduação' })).toBe(true);
+    expect(com({ sexo: '', escolaridade: '' })).toBe(true);
+    expect(com({ sexo: 'Outro texto' })).toBe(false);
+    expect(com({ escolaridade: 'Faculdade' })).toBe(false);
   });
   it.each(['2999-01-01', '2025-02-30', 'ontem'])(
     'recusa nascimento %s',
@@ -125,6 +153,36 @@ describe('RF1/RF2: contrato compartilhado', () => {
         // Padrão até a resposta da FBr: só o nome e o telefone do contato de
         // emergência são obrigatórios (pendência de validação).
         contatoEmergenciaParentesco: '',
+      }).success,
+    ).toBe(true);
+  });
+  it('grau de parentesco e documento do responsável só aceitam as opções da lista (RF1)', () => {
+    expect(
+      inscricaoSchema.safeParse({
+        ...valido(),
+        contatoEmergenciaParentesco: 'Irmã mais velha',
+      }).success,
+    ).toBe(false);
+    expect(
+      inscricaoSchema.safeParse({
+        ...valido(),
+        contatoEmergenciaParentesco: 'Avô ou avó',
+      }).success,
+    ).toBe(true);
+    const menor = {
+      ...valido(),
+      dataNascimento: '2020-01-01',
+      responsavelLegal: 'Responsável Fictício',
+      cpfResponsavel: '52998224725',
+    };
+    expect(
+      inscricaoSchema.safeParse({ ...menor, documentoResponsavel: 'RG da mãe' })
+        .success,
+    ).toBe(false);
+    expect(
+      inscricaoSchema.safeParse({
+        ...menor,
+        documentoResponsavel: 'Termo de guarda',
       }).success,
     ).toBe(true);
   });
@@ -248,26 +306,26 @@ describe('RF1/RF2: HTTP, transações e migrations oficiais', () => {
       ...valido(),
       sexo: 'Feminino',
       profissao: 'Professora',
-      escolaridade: 'Superior completo',
+      escolaridade: 'Ensino superior completo',
       bairro: 'Santa Maria',
       cidadeUf: 'Brasília/DF',
       cep: '72500-000',
       whatsapp: '(61) 98888-7777',
       contatoEmergenciaNome: 'Contato Fictício',
-      contatoEmergenciaParentesco: 'Irmã',
+      contatoEmergenciaParentesco: 'Irmão(ã)',
       contatoEmergenciaTelefone: '(61) 3333-4444',
     }).expect(201);
     const [registro] = await db.select().from(inscricoes);
     expect(registro).toMatchObject({
       sexo: 'Feminino',
       profissao: 'Professora',
-      escolaridade: 'Superior completo',
+      escolaridade: 'Ensino superior completo',
       bairro: 'Santa Maria',
       cidadeUf: 'Brasília/DF',
       cep: '72500000',
       whatsapp: '61988887777',
       contatoEmergenciaNome: 'Contato Fictício',
-      contatoEmergenciaParentesco: 'Irmã',
+      contatoEmergenciaParentesco: 'Irmão(ã)',
       contatoEmergenciaTelefone: '6133334444',
       cpfResponsavel: null,
       documentoResponsavel: null,
