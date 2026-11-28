@@ -22,6 +22,8 @@ A validação é o ambiente de homologação: [validacao.clinica.fbr.edu.br](htt
 
 O prazo das features é quarta porque a produção só sai depois do aceite da FBr na validação. Com tudo pronto na quarta, a FBr tem até sexta para testar, e o fim de semana fica para as correções.
 
+**Situação em 27/11/2026.** O código das 14 features do Ciclo 6 entrou na `development` em 25 e 26/11. A homologação foi feita na [validação final com a FBr](../historico/unidade-4/reunioes.md#validacao-final-com-a-fbr-2711), em 27/11, com a demonstração do sistema completo e o aceite ([DF73](../requisitos/decisoes-fbr.md#df73)). A ressalva é entregar até 01/12 os pedidos confirmados na reunião, que ocupam o fim de semana no lugar das correções: o registro de acessos detalhado ([DF77](../requisitos/decisoes-fbr.md#df77)) e, se viáveis, o endereço pelo CEP ([DF75](../requisitos/decisoes-fbr.md#df75)) e o comprovante por e-mail ([DF76](../requisitos/decisoes-fbr.md#df76)).
+
 ## Ordem de integração { #ordem-de-integracao }
 
 As PRs abertas em 24/11 entram nesta ordem. A ordem respeita as que estão empilhadas e os números das migrations:
@@ -60,7 +62,7 @@ As PRs abertas em 24/11 entram nesta ordem. A ordem respeita as que estão empil
     3. gere de novo com `pnpm --filter @clinica/database db:generate --name <nome>`;
     4. copie para o arquivo novo o SQL escrito à mão (gatilhos e comentários), que o gerador não recria;
     5. rode os testes da API.
-- **Versão do histórico repetida.** Cada PR já tem a sua linha no [histórico de versões](../index.md). Se duas usarem o mesmo número, a que entra depois passa para o próximo número livre. Já se repetem: a 3.101 (#307 e #311), a 3.102 (#308 e #312), a 3.103 (#305 e #309), a 3.104 (#310; a #314 já passou para a 3.105) e a 3.108 (#300 e #318). As respostas da FBr de 25/11 usam da 3.109 à 3.112 (#296, #308, #297 e #322).
+- **Versão do histórico repetida.** Cada PR já tem a sua linha no [histórico de versões](../index.md). Se duas usarem o mesmo número, a que entra depois passa para o próximo número livre. Na integração de 24 e 25/11, as PRs #300, #305, #307 a #312, #314 e #318 repetiram números entre 3.101 e 3.108 e foram ajustadas assim; na renumeração da Unidade 4, em 27/11, essas linhas e as das respostas da FBr de 25/11 ficaram entre a 4.10 e a 4.20, sem repetição. As PRs abertas depois da renumeração usam 4.x.
 - **Marcos nas issues.** O merge marca o D4.3. O bot marca os marcos que dependem de comentário: `/de-acordo`, `/demonstrada` e `/aceite`. Confira se a aprovação da PR marcou o D3.1.
 
 ## Roteiro de homologação { #roteiro-de-homologacao }
@@ -142,6 +144,14 @@ O [RNF41](../requisitos/nao-funcionais.md#rnf41) pede que a declaração de comp
 - **Atende:** todos concluem sem ajuda, em até 3 interações. Se alguém não concluir, a equipe registra onde a pessoa parou e trata como correção (D6.2).
 - **Preparação:** a equipe deixa os pacientes fictícios com uma sessão realizada e a identidade verificável, e quem aplica o teste não explica a tela antes.
 - **Registro:** com a resposta da FBr, a equipe registra `/rnf RNF41 <link>` nas issues do RF44 e do RF45, com o número de participantes por público, quantos concluíram sem ajuda e o maior número de interações observado.
+
+#### Registro do RNF41 (27/11/2026) { #registro-do-rnf41 }
+
+A clínica não tem como aplicar o teste com 3 pessoas por público antes da entrega. Por isso, o RNF41 segue a mesma forma de verificação adotada no [RNF22](../historico/unidade-3/reunioes.md#registro-do-teste-de-usabilidade-rnf22): o uso do sistema pelos usuários reais da clínica, sem treinamento e com a aprovação da coordenação, mais o e2e das 3 interações.
+
+- **Uso pelos usuários da clínica:** em 12/11, estagiários, um supervisor e a secretária usaram o sistema sem treinamento. Em 24/11, Robson Araújo, com os professores Alexandre e Lauana e com a supervisora Elaine, conferiu a lista de sessões com presença registrada (RF44), para o paciente e para a secretaria, e respondeu "tá tudo ok, tá a contento" ([validação de 24/11](../historico/unidade-4/reunioes.md#validacao-das-funcionalidades-do-ciclo-5-pela-fbr)). Em 27/11, a emissão da declaração (RF45) foi demonstrada na [validação final](../historico/unidade-4/reunioes.md#validacao-final-com-a-fbr-2711) e aceita pela FBr.
+- **Teste automatizado:** o e2e `rnf41.spec.ts` confere, no computador e no celular, que o paciente, a partir das sessões, e a secretaria, a partir da ficha do paciente, emitem e imprimem a declaração em até 3 interações.
+- **Ressalva:** a amostra fica abaixo do patamar escrito (3 pessoas **por público**), e a FBr não mediu as interações pessoa a pessoa. Se a clínica observar dificuldade na emissão depois da produção, a equipe registra onde a pessoa parou e trata como correção.
 
 ## Publicação em produção { #publicacao-em-producao }
 

@@ -51,7 +51,7 @@ Toda evidência fica num lugar público do projeto, ligada ao requisito ou à fe
 | Avaliação do DoR, inspeção de design, `/de-acordo`, `/rnf`, `/demonstrada` e `/aceite` | Comentários na issue da feature | A issue é o campo "issue" do catálogo e aparece no título do RF |
 | Revisão do código e da documentação | Pull request aprovada | A PR cita a issue da feature (conferido no CI) |
 | Resultados dos testes e verificação dos RNFs | Execuções do CI e tabela de RNFs do robô na issue | O nome de cada teste cita o RF e o RNF |
-| Decisões e respostas da FBr | [Registro de Decisões](../requisitos/decisoes-fbr.md) e [Reuniões](../historico/unidade-3/reunioes.md) | A DF é a "Origem" de cada requisito no catálogo |
+| Decisões e respostas da FBr | [Registro de Decisões](../requisitos/decisoes-fbr.md) e Reuniões da [Unidade 3](../historico/unidade-3/reunioes.md) e da [Unidade 4](../historico/unidade-4/reunioes.md) | A DF é a "Origem" de cada requisito no catálogo |
 | Apontamentos externos | [Análise do Feedback](../requisitos/analise-feedback.md) e issues do professor | Cada apontamento cita o requisito |
 | Situação de cada feature no ciclo | [Fechamento dos ciclos](../visao-geral/cronograma.md#fechamento-dos-ciclos) e o "Estado da feature" da issue | O estado é o marco do FDD alcançado |
 

@@ -481,7 +481,10 @@
   function openTargetDetails() {
     var id = decodeURIComponent(window.location.hash.slice(1));
     var target = id && document.getElementById(id);
-    if (target && target.tagName === "DETAILS") target.open = true;
+    // Abre também os blocos de fora (ex.: #historico-unidade-1, dentro do histórico de revisão).
+    for (var el = target; el; el = el.parentElement) {
+      if (el.tagName === "DETAILS") el.open = true;
+    }
   }
 
   window.addEventListener("hashchange", openTargetDetails);
